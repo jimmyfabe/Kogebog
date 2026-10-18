@@ -52,6 +52,7 @@ Standard schema.org/Recipe med egne felter under `tumbi`. Den fulde tabel står 
 - Kniv (`skaere`, `rive`) og varme (`stege`, `koge`, `vende`, `bage`) kræver `"voksen": true` og `voksen_hjaelp` (`"kniv"` eller `"varme"`). De to følges ad.
 - `piske`, `pensle`, `mose` og `drysse` kan barnet selv. Er der varme med, skriver opskriften `"voksen": true`, og så skal hjælpen være `"varme"` (validatoren kan ikke selv se varmen).
 - Et trin med råt kød (`koed`) eller æg (`aeg`) i `ikoner` skal efterfølges af et `vaske-haender`-trin. Andre ingredienser må ikke røres før det.
+- Rå fisk og råt svinekød bruger også ikonet `koed`, så validatoren kræver håndvask. `tun` (på dåse) og `skinke` (pålæg) er ikke rå.
 - Dej med råt æg (eller kød) regnes først som indarbejdet efter æltningen: et `aelte`-trin efter et `roere`-, `haelde`- eller `piske`-trin med et råt ikon tæller som råt, så vasken kommer efter æltningen, ikke før.
 - `timer_sek` er et heltal, højst 4 timer. Billedfilerne findes.
 - En ny ret skrives med `"afproevet": false`, indtil den er lavet.

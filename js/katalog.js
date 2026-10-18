@@ -77,15 +77,15 @@ export const INGREDIENSER = {
   'rasp': 'rasp',
   'hytteost': 'hytteost',
   'kerner': 'kerner',
-  'tun': 'tun',
+  'tun': 'tun på dåse',
   'yoghurt': 'yoghurt',
-  'skinke': 'skinke',
+  'skinke': 'skinke (pålæg)',
   'bagepulver': 'bagepulver',
   'kokos': 'kokosmel',
 };
 
 // Ikoner for råt kød og råt æg: efter dem skal der komme et trin med «vaske-haender».
-// Tun på dåse og skinke er ikke rå, så de står ikke her.
+// Tun på dåse og skinke (pålæg) er ikke rå, så de står ikke her. Rå fisk og råt svinekød bruger «koed».
 export const RAA_IKONER = ['koed', 'aeg'];
 
 export const DYR = {
