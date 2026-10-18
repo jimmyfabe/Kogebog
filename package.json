@@ -1,0 +1,13 @@
+{
+  "name": "tumbi-koekken",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Tumbi Køkken: en lille kogebog til iPad, hvor et barn og en voksen laver mad sammen (statisk PWA uden afhængigheder)",
+  "type": "module",
+  "scripts": {
+    "test": "node test/koer-alle.js",
+    "test:e2e": "node test/test-e2e.js"
+  },
+  "author": "Jimmy <jimmy.falbe-hansen@outlook.com>",
+  "license": "UNLICENSED"
+}

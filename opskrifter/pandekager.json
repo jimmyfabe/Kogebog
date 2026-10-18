@@ -1,0 +1,51 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Pandekager",
+  "description": "Tynde pandekager med sukker eller syltetøj.",
+  "image": "grafik/ret-pandekager.svg",
+  "inLanguage": "da",
+  "recipeYield": "4 personer (ca. 12 stk.)",
+  "prepTime": "PT15M",
+  "cookTime": "PT25M",
+  "totalTime": "PT50M",
+  "recipeIngredient": [
+    "2,5 dl hvedemel",
+    "1 spsk sukker",
+    "1 knivspids salt",
+    "3 æg",
+    "4 dl mælk",
+    "smør til panden",
+    "sukker eller syltetøj til servering"
+  ],
+  "tool": ["stor skål", "piskeris", "dl-mål", "kop", "pande", "paletkniv"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Mål 2,5 dl mel.", "tumbi": { "verbum": "maale", "ikoner": ["mel"] } },
+    { "@type": "HowToStep", "text": "Hæld melet i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["mel"] } },
+    { "@type": "HowToStep", "text": "Hæld sukker og salt i.", "tumbi": { "verbum": "haelde", "ikoner": ["sukker", "salt"] } },
+    { "@type": "HowToStep", "text": "Hæld halvdelen af mælken i.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk"] } },
+    { "@type": "HowToStep", "text": "Rør, til dejen er glat.", "tumbi": { "verbum": "roere", "note": "Brug piskeriset, så bliver der ingen klumper." } },
+    { "@type": "HowToStep", "text": "Rør æggene og resten af mælken i.", "tumbi": { "verbum": "roere", "ikoner": ["aeg", "maelk"], "note": "Slå æggene ud i en kop først, så er det let at fiske skaller op." } },
+    { "@type": "HowToStep", "text": "Vask hænderne igen.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg på fingrene." } },
+    { "@type": "HowToStep", "text": "Lad dejen hvile i 10 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 600 } },
+    { "@type": "HowToStep", "text": "Steg pandekagen.", "tumbi": { "verbum": "stege", "voksen_hjaelp": "varme", "timer_sek": 60, "ikoner": ["smoer"], "note": "Middel varme og lidt smør på panden. Ca. 1/2 dl dej pr. pandekage." } },
+    { "@type": "HowToStep", "text": "Vend pandekagen.", "tumbi": { "verbum": "vende", "voksen_hjaelp": "varme", "timer_sek": 45, "note": "Vend, når kanten slipper. Gentag med resten af dejen." } },
+    { "@type": "HowToStep", "text": "Smag! Sukker eller syltetøj?", "tumbi": { "verbum": "smage", "ikoner": ["sukker", "syltetoej"] } }
+  ],
+  "tumbi": {
+    "id": "pandekager",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen tekst",
+    "ingredienser": [
+      { "ikon": "mel", "maengde": "2,5 dl" },
+      { "ikon": "sukker", "maengde": "1 spsk" },
+      { "ikon": "salt", "maengde": "1 knivspids" },
+      { "ikon": "aeg", "maengde": "3" },
+      { "ikon": "maelk", "maengde": "4 dl" },
+      { "ikon": "smoer", "maengde": "" },
+      { "ikon": "syltetoej", "maengde": "" }
+    ]
+  }
+}

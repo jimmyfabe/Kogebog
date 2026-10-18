@@ -1,0 +1,58 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Chorizo-pasta",
+  "description": "One pot-pasta: det hele koger i én stor pande med låg.",
+  "image": "grafik/ret-chorizo-pasta.svg",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT10M",
+  "cookTime": "PT20M",
+  "totalTime": "PT30M",
+  "recipeIngredient": [
+    "250 g mild chorizo",
+    "1 stort løg",
+    "3 fed hvidløg",
+    "1 spsk tomatpuré",
+    "1,25 l kogende vand",
+    "2 grøntsagsbouillonterninger",
+    "400 g spaghetti",
+    "2,5 dl madlavningsfløde 15 %",
+    "100 g parmesan, fintrevet",
+    "peber (og evt. salt)"
+  ],
+  "tool": ["skærebræt", "kniv", "stor sauterpande med låg", "kande", "grydeske", "rivejern"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Skær chorizoen i små tern.", "tumbi": { "verbum": "skaere", "voksen_hjaelp": "kniv", "ikoner": ["chorizo"], "note": "Køb mild chorizo, ikke «picante». Tern på ca. 1 cm." } },
+    { "@type": "HowToStep", "text": "Hak løg og hvidløg fint.", "tumbi": { "verbum": "skaere", "voksen_hjaelp": "kniv", "ikoner": ["loeg", "hvidloeg"] } },
+    { "@type": "HowToStep", "text": "Steg chorizoen sprød.", "tumbi": { "verbum": "stege", "voksen_hjaelp": "varme", "timer_sek": 300, "ikoner": ["chorizo"], "note": "Største sauterpande ved middel varme, uden fedtstof. Tag den op, og stil den til side." } },
+    { "@type": "HowToStep", "text": "Steg løg og hvidløg bløde.", "tumbi": { "verbum": "stege", "voksen_hjaelp": "varme", "timer_sek": 240, "ikoner": ["loeg", "hvidloeg"], "note": "I fedtet fra chorizoen." } },
+    { "@type": "HowToStep", "text": "Rør tomatpuréen i.", "tumbi": { "verbum": "roere", "voksen_hjaelp": "varme", "timer_sek": 60, "ikoner": ["tomatpure"], "note": "Steg 1 min under omrøring." } },
+    { "@type": "HowToStep", "text": "Kom bouillon i det varme vand.", "tumbi": { "verbum": "haelde", "voksen_hjaelp": "varme", "ikoner": ["bouillon", "vand"], "note": "Opløs terningerne i 1,25 l kogende vand i en kande. Den voksne holder kanden." } },
+    { "@type": "HowToStep", "text": "Hæld bouillonen i panden.", "tumbi": { "verbum": "haelde", "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "Pas på dampen." } },
+    { "@type": "HowToStep", "text": "Kom spaghettien i panden.", "tumbi": { "verbum": "koge", "voksen_hjaelp": "varme", "ikoner": ["spaghetti"], "note": "Knæk den på midten, hvis panden er for lille. Så er den også lettere at spise." } },
+    { "@type": "HowToStep", "text": "Kog med låg på i 10 minutter.", "tumbi": { "verbum": "koge", "voksen_hjaelp": "varme", "timer_sek": 600, "note": "Eller som anvist på pakken. Rør tit, så pastaen ikke klistrer eller brænder på." } },
+    { "@type": "HowToStep", "text": "Rør fløde og ost i.", "tumbi": { "verbum": "roere", "voksen_hjaelp": "varme", "ikoner": ["flode", "ost"], "note": "Også halvdelen af chorizoen. Småkog et par minutter, til saucen er cremet. Er den for tyk, så rør lidt vand i." } },
+    { "@type": "HowToStep", "text": "Smag til med peber.", "tumbi": { "verbum": "smage", "voksen_hjaelp": "varme", "ikoner": ["peber"], "note": "Bouillon, ost og chorizo er salte, så smag, før der kommer salt i. Pust på skeen." } },
+    { "@type": "HowToStep", "text": "Drys resten af chorizoen over.", "tumbi": { "verbum": "haelde", "ikoner": ["chorizo", "ost"], "note": "Og lidt ekstra parmesan." } }
+  ],
+  "tumbi": {
+    "id": "chorizo-pasta",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen tekst, idé fra «Ibsens mad»",
+    "ingredienser": [
+      { "ikon": "chorizo", "maengde": "250 g" },
+      { "ikon": "loeg", "maengde": "1 stort" },
+      { "ikon": "hvidloeg", "maengde": "3 fed" },
+      { "ikon": "tomatpure", "maengde": "1 spsk" },
+      { "ikon": "vand", "maengde": "1,25 l" },
+      { "ikon": "bouillon", "maengde": "2" },
+      { "ikon": "spaghetti", "maengde": "400 g" },
+      { "ikon": "flode", "maengde": "2,5 dl" },
+      { "ikon": "ost", "maengde": "100 g" },
+      { "ikon": "peber", "maengde": "" }
+    ]
+  }
+}

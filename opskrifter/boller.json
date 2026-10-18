@@ -1,0 +1,56 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Boller",
+  "description": "Bløde boller med en blank top. Gode med smør.",
+  "image": "grafik/ret-boller.svg",
+  "inLanguage": "da",
+  "recipeYield": "4 personer (16 boller)",
+  "prepTime": "PT30M",
+  "cookTime": "PT12M",
+  "totalTime": "PT1H45M",
+  "recipeIngredient": [
+    "25 g gær",
+    "4 dl lunkent vand",
+    "1 tsk salt",
+    "1 spsk sukker",
+    "3 spsk olie",
+    "ca. 650 g hvedemel",
+    "1 æg til pensling",
+    "smør til servering"
+  ],
+  "tool": ["stor skål", "grydeske", "dl-mål", "viskestykke", "bageplade", "bagepapir", "kop", "gaffel", "pensel"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Smuldr gæren ned i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["gaer"] } },
+    { "@type": "HowToStep", "text": "Mål 4 dl lunkent vand.", "tumbi": { "verbum": "maale", "ikoner": ["vand"], "note": "Lunkent er ca. 37 °C: det føles lunt på en finger." } },
+    { "@type": "HowToStep", "text": "Hæld vandet over gæren, og rør.", "tumbi": { "verbum": "roere", "ikoner": ["vand", "gaer"] } },
+    { "@type": "HowToStep", "text": "Hæld salt, sukker og olie i.", "tumbi": { "verbum": "haelde", "ikoner": ["salt", "sukker", "olie"] } },
+    { "@type": "HowToStep", "text": "Rør melet i lidt ad gangen.", "tumbi": { "verbum": "roere", "ikoner": ["mel"], "note": "Gem ca. 1 dl mel til at ælte med. Dejen skal slippe skålen." } },
+    { "@type": "HowToStep", "text": "Ælt dejen i 5 minutter.", "tumbi": { "verbum": "aelte", "timer_sek": 300, "ikoner": ["mel"], "note": "Drys lidt mel på bordet. Dejen skal være blød og blank." } },
+    { "@type": "HowToStep", "text": "Lad dejen hæve i 30 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "Dæk skålen med et viskestykke, og stil den et lunt sted." } },
+    { "@type": "HowToStep", "text": "Rul dejen til 16 kugler.", "tumbi": { "verbum": "rulle", "note": "Del dejen i 4 lige store stykker og hvert stykke i 4. Læg kuglerne på en bageplade med bagepapir." } },
+    { "@type": "HowToStep", "text": "Lad bollerne hæve i 20 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 1200, "note": "Tænd ovnen på 220 °C (almindelig ovn) imens." } },
+    { "@type": "HowToStep", "text": "Pisk ægget, og pensl bollerne.", "tumbi": { "verbum": "roere", "ikoner": ["aeg"], "note": "Pisk ægget med en gaffel i en kop. Pensl forsigtigt, så bollerne ikke falder sammen." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter råt æg." } },
+    { "@type": "HowToStep", "text": "Bag bollerne i ovnen.", "tumbi": { "verbum": "stege", "voksen_hjaelp": "varme", "timer_sek": 720, "note": "220 °C i ca. 12 min midt i ovnen. De er færdige, når de er gyldne og lyder hule, når man banker under dem." } },
+    { "@type": "HowToStep", "text": "Lad bollerne køle lidt af.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Bagepladen er meget varm. Den voksne tager den ud." } },
+    { "@type": "HowToStep", "text": "Smag en bolle med smør.", "tumbi": { "verbum": "smage", "ikoner": ["smoer"] } }
+  ],
+  "tumbi": {
+    "id": "boller",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen tekst",
+    "ingredienser": [
+      { "ikon": "gaer", "maengde": "25 g" },
+      { "ikon": "vand", "maengde": "4 dl" },
+      { "ikon": "salt", "maengde": "1 tsk" },
+      { "ikon": "sukker", "maengde": "1 spsk" },
+      { "ikon": "olie", "maengde": "3 spsk" },
+      { "ikon": "mel", "maengde": "ca. 650 g" },
+      { "ikon": "aeg", "maengde": "1" },
+      { "ikon": "smoer", "maengde": "" }
+    ]
+  }
+}
