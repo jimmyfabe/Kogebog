@@ -137,7 +137,7 @@ export function valider(rod = ROD) {
         ti.forEach((x, i) => {
           const hvor = 'ingrediens ' + (i + 1);
           if (!x || typeof x !== 'object') { f(hvor + ': skal være { "ikon", "maengde" }'); return; }
-          if (!(x.ikon in INGREDIENSER)) f(hvor + ': ukendt ikon ' + JSON.stringify(x.ikon) + ' — brug et af: ' + liste(Object.keys(INGREDIENSER)));
+          if (!Object.hasOwn(INGREDIENSER, x.ikon)) f(hvor + ': ukendt ikon ' + JSON.stringify(x.ikon) + ' — brug et af: ' + liste(Object.keys(INGREDIENSER)));
           else retIkoner.add(x.ikon);
           if (typeof x.maengde !== 'string') f(hvor + ': «maengde» skal være en tekst (tom, hvis der ingen mængde er)');
           else if (x.maengde && typeof ingr[i] === 'string' && !ingr[i].startsWith(x.maengde + ' ')) f(hvor + ': mængden «' + x.maengde + '» passer ikke til «' + ingr[i] + '»');
@@ -161,13 +161,13 @@ export function valider(rod = ROD) {
         const st = s.tumbi;
         if (!st || typeof st !== 'object') { f(hvor + ': mangler «tumbi» med et verbum'); return; }
         for (const k of Object.keys(st)) if (!TRIN_NOEGLER.has(k)) f(hvor + ': ukendt felt «tumbi.' + k + '»');
-        if (!(st.verbum in VERBER)) f(hvor + ': ukendt verbum ' + JSON.stringify(st.verbum) + ' — brug et af: ' + liste(Object.keys(VERBER)));
-        if ('voksen_hjaelp' in st && !(st.voksen_hjaelp in VOKSEN_HJAELP)) f(hvor + ': «voksen_hjaelp» skal være ' + liste(Object.keys(VOKSEN_HJAELP).map((x) => '"' + x + '"')) + ', fandt ' + JSON.stringify(st.voksen_hjaelp));
+        if (!Object.hasOwn(VERBER, st.verbum)) f(hvor + ': ukendt verbum ' + JSON.stringify(st.verbum) + ' — brug et af: ' + liste(Object.keys(VERBER)));
+        if ('voksen_hjaelp' in st && !Object.hasOwn(VOKSEN_HJAELP, st.voksen_hjaelp)) f(hvor + ': «voksen_hjaelp» skal være ' + liste(Object.keys(VOKSEN_HJAELP).map((x) => '"' + x + '"')) + ', fandt ' + JSON.stringify(st.voksen_hjaelp));
         // «voksen: true» viser «Hent en voksen»; «voksen_hjaelp» siger hvorfor. De to følges ad.
         if ('voksen' in st && st.voksen !== true) f(hvor + ': «voksen» skal være true (udelad feltet, når barnet kan selv), fandt ' + JSON.stringify(st.voksen));
         else if (st.voksen === true && !('voksen_hjaelp' in st)) f(hvor + ': "voksen": true kræver også «voksen_hjaelp» ("kniv" eller "varme")');
         if ('voksen_hjaelp' in st && st.voksen !== true) f(hvor + ': «voksen_hjaelp» kræver også "voksen": true');
-        const krav = VOKSEN_KRAV[st.verbum];
+        const krav = Object.hasOwn(VOKSEN_KRAV, st.verbum) ? VOKSEN_KRAV[st.verbum] : undefined;
         if (krav && (st.voksen !== true || st.voksen_hjaelp !== krav)) f(hvor + ': verbet «' + st.verbum + '» skal have "voksen": true og "voksen_hjaelp": "' + krav + '"');
         if (st.voksen === true) tal.voksentrin++;
         if ('timer_sek' in st) {
@@ -179,7 +179,7 @@ export function valider(rod = ROD) {
         if ('ikoner' in st) {
           if (!Array.isArray(st.ikoner) || !st.ikoner.length) f(hvor + ': «ikoner» skal være en liste med mindst ét ikon');
           else for (const ik of st.ikoner) {
-            if (!(ik in INGREDIENSER)) f(hvor + ': ukendt ikon ' + JSON.stringify(ik));
+            if (!Object.hasOwn(INGREDIENSER, ik)) f(hvor + ': ukendt ikon ' + JSON.stringify(ik));
             else if (!retIkoner.has(ik)) f(hvor + ': ikonet «' + ik + '» er ikke blandt rettens ingredienser');
           }
           const raa = (Array.isArray(st.ikoner) ? st.ikoner : []).filter((ik) => RAA_IKONER.includes(ik));

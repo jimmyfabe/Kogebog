@@ -103,6 +103,14 @@ test('ingrediens-ikoner skal være kendte og passe til mængden', () => {
   forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[1].tumbi.ikoner = ['chorizo']; }, 'trin 2: ikonet «chorizo» er ikke blandt rettens ingredienser');
 });
 
+test('navne, som alle objekter arver (constructor, toString), er ikke gyldige id\'er', () => {
+  forventFejl('opskrifter/pandekager.json', (d) => { d.tumbi.ingredienser[0].ikon = 'constructor'; }, 'ingrediens 1: ukendt ikon "constructor"');
+  forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[2].tumbi.ikoner = ['toString']; }, 'trin 3: ukendt ikon "toString"');
+  forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[2].tumbi.verbum = 'valueOf'; }, 'trin 3: ukendt verbum "valueOf"');
+  forventFejl('opskrifter/pandekager.json', (d) => { Object.assign(d.recipeInstructions[2].tumbi, { voksen: true, voksen_hjaelp: 'toString' }); },
+    'trin 3: «voksen_hjaelp» skal være "kniv", "varme", fandt "toString"');
+});
+
 test('manglende grafik for et verbum eller en ret', () => {
   const m = kopi();
   try {
