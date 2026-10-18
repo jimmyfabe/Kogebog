@@ -407,6 +407,9 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .timer.faerdig .timer-ring { border-radius: 50%; background: var(--sennep-lys); }
 .timer-faerdig-tekst { font-size: 26px; font-weight: 800; }
 .timer-optaget { flex: 1 1 14em; max-width: 22em; font-size: 18px; font-weight: 700; line-height: 1.3; }
+/* Den falmede knap rulles så langt op, at forklaringen under den også kan ses over en fast bund:
+   mellemrum (14 px) og op til tre linjer (3 × 23 px). På 390 px lå forklaringen under bunden */
+.timer.optaget .timer-start { scroll-margin-bottom: calc(var(--bund, 0px) + 86px); }
 .lille-primaer { min-height: 64px; font-size: 22px; padding: 0 24px; }
 @media (prefers-reduced-motion: no-preference) {
   .timer.faerdig .timer-ring { animation: puls 1s ease-in-out infinite; }

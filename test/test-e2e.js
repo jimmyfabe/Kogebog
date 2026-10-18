@@ -1023,6 +1023,17 @@ async function former(browser) {
       }
       await tabIBunden(side, n + ' ' + ret + ' trin ' + nr);
     }
+
+    // Kører en anden timer (sovsen på trin 8), er «Start timer» på trin 10 falmet med en forklaring under sig.
+    // Får knappen fokus, skal forklaringen også ses over den faste bund (på 390 px lå den under bunden)
+    await medGemt(side, { timer: { ret: 'koedsovs', nr: 8, sek: 1200, slutOm: 15 * 60000 } }, '#/ret/koedsovs/trin/10');
+    await side.waitForSelector('.timer.optaget .timer-optaget');
+    await side.waitForFunction(() => [...document.images].every((i) => i.complete && i.naturalWidth));
+    await side.evaluate(() => window.scrollTo(0, 0));
+    await side.locator('.timer-start').focus();
+    await vent(150);
+    const optaget = await modBund(side, '.timer-optaget');
+    tjek(optaget.bund <= optaget.bundTop, n + ' kødsovs trin 10 (en anden timer kører): forklaringen under «Start timer» med fokus ligger under den faste bund ' + JSON.stringify(optaget));
     tjek(side.fejl.length === 0, n + ' (skærmformer): ' + side.fejl.join(' | '));
     await ctx.close();
   }
