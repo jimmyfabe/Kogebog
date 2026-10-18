@@ -292,13 +292,17 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 
 /* ---------- Retten ---------- */
 
+/* Billedet og ingredienserne står fra toppen, og rækken som helhed i midten af pladsen, når den kan være der.
+   Med align-items: center stod billedet og navnet midt i en høj række, når ingredienslisten var lang: pizzasneglenes
+   personer og tid lå 129 px under den faste bund på 901×800 og var skåret over på 1180×820 */
 .ret-indhold {
   flex: 1;
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
   gap: 18px 36px;
   padding: 6px 32px 10px;
-  align-items: center;
+  align-items: start;
+  align-content: center;
 }
 .ret-hoved { display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .ret-billede { width: min(100%, 42svh, 340px); }
@@ -532,7 +536,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .kort-navn { font-size: 20px; }
   .kort-billede { width: min(100%, 132px); }
 
-  .ret-indhold { grid-template-columns: minmax(0, 1fr); padding: 4px 14px 8px; align-items: start; }
+  .ret-indhold { grid-template-columns: minmax(0, 1fr); padding: 4px 14px 8px; align-items: start; align-content: normal; }
   .ret-billede { width: min(56vw, 26svh); }
   .ingr-gitter { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
   .handlinger .skub { display: none; }
@@ -642,7 +646,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .trin-ikoner, .trin-tekst .timer, .note { grid-column: 1 / -1; }
   /* Retten: billede og navn øverst (før stod navnet midt i den lange række og blev dækket af bunden).
      To lige brede kolonner: på 667 px fik navnet ellers tre linjer i den smalle venstre kolonne */
-  .ret-indhold { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px 24px; padding: 6px 24px 10px; align-items: start; }
+  .ret-indhold { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px 24px; padding: 6px 24px 10px; align-items: start; align-content: normal; }
   /* Mindre billede og tættere afstande: personer og tid lå halvt under bunden (844×390 og 667×375).
      Højst 16 % af højden: på 667×375 brydes «personer og tid» på to linjer for pizzasnegle, brownie og blondie,
      og med 22svh (83 px) lå den anden linje 18 px under bunden. Med 60 px er der 5 px luft */

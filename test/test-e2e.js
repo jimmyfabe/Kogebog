@@ -205,6 +205,22 @@ async function tjekVerbum(side, hvor) {
   tjek(r.bredde >= r.indeni - 1, hvor + ': verbum-billedet skal fylde rammens bredde (' + r.bredde + ' af ' + r.indeni + ' px)');
 }
 
+// Rettens hoved ved første visning: billedet, navnet og personer og tid står over den faste bund (eller skærmens kant).
+// Før stod hovedet midt i en høj række ved en lang ingrediensliste: pizzasnegle på 901×800 havde personer og tid
+// 129 px under bunden, og på 1180×820 var linjen skåret over
+async function retHoved(side, hvor) {
+  const r = await side.evaluate(() => {
+    const s = document.querySelector('#app > .skaerm:not([data-gammel])');
+    const b = (sel) => s.querySelector(sel).getBoundingClientRect();
+    const h = s.querySelector('.handlinger');
+    const bund = getComputedStyle(h).position === 'sticky' ? h.getBoundingClientRect().top : innerHeight;
+    return { rul: Math.round(scrollY), billede: [Math.round(b('.ret-billede img').top), Math.round(b('.ret-billede img').bottom)], navn: Math.round(b('.ret-titel h1').bottom), meta: Math.round(b('.meta').bottom), bund: Math.round(bund) };
+  });
+  tjek(r.rul === 0 && r.billede[0] >= 0 && Math.max(r.billede[1], r.navn, r.meta) <= r.bund,
+    hvor + ': billedet, navnet og personer og tid skal ses over bunden ved første visning ' + JSON.stringify(r));
+  return r;
+}
+
 async function sidsteTale(side) {
   return side.evaluate(() => (window.__tale[window.__tale.length - 1] || {}).tekst || '');
 }
@@ -548,6 +564,7 @@ async function heleVejen(browser, skaerm) {
     await side.waitForFunction((x) => document.querySelector('.ret h1') && document.querySelector('.ret h1').textContent === x, RETTER[id].name);
     await billederFaerdige();
     await tjekLayout(side, n + ' ' + id + ' ret', { knapperSes: true });
+    await retHoved(side, n + ' ' + id + ' ret');
     if (n !== 'ipad' && id === 'koedsovs') await foto(side, n + '-8-ret-koedsovs');
     for (let i = 0; i < RETTER[id].recipeInstructions.length; i++) {
       const t = RETTER[id].recipeInstructions[i];
@@ -560,6 +577,12 @@ async function heleVejen(browser, skaerm) {
       if (n === 'iphone' && id === 'chorizo-pasta' && i === 10) await foto(side, n + '-9-chorizo-trin-11');
       if (n === 'ipad' && id === 'boller' && i === 6) await foto(side, n + '-9-boller-trin-7');
     }
+    // Tilbage på retten efter det sidste trin står «Fortsæt ved trin N» i bunden: hovedet ses stadig
+    await gaaTil('#/ret/' + id, id + ' ret med Fortsæt');
+    await side.waitForSelector('.ret .fortsaet', { timeout: 5000 }).catch(() => tjek(false, n + ' ' + id + ': retten skal vise «Fortsæt» efter det sidste trin'));
+    await billederFaerdige();
+    await tjekLayout(side, n + ' ' + id + ' ret med Fortsæt', { knapperSes: true });
+    await retHoved(side, n + ' ' + id + ' ret med Fortsæt');
   }
   tjek(side.fejl.length === 0, n + ' (alle retter): ' + side.fejl.join(' | '));
 
@@ -930,8 +953,9 @@ async function beroering(browser, skaerm) {
 // Den smalleste iPhone (360 px), iPhone (390), iPad mini på højkant (768×1024 og den nye 744×1133) og iPhone på langs
 // (844×390), de små iPhones på langs (667×375 og 736×414), som før fik iPhone-layoutet på højkant, iPhone mini, X og
 // 11 Pro på langs (812×375) og iPhone Pro Max på langs (932×430). På langs skal rettens bund være én række, også med
-// «Fortsæt ved trin 12». Og to smalle desktopvinduer: 901×800 er det smalleste med desktop-layoutet (grænsen i app.css),
-// og op til 970 px (960×800) har ingredienserne tre kolonner, og kødsovs' knapper lå under kanten
+// «Fortsæt ved trin 12». Og tre smalle desktopvinduer: 901×800 er det smalleste med desktop-layoutet (grænsen i app.css),
+// op til 970 px (960×800) har ingredienserne tre kolonner, og kødsovs' knapper lå under kanten, og på 1024×800 lå
+// pizzasneglenes personer og tid under bunden
 const FORMER = [
   { navn: 'w360', viewport: { width: 360, height: 780 }, hasTouch: true },
   { navn: 'iphone', viewport: { width: 390, height: 844 }, hasTouch: true },
@@ -944,10 +968,11 @@ const FORMER = [
   { navn: 'max-land', viewport: { width: 932, height: 430 }, hasTouch: true },
   { navn: 'desk-901', viewport: { width: 901, height: 800 }, hasTouch: false },
   { navn: 'desk-960', viewport: { width: 960, height: 800 }, hasTouch: false },
+  { navn: 'desk-1024', viewport: { width: 1024, height: 800 }, hasTouch: false },
 ];
 // Retterne, som «former» går helt igennem (knapper, Tab, fokus), og skærmene, hvor alle retters hoved også måles
 const RET_FORMER = ['pandekager', 'koedsovs', 'pizzasnegle'];
-const RET_ALLE_PAA = ['se-land', 'plus-land', 'x-land'];
+const RET_ALLE_PAA = ['se-land', 'plus-land', 'x-land', 'mini', 'desk-901', 'desk-960', 'desk-1024'];
 
 // Hvor et element ligger i forhold til den faste bund: { top, bund } for elementet og bundens top (bundTop)
 const modBund = (side, sel) => side.evaluate((sel) => {
@@ -1076,15 +1101,15 @@ async function former(browser) {
         }));
         tjek(deling.every((d) => d.endsWith(': auto')), hvor + ': lange ord skal deles med bindestreg (' + deling.join(', ') + ')');
         if (ipadKolonner) tjek(await kolonner('.ret-indhold') === 2, hvor + ': billedet og ingredienserne skal stå i to kolonner som på iPad (' + await kolonner('.ret-indhold') + ')');
+        // Billedet, navnet og personer og tid ses ved første visning på alle skærme (på 844×390 lå linjen halvt under
+        // bunden, og på 901×800 og 744×1133 lå pizzasneglenes under den)
+        await side.waitForFunction(() => [...document.images].every((i) => i.complete && i.naturalWidth)); // billedet giver højden
+        await retHoved(side, hvor);
         if (lav) {
           // På langs er bunden én række, og navnet står over den (667×375 fik iPhone-bunden: 179 px = 48 %, navnet under den)
           const navn = await modBund(side, '.ret-titel h1');
           tjek(navn.hoejde <= navn.H * 0.25, hvor + ': bunden fylder ' + navn.hoejde + ' af ' + navn.H + ' px (højst 25 %)');
-          tjek(navn.bund <= navn.bundTop, hvor + ': navnet ligger under den faste bund ' + JSON.stringify(navn));
-          // … og det gør personer og tid også (på 844×390 lå linjen halvt under bunden)
-          const meta = await modBund(side, '.meta');
-          tjek(meta.bund <= meta.bundTop, hvor + ': personer og tid ligger under den faste bund ' + JSON.stringify(meta));
-          noterLuft(meta, hvor);
+          noterLuft(await modBund(side, '.meta'), hvor);
           // Knapperne står på én række (de er centreret lodret, så rækken tælles på midten: print er lavere end «Start»).
           // Luften i rækken (skubbet mellem knapperne) skrives ud: WebKit på Windows tegner med Trebuchet MS, iPhonen med
           // ui-rounded, så bredderne her er kun omtrentlige
@@ -1137,9 +1162,10 @@ async function former(browser) {
       }
     }
 
-    // De øvrige retter på de laveste iPhones på langs: navnet og personer og tid står også over den faste bund, med og
-    // uden «Fortsæt». På 667×375 brydes «personer og tid» på to linjer for pizzasnegle, brownie og blondie, og med et
-    // billede på 22svh lå den anden linje 18 px under bunden. Kun målingen her: resten af retten er tjekket ovenfor
+    // De øvrige retter på de laveste iPhones på langs, iPad mini på højkant og de smalle desktopvinduer: billedet, navnet
+    // og personer og tid står også over den faste bund, med og uden «Fortsæt». På 667×375 brydes «personer og tid» på to
+    // linjer for pizzasnegle, brownie og blondie, og med et billede på 22svh lå den anden linje 18 px under bunden.
+    // Kun målingen her: resten af retten er tjekket ovenfor
     if (RET_ALLE_PAA.includes(n)) {
       for (const ret of index.filter((r) => !RET_FORMER.includes(r))) {
         for (const fortsaet of [false, true]) {
@@ -1147,11 +1173,8 @@ async function former(browser) {
           await side.waitForSelector(fortsaet ? '.ret .fortsaet' : '.ret .start');
           await side.waitForFunction(() => [...document.images].every((i) => i.complete && i.naturalWidth)); // billedet giver højden
           const hvor = n + ' ret ' + ret + (fortsaet ? ' med Fortsæt' : '');
-          const navn = await modBund(side, '.ret-titel h1');
-          tjek(navn.bund <= navn.bundTop, hvor + ': navnet ligger under den faste bund ' + JSON.stringify(navn));
-          const meta = await modBund(side, '.meta');
-          tjek(meta.bund <= meta.bundTop, hvor + ': personer og tid ligger under den faste bund ' + JSON.stringify(meta));
-          noterLuft(meta, hvor);
+          await retHoved(side, hvor);
+          if (lav) noterLuft(await modBund(side, '.meta'), hvor);
         }
       }
     }
