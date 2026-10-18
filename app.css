@@ -417,6 +417,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 
 /* Timeren */
 .timer { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; }
+/* Når timeren rulles frem (rulFrem i app.js), står den over den faste bund med lidt luft */
+.timer { scroll-margin: 12px 0 calc(var(--bund, 0px) + 12px); }
 .timer-start { background: var(--blaa-lys); padding: 0 22px; min-height: 72px; }
 /* Kører en anden timer, er «Start timer» bleg. Den kan stadig trykkes og siger så, hvor timeren kører (kakao-blid 5,2:1) */
 .timer-start[aria-disabled="true"] { background: var(--creme-moerk); color: var(--kakao-blid); border-color: var(--kakao-blid); box-shadow: 0 5px 0 var(--kakao-blid); }

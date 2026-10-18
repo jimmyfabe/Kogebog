@@ -1090,6 +1090,90 @@ async function medGemt(side, { sidste = null, timer = null }, hash) {
   await side.reload();
 }
 
+// Timeren rulles frem, når man trykker «Start timer»: ringen og «Stop» skal ses over den faste bund. Før lå de under
+// bunden på alle 34 timer-trin på 667×375 og 844×390 og på 23 af dem på 390×844. Kører en anden timer, skal forklaringen
+// («Der kører allerede en timer …») kunne ses efter trykket. Med «mindre bevægelse» rulles der uden animation
+const TIMER_PAA = ['iphone', 'land', 'se-land'];
+const nuSkaerm = '#app > .skaerm:not([data-gammel]) ';
+// Vent, til siden står stille (en blød rulning er færdig)
+const stille = (side) => side.evaluate(() => new Promise((ok) => {
+  let y = scrollY; let ens = 0; const slut = performance.now() + 2000;
+  const se = () => {
+    if (scrollY === y) ens++; else { y = scrollY; ens = 0; }
+    if (ens >= 6 || performance.now() > slut) ok(Math.round(scrollY)); else requestAnimationFrame(se);
+  };
+  requestAnimationFrame(se);
+}));
+const overBunden = (side, sel) => side.evaluate((sel) => {
+  const s = document.querySelector('#app > .skaerm:not([data-gammel])');
+  const h = s.querySelector('.handlinger');
+  const bund = getComputedStyle(h).position === 'sticky' ? h.getBoundingClientRect().top : innerHeight;
+  const ud = sel.map((x) => s.querySelector(x).getBoundingClientRect());
+  return { top: Math.round(Math.min(...ud.map((b) => b.top))), bund: Math.round(Math.max(...ud.map((b) => b.bottom))), fast: Math.round(bund), rul: Math.round(scrollY), ses: ud.every((b) => b.top >= 0 && b.bottom <= bund + 0.5) };
+}, sel);
+async function timerFrem(browser) {
+  const timerTrin = index.flatMap((id) => RETTER[id].recipeInstructions.map((t, i) => (t.tumbi.timer_sek ? [id, i + 1] : null)).filter(Boolean));
+  for (const sk of FORMER.filter((f) => TIMER_PAA.includes(f.navn))) {
+    const n = sk.navn;
+    console.log('[' + n + '] timeren rulles frem på ' + timerTrin.length + ' timer-trin');
+    const { ctx, side } = await nySide(browser, sk);
+    await side.goto(BASE + '/index.html');
+    await side.waitForSelector('.kort[data-ret]');
+    const gaa = async (id, nr) => {
+      await side.evaluate((h) => { location.hash = h; }, '#/ret/' + id + '/trin/' + nr);
+      await side.waitForFunction((x) => location.hash.endsWith(x) && !document.querySelector('.skaerm[data-gammel]') && document.querySelector('#app > .skaerm .timer-start'), '/' + id + '/trin/' + nr);
+      // Billedet skubber timeren ned, når det er hentet: før det kunne «Start timer» se ud til at stå over bunden
+      await side.waitForFunction(() => [...document.images].every((i) => i.complete), null, { timeout: 5000 }).catch(() => {});
+    };
+    // Som et barn: rul kun lige så langt, at «Start timer» kan ses over bunden, og tryk så
+    const knapFrem = () => side.evaluate(() => {
+      const s = document.querySelector('#app > .skaerm:not([data-gammel])');
+      const h = s.querySelector('.handlinger');
+      const bund = getComputedStyle(h).position === 'sticky' ? h.getBoundingClientRect().top : innerHeight;
+      const b = s.querySelector('.timer-start').getBoundingClientRect();
+      if (b.bottom > bund) window.scrollBy({ top: b.bottom - bund + 4, behavior: 'instant' });
+    });
+    const ikke = [];
+    for (const [id, nr] of timerTrin) {
+      await gaa(id, nr);
+      await knapFrem();
+      await tryk(side, nuSkaerm + '.timer-start');
+      await stille(side);
+      const r = await overBunden(side, ['.timer-ring', '.timer .knap']);
+      if (!r.ses) ikke.push(id + ' ' + nr + ' ' + JSON.stringify(r));
+      await tryk(side, nuSkaerm + '.timer .knap');
+    }
+    tjek(!ikke.length, n + ': ringen og «Stop» skal ses over bunden, når timeren starter (' + ikke.length + ' af ' + timerTrin.length + ' trin): ' + ikke.slice(0, 4).join(' | '));
+    // En anden timer kører (den første), og man trykker «Start timer» på de andre timer-trin
+    const [forsteId, forsteNr] = timerTrin[0];
+    await gaa(forsteId, forsteNr);
+    await tryk(side, nuSkaerm + '.timer-start');
+    const optaget = [];
+    for (const [id, nr] of timerTrin.slice(1)) {
+      await gaa(id, nr);
+      await knapFrem();
+      await tryk(side, nuSkaerm + '.timer-start', { force: true }); // aria-disabled: Playwright venter ellers på, at den bliver aktiv
+      await stille(side);
+      const r = await overBunden(side, ['.timer-optaget']);
+      r.trin = side.url().endsWith('/' + id + '/trin/' + nr); // trykket ramte «Start timer», ikke bunden
+      if (!r.ses || !r.trin) optaget.push(id + ' ' + nr + ' ' + JSON.stringify(r));
+    }
+    tjek(!optaget.length, n + ': «Der kører allerede en timer» skal ses over bunden efter trykket (' + optaget.length + ' af ' + (timerTrin.length - 1) + ' trin): ' + optaget.slice(0, 4).join(' | '));
+    tjek(side.fejl.length === 0, n + ' (timeren rulles frem): ' + side.fejl.join(' | '));
+    await ctx.close();
+  }
+  // Mindre bevægelse: siden står det rette sted med det samme (ingen blød rulning). Kødsovs trin 10 ligger lavest på 390×844
+  const { ctx, side } = await nySide(browser, FORMER.find((f) => f.navn === 'iphone'), { reducedMotion: 'reduce' });
+  await side.goto(BASE + '/index.html#/ret/koedsovs/trin/10');
+  await side.waitForSelector('.timer-start');
+  await tryk(side, '.timer-start');
+  const straks = await side.evaluate(() => Math.round(scrollY));
+  const til = await stille(side);
+  const r = await overBunden(side, ['.timer-ring', '.timer .knap']);
+  tjek(r.ses && straks === til, 'iphone med mindre bevægelse: timeren skal rulles frem uden animation (straks ' + straks + ', til sidst ' + til + ', ' + JSON.stringify(r) + ')');
+  await ctx.close();
+}
+
 async function former(browser) {
   // E2E_FORMER=se-land,land begrænser skærmformerne (standard: alle)
   const valgte = FORMER.filter((s) => !process.env.E2E_FORMER || process.env.E2E_FORMER.split(',').includes(s.navn));
@@ -1348,6 +1432,7 @@ for (const s of VALGTE) if (DELE.includes('hele')) KOERSEL.push(['hele vejen ' +
 for (const s of VALGTE) if (DELE.includes('print')) KOERSEL.push(['print ' + s.navn, (b) => print(b, s)]);
 if (DELE.includes('tastatur')) KOERSEL.push(['tastatur', (b) => tastatur(b, SKAERME[2])]);
 if (DELE.includes('timer')) KOERSEL.push(['timere', (b) => timere(b, SKAERME[0])]);
+if (DELE.includes('timer')) KOERSEL.push(['timeren rulles frem', (b) => timerFrem(b)]);
 if (DELE.includes('fejl')) KOERSEL.push(['fejltilstande', (b) => fejltilstande(b, SKAERME[0])]);
 if (DELE.includes('beroering')) KOERSEL.push(['berøring', (b) => beroering(b, SKAERME[0])]);
 if (DELE.includes('former')) KOERSEL.push(['skærmformer', (b) => former(b)]);

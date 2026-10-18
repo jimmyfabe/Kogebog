@@ -286,6 +286,12 @@ function fremskridt(m, nr) {
     el('p', { class: 'trin-nr', tekst: 'Trin ' + nr + ' af ' + m.trin.length }));
 }
 
+// Timeren rulles frem over den faste bund, når den starter, og når «Start timer» siger, at en anden timer kører: på lave
+// skærme lå ringen, «Stop» og forklaringen under bunden (667×375, 844×390 og 390×844). Uden animation ved «mindre bevægelse»
+function rulFrem(e) {
+  e.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+}
+
 function timerBlok(m, t) {
   const sek = varighed(t.timerSek, HURTIG);
   const blok = el('div', { class: 'timer' });
@@ -311,10 +317,12 @@ function timerBlok(m, t) {
     const a = andenTimer();
     if (a) {
       Tale.sig('Der kører allerede en timer på ' + hvor(a) + '. Stop den først.', { knap: startKnap });
+      rulFrem(blok);
       return;
     }
     Timer.start(m.id, t.nr, sek);
     annoncer('Timeren er startet: ' + varighedTale(sek) + '.');
+    rulFrem(blok);
   }));
   const stopKnap = knap('Stop', { klasse: 'lille', ikonNavn: 'stop', label: 'Stop timeren', onclick: () => Timer.stop() });
   const okKnap = knap('Ok', { klasse: 'primaer lille-primaer', ikonNavn: 'tjek', label: 'Ok, tiden er gået. Slå timeren fra.', onclick: () => Timer.stop() });
