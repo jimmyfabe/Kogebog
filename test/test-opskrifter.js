@@ -203,8 +203,14 @@ export function valider(rod = ROD) {
         if (raa.length && vask < 0) {
           f(hvor + ': rører råt kød eller æg (' + liste(raa) + ')' + hvorfra + ', men der kommer ikke et «vaske-haender»-trin bagefter');
         } else if (raa.length) {
-          // Indtil hænderne er vasket, må barnet kun røre det rå (ellers kommer kødet over på mælkekartonen og saltet)
+          // Indtil hænderne er vasket, må barnet kun røre det rå (ellers kommer kødet over på mælkekartonen og saltet),
+          // og der må ikke være en pause: så går barnet fra køkkenet med råt på hænderne
           for (let k = i + 1; k < vask; k++) {
+            if (trin[k] && trin[k].tumbi && trin[k].tumbi.verbum === 'vente' && !forurenet.has(k)) {
+              forurenet.add(k);
+              f('trin ' + (k + 1) + ': en pause med råt kød eller æg på hænderne fra trin ' + (i + 1) + hvorfra + '. Vask hænderne før pausen');
+              continue;
+            }
             const ik = trin[k] && trin[k].tumbi && Array.isArray(trin[k].tumbi.ikoner) ? trin[k].tumbi.ikoner : [];
             const andre = ik.filter((x) => !RAA_IKONER.includes(x));
             if (andre.length && !forurenet.has(k)) {

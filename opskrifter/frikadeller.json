@@ -32,6 +32,7 @@
     { "@type": "HowToStep", "text": "Kom salt, peber og krydderier i.", "tumbi": { "verbum": "haelde", "ikoner": ["salt", "peber", "krydderurt"], "note": "8-10 g salt er ca. 1½ tsk. Muskat og allehånde kan udelades." } },
     { "@type": "HowToStep", "text": "Kom kødet og æggene i.", "tumbi": { "verbum": "haelde", "ikoner": ["koed", "aeg"], "note": "Kilden rører kød og salt først. Her kommer kødet og æggene i til sidst, så barnet ikke rører andet med råt kød på fingrene." } },
     { "@type": "HowToStep", "text": "Rør farsen, til den er sej.", "tumbi": { "verbum": "roere", "ikoner": ["koed"], "note": "Rør med en grydeske i 2-3 minutter. Farsen må hverken være for fast eller for løs." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt kød på hænderne." } },
     { "@type": "HowToStep", "text": "Lad farsen hvile i en time.", "tumbi": { "verbum": "vente", "timer_sek": 3600, "note": "I køleskabet. Kilden siger mindst en time." } },
     { "@type": "HowToStep", "text": "Form små frikadeller med en ske.", "tumbi": { "verbum": "rulle", "ikoner": ["koed"], "note": "Dyp skeen i koldt vand mellem hver frikadelle." } },
     { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt kød på hænderne." } },

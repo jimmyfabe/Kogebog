@@ -143,7 +143,7 @@ test('manglende felter og for lange sætninger', () => {
 });
 
 test('råt kød uden «vask hænderne» bagefter', () => {
-  forventFejl('opskrifter/frikadeller.json', (d) => { d.recipeInstructions = d.recipeInstructions.filter((s, i) => i !== 11); },
+  forventFejl('opskrifter/frikadeller.json', (d) => { d.recipeInstructions = d.recipeInstructions.filter((s, i) => i !== 12); },
     'rører råt kød eller æg (koed), men der kommer ikke et «vaske-haender»-trin bagefter');
 });
 
@@ -151,6 +151,14 @@ test('andre ingredienser mellem råt kød/æg og håndvasken', () => {
   forventFejl('opskrifter/pandekager.json', (d) => {
     d.recipeInstructions.splice(7, 0, { '@type': 'HowToStep', text: 'Hæld sukker i.', tumbi: { verbum: 'haelde', ikoner: ['sukker'] } });
   }, 'trin 8: rører sukker med hænder, der har rørt råt kød eller æg i trin 7');
+});
+
+// En pause (vente) med råt kød eller æg på hænderne: barnet går fra køkkenet uden at vaske sig.
+// Pandekager får en pause mellem æggene (trin 7) og vasken
+test('ingen pause med råt kød eller æg på hænderne', () => {
+  forventFejl('opskrifter/pandekager.json', (d) => {
+    d.recipeInstructions.splice(7, 0, { '@type': 'HowToStep', text: 'Lad dejen hvile.', tumbi: { verbum: 'vente', timer_sek: 600 } });
+  }, 'trin 8: en pause med råt kød eller æg på hænderne fra trin 7');
 });
 
 // Dej med råt æg (eller kød) er først indarbejdet efter æltningen: en vask mellem ægget og æltningen er ikke nok.
