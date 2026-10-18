@@ -175,6 +175,10 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 
 .handlinger { display: flex; align-items: center; gap: 16px; padding: 10px 24px 22px; flex-wrap: wrap; }
 .skub { flex: 1; }
+/* Hvor bunden står fast, sætter --bund dens højde plus lidt luft. En knap i indholdet, der får fokus (Tab, VoiceOver),
+   rulles så op over bunden i stedet for ind under den. Margen på knapperne og ikke scroll-padding på html: med den
+   rullede siden også, når fokus gik mellem knapperne i selve bunden, så indholdet hoppede (390 px: 0 → 176 → 348 px) */
+.ret-indhold button, .scene button { scroll-margin-bottom: var(--bund, 0px); }
 
 /* ---------- Status: henter, tom, fejl ---------- */
 
@@ -545,10 +549,9 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
     border-top: 3px solid var(--creme-moerk);
     padding-bottom: max(16px, env(safe-area-inset-bottom));
   }
-  /* Får en knap under bunden fokus (Tab, VoiceOver), rulles den op over bunden i stedet for at blive liggende under den.
-     Bunden er 103 px høj, på retten med «Fortsæt» 179 px (to rækker) */
-  html { scroll-padding-bottom: 116px; }
-  html:has(.ret .fortsaet) { scroll-padding-bottom: 192px; }
+  /* Bunden er 103 px høj, på retten med «Fortsæt» 179 px (to rækker) */
+  .trin, .ret { --bund: 116px; }
+  .ret:has(.fortsaet) { --bund: 192px; }
   .naeste { min-width: 0; flex: 1 1 60%; }
   /* Tilbage er kun pilen, som husknappen (navnet står i aria-label): ellers gik teksten ud til kanten,
      og «Næste · Voksen: hold» fik ikke plads ned til 360 px */
@@ -569,6 +572,9 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
     border-top: 3px solid var(--creme-moerk);
     padding-bottom: max(22px, env(safe-area-inset-bottom));
   }
+  /* Bunden er 119 px høj, på retten med «Fortsæt» 199 px (to rækker) */
+  .trin, .ret { --bund: 132px; }
+  .ret:has(.fortsaet) { --bund: 212px; }
 }
 
 /* Under 400 px er der kun plads til «Start forfra» ved siden af print, når print-knappen er uden ikon (teksten siger det) */
@@ -610,7 +616,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   }
   .handlinger .knap.primaer { min-height: 68px; font-size: 24px; padding: 0 26px; }
   .ret .handlinger .start { min-width: 0; }
-  html { scroll-padding-bottom: 96px; } /* bunden er 85 px: fokus ruller ikke ind under den (se de smalle skærme) */
+  .trin, .ret { --bund: 96px; } /* bunden er én række på 85 px, også med «Fortsæt» */
 }
 
 /* Små iPhones på langs (667 og 736 px): rettens tre knapper skal stå på én række. Fortsæt, Start forfra og print

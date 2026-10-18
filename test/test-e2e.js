@@ -879,6 +879,24 @@ const modBund = (side, sel) => side.evaluate((sel) => {
   return { top: b ? Math.round(b.top) : null, bund: b ? Math.round(b.bottom) : null, bundTop: Math.round(h.top), hoejde: Math.round(h.height), H: innerHeight };
 }, sel);
 
+// Tab mellem knapperne i den faste bund må ikke rulle siden: de kan allerede ses. Før rullede html { scroll-padding-bottom }
+// siden, når fokus kom ind i bunden (390 px, kødsovs med «Fortsæt»: 0 → 176 → 348 px), og indholdet hoppede
+async function tabIBunden(side, hvor) {
+  const antal = await side.evaluate(() => {
+    window.scrollTo(0, 0);
+    const k = [...document.querySelectorAll('#app > .skaerm:not([data-gammel]) .handlinger button')].filter((b) => b.getClientRects().length);
+    k[k.length - 1].focus({ preventScroll: true });
+    return k.length;
+  });
+  const rul = [];
+  for (let i = 1; i < antal; i++) {
+    await side.keyboard.press('Shift+Tab');
+    await vent(100);
+    rul.push(await side.evaluate(() => Math.round(window.scrollY)));
+  }
+  tjek(rul.every((y) => y === 0), hvor + ': Shift+Tab mellem knapperne i den faste bund må ikke rulle siden (rulning ' + rul.join(', ') + ')');
+}
+
 // Læg en gemt tilstand i «kog-v1», og indlæs siden igen: timeren og «Fortsæt» læses, når siden indlæses.
 // Adressen skiftes med replaceState, så appen ikke når at tegne (og hente billeder til) skærmen før genindlæsningen
 async function medGemt(side, { sidste = null, timer = null }, hash) {
@@ -947,6 +965,19 @@ async function former(browser) {
           tjek(k['.fortsaet'].bredde > k['.forfra'].bredde, hvor + ': «Fortsæt» skal være bredere end «Start forfra» ' + JSON.stringify(k));
         }
         await foto(side, n + '-former-ret-' + ret + (fortsaet ? '-fortsaet' : ''));
+        await tabIBunden(side, hvor);
+        // Den sidste ingrediens med fokus (Tab, VoiceOver) rulles op over den faste bund, ikke ind under den
+        await side.evaluate(() => {
+          window.scrollTo(0, 0);
+          const a = [...document.querySelectorAll('#app > .skaerm:not([data-gammel]) .ret-indhold .ingr')];
+          a[a.length - 1].focus();
+        });
+        await vent(150);
+        const sidst = await side.evaluate(() => {
+          const a = [...document.querySelectorAll('#app > .skaerm:not([data-gammel]) .ret-indhold .ingr')];
+          return { knap: Math.round(a[a.length - 1].getBoundingClientRect().bottom), bund: Math.round(document.querySelector('#app > .skaerm:not([data-gammel]) .handlinger').getBoundingClientRect().top) };
+        });
+        tjek(sidst.knap <= sidst.bund, hvor + ': den sidste ingrediens med fokus ligger under den faste bund (knappens bund ' + sidst.knap + ' > bundens top ' + sidst.bund + ')');
       }
     }
 
@@ -990,6 +1021,7 @@ async function former(browser) {
         }));
         tjek(f.knap <= f.bund, n + ' pandekager trin 10: «Start timer» med fokus ligger under den faste bund (knappens bund ' + f.knap + ' > bundens top ' + f.bund + ')');
       }
+      await tabIBunden(side, n + ' ' + ret + ' trin ' + nr);
     }
     tjek(side.fejl.length === 0, n + ' (skærmformer): ' + side.fejl.join(' | '));
     await ctx.close();
