@@ -35,6 +35,7 @@ const RETTER = Object.fromEntries(index.map((id) => [id, JSON.parse(fs.readFileS
 const vent = (ms) => new Promise((r) => setTimeout(r, ms));
 let antalTjek = 0;
 const fejl = [];
+const maal = []; // målinger, der ikke er fejl (fx at man skal rulle på iPhone)
 function tjek(betingelse, besked) {
   antalTjek++;
   if (!betingelse) { fejl.push(besked); console.log('  FEJL: ' + besked); }
@@ -91,21 +92,45 @@ async function nySide(browser, skaerm, ekstra = {}) {
 
 const foto = (side, navn) => side.screenshot({ path: path.join(UD, navn + '.png') });
 
-// Ingen vandret rulning, knapper mindst 48 px, alle billeder indlæst
-async function tjekLayout(side, hvor) {
-  const r = await side.evaluate(() => {
+// Børnenes egne knapper skal være mindst 64 px (de voksnes, fx print og stop, mindst 48 px)
+const BOERNEKNAPPER = '.kort, .ingr, .start, .naeste, .tilbage, .laes-op, .timer-start, .stor-rund, .knap.primaer';
+const SKAERMKNAPPER = '.handlinger .knap'; // skal kunne ses uden at rulle på iPad og desktop
+
+// Ingen vandret rulning (heller ikke indhold, som body's overflow-x skjuler), knapper mindst 48/64 px, alle billeder indlæst
+async function tjekLayout(side, hvor, { knapperSes = false } = {}) {
+  const r = await side.evaluate(({ boern, skaermknapper }) => {
+    const navn = (e) => (typeof e.className === 'string' && e.className ? '.' + e.className.trim().split(/\s+/).join('.') : e.tagName.toLowerCase());
     const smaa = [];
+    const smaaBoern = [];
     for (const e of document.querySelectorAll('button, a[href], [role="button"]')) {
       const b = e.getBoundingClientRect();
       if (!b.width || !b.height || getComputedStyle(e).visibility === 'hidden') continue;
-      if (Math.min(b.width, b.height) < 48) smaa.push((e.className || e.tagName) + ' ' + Math.round(b.width) + '×' + Math.round(b.height));
+      const mindst = Math.min(b.width, b.height);
+      if (mindst < 48) smaa.push(navn(e) + ' ' + Math.round(b.width) + '×' + Math.round(b.height));
+      else if (mindst < 63.5 && e.matches(boern)) smaaBoern.push(navn(e) + ' ' + Math.round(b.width) + '×' + Math.round(b.height));
     }
+    const W = window.innerWidth;
+    const udenfor = [];
+    for (const e of document.querySelectorAll('body *')) {
+      if (e.closest('.konfetti, .sr-kun, svg, noscript')) continue;
+      const b = e.getBoundingClientRect();
+      if (!b.width || !b.height) continue;
+      if (b.right > W + 1 || b.left < -1) udenfor.push(navn(e) + ' ' + Math.round(b.left) + '…' + Math.round(b.right));
+    }
+    const H = window.innerHeight;
+    const underKanten = [...document.querySelectorAll(skaermknapper)]
+      .filter((e) => { const b = e.getBoundingClientRect(); return b.height && b.bottom + window.scrollY > H + 1; })
+      .map((e) => navn(e) + ' bund ' + Math.round(e.getBoundingClientRect().bottom + window.scrollY) + ' > ' + H);
     const billeder = [...document.images].filter((i) => !i.complete || !i.naturalWidth).map((i) => i.getAttribute('src'));
     const udenAlt = [...document.images].filter((i) => !i.hasAttribute('alt')).map((i) => i.getAttribute('src'));
-    return { bred: document.documentElement.scrollWidth, vindue: window.innerWidth, smaa, billeder, udenAlt };
-  });
+    return { bred: document.documentElement.scrollWidth, vindue: W, udenfor: udenfor.slice(0, 6), smaa, smaaBoern, underKanten, billeder, udenAlt };
+  }, { boern: BOERNEKNAPPER, skaermknapper: SKAERMKNAPPER });
   tjek(r.bred <= r.vindue, hvor + ': vandret rulning (' + r.bred + ' > ' + r.vindue + ')');
+  tjek(!r.udenfor.length, hvor + ': indhold uden for skærmen i siden: ' + r.udenfor.join(', '));
   tjek(!r.smaa.length, hvor + ': knapper under 48 px: ' + r.smaa.join(', '));
+  tjek(!r.smaaBoern.length, hvor + ': børneknapper under 64 px: ' + r.smaaBoern.join(', '));
+  if (knapperSes) tjek(!r.underKanten.length, hvor + ': knapperne nederst kræver rulning: ' + r.underKanten.join(', '));
+  else if (r.underKanten.length) maal.push(hvor + ': rul for at nå ' + r.underKanten.join(', '));
   tjek(!r.billeder.length, hvor + ': billeder ikke indlæst: ' + r.billeder.join(', '));
   tjek(!r.udenAlt.length, hvor + ': billeder uden alt: ' + r.udenAlt.join(', '));
 }
@@ -162,7 +187,7 @@ async function heleVejen(browser, skaerm) {
   await side.waitForSelector('.ret h1');
   tjek(await h1(side) === 'Pandekager', n + ': retten skal hedde Pandekager');
   tjek(await side.locator('.ingr').count() === RETTER.pandekager.recipeIngredient.length, n + ': alle ingredienser skal vises');
-  await tjekLayout(side, n + ' ret');
+  await tjekLayout(side, n + ' ret', { knapperSes: n !== 'iphone' });
   await foto(side, n + '-3-ret');
   await tryk(side, '.ingr');
   tjek(await sidsteTale(side) === tilTale(RETTER.pandekager.recipeIngredient[0]), n + ': tryk på en ingrediens læser den op');
@@ -175,10 +200,10 @@ async function heleVejen(browser, skaerm) {
     const t = trin[i];
     await side.waitForFunction((x) => location.hash === '#/ret/pandekager/trin/' + x, nr, { timeout: 5000 }).catch(() => {});
     tjek(await h1(side) === t.text, n + ' trin ' + nr + ': teksten skal være «' + t.text + '», var «' + (await h1(side)) + '»');
-    const voksen = !!t.tumbi.voksen_hjaelp;
+    const voksen = t.tumbi.voksen === true;
     tjek(await sidsteTale(side) === tilTale((voksen ? 'Hent en voksen. ' : '') + t.text), n + ' trin ' + nr + ': trykket læser trinnet op');
     tjek((await side.locator('.voksen-maerke').count() === 1) === voksen, n + ' trin ' + nr + ': «Hent en voksen» skal ' + (voksen ? '' : 'ikke ') + 'vises');
-    await tjekLayout(side, n + ' trin ' + nr);
+    await tjekLayout(side, n + ' trin ' + nr, { knapperSes: n !== 'iphone' });
     if ([1, 3, 10, 12].includes(nr)) await foto(side, n + '-4-trin-' + nr);
 
     if (t.tumbi.timer_sek && nr === 9) {
@@ -235,14 +260,14 @@ async function heleVejen(browser, skaerm) {
   for (const id of index) {
     await side.evaluate((h) => { location.hash = h; }, '#/ret/' + id);
     await side.waitForFunction((x) => document.querySelector('.ret h1') && document.querySelector('.ret h1').textContent === x, RETTER[id].name);
-    await tjekLayout(side, n + ' ' + id + ' ret');
+    await tjekLayout(side, n + ' ' + id + ' ret', { knapperSes: n !== 'iphone' });
     if (n !== 'ipad' && id === 'koedsovs') await foto(side, n + '-8-ret-koedsovs');
     for (let i = 0; i < RETTER[id].recipeInstructions.length; i++) {
       const t = RETTER[id].recipeInstructions[i];
       await side.evaluate((h) => { location.hash = h; }, '#/ret/' + id + '/trin/' + (i + 1));
       await side.waitForFunction((x) => document.querySelector('.trin h1') && document.querySelector('.trin h1').textContent === x, t.text, { timeout: 5000 })
         .catch(() => tjek(false, n + ' ' + id + ' trin ' + (i + 1) + ': viste ikke «' + t.text + '»'));
-      await tjekLayout(side, n + ' ' + id + ' trin ' + (i + 1));
+      await tjekLayout(side, n + ' ' + id + ' trin ' + (i + 1), { knapperSes: n !== 'iphone' });
       if (n === 'iphone' && id === 'chorizo-pasta' && i === 10) await foto(side, n + '-9-chorizo-trin-11');
       if (n === 'ipad' && id === 'boller' && i === 6) await foto(side, n + '-9-boller-trin-7');
     }
@@ -252,6 +277,7 @@ async function heleVejen(browser, skaerm) {
   // Service workeren må kun lave «kog-»-caches
   if (n === 'ipad') {
     const sw = await side.evaluate(async () => {
+      if (!('serviceWorker' in navigator) || !window.caches) return { mangler: true };
       const reg = await Promise.race([navigator.serviceWorker.ready, new Promise((r) => setTimeout(() => r(null), 8000))]);
       for (let i = 0; i < 40; i++) {
         const k = await caches.keys();
@@ -263,9 +289,12 @@ async function heleVejen(browser, skaerm) {
       }
       return { scope: reg && reg.scope, noegler: [], filer: 0 };
     });
-    tjek(sw.scope === BASE + '/', n + ': service workerens scope skal være appens mappe, var ' + sw.scope);
-    tjek(sw.noegler.length === 1 && sw.noegler[0].startsWith('kog-'), n + ': kun én cache, og den starter med «kog-»: ' + sw.noegler.join(', '));
-    tjek(sw.filer > 60, n + ': service workeren skal have gemt appens filer (fik ' + sw.filer + ')');
+    if (sw.mangler) maal.push(n + ': denne WebKit har ingen service worker/Cache API — sw.js er kun testet i node (test-sw.js)');
+    else {
+      tjek(sw.scope === BASE + '/', n + ': service workerens scope skal være appens mappe, var ' + sw.scope);
+      tjek(sw.noegler.length === 1 && sw.noegler[0].startsWith('kog-'), n + ': kun én cache, og den starter med «kog-»: ' + sw.noegler.join(', '));
+      tjek(sw.filer > 60, n + ': service workeren skal have gemt appens filer (fik ' + sw.filer + ')');
+    }
   }
   await ctx.close();
 }
@@ -283,7 +312,7 @@ async function print(browser, skaerm) {
     tjek(await side.locator('ol.trin > li').count() === r.recipeInstructions.length, n + ' print ' + id + ': alle trin');
     tjek(await side.locator('ul.tjek > li').count() === r.recipeIngredient.length, n + ' print ' + id + ': alle ingredienser');
     tjek(await side.locator('ol.trin img.trin-ikon').count() === r.recipeInstructions.length, n + ' print ' + id + ': et verbum-ikon pr. trin');
-    const voksen = r.recipeInstructions.filter((t) => t.tumbi.voksen_hjaelp).length;
+    const voksen = r.recipeInstructions.filter((t) => t.tumbi.voksen === true).length;
     tjek(await side.locator('ol.trin > li.voksen').count() === voksen, n + ' print ' + id + ': voksen-trinene er mærket');
     tjek((await side.locator('.fod').textContent()).includes('Tjek selv pakkerne for allergener'), n + ' print ' + id + ': allergen-linjen');
     tjek((await side.locator('.ikke-afproevet').count() === 1) === !r.tumbi.afproevet, n + ' print ' + id + ': «Ikke afprøvet»');
@@ -398,20 +427,32 @@ async function fejltilstande(browser, skaerm) {
   await r.ctx.close();
 }
 
+// E2E_DELE=hele,print,tastatur,fejl (standard: alle) og E2E_SKAERME=ipad,iphone,desktop (standard: alle)
+const DELE = (process.env.E2E_DELE || 'hele,print,tastatur,fejl').split(',').map((x) => x.trim()).filter(Boolean);
+const VALGTE = SKAERME.filter((s) => !process.env.E2E_SKAERME || process.env.E2E_SKAERME.split(',').includes(s.navn));
+const KOERSEL = [];
+for (const s of VALGTE) if (DELE.includes('hele')) KOERSEL.push(['hele vejen ' + s.navn, (b) => heleVejen(b, s)]);
+for (const s of VALGTE) if (DELE.includes('print')) KOERSEL.push(['print ' + s.navn, (b) => print(b, s)]);
+if (DELE.includes('tastatur')) KOERSEL.push(['tastatur', (b) => tastatur(b, SKAERME[2])]);
+if (DELE.includes('fejl')) KOERSEL.push(['fejltilstande', (b) => fejltilstande(b, SKAERME[0])]);
+
 const browser = await webkit.launch();
 const start = Date.now();
 try {
-  for (const s of SKAERME) await heleVejen(browser, s);
-  for (const s of SKAERME) await print(browser, s);
-  await tastatur(browser, SKAERME[2]);
-  await fejltilstande(browser, SKAERME[0]);
-} catch (e) {
-  fejl.push('testen stoppede: ' + (e.stack || e.message));
-  console.log(e);
+  // Én del, der går i stå, stopper ikke de andre: så giver én kørsel alle fund
+  for (const [navn, del] of KOERSEL) {
+    try {
+      await del(browser);
+    } catch (e) {
+      fejl.push(navn + ' stoppede: ' + (e.stack || e.message).split('\n').slice(0, 4).join(' | '));
+      console.log('  STOPPEDE: ' + navn + ': ' + e.message);
+    }
+  }
 } finally {
   await browser.close();
 }
-console.log('\n' + antalTjek + ' tjek på ' + SKAERME.length + ' skærme i ' + Math.round((Date.now() - start) / 1000) + ' s · skærmbilleder i ' + UD);
+console.log('\n' + antalTjek + ' tjek (' + KOERSEL.map((k) => k[0]).join(', ') + ') i ' + Math.round((Date.now() - start) / 1000) + ' s · skærmbilleder i ' + UD);
+if (maal.length) console.log(maal.length + ' målinger (ikke fejl):\n  - ' + maal.slice(0, 40).join('\n  - '));
 if (fejl.length) {
   console.log(fejl.length + ' FEJL:\n  - ' + fejl.join('\n  - '));
   process.exit(1);
