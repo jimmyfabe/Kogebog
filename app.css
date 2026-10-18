@@ -645,7 +645,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .ret-hoved { gap: 6px; }
   .ret-billede { width: min(100%, 22svh); }
   .forside-dyr { display: none; }
-  .kort-billede { width: min(100%, 120px); }
+  /* Højst 30 % af højden: på 812×375 blev den første række kort skåret 1 px af (titlen er højere end på 667 px) */
+  .kort-billede { width: min(100%, 120px, 30svh); }
   .trin .handlinger, .ret .handlinger {
     position: sticky;
     bottom: 0;
