@@ -220,6 +220,11 @@ export function valider(rod = ROD) {
           }
         }
       });
+      // Råt kød og æg skal stå på det trin, hvor de røres: ellers kan validatoren ikke se, hvornår hænderne skal vaskes
+      const raaITrin = new Set(trin.flatMap((s) => (s && s.tumbi && Array.isArray(s.tumbi.ikoner) ? s.tumbi.ikoner : [])));
+      for (const ik of RAA_IKONER) {
+        if (retIkoner.has(ik) && !raaITrin.has(ik)) f('«' + ik + '» står i ingredienserne, men intet trin har ikonet, så det kan ikke ses, hvornår hænderne skal vaskes');
+      }
       // Når tiden i ovnen er gået, er pladen eller formen varm: trinnet efter et bage-trin med timer er den voksnes
       trin.forEach((s, i) => {
         const st = s && s.tumbi;

@@ -164,6 +164,19 @@ test('andre ingredienser mellem råt kød/æg og håndvasken', () => {
   }, 'trin 8: rører sukker med hænder, der har rørt råt kød eller æg i trin 7');
 });
 
+// Står råt kød eller æg i ingredienserne, men på intet trin, kan validatoren ikke se, hvornår hænderne skal vaskes
+test('råt kød og æg i ingredienserne skal stå på et trin', () => {
+  const udenIkon = (ik) => (d) => {
+    for (const s of d.recipeInstructions) {
+      if (!s.tumbi.ikoner) continue;
+      s.tumbi.ikoner = s.tumbi.ikoner.filter((x) => x !== ik);
+      if (!s.tumbi.ikoner.length) delete s.tumbi.ikoner;
+    }
+  };
+  forventFejl('opskrifter/pandekager.json', udenIkon('aeg'), '«aeg» står i ingredienserne, men intet trin har ikonet');
+  forventFejl('opskrifter/frikadeller.json', udenIkon('koed'), '«koed» står i ingredienserne, men intet trin har ikonet');
+});
+
 // En pause (vente) med råt kød eller æg på hænderne: barnet går fra køkkenet uden at vaske sig.
 // Pandekager får en pause mellem æggene (trin 7) og vasken
 test('ingen pause med råt kød eller æg på hænderne', () => {
