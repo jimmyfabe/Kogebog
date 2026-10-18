@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="plate">
+    <ellipse cx="128" cy="140" rx="108" ry="75" fill="#3E8FB0"/>
+    <ellipse cx="128" cy="140" rx="94" ry="61" fill="#FFF4E2"/>
+  </g>
+  <g id="back-piece">
+    <path d="M118 96 L170 88 L196 108 L196 126 L144 136 L118 114 Z" fill="#CFA976"/>
+    <path d="M118 96 L170 88 L196 108 L144 118 Z" fill="#E8C79A"/>
+    <path d="M140 98 L147 96 L149 102 L142 104 Z M164 104 L171 102 L173 108 L166 110 Z" fill="#FFFFFF"/>
+  </g>
+  <g id="front-piece">
+    <path d="M58 128 L114 118 L142 140 L142 162 L86 174 L58 150 Z" fill="#CFA976"/>
+    <path d="M58 128 L114 118 L142 140 L86 152 Z" fill="#E8C79A"/>
+    <path d="M80 128 L87 126 L89 132 L82 134 Z M104 136 L111 134 L113 140 L106 142 Z M92 144 L99 142 L101 148 L94 150 Z" fill="#FFFFFF"/>
+    <path d="M100 160 L106 158 L108 164 L102 166 Z M120 154 L126 152 L128 158 L122 160 Z" fill="#FFFFFF"/>
+  </g>
+  <g id="crumbs" fill="#E8C79A">
+    <ellipse cx="164" cy="160" rx="5" ry="3.5"/>
+    <ellipse cx="178" cy="150" rx="4" ry="3"/>
+    <ellipse cx="156" cy="172" rx="3.5" ry="2.5"/>
+  </g>
+</g>
+</svg>
