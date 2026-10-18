@@ -63,12 +63,12 @@ ol.trin li::before { content: counter(trin) "."; font-weight: 800; text-align: r
 .trin-ikon { align-self: start; width: 34px; height: 34px; filter: grayscale(1) contrast(1.15); }
 .trin-krop { min-width: 0; }
 .trin-tekst { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-weight: 650; }
-.maerke { display: inline-flex; align-items: center; gap: 4px; padding: 0 7px; border: 1.5px solid #111; border-radius: 6px; font-size: 13px; font-weight: 700; white-space: nowrap; }
+.maerke { display: inline-flex; align-items: center; gap: 4px; padding: 0 7px; border: 1.5px solid #111; border-radius: 6px; font-size: 15px; font-weight: 700; white-space: nowrap; }
 .voksen .maerke:first-of-type { border-width: 2.5px; }
 .maerke .ikon { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
-.note { font-size: 14px; color: #333; margin-top: 1px; }
+.note { font-size: 16px; color: #333; margin-top: 1px; }
 
-.fod { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px 16px; margin-top: 16px; padding-top: 8px; border-top: 1.5px solid #111; font-size: 14px; }
+.fod { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px 16px; margin-top: 16px; padding-top: 8px; border-top: 1.5px solid #111; font-size: 16px; }
 .fod p:first-child { font-weight: 700; }
 
 @media (max-width: 640px) {

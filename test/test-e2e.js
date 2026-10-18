@@ -193,6 +193,25 @@ async function sidsteTale(side) {
 
 // valg går videre til Playwrights click, fx { force: true } til en knap, der pulserer (Playwright venter ellers på,
 // at den står stille, og det gør «Tiden er gået»-pillen aldrig)
+// Mindste skriftstørrelse og laveste kontrast mod hvid blandt de synlige elementer, der matcher sel
+async function skrift(side, sel) {
+  return side.evaluate((sel) => {
+    const lum = (farve) => {
+      const [r, g, b] = farve.match(/[\d.]+/g).slice(0, 3).map((v) => { const c = v / 255; return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; });
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+    let px = Infinity;
+    let kontrast = Infinity;
+    for (const e of document.querySelectorAll(sel)) {
+      if (!e.getClientRects().length) continue;
+      const cs = getComputedStyle(e);
+      px = Math.min(px, parseFloat(cs.fontSize));
+      kontrast = Math.min(kontrast, 1.05 / (lum(cs.color) + 0.05));
+    }
+    return { px, kontrast: Math.round(kontrast * 10) / 10 };
+  }, sel);
+}
+
 async function tryk(side, sel, valg = {}) {
   await vent(SPAERRE);
   await side.locator(sel).first().click(valg);
@@ -285,6 +304,13 @@ async function heleVejen(browser, skaerm) {
   tjek(await h1(side) === 'Pandekager', n + ': retten skal hedde Pandekager');
   tjek(await side.locator('.ingr').count() === RETTER.pandekager.recipeIngredient.length, n + ': alle ingredienser skal vises');
   await tjekLayout(side, n + ' ret', { knapperSes: n !== 'iphone' });
+  // U15: den voksne skal kunne læse ingredienserne på armslængde
+  const navne = await skrift(side, '.ingr-navn');
+  tjek(navne.px >= 18 && navne.kontrast >= 10, n + ' ret: ingrediensnavnene skal være mindst 18 px og mørke (' + navne.px + ' px, kontrast ' + navne.kontrast + ':1)');
+  if (n === 'ipad') {
+    const ikonBredde = await side.evaluate(() => document.querySelector('.ingr-ikon').getBoundingClientRect().width);
+    tjek(ikonBredde >= 72, n + ' ret: ingrediensikonerne skal være mindst 72 px (' + Math.round(ikonBredde) + ')');
+  }
   await foto(side, n + '-3-ret');
   await tryk(side, '.ingr');
   tjek(await sidsteTale(side) === tilTale(RETTER.pandekager.recipeIngredient[0]), n + ': tryk på en ingrediens læser den op');
@@ -466,6 +492,8 @@ async function print(browser, skaerm) {
     tjek((await side.locator('.fod').textContent()).includes('Tjek selv pakkerne for allergener'), n + ' print ' + id + ': allergen-linjen');
     tjek((await side.locator('.ikke-afproevet').count() === 1) === !r.tumbi.afproevet, n + ' print ' + id + ': «Ikke afprøvet»');
     await tjekLayout(side, n + ' print ' + id);
+    const smaat = await skrift(side, '.note, .maerke, .fod');
+    tjek(smaat.px >= 15, n + ' print ' + id + ': noter, mærker og fod skal være mindst 15 px på skærmen (' + smaat.px + ' px)');
     const kol = await trinKolonne(side);
     tjek(kol.spredning <= 1, n + ' print ' + id + ': trin-ikonerne skal stå i én lige kolonne (de rykker ' + kol.spredning + ' px)');
     tjek(kol.foran >= 18, n + ' print ' + id + ': trinnummeret skal have plads foran ikonet (' + kol.foran + ' px)');

@@ -304,9 +304,10 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   cursor: pointer;
 }
 .ingr:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--kakao); }
-.ingr-ikon { width: clamp(44px, 7svh, 60px); height: auto; aspect-ratio: 1; margin-bottom: 2px; }
+/* Den voksne læser ingredienserne på armslængde fra iPad'en: store ikoner og navne i fuld kakao */
+.ingr-ikon { width: clamp(52px, 10svh, 84px); height: auto; aspect-ratio: 1; margin-bottom: 2px; }
 .ingr-maengde { font-size: 19px; font-weight: 800; }
-.ingr-navn { font-size: 15px; color: var(--kakao-blid); text-align: center; line-height: 1.2; overflow-wrap: anywhere; }
+.ingr-navn { font-size: 18px; color: var(--kakao); text-align: center; line-height: 1.2; overflow-wrap: anywhere; }
 
 .fortsaet { font-size: 20px; }
 .start { min-width: 220px; }
