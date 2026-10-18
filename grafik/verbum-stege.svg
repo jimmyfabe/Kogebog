@@ -1,1 +1,38 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="118" cy="160" rx="86" ry="46" fill="#6D7B8A"/><ellipse cx="118" cy="156" rx="72" ry="36" fill="#8E9AA6"/><rect x="196" y="148" width="52" height="16" rx="8" fill="#3B2A20"/><ellipse cx="94" cy="156" rx="26" ry="17" fill="#9A6A44"/><ellipse cx="144" cy="156" rx="26" ry="17" fill="#9A6A44"/><ellipse cx="90" cy="150" rx="10" ry="5" fill="#CFA976"/><ellipse cx="140" cy="150" rx="10" ry="5" fill="#CFA976"/><path d="M78 116 l-6 -10 M112 112 l0 -12 M150 116 l6 -10" fill="none"/><path d="M88 236 q6 -8 0 -16 q-6 -8 0 -16" fill="none" stroke="#F08A3C" stroke-width="6"/><path d="M112 236 q6 -8 0 -16 q-6 -8 0 -16" fill="none" stroke="#F08A3C" stroke-width="6"/><path d="M136 236 q6 -8 0 -16 q-6 -8 0 -16" fill="none" stroke="#F08A3C" stroke-width="6"/><g transform="translate(232 140) rotate(78)"><rect x="-17" y="10" width="34" height="80" rx="14" fill="#9A6A44"/><ellipse cx="0" cy="2" rx="24" ry="20" fill="#E2513B"/><rect x="-20" y="14" width="40" height="14" rx="6" fill="#C3331D"/></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="frying" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="heat" fill="#F08A3C">
+      <path d="M55 229 C47 220 64 217 57 208 Q54 203 59 201 Q63 200 65 205 C74 218 57 220 62 225 Q65 229 61 232 Q57 234 55 229 Z"/>
+      <path d="M99 229 C91 220 108 217 101 208 Q98 203 103 201 Q107 200 109 205 C118 218 101 220 106 225 Q109 229 105 232 Q101 234 99 229 Z"/>
+      <path d="M143 229 C135 220 152 217 145 208 Q142 203 147 201 Q151 200 153 205 C162 218 145 220 150 225 Q153 229 149 232 Q145 234 143 229 Z"/>
+    </g>
+    <g id="pan-handle">
+      <path d="M159 117 L208 51 Q213 45 219 49 L225 54 Q230 58 225 65 L178 130 Z" fill="#6D7B8A"/>
+      <path d="M174 111 L184 119" fill="none"/>
+    </g>
+    <g id="pan">
+      <path d="M24 139 C25 168 54 190 98 193 C141 196 177 176 184 147 L185 139 Z" fill="#6D7B8A"/>
+      <ellipse cx="104.5" cy="139" rx="80.5" ry="42" fill="#8E9AA6"/>
+      <ellipse cx="104.5" cy="139" rx="69.5" ry="32" fill="#6D7B8A"/>
+    </g>
+    <g id="meatballs">
+      <path d="M46 125 C47 114 63 108 79 111 C96 113 109 124 106 135 C104 146 87 150 71 145 C56 142 45 135 46 125 Z" fill="#704D31"/>
+      <path d="M47 123 C51 113 67 109 81 113 C96 116 105 123 102 131 C99 140 84 143 70 138 C56 134 45 132 47 123 Z" fill="#9A6A44"/>
+      <path d="M59 120 Q70 113 83 119 Q87 122 83 125 Q71 121 63 126 Q58 127 59 120 Z" fill="#F2C14E"/>
+      <path d="M105 146 C107 135 124 129 141 132 C158 135 169 144 166 155 C162 167 145 171 128 166 C112 163 102 157 105 146 Z" fill="#704D31"/>
+      <path d="M107 143 C112 134 127 130 143 135 C157 138 165 145 161 152 C157 161 141 163 127 159 C113 155 104 151 107 143 Z" fill="#9A6A44"/>
+      <path d="M120 141 Q131 135 144 141 Q148 144 144 147 Q133 143 125 147 Q119 148 120 141 Z" fill="#F2C14E"/>
+    </g>
+    <g id="sizzle" fill="#FFFFFF">
+      <path d="M49 148 Q52 145 55 149 L59 156 Q61 160 57 161 Q54 162 52 158 L48 153 Q46 150 49 148 Z"/>
+      <path d="M128 110 Q131 107 134 110 L139 116 Q141 120 137 122 Q134 123 132 119 L128 116 Q125 113 128 110 Z"/>
+    </g>
+    <g id="bo-forearm">
+      <path d="M256 27 C244 27 233 31 225 37 L229 70 Q243 72 256 66" fill="#9A6A44"/>
+    </g>
+    <g id="oven-mitt">
+      <path d="M233 33 C221 28 210 32 204 41 L194 56 C190 63 195 70 202 68 L210 61 L206 69 C202 77 208 85 215 83 C226 81 234 71 239 60 Z" fill="#E2513B"/>
+      <path d="M229 31 L239 33 L246 62 L236 66 Z" fill="#C3331D"/>
+      <path d="M210 61 Q216 57 220 60" fill="none"/>
+    </g>
+  </g>
+</svg>

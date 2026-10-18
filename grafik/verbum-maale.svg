@@ -1,1 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M70 88 L150 88 L144 206 Q110 216 76 206 Z" fill="#FFF4E2"/><path d="M74 150 L146 148 L144 206 Q110 216 76 206 Z" fill="#FFFFFF"/><path d="M150 104 Q176 108 172 134 Q168 154 146 156" fill="none"/><path d="M122 118 l14 0 M124 148 l14 0 M126 178 l14 0" fill="none"/><ellipse cx="196" cy="196" rx="22" ry="12" fill="#8E9AA6"/><rect x="168" y="190" width="46" height="9" rx="4" fill="#6D7B8A" transform="rotate(-20 191 194.5)"/><path d="M180 192 Q196 176 212 192" fill="#FFFFFF"/><g transform="translate(26 140) rotate(-80)"><rect x="-14" y="0" width="28" height="80" rx="14" fill="#F08A3C"/><ellipse cx="0" cy="0" rx="18" ry="15" fill="#F08A3C"/><ellipse cx="0" cy="2" rx="10" ry="8" fill="#FFF4E2"/></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="measuring" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="cup-handle">
+      <path d="M73 86 L52 86 Q32 86 32 106 L32 143 Q32 164 53 164 L74 164 L74 151 L54 151 Q45 151 45 141 L45 108 Q45 99 54 99 L73 99 Z" fill="#FFF4E2"/>
+    </g>
+    <g id="measuring-cup">
+      <path d="M68 44 L160 44 L178 56 Q181 59 177 63 L165 74 L165 190 Q165 208 148 210 L86 210 Q68 208 68 190 Z" fill="#FFF4E2"/>
+      <path d="M76 54 L156 54 L166 58" fill="none"/>
+      <path d="M76 126 L157 126 L157 188 Q157 201 145 202 L89 202 Q76 201 76 188 Z" fill="#FFFFFF"/>
+      <path d="M142 100 L157 100 M137 126 L157 126 M142 152 L157 152" fill="none"/>
+    </g>
+    <g id="rosa-forearm">
+      <path d="M0 132 C13 134 24 133 36 127 L46 151 Q30 170 0 166" fill="#F08A3C"/>
+    </g>
+    <g id="holding-paw">
+      <path d="M35 124 C35 116 43 113 48 119 C51 111 60 115 59 122 C67 119 72 126 66 132 C72 138 67 145 61 143 C57 153 43 154 36 148 Q29 143 32 134 Z" fill="#F08A3C"/>
+      <path d="M39 132 Q47 127 56 134 Q61 141 53 146 Q41 147 39 138 Z" fill="#FFF4E2"/>
+      <path d="M47 122 L48 127 M58 125 L57 129" fill="none"/>
+    </g>
+    <g id="measuring-spoon">
+      <path d="M226 118 C214 114 203 125 201 139 C199 151 204 158 211 161 L187 222 Q185 228 191 231 Q197 233 200 227 L221 164 C231 163 237 152 236 140 C237 129 233 121 226 118 Z" fill="#8E9AA6"/>
+      <path d="M220 128 C213 128 207 139 209 147 Q211 154 218 155 C225 155 230 148 229 140 Q229 130 220 128 Z" fill="#6D7B8A"/>
+      <path d="M205 141 Q207 135 212 134 Q216 123 223 129 Q228 129 232 142 Q219 150 205 141 Z" fill="#FFFFFF"/>
+    </g>
+  </g>
+</svg>

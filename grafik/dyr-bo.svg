@@ -1,1 +1,57 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="102" cy="222" rx="18" ry="12" fill="#9A6A44"/><ellipse cx="154" cy="222" rx="18" ry="12" fill="#9A6A44"/><ellipse cx="128" cy="166" rx="58" ry="62" fill="#9A6A44"/><path d="M90 140 Q128 128 166 140 L172 214 Q128 228 84 214 Z" fill="#3E8FB0"/><rect x="112" y="172" width="32" height="24" rx="6" fill="#2E6A83"/><g transform="translate(76 130) rotate(-150)"><rect x="-13" y="0" width="26" height="56" rx="13" fill="#9A6A44"/><ellipse cx="0" cy="58" rx="15" ry="13" fill="#9A6A44"/></g><g transform="translate(180 140) rotate(15)"><rect x="-13" y="0" width="26" height="50" rx="13" fill="#9A6A44"/></g><g transform="translate(196 196) rotate(-10)"><rect x="-6" y="-86" width="12" height="92" rx="6" fill="#E8C79A"/><ellipse cx="0" cy="14" rx="15" ry="21" fill="#CFA976"/></g><ellipse cx="186" cy="192" rx="15" ry="13" fill="#9A6A44"/><circle cx="92" cy="66" r="15" fill="#9A6A44"/><circle cx="164" cy="66" r="15" fill="#9A6A44"/><circle cx="92" cy="66" r="7" fill="#E8C79A"/><circle cx="164" cy="66" r="7" fill="#E8C79A"/><circle cx="128" cy="94" r="42" fill="#9A6A44"/><ellipse cx="128" cy="110" rx="22" ry="16" fill="#E8C79A"/><ellipse cx="128" cy="103" rx="8" ry="6" fill="#3B2A20"/><ellipse cx="112" cy="86" rx="4.5" ry="6" fill="#3B2A20"/><circle cx="113.5" cy="83.5" r="1.6" fill="#FFFFFF" stroke="none"/><ellipse cx="144" cy="86" rx="4.5" ry="6" fill="#3B2A20"/><circle cx="145.5" cy="83.5" r="1.6" fill="#FFFFFF" stroke="none"/><path d="M120 116 Q128 122 136 116" fill="none"/><rect x="98" y="44" width="60" height="18" rx="6" fill="#FFFFFF"/><circle cx="106" cy="36" r="14" fill="#FFFFFF"/><circle cx="128" cy="28" r="16" fill="#FFFFFF"/><circle cx="150" cy="36" r="14" fill="#FFFFFF"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="bo" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="legs" fill="#9A6A44">
+      <path d="M103 204 L124 207 L125 225 Q128 233 120 234 L105 234 Q94 234 96 228 Q102 221 103 204 Z"/>
+      <path d="M141 207 L160 204 L164 225 Q174 230 166 234 L145 234 Q136 234 139 225 Z"/>
+    </g>
+    <g id="waving-arm" fill="#9A6A44">
+      <path d="M103 123 C91 123 83 115 78 103 C83 98 80 91 74 90 L73 75 C73 67 65 66 64 74 L64 68 C64 60 56 61 56 69 L56 73 C53 65 46 67 48 75 L50 81 C45 74 39 78 42 85 L50 98 Q52 108 63 109 C67 129 80 143 96 145 Z"/>
+      <path d="M56 76 L58 85 M65 77 L66 85 M51 89 Q56 92 57 98" fill="none"/>
+    </g>
+    <g id="body">
+      <path d="M110 108 C95 114 88 129 89 151 L92 193 Q92 215 111 221 L146 222 Q168 218 171 198 L173 149 C172 126 161 113 144 109 Z" fill="#9A6A44"/>
+      <path d="M120 118 C104 129 103 153 106 177 Q108 202 131 206 Q155 201 157 177 C158 148 149 124 138 119 Z" fill="#E8C79A"/>
+    </g>
+    <g id="apron">
+      <path d="M109 112 L117 110 L123 133 L113 139 Z" fill="#3E8FB0"/>
+      <path d="M140 111 L148 114 L153 138 L143 138 Z" fill="#3E8FB0"/>
+      <path d="M114 127 Q131 130 147 126 L151 144 C159 164 160 188 163 210 Q133 224 98 210 C102 183 103 158 109 143 Z" fill="#3E8FB0"/>
+      <path d="M116 165 Q132 169 148 165 L148 181 Q134 192 117 183 Z" fill="#2E6A83"/>
+      <path d="M103 198 Q104 203 103 208 M157 198 L158 207" fill="none"/>
+    </g>
+    <g id="spoon-arm">
+      <path d="M158 126 C172 125 178 135 182 145 L194 141 L203 160 Q189 175 173 165 L163 155" fill="#9A6A44"/>
+    </g>
+    <g id="wooden-spoon">
+      <path d="M205 82 C195 80 187 91 188 103 Q189 115 198 119 L190 181 Q190 187 195 187 Q201 187 201 181 L208 120 C217 118 223 109 222 98 Q220 84 205 82 Z" fill="#E8C79A"/>
+      <path d="M205 90 C198 88 194 95 195 103 Q195 111 202 112 C209 114 215 106 214 100 Q214 92 205 90 Z" fill="#CFA976"/>
+    </g>
+    <g id="holding-paw">
+      <path d="M181 145 C184 138 190 137 195 141 C200 135 207 139 206 145 C214 142 218 149 212 153 C218 158 212 165 206 163 Q196 172 185 163 Q179 156 181 145 Z" fill="#9A6A44"/>
+      <path d="M195 145 L201 148 M199 153 L207 156 M195 161 L201 163" fill="none"/>
+    </g>
+    <g id="ears">
+      <circle cx="94" cy="80" r="10" fill="#9A6A44"/>
+      <circle cx="159" cy="81" r="10" fill="#9A6A44"/>
+      <path d="M90 84 Q86 76 93 75 Q99 75 100 82" fill="#E8C79A"/>
+      <path d="M153 82 Q153 75 160 76 Q166 78 162 85" fill="#E8C79A"/>
+    </g>
+    <g id="head">
+      <path d="M103 72 C114 67 137 68 149 76 C159 82 163 95 158 105 C153 116 137 122 121 120 C105 120 93 113 92 100 Q89 82 103 72 Z" fill="#9A6A44"/>
+      <path d="M108 96 C115 91 130 93 135 101 C141 109 132 116 119 116 C106 116 99 111 101 105 Q102 100 108 96 Z" fill="#E8C79A"/>
+      <path d="M116 105 L116 109 Q122 114 128 108" fill="none"/>
+    </g>
+    <g id="chefs-hat">
+      <path d="M98 65 L96 54 C85 52 84 38 94 32 Q102 27 110 33 C111 19 135 19 140 33 C153 25 169 33 169 45 Q170 56 159 60 L158 68 Z" fill="#FFFFFF"/>
+      <path d="M104 47 Q102 55 104 64 M149 46 Q152 55 149 64" fill="none"/>
+      <path d="M98 64 Q128 68 159 64 L158 77 Q127 81 98 76 Z" fill="#FFFFFF"/>
+    </g>
+  </g>
+  <g id="face">
+    <ellipse cx="108" cy="89" rx="3" ry="4" fill="#3B2A20"/>
+    <ellipse cx="142" cy="91" rx="3" ry="4" fill="#3B2A20"/>
+    <circle cx="107.2" cy="87.8" r="0.9" fill="#FFFFFF"/>
+    <circle cx="141.2" cy="89.8" r="0.9" fill="#FFFFFF"/>
+    <ellipse cx="115" cy="102" rx="5.7" ry="4.6" fill="#3B2A20"/>
+  </g>
+</svg>

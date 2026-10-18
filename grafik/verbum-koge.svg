@@ -1,1 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="54" y="112" width="148" height="92" rx="22" fill="#8E9AA6"/><rect x="34" y="124" width="24" height="14" rx="7" fill="#6D7B8A"/><rect x="198" y="124" width="24" height="14" rx="7" fill="#6D7B8A"/><ellipse cx="128" cy="112" rx="74" ry="15" fill="#6D7B8A"/><ellipse cx="128" cy="114" rx="64" ry="10" fill="#3E8FB0"/><circle cx="104" cy="112" r="5" fill="#FFFFFF"/><circle cx="136" cy="110" r="6" fill="#FFFFFF"/><circle cx="158" cy="114" r="4" fill="#FFFFFF"/><path d="M106 90 c-10 -10 10 -18 0 -30" fill="none" stroke="#EDE8E0" stroke-width="7"/><path d="M128 90 c-10 -10 10 -18 0 -30" fill="none" stroke="#EDE8E0" stroke-width="7"/><path d="M150 90 c-10 -10 10 -18 0 -30" fill="none" stroke="#EDE8E0" stroke-width="7"/><path d="M98 244 q6 -8 0 -16 q-6 -8 0 -16" fill="none" stroke="#F08A3C" stroke-width="6"/><path d="M122 244 q6 -8 0 -16 q-6 -8 0 -16" fill="none" stroke="#F08A3C" stroke-width="6"/><path d="M146 244 q6 -8 0 -16 q-6 -8 0 -16" fill="none" stroke="#F08A3C" stroke-width="6"/><g transform="translate(232 118) rotate(80)"><rect x="-17" y="10" width="34" height="80" rx="14" fill="#9A6A44"/><ellipse cx="0" cy="2" rx="24" ry="20" fill="#E2513B"/><rect x="-20" y="14" width="40" height="14" rx="6" fill="#C3331D"/></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="boiling" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="steam" fill="#FFFFFF">
+      <path d="M71 77 C59 67 60 57 70 50 C77 45 76 41 72 37 Q69 33 73 30 Q77 28 80 32 C89 42 84 52 76 57 C68 62 70 67 77 71 Q81 75 77 78 Q74 80 71 77 Z"/>
+      <path d="M113 72 C102 63 104 53 114 45 C122 39 121 34 117 29 Q114 25 118 23 Q122 21 125 25 C134 37 128 47 120 53 C113 58 113 62 119 66 Q123 70 119 73 Q116 75 113 72 Z"/>
+      <path d="M157 77 C146 68 148 58 157 51 C164 46 165 42 161 38 Q158 34 162 31 Q166 29 169 33 C178 43 173 53 165 59 C158 64 157 68 163 71 Q168 75 163 79 Q160 81 157 77 Z"/>
+    </g>
+    <g id="heat" fill="#F08A3C">
+      <path d="M70 231 C63 223 77 220 72 213 Q69 209 73 207 Q77 205 80 210 C88 221 74 225 77 228 Q80 232 76 234 Q72 236 70 231 Z"/>
+      <path d="M116 231 C109 223 123 220 118 213 Q115 209 119 207 Q123 205 126 210 C134 221 120 225 123 228 Q126 232 122 234 Q118 236 116 231 Z"/>
+      <path d="M162 231 C155 223 169 220 164 213 Q161 209 165 207 Q169 205 172 210 C180 221 166 225 169 228 Q172 232 168 234 Q164 236 162 231 Z"/>
+    </g>
+    <g id="handles">
+      <path d="M50 121 L33 121 Q24 121 24 131 L24 143 Q24 153 35 153 L51 153 L51 143 L36 143 L36 132 L51 132 Z" fill="#8E9AA6"/>
+      <path d="M192 121 L211 121 Q222 121 222 132 L222 142 Q222 153 211 153 L192 153 L192 143 L210 143 L210 132 L192 132 Z" fill="#8E9AA6"/>
+    </g>
+    <g id="pot">
+      <path d="M47 111 L47 174 C47 191 77 200 121 200 C164 200 195 191 195 174 L195 111 Z" fill="#8E9AA6"/>
+      <path d="M177 121 L177 173 Q175 189 152 197 C179 194 195 186 195 174 L195 111 Z" fill="#6D7B8A"/>
+      <ellipse cx="121" cy="111" rx="74" ry="22" fill="#6D7B8A"/>
+      <ellipse cx="121" cy="114" rx="64" ry="15" fill="#3E8FB0"/>
+      <path d="M60 119 Q121 141 182 119" fill="none"/>
+    </g>
+    <g id="water-bubbles" fill="#3E8FB0">
+      <circle cx="81" cy="110" r="6"/>
+      <circle cx="108" cy="103" r="8"/>
+      <circle cx="139" cy="113" r="6"/>
+      <circle cx="163" cy="104" r="7"/>
+    </g>
+    <g id="bo-forearm">
+      <path d="M256 126 Q241 123 229 130 L229 158 Q241 165 256 163" fill="#9A6A44"/>
+    </g>
+    <g id="oven-mitt">
+      <path d="M233 128 C226 118 214 113 206 118 C199 122 201 130 208 133 L216 137 L205 136 C195 135 193 143 200 149 C205 158 217 162 230 157 Z" fill="#E2513B"/>
+      <path d="M230 125 L240 128 L239 162 L229 160 Z" fill="#C3331D"/>
+      <path d="M216 137 Q221 140 220 145" fill="none"/>
+    </g>
+  </g>
+</svg>
