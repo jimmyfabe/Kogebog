@@ -386,10 +386,11 @@ function trinSkaerm(m, nr) {
       knap('Tilbage', { klasse: 'tilbage', ikonNavn: 'tilbage', onclick: tilbage }),
       el('span', { class: 'skub' }),
       naeste));
+  // En tast, der holdes inde (e.repeat), gør ikke noget igen — fx mellemrum, der stadig er nede efter et voksen-hold
   skaerm.tastatur = (e) => {
-    if (e.key === 'ArrowRight' && !t.voksen) { e.preventDefault(); if (performance.now() >= S.spaerTil) frem(); }
-    else if (e.key === 'ArrowLeft') { e.preventDefault(); if (performance.now() >= S.spaerTil) tilbage(); }
-    else if (e.key === ' ' && (document.activeElement === document.body || document.activeElement.tagName === 'H1')) { e.preventDefault(); sigTrin(m, t, laesOp); }
+    if (e.key === 'ArrowRight' && !t.voksen) { e.preventDefault(); if (!e.repeat && performance.now() >= S.spaerTil) frem(); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); if (!e.repeat && performance.now() >= S.spaerTil) tilbage(); }
+    else if (e.key === ' ' && (document.activeElement === document.body || document.activeElement.tagName === 'H1')) { e.preventDefault(); if (!e.repeat) sigTrin(m, t, laesOp); }
   };
   return skaerm;
 }
