@@ -295,6 +295,12 @@ const konfettiAfstand = (side) => side.evaluate(() => {
 });
 
 // ---------- Hele vejen med pandekager ----------
+// Trinnumrene læses af opskriften: timeren er det første trin med «timer_sek», og holdet på 3 s er det sidste voksen-trin
+const VEJ = 'pandekager';
+const VEJ_NAVN = RETTER[VEJ].name;
+const VEJ_TRIN = RETTER[VEJ].recipeInstructions;
+const TIMER_NR = VEJ_TRIN.findIndex((t) => t.tumbi.timer_sek) + 1;
+const HOLD_NR = VEJ_TRIN.map((t, i) => (t.tumbi.voksen === true && i < VEJ_TRIN.length - 1 ? i + 1 : 0)).reduce((a, b) => Math.max(a, b), 0);
 async function heleVejen(browser, skaerm) {
   const n = skaerm.navn;
   console.log('[' + n + '] forside → pandekager → færdig');
@@ -342,13 +348,13 @@ async function heleVejen(browser, skaerm) {
     return { kontrast: (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05), kant: cs.boxShadow.includes('inset') || parseFloat(cs.borderTopWidth) >= 2 };
   });
   tjek(cirkel.kontrast >= 1.5 || cirkel.kant, n + ': cirklen bag billedet skal kunne ses på det valgte kort (kontrast ' + cirkel.kontrast.toFixed(2) + ', ingen kant)');
-  tjek((await sidsteTale(side)).startsWith('Pandekager'), n + ': første tryk skal sige navnet');
+  tjek((await sidsteTale(side)).startsWith(VEJ_NAVN), n + ': første tryk skal sige navnet');
   const stemme = await side.evaluate(() => window.__tale[window.__tale.length - 1]);
   tjek(stemme.lang === 'da-DK' && stemme.stemme === 'da-DK', n + ': oplæsning skal være da-DK med den danske stemme, fik ' + JSON.stringify(stemme));
   if (n === 'ipad') await foto(side, n + '-2-forside-valgt');
   await tryk(side, '.kort[data-ret="pandekager"]');
   await side.waitForSelector('.ret h1');
-  tjek(await h1(side) === 'Pandekager', n + ': retten skal hedde Pandekager');
+  tjek(await h1(side) === VEJ_NAVN, n + ': retten skal hedde ' + VEJ_NAVN);
   tjek(await side.locator('.ingr').count() === RETTER.pandekager.recipeIngredient.length, n + ': alle ingredienser skal vises');
   // Start (og print) skal kunne ses uden at rulle på alle skærme. På iPhone står bunden fast (før skulle man rulle)
   await tjekLayout(side, n + ' ret', { knapperSes: true });
@@ -375,8 +381,8 @@ async function heleVejen(browser, skaerm) {
 
   // Trinene
   await tryk(side, '.start');
-  const trin = RETTER.pandekager.recipeInstructions;
-  let fremUdenTimer = null; // fremskridtets x på trin 8 (før timeren): det må ikke flytte sig, når pillen kommer
+  const trin = VEJ_TRIN;
+  let fremUdenTimer = null; // fremskridtets x på trinnet før timeren: det må ikke flytte sig, når pillen kommer
   for (let i = 0; i < trin.length; i++) {
     const nr = i + 1;
     const t = trin[i];
@@ -387,18 +393,20 @@ async function heleVejen(browser, skaerm) {
     tjek((await side.locator('.voksen-maerke').count() === 1) === voksen, n + ' trin ' + nr + ': «Hent en voksen» skal ' + (voksen ? '' : 'ikke ') + 'vises');
     // Tilbage og Næste skal kunne ses uden at rulle på alle skærme, også iPhone (på retten må man rulle til Start)
     await tjekLayout(side, n + ' trin ' + nr, { knapperSes: true });
-    if ([1, 3, 10, 12].includes(nr)) await foto(side, n + '-4-trin-' + nr);
-    if (nr === 8) fremUdenTimer = (await topbarMaal(side)).fremX;
+    if ([1, 3, TIMER_NR + 1, trin.length].includes(nr)) await foto(side, n + '-4-trin-' + nr);
+    if (nr === TIMER_NR - 1) fremUdenTimer = (await topbarMaal(side)).fremX;
 
-    if (t.tumbi.timer_sek && nr === 9) {
+    if (nr === TIMER_NR) {
       // Timeren: start, gå videre, se pillen, vent på slut, gå tilbage, kvittér
       tjek((await side.locator('.timer-start').textContent()).includes(formaterTid(HURTIG_SEK)), n + ': ?hurtig=1 skal give en timer på ' + formaterTid(HURTIG_SEK));
       await tryk(side, '.timer-start');
       tjek(await side.locator('.timer-ring').isVisible(), n + ': timer-ringen skal vises');
       tjek(await side.evaluate(() => window.__laas.anmodet) === 1, n + ': timeren skal holde skærmen tændt (wakeLock)');
       if (n === 'ipad') await foto(side, n + '-5-timer');
-      await tryk(side, '.naeste');
-      await side.waitForFunction(() => location.hash.endsWith('/trin/10'));
+      // Er timer-trinnet et voksen-trin (pandekagen på panden), går man videre med et hold
+      if (voksen) await hold(side, '.naeste', 2300);
+      else await tryk(side, '.naeste');
+      await side.waitForFunction((x) => location.hash.endsWith('/trin/' + x), TIMER_NR + 1);
       tjek(await side.locator('.pille:not([hidden])').count() === 1, n + ': timer-pillen skal vises på næste trin');
       const fremKoerer = (await topbarMaal(side)).fremX;
       await venterPaa(side, () => !!document.querySelector('.pille.faerdig'), null, n + ': pillen skal vise, at tiden er gået');
@@ -409,14 +417,14 @@ async function heleVejen(browser, skaerm) {
       const top = await topbarMaal(side);
       tjek(top.midte >= 140, n + ': topbarens midte med en færdig timer er kun ' + top.midte + ' px bred');
       tjek(top.pille !== null && !top.overlap, n + ': fremskridtet løber ind under pillen (fremskridt ' + top.frem + ', pille ' + top.pille + ')');
-      tjek(top.linjer === 1, n + ': «Trin 10 af 12» skal stå på én linje med en færdig timer (' + top.linjer + ' linjer)');
+      tjek(top.linjer === 1, n + ': «Trin ' + (TIMER_NR + 1) + ' af ' + trin.length + '» skal stå på én linje med en færdig timer (' + top.linjer + ' linjer)');
       // Fremskridtet må ikke hoppe vandret efter pillens bredde (iPad: x 320 → 248 → 200). iPhone har ikke plads til at stå stille.
       const xer = [fremUdenTimer, fremKoerer, top.fremX];
       if (n === 'iphone') maal.push(n + ': fremskridtets x uden timer, med timer og færdig: ' + xer.join(', '));
       else tjek(Math.max(...xer) - Math.min(...xer) <= 1, n + ': fremskridtet flytter sig, når timer-pillen kommer (x uden timer, med timer og færdig: ' + xer.join(', ') + ')');
       await foto(side, n + '-6-pille-faerdig');
       await tryk(side, '.pille', PULSERER);
-      await side.waitForFunction(() => location.hash.endsWith('/trin/9'));
+      await side.waitForFunction((x) => location.hash.endsWith('/trin/' + x), TIMER_NR);
       tjek(await side.locator('.timer.faerdig').count() === 1, n + ': trinnet skal vise, at tiden er gået');
       await tryk(side, '.timer.faerdig .knap.primaer');
       tjek(await side.locator('.timer-start').count() === 1, n + ': «Ok» slår timeren fra');
@@ -438,11 +446,11 @@ async function heleVejen(browser, skaerm) {
       tjek((await sidsteTale(side)).startsWith('Hent en voksen'), n + ' trin ' + nr + ': et kort tryk siger «Hent en voksen»');
       // … og det skal kunne ses: knappen får en ring (før var skærmen den samme før og efter trykket)
       tjek(await skygge() !== skyggeFoer, n + ' trin ' + nr + ': et kort tryk på «Næste» skal kunne ses (knappen ændrede sig ikke)');
-      // Trin 11 holdes i 3 s: klikket ved slip kommer efter appens spærre, så kun blokerTilSlip (hold.js) kan sluge det
-      await hold(side, '.naeste', nr === 11 ? 3000 : 2300);
-      if (nr === 11) {
+      // Det sidste voksen-trin holdes i 3 s: klikket ved slip kommer efter appens spærre, så kun blokerTilSlip (hold.js) kan sluge det
+      await hold(side, '.naeste', nr === HOLD_NR ? 3000 : 2300);
+      if (nr === HOLD_NR) {
         await vent(300);
-        tjek(side.url().endsWith('/trin/12'), n + ' trin 11: et hold på 3 s må kun gå ét trin frem (adressen er ' + side.url() + ')');
+        tjek(side.url().endsWith('/trin/' + (nr + 1)), n + ' trin ' + nr + ': et hold på 3 s må kun gå ét trin frem (adressen er ' + side.url() + ')');
       }
     } else {
       await tryk(side, '.naeste');

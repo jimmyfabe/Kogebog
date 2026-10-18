@@ -155,7 +155,7 @@ test('andre ingredienser mellem råt kød/æg og håndvasken', () => {
 
 test('ingrediens-ikoner skal være kendte og passe til mængden', () => {
   forventFejl('opskrifter/pandekager.json', (d) => { d.tumbi.ingredienser[0].ikon = 'kanel'; }, 'ingrediens 1: ukendt ikon "kanel"');
-  forventFejl('opskrifter/pandekager.json', (d) => { d.tumbi.ingredienser[0].maengde = '3 dl'; }, 'ingrediens 1: mængden «3 dl» passer ikke til «2,5 dl hvedemel»');
+  forventFejl('opskrifter/pandekager.json', (d) => { d.tumbi.ingredienser[0].maengde = '3 dl'; }, 'ingrediens 1: mængden «3 dl» passer ikke til «200 g hvedemel»');
   forventFejl('opskrifter/pandekager.json', (d) => { d.tumbi.ingredienser.pop(); }, '«tumbi.ingredienser» har 6 linjer, men recipeIngredient har 7');
   forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[1].tumbi.ikoner = ['chorizo']; }, 'trin 2: ikonet «chorizo» er ikke blandt rettens ingredienser');
 });
@@ -181,7 +181,7 @@ test('manglende grafik for et verbum eller en ret', () => {
 
 test('lydlisten må kun nævne filer, der findes', () => {
   forventFejl('lyd/liste.json', (d) => { d.filer = ['pandekager/3.mp3']; }, '«pandekager/3.mp3» står på listen, men filen lyd/pandekager/3.mp3 findes ikke');
-  forventFejl('lyd/liste.json', (d) => { d.filer = ['pandekager/99.mp3']; }, 'retten har kun 12 trin');
+  forventFejl('lyd/liste.json', (d) => { d.filer = ['pandekager/99.mp3']; }, 'retten har kun 11 trin');
 });
 
 test('kommandolinjen giver exit 1 og fejlen på stderr', () => {

@@ -102,11 +102,11 @@ test('modellen af pandekagerne', () => {
   const json = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter/pandekager.json'), 'utf8'));
   const m = lavModel(json);
   assert.equal(m.id, 'pandekager');
-  assert.equal(m.minutter, 50);
-  assert.equal(m.trin.length, 12);
+  assert.equal(m.minutter, 35);
+  assert.equal(m.trin.length, 11);
   assert.equal(m.ingredienser[0].ikon, 'mel');
   assert.equal(m.ingredienser[0].navn, 'hvedemel');
-  assert.equal(m.trin[8].timerSek, 600);
+  assert.equal(m.trin[8].timerSek, 60);
   assert.equal(m.trin[9].voksen, true);
   assert.equal(m.trin[9].voksenSlags, 'varme');
   assert.equal(m.trin[0].voksen, false);
