@@ -1,1 +1,40 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="70" y="30" width="110" height="22" rx="11" fill="#8E9AA6"/><rect x="152" y="48" width="24" height="38" rx="10" fill="#6D7B8A"/><rect x="118" y="20" width="26" height="18" rx="8" fill="#6D7B8A"/><rect x="152" y="86" width="24" height="72" rx="10" fill="#3E8FB0"/><g transform="translate(132 236) rotate(-14)"><rect x="-14" y="0" width="28" height="80" rx="14" fill="#F08A3C"/><ellipse cx="0" cy="0" rx="18" ry="15" fill="#F08A3C"/><ellipse cx="0" cy="2" rx="10" ry="8" fill="#FFF4E2"/></g><g transform="translate(196 236) rotate(14)"><rect x="-14" y="0" width="28" height="80" rx="14" fill="#F08A3C"/><ellipse cx="0" cy="0" rx="18" ry="15" fill="#F08A3C"/><ellipse cx="0" cy="2" rx="10" ry="8" fill="#FFF4E2"/></g><circle cx="120" cy="170" r="9" fill="#FFFFFF"/><circle cx="204" cy="166" r="8" fill="#FFFFFF"/><circle cx="140" cy="196" r="7" fill="#FFFFFF"/><circle cx="190" cy="200" r="10" fill="#FFFFFF"/><circle cx="110" cy="204" r="6" fill="#FFFFFF"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="washing" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="tap">
+      <path d="M181 95 L181 58 Q181 45 168 45 L146 45 Q133 45 133 58 L133 76 L111 76 L111 56 Q111 24 144 24 L173 24 Q204 24 204 56 L204 95 Z" fill="#8E9AA6"/>
+      <path d="M193 57 L193 95 L204 95 L204 56 Q204 33 184 26 Q193 39 193 57 Z" fill="#6D7B8A"/>
+      <path d="M176 57 L207 57 Q213 57 213 63 Q213 69 207 69 L176 69 Q170 69 170 63 Q170 57 176 57 Z" fill="#8E9AA6"/>
+      <path d="M175 95 L210 95 Q216 95 216 102 L216 107 L175 107 Q169 107 169 101 Q169 95 175 95 Z" fill="#8E9AA6"/>
+      <path d="M108 70 L136 70 L136 80 Q122 85 108 80 Z" fill="#6D7B8A"/>
+    </g>
+    <g id="water" fill="#3E8FB0">
+      <path d="M114 88 Q122 91 130 88 L133 143 Q123 152 111 143 Z"/>
+      <path d="M74 181 Q65 190 70 195 Q75 200 79 194 Q82 190 74 181 Z"/>
+      <path d="M174 190 Q167 199 172 203 Q177 207 180 201 Q182 197 174 190 Z"/>
+    </g>
+    <g id="left-forearm">
+      <path d="M40 256 C47 229 62 206 84 184 L112 201 Q88 228 84 256" fill="#F08A3C"/>
+    </g>
+    <g id="left-paw">
+      <path d="M80 184 C78 174 87 162 101 152 L130 131 C138 125 145 133 140 139 L148 134 C157 129 164 138 157 144 L163 143 C172 142 175 151 167 156 L159 161 C170 158 174 168 165 174 L140 189 C133 205 116 215 101 211 Q84 208 80 194 Z" fill="#F08A3C"/>
+      <path d="M96 180 Q109 163 123 167 Q139 176 129 191 Q115 207 101 197 Q94 191 96 180 Z" fill="#FFF4E2"/>
+      <path d="M140 139 L127 148 M157 144 L140 155 M159 161 L147 168" fill="none"/>
+    </g>
+    <g id="right-forearm">
+      <path d="M217 256 C208 226 193 204 169 183 L144 207 Q168 229 176 256" fill="#F08A3C"/>
+    </g>
+    <g id="right-paw">
+      <path d="M174 181 C173 170 163 162 150 159 L119 150 C110 147 105 155 112 160 L103 158 C94 156 90 166 98 171 L104 174 C94 172 91 183 100 187 L110 192 C101 192 103 202 112 204 L133 209 Q151 216 164 206 Q178 196 174 181 Z" fill="#F08A3C"/>
+      <path d="M144 176 Q158 174 163 186 Q166 199 152 204 Q138 205 131 194 Q128 184 144 176 Z" fill="#FFF4E2"/>
+      <path d="M112 160 L124 164 M104 174 L119 179 M110 192 L123 195" fill="none"/>
+    </g>
+    <g id="soap-bubbles" fill="#FFFFFF">
+      <circle cx="91" cy="137" r="10"/>
+      <circle cx="74" cy="153" r="7"/>
+      <circle cx="157" cy="122" r="8"/>
+      <circle cx="180" cy="150" r="11"/>
+      <circle cx="136" cy="151" r="9"/>
+      <circle cx="114" cy="218" r="7"/>
+    </g>
+  </g>
+</svg>

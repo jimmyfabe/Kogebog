@@ -1,1 +1,54 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(-14 30) scale(0.78)"><ellipse cx="108" cy="226" rx="14" ry="9" fill="#E8C79A"/><ellipse cx="148" cy="226" rx="14" ry="9" fill="#E8C79A"/><path d="M58 150 Q50 120 70 104 Q66 80 92 72 Q100 50 128 56 Q156 50 164 72 Q190 80 186 104 Q206 120 198 150 Q206 178 184 192 L72 192 Q50 178 58 150 Z" fill="#9A6A44"/><path d="M84 96 q8 -10 18 -6 M150 86 q10 -2 16 8 M70 140 q4 -12 14 -14 M176 128 q10 4 10 16" fill="none"/><ellipse cx="128" cy="170" rx="52" ry="50" fill="#E8C79A"/><path d="M92 168 Q128 160 164 168 L166 214 Q128 226 90 214 Z" fill="#F2C14E"/><ellipse cx="128" cy="122" rx="36" ry="30" fill="#E8C79A"/><ellipse cx="128" cy="132" rx="8" ry="6" fill="#3B2A20"/><ellipse cx="114" cy="116" rx="4.5" ry="6" fill="#3B2A20"/><circle cx="115.5" cy="113.5" r="1.6" fill="#FFFFFF" stroke="none"/><ellipse cx="142" cy="116" rx="4.5" ry="6" fill="#3B2A20"/><circle cx="143.5" cy="113.5" r="1.6" fill="#FFFFFF" stroke="none"/><path d="M122 142 Q128 146 134 142" fill="none"/><circle cx="98" cy="98" r="8" fill="#E8C79A"/><circle cx="158" cy="98" r="8" fill="#E8C79A"/><g transform="translate(128 186) scale(0.42)"><rect x="-34" y="-56" width="68" height="12" rx="5" fill="#CFA976"/><rect x="-34" y="44" width="68" height="12" rx="5" fill="#CFA976"/><path d="M-26 -44 L26 -44 Q26 -14 4 0 Q26 14 26 44 L-26 44 Q-26 14 -4 0 Q-26 -14 -26 -44 Z" fill="#FFF4E2"/><path d="M-16 -30 L16 -30 Q12 -18 0 -10 Q-12 -18 -16 -30 Z" fill="#E8C79A"/><path d="M-20 40 Q0 18 20 40 Z" fill="#E8C79A"/></g><ellipse cx="104" cy="196" rx="11" ry="9" fill="#E8C79A"/><ellipse cx="152" cy="196" rx="11" ry="9" fill="#E8C79A"/></g><g transform="translate(190 140) scale(1.15)"><rect x="-34" y="-56" width="68" height="12" rx="5" fill="#CFA976"/><rect x="-34" y="44" width="68" height="12" rx="5" fill="#CFA976"/><path d="M-26 -44 L26 -44 Q26 -14 4 0 Q26 14 26 44 L-26 44 Q-26 14 -4 0 Q-26 -14 -26 -44 Z" fill="#FFF4E2"/><path d="M-16 -30 L16 -30 Q12 -18 0 -10 Q-12 -18 -16 -30 Z" fill="#E8C79A"/><path d="M-20 40 Q0 18 20 40 Z" fill="#E8C79A"/></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="waiting" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="spines">
+      <path d="M38 195 C25 192 22 181 28 172 C17 163 21 152 29 147 C20 137 24 125 33 120 C25 109 30 96 41 94 C38 81 48 74 59 77 C61 65 73 61 82 68 C91 57 104 60 110 70 C122 64 133 72 134 83 C147 81 155 91 151 103 C162 107 166 120 158 129 C168 138 165 150 157 156 C165 166 161 180 151 183 C157 195 149 207 137 207 Q115 224 83 220 Q51 219 38 195 Z" fill="#9A6A44"/>
+      <path d="M134 83 C147 81 155 91 151 103 C162 107 166 120 158 129 C168 138 165 150 157 156 C165 166 161 180 151 183 C157 195 149 207 137 207 Q124 219 107 220 Q130 208 134 192 C148 187 150 174 143 165 C154 155 153 145 147 138 C155 125 147 113 140 109 Q145 95 134 83 Z" fill="#704D31"/>
+      <path d="M43 105 Q49 99 56 101 M70 80 Q77 77 82 82 M107 84 Q113 80 119 87" fill="none"/>
+    </g>
+    <g id="body">
+      <path d="M68 139 C47 150 43 174 46 192 Q51 218 81 223 L109 223 Q137 219 142 196 C147 174 136 153 120 143 Z" fill="#E8C79A"/>
+    </g>
+    <g id="feet" fill="#E8C79A">
+      <path d="M57 207 Q43 209 41 219 Q39 229 50 230 L72 230 Q80 228 76 219 Q70 207 57 207 Z"/>
+      <path d="M117 211 Q128 207 138 215 Q148 224 140 230 L116 230 Q106 230 108 222 Q109 216 117 211 Z"/>
+    </g>
+    <g id="apron">
+      <path d="M66 146 L74 144 L79 163 L69 167 Z M108 145 L117 148 L122 166 L112 168 Z" fill="#F2C14E"/>
+      <path d="M73 158 Q92 163 113 158 L120 177 Q132 199 132 216 Q95 229 57 216 Q59 194 66 177 Z" fill="#F2C14E"/>
+      <path d="M61 207 Q93 218 129 207 L132 216 Q95 229 57 216 Z" fill="#D9A52E"/>
+    </g>
+    <g id="ears">
+      <circle cx="56" cy="112" r="9" fill="#E8C79A"/>
+      <circle cx="127" cy="116" r="9" fill="#E8C79A"/>
+      <path d="M52 115 Q50 108 56 108 Q61 108 61 113 M122 117 Q121 111 127 111 Q132 112 131 118" fill="#CFA976"/>
+    </g>
+    <g id="head">
+      <path d="M65 101 Q75 94 85 102 Q94 95 104 102 C122 107 133 121 129 135 C126 151 111 159 94 158 C77 158 67 152 58 147 L46 141 Q40 137 44 131 L55 122 Q56 108 65 101 Z" fill="#E8C79A"/>
+      <path d="M59 142 Q66 148 74 143" fill="none"/>
+    </g>
+    <g id="folded-arms" fill="#E8C79A">
+      <path d="M62 166 C50 169 48 182 55 190 Q66 201 87 198 L99 188 L88 178 L72 183 L68 178"/>
+      <path d="M125 167 C137 171 140 183 132 192 Q120 201 104 197 L95 183 L113 180 L117 176"/>
+    </g>
+    <g id="folded-paws" fill="#E8C79A">
+      <path d="M83 181 C88 175 94 178 94 182 C100 178 105 183 103 188 C109 190 106 197 101 197 C98 203 92 201 89 198 Q81 200 78 194 Q76 186 83 181 Z"/>
+      <path d="M102 181 C107 177 113 181 112 185 C119 185 120 191 115 194 C117 200 111 203 107 199 C101 203 96 197 99 193 C93 189 97 183 102 185 Z"/>
+      <path d="M85 186 L90 188 M84 193 L89 194 M103 189 L108 191 M103 196 L109 197" fill="none"/>
+    </g>
+    <g id="hourglass">
+      <path d="M173 119 L180 119 L180 217 L173 217 Z M224 119 L231 119 L231 217 L224 217 Z" fill="#CFA976"/>
+      <path d="M184 121 L220 121 C220 139 212 150 205 159 Q201 165 206 171 C215 183 221 195 220 215 L184 215 C183 195 189 183 198 171 Q203 165 198 159 C190 150 184 139 184 121 Z" fill="#FFF4E2"/>
+      <path d="M192 140 L212 140 Q208 151 202 156 Q196 151 192 140 Z" fill="#E8C79A"/>
+      <path d="M202 165 L202 177" fill="none"/>
+      <path d="M185 204 Q191 193 202 185 Q213 193 219 204 L220 215 L184 215 Z" fill="#E8C79A"/>
+      <path d="M169 110 Q202 106 235 110 L235 121 L169 121 Z" fill="#E8C79A"/>
+      <path d="M169 216 L235 216 L235 228 Q202 232 169 228 Z" fill="#E8C79A"/>
+    </g>
+  </g>
+  <g id="face">
+    <path d="M68 127 Q72 130 76 127 Q76 133 72 133 Q68 133 68 127 Z M101 130 Q105 133 109 130 Q109 136 105 136 Q101 136 101 130 Z" fill="#3B2A20"/>
+    <circle cx="71" cy="130" r="0.9" fill="#FFFFFF"/>
+    <circle cx="104" cy="133" r="0.9" fill="#FFFFFF"/>
+    <circle cx="46" cy="136" r="4" fill="#3B2A20"/>
+  </g>
+</svg>

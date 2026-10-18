@@ -1,1 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="128" cy="150" rx="108" ry="66" fill="#3E8FB0"/><ellipse cx="128" cy="146" rx="88" ry="50" fill="#FFF4E2"/><circle cx="88" cy="128" r="26" fill="#CFA976"/><circle cx="138" cy="118" r="26" fill="#CFA976"/><circle cx="98" cy="172" r="26" fill="#CFA976"/><circle cx="150" cy="166" r="26" fill="#CFA976"/><ellipse cx="84" cy="120" rx="12" ry="6" fill="#F2C14E"/><ellipse cx="134" cy="110" rx="12" ry="6" fill="#F2C14E"/><ellipse cx="94" cy="164" rx="12" ry="6" fill="#F2C14E"/><ellipse cx="146" cy="158" rx="12" ry="6" fill="#F2C14E"/><ellipse cx="196" cy="150" rx="26" ry="18" fill="#CFA976"/><ellipse cx="196" cy="146" rx="21" ry="13" fill="#FFF4E2"/><rect x="186" y="138" width="20" height="12" rx="3" fill="#F2C14E"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="plate">
+    <ellipse cx="128" cy="140" rx="108" ry="75" fill="#3E8FB0"/>
+    <ellipse cx="128" cy="140" rx="94" ry="61" fill="#FFF4E2"/>
+  </g>
+<g id="back-buns">
+    <path d="M57 116 C48 105 57 82 79 79 C102 75 120 93 113 112 C107 129 69 132 57 116 Z" fill="#CFA976"/>
+    <path d="M57 106 C54 91 66 79 82 79 C101 79 114 92 111 105 C100 117 69 119 57 106 Z" fill="#E8C79A"/>
+    <path d="M67 96 C70 83 92 82 102 95 Q106 103 95 106 Q80 111 68 104 Z" fill="#F08A3C"/>
+    <path d="M126 113 C115 99 124 79 145 77 C169 74 185 89 181 108 C176 128 139 129 126 113 Z" fill="#CFA976"/>
+    <path d="M126 103 C120 90 131 78 146 77 C165 75 181 87 180 100 C169 115 139 117 126 103 Z" fill="#E8C79A"/>
+    <path d="M137 92 C144 80 163 83 170 93 Q173 102 163 104 Q145 109 136 100 Z" fill="#F08A3C"/>
+  </g>
+  <g id="middle-buns">
+    <path d="M80 148 C68 134 79 111 101 108 C126 104 146 124 138 144 C131 164 94 165 80 148 Z" fill="#CFA976"/>
+    <path d="M79 137 C73 122 86 109 103 108 C125 106 140 122 137 135 C124 151 94 151 79 137 Z" fill="#E8C79A"/>
+    <path d="M89 126 C94 112 117 113 127 128 Q130 136 119 139 Q99 143 90 135 Z" fill="#9A6A44"/>
+    <path d="M155 149 C141 134 150 112 171 108 C195 104 213 121 207 140 C202 160 170 165 155 149 Z" fill="#CFA976"/>
+    <path d="M153 137 C148 122 158 110 174 108 C193 106 208 118 207 133 C195 149 167 153 153 137 Z" fill="#E8C79A"/>
+    <path d="M163 125 C170 113 190 113 197 127 Q200 135 189 139 Q172 143 163 134 Z" fill="#F08A3C"/>
+  </g>
+  <g id="cut-bun">
+    <path d="M67 164 C70 150 95 143 114 152 C128 157 130 170 119 180 C106 192 72 190 64 177 Z" fill="#CFA976"/>
+    <path d="M66 164 C73 151 96 146 114 154 C130 161 121 175 105 179 C87 184 60 177 66 164 Z" fill="#FFF4E2"/>
+    <path d="M129 177 C124 166 139 153 159 151 C180 149 195 160 190 174 C183 192 143 197 129 177 Z" fill="#CFA976"/>
+    <path d="M130 170 C131 159 145 151 163 151 C181 151 193 159 189 169 C180 182 142 186 130 170 Z" fill="#FFF4E2"/>
+    <path d="M141 161 L164 156 L177 163 L175 171 L151 176 L140 169 Z" fill="#D9A52E"/>
+    <path d="M141 161 L164 156 L177 163 L152 169 L140 165 Z" fill="#F2C14E"/>
+    <path d="M78 165 L82 163 M100 159 L104 160 M91 173 L95 172" fill="none"/>
+  </g>
+  <g id="bun-scores" fill="none">
+    <path d="M76 93 Q82 96 85 102 M149 88 Q155 92 157 100 M100 122 Q107 127 109 135 M176 119 Q183 125 184 134"/>
+  </g>
+</g>
+</svg>

@@ -1,1 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="128" cy="150" rx="108" ry="66" fill="#3E8FB0"/><ellipse cx="128" cy="146" rx="88" ry="50" fill="#FFF4E2"/><rect x="64" y="120" width="110" height="30" rx="15" fill="#F2C14E" transform="rotate(-12 119 135)"/><circle cx="90" cy="130" r="4" fill="#D9A52E" stroke="none"/><circle cx="130" cy="124" r="3" fill="#D9A52E" stroke="none"/><rect x="80" y="148" width="110" height="30" rx="15" fill="#F2C14E" transform="rotate(-12 135 163)"/><circle cx="110" cy="160" r="4" fill="#D9A52E" stroke="none"/><circle cx="150" cy="152" r="3" fill="#D9A52E" stroke="none"/><path d="M150 120 L208 132 L176 172 Z" fill="#F2C14E"/><ellipse cx="188" cy="170" rx="18" ry="11" fill="#E2513B"/><circle cx="110" cy="178" r="2.5" fill="#FFFFFF" stroke="none"/><circle cx="124" cy="182" r="2" fill="#FFFFFF" stroke="none"/><circle cx="98" cy="186" r="2" fill="#FFFFFF" stroke="none"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="plate">
+    <ellipse cx="128" cy="140" rx="108" ry="75" fill="#3E8FB0"/>
+    <ellipse cx="128" cy="140" rx="94" ry="61" fill="#FFF4E2"/>
+  </g>
+<g id="folded-pancake">
+    <path d="M143 86 Q151 81 157 89 L199 144 Q176 166 128 156 Z" fill="#D9A52E"/>
+    <path d="M146 84 Q151 80 155 87 L196 137 Q172 158 126 150 Z" fill="#F2C14E"/>
+    <path d="M151 92 Q151 121 133 145 M137 150 Q166 151 188 138" fill="none"/>
+    <ellipse cx="164" cy="120" rx="5" ry="3" fill="#9A6A44"/>
+    <ellipse cx="153" cy="138" rx="4" ry="3" fill="#9A6A44"/>
+    <ellipse cx="177" cy="134" rx="4" ry="3" fill="#9A6A44"/>
+  </g>
+  <g id="back-roll">
+    <path d="M57 112 Q54 101 66 96 L130 84 Q141 83 145 94 Q148 104 139 110 L73 129 Q62 130 57 112 Z" fill="#F2C14E"/>
+    <path d="M64 119 Q96 112 139 100 L139 110 L73 129 Q66 129 64 119 Z" fill="#D9A52E"/>
+    <ellipse cx="65" cy="113" rx="10" ry="16" fill="#F2C14E" transform="rotate(-18 65 113)"/>
+    <path d="M65 120 Q58 112 64 107 Q70 105 71 114" fill="none"/>
+    <path d="M81 102 L87 101 M104 102 L110 100 M123 91 L127 90" fill="none"/>
+  </g>
+  <g id="front-roll">
+    <path d="M61 151 Q56 138 68 133 L151 111 Q161 109 166 121 Q171 133 160 138 L80 164 Q67 169 61 151 Z" fill="#F2C14E"/>
+    <path d="M74 156 L165 128 Q168 135 160 138 L80 164 Q73 167 69 161 Z" fill="#D9A52E"/>
+    <ellipse cx="70" cy="150" rx="11" ry="17" fill="#F2C14E" transform="rotate(-21 70 150)"/>
+    <path d="M72 158 C62 154 63 141 69 143 Q76 144 74 151" fill="none"/>
+    <ellipse cx="98" cy="137" rx="5" ry="3" fill="#9A6A44"/>
+    <ellipse cx="123" cy="135" rx="4" ry="3" fill="#9A6A44"/>
+    <ellipse cx="147" cy="122" rx="4" ry="3" fill="#9A6A44"/>
+  </g>
+  <g id="jam">
+    <path d="M137 175 C126 169 136 158 148 160 C151 149 169 149 176 158 C192 157 199 168 188 175 C175 182 149 182 137 175 Z" fill="#E2513B"/>
+    <path d="M142 173 Q164 178 182 169" fill="none"/>
+    <path d="M153 160 Q161 156 167 162" fill="none"/>
+  </g>
+  <g id="sugar" fill="#FFFFFF">
+    <ellipse cx="93" cy="152" rx="3" ry="2"/>
+    <ellipse cx="105" cy="159" rx="3" ry="2"/>
+    <ellipse cx="116" cy="149" rx="3" ry="2"/>
+    <ellipse cx="105" cy="146" rx="3" ry="2"/>
+    <ellipse cx="124" cy="160" rx="3" ry="2"/>
+  </g>
+</g>
+</svg>

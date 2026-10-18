@@ -1,1 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M48 150 Q48 230 128 230 Q208 230 208 150 Z" fill="#FFF4E2"/><ellipse cx="128" cy="150" rx="80" ry="17" fill="#EEDDBF"/><ellipse cx="128" cy="152" rx="68" ry="11" fill="#FFFFFF"/><path d="M128 116 Q122 132 126 150" fill="none" stroke="#EDE8E0" stroke-width="12"/><g transform="translate(150 86) rotate(-38)"><path d="M-34 -30 L30 -30 L26 34 Q0 44 -26 34 Z" fill="#FFF4E2"/><path d="M30 -18 Q50 -16 46 6 Q44 18 28 18" fill="none"/><path d="M-34 -30 L-46 -40" fill="none"/><rect x="-28" y="-18" width="52" height="46" rx="8" fill="#FFFFFF"/></g><g transform="translate(208 46) rotate(130)"><rect x="-14" y="0" width="28" height="80" rx="14" fill="#F08A3C"/><ellipse cx="0" cy="0" rx="18" ry="15" fill="#F08A3C"/><ellipse cx="0" cy="2" rx="10" ry="8" fill="#FFF4E2"/></g><path d="M196 128 Q214 104 204 82" fill="none" stroke="#3B2A20" stroke-width="13"/><path d="M192 92 L204 80 L214 94" fill="none" stroke="#3B2A20" stroke-width="13"/><path d="M196 128 Q214 104 204 82" fill="none" stroke="#3E8FB0" stroke-width="6.5"/><path d="M192 92 L204 80 L214 94" fill="none" stroke="#3E8FB0" stroke-width="6.5"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="pour" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="bowl">
+      <path d="M28 177 L199 177 Q190 225 115 231 Q42 226 28 177 Z" fill="#FFF4E2"/>
+      <ellipse cx="113.5" cy="177" rx="85.5" ry="23" fill="#EEDDBF"/>
+      <ellipse cx="113.5" cy="181" rx="69" ry="14" fill="#FFFFFF"/>
+    </g>
+    <g id="milk">
+      <path d="M103 105 C83 117 77 136 77 158 L77 178 Q84 185 93 178 L92 157 C91 139 94 124 113 117 Z" fill="#FFFFFF"/>
+    </g>
+    <g id="jug-handle">
+      <path d="M179 62 C199 49 222 58 220 76 C219 90 206 105 193 103 L187 92 C198 94 209 81 209 74 Q209 61 188 74 Z" fill="#FFF4E2"/>
+    </g>
+    <g id="measuring-jug">
+      <path d="M112 54 L191 92 L172 132 Q165 147 150 140 L105 119 L91 105 L111 99 Q115 79 112 54 Z" fill="#FFF4E2"/>
+      <path d="M113 54 Q149 65 191 92 L185 103 Q147 82 110 67 Z" fill="#EEDDBF"/>
+      <path d="M130 91 L143 97 M127 103 L136 107 M131 118 L143 124" fill="none"/>
+    </g>
+    <g id="rosa-forearm">
+      <path d="M256 12 Q230 21 210 49 L209 68 L225 79 Q241 65 256 58" fill="#F08A3C"/>
+    </g>
+    <g id="rosa-holding-paw">
+      <path d="M207 48 Q195 51 200 62 C192 72 198 83 209 79 C216 88 228 80 224 72 C233 66 226 54 218 59 Q219 47 207 48 Z" fill="#F08A3C"/>
+      <path d="M205 62 Q212 57 220 66 Q224 75 215 77 Q203 76 205 62 Z" fill="#FFF4E2"/>
+    </g>
+    <g id="tipping-motion">
+      <path d="M169 36 C139 17 100 21 79 46 L72 39 L70 64 L95 61 L87 54 C105 32 137 31 163 44 Q171 47 169 36 Z" fill="#3E8FB0"/>
+    </g>
+  </g>
+</svg>

@@ -1,1 +1,37 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="110" cy="186" rx="78" ry="22" fill="#6D7B8A"/><ellipse cx="110" cy="182" rx="66" ry="16" fill="#8E9AA6"/><rect x="180" y="178" width="56" height="14" rx="7" fill="#3B2A20"/><path d="M80 236 q6 -8 0 -16 q-6 -8 0 -16" fill="none" stroke="#F08A3C" stroke-width="6"/><path d="M104 236 q6 -8 0 -16 q-6 -8 0 -16" fill="none" stroke="#F08A3C" stroke-width="6"/><path d="M128 236 q6 -8 0 -16 q-6 -8 0 -16" fill="none" stroke="#F08A3C" stroke-width="6"/><ellipse cx="108" cy="92" rx="52" ry="14" fill="#F2C14E" transform="rotate(-14 108 92)"/><circle cx="96" cy="92" r="4" fill="#D9A52E" stroke="none"/><circle cx="120" cy="88" r="3" fill="#D9A52E" stroke="none"/><rect x="150" y="112" width="50" height="10" rx="5" fill="#8E9AA6" transform="rotate(-30 175 117)"/><g transform="translate(216 112) rotate(70)"><rect x="-17" y="10" width="34" height="80" rx="14" fill="#9A6A44"/><ellipse cx="0" cy="2" rx="24" ry="20" fill="#E2513B"/><rect x="-20" y="14" width="40" height="14" rx="6" fill="#C3331D"/></g><path d="M56 150 Q36 104 64 72" fill="none" stroke="#3B2A20" stroke-width="13"/><path d="M52 80 L64 70 L76 82" fill="none" stroke="#3B2A20" stroke-width="13"/><path d="M56 150 Q36 104 64 72" fill="none" stroke="#3E8FB0" stroke-width="6.5"/><path d="M52 80 L64 70 L76 82" fill="none" stroke="#3E8FB0" stroke-width="6.5"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="flip" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="heat" fill="none">
+      <path d="M76 233 C63 224 84 220 76 211" stroke="#F08A3C"/>
+      <path d="M112 234 C99 225 120 221 112 212" stroke="#F08A3C"/>
+      <path d="M148 233 C135 224 156 220 148 211" stroke="#F08A3C"/>
+    </g>
+    <g id="pan-handle">
+      <path d="M185 172 L222 153 Q230 151 233 157 Q236 164 228 168 L192 188 Z" fill="#6D7B8A"/>
+    </g>
+    <g id="frying-pan">
+      <path d="M25 172 L199 172 Q193 204 112 204 Q33 204 25 172 Z" fill="#8E9AA6"/>
+      <ellipse cx="112" cy="171" rx="87" ry="25" fill="#6D7B8A"/>
+      <ellipse cx="112" cy="171" rx="73" ry="16" fill="#8E9AA6"/>
+    </g>
+    <g id="spatula">
+      <path d="M145 115 L212 104 L215 113 L148 126 Z" fill="#6D7B8A"/>
+      <path d="M105 110 L147 106 Q154 108 155 115 L157 128 Q155 134 148 135 L110 139 Q103 139 102 133 L99 118 Q98 112 105 110 Z" fill="#8E9AA6"/>
+      <path d="M112 118 L114 130 M125 116 L127 129 M138 115 L140 127" fill="none"/>
+    </g>
+    <g id="bo-forearm">
+      <path d="M256 90 L233 91 L228 119 L256 127" fill="#9A6A44"/>
+    </g>
+    <g id="oven-mitt">
+      <path d="M237 89 L237 123 L222 123 C213 130 198 128 193 119 C185 118 180 110 184 104 Q187 98 196 102 C189 93 194 83 203 83 Q214 82 222 91 Z" fill="#E2513B"/>
+      <path d="M228 88 L241 89 L241 125 L228 125 Z" fill="#C3331D"/>
+      <path d="M196 102 Q204 105 205 113" fill="none"/>
+    </g>
+    <g id="pancake">
+      <path d="M49 96 C49 85 66 70 85 64 C107 56 126 59 130 68 L132 74 C131 86 113 98 95 104 C74 111 54 109 50 102 Z" fill="#D9A52E"/>
+      <path d="M49 96 C45 87 64 71 85 64 C106 56 125 58 130 68 C134 77 116 92 95 99 C74 107 54 106 49 96 Z" fill="#F2C14E"/>
+    </g>
+    <g id="flip-motion">
+      <path d="M173 80 C178 48 150 23 117 25 C97 25 81 32 70 44 L63 37 L60 62 L85 58 L78 51 C88 40 101 35 117 35 C144 33 168 53 163 78 Q164 87 173 80 Z" fill="#3E8FB0"/>
+    </g>
+  </g>
+</svg>

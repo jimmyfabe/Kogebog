@@ -1,1 +1,34 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="48" y="196" width="160" height="30" rx="12" fill="#CFA976"/><circle cx="100" cy="192" r="16" fill="#E8C79A"/><circle cx="156" cy="192" r="16" fill="#E8C79A"/><circle cx="128" cy="118" r="26" fill="#E8C79A"/><g transform="translate(128 82) rotate(180)"><rect x="-14" y="0" width="28" height="80" rx="14" fill="#F08A3C"/><ellipse cx="0" cy="0" rx="18" ry="15" fill="#F08A3C"/><ellipse cx="0" cy="2" rx="10" ry="8" fill="#FFF4E2"/></g><g transform="translate(128 154) rotate(0)"><rect x="-14" y="0" width="28" height="80" rx="14" fill="#F08A3C"/><ellipse cx="0" cy="0" rx="18" ry="15" fill="#F08A3C"/><ellipse cx="0" cy="2" rx="10" ry="8" fill="#FFF4E2"/></g><path d="M78 92 Q66 118 80 142" fill="none" stroke="#3B2A20" stroke-width="13"/><path d="M68 132 L80 144 L92 132" fill="none" stroke="#3B2A20" stroke-width="13"/><path d="M78 92 Q66 118 80 142" fill="none" stroke="#3E8FB0" stroke-width="6.5"/><path d="M68 132 L80 144 L92 132" fill="none" stroke="#3E8FB0" stroke-width="6.5"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="roll" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="finished-balls-board">
+      <path d="M65 190 Q68 183 79 183 L177 183 Q187 183 190 191 L203 222 Q207 232 195 233 L60 233 Q49 233 53 222 Z" fill="#FFF4E2"/>
+      <path d="M54 222 Q128 230 202 222" fill="none"/>
+    </g>
+    <g id="finished-dough-balls">
+      <g id="left-ball">
+        <circle cx="96" cy="196" r="22" fill="#E8C79A"/>
+        <path d="M78 209 Q99 218 117 192 C120 209 107 220 94 218 Q83 217 78 209 Z" fill="#CFA976"/>
+      </g>
+      <g id="right-ball">
+        <circle cx="159" cy="196" r="22" fill="#E8C79A"/>
+        <path d="M141 209 Q162 218 180 192 C183 209 170 220 157 218 Q146 217 141 209 Z" fill="#CFA976"/>
+      </g>
+    </g>
+    <g id="rosa-lower-paw">
+      <path d="M256 114 C223 116 196 114 170 110 L151 103 C143 100 138 107 144 112 L123 113 C116 107 109 111 110 118 C101 113 94 119 99 126 C90 127 91 136 99 138 C96 146 105 150 112 146 Q137 157 163 140 C195 144 226 148 256 147" fill="#F08A3C"/>
+      <path d="M111 120 Q132 124 152 115 Q164 122 153 131 Q135 143 115 135 Q108 131 111 120 Z" fill="#FFF4E2"/>
+    </g>
+    <g id="dough-ball">
+      <circle cx="126" cy="94" r="26" fill="#E8C79A"/>
+      <path d="M106 110 C123 118 144 107 151 88 C155 106 142 121 126 120 Q113 120 106 110 Z" fill="#CFA976"/>
+    </g>
+    <g id="rosa-upper-paw">
+      <path d="M0 23 C35 23 61 40 86 48 Q100 43 113 48 C118 42 127 45 127 52 C136 48 142 55 138 61 C147 60 151 68 144 72 C147 80 137 84 131 79 L105 77 C108 85 99 90 94 83 L81 72 C54 63 30 56 0 55" fill="#F08A3C"/>
+      <path d="M99 57 Q115 52 134 63 Q141 68 135 73 Q116 76 101 69 Q95 65 99 57 Z" fill="#FFF4E2"/>
+      <path d="M119 52 L122 58 M131 57 L133 61" fill="none"/>
+    </g>
+    <g id="round-motion">
+      <path d="M87.1 55.1 A55 55 0 1 1 92.1 137.3 L86.6 144.4 Q85.2 146.1 84.1 143.7 L73.5 121.2 Q72.4 118.8 75 119.6 L101.5 127.7 Q104.1 128.5 102.4 130.6 L98.9 128.7 A44 44 0 1 0 94.9 62.9 Q87.1 70.7 87.1 55.1 Z" fill="#3E8FB0"/>
+    </g>
+  </g>
+</svg>

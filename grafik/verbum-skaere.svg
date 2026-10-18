@@ -1,1 +1,50 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="34" y="132" width="188" height="70" rx="18" fill="#E8C79A"/><ellipse cx="116" cy="160" rx="34" ry="26" fill="#FFF4E2"/><path d="M82 160 Q84 132 116 134 Q148 132 150 160" fill="#CFA976"/><ellipse cx="160" cy="174" rx="7" ry="16" fill="#FFF4E2"/><ellipse cx="178" cy="176" rx="7" ry="16" fill="#FFF4E2"/><ellipse cx="196" cy="178" rx="7" ry="16" fill="#FFF4E2"/><path d="M120 140 L196 104 L206 116 L128 152 Z" fill="#8E9AA6"/><rect x="196" y="92" width="44" height="18" rx="8" fill="#3B2A20" transform="rotate(-24 218 101)"/><g transform="translate(236 96) rotate(64)"><rect x="-17" y="0" width="34" height="90" rx="16" fill="#9A6A44"/><ellipse cx="0" cy="0" rx="22" ry="18" fill="#9A6A44"/><ellipse cx="0" cy="3" rx="12" ry="9" fill="#E8C79A"/></g><g transform="translate(24 140) rotate(-70)"><rect x="-17" y="0" width="34" height="90" rx="16" fill="#9A6A44"/><ellipse cx="0" cy="0" rx="22" ry="18" fill="#9A6A44"/><ellipse cx="0" cy="3" rx="12" ry="9" fill="#E8C79A"/></g><path d="M150 64 L150 98" fill="none" stroke="#3B2A20" stroke-width="13"/><path d="M138 86 L150 100 L162 86" fill="none" stroke="#3B2A20" stroke-width="13"/><path d="M150 64 L150 98" fill="none" stroke="#3E8FB0" stroke-width="6.5"/><path d="M138 86 L150 100 L162 86" fill="none" stroke="#3E8FB0" stroke-width="6.5"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="cut" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="cutting-board">
+      <path d="M40 133 Q42 123 54 123 L204 123 Q215 123 218 134 L233 220 Q235 232 222 233 L34 233 Q21 233 23 221 Z" fill="#E8C79A"/>
+      <path d="M24 219 Q26 225 37 225 L220 225 Q230 225 233 220 L233 223 Q234 232 222 233 L34 233 Q22 233 23 224 Z" fill="#CFA976"/>
+    </g>
+    <g id="onion-half">
+      <path d="M54 176 C53 140 69 112 92 112 C117 112 136 140 138 177 Q98 191 54 176 Z" fill="#F2C14E"/>
+      <path d="M63 174 C62 144 74 122 92 122 C111 122 126 144 129 175 Q98 184 63 174 Z" fill="#FFF4E2"/>
+      <path d="M75 172 C74 150 81 134 93 134 C105 134 116 151 117 173 M87 172 C86 158 88 146 94 146 Q103 148 105 173" fill="none"/>
+      <path d="M54 176 Q96 190 138 177 L135 184 Q95 197 56 183 Z" fill="#D9A52E"/>
+    </g>
+    <g id="onion-slices">
+      <g id="upper-slice">
+        <path d="M158 164 C161 148 175 140 187 148 Q196 154 197 169 Q177 179 158 164 Z" fill="#FFF4E2"/>
+        <path d="M158 164 Q177 176 197 169 L196 175 Q176 183 159 170 Z" fill="#F2C14E"/>
+        <path d="M168 162 Q178 146 187 164" fill="none"/>
+      </g>
+      <g id="right-slice">
+        <path d="M186 191 C189 175 201 168 213 176 Q222 181 224 196 Q204 205 186 191 Z" fill="#FFF4E2"/>
+        <path d="M186 191 Q205 203 224 196 L223 202 Q204 210 187 197 Z" fill="#F2C14E"/>
+        <path d="M196 189 Q205 175 214 191" fill="none"/>
+      </g>
+      <g id="lower-slice">
+        <path d="M143 210 C146 195 159 188 171 196 Q180 201 182 215 Q162 224 143 210 Z" fill="#FFF4E2"/>
+        <path d="M143 210 Q162 222 182 215 L181 221 Q161 229 144 216 Z" fill="#F2C14E"/>
+        <path d="M153 208 Q162 194 172 211" fill="none"/>
+      </g>
+    </g>
+    <g id="bo-claw-grip">
+      <path d="M0 87 C23 87 41 97 54 106 C56 96 65 93 71 101 C77 95 86 100 85 108 C94 104 101 112 97 119 C106 121 106 131 98 134 C95 143 84 145 78 137 Q62 141 53 130 C34 126 17 124 0 124" fill="#9A6A44"/>
+      <path d="M68 110 Q77 110 76 120 M80 118 Q90 118 88 128 M70 129 Q74 135 80 134" fill="none"/>
+    </g>
+    <g id="bo-knife-forearm">
+      <path d="M256 61 C241 61 230 69 222 78 L226 104 Q243 104 256 96" fill="#9A6A44"/>
+    </g>
+    <g id="knife">
+      <path d="M184 93 L114 155 C137 151 165 135 193 111 Z" fill="#8E9AA6"/>
+      <path d="M114 155 C143 143 166 128 190 105 L193 111 C165 135 137 151 114 155 Z" fill="#6D7B8A"/>
+      <path d="M184 93 L222 66 Q229 62 234 69 Q239 76 233 81 L193 111 Z" fill="#3B2A20"/>
+    </g>
+    <g id="bo-holding-paw">
+      <path d="M238 74 C232 67 224 64 219 68 C212 65 205 70 208 77 C199 76 196 84 203 89 C197 95 202 102 209 101 C209 109 219 113 225 106 Q237 104 241 92" fill="#9A6A44"/>
+      <path d="M210 79 L217 84 M207 90 L215 95 M216 101 L222 104" fill="none"/>
+    </g>
+    <g id="downward-motion">
+      <path d="M139 24 C155 31 161 47 159 65 L168 65 Q170 65 168 68 L155 86 Q153 89 151 86 L138 68 Q136 65 139 65 L149 65 C151 51 147 39 135 33 Q130 30 133 26 Q135 22 139 24 Z" fill="#3E8FB0"/>
+    </g>
+  </g>
+</svg>
