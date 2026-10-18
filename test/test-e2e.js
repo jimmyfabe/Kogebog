@@ -592,6 +592,11 @@ async function tastatur(browser, skaerm) {
   await side.evaluate(() => { location.hash = '#/ret/pandekager'; });
   await side.waitForSelector('.ret h1');
   tjek((await side.locator('.fortsaet').textContent().catch(() => '')).includes('trin 2'), 'Fortsæt ved trin 2 skal vises');
+  // U17: «Fortsæt» er den store knap, og den anden siger, at den starter forfra
+  tjek(await side.locator('.handlinger .knap.primaer').count() === 1 && await side.locator('.fortsaet.primaer').count() === 1, 'Fortsæt skal være den eneste store knap');
+  tjek((await side.locator('.start').textContent().catch(() => '')).trim() === 'Start forfra', 'knappen ved siden af Fortsæt skal hedde «Start forfra»');
+  await tjekLayout(side, 'tastatur ret med Fortsæt', { knapperSes: true });
+  await foto(side, 'desktop-ret-fortsaet');
   // Hold med tastaturet: mellemrum i 2 sekunder på et voksen-trin
   await side.evaluate(() => { location.hash = '#/ret/pandekager/trin/10'; });
   await side.waitForSelector('.voksen-hold');

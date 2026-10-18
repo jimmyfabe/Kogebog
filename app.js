@@ -206,9 +206,13 @@ function retSkaerm(m) {
   });
 
   const sidste = Lager.hent().sidste;
-  const fortsaet = sidste && sidste.ret === m.id && sidste.nr > 1 && sidste.nr <= m.trin.length && Date.now() - sidste.tid < FORTSAET_MS
-    ? knap('Fortsæt ved trin ' + sidste.nr, { klasse: 'fortsaet', onclick: () => gaaTilTrin(m, sidste.nr) })
-    : null;
+  const fortsaetNr = sidste && sidste.ret === m.id && sidste.nr > 1 && sidste.nr <= m.trin.length && Date.now() - sidste.tid < FORTSAET_MS
+    ? sidste.nr : 0;
+  // Gik man ud midt i retten, er «Fortsæt» den store knap, og «Start forfra» siger, hvad den gør
+  const start = fortsaetNr
+    ? [knap('Start forfra', { klasse: 'start forfra', ikonNavn: 'igen', onclick: () => gaaTilTrin(m, 1) }),
+      knap('Fortsæt ved trin ' + fortsaetNr, { klasse: 'primaer fortsaet', ikonNavn: 'naeste', ikonEfter: true, onclick: () => gaaTilTrin(m, fortsaetNr) })]
+    : knap('Start', { klasse: 'primaer start', ikonNavn: 'naeste', ikonEfter: true, onclick: () => gaaTilTrin(m, 1) });
 
   const print = holdKnap({
     klasse: 'lille print-knap',
@@ -236,8 +240,7 @@ function retSkaerm(m) {
     el('footer', { class: 'handlinger' },
       print,
       el('span', { class: 'skub' }),
-      fortsaet,
-      knap('Start', { klasse: 'primaer start', ikonNavn: 'naeste', ikonEfter: true, onclick: () => gaaTilTrin(m, 1) })));
+      start));
 }
 
 // ---------- Trinene ----------

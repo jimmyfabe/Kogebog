@@ -318,7 +318,6 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .ingr-maengde { font-size: 19px; font-weight: 800; }
 .ingr-navn { font-size: 18px; color: var(--kakao); text-align: center; line-height: 1.2; overflow-wrap: anywhere; }
 
-.fortsaet { font-size: 20px; }
 .start { min-width: 220px; }
 
 /* ---------- Trinene ---------- */
@@ -495,6 +494,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .ingr-gitter { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
   .handlinger .skub { display: none; }
   .ret .handlinger .start, .ret .handlinger .fortsaet { flex: 1 1 100%; order: -1; }
+  .ret .handlinger .fortsaet { order: -2; }
   .ret .handlinger .print-knap { margin: 0 auto; }
 
   .scene {
