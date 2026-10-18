@@ -566,6 +566,15 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .tilbage > span { display: none; }
 }
 
+/* Uden :has (iOS under 15.4) får fremskridtet ikke sin egen række under pillen, og «Tiden er gået» fylder for meget
+   ved siden af det: dér viser topbaren «0:00» på den gule, pulserende pille, som før rækken kom til */
+@supports not selector(:has(*)) {
+  @media (max-width: 760px) {
+    .topbar .pille.faerdig .pille-tal { display: inline; }
+    .topbar .pille.faerdig .pille-slut { display: none; }
+  }
+}
+
 /* iPad på højkant (op til 900 px): «Fortsæt ved trin N» står først og fylder hele rækken, som på iPhone.
    Før faldt den ned på en række for sig under «Start forfra» (768 px) og lignede det mindst vigtige valg */
 @media (min-width: 701px) and (max-width: 900px) and (min-height: 521px) {

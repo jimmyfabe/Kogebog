@@ -945,6 +945,30 @@ async function former(browser) {
         maal.push(hvor + ': mindste streg ' + top.mindsteStreg + ' px');
         await tjekLayout(side, hvor, { knapperSes: true });
         if (nr === 9) await foto(side, n + '-former-pille');
+        // Uden :has (iOS under 15.4) står pillen ved siden af fremskridtet, og «Tiden er gået» fylder for meget: dér viser
+        // pillen «0:00». Reglen står i @supports not selector(:has(*)) og må ikke gælde her, hvor WebKit kan :has.
+        // Den prøves ved at lægge dens regler ind i arket uden @supports og tage dem ud igen
+        if (nr === 13) {
+          const u = await side.evaluate(() => {
+            const vist = () => [...document.querySelectorAll('#app > .skaerm:not([data-gammel]) .topbar .pille > span')]
+              .filter((e) => getComputedStyle(e).display !== 'none').map((e) => e.textContent.trim()).join(' + ');
+            let regel = null;
+            let ark = null;
+            for (const a of document.styleSheets) {
+              for (const r of a.cssRules) if (r instanceof CSSSupportsRule && /not\s*\(?\s*selector\(\s*:has\(/.test(r.conditionText)) { regel = r; ark = a; }
+            }
+            const ud = { kanHas: CSS.supports('selector(:has(*))'), medHas: vist(), regel: !!regel, udenHas: null };
+            if (regel) {
+              const n = ark.cssRules.length;
+              for (const r of regel.cssRules) ark.insertRule(r.cssText, ark.cssRules.length);
+              ud.udenHas = vist();
+              while (ark.cssRules.length > n) ark.deleteRule(ark.cssRules.length - 1);
+            }
+            return ud;
+          });
+          tjek(u.kanHas && u.medHas === 'Tiden er gået', hvor + ': med :has skal pillen sige «Tiden er gået» ' + JSON.stringify(u));
+          tjek(u.regel && u.udenHas === '0:00', hvor + ': uden :has (iOS under 15.4) skal pillen vise «0:00» (@supports not selector(:has(*))) ' + JSON.stringify(u));
+        }
       }
     }
 
