@@ -1,0 +1,60 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Tunfrikadeller",
+  "description": "Hurtige frikadeller af tun på dåse med persille og yoghurt.",
+  "image": "grafik/ret-tunfrikadeller.svg",
+  "inLanguage": "da",
+  "recipeYield": "10-12 frikadeller",
+  "prepTime": "PT10M",
+  "cookTime": "PT15M",
+  "totalTime": "PT25M",
+  "recipeIngredient": [
+    "2 dåser tun i vand (ca. 185 g)",
+    "2 æg",
+    "1 løg, groftrevet",
+    "2 fed hvidløg, finthakkede",
+    "3 spsk græsk yoghurt",
+    "3 spsk finvalsede havregryn",
+    "2 dl hakket persille",
+    "¾ tsk groft salt",
+    "peber",
+    "1 spsk rapsolie",
+    "10 g smør"
+  ],
+  "tool": ["dåseåbner", "rivejern", "kniv", "skærebræt", "stor skål", "grydeske", "spiseske", "kop", "tallerken", "pande", "paletkniv"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Riv løget groft.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["loeg"], "note": "Rivejernet er skarpt, så den voksne river." } },
+    { "@type": "HowToStep", "text": "Hak hvidløg og persille fint.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["hvidloeg", "krydderurt"], "note": "Kilden siger 2 dl hakket persille. Det er meget, men det giver farsen farve." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra tunen.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["tun"], "note": "Den voksne åbner dåserne: kanten er skarp. Tryk låget ned, og hæld vandet ud." } },
+    { "@type": "HowToStep", "text": "Kom tun, løg og hvidløg i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["tun", "loeg", "hvidloeg"] } },
+    { "@type": "HowToStep", "text": "Kom yoghurt, havregryn og persille i.", "tumbi": { "verbum": "haelde", "ikoner": ["yoghurt", "havregryn", "krydderurt"], "note": "3 spsk yoghurt og 3 spsk havregryn." } },
+    { "@type": "HowToStep", "text": "Kom salt og peber i.", "tumbi": { "verbum": "haelde", "ikoner": ["salt", "peber"] } },
+    { "@type": "HowToStep", "text": "Rør æggene i farsen.", "tumbi": { "verbum": "roere", "ikoner": ["aeg"], "note": "Slå æggene ud i en kop først. Er farsen for våd, kommer den voksne lidt flere havregryn i." } },
+    { "@type": "HowToStep", "text": "Form frikadeller med en ske.", "tumbi": { "verbum": "rulle", "note": "10-12 stk. Læg dem på en tallerken. Den voksne lægger dem på panden." } },
+    { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg i farsen." } },
+    { "@type": "HowToStep", "text": "Steg frikadellerne i olie og smør.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 360, "ikoner": ["olie", "smoer"], "note": "Varm olien, og smelt smørret på panden. Jævn varme, ca. 12 min i alt." } },
+    { "@type": "HowToStep", "text": "Vend frikadellerne forsigtigt.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 360, "note": "Vend dem af og til, så de bliver gyldne og sprøde hele vejen rundt." } },
+    { "@type": "HowToStep", "text": "Smag på en frikadelle.", "tumbi": { "verbum": "smage", "note": "Lad den køle lidt først." } }
+  ],
+  "tumbi": {
+    "id": "tunfrikadeller",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Arla: «Tunfrikadeller» (arla.dk). Trinene er egen tekst",
+    "ingredienser": [
+      { "ikon": "tun", "maengde": "2 dåser" },
+      { "ikon": "aeg", "maengde": "2" },
+      { "ikon": "loeg", "maengde": "1" },
+      { "ikon": "hvidloeg", "maengde": "2 fed" },
+      { "ikon": "yoghurt", "maengde": "3 spsk" },
+      { "ikon": "havregryn", "maengde": "3 spsk" },
+      { "ikon": "krydderurt", "maengde": "2 dl" },
+      { "ikon": "salt", "maengde": "¾ tsk" },
+      { "ikon": "peber", "maengde": "" },
+      { "ikon": "olie", "maengde": "1 spsk" },
+      { "ikon": "smoer", "maengde": "10 g" }
+    ]
+  }
+}
