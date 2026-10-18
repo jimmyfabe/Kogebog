@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="plate">
+    <ellipse cx="128" cy="140" rx="108" ry="75" fill="#3E8FB0"/>
+    <ellipse cx="128" cy="140" rx="94" ry="61" fill="#FFF4E2"/>
+  </g>
+  <g id="back-bun">
+    <path d="M98 122 C88 104 104 84 128 84 C152 84 168 104 158 122 C150 134 106 134 98 122 Z" fill="#CFA976"/>
+    <path d="M100 112 C98 96 112 86 128 86 C146 86 158 96 156 112 C146 122 110 122 100 112 Z" fill="#E8C79A"/>
+  </g>
+  <g id="front-buns">
+    <path d="M56 164 C46 146 62 126 86 126 C110 126 126 146 116 164 C108 176 64 176 56 164 Z" fill="#CFA976"/>
+    <path d="M58 154 C56 138 70 128 86 128 C104 128 116 138 114 154 C104 164 68 164 58 154 Z" fill="#E8C79A"/>
+    <path d="M140 164 C130 146 146 126 170 126 C194 126 210 146 200 164 C192 176 148 176 140 164 Z" fill="#CFA976"/>
+    <path d="M142 154 C140 138 154 128 170 128 C188 128 200 138 198 154 C188 164 152 164 142 154 Z" fill="#E8C79A"/>
+  </g>
+  <g id="seeds" fill="#5BAA6A">
+    <ellipse cx="118" cy="98" rx="4" ry="2.5" transform="rotate(-20 118 98)"/>
+    <ellipse cx="138" cy="102" rx="4" ry="2.5" transform="rotate(25 138 102)"/>
+    <ellipse cx="78" cy="140" rx="4" ry="2.5" transform="rotate(-15 78 140)"/>
+    <ellipse cx="96" cy="146" rx="4" ry="2.5" transform="rotate(30 96 146)"/>
+    <ellipse cx="162" cy="140" rx="4" ry="2.5" transform="rotate(20 162 140)"/>
+    <ellipse cx="182" cy="146" rx="4" ry="2.5" transform="rotate(-25 182 146)"/>
+  </g>
+  <g id="oats" fill="#FFF4E2">
+    <ellipse cx="128" cy="108" rx="3" ry="2"/>
+    <ellipse cx="86" cy="152" rx="3" ry="2"/>
+    <ellipse cx="172" cy="152" rx="3" ry="2"/>
+  </g>
+</g>
+</svg>
