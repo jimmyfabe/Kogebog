@@ -23,11 +23,11 @@
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
     { "@type": "HowToStep", "text": "Riv løget fint.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["loeg"], "note": "Rivejernet er skarpt, så den voksne river. Eller hak løget meget fint." } },
-    { "@type": "HowToStep", "text": "Kom kødet i den store skål.", "tumbi": { "verbum": "haelde", "ikoner": ["koed"] } },
-    { "@type": "HowToStep", "text": "Kom løg, æg og havregryn i.", "tumbi": { "verbum": "haelde", "ikoner": ["loeg", "aeg", "havregryn"] } },
+    { "@type": "HowToStep", "text": "Kom løg og havregryn i den store skål.", "tumbi": { "verbum": "haelde", "ikoner": ["loeg", "havregryn"] } },
     { "@type": "HowToStep", "text": "Mål 1 dl mælk.", "tumbi": { "verbum": "maale", "ikoner": ["maelk"] } },
     { "@type": "HowToStep", "text": "Hæld mælken i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk"] } },
     { "@type": "HowToStep", "text": "Kom salt og peber i.", "tumbi": { "verbum": "haelde", "ikoner": ["salt", "peber"] } },
+    { "@type": "HowToStep", "text": "Kom kødet og ægget i.", "tumbi": { "verbum": "haelde", "ikoner": ["koed", "aeg"], "note": "Kødet og ægget kommer i til sidst, så rører barnet ikke mælk og salt med råt kød på fingrene." } },
     { "@type": "HowToStep", "text": "Rør farsen godt sammen.", "tumbi": { "verbum": "roere", "ikoner": ["koed"], "note": "Rør med en grydeske i 2-3 minutter, til farsen er sej og samler sig." } },
     { "@type": "HowToStep", "text": "Lad farsen hvile i 15 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 900, "note": "Gerne i køleskabet. Så er den lettere at forme." } },
     { "@type": "HowToStep", "text": "Form frikadeller med en våd ske.", "tumbi": { "verbum": "rulle", "ikoner": ["koed"], "note": "Ca. 16 stk. Dyp skeen i koldt vand mellem hver, og form dem i den våde hånd." } },

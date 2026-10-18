@@ -151,6 +151,7 @@ export function valider(rod = ROD) {
     else {
       trinAntal.set(filId, trin.length);
       let timerSek = 0;
+      const forurenet = new Set(); // trin, der allerede er meldt for at røre andet efter det rå
       trin.forEach((s, i) => {
         const hvor = 'trin ' + (i + 1);
         tal.trin++;
@@ -183,8 +184,19 @@ export function valider(rod = ROD) {
             else if (!retIkoner.has(ik)) f(hvor + ': ikonet «' + ik + '» er ikke blandt rettens ingredienser');
           }
           const raa = (Array.isArray(st.ikoner) ? st.ikoner : []).filter((ik) => RAA_IKONER.includes(ik));
-          if (raa.length && !trin.slice(i + 1).some((x) => x && x.tumbi && x.tumbi.verbum === 'vaske-haender')) {
+          const vask = trin.findIndex((x, k) => k > i && x && x.tumbi && x.tumbi.verbum === 'vaske-haender');
+          if (raa.length && vask < 0) {
             f(hvor + ': rører råt kød eller æg (' + liste(raa) + '), men der kommer ikke et «vaske-haender»-trin bagefter');
+          } else if (raa.length) {
+            // Indtil hænderne er vasket, må barnet kun røre det rå (ellers kommer kødet over på mælkekartonen og saltet)
+            for (let k = i + 1; k < vask; k++) {
+              const ik = trin[k] && trin[k].tumbi && Array.isArray(trin[k].tumbi.ikoner) ? trin[k].tumbi.ikoner : [];
+              const andre = ik.filter((x) => !RAA_IKONER.includes(x));
+              if (andre.length && !forurenet.has(k)) {
+                forurenet.add(k);
+                f('trin ' + (k + 1) + ': rører ' + liste(andre) + ' med hænder, der har rørt råt kød eller æg i trin ' + (i + 1) + '. Flyt trinnet, så det rå kommer sidst før «vaske-haender»');
+              }
+            }
           }
         }
       });

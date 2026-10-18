@@ -96,6 +96,12 @@ test('råt kød uden «vask hænderne» bagefter', () => {
     'rører råt kød eller æg (koed), men der kommer ikke et «vaske-haender»-trin bagefter');
 });
 
+test('andre ingredienser mellem råt kød/æg og håndvasken', () => {
+  forventFejl('opskrifter/pandekager.json', (d) => {
+    d.recipeInstructions.splice(7, 0, { '@type': 'HowToStep', text: 'Hæld sukker i.', tumbi: { verbum: 'haelde', ikoner: ['sukker'] } });
+  }, 'trin 8: rører sukker med hænder, der har rørt råt kød eller æg i trin 7');
+});
+
 test('ingrediens-ikoner skal være kendte og passe til mængden', () => {
   forventFejl('opskrifter/pandekager.json', (d) => { d.tumbi.ingredienser[0].ikon = 'kanel'; }, 'ingrediens 1: ukendt ikon "kanel"');
   forventFejl('opskrifter/pandekager.json', (d) => { d.tumbi.ingredienser[0].maengde = '3 dl'; }, 'ingrediens 1: mængden «3 dl» passer ikke til «2,5 dl hvedemel»');
