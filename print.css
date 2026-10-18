@@ -1,0 +1,86 @@
+/* print.css — A4-printet til den voksne. Sort-hvid-venligt: rammer og ikoner, ingen farvede flader. */
+
+@page { size: A4; margin: 14mm 14mm 16mm; }
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", "Nunito", "Segoe UI", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.45;
+  color: #111;
+  background: #F3EBDD;
+  overflow-x: hidden;
+}
+img { max-width: 100%; height: auto; }
+h1, h2, p { margin: 0; }
+
+/* Værktøjslinjen (kun på skærmen) */
+.vaerktoej { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; max-width: 210mm; margin: 0 auto; padding: 16px; }
+.knap {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 56px; padding: 0 22px;
+  border: 3px solid #3B2A20; border-radius: 999px;
+  background: #fff; color: #3B2A20; box-shadow: 0 4px 0 #3B2A20;
+  font: inherit; font-weight: 750; text-decoration: none; cursor: pointer;
+}
+.knap.primaer { background: #F2C14E; }
+.knap:disabled { opacity: .55; cursor: default; }
+.knap:active { transform: translateY(3px); box-shadow: 0 1px 0 #3B2A20; }
+:focus-visible { outline: 4px solid #2E6A83; outline-offset: 3px; }
+
+/* Arket */
+.ark { max-width: 210mm; margin: 0 auto 32px; padding: 14mm; background: #fff; border: 1px solid #d6cbb8; }
+.besked { font-size: 18px; margin-top: 8px; }
+
+.hoved { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding-bottom: 8px; border-bottom: 2.5px solid #111; }
+.hoved h1 { font-size: 30px; line-height: 1.1; }
+.meta { color: #444; margin-top: 2px; }
+.beskrivelse { margin-top: 4px; }
+.ikke-afproevet { flex: none; padding: 4px 10px; border: 2px dashed #111; border-radius: 8px; font-weight: 700; font-size: 15px; }
+
+.spalter { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.75fr); gap: 26px; margin-top: 14px; }
+h2 { font-size: 19px; margin: 0 0 6px; padding-bottom: 3px; border-bottom: 1.5px solid #111; }
+.ingredienser h2 + .tjek { margin-bottom: 14px; }
+.ingredienser h2:not(:first-child) { margin-top: 14px; }
+
+ul.tjek { list-style: none; margin: 0; padding: 0; }
+ul.tjek li { position: relative; padding: 2px 0 2px 26px; break-inside: avoid; }
+ul.tjek li::before { content: ""; position: absolute; left: 0; top: 7px; width: 14px; height: 14px; border: 1.5px solid #111; border-radius: 2px; }
+.redskaber { color: #333; }
+
+ol.trin { margin: 0; padding-left: 26px; }
+ol.trin li { padding: 5px 0 6px 4px; break-inside: avoid; border-bottom: 1px dotted #999; }
+ol.trin li:last-child { border-bottom: 0; }
+ol.trin li::marker { font-weight: 800; }
+.trin-ikon { float: left; width: 34px; height: 34px; margin: 0 10px 0 0; filter: grayscale(1) contrast(1.15); }
+.trin-krop { overflow: hidden; }
+.trin-tekst { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-weight: 650; }
+.maerke { display: inline-flex; align-items: center; gap: 4px; padding: 0 7px; border: 1.5px solid #111; border-radius: 6px; font-size: 13px; font-weight: 700; white-space: nowrap; }
+.voksen .maerke:first-of-type { border-width: 2.5px; }
+.maerke .ikon { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.note { font-size: 14px; color: #333; margin-top: 1px; }
+
+.fod { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px 16px; margin-top: 16px; padding-top: 8px; border-top: 1.5px solid #111; font-size: 14px; }
+.fod p:first-child { font-weight: 700; }
+
+@media (max-width: 640px) {
+  .ark { padding: 18px 16px; border-left: 0; border-right: 0; }
+  .spalter { grid-template-columns: minmax(0, 1fr); }
+  .hoved { flex-direction: column; }
+  .vaerktoej .knap { flex: 1 1 auto; }
+}
+
+@media print {
+  body { background: #fff; font-size: 10.5pt; line-height: 1.35; }
+  .vaerktoej { display: none; }
+  .ark { max-width: none; margin: 0; padding: 0; border: 0; }
+  .hoved h1 { font-size: 22pt; }
+  h2 { font-size: 12.5pt; }
+  .spalter { grid-template-columns: minmax(0, 1fr) minmax(0, 1.75fr); gap: 7mm; }
+  .trin-ikon { width: 9mm; height: 9mm; }
+  .maerke { font-size: 8.5pt; }
+  .note { font-size: 9pt; }
+  .fod { font-size: 9pt; }
+}
