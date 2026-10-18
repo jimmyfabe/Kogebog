@@ -172,9 +172,10 @@ async function tjekLayout(side, hvor, { knapperSes = false } = {}) {
       .map((e) => navn(e) + ' bund ' + Math.round(e.getBoundingClientRect().bottom + window.scrollY) + ' > ' + H);
     const billeder = [...document.images].filter((i) => !i.complete || !i.naturalWidth).map((i) => i.getAttribute('src'));
     const udenAlt = [...document.images].filter((i) => !i.hasAttribute('alt')).map((i) => i.getAttribute('src'));
-    // Siden må ikke være højere end indholdet (UI-review 4: #meddelelse lå under #app og gav 1 px lodret rul)
-    const appBund = Math.ceil(document.getElementById('app').getBoundingClientRect().bottom + window.scrollY);
-    const ekstra = document.documentElement.scrollHeight - Math.max(H, appBund);
+    // Siden må ikke være højere end indholdet (UI-review 4: #meddelelse lå under #app og gav 1 px lodret rul).
+    // Printsiden har intet #app og tjekkes ikke her
+    const app = document.getElementById('app');
+    const ekstra = app ? document.documentElement.scrollHeight - Math.max(H, Math.ceil(app.getBoundingClientRect().bottom + window.scrollY)) : 0;
     return { bred: document.documentElement.scrollWidth, vindue: W, udenfor: udenfor.slice(0, 6), smaa, smaaBoern, traengt, underKanten, billeder, udenAlt, ekstra };
   }, { boern: BOERNEKNAPPER, skaermknapper: SKAERMKNAPPER });
   tjek(r.bred <= r.vindue, hvor + ': vandret rulning (' + r.bred + ' > ' + r.vindue + ')');
