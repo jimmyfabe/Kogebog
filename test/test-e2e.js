@@ -872,21 +872,30 @@ async function former(browser) {
       }
     }
 
-    // Retten med og uden «Fortsæt»: knapperne kan ses uden at rulle, og «Fortsæt» står først, over de andre
-    if (sk.viewport.height > 520) {
-      for (const fortsaet of [false, true]) {
-        await medGemt(side, { sidste: fortsaet ? { ret: 'pandekager', nr: 7 } : null }, '#/ret/pandekager');
-        await side.waitForSelector(fortsaet ? '.ret .fortsaet' : '.ret .start');
-        const hvor = n + ' ret' + (fortsaet ? ' med Fortsæt' : '');
-        await tjekLayout(side, hvor, { knapperSes: true });
-        if (fortsaet) {
-          const k = await side.evaluate(() => Object.fromEntries(['.fortsaet', '.forfra', '.print-knap']
-            .map((s) => { const b = document.querySelector('.handlinger ' + s).getBoundingClientRect(); return [s, { top: Math.round(b.top), bund: Math.round(b.bottom), bredde: Math.round(b.width) }]; })));
-          tjek(k['.fortsaet'].bund <= Math.min(k['.forfra'].top, k['.print-knap'].top) + 1, hvor + ': «Fortsæt» skal stå først, over de andre knapper ' + JSON.stringify(k));
-          tjek(k['.fortsaet'].bredde > k['.forfra'].bredde, hvor + ': «Fortsæt» skal være bredere end «Start forfra» ' + JSON.stringify(k));
-        }
-        await foto(side, n + '-former-ret' + (fortsaet ? '-fortsaet' : ''));
+    // Retten med og uden «Fortsæt»: knapperne kan ses uden at rulle, og «Fortsæt» står først, over de andre.
+    // På langs er der kun højde til én række knapper: dér står «Fortsæt» til højre som på iPad
+    const lav = sk.viewport.height <= 520;
+    for (const fortsaet of [false, true]) {
+      await medGemt(side, { sidste: fortsaet ? { ret: 'pandekager', nr: 7 } : null }, '#/ret/pandekager');
+      await side.waitForSelector(fortsaet ? '.ret .fortsaet' : '.ret .start');
+      const hvor = n + ' ret' + (fortsaet ? ' med Fortsæt' : '');
+      await tjekLayout(side, hvor, { knapperSes: true });
+      if (fortsaet && !lav) {
+        const k = await side.evaluate(() => Object.fromEntries(['.fortsaet', '.forfra', '.print-knap']
+          .map((s) => { const b = document.querySelector('.handlinger ' + s).getBoundingClientRect(); return [s, { top: Math.round(b.top), bund: Math.round(b.bottom), bredde: Math.round(b.width) }]; })));
+        tjek(k['.fortsaet'].bund <= Math.min(k['.forfra'].top, k['.print-knap'].top) + 1, hvor + ': «Fortsæt» skal stå først, over de andre knapper ' + JSON.stringify(k));
+        tjek(k['.fortsaet'].bredde > k['.forfra'].bredde, hvor + ': «Fortsæt» skal være bredere end «Start forfra» ' + JSON.stringify(k));
       }
+      await foto(side, n + '-former-ret' + (fortsaet ? '-fortsaet' : ''));
+    }
+
+    // Trinene: «Næste» kan ses uden at rulle, også på langs (et almindeligt trin, et voksen-trin med timer, en lang note)
+    for (const [ret, nr] of [['pandekager', 3], ['pandekager', 10], ['boller', 9]]) {
+      const hash = '#/ret/' + ret + '/trin/' + nr;
+      await side.evaluate((h) => { location.hash = h; }, hash);
+      await side.waitForFunction((h) => location.hash === h && !!document.querySelector('.trin h1') && [...document.images].every((i) => i.complete && i.naturalWidth), hash);
+      await tjekLayout(side, n + ' ' + ret + ' trin ' + nr, { knapperSes: true });
+      if (nr === 10) await foto(side, n + '-former-trin-10');
     }
     tjek(side.fejl.length === 0, n + ' (skærmformer): ' + side.fejl.join(' | '));
     await ctx.close();
