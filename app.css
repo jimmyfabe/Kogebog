@@ -605,6 +605,14 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .scene { grid-template-columns: min(44svh, 40%) minmax(0, 1fr); grid-template-areas: "billede maerke" "billede tekst"; column-gap: 28px; margin: 4px 24px; padding: 8px 20px; }
   /* Billedet står øverst: midt i en høj tekstkolonne (voksen-trin med timer og note) lå det under bunden */
   .verbum-ramme { width: min(100%, 44svh); align-self: start; }
+  /* «Læs op» står som rund højttaler ved siden af trinteksten, som på retten: under ikonerne lå den under bunden
+     (844×390). Børnene kan ikke læse trinnet selv. Teksten «Læs op» er skjult, men er stadig knappens navn */
+  .trin-tekst { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px 14px; align-items: center; justify-items: start; }
+  .trin-tekst h1 { grid-column: 1; grid-row: 1; }
+  .trin-knapper { display: contents; }
+  .trin-tekst .laes-op { grid-column: 2; grid-row: 1; align-self: start; width: var(--tryk); padding: 0; border-radius: 50%; }
+  .trin-tekst .laes-op > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .trin-ikoner, .trin-tekst .timer, .note { grid-column: 1 / -1; }
   /* Retten: billede og navn øverst (før stod navnet midt i den lange række og blev dækket af bunden).
      To lige brede kolonner: på 667 px fik navnet ellers tre linjer i den smalle venstre kolonne */
   .ret-indhold { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px 24px; padding: 6px 24px 10px; align-items: start; }

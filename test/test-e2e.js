@@ -1026,6 +1026,11 @@ async function former(browser) {
       // … og det samme gør trinteksten (på 667×375 lå den under bunden)
       const tekst = await modBund(side, '#trin-tekst');
       tjek(tekst.bund <= tekst.bundTop, n + ' ' + ret + ' trin ' + nr + ': trinteksten skal ses over bunden uden at rulle ' + JSON.stringify(tekst));
+      // På langs kan «Læs op» også ses uden at rulle: børnene kan ikke læse trinnet selv (på 844×390 lå den under bunden)
+      if (lav) {
+        const laes = await modBund(side, '.laes-op');
+        tjek(laes.bund <= laes.bundTop, n + ' ' + ret + ' trin ' + nr + ': «Læs op» skal ses over bunden uden at rulle ' + JSON.stringify(laes));
+      }
       if (nr === 10) await foto(side, n + '-former-trin-10');
       if (nr === 10) {
         // strong er et flex-element (en blok), så linjerne tælles på teksten: én kasse pr. linje
@@ -1056,6 +1061,12 @@ async function former(browser) {
     await side.waitForSelector('.timer.optaget .timer-optaget');
     await side.waitForFunction(() => [...document.images].every((i) => i.complete && i.naturalWidth));
     await side.evaluate(() => window.scrollTo(0, 0));
+    if (lav) {
+      // Voksen-trinnet med timer og note er det højeste: «Læs op» står stadig over bunden
+      const laes = await modBund(side, '.laes-op');
+      tjek(laes.bund <= laes.bundTop, n + ' kødsovs trin 10: «Læs op» skal ses over bunden uden at rulle ' + JSON.stringify(laes));
+      await foto(side, n + '-former-koedsovs-10');
+    }
     await side.locator('.timer-start').focus();
     await vent(150);
     const optaget = await modBund(side, '.timer-optaget');
