@@ -194,10 +194,13 @@ async function tjekVerbum(side, hvor) {
     const ude = Math.max(...[[b.left, b.top], [b.right, b.top], [b.left, b.bottom], [b.right, b.bottom]].map(([x, y]) => Math.hypot(x - cx, y - cy) - radius));
     const cs = getComputedStyle(ramme);
     const klipper = ['hidden', 'clip'].includes(cs.overflowX) && ['hidden', 'clip'].includes(cs.overflowY) && parseFloat(cs.borderTopLeftRadius) > 0;
-    return { ude: Math.round(ude), klipper };
+    // offsetWidth og clientWidth er uden transform, så verbernes små bevægelser ikke tæller med
+    return { ude: Math.round(ude), klipper, bredde: img.offsetWidth, indeni: ramme.clientWidth };
   });
   if (!r) return;
   tjek(r.ude <= 1 || r.klipper, hvor + ': verbum-billedet stikker ' + r.ude + ' px ud over den runde ramme');
+  // Tegningernes arme skal nå ud til rammen (før var billedet 86 % af rammen, og armene stoppede før kanten)
+  tjek(r.bredde >= r.indeni - 1, hvor + ': verbum-billedet skal fylde rammens bredde (' + r.bredde + ' af ' + r.indeni + ' px)');
 }
 
 async function sidsteTale(side) {
