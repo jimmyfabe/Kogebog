@@ -7,11 +7,11 @@
       <path d="M68 55 L173 55 Q181 55 181 64 L174 199 Q173 213 157 216 L104 216 Q87 215 86 200 L80 82 L64 65 Q59 60 61 56 Q63 53 68 55 Z" fill="#FFFFFF"/>
       <path d="M80 67 L168 67" fill="none"/>
     </g>
-    <g id="water">
-      <path d="M89 114 L175 114 L169 197 Q168 209 154 210 L108 210 Q95 209 94 197 Z" fill="#3E8FB0"/>
-      <path d="M89 114 L175 114 L174 123 L89.5 123 Z" fill="#2E6A83"/>
+    <g id="contents">
+      <path d="M89 114 L175 114 L169 197 Q168 209 154 210 L108 210 Q95 209 94 197 Z" fill="#EEDDBF"/>
+      <path d="M89 114 L175 114 L174 123 L89.5 123 Z" fill="#FFF4E2"/>
     </g>
-    <g id="water-level-arrow">
+    <g id="level-arrow">
       <path d="M28 109 L55 109 L55 102 Q55 99 58 101 L74 112 Q77 114 74 116 L58 127 Q55 129 55 126 L55 119 L28 119 Q23 114 28 109 Z" fill="#3E8FB0"/>
     </g>
     <g id="rosa-forearm">
