@@ -163,7 +163,8 @@ function forside() {
       billede(grafikDyr('bo'), '', 'status-dyr'),
       el('h2', { tekst: 'Der er ingen opskrifter endnu' }),
       el('p', { tekst: 'Kogebogen er tom lige nu. Hent listen igen om lidt.' }),
-      knap('Hent opskrifterne igen', { klasse: 'primaer', ikonNavn: 'igen', onclick: () => indlaes() }));
+      // S.ids = null, så skærmen viser «Henter opskrifterne …», mens listen hentes (en tom liste er ikke null)
+      knap('Hent opskrifterne igen', { klasse: 'primaer', ikonNavn: 'igen', onclick: () => { S.ids = null; indlaes(); } }));
   } else {
     const fejlede = [];
     const kort = S.ids.map((id) => {
@@ -280,6 +281,7 @@ function timerBlok(m, t) {
   startKnap.append(ikon('ur'), el('span', { class: 'timer-start-tekst' }, el('span', { tekst: 'Start timer' }), el('strong', { tekst: formaterTid(sek) })));
   // Appen har én timer ad gangen: kører en anden, sletter et tryk her den ikke (fx sovsen på trin 8, når spaghettien skal i)
   const optagetTekst = el('p', { class: 'timer-optaget' });
+  // En anden timer, der stadig kører. En færdig timer tæller med vilje ikke: «Start timer» her erstatter den
   const andenTimer = () => {
     const a = Timer.aktuel();
     return a && !a.faerdig && !(a.ret === m.id && a.nr === t.nr) ? a : null;

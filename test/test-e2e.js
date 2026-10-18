@@ -38,6 +38,7 @@ const vent = (ms) => new Promise((r) => setTimeout(r, ms));
 let antalTjek = 0;
 const fejl = [];
 const maal = []; // målinger, der ikke er fejl (fx at man skal rulle på iPhone)
+let cspSprunget = 0; // CSP-beskeder fra Playwrights eget <style> ved skærmbilleder, som ikke tælles som fejl (se foto())
 function tjek(betingelse, besked) {
   antalTjek++;
   if (!betingelse) { fejl.push(besked); console.log('  FEJL: ' + besked); }
@@ -101,7 +102,7 @@ async function nySide(browser, skaerm, ekstra = {}) {
   side.on('pageerror', (e) => side.fejl.push('pageerror: ' + e.message));
   side.on('console', (m) => {
     if (m.type() !== 'error') return;
-    if (side.iFoto && /^Refused to apply a stylesheet/.test(m.text())) return; // testens eget <style>, se foto()
+    if (side.iFoto && /^Refused to apply a stylesheet/.test(m.text())) { cspSprunget++; return; } // testens eget <style>, se foto()
     side.fejl.push('console: ' + m.text());
   });
   side.on('response', (r) => { if (r.status() >= 400) side.fejl.push('HTTP ' + r.status() + ': ' + r.url()); });
@@ -207,8 +208,6 @@ async function sidsteTale(side) {
   return side.evaluate(() => (window.__tale[window.__tale.length - 1] || {}).tekst || '');
 }
 
-// valg går videre til Playwrights click, fx { force: true } til en knap, der pulserer (Playwright venter ellers på,
-// at den står stille, og det gør «Tiden er gået»-pillen aldrig)
 // Mindste skriftstørrelse og laveste kontrast mod hvid blandt de synlige elementer, der matcher sel
 async function skrift(side, sel) {
   return side.evaluate((sel) => {
@@ -228,6 +227,8 @@ async function skrift(side, sel) {
   }, sel);
 }
 
+// valg går videre til Playwrights click, fx { force: true } til en knap, der pulserer (Playwright venter ellers på,
+// at den står stille, og det gør «Tiden er gået»-pillen aldrig)
 async function tryk(side, sel, valg = {}) {
   await vent(SPAERRE);
   await side.locator(sel).first().click(valg);
@@ -760,8 +761,13 @@ async function fejltilstande(browser, skaerm) {
   await tjekLayout(side, 'tom forside');
   await foto(side, skaerm.navn + '-tom-forside');
   await side.unroute('**/opskrifter/index.json');
+  // Listen svarer langsomt: imens skal skærmen sige «Henter opskrifterne …» og ikke blive stående på den tomme liste
+  await side.route('**/opskrifter/index.json', async (r) => { await vent(1500); await r.continue().catch(() => {}); });
   await tryk(side, 'button:has-text("Hent opskrifterne igen")');
+  await side.waitForSelector('text=Henter opskrifterne', { timeout: 1000 })
+    .catch(() => tjek(false, 'tom: «Hent opskrifterne igen» skal vise «Henter opskrifterne …», mens listen hentes'));
   await side.waitForSelector('.kort[data-ret]').catch(() => tjek(false, 'tom: «Hent opskrifterne igen» skal hente listen'));
+  await side.unroute('**/opskrifter/index.json');
 
   await side.evaluate(() => { location.hash = '#/ret/findes-ikke'; });
   await side.waitForSelector('text=Den opskrift findes ikke').catch(() => tjek(false, 'fejl: ukendt ret skal give «Den opskrift findes ikke»'));
@@ -817,6 +823,10 @@ async function beroering(browser, skaerm) {
   await vent(200);
   tjek((await adresse()).endsWith('/trin/10'), n + ': et kort tryk må ikke gå videre (' + await adresse() + ')');
   tjek(await side.locator('.voksen-hold.mind').count() === 1, n + ': et kort tryk skal give hold-knappen ringen');
+  // Den voksne holder lige efter: ringen og rystet stopper med det samme (før rystede knappen videre i 1,5 s under holdet)
+  await finger('pointerdown');
+  tjek(await side.locator('.voksen-hold.mind').count() === 0, n + ': et hold lige efter et kort tryk skal fjerne ringen');
+  await finger('pointercancel');
 
   // 3. iPad'en afbryder berøringen (pointercancel, fx når den tror, man ruller): holdet stopper
   await tilTrin10();
@@ -974,6 +984,7 @@ try {
 } finally {
   await browser.close();
 }
+maal.push(cspSprunget + ' CSP-beskeder fra Playwrights eget <style> ved skærmbilleder er ikke talt som fejl (se foto())');
 console.log('\n' + antalTjek + ' tjek (' + KOERSEL.map((k) => k[0]).join(', ') + ') i ' + Math.round((Date.now() - start) / 1000) + ' s · skærmbilleder i ' + UD);
 if (maal.length) console.log(maal.length + ' målinger (ikke fejl):\n  - ' + maal.slice(0, 40).join('\n  - '));
 if (fejl.length) {

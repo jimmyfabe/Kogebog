@@ -31,6 +31,9 @@ export function holdKnap({ klasse = '', indhold = [], label, ms = 2000, naarFaer
   }
   function start(pointer) {
     if (holder) return;
+    // Et hold lige efter et kort tryk: ringen og rystet fra det korte tryk stopper, så knappen ikke ryster, mens den holdes
+    clearTimeout(mindTid);
+    b.classList.remove('mind');
     holder = true;
     viaPointer = pointer;
     t0 = performance.now();
