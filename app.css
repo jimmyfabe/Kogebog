@@ -497,9 +497,14 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .ret-billede { width: min(56vw, 26svh); }
   .ingr-gitter { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 10px; }
   .handlinger .skub { display: none; }
-  .ret .handlinger .start, .ret .handlinger .fortsaet { flex: 1 1 100%; order: -1; }
-  .ret .handlinger .fortsaet { order: -2; }
-  .ret .handlinger .print-knap { margin: 0 auto; }
+  /* Retten: «Start» fylder rækken ved siden af print, og «Fortsæt ved trin N» får sin egen række øverst.
+     Teksten brydes ikke inde i knapperne: er der ikke plads, ryger knappen ned på en ny række */
+  .ret .handlinger .knap { white-space: nowrap; }
+  .ret .handlinger .start { flex: 1 1 0; min-width: auto; }
+  .ret .handlinger .fortsaet { flex: 1 1 100%; order: -1; }
+  .ret .handlinger .forfra { font-size: 19px; padding: 0 16px; gap: 8px; }
+  .ret .handlinger .forfra .ikon { width: 24px; height: 24px; }
+  .ret .handlinger .print-knap { padding: 0 14px; }
 
   .scene {
     margin: 4px 8px;
@@ -517,8 +522,9 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .trin-tekst { gap: 14px; }
   .trin-tekst h1 { font-size: 30px; }
   .trin-ikoner img { width: 56px; height: 56px; }
-  /* «Næste» skal kunne nås uden at rulle på hvert trin: bunden står fast, og et langt trin ruller ind under den */
-  .trin .handlinger {
+  /* «Næste» og rettens «Start» skal kunne nås uden at rulle: bunden står fast, og et langt trin
+     eller en lang ingrediensliste ruller ind under den */
+  .trin .handlinger, .ret .handlinger {
     position: sticky;
     bottom: 0;
     z-index: 2;
@@ -531,6 +537,11 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
      og «Næste · Voksen: hold» fik ikke plads ned til 360 px */
   .tilbage { min-width: 0; flex: none; width: var(--tryk); padding: 0; }
   .tilbage > span { display: none; }
+}
+
+/* Under 400 px er der kun plads til «Start forfra» ved siden af print, når print-knappen er uden ikon (teksten siger det) */
+@media (max-width: 399px) {
+  .ret .handlinger .print-knap .ikon { display: none; }
 }
 
 /* Lave skærme på langs (fx iPhone på tværs): mindre billeder, så knapperne kan ses */

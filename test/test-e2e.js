@@ -337,7 +337,8 @@ async function heleVejen(browser, skaerm) {
   await side.waitForSelector('.ret h1');
   tjek(await h1(side) === 'Pandekager', n + ': retten skal hedde Pandekager');
   tjek(await side.locator('.ingr').count() === RETTER.pandekager.recipeIngredient.length, n + ': alle ingredienser skal vises');
-  await tjekLayout(side, n + ' ret', { knapperSes: n !== 'iphone' });
+  // Start (og print) skal kunne ses uden at rulle på alle skærme. På iPhone står bunden fast (før skulle man rulle)
+  await tjekLayout(side, n + ' ret', { knapperSes: true });
   if (n === 'desktop') {
     const skygge = () => side.evaluate(() => getComputedStyle(document.querySelector('.ret .start')).boxShadow);
     const foer = await skygge();
@@ -470,7 +471,7 @@ async function heleVejen(browser, skaerm) {
   for (const id of index) {
     await side.evaluate((h) => { location.hash = h; }, '#/ret/' + id);
     await side.waitForFunction((x) => document.querySelector('.ret h1') && document.querySelector('.ret h1').textContent === x, RETTER[id].name);
-    await tjekLayout(side, n + ' ' + id + ' ret', { knapperSes: n !== 'iphone' });
+    await tjekLayout(side, n + ' ' + id + ' ret', { knapperSes: true });
     if (n !== 'ipad' && id === 'koedsovs') await foto(side, n + '-8-ret-koedsovs');
     for (let i = 0; i < RETTER[id].recipeInstructions.length; i++) {
       const t = RETTER[id].recipeInstructions[i];
@@ -868,6 +869,23 @@ async function former(browser) {
         maal.push(hvor + ': mindste streg ' + top.mindsteStreg + ' px');
         await tjekLayout(side, hvor, { knapperSes: true });
         if (nr === 9) await foto(side, n + '-former-pille');
+      }
+    }
+
+    // Retten med og uden «Fortsæt»: knapperne kan ses uden at rulle, og «Fortsæt» står først, over de andre
+    if (sk.viewport.width <= 760) {
+      for (const fortsaet of [false, true]) {
+        await medGemt(side, { sidste: fortsaet ? { ret: 'pandekager', nr: 7 } : null }, '#/ret/pandekager');
+        await side.waitForSelector(fortsaet ? '.ret .fortsaet' : '.ret .start');
+        const hvor = n + ' ret' + (fortsaet ? ' med Fortsæt' : '');
+        await tjekLayout(side, hvor, { knapperSes: true });
+        if (fortsaet) {
+          const k = await side.evaluate(() => Object.fromEntries(['.fortsaet', '.forfra', '.print-knap']
+            .map((s) => { const b = document.querySelector('.handlinger ' + s).getBoundingClientRect(); return [s, { top: Math.round(b.top), bund: Math.round(b.bottom), bredde: Math.round(b.width) }]; })));
+          tjek(k['.fortsaet'].bund <= Math.min(k['.forfra'].top, k['.print-knap'].top) + 1, hvor + ': «Fortsæt» skal stå først, over de andre knapper ' + JSON.stringify(k));
+          tjek(k['.fortsaet'].bredde > k['.forfra'].bredde, hvor + ': «Fortsæt» skal være bredere end «Start forfra» ' + JSON.stringify(k));
+        }
+        await foto(side, n + '-former-ret' + (fortsaet ? '-fortsaet' : ''));
       }
     }
     tjek(side.fejl.length === 0, n + ' (skærmformer): ' + side.fejl.join(' | '));
