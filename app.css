@@ -233,7 +233,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .forside-timer .pille { margin-top: 16px; }
 /* Pillen skubber kortene ned: på iPad på langs bliver kortenes billeder lidt mindre, så den nederste række kan ses
    (før blev den skåret af på 1180×820) */
-@media (min-width: 761px) and (min-height: 521px) {
+@media (min-width: 701px) and (min-height: 521px) {
   .forside:has(.forside-timer .pille:not([hidden])) .kort-billede { width: min(100%, 20svh, 200px); }
 }
 
@@ -485,8 +485,10 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 
 /* ---------- Smalle skærme (iPhone på højkant) ---------- */
 
-/* Ikke lave skærme på langs: en iPhone på langs under 761 px (667×375, 736×414) får reglen for lave skærme nederst */
-@media (max-width: 760px) and (min-height: 521px), (max-width: 760px) and (orientation: portrait) {
+/* Ikke lave skærme på langs: en iPhone på langs (667×375, 736×414) får reglen for lave skærme nederst.
+   Op til 700 px: iPad mini på højkant (744 og 768 px) har to kolonner som iPad'en (før fik 744 px én kolonne
+   og en 640 px bred «Næste») */
+@media (max-width: 700px) and (min-height: 521px), (max-width: 700px) and (orientation: portrait) {
   body { font-size: 18px; }
   .topbar { gap: 10px; padding: 10px 12px 4px; }
   /* Kører en timer på et andet trin, står pillen til højre for hjem, og fremskridtet får hele bredden nedenunder.
@@ -556,7 +558,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 
 /* iPad på højkant (op til 900 px): «Fortsæt ved trin N» står først og fylder hele rækken, som på iPhone.
    Før faldt den ned på en række for sig under «Start forfra» (768 px) og lignede det mindst vigtige valg */
-@media (min-width: 761px) and (max-width: 900px) and (min-height: 521px) {
+@media (min-width: 701px) and (max-width: 900px) and (min-height: 521px) {
   .ret .handlinger .fortsaet { flex: 1 1 100%; order: -1; }
 }
 
@@ -575,7 +577,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 }
 
 /* Lave skærme på langs (iPhone på tværs, fra 667×375 til 932×430): mindre billeder, og bunden står fast, så «Næste» og
-   rettens knapper kan ses uden at rulle (før lå de under kanten på 844×390). Under 761 px fik de før iPhone-layoutet
+   rettens knapper kan ses uden at rulle (før lå de under kanten på 844×390). 667×375 og 736×414 fik før iPhone-layoutet
    på højkant, med en bund på op til 48 % af skærmen */
 @media (max-height: 520px) and (orientation: landscape) {
   /* Billedet skal kunne ses helt mellem topbaren og bunden: mærket står over teksten i stedet for over begge kolonner.

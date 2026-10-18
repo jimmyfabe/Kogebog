@@ -859,12 +859,13 @@ async function beroering(browser, skaerm) {
 }
 
 // ---------- Skærmformer, som de tre faste skærme ikke dækker ----------
-// Den smalleste iPhone (360 px), iPhone (390), iPad mini på højkant (768×1024) og iPhone på langs (844×390),
-// og de små iPhones på langs under 761 px (667×375 og 736×414), som før fik iPhone-layoutet på højkant
+// Den smalleste iPhone (360 px), iPhone (390), iPad mini på højkant (768×1024 og den nye 744×1133) og iPhone på langs
+// (844×390), og de små iPhones på langs (667×375 og 736×414), som før fik iPhone-layoutet på højkant
 const FORMER = [
   { navn: 'w360', viewport: { width: 360, height: 780 }, hasTouch: true },
   { navn: 'iphone', viewport: { width: 390, height: 844 }, hasTouch: true },
   { navn: 'tablet', viewport: { width: 768, height: 1024 }, hasTouch: true },
+  { navn: 'mini', viewport: { width: 744, height: 1133 }, hasTouch: true },
   { navn: 'land', viewport: { width: 844, height: 390 }, hasTouch: true },
   { navn: 'se-land', viewport: { width: 667, height: 375 }, hasTouch: true },
   { navn: 'plus-land', viewport: { width: 736, height: 414 }, hasTouch: true },
@@ -902,6 +903,9 @@ async function former(browser) {
     const lav = sk.viewport.height <= 520;
     console.log('[' + n + '] skærmform ' + sk.viewport.width + '×' + sk.viewport.height);
     const { ctx, side } = await nySide(browser, sk);
+    // iPad mini på højkant har to kolonner som iPad'en (744×1133 fik før iPhone-layoutet: én kolonne og en 640 px bred «Næste»)
+    const ipadKolonner = sk.viewport.width >= 701 && !lav;
+    const kolonner = (sel) => side.evaluate((s) => getComputedStyle(document.querySelector('#app > .skaerm:not([data-gammel]) ' + s)).gridTemplateColumns.split(' ').length, sel);
     await side.goto(BASE + '/index.html');
     await side.waitForSelector('.kort[data-ret]');
 
@@ -927,6 +931,7 @@ async function former(browser) {
       await side.waitForSelector(fortsaet ? '.ret .fortsaet' : '.ret .start');
       const hvor = n + ' ret' + (fortsaet ? ' med Fortsæt' : '');
       await tjekLayout(side, hvor, { knapperSes: true });
+      if (ipadKolonner) tjek(await kolonner('.ret-indhold') === 2, hvor + ': billedet og ingredienserne skal stå i to kolonner som på iPad (' + await kolonner('.ret-indhold') + ')');
       if (lav) {
         // På langs er bunden én række, og navnet står over den (667×375 fik iPhone-bunden: 179 px = 48 %, navnet under den)
         const navn = await modBund(side, '.ret-titel h1');
@@ -950,6 +955,7 @@ async function former(browser) {
       await side.evaluate((h) => { document.querySelector('#app > .skaerm').dataset.gammel = '1'; location.hash = h; }, hash);
       await side.waitForFunction(() => !!document.querySelector('#app > .trin:not([data-gammel]) h1') && [...document.images].every((i) => i.complete && i.naturalWidth));
       await tjekLayout(side, n + ' ' + ret + ' trin ' + nr, { knapperSes: true });
+      if (ipadKolonner) tjek(await kolonner('.scene') === 2, n + ' ' + ret + ' trin ' + nr + ': billedet og teksten skal stå i to kolonner som på iPad (' + await kolonner('.scene') + ')');
       // Billedet ses også uden at rulle: det står over den faste bund (på langs lå det midt i en høj tekstkolonne)
       const bil = await side.evaluate(() => ({
         rul: Math.round(window.scrollY),
