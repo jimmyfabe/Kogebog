@@ -45,7 +45,7 @@ Alle køres i Git Bash eller PowerShell i `D:\Claude\Kogebog`.
 
 1. Læg `opskrifter/<id>.json` (se en af de fem) og skriv id'et i `opskrifter/index.json`.
 2. Kør `node test/test-opskrifter.js`. Den siger præcis, hvad der er galt, fx kniv uden `"voksen": true` og `voksen_hjaelp`, rå kød uden håndvask bagefter, eller et trin over 9 ord.
-3. Skriv den nye fil i `FILER` i `sw.js`, og tæl `VERSION` op (testen `test-sw.js` fejler, hvis en fil mangler).
+3. Skriv den nye fil i `FILER` i `sw.js`. Kør `node test/test-sw.js`: når en fil er ny eller ændret, fejler den og skriver den nye værdi for `INDHOLD` i `sw.js`. Sæt den, så skifter cachens navn, og enhederne henter den nye udgave. Det gælder også, når du kun retter kode eller grafik.
 
 ## Regler i koden
 

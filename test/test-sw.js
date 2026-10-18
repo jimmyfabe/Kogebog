@@ -1,11 +1,13 @@
 // test-sw.js — kører sw.js i en sandkasse (node:vm) med falske caches og fetch.
-// Tjekker: FILER er komplet og findes, kun «kog-»-caches slettes, netværk først for opskrifterne, cache først for resten.
+// Tjekker: FILER er komplet og findes, INDHOLD passer til filerne (så VERSION skifter ved hver ændring),
+// kun «kog-»-caches slettes, netværk først for opskrifterne, cache først for resten.
 // Kør:  node test/test-sw.js
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
+import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -57,8 +59,8 @@ function lavSw({ caches, fetch }) {
     skipWaiting: async () => {},
   };
   const ctx = vm.createContext({ self, caches, fetch, Request: SwRequest, Response, URL, console });
-  vm.runInContext(KILDE + '\n;globalThis.__FILER = FILER; globalThis.__VERSION = VERSION;', ctx);
-  return { haendelser, FILER: ctx.__FILER, VERSION: ctx.__VERSION };
+  vm.runInContext(KILDE + '\n;globalThis.__FILER = FILER; globalThis.__VERSION = VERSION; globalThis.__INDHOLD = typeof INDHOLD === \'undefined\' ? undefined : INDHOLD;', ctx);
+  return { haendelser, FILER: ctx.__FILER, VERSION: ctx.__VERSION, INDHOLD: ctx.__INDHOLD };
 }
 
 function haendelse(req) {
@@ -84,6 +86,28 @@ test('FILER er komplet, uden dubletter, og hver fil findes', () => {
   }
   const mangler = forventet.filter((f) => !FILER.includes(f));
   assert.deepEqual(mangler, [], 'disse filer mangler i sw.js FILER (så virker de ikke offline)');
+});
+
+// sha256 (16 tegn) over stierne og indholdet i FILER-rækkefølge. Tekstfiler regnes med LF, for git på Windows
+// kan give CRLF i arbejdsmappen, og samme indhold skal give samme tal på alle maskiner.
+const TEKSTFIL = /\.(html|js|css|json|svg|webmanifest)$/;
+function indholdAf(filer) {
+  const h = crypto.createHash('sha256');
+  for (const f of filer) {
+    const fil = f === './' ? 'index.html' : f;
+    let data = fs.readFileSync(path.join(ROD, fil));
+    if (TEKSTFIL.test(fil)) data = Buffer.from(data.toString('utf8').replace(/\r\n/g, '\n'), 'utf8');
+    h.update(f + '\n').update(data).update('\n');
+  }
+  return h.digest('hex').slice(0, 16);
+}
+
+// app.js, js/*.js, grafikken osv. er «cache først»: kun en ny VERSION får dem ud til en enhed, der allerede har appen
+test('INDHOLD i sw.js passer til filerne, og VERSION følger med', () => {
+  const { FILER, VERSION, INDHOLD } = lavSw({ caches: falskeCaches(), fetch: async () => ok('') });
+  const nu = indholdAf(FILER);
+  assert.equal(INDHOLD, nu, 'filerne er ændret: sæt INDHOLD i sw.js til \'' + nu + '\' (så skifter VERSION, og enhederne henter den nye udgave)');
+  assert.equal(VERSION, 'kog-' + INDHOLD, 'VERSION skal være \'kog-\' + INDHOLD');
 });
 
 test('activate sletter kun gamle «kog-»-caches', async () => {

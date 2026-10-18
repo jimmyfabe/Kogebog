@@ -1,9 +1,12 @@
 /* sw.js — service worker for Tumbi Køkken (scope './'), så kogebogen virker i køkkenet uden net.
    Samme origin som Lystårnet («mat-») og LEGO («lego-»): denne fil rører KUN caches, der starter med «kog-».
    Opskrifterne (opskrifter/*.json og lyd/liste.json) hentes netværk først, så en rettet opskrift slår igennem;
-   alt andet er cache først. Ved hver ny udgave: tæl VERSION op. test/test-sw.js tjekker, at FILER er komplet. */
+   alt andet er cache først, så en ændret fil kun når ud til enhederne, hvis cachens navn (VERSION) skifter.
+   Derfor er VERSION bygget af INDHOLD: et tal for alle FILER. test/test-sw.js tjekker, at FILER er komplet,
+   og fejler, når en fil er ændret, med den nye værdi for INDHOLD. */
 const PRAEFIKS = 'kog-';
-const VERSION = PRAEFIKS + '2026-10-18-v1';
+const INDHOLD = '857dc1251d607b44'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js skriver
+const VERSION = PRAEFIKS + INDHOLD;
 const FILER = [
   './',
   'index.html',
