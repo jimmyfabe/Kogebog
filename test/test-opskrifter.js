@@ -26,6 +26,8 @@ const ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const ISO_RE = /^P(?:\d+D)?(?:T(?:\d+H)?(?:\d+M)?(?:\d+S)?)?$/;
 const MAKS_TIMER_SEK = 4 * 3600;
 const BLANDER = ['roere', 'haelde', 'piske']; // verber, der blander en ingrediens i dejen eller farsen
+// Ord i trinteksten, der betyder kniv, rivejern eller varme. Hele ord (ikke «bagepapir» eller «rivejern»), men «ovn» overalt
+const ORDVAGT = /(?<!\p{L})(riv|bag|steg|kog|hak|skær)(?!\p{L})|ovn/iu;
 const LYD_RE = /^([a-z0-9]+(?:-[a-z0-9]+)*)\/(\d+|navn)\.mp3$/;
 
 const erTekst = (v) => typeof v === 'string' && v.trim().length > 0;
@@ -174,6 +176,9 @@ export function valider(rod = ROD) {
         if (krav && (st.voksen !== true || st.voksen_hjaelp !== krav)) f(hvor + ': verbet «' + st.verbum + '» skal have "voksen": true og "voksen_hjaelp": "' + krav + '"');
         // Piske, pensle, mose og drysse kan barnet selv; hjælper den voksne, er det for varmens skyld (varmt fedt, gryde, pande)
         if (KUN_VARME_HJAELP.includes(st.verbum) && 'voksen_hjaelp' in st && st.voksen_hjaelp !== 'varme') f(hvor + ': verbet «' + st.verbum + '» kan barnet selv. Hjælper den voksne, er det for varmens skyld: brug "voksen_hjaelp": "varme", fandt ' + JSON.stringify(st.voksen_hjaelp));
+        // Ordvagten: nævner teksten kniv, rivejern eller varme, er det den voksnes trin, uanset verbet
+        const farlig = ORDVAGT.exec(s.text);
+        if (farlig && st.voksen !== true) f(hvor + ': teksten nævner «' + farlig[0] + '» (kniv, rivejern eller varme), så trinnet skal have "voksen": true og «voksen_hjaelp»: «' + s.text + '»');
         if (st.voksen === true) tal.voksentrin++;
         if ('timer_sek' in st) {
           if (!Number.isInteger(st.timer_sek) || st.timer_sek <= 0) f(hvor + ': «timer_sek» skal være et positivt heltal (sekunder), fandt ' + JSON.stringify(st.timer_sek));

@@ -129,6 +129,22 @@ test('efter ovnen tager en voksen pladen eller formen ud', () => {
     'trin 13: når tiden i ovnen er gået, tager en voksen det ud');
 });
 
+// Ordvagten: nævner trinteksten kniv, rivejern eller varme (riv, bag, steg, kog, hak, skær, ovn), er det et voksen-trin,
+// uanset hvilket verbum trinnet har fået
+test('trinteksten om kniv eller varme kræver et voksen-trin', () => {
+  const tekst = (t) => (d) => { d.recipeInstructions[2].text = t; };
+  forventFejl('opskrifter/pandekager.json', tekst('Tænd ovnen.'), 'trin 3: teksten nævner «ovn»');
+  forventFejl('opskrifter/pandekager.json', tekst('Riv lidt citronskal.'), 'trin 3: teksten nævner «Riv»');
+  forventFejl('opskrifter/pandekager.json', tekst('Hak melet fint.'), 'trin 3: teksten nævner «Hak»');
+  // Ordene inde i andre ord tæller ikke: bagepapir, rivejern, kogebog
+  forventGyldig('opskrifter/pandekager.json', tekst('Læg bagepapir ved rivejernet.'));
+  // Som voksen-trin er det i orden
+  forventGyldig('opskrifter/pandekager.json', (d) => {
+    d.recipeInstructions[2].text = 'Tænd ovnen.';
+    Object.assign(d.recipeInstructions[2].tumbi, { voksen: true, voksen_hjaelp: 'varme' });
+  });
+});
+
 test('voksen og voksen_hjaelp følges ad', () => {
   forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[9].tumbi.voksen = 'ja'; }, 'trin 10: «voksen» skal være true');
   forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[2].tumbi.voksen = false; }, 'trin 3: «voksen» skal være true (udelad feltet');
