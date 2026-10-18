@@ -957,6 +957,12 @@ async function former(browser) {
         await side.waitForSelector(fortsaet ? '.ret .fortsaet' : '.ret .start');
         const hvor = n + ' ret ' + ret + (fortsaet ? ' med Fortsæt' : '');
         await tjekLayout(side, hvor, { knapperSes: true });
+        // Lange sammensatte ord deles med bindestreg som på forsidens kort (før blev de brudt midt i ordet uden streg)
+        const deling = await side.evaluate(() => ['.ret-titel h1', '.ingr-navn'].map((s) => {
+          const cs = getComputedStyle(document.querySelector('#app > .skaerm:not([data-gammel]) ' + s));
+          return s + ': ' + (cs.hyphens || cs.webkitHyphens);
+        }));
+        tjek(deling.every((d) => d.endsWith(': auto')), hvor + ': lange ord skal deles med bindestreg (' + deling.join(', ') + ')');
         if (ipadKolonner) tjek(await kolonner('.ret-indhold') === 2, hvor + ': billedet og ingredienserne skal stå i to kolonner som på iPad (' + await kolonner('.ret-indhold') + ')');
         if (lav) {
           // På langs er bunden én række, og navnet står over den (667×375 fik iPhone-bunden: 179 px = 48 %, navnet under den)

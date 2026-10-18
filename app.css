@@ -303,7 +303,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .ret-hoved { display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .ret-billede { width: min(100%, 42svh, 340px); }
 .ret-titel { display: flex; align-items: center; gap: 14px; }
-.ret-titel h1 { font-size: clamp(30px, 3.8vw, 46px); line-height: 1.05; text-align: center; overflow-wrap: anywhere; }
+/* Lange sammensatte ord deles med bindestreg som på forsidens kort; overflow-wrap bryder kun, hvis der ingen deling findes */
+.ret-titel h1 { font-size: clamp(30px, 3.8vw, 46px); line-height: 1.05; text-align: center; overflow-wrap: anywhere; -webkit-hyphens: auto; hyphens: auto; }
 .meta { font-size: 19px; color: var(--kakao-blid); text-align: center; }
 
 .ret-ingredienser h2 { font-size: 26px; margin-bottom: 12px; }
@@ -327,7 +328,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 /* Den voksne læser ingredienserne på armslængde fra iPad'en: store ikoner og navne i fuld kakao */
 .ingr-ikon { width: clamp(52px, 10svh, 84px); height: auto; aspect-ratio: 1; margin-bottom: 2px; }
 .ingr-maengde { font-size: 19px; font-weight: 800; }
-.ingr-navn { font-size: 18px; color: var(--kakao); text-align: center; line-height: 1.2; overflow-wrap: anywhere; }
+.ingr-navn { font-size: 18px; color: var(--kakao); text-align: center; line-height: 1.2; overflow-wrap: anywhere; -webkit-hyphens: auto; hyphens: auto; }
 
 .start { min-width: 220px; }
 /* «Fortsæt» står først i bunden, så Tab når den først. På de brede skærme og på langs står den til højre som «Næste» */
