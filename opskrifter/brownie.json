@@ -1,0 +1,53 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Brownie",
+  "description": "Blød chokoladekage, der er lidt klistret i midten.",
+  "image": "grafik/ret-brownie.svg",
+  "inLanguage": "da",
+  "recipeYield": "6 stykker (en lille form)",
+  "prepTime": "PT20M",
+  "cookTime": "PT25M",
+  "totalTime": "PT1H30M",
+  "recipeIngredient": [
+    "100 g smør",
+    "100 g mørk chokolade",
+    "1,5 dl sukker",
+    "2 æg",
+    "1 dl hvedemel",
+    "1 spsk kakao",
+    "1 knivspids salt"
+  ],
+  "tool": ["lille gryde", "grydeske", "stor skål", "dl-mål", "kop", "piskeris", "spiseske", "lille form", "bagepapir", "kniv"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Smelt smør og chokolade i en gryde.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["smoer", "chokolade"], "note": "Lav varme, og rør hele tiden. Tænd ovnen på 160 °C varmluft (175 °C almindelig ovn)." } },
+    { "@type": "HowToStep", "text": "Lad chokoladen køle lidt af.", "tumbi": { "verbum": "vente", "timer_sek": 300, "note": "Er den for varm, bliver æggene kogte, når den kommer i." } },
+    { "@type": "HowToStep", "text": "Mål 1,5 dl sukker.", "tumbi": { "verbum": "maale", "ikoner": ["sukker"], "note": "Hæld det i en stor skål." } },
+    { "@type": "HowToStep", "text": "Pisk æggene og sukkeret sammen.", "tumbi": { "verbum": "piske", "ikoner": ["aeg"], "note": "Slå æggene ud i en kop først, så er det let at fiske skaller op. Pisk, til det er lyst." } },
+    { "@type": "HowToStep", "text": "Vask hænderne igen.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg på fingrene." } },
+    { "@type": "HowToStep", "text": "Rør chokoladen i.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["chokolade"], "note": "Den voksne hælder fra gryden, og barnet rører." } },
+    { "@type": "HowToStep", "text": "Mål 1 dl mel.", "tumbi": { "verbum": "maale", "ikoner": ["mel"] } },
+    { "@type": "HowToStep", "text": "Rør mel, kakao og salt forsigtigt i.", "tumbi": { "verbum": "roere", "ikoner": ["mel", "kakao", "salt"], "note": "1 spsk kakao og en knivspids salt. Rør kun, til melet er væk." } },
+    { "@type": "HowToStep", "text": "Hæld dejen i formen.", "tumbi": { "verbum": "haelde", "note": "Læg bagepapir i formen først. Dejen fylder en lille form, ca. en halv alubakke." } },
+    { "@type": "HowToStep", "text": "Bag brownien i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1200, "note": "20-25 min. Den skal være blød i midten: en tandstik skal komme op med fugtige krummer." } },
+    { "@type": "HowToStep", "text": "Lad brownien køle helt af.", "tumbi": { "verbum": "vente", "note": "Formen er meget varm. Den voksne tager den ud." } },
+    { "@type": "HowToStep", "text": "Skær kagen i 6 stykker.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv" } },
+    { "@type": "HowToStep", "text": "Smag en bid!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "brownie",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift",
+    "ingredienser": [
+      { "ikon": "smoer", "maengde": "100 g" },
+      { "ikon": "chokolade", "maengde": "100 g" },
+      { "ikon": "sukker", "maengde": "1,5 dl" },
+      { "ikon": "aeg", "maengde": "2" },
+      { "ikon": "mel", "maengde": "1 dl" },
+      { "ikon": "kakao", "maengde": "1 spsk" },
+      { "ikon": "salt", "maengde": "1 knivspids" }
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="plate">
+    <ellipse cx="128" cy="140" rx="108" ry="75" fill="#3E8FB0"/>
+    <ellipse cx="128" cy="140" rx="94" ry="61" fill="#FFF4E2"/>
+  </g>
+  <g id="back-piece">
+    <path d="M118 96 L170 88 L196 108 L196 126 L144 136 L118 114 Z" fill="#3B2A20"/>
+    <path d="M118 96 L170 88 L196 108 L144 118 Z" fill="#704D31"/>
+    <path d="M140 100 Q150 97 160 101 M156 108 Q166 105 176 108" fill="none" stroke="#9A6A44"/>
+  </g>
+  <g id="front-piece">
+    <path d="M58 128 L114 118 L142 140 L142 162 L86 174 L58 150 Z" fill="#3B2A20"/>
+    <path d="M58 128 L114 118 L142 140 L86 152 Z" fill="#704D31"/>
+    <path d="M78 132 Q88 128 98 132 M96 140 Q106 136 118 140" fill="none" stroke="#9A6A44"/>
+  </g>
+  <g id="crumbs" fill="#704D31">
+    <ellipse cx="164" cy="160" rx="5" ry="3.5"/>
+    <ellipse cx="178" cy="150" rx="4" ry="3"/>
+    <ellipse cx="156" cy="172" rx="3.5" ry="2.5"/>
+  </g>
+</g>
+</svg>
