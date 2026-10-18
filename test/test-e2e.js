@@ -476,8 +476,8 @@ async function timere(browser, skaerm) {
   } else {
     await side.evaluate(() => { location.hash = '#/ret/koedsovs/trin/8'; });
   }
-  await side.waitForSelector('button[aria-label="Stop timeren"]');
-  await tryk(side, 'button[aria-label="Stop timeren"]');
+  await side.waitForFunction(() => location.hash === '#/ret/koedsovs/trin/8');
+  tjek(await side.locator('button[aria-label="Stop timeren"]').count() === 1, n + ': trin 8 skal stadig have sin timer (med «Stop»)');
 
   // 3) Timeren løb ud, mens fanen var væk (iOS smed den ud): efter genindlæsningen skal «Tiden er gået» stå på forsiden
   await gemTimer(side, { ret: 'koedsovs', nr: 8, sek: 1200, slutOm: -60000 });
