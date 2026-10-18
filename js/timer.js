@@ -24,6 +24,16 @@ function klargoerLyd() {
   }
 }
 
+// Med en finger tæller pointerdown ikke som et tryk (HTML-standardens brugeraktivering): først pointerup, touchend
+// og click gør. Lytterne bliver, til lyden faktisk kører, for resume() er asynkron og kan afvises første gang.
+const TRYK = ['pointerup', 'touchend', 'click', 'keydown'];
+function lydVedTryk() {
+  klargoerLyd();
+  if (lydKontekst && lydKontekst.state === 'running') {
+    for (const type of TRYK) document.removeEventListener(type, lydVedTryk, true);
+  }
+}
+
 function bip() {
   const k = lydKontekst;
   if (!k) return;
@@ -152,9 +162,8 @@ export function gendan() {
   aktiv = { ...t, faerdig: false };
   startUr();
   bedOmLaas();
-  // Lyden må først komme efter et tryk (iPad): gør den klar ved det første tryk efter genindlæsningen
-  document.addEventListener('pointerdown', klargoerLyd, { once: true, capture: true });
-  document.addEventListener('keydown', klargoerLyd, { once: true, capture: true });
+  // Lyden må først komme efter et tryk (iPad): gør den klar ved trykkene efter genindlæsningen
+  for (const type of TRYK) document.addEventListener(type, lydVedTryk, true);
 }
 
 document.addEventListener('visibilitychange', () => {
