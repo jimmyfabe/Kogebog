@@ -896,6 +896,17 @@ async function former(browser) {
       await side.waitForFunction((h) => location.hash === h && !!document.querySelector('.trin h1') && [...document.images].every((i) => i.complete && i.naturalWidth), hash);
       await tjekLayout(side, n + ' ' + ret + ' trin ' + nr, { knapperSes: true });
       if (nr === 10) await foto(side, n + '-former-trin-10');
+      // Når «Start timer» får fokus (Tab, VoiceOver), skal den rulles op over den faste bund, ikke blive liggende under den
+      if (nr === 10) {
+        await side.evaluate(() => window.scrollTo(0, 0));
+        await side.locator('.timer-start').focus();
+        await vent(100);
+        const f = await side.evaluate(() => ({
+          knap: Math.round(document.querySelector('.timer-start').getBoundingClientRect().bottom),
+          bund: Math.round(document.querySelector('.handlinger').getBoundingClientRect().top),
+        }));
+        tjek(f.knap <= f.bund, n + ' pandekager trin 10: «Start timer» med fokus ligger under den faste bund (knappens bund ' + f.knap + ' > bundens top ' + f.bund + ')');
+      }
     }
     tjek(side.fejl.length === 0, n + ' (skærmformer): ' + side.fejl.join(' | '));
     await ctx.close();

@@ -532,6 +532,10 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
     border-top: 3px solid var(--creme-moerk);
     padding-bottom: max(16px, env(safe-area-inset-bottom));
   }
+  /* Får en knap under bunden fokus (Tab, VoiceOver), rulles den op over bunden i stedet for at blive liggende under den.
+     Bunden er 103 px høj, på retten med «Fortsæt» 179 px (to rækker) */
+  html { scroll-padding-bottom: 116px; }
+  html:has(.ret .fortsaet) { scroll-padding-bottom: 192px; }
   .naeste { min-width: 0; flex: 1 1 60%; }
   /* Tilbage er kun pilen, som husknappen (navnet står i aria-label): ellers gik teksten ud til kanten,
      og «Næste · Voksen: hold» fik ikke plads ned til 360 px */
@@ -571,4 +575,5 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   }
   .handlinger .knap.primaer { min-height: 68px; font-size: 24px; padding: 0 26px; }
   .ret .handlinger .start { min-width: 0; }
+  html { scroll-padding-bottom: 96px; } /* bunden er 85 px: fokus ruller ikke ind under den (se de smalle skærme) */
 }
