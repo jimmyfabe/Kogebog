@@ -105,7 +105,9 @@ async function nySide(browser, skaerm, ekstra = {}) {
   return { ctx, side };
 }
 
-const foto = (side, navn) => side.screenshot({ path: path.join(UD, navn + '.png') });
+// caret: 'initial': ellers lægger Playwright et <style> ind for at skjule markøren, og appens CSP (style-src 'self')
+// afviser det med en konsolfejl, som testen så tager for en fejl i appen
+const foto = (side, navn, ekstra = {}) => side.screenshot({ path: path.join(UD, navn + '.png'), caret: 'initial', ...ekstra });
 
 // Børnenes egne knapper skal være mindst 64 px (de voksnes, fx print og stop, mindst 48 px)
 const BOERNEKNAPPER = '.kort, .ingr, .start, .naeste, .tilbage, .laes-op, .timer-start, .stor-rund, .knap.primaer';
@@ -412,7 +414,7 @@ async function print(browser, skaerm) {
       const kp = await trinKolonne(side);
       tjek(kp.spredning <= 1, 'printvisning ' + id + ': trin-ikonerne skal stå i én lige kolonne (de rykker ' + kp.spredning + ' px)');
       tjek(kp.foran >= 14, 'printvisning ' + id + ': trinnummeret skal have plads foran ikonet (' + kp.foran + ' px)');
-      await side.screenshot({ path: path.join(UD, 'print-' + id + '.png'), fullPage: true });
+      await foto(side, 'print-' + id, { fullPage: true });
       const a4 = await side.evaluate(() => document.documentElement.scrollHeight);
       console.log('  print ' + id + ': ' + a4 + ' px høj i printvisning (688 px bred)');
       await side.emulateMedia({ media: 'screen' });
