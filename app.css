@@ -491,6 +491,15 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .trin-tekst { gap: 14px; }
   .trin-tekst h1 { font-size: 30px; }
   .trin-ikoner img { width: 56px; height: 56px; }
+  /* «Næste» skal kunne nås uden at rulle på hvert trin: bunden står fast, og et langt trin ruller ind under den */
+  .trin .handlinger {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    background: var(--creme);
+    border-top: 3px solid var(--creme-moerk);
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
   .naeste { min-width: 0; flex: 1 1 60%; }
   .tilbage { min-width: 0; flex: 1 1 30%; padding: 0 14px; }
 }

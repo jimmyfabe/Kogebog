@@ -238,7 +238,8 @@ async function heleVejen(browser, skaerm) {
     const voksen = t.tumbi.voksen === true;
     tjek(await sidsteTale(side) === tilTale((voksen ? 'Hent en voksen. ' : '') + t.text), n + ' trin ' + nr + ': trykket læser trinnet op');
     tjek((await side.locator('.voksen-maerke').count() === 1) === voksen, n + ' trin ' + nr + ': «Hent en voksen» skal ' + (voksen ? '' : 'ikke ') + 'vises');
-    await tjekLayout(side, n + ' trin ' + nr, { knapperSes: n !== 'iphone' });
+    // Tilbage og Næste skal kunne ses uden at rulle på alle skærme, også iPhone (på retten må man rulle til Start)
+    await tjekLayout(side, n + ' trin ' + nr, { knapperSes: true });
     if ([1, 3, 10, 12].includes(nr)) await foto(side, n + '-4-trin-' + nr);
     if (nr === 8) fremUdenTimer = (await topbarMaal(side)).fremX;
 
@@ -318,7 +319,7 @@ async function heleVejen(browser, skaerm) {
       await side.evaluate((h) => { location.hash = h; }, '#/ret/' + id + '/trin/' + (i + 1));
       await side.waitForFunction((x) => document.querySelector('.trin h1') && document.querySelector('.trin h1').textContent === x, t.text, { timeout: 5000 })
         .catch(() => tjek(false, n + ' ' + id + ' trin ' + (i + 1) + ': viste ikke «' + t.text + '»'));
-      await tjekLayout(side, n + ' ' + id + ' trin ' + (i + 1), { knapperSes: n !== 'iphone' });
+      await tjekLayout(side, n + ' ' + id + ' trin ' + (i + 1), { knapperSes: true });
       if (n === 'iphone' && id === 'chorizo-pasta' && i === 10) await foto(side, n + '-9-chorizo-trin-11');
       if (n === 'ipad' && id === 'boller' && i === 6) await foto(side, n + '-9-boller-trin-7');
     }
