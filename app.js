@@ -415,7 +415,7 @@ function trinSkaerm(m, nr) {
 
 // ---------- Færdig ----------
 
-function faerdigSkaerm(m) {
+function faerdigSkaerm() {
   Lager.gem({ sidste: null });
   const konfetti = el('div', { class: 'konfetti', 'aria-hidden': 'true' }, Array.from({ length: 14 }, (_, i) => el('span', { class: 'k' + (i % 4) })));
   const hoejttaler = knap('Læs op', { ikonNavn: 'hoejttaler' });
@@ -426,7 +426,7 @@ function faerdigSkaerm(m) {
     el('div', { class: 'faerdig-indhold' },
       billede(GRAFIK_FAERDIG, 'Bo, Rosa og Pip fejrer, at maden er færdig', 'faerdig-billede'),
       el('h1', { tabindex: '-1', tekst: 'Færdig!' }),
-      el('p', { class: 'faerdig-tekst', tekst: 'Godt gået. Velbekomme med ' + m.navn.toLowerCase() + '.' }),
+      el('p', { class: 'faerdig-tekst', tekst: 'Godt gået. Velbekomme!' }),
       el('div', { class: 'status-knapper' },
         hoejttaler,
         knap('Til forsiden', { klasse: 'primaer', ikonNavn: 'hjem', onclick: () => naviger(hashFor.forside()) }))));
@@ -446,7 +446,7 @@ function vis() {
     else if (!m) skaerm = fejlSkaermRet(r.id, S.indexFejl || { findesIkke: true });
     else if (m instanceof Error) skaerm = fejlSkaermRet(r.id, m);
     else if (r.side === 'ret') skaerm = retSkaerm(m);
-    else if (r.side === 'faerdig') skaerm = faerdigSkaerm(m);
+    else if (r.side === 'faerdig') skaerm = faerdigSkaerm();
     else if (Number.isInteger(r.nr) && r.nr >= 1 && r.nr <= m.trin.length) skaerm = trinSkaerm(m, r.nr);
     else skaerm = fejlSkaermRet(r.id, { findesIkke: true });
   }
