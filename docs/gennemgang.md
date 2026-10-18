@@ -50,7 +50,7 @@ flowchart LR
     T -.-> U["Timer<br/>skærmen holdes tændt"]
 ```
 
-- **Forside:** et kort pr. ret i rækkefølgen aftensmad, bagning, søde sager (`opskrifter/index.json`). Fra oktober 2026 er der 13 retter, så siden ruller; den første række ses uden at rulle. Ingen kategorier eller anden navigation. Første tryk siger navnet, andet tryk åbner retten.
+- **Forside:** tre afsnit, aftensmad, bagning og søde sager (`opskrifter/index.json`), hvert med en overskrift af billede og ord (en gryde, en ovn og en kage) og et kort pr. ret. Kortenes cirkel har afsnittets farve. Fra oktober 2026 er der 13 retter, så siden ruller; den første række ses uden at rulle. Ingen anden navigation. Første tryk siger navnet, andet tryk åbner retten.
 - **Trin for trin:** et verbum-billede og én sætning (højst ca. 8 ord), der læses op af sig selv. Knapper: igen, tilbage, næste.
 - **Voksen-hjælp:** orange ramme, Bo og «Nu hjælper den voksne». Næste kræver et hold i 2 s som Lystårnets voksen-hold, og print ligger bag samme hold.
 

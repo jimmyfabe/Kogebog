@@ -5,8 +5,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
-  VERBER, VOKSEN_KRAV, KUN_VARME_HJAELP, VOKSEN_HJAELP, INGREDIENSER, RAA_IKONER, DYR, MAKS_ORD,
-  grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, GRAFIK_FAERDIG,
+  VERBER, VOKSEN_KRAV, KUN_VARME_HJAELP, VOKSEN_HJAELP, INGREDIENSER, RAA_IKONER, DYR, GRUPPER, MAKS_ORD,
+  grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, grafikGruppe, GRAFIK_FAERDIG,
 } from '../js/katalog.js';
 import { isoTilMinutter, antalOrd } from '../js/tekst.js';
 
@@ -71,22 +71,36 @@ export function valider(rod = ROD) {
   } catch (e) {
     fejlI('opskrifter/', 'mappen kan ikke læses (' + e.code + ')');
   }
+  // Forsidens afsnit: hver ret står i præcis én kendt gruppe (js/katalog.js GRUPPER), og grupperne har billeder
+  for (const g of Object.keys(GRUPPER)) if (!findes(grafikGruppe(g))) fejlI(grafikGruppe(g), 'billedet mangler (gruppen «' + g + '»)');
   const index = laesJson('opskrifter/index.json');
-  let indexIds = [];
+  const IX = 'opskrifter/index.json';
   if (index) {
-    if (index.version !== 1) fejlI('opskrifter/index.json', '«version» skal være 1, fandt ' + JSON.stringify(index.version));
-    if (!Array.isArray(index.retter) || !index.retter.length) fejlI('opskrifter/index.json', '«retter» skal være en liste med mindst én ret');
+    if (index.version !== 2) fejlI(IX, '«version» skal være 2, fandt ' + JSON.stringify(index.version));
+    for (const k of Object.keys(index)) if (k !== 'version' && k !== 'grupper') fejlI(IX, 'ukendt felt «' + k + '» (retterne står i «grupper»)');
+    if (!Array.isArray(index.grupper) || !index.grupper.length) fejlI(IX, '«grupper» skal være en liste med mindst én gruppe');
     else {
-      indexIds = index.retter;
-      const set = new Set();
-      for (const id of indexIds) {
-        if (typeof id !== 'string' || !ID_RE.test(id)) fejlI('opskrifter/index.json', 'ugyldigt id ' + JSON.stringify(id));
-        else if (set.has(id)) fejlI('opskrifter/index.json', 'id «' + id + '» står der to gange');
-        else if (!filer.includes(id + '.json')) fejlI('opskrifter/index.json', 'retten «' + id + '» findes ikke (mangler opskrifter/' + id + '.json)');
-        set.add(id);
+      const gruppeAf = new Map(); // ret → gruppe
+      const grupper = new Set();
+      for (const g of index.grupper) {
+        const gid = g && g.id;
+        if (typeof gid !== 'string' || !Object.hasOwn(GRUPPER, gid)) { fejlI(IX, 'ukendt gruppe ' + (typeof gid === 'string' ? '«' + gid + '»' : JSON.stringify(gid)) + ' (lovlige: ' + liste(Object.keys(GRUPPER)) + ')'); continue; }
+        if (grupper.has(gid)) fejlI(IX, 'gruppen «' + gid + '» står der to gange');
+        grupper.add(gid);
+        for (const k of Object.keys(g)) if (k !== 'id' && k !== 'retter') fejlI(IX, 'gruppen «' + gid + '»: ukendt felt «' + k + '»');
+        if (!Array.isArray(g.retter) || !g.retter.length) { fejlI(IX, 'gruppen «' + gid + '» skal have mindst én ret i «retter»'); continue; }
+        for (const id of g.retter) {
+          if (typeof id !== 'string' || !ID_RE.test(id)) fejlI(IX, 'ugyldigt id ' + JSON.stringify(id));
+          else if (gruppeAf.get(id) === gid) fejlI(IX, 'id «' + id + '» står der to gange');
+          else if (gruppeAf.has(id)) fejlI(IX, '«' + id + '» står i to grupper (' + gruppeAf.get(id) + ' og ' + gid + '); en ret står i præcis én');
+          else {
+            if (!filer.includes(id + '.json')) fejlI(IX, 'retten «' + id + '» findes ikke (mangler opskrifter/' + id + '.json)');
+            gruppeAf.set(id, gid);
+          }
+        }
       }
       for (const fil of filer) {
-        if (!set.has(fil.slice(0, -5))) fejlI('opskrifter/' + fil, 'står ikke i opskrifter/index.json');
+        if (!gruppeAf.has(fil.slice(0, -5))) fejlI('opskrifter/' + fil, 'står ikke i opskrifter/index.json');
       }
     }
   }

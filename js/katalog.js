@@ -94,6 +94,14 @@ export const DYR = {
   pip: 'Pip, det lille pindsvin',
 };
 
+// Forsidens afsnit (opskrifter/index.json). Navnet er overskriften; billedet er grafik/gruppe-<id>.svg
+// (en gryde, en ovn og en kage), og farven på kortenes cirkel står i app.css under [data-gruppe]
+export const GRUPPER = {
+  'aftensmad': 'Aftensmad',
+  'bagning': 'Bagning',
+  'soede-sager': 'Søde sager',
+};
+
 // Grafikken. Pladsholderne er SVG; skiftes de til PNG i fase 2, rettes det kun her.
 export const GRAFIK_MAPPE = 'grafik/';
 export const GRAFIK_ENDELSE = '.svg';
@@ -101,6 +109,7 @@ export const grafikVerbum = (id) => GRAFIK_MAPPE + 'verbum-' + id + GRAFIK_ENDEL
 export const grafikIngrediens = (id) => GRAFIK_MAPPE + 'ing-' + id + GRAFIK_ENDELSE;
 export const grafikDyr = (navn) => GRAFIK_MAPPE + 'dyr-' + navn + GRAFIK_ENDELSE;
 export const grafikRet = (id) => GRAFIK_MAPPE + 'ret-' + id + GRAFIK_ENDELSE;
+export const grafikGruppe = (id) => GRAFIK_MAPPE + 'gruppe-' + id + GRAFIK_ENDELSE;
 export const GRAFIK_FAERDIG = GRAFIK_MAPPE + 'faerdig' + GRAFIK_ENDELSE;
 
 // Højst så mange ord i en trin-tekst («højst ca. 8 ord»; 9 giver plads til «ca.»).

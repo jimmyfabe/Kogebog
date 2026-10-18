@@ -26,10 +26,20 @@ async function hentJson(sti) {
   }
 }
 
+// index.json har forsidens afsnit i rækkefølge, hvert med sine retter: { grupper: [{ id, retter }], ids }, hvor ids er
+// alle retter i forsidens rækkefølge. En ret, der står to gange, vises kun første gang (validatoren tillader det ikke)
 export async function hentIndex() {
   const j = await hentJson('opskrifter/index.json');
-  if (!j || !Array.isArray(j.retter)) throw new HentFejl('listen over retter mangler');
-  return j.retter.filter((id) => typeof id === 'string' && ID_RE.test(id));
+  if (!j || !Array.isArray(j.grupper)) throw new HentFejl('listen over retter mangler');
+  const ids = [];
+  const grupper = [];
+  for (const g of j.grupper) {
+    if (!g || typeof g.id !== 'string' || !ID_RE.test(g.id) || !Array.isArray(g.retter)) continue;
+    const retter = g.retter.filter((id) => typeof id === 'string' && ID_RE.test(id) && !ids.includes(id));
+    ids.push(...retter);
+    grupper.push({ id: g.id, retter });
+  }
+  return { grupper, ids };
 }
 
 export async function hentRet(id) {

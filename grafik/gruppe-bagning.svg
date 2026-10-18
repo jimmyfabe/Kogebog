@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="feet" fill="#3B2A20">
+    <path d="M56 216 L76 216 L76 236 L56 236 Z"/>
+    <path d="M180 216 L200 216 L200 236 L180 236 Z"/>
+  </g>
+  <g id="oven">
+    <path fill="#3E8FB0" d="M48 32 L208 32 Q222 32 222 46 L222 210 Q222 224 208 224 L48 224 Q34 224 34 210 L34 46 Q34 32 48 32 Z"/>
+    <path fill="#2E6A83" d="M200 32 L208 32 Q222 32 222 46 L222 210 Q222 224 208 224 L200 224 Z"/>
+    <path fill="none" d="M34 74 L222 74"/>
+  </g>
+  <g id="knobs">
+    <circle cx="66" cy="53" r="10" fill="#FFF4E2"/>
+    <circle cx="100" cy="53" r="10" fill="#FFF4E2"/>
+    <circle cx="176" cy="53" r="7" fill="#F08A3C"/>
+  </g>
+  <g id="door">
+    <path fill="#8E9AA6" d="M82 88 L174 88 Q182 88 182 96 Q182 104 174 104 L82 104 Q74 104 74 96 Q74 88 82 88 Z"/>
+    <path fill="#3B2A20" d="M64 116 L192 116 Q200 116 200 124 L200 196 Q200 204 192 204 L64 204 Q56 204 56 196 L56 124 Q56 116 64 116 Z"/>
+    <path fill="#F08A3C" d="M72 128 L184 128 Q188 128 188 132 L188 188 Q188 192 184 192 L72 192 Q68 192 68 188 L68 132 Q68 128 72 128 Z"/>
+  </g>
+  <g id="bun">
+    <path fill="none" d="M76 178 L180 178"/>
+    <path fill="#E8C79A" d="M96 176 C94 150 110 142 128 142 C146 142 162 150 160 176 Z"/>
+    <path fill="none" d="M116 156 Q128 150 140 156"/>
+  </g>
+</g>
+</svg>

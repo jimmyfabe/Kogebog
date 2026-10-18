@@ -5,7 +5,7 @@
    Derfor er VERSION bygget af INDHOLD: et tal for alle FILER. test/test-sw.js tjekker, at FILER er komplet,
    og fejler, når en fil er ændret. Fejlbeskeden viser den nye værdi; testen ændrer ikke sw.js, så den sættes her i hånden. */
 const PRAEFIKS = 'kog-';
-const INDHOLD = 'cc26a8b18f94b34b'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = 'f364099151607873'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const FILER = [
   './',
@@ -58,6 +58,7 @@ const FILER = [
   'grafik/ret-kartoffelmos.svg', 'grafik/ret-hvidloegsflutes.svg', 'grafik/ret-brownie.svg', 'grafik/ret-blondie.svg',
   'grafik/ret-hytteostboller.svg', 'grafik/ret-havregrynskugler.svg', 'grafik/ret-tunfrikadeller.svg',
   'grafik/ret-pizzasnegle.svg',
+  'grafik/gruppe-aftensmad.svg', 'grafik/gruppe-bagning.svg', 'grafik/gruppe-soede-sager.svg',
   'grafik/verbum-aelte.svg', 'grafik/verbum-haelde.svg', 'grafik/verbum-koge.svg', 'grafik/verbum-maale.svg', 'grafik/verbum-roere.svg',
   'grafik/verbum-rulle.svg', 'grafik/verbum-skaere.svg', 'grafik/verbum-smage.svg', 'grafik/verbum-stege.svg',
   'grafik/verbum-vaske-haender.svg', 'grafik/verbum-vende.svg', 'grafik/verbum-vente.svg',

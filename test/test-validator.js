@@ -34,7 +34,8 @@ function forventFejl(fil, ret, forventet) {
   } finally { ryd(m); }
 }
 
-const ANTAL_RETTER = laes(ROD, 'opskrifter/index.json').retter.length;
+const ANTAL_RETTER = laes(ROD, 'opskrifter/index.json').grupper.flatMap((g) => g.retter).length;
+const gruppe = (d, id) => d.grupper.find((g) => g.id === id);
 
 test('de rigtige opskrifter er gyldige', () => {
   const { fejl, tal } = valider(ROD);
@@ -169,9 +170,20 @@ test('id skal passe til filnavnet', () => {
 });
 
 test('index.json skal passe til filerne', () => {
-  forventFejl('opskrifter/index.json', (d) => { d.retter = d.retter.filter((x) => x !== 'boller'); }, 'opskrifter/boller.json: står ikke i opskrifter/index.json');
-  forventFejl('opskrifter/index.json', (d) => { d.retter.push('lasagne'); }, 'retten «lasagne» findes ikke');
-  forventFejl('opskrifter/index.json', (d) => { d.retter.push('boller'); }, 'id «boller» står der to gange');
+  forventFejl('opskrifter/index.json', (d) => { const g = gruppe(d, 'bagning'); g.retter = g.retter.filter((x) => x !== 'boller'); }, 'opskrifter/boller.json: står ikke i opskrifter/index.json');
+  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'aftensmad').retter.push('lasagne'); }, 'retten «lasagne» findes ikke');
+  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'bagning').retter.push('boller'); }, 'id «boller» står der to gange');
+});
+
+// Forsiden har tre afsnit (aftensmad, bagning, søde sager), og hver ret står i præcis én af dem
+test('hver ret står i præcis én kendt gruppe', () => {
+  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'soede-sager').retter.push('boller'); }, '«boller» står i to grupper (bagning og soede-sager)');
+  forventFejl('opskrifter/index.json', (d) => { d.grupper[0].id = 'forretter'; }, 'ukendt gruppe «forretter»');
+  forventFejl('opskrifter/index.json', (d) => { d.grupper[1].id = 'aftensmad'; }, 'gruppen «aftensmad» står der to gange');
+  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'bagning').retter = []; }, 'gruppen «bagning» skal have mindst én ret');
+  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'bagning').navn = 'Bagværk'; }, 'gruppen «bagning»: ukendt felt «navn»');
+  forventFejl('opskrifter/index.json', (d) => { d.version = 1; d.retter = d.grupper.flatMap((g) => g.retter); delete d.grupper; }, '«version» skal være 2');
+  forventFejl('opskrifter/index.json', (d) => { delete d.grupper; }, '«grupper» skal være en liste med mindst én gruppe');
 });
 
 test('manglende felter og for lange sætninger', () => {
@@ -257,14 +269,16 @@ test('navne, som alle objekter arver (constructor, toString), er ikke gyldige id
     'trin 3: «voksen_hjaelp» skal være "kniv", "varme", fandt "toString"');
 });
 
-test('manglende grafik for et verbum eller en ret', () => {
+test('manglende grafik for et verbum, en ret eller en gruppe', () => {
   const m = kopi();
   try {
     fs.rmSync(path.join(m, 'grafik/verbum-aelte.svg'));
     fs.rmSync(path.join(m, 'grafik/ret-boller.svg'));
+    fs.rmSync(path.join(m, 'grafik/gruppe-bagning.svg'));
     const { fejl } = valider(m);
     assert.ok(fejl.includes('grafik/verbum-aelte.svg: billedet mangler (verbum «aelte»)'), fejl.join('\n'));
     assert.ok(fejl.includes('grafik/ret-boller.svg: billedet mangler (retten «boller»)'), fejl.join('\n'));
+    assert.ok(fejl.includes('grafik/gruppe-bagning.svg: billedet mangler (gruppen «bagning»)'), fejl.join('\n'));
   } finally { ryd(m); }
 });
 

@@ -37,7 +37,7 @@ Kør i Git Bash i `D:/Claude/Kogebog`.
 | `js/lager.js` | Det eneste, appen gemmer i `localStorage`: nøglen `kog-v1` |
 | `js/dom.js` | Bygger elementer. Tekst sættes som tekst |
 | `sw.js`, `manifest.webmanifest` | Offline: service worker med `kog-`-caches |
-| `opskrifter/` | `<id>.json` pr. ret og `index.json` (rækkefølgen på forsiden) |
+| `opskrifter/` | `<id>.json` pr. ret og `index.json` (forsidens afsnit og rækkefølgen) |
 | `grafik/`, `ikoner/` | SVG-billeder i fase 1 og ikoner til hjemmeskærmen |
 | `test/`, `vaerktoej/lav-ikoner.js` | Node-tests og `test-e2e.js`. Ikon-scriptet laver PNG-ikonerne |
 | `docs/` | `gennemgang.md` (plan), `chatgpt-app-prompt.md` og `chatgpt-grafik-prompt.md` (prompter til ChatGPT) |
@@ -46,7 +46,7 @@ Kør i Git Bash i `D:/Claude/Kogebog`.
 
 Standard schema.org/Recipe med egne felter under `tumbi`. Den fulde tabel står i `docs/gennemgang.md`. Validatoren (`test/test-opskrifter.js`) tjekker:
 
-- `tumbi.id` er filnavnet, og id'et står i `opskrifter/index.json`.
+- `tumbi.id` er filnavnet, og id'et står i præcis én gruppe i `opskrifter/index.json` (version 2: `grupper` med `id` og `retter`). Grupperne er `aftensmad`, `bagning` og `soede-sager` (`GRUPPER` i `js/katalog.js`, billedet `grafik/gruppe-<id>.svg`).
 - Hvert trin har `tumbi.verbum` fra de 19 verber i `js/katalog.js`: `roere haelde skaere aelte rulle vende stege koge maale vaske-haender vente smage smoere mose bage piske drysse rive pensle`.
 - Trinteksten (`text`, den der læses op) er højst 9 ord.
 - Kniv (`skaere`, `rive`) og varme (`stege`, `koge`, `vende`, `bage`) kræver `"voksen": true` og `voksen_hjaelp` (`"kniv"` eller `"varme"`). De to følges ad.
@@ -60,7 +60,7 @@ Standard schema.org/Recipe med egne felter under `tumbi`. Den fulde tabel står 
 
 ## Ny opskrift
 
-1. Kopiér en af `opskrifter/<id>.json`, og skriv id'et i `opskrifter/index.json` (rækkefølgen: aftensmad, bagning, søde sager).
+1. Kopiér en af `opskrifter/<id>.json`, og skriv id'et i den rigtige gruppe i `opskrifter/index.json` (aftensmad, bagning eller søde sager).
 2. Kør `node test/test-opskrifter.js`. Den siger præcis, hvad der er galt.
 3. Læg `grafik/ret-<id>.svg` (og nye verbum- eller ingrediens-billeder). Tilføj filerne i `FILER` i `sw.js`.
 4. Kør `node test/test-sw.js`, og sæt den nye `INDHOLD` (se regel 3 nedenfor).

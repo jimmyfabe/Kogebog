@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="plate">
+    <ellipse cx="128" cy="210" rx="108" ry="24" fill="#3E8FB0"/>
+    <ellipse cx="128" cy="206" rx="92" ry="15" fill="#FFF4E2"/>
+  </g>
+  <g id="cake">
+    <path fill="#E8C79A" d="M50 124 L50 196 Q50 214 128 214 Q206 214 206 196 L206 124 Z"/>
+    <path fill="#E2513B" d="M50 164 Q50 178 128 178 Q206 178 206 164 L206 176 Q206 190 128 190 Q50 190 50 176 Z"/>
+    <path fill="#FFFFFF" d="M50 122 L50 140 Q58 152 68 142 Q78 158 92 144 Q104 156 116 146 Q128 160 140 146 Q152 156 164 144 Q178 158 188 142 Q198 152 206 140 L206 122 Z"/>
+    <ellipse cx="128" cy="122" rx="78" ry="22" fill="#FFFFFF"/>
+  </g>
+  <g id="cherry">
+    <path fill="none" d="M132 92 Q136 66 156 56"/>
+    <path fill="#5BAA6A" d="M150 60 C152 46 168 40 180 44 C176 56 164 64 150 60 Z"/>
+    <circle cx="128" cy="104" r="17" fill="#E2513B"/>
+  </g>
+</g>
+</svg>

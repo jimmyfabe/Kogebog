@@ -241,16 +241,24 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .forside:has(.forside-timer .pille:not([hidden])) .kort-billede { width: min(100%, 20svh, 200px); }
 }
 
-.forside-indhold { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-.kort-gitter {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 22px 26px;
-  padding: 22px 24px 28px;
-}
+.forside-indhold { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-bottom: 28px; }
+/* Tre afsnit (opskrifter/index.json): aftensmad, bagning og søde sager. Overskriften er et billede på afsnittets farve og
+   et ord, og kortenes cirkel har samme farve, så børnene kan kende gryden, ovnen og kagen igen uden at læse.
+   Før stod alle 13 kort i ét gitter, og med to kort pr. række delte pizzasnegle og pandekager række */
+.gruppe { width: min(100%, 990px); margin: 0 auto; padding: 22px 24px 0; }
+.gruppe + .gruppe { margin-top: 10px; }
+.gruppe[data-gruppe="aftensmad"] { --ret-farve: var(--urt-lys); }
+.gruppe[data-gruppe="bagning"] { --ret-farve: var(--sennep-lys); }
+.gruppe[data-gruppe="soede-sager"] { --ret-farve: var(--tomat-lys); }
+.gruppe-navn { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; font-size: 34px; font-weight: 800; line-height: 1.1; }
+/* En streg ud til højre skiller afsnittene ad */
+.gruppe-navn::after { content: ''; flex: 1; min-width: 24px; height: var(--streg); border-radius: 2px; background: var(--creme-moerk); }
+.gruppe-ikon { flex: none; display: grid; place-items: center; width: 72px; height: 72px; border: var(--kant); border-radius: 50%; background: var(--ret-farve); }
+.gruppe-ikon img { width: 84%; }
+/* Tre kolonner, når der er plads, ellers to. Hvert afsnit har sit eget gitter, så en række aldrig blander to grupper */
+.kort-gitter { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 22px 26px; }
 /* display: flex, så kortet fylder hele rækkens højde: et navn på to linjer (Kødsovs med spaghetti) gør ikke ét kort højere */
-.kort-plads { flex: 0 1 290px; min-width: 0; display: flex; }
+.kort-plads { min-width: 0; display: flex; }
 .kort {
   width: 100%;
   display: flex;
@@ -275,11 +283,6 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   border-radius: 50%;
   background: var(--ret-farve, var(--sennep-lys));
 }
-.kort-plads:nth-child(5n+1) .kort { --ret-farve: var(--sennep-lys); }
-.kort-plads:nth-child(5n+2) .kort { --ret-farve: var(--tomat-lys); }
-.kort-plads:nth-child(5n+3) .kort { --ret-farve: var(--urt-lys); }
-.kort-plads:nth-child(5n+4) .kort { --ret-farve: var(--dej-lys); }
-.kort-plads:nth-child(5n+5) .kort { --ret-farve: var(--raev-lys); }
 .kort-billede img { width: 92%; }
 /* Lange ord deles med bindestreg (lang="da"), ikke midt i ordet uden tegn */
 .kort-navn { font-size: 26px; font-weight: 800; line-height: 1.1; text-align: center; overflow-wrap: break-word; -webkit-hyphens: auto; hyphens: auto; }
@@ -530,8 +533,10 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 
   .forside-top { gap: 8px; padding: 12px 10px 0; }
   .forside-titel { padding: 8px 16px 10px; }
-  .kort-gitter { gap: 16px 14px; padding: 16px 12px 22px; }
-  .kort-plads { flex-basis: calc(50% - 7px); }
+  .gruppe { padding: 16px 12px 0; }
+  .gruppe-navn { gap: 10px; margin-bottom: 12px; font-size: 26px; }
+  .gruppe-ikon { width: 56px; height: 56px; }
+  .kort-gitter { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 14px; }
   .kort { padding: 12px 8px 12px; border-radius: 24px; }
   .kort-navn { font-size: 20px; }
   .kort-billede { width: min(100%, 132px); }
@@ -655,6 +660,17 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .forside-dyr { display: none; }
   /* Højst 30 % af højden: på 812×375 blev den første række kort skåret 1 px af (titlen er højere end på 667 px) */
   .kort-billede { width: min(100%, 120px, 30svh); }
+  /* Dugen, afsnittenes overskrifter og kortene er lavere, så den første række kort ses under den første overskrift
+     (på 667×375 lå «Kødsovs med spaghetti» på to linjer 10 px under kanten) */
+  .kort { padding: 10px 10px 10px; }
+  .kort-navn { font-size: 22px; }
+  .forside-top { padding-top: 10px; }
+  .forside-titel { margin-bottom: 10px; padding: 6px 22px 8px; }
+  .forside-titel h1 { font-size: 30px; }
+  .forside-titel p { margin-top: 2px; font-size: 17px; }
+  .gruppe { padding-top: 12px; }
+  .gruppe-navn { gap: 10px; margin-bottom: 8px; font-size: 26px; }
+  .gruppe-ikon { width: 48px; height: 48px; }
   .trin .handlinger, .ret .handlinger {
     position: sticky;
     bottom: 0;

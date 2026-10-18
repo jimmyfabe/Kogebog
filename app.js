@@ -7,7 +7,7 @@ import * as Tale from './js/tale.js';
 import * as Timer from './js/timer.js';
 import * as Lager from './js/lager.js';
 import { holdKnap } from './js/hold.js';
-import { VERBER, VOKSEN_HJAELP, INGREDIENSER, grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, GRAFIK_FAERDIG } from './js/katalog.js';
+import { VERBER, VOKSEN_HJAELP, INGREDIENSER, GRUPPER, grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, grafikGruppe, GRAFIK_FAERDIG } from './js/katalog.js';
 import { formaterTid, varighed, varighedTale } from './js/tid.js';
 import { minutterTekst } from './js/tekst.js';
 
@@ -22,6 +22,7 @@ const meddelelse = document.getElementById('meddelelse');
 
 const S = {
   ids: null,          // rækkefølgen fra index.json
+  grupper: [],        // forsidens afsnit fra index.json: [{ id, retter }]
   indexFejl: null,
   retter: new Map(),  // id → model eller HentFejl
   valgtKort: null,    // forsiden: første tryk siger navnet, andet åbner
@@ -167,7 +168,7 @@ function forside() {
       knap('Hent opskrifterne igen', { klasse: 'primaer', ikonNavn: 'igen', onclick: () => { S.ids = null; indlaes(); } }));
   } else {
     const fejlede = [];
-    const kort = S.ids.map((id) => {
+    const kortTil = (id) => {
       const m = S.retter.get(id);
       if (!m) return el('li', { class: 'kort-plads' }, el('div', { class: 'kort tomt', 'aria-hidden': 'true' }));
       if (m instanceof Error) { fejlede.push(id); return null; }
@@ -177,9 +178,20 @@ function forside() {
         el('span', { class: 'kort-aabn', 'aria-hidden': 'true' }, ikon('naeste'), el('span', { tekst: 'Tryk igen' })));
       b.addEventListener('click', klik(() => kortTryk(id, b)));
       return el('li', { class: 'kort-plads' }, b);
-    }).filter(Boolean);
+    };
+    // Et afsnit pr. gruppe: gryden, ovnen og kagen står i overskriften og har samme farve som kortenes cirkel.
+    // Et afsnit uden kort (alle dets opskrifter fejlede) vises ikke
+    const afsnit = S.grupper.map((g) => {
+      const kort = g.retter.map(kortTil).filter(Boolean);
+      if (!kort.length) return null;
+      const navn = Object.hasOwn(GRUPPER, g.id) ? GRUPPER[g.id] : null;
+      return el('section', { class: 'gruppe', 'data-gruppe': g.id, 'aria-labelledby': navn ? 'gruppe-' + g.id : null },
+        navn ? el('h2', { class: 'gruppe-navn', id: 'gruppe-' + g.id },
+          el('span', { class: 'gruppe-ikon' }, billede(grafikGruppe(g.id), '')), el('span', { tekst: navn })) : null,
+        el('ul', { class: 'kort-gitter' }, kort));
+    });
     indhold = el('div', { class: 'forside-indhold' },
-      el('ul', { class: 'kort-gitter', 'aria-label': 'Retter' }, kort),
+      afsnit,
       fejlede.length ? el('p', { class: 'fejl-linje', role: 'status', tekst: (fejlede.length === 1 ? 'Én opskrift' : fejlede.length + ' opskrifter') + ' kunne ikke læses (' + fejlede.join(', ') + '). Prøv at genindlæse siden.' }) : null);
   }
   return el('main', { class: 'skaerm forside' }, top, el('div', { class: 'forside-timer' }, timerPille()), indhold);
@@ -476,7 +488,9 @@ async function indlaes() {
   S.indexFejl = null;
   if (!S.ids) vis();
   try {
-    S.ids = await hentIndex();
+    const ix = await hentIndex();
+    S.grupper = ix.grupper;
+    S.ids = ix.ids;
   } catch (e) {
     S.indexFejl = e;
     S.ids = null;

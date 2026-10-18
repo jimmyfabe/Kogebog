@@ -17,6 +17,7 @@ import { fileURLToPath } from 'node:url';
 import { hentPlaywright } from '../vaerktoej/lav-ikoner.js';
 import { tilTale } from '../js/tekst.js';
 import { formaterTid, HURTIG_SEK } from '../js/tid.js';
+import { GRUPPER } from '../js/katalog.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const BASE = (process.argv[2] || 'http://127.0.0.1:8091').replace(/\/$/, '');
@@ -32,7 +33,9 @@ const SKAERME = [
   { navn: 'desktop', viewport: { width: 1280, height: 800 }, hasTouch: false },
 ];
 
-const index = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter/index.json'), 'utf8')).retter;
+// Forsiden har et afsnit pr. gruppe (aftensmad, bagning, søde sager); index er alle retter i forsidens rækkefølge
+const INDEX_GRUPPER = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter/index.json'), 'utf8')).grupper;
+const index = INDEX_GRUPPER.flatMap((g) => g.retter);
 const RETTER = Object.fromEntries(index.map((id) => [id, JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8'))]));
 
 const vent = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -291,6 +294,58 @@ async function forsideRulning(side) {
   });
 }
 
+// Forsiden har et afsnit pr. gruppe med en stor overskrift (ikon + ord), og kortene i et afsnit har samme farve på
+// cirklen. Før stod alle 13 kort i ét gitter, og grupperne kunne ikke ses: med to kort pr. række delte pizzasnegle
+// (bagning) og pandekager (søde sager) række. Rækkerne regnes efter index.json, så blandingen også kan måles uden afsnit
+async function tjekGrupper(side, hvor) {
+  const gruppeAf = Object.fromEntries(INDEX_GRUPPER.flatMap((g) => g.retter.map((id) => [id, g.id])));
+  const g = await side.evaluate((gruppeAf) => {
+    const afsnit = [...document.querySelectorAll('.forside .gruppe')].map((s) => {
+      const h = s.querySelector('h2');
+      const img = h && h.querySelector('img');
+      const kort = [...s.querySelectorAll('.kort[data-ret]')];
+      return {
+        id: s.dataset.gruppe,
+        navn: h ? h.textContent.trim() : null,
+        navnPx: h ? parseFloat(getComputedStyle(h).fontSize) : 0,
+        ikon: img ? { alt: img.getAttribute('alt'), b: Math.round(img.getBoundingClientRect().width), ok: img.complete && img.naturalWidth > 0 } : null,
+        hBund: h ? Math.round(h.getBoundingClientRect().bottom) : null,
+        retter: kort.map((k) => k.dataset.ret),
+        farver: [...new Set(kort.map((k) => getComputedStyle(k.querySelector('.kort-billede')).backgroundColor))],
+        kortTop: kort.length ? Math.round(Math.min(...kort.map((k) => k.getBoundingClientRect().top))) : null,
+        kortPx: kort.length ? parseFloat(getComputedStyle(kort[0].querySelector('.kort-navn')).fontSize) : 0,
+      };
+    });
+    const raekker = {};
+    for (const k of document.querySelectorAll('.forside .kort[data-ret]')) {
+      const top = Math.round(k.getBoundingClientRect().top + scrollY);
+      (raekker[top] = raekker[top] || []).push(k.dataset.ret);
+    }
+    const r = Object.values(raekker);
+    return {
+      afsnit,
+      blandet: r.filter((ids) => new Set(ids.map((id) => gruppeAf[id])).size > 1).map((ids) => ids.join('+')),
+      iRaekke: Math.max(...r.map((ids) => ids.length)),
+    };
+  }, gruppeAf);
+  tjek(g.afsnit.length === INDEX_GRUPPER.length, hvor + ': forsiden skal have ' + INDEX_GRUPPER.length + ' afsnit med hver sin overskrift (fandt ' + g.afsnit.length + ')');
+  INDEX_GRUPPER.forEach((ig, i) => {
+    const a = g.afsnit[i];
+    if (!a) return;
+    const navn = GRUPPER[ig.id];
+    tjek(a.id === ig.id && a.navn === navn, hvor + ': afsnit ' + (i + 1) + ' skal hedde «' + navn + '» (fandt ' + a.id + ' «' + a.navn + '»)');
+    tjek(a.ikon && a.ikon.ok && a.ikon.alt === '' && a.ikon.b >= 32, hvor + ': overskriften «' + navn + '» skal have et ikon på mindst 32 px ' + JSON.stringify(a.ikon));
+    tjek(a.navnPx >= Math.max(24, a.kortPx), hvor + ': overskriften «' + navn + '» skal være mindst 24 px og ikke mindre end kortenes navne (' + a.navnPx + ' mod ' + a.kortPx + ' px)');
+    tjek(a.retter.join() === ig.retter.join(), hvor + ': afsnittet «' + navn + '» skal have ' + ig.retter.join(', ') + ' (fandt ' + a.retter.join(', ') + ')');
+    tjek(a.farver.length === 1, hvor + ': kortene i «' + navn + '» skal have samme farve på cirklen (fandt ' + a.farver.join(', ') + ')');
+    tjek(a.hBund !== null && a.kortTop !== null && a.hBund <= a.kortTop, hvor + ': overskriften «' + navn + '» skal stå over sine kort (bund ' + a.hBund + ', kort ' + a.kortTop + ')');
+  });
+  const farver = g.afsnit.map((a) => a.farver[0]);
+  tjek(new Set(farver).size === farver.length, hvor + ': hvert afsnit skal have sin egen farve på cirklen (fandt ' + farver.join(', ') + ')');
+  tjek(g.blandet.length === 0, hvor + ': en række må kun have kort fra én gruppe (blandet: ' + g.blandet.join(' | ') + ')');
+  return g;
+}
+
 async function venterPaa(side, fn, arg, hvor, ms = 6000) {
   try {
     await side.waitForFunction(fn, arg, { timeout: ms });
@@ -370,6 +425,8 @@ async function heleVejen(browser, skaerm) {
   tjek(rul.foersteUnder <= 0, n + ': den første række kort på forsiden skæres ' + rul.foersteUnder + ' px af forneden');
   tjek(rul.sidsteSes, n + ': det sidste kort på forsiden skal kunne rulles helt frem ' + JSON.stringify(rul));
   maal.push(n + ' forside: ' + rul.kort + ' kort, ' + rul.iFoersteRaekke + ' i første række, rullet ' + rul.rullet + ' px for at nå det sidste');
+  const gr = await tjekGrupper(side, n + ' forside');
+  maal.push(n + ' forside: ' + gr.afsnit.length + ' afsnit, højst ' + gr.iRaekke + ' kort pr. række');
   if (n === 'desktop') {
     // U16: med mus skal et kort ændre sig, når musen står over det
     const skygge = () => side.evaluate(() => getComputedStyle(document.querySelector('.kort[data-ret="frikadeller"]')).boxShadow);
@@ -842,7 +899,7 @@ async function fejltilstande(browser, skaerm) {
   await side.waitForSelector('.kort[data-ret]').catch(() => tjek(false, 'fejl: «Prøv igen» skal hente opskrifterne'));
 
   // U18: en tom liste taler til forælderen, ikke til udvikleren
-  await side.route('**/opskrifter/index.json', (r) => r.fulfill({ contentType: 'application/json', body: '{"version":1,"retter":[]}' }));
+  await side.route('**/opskrifter/index.json', (r) => r.fulfill({ contentType: 'application/json', body: '{"version":2,"grupper":[]}' }));
   await side.goto(BASE + '/index.html');
   await side.waitForSelector('text=Der er ingen opskrifter endnu').catch(() => tjek(false, 'tom: en tom liste skal sige «Der er ingen opskrifter endnu»'));
   const tomTekst = await side.locator('.status-boks').textContent().catch(() => '');
@@ -1039,6 +1096,8 @@ async function former(browser) {
     tjek(rul.sidsteSes, n + ' forside: det sidste kort skal kunne rulles helt frem ' + JSON.stringify(rul));
     tjek(rul.navnUd.length === 0, n + ' forside: navnet stikker ud af kortet på ' + rul.navnUd.join(', '));
     maal.push(n + ' forside: ' + rul.iFoersteRaekke + ' kort i første række, rullet ' + rul.rullet + ' px for at nå det sidste');
+    const gr = await tjekGrupper(side, n + ' forside');
+    maal.push(n + ' forside: højst ' + gr.iRaekke + ' kort pr. række');
     await tjekLayout(side, n + ' forside');
     await foto(side, n + '-former-forside');
 
