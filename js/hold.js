@@ -20,6 +20,7 @@ export function holdKnap({ klasse = '', indhold = [], label, ms = 2000, naarFaer
   let raf = 0;
   let holder = false;
   let viaPointer = false;
+  let mindTid = 0;
 
   function tegn() {
     // Skærmen er skiftet under holdet (fx Hjem eller Tilbage): knappen er fjernet, så holdet må ikke gå videre fra den
@@ -52,7 +53,6 @@ export function holdKnap({ klasse = '', indhold = [], label, ms = 2000, naarFaer
   }
   // Kort tryk: under 2 sekunder og ikke et hold, der lige er lykkedes.
   // Det skal også kunne SES (talen alene er ikke nok, og den kan være slået fra): knappen får en ring og ryster i 1,5 s.
-  let mindTid = 0;
   function kort() {
     b.classList.remove('mind');
     void b.offsetWidth; // start rystet forfra ved et nyt kort tryk

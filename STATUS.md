@@ -24,7 +24,19 @@
 - De nye tests mod e82d280 giver 238 fejl. Hvert nyt tjek fejler.
 - Node-testene: 4/4 grønne. `INDHOLD = '911f176f0b75c623'`.
 
-**Kører nu:** UI-review 3 (`ui-reviewer`) på 360–1440 px, med 844×390 og 667×375.
+**Efter kl. 16:50:**
+- UI-review 3 gav 11 fund. Fund 1–10 er rettet (cf715f7..1b95271, e2e 3890 grøn). Fund 11 er billedet og venter på grafikrunde 2.
+- Code review gav 7 fund (0d256dd..99eea68, e2e 4120 grøn på 99eea68):
+  - rettet: safe-area i `--bund`, `:has`-fallback og mindTid;
+  - fund 3 (Tab-rækkefølgen) er valgt med vilje og står i CLAUDE.md;
+  - fund 6 (bunden står tre gange) er sprunget over, fordi det er oprydning;
+  - fund 1 og 4 holdt ikke ved måling i WebKit.
+- To åbne punkter tages ved næste sammenlægning:
+  - (a) Fjern `and (max-width: 800px)` i app.css ca. linje 658 som forsikring. På 812×375 er der kun 11 px luft, og WebKit på Windows bruger Trebuchet MS, ikke iPhonens ui-rounded. Med Verdana brækker bunden.
+  - (b) I et desktopvindue på 901–979 × 800 ligger kødsovs' bund under kanten. Bunden står kun fast op til 900 px.
+- Arbejder nu:
+  - de nye opskrifter på grenen `opskrifter-2` (worktree i kladdemappen);
+  - grafikrunde 2 med Codex (49 SVG'er).
 
 **Ikke gjort eller ikke afprøvet:**
 - iPhone SE på langs (667×375): bunden står på to rækker (174 px).
