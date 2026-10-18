@@ -229,7 +229,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   gap: 22px 26px;
   padding: 22px 24px 28px;
 }
-.kort-plads { flex: 0 1 290px; min-width: 0; }
+/* display: flex, så kortet fylder hele rækkens højde: et navn på to linjer (Kødsovs med spaghetti) gør ikke ét kort højere */
+.kort-plads { flex: 0 1 290px; min-width: 0; display: flex; }
 .kort {
   width: 100%;
   display: flex;
@@ -260,7 +261,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .kort-plads:nth-child(5n+4) .kort { --ret-farve: var(--dej-lys); }
 .kort-plads:nth-child(5n+5) .kort { --ret-farve: var(--raev-lys); }
 .kort-billede img { width: 92%; }
-.kort-navn { font-size: 26px; font-weight: 800; line-height: 1.1; text-align: center; overflow-wrap: anywhere; }
+/* Lange ord deles med bindestreg (lang="da"), ikke midt i ordet uden tegn */
+.kort-navn { font-size: 26px; font-weight: 800; line-height: 1.1; text-align: center; overflow-wrap: break-word; -webkit-hyphens: auto; hyphens: auto; }
 .kort-aabn { display: none; align-items: center; gap: 6px; font-size: 17px; font-weight: 750; }
 .kort-aabn .ikon { width: 22px; height: 22px; }
 .kort.valgt { background: var(--sennep-lys); box-shadow: 0 6px 0 var(--kakao), 0 0 0 6px var(--sennep); }

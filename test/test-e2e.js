@@ -233,6 +233,16 @@ async function heleVejen(browser, skaerm) {
   await side.waitForSelector('.kort[data-ret]');
   tjek(await side.locator('.kort[data-ret]').count() === index.length, n + ': forsiden skal have ' + index.length + ' kort');
   await tjekLayout(side, n + ' forside');
+  // Kortene i samme række er lige høje (før var «Kødsovs med spaghetti» højere end naboerne)
+  const raekker = await side.evaluate(() => {
+    const r = {};
+    for (const k of document.querySelectorAll('.kort[data-ret]')) {
+      const b = k.getBoundingClientRect();
+      (r[Math.round(b.top)] = r[Math.round(b.top)] || []).push(Math.round(b.height));
+    }
+    return Object.values(r);
+  });
+  tjek(raekker.every((h) => Math.max(...h) - Math.min(...h) <= 1), n + ': kortene i en række skal være lige høje: ' + JSON.stringify(raekker));
   await foto(side, n + '-1-forside');
 
   // Første tryk siger navnet, andet åbner
