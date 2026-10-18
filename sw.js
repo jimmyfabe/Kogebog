@@ -5,7 +5,7 @@
    Derfor er VERSION bygget af INDHOLD: et tal for alle FILER. test/test-sw.js tjekker, at FILER er komplet,
    og fejler, når en fil er ændret. Fejlbeskeden viser den nye værdi; testen ændrer ikke sw.js, så den sættes her i hånden. */
 const PRAEFIKS = 'kog-';
-const INDHOLD = '980ff6478cc1bc9d'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = 'cb425224b35a3254'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const FILER = [
   './',
@@ -33,6 +33,7 @@ const FILER = [
   'opskrifter/boller.json',
   'opskrifter/chorizo-pasta.json',
   'opskrifter/kartoffelmos.json',
+  'opskrifter/hvidloegsflutes.json',
   'lyd/liste.json',
   'ikoner/ikon.svg',
   'ikoner/ikon-180.png',
@@ -48,7 +49,7 @@ const FILER = [
   'grafik/ing-kartoffel.svg', 'grafik/ing-kerner.svg', 'grafik/ing-kokos.svg', 'grafik/ing-rasp.svg', 'grafik/ing-skinke.svg',
   'grafik/ing-tun.svg', 'grafik/ing-yoghurt.svg',
   'grafik/ret-boller.svg', 'grafik/ret-chorizo-pasta.svg', 'grafik/ret-frikadeller.svg', 'grafik/ret-koedsovs.svg', 'grafik/ret-pandekager.svg',
-  'grafik/ret-kartoffelmos.svg',
+  'grafik/ret-kartoffelmos.svg', 'grafik/ret-hvidloegsflutes.svg',
   'grafik/verbum-aelte.svg', 'grafik/verbum-haelde.svg', 'grafik/verbum-koge.svg', 'grafik/verbum-maale.svg', 'grafik/verbum-roere.svg',
   'grafik/verbum-rulle.svg', 'grafik/verbum-skaere.svg', 'grafik/verbum-smage.svg', 'grafik/verbum-stege.svg',
   'grafik/verbum-vaske-haender.svg', 'grafik/verbum-vende.svg', 'grafik/verbum-vente.svg',

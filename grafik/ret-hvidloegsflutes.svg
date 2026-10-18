@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="plate">
+    <ellipse cx="128" cy="140" rx="108" ry="75" fill="#3E8FB0"/>
+    <ellipse cx="128" cy="140" rx="94" ry="61" fill="#FFF4E2"/>
+  </g>
+  <g id="foil">
+    <path d="M44 150 L70 106 L214 118 L196 170 Z" fill="#EDE8E0"/>
+    <path d="M70 106 L80 122 L204 132 L214 118 M80 122 L62 158" fill="none"/>
+  </g>
+  <g id="flute">
+    <path d="M60 140 C56 124 70 114 90 116 L186 124 C204 126 212 140 202 152 C196 160 180 160 170 158 L84 152 C70 152 62 148 60 140 Z" fill="#CFA976"/>
+    <path d="M64 134 C62 122 74 116 90 118 L184 126 C200 128 206 138 198 146 L88 140 C76 140 66 140 64 134 Z" fill="#E8C79A"/>
+  </g>
+  <g id="cuts" fill="#5BAA6A">
+    <path d="M88 118 L84 150 L90 151 L95 119 Z"/>
+    <path d="M110 120 L106 152 L112 152 L117 121 Z"/>
+    <path d="M132 122 L128 154 L134 154 L139 123 Z"/>
+    <path d="M154 124 L150 156 L156 156 L161 125 Z"/>
+    <path d="M176 126 L172 157 L178 157 L183 127 Z"/>
+  </g>
+  <g id="crumbs" fill="none">
+    <path d="M98 126 L101 125 M143 130 L146 129 M120 128 L123 127 M165 132 L168 131"/>
+  </g>
+</g>
+</svg>

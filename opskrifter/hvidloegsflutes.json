@@ -1,0 +1,46 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Hvidløgsflutes",
+  "description": "Varme flutes med hvidløgssmør og persille mellem skiverne.",
+  "image": "grafik/ret-hvidloegsflutes.svg",
+  "inLanguage": "da",
+  "recipeYield": "6 personer (2 flutes)",
+  "prepTime": "PT15M",
+  "cookTime": "PT20M",
+  "totalTime": "PT40M",
+  "recipeIngredient": [
+    "2 flutes (bake-off)",
+    "150 g blødt smør",
+    "2 fed hvidløg, presset",
+    "2 spsk hakket persille",
+    "½ tsk salt"
+  ],
+  "tool": ["hvidløgspresser", "kniv", "skærebræt", "skål", "grydeske", "brødkniv", "smørekniv", "staniol", "bageplade"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Pres hvidløget, og hak persillen.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["hvidloeg", "krydderurt"], "note": "Barnet kan trykke hvidløgspresseren sammen. Persillen hakker den voksne." } },
+    { "@type": "HowToStep", "text": "Kom smør, hvidløg og persille i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["smoer", "hvidloeg", "krydderurt"], "note": "Smørret skal være blødt: tag det ud af køleskabet et par timer før." } },
+    { "@type": "HowToStep", "text": "Kom salt i.", "tumbi": { "verbum": "haelde", "ikoner": ["salt"] } },
+    { "@type": "HowToStep", "text": "Rør hvidløgssmørret sammen.", "tumbi": { "verbum": "roere", "ikoner": ["smoer"] } },
+    { "@type": "HowToStep", "text": "Skær flutes i skiver, ikke helt igennem.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["broed"], "note": "Med en brødkniv. Tænd ovnen på 200 °C almindelig ovn (180 °C varmluft)." } },
+    { "@type": "HowToStep", "text": "Smør hvidløgssmør mellem skiverne.", "tumbi": { "verbum": "smoere", "ikoner": ["broed", "smoer"], "note": "Med en smørekniv eller en teske." } },
+    { "@type": "HowToStep", "text": "Pak flutes ind i staniol.", "tumbi": { "verbum": "rulle", "ikoner": ["broed"], "note": "Hver flute i sit eget stykke staniol." } },
+    { "@type": "HowToStep", "text": "Bag flutes i staniol i 15 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900 } },
+    { "@type": "HowToStep", "text": "Åbn staniolen, og bag dem 5 minutter mere.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Den voksne åbner: der kommer varm damp ud." } },
+    { "@type": "HowToStep", "text": "Smag en varm skive.", "tumbi": { "verbum": "smage", "ikoner": ["broed"], "note": "Lad den køle lidt først." } }
+  ],
+  "tumbi": {
+    "id": "hvidloegsflutes",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift",
+    "ingredienser": [
+      { "ikon": "broed", "maengde": "2" },
+      { "ikon": "smoer", "maengde": "150 g" },
+      { "ikon": "hvidloeg", "maengde": "2 fed" },
+      { "ikon": "krydderurt", "maengde": "2 spsk" },
+      { "ikon": "salt", "maengde": "½ tsk" }
+    ]
+  }
+}
