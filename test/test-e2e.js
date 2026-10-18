@@ -917,8 +917,8 @@ async function beroering(browser, skaerm) {
 // ---------- Skærmformer, som de tre faste skærme ikke dækker ----------
 // Den smalleste iPhone (360 px), iPhone (390), iPad mini på højkant (768×1024 og den nye 744×1133) og iPhone på langs
 // (844×390), de små iPhones på langs (667×375 og 736×414), som før fik iPhone-layoutet på højkant, iPhone mini, X og
-// 11 Pro på langs (812×375) og iPhone Pro Max på langs (932×430). De to sidste er bredere end 800 px og får rettens
-// store knapper i bunden; den skal stadig være én række med «Fortsæt ved trin 12»
+// 11 Pro på langs (812×375) og iPhone Pro Max på langs (932×430). På langs skal rettens bund være én række, også med
+// «Fortsæt ved trin 12»
 const FORMER = [
   { navn: 'w360', viewport: { width: 360, height: 780 }, hasTouch: true },
   { navn: 'iphone', viewport: { width: 390, height: 844 }, hasTouch: true },
@@ -1061,6 +1061,17 @@ async function former(browser) {
           // … og det gør personer og tid også (på 844×390 lå linjen halvt under bunden)
           const meta = await modBund(side, '.meta');
           tjek(meta.bund <= meta.bundTop, hvor + ': personer og tid ligger under den faste bund ' + JSON.stringify(meta));
+          // Knapperne står på én række (de er centreret lodret, så rækken tælles på midten: print er lavere end «Start»).
+          // Luften i rækken (skubbet mellem knapperne) skrives ud: WebKit på Windows tegner med Trebuchet MS, iPhonen med
+          // ui-rounded, så bredderne her er kun omtrentlige
+          const raekke = await side.evaluate(() => {
+            const h = document.querySelector('#app > .skaerm:not([data-gammel]) .handlinger');
+            const k = [...h.querySelectorAll('button')].filter((b) => b.getClientRects().length).map((b) => b.getBoundingClientRect());
+            const skub = h.querySelector('.skub');
+            return { raekker: new Set(k.map((b) => Math.round((b.top + b.bottom) / 2))).size, luft: skub ? Math.round(skub.getBoundingClientRect().width) : null };
+          });
+          tjek(raekke.raekker === 1, hvor + ': bunden på langs skal være én række knapper (' + raekke.raekker + ' rækker)');
+          maal.push(hvor + ': luft i bundens række ' + raekke.luft + ' px');
         }
         if (fortsaet) {
           // Tab-rækkefølgen: «Fortsæt» er den første knap i bunden (før kom den efter print og «Start forfra», selvom den stod øverst),

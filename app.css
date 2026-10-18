@@ -668,9 +668,11 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .faerdig .status-knapper .knap { min-height: 68px; }
 }
 
-/* Små iPhones på langs (667 og 736 px): rettens tre knapper skal stå på én række. Fortsæt, Start forfra og print
-   fyldte 787 px, så bunden brød på to rækker (44 % af skærmen). Print står uden ikon, som under 400 px */
-@media (max-height: 520px) and (orientation: landscape) and (max-width: 800px) {
+/* iPhones på langs: rettens tre knapper skal stå på én række. Fortsæt, Start forfra og print fyldte 787 px, så bunden
+   brød på to rækker på 667 og 736 px (44 % af skærmen). Print står uden ikon, som under 400 px. Gælder også de bredere
+   (812-932 px): på 812×375 var der kun 11 px luft med de store knapper, og iPhonens ui-rounded kan være bredere end
+   Trebuchet MS, som WebKit på Windows tegner med */
+@media (max-height: 520px) and (orientation: landscape) {
   .ret .handlinger { gap: 12px; padding-left: 16px; padding-right: 16px; }
   .ret .handlinger .knap { white-space: nowrap; }
   .ret .handlinger .print-knap { padding: 0 14px; }
