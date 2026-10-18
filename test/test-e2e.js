@@ -963,6 +963,9 @@ async function former(browser) {
           const navn = await modBund(side, '.ret-titel h1');
           tjek(navn.hoejde <= navn.H * 0.25, hvor + ': bunden fylder ' + navn.hoejde + ' af ' + navn.H + ' px (højst 25 %)');
           tjek(navn.bund <= navn.bundTop, hvor + ': navnet ligger under den faste bund ' + JSON.stringify(navn));
+          // … og det gør personer og tid også (på 844×390 lå linjen halvt under bunden)
+          const meta = await modBund(side, '.meta');
+          tjek(meta.bund <= meta.bundTop, hvor + ': personer og tid ligger under den faste bund ' + JSON.stringify(meta));
         }
         if (fortsaet) {
           // Tab-rækkefølgen: «Fortsæt» er den første knap i bunden (før kom den efter print og «Start forfra», selvom den stod øverst),
