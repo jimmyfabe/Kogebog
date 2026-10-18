@@ -102,7 +102,11 @@ Her er et forkortet eksempel. Det fulde eksempel står i `chatgpt-app-prompt.md`
 ## Stemme
 
 - **Nu (pladsholder):** iPad'ens egen danske stemme via `speechSynthesis` med `lang = "da-DK"`. Den koster 0 kr og kræver ingen filer. Den kræver en dansk stemme på iPad'en og sandsynligvis et tryk, før den taler første gang (ikke afprøvet).
-- **Senere:** samme danske kvindestemme som i Lystårnet (Google Chirp 3 HD) som færdige MP3-filer, ca. 200 sætninger og ca. 2 MB. Det kræver lyttetesten og Jimmys ja til Google Cloud.
+- **Google Chirp 3 HD er udelukket, medmindre Google bekræfter det skriftligt.** Googles Service Specific Terms, punkt 20(d), forbyder en generativ AI-tjeneste i en tjeneste rettet mod personer under 18 år. Der er ingen undtagelse for færdige lydfiler. Kilde: Heimdal `docs/loerdag-17-10/00-samlet-anbefaling.md`, «Ændringer efter dommen» (18-10-2026).
+- **Senere:** en lokal dansk kvindestemme eller Azure, som færdige MP3-filer (ca. 200 sætninger og ca. 2 MB). En lyttetest afgør valget:
+  - **Røst v3** (lokalt, kræver PyTorch og Jimmys ja). Kilden har ikke afgjort, hvilken af «Mic» og «Nic» der er kvinden.
+  - **Piper-kvinde trænet på CoRal-TTS** (langsigtet). Træningen kræver en GPU med mindst 8 GB eller en lejet GPU.
+  - **Azure `da-DK-ChristelNeural`.** Vilkårene er kun delvist læst (Heimdal `docs/stemmer/azure-vilkaar.md`). Den gratis F0-ressource må ikke bruges til MP3-filer, der udgives, og stemmen skal oplyses som syntetisk.
 - Den danske Piper-mandestemme er afvist og bruges ikke. Teksten er den samme, og det er kun motoren, der skiftes.
 
 ## Print og timer
@@ -127,12 +131,12 @@ Her er et forkortet eksempel. Det fulde eksempel står i `chatgpt-app-prompt.md`
 ## Faser
 
 1. **Køkkenklar MVP:** format og validator, de 5 retter som JSON, skærmene, voksen-hjælp, timer med Wake Lock, iPad-stemmen, A4-print og pladsholdergrafik. Det testes i WebKit på iPad i landskab, iPhone og desktop.
-2. **Billeder, stemme og offline:** ChatGPT-billederne lægges ind (skaleret ned, så pakken er lille), Chirp-stemmen kommer ind som MP3, der kommer en service worker med `kog-`, og appen udgives på GitHub Pages.
+2. **Billeder, stemme og offline:** ChatGPT-billederne lægges ind (skaleret ned, så pakken er lille), den valgte stemme kommer ind som MP3, der kommer en service worker med `kog-`, og appen udgives på GitHub Pages.
 3. **Mere for barnet:** «Find tingene» med ingredienserne som billeder, tur-skifte mellem Rosa og Pip, flere retter (ChatGPT skriver JSON, og Claude tjekker) og et link-kort fra Lystårnet.
 
 ## Afventer Jimmy
 
 1. **Billeder:** Godkend dyrenes navne (Bo, Rosa og Pip) først, for de indgår i filnavnene. Læg derefter de 25 billeder fra ChatGPT i Drev-mappen `Claude/Kogebog/billeder`.
-2. **Stemme:** lyttetesten og dit ja til Google Cloud TTS (samme kvindestemme som Lystårnet). Indtil da bruger appen iPad'ens egen stemme.
+2. **Stemme:** lyttetesten og dit valg mellem Røst, en Piper-kvinde og Azure. Google Chirp er udelukket, medmindre Google bekræfter skriftligt. Indtil da bruger appen iPad'ens egen stemme.
 3. **Udgivelse:** Må `Kogebog` blive et offentligt repo med GitHub Pages på `/Kogebog/`? Stien kan ikke skiftes senere, uden at ikoner og indstillinger på iPad'erne forsvinder.
 4. **Domænet tumbi.dk:** Skal det købes nu (en lille udgift)? Bruges det som eget domæne på GitHub Pages, skifter appen origin. Så forsvinder gemte data og hjemmeskærmsikoner, og det kræver derfor en plan først (ikke undersøgt i detaljer).
