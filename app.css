@@ -103,6 +103,15 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .knap.lille { min-height: 56px; padding: 0 18px; font-size: 18px; }
 .knap.lille .ikon { width: 24px; height: 24px; }
 
+/* Med mus: knapper og kort løfter sig lidt, så man ser, hvad der kan trykkes på. Ikke mens de trykkes eller holdes */
+@media (hover: hover) {
+  .knap:hover:not(:active):not(.holder):not([aria-disabled="true"]) { transform: translateY(-2px); box-shadow: 0 7px 0 var(--kakao); }
+  .ingr:hover:not(:active) { transform: translateY(-2px); box-shadow: 0 6px 0 var(--kakao); }
+  .kort:not(.tomt):hover:not(:active) { transform: translateY(-2px); box-shadow: 0 8px 0 var(--kakao); }
+  .kort.valgt:hover:not(:active) { box-shadow: 0 8px 0 var(--kakao), 0 0 0 6px var(--sennep); }
+  .knap.hold.mind:hover:not(:active) { box-shadow: 0 7px 0 var(--kakao), 0 0 0 6px var(--raev); }
+}
+
 /* Hold-knappen: en fyldning løber over knappen i 2 sekunder */
 .hold { overflow: hidden; touch-action: none; }
 .hold-fyld {

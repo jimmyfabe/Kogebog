@@ -277,6 +277,17 @@ async function heleVejen(browser, skaerm) {
     return Object.values(r);
   });
   tjek(raekker.every((h) => Math.max(...h) - Math.min(...h) <= 1), n + ': kortene i en række skal være lige høje: ' + JSON.stringify(raekker));
+  if (n === 'desktop') {
+    // U16: med mus skal et kort ændre sig, når musen står over det
+    const skygge = () => side.evaluate(() => getComputedStyle(document.querySelector('.kort[data-ret="frikadeller"]')).boxShadow);
+    const foer = await skygge();
+    await side.hover('.kort[data-ret="frikadeller"]');
+    await vent(200);
+    const over = await skygge();
+    await side.mouse.move(0, 0);
+    await vent(200);
+    tjek(foer !== over, n + ': et kort skal ændre sig, når musen står over det (skygge ' + foer + ')');
+  }
   await foto(side, n + '-1-forside');
 
   // Første tryk siger navnet, andet åbner
@@ -304,6 +315,16 @@ async function heleVejen(browser, skaerm) {
   tjek(await h1(side) === 'Pandekager', n + ': retten skal hedde Pandekager');
   tjek(await side.locator('.ingr').count() === RETTER.pandekager.recipeIngredient.length, n + ': alle ingredienser skal vises');
   await tjekLayout(side, n + ' ret', { knapperSes: n !== 'iphone' });
+  if (n === 'desktop') {
+    const skygge = () => side.evaluate(() => getComputedStyle(document.querySelector('.ret .start')).boxShadow);
+    const foer = await skygge();
+    await side.hover('.ret .start');
+    await vent(200);
+    const over = await skygge();
+    await side.mouse.move(0, 0);
+    await vent(200);
+    tjek(foer !== over, n + ' ret: Start skal ændre sig, når musen står over den (skygge ' + foer + ')');
+  }
   // U15: den voksne skal kunne læse ingredienserne på armslængde
   const navne = await skrift(side, '.ingr-navn');
   tjek(navne.px >= 18 && navne.kontrast >= 10, n + ' ret: ingrediensnavnene skal være mindst 18 px og mørke (' + navne.px + ' px, kontrast ' + navne.kontrast + ':1)');
