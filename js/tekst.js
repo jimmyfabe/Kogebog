@@ -17,17 +17,18 @@ export function minutterTekst(min) {
   return r ? t + ' t ' + r + ' min' : t + ' t';
 }
 
-// Enheder skrevet ud, så stemmen siger «2,5 deciliter» og ikke «2,5 d l»
+// Enheder skrevet ud, så stemmen siger «2,5 deciliter» og ikke «2,5 d l».
+// Grænserne er Unicode (\p{L}), ikke \b: \b kender kun a-z, så «l» i «1 løg» og «g» i «2 gås» lignede en enhed.
 const ENHEDER = [
-  [/\bdl\b/g, 'deciliter'],
-  [/(\d+(?:,\d+)?)\s*spsk\b/g, (_, n) => n + (n === '1' ? ' spiseskefuld' : ' spiseskefulde')],
-  [/(\d+(?:,\d+)?)\s*tsk\b/g, (_, n) => n + (n === '1' ? ' teskefuld' : ' teskefulde')],
-  [/\bspsk\b/g, 'spiseskefulde'],
-  [/\btsk\b/g, 'teskefulde'],
-  [/\bkg\b/g, 'kilo'],
-  [/\bstk\.?(?=\s|$)/g, 'stykker'],
-  [/(\d)\s*g\b/g, '$1 gram'],
-  [/(\d)\s*l\b/g, '$1 liter'],
+  [/(?<!\p{L})dl(?![\p{L}\p{N}])/gu, 'deciliter'],
+  [/(\d+(?:,\d+)?)\s*spsk(?![\p{L}\p{N}])/gu, (_, n) => n + (n === '1' ? ' spiseskefuld' : ' spiseskefulde')],
+  [/(\d+(?:,\d+)?)\s*tsk(?![\p{L}\p{N}])/gu, (_, n) => n + (n === '1' ? ' teskefuld' : ' teskefulde')],
+  [/(?<!\p{L})spsk(?![\p{L}\p{N}])/gu, 'spiseskefulde'],
+  [/(?<!\p{L})tsk(?![\p{L}\p{N}])/gu, 'teskefulde'],
+  [/(?<!\p{L})kg(?![\p{L}\p{N}])/gu, 'kilo'],
+  [/(?<!\p{L})stk\.?(?=\s|$)/gu, 'stykker'],
+  [/(\d)\s*g(?![\p{L}\p{N}])/gu, '$1 gram'],
+  [/(\d)\s*l(?![\p{L}\p{N}])/gu, '$1 liter'],
   [/°C/g, 'grader'],
   [/(\d)\s*%/g, '$1 procent'],
 ];

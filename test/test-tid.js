@@ -72,6 +72,18 @@ test('enheder skrives ud til stemmen', () => {
   assert.equal(tilTale('1,25 l kogende vand'), '1,25 liter kogende vand');
   assert.equal(tilTale('2,5 dl madlavningsfløde 15 %'), '2,5 deciliter madlavningsfløde 15 procent');
   assert.equal(tilTale('Lad dejen hvile.'), 'Lad dejen hvile.');
+  // æ, ø og å er bogstaver: «l» i «løg» og «g» i «gås» er ikke en enhed
+  assert.equal(tilTale('1 løg'), '1 løg');
+  assert.equal(tilTale('1 stort løg'), '1 stort løg');
+  assert.equal(tilTale('2 gås'), '2 gås');
+  assert.equal(tilTale('25 g gær'), '25 gram gær');
+  assert.equal(tilTale('1 dlø'), '1 dlø');
+  assert.equal(tilTale('2 kgå'), '2 kgå');
+  assert.equal(tilTale('1 spskæ'), '1 spskæ');
+  assert.equal(tilTale('1 tskø'), '1 tskø');
+  assert.equal(tilTale('2 stkæ'), '2 stkæ');
+  assert.equal(tilTale('ca. 16 stk.'), 'ca. 16 stykker');
+  assert.equal(tilTale('1 kg kartofler'), '1 kilo kartofler');
 });
 
 test('ord tælles uden tegnsætning', () => {
