@@ -873,7 +873,7 @@ async function former(browser) {
     }
 
     // Retten med og uden «Fortsæt»: knapperne kan ses uden at rulle, og «Fortsæt» står først, over de andre
-    if (sk.viewport.width <= 760) {
+    if (sk.viewport.height > 520) {
       for (const fortsaet of [false, true]) {
         await medGemt(side, { sidste: fortsaet ? { ret: 'pandekager', nr: 7 } : null }, '#/ret/pandekager');
         await side.waitForSelector(fortsaet ? '.ret .fortsaet' : '.ret .start');

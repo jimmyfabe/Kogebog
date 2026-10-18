@@ -539,6 +539,12 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .tilbage > span { display: none; }
 }
 
+/* iPad på højkant (op til 900 px): «Fortsæt ved trin N» står først og fylder hele rækken, som på iPhone.
+   Før faldt den ned på en række for sig under «Start forfra» (768 px) og lignede det mindst vigtige valg */
+@media (min-width: 761px) and (max-width: 900px) and (min-height: 521px) {
+  .ret .handlinger .fortsaet { flex: 1 1 100%; order: -1; }
+}
+
 /* Under 400 px er der kun plads til «Start forfra» ved siden af print, når print-knappen er uden ikon (teksten siger det) */
 @media (max-width: 399px) {
   .ret .handlinger .print-knap .ikon { display: none; }
