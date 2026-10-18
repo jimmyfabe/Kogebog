@@ -92,8 +92,9 @@ function meld() {
   }
 }
 
+// En færdig timer gemmes også, til nogen trykker «Ok» (stop): så overlever «Tiden er gået» en genindlæsning
 function gemTimer() {
-  Lager.gem({ timer: aktiv && !aktiv.faerdig ? { ret: aktiv.ret, nr: aktiv.nr, start: aktiv.start, slut: aktiv.slut, sek: aktiv.sek } : null });
+  Lager.gem({ timer: aktiv ? { ret: aktiv.ret, nr: aktiv.nr, start: aktiv.start, slut: aktiv.slut, sek: aktiv.sek } : null });
 }
 
 function stopUr() {
@@ -152,11 +153,15 @@ export function lyt(fn) {
   return () => lyttere.delete(fn);
 }
 
-// En timer, der kørte før en genindlæsning, fortsætter (en, der løb ud imens, glemmes)
+// En timer, der kørte før en genindlæsning, fortsætter. En, der løb ud imens, vises som færdig i op til 2 timer.
+const HUSK_UDLOEBET_MS = 2 * 3600 * 1000;
 export function gendan() {
   const t = Lager.hent().timer;
-  if (!t || t.slut <= Date.now()) {
-    if (t) Lager.gem({ timer: null });
+  if (!t) return;
+  if (t.slut <= Date.now()) {
+    // Løb ud, mens siden var væk (fx smed iOS fanen ud): vis «Tiden er gået», hvis det er under 2 timer siden
+    if (Date.now() - t.slut < HUSK_UDLOEBET_MS) aktiv = { ...t, faerdig: true };
+    else Lager.gem({ timer: null });
     return;
   }
   aktiv = { ...t, faerdig: false };

@@ -1,5 +1,6 @@
 // lager.js — det eneste, appen gemmer: én nøgle «kog-v1» i localStorage med et versionsfelt.
 // Indhold: { v: 1, sidste: { ret, nr, tid } | null, timer: { ret, nr, start, slut, sek } | null }
+// timer er også gemt, når tiden er gået, til nogen trykker «Ok» (slut ligger så i fortiden).
 // Der er ingen fremskridt eller børnedata her; mister vi det, mister man kun «Fortsæt» og en kørende timer.
 
 const NOEGLE = 'kog-v1';
