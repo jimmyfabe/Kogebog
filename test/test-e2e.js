@@ -801,6 +801,14 @@ async function beroering(browser, skaerm) {
   await tryk(side, '.tilbage');
   await side.waitForFunction(() => location.hash.endsWith('/trin/10'), null, { timeout: 2000 })
     .catch(() => tjek(false, n + ': efter pointercancel skal næste tryk virke (Tilbage blev slugt)'));
+
+  // 5. Den voksne holder «Næste», og barnet trykker Hjem imens. Knappen er væk, så holdet må ikke gå videre bagefter
+  //    (før kørte holdets løkke videre på den gamle knap og sendte appen til trin 11 efter 2 s)
+  await tilTrin10();
+  await finger('pointerdown');
+  await tryk(side, '.topbar .rund');
+  await vent(2300);
+  tjek(await adresse() === '#/', n + ': et hold, hvor skærmen skifter undervejs, må ikke gå videre bagefter (adressen er ' + await adresse() + ')');
   tjek(side.fejl.length === 0, n + ': ' + side.fejl.join(' | '));
   await ctx.close();
 }

@@ -22,6 +22,8 @@ export function holdKnap({ klasse = '', indhold = [], label, ms = 2000, naarFaer
   let viaPointer = false;
 
   function tegn() {
+    // Skærmen er skiftet under holdet (fx Hjem eller Tilbage): knappen er fjernet, så holdet må ikke gå videre fra den
+    if (!b.isConnected) { slut(false); return; }
     const andel = Math.min(1, (performance.now() - t0) / ms);
     b.style.setProperty('--fyld', String(andel));
     if (andel >= 1) { slut(true); return; }
