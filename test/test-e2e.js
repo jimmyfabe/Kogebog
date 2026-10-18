@@ -282,6 +282,18 @@ async function topbarMaal(side) {
   });
 }
 
+// Konfettiens mindste afstand til færdig-skærmens overskrift og tekst (målt til selve bogstaverne, ikke hele linjens bredde)
+const konfettiAfstand = (side) => side.evaluate(() => {
+  const linjer = (e) => { const r = document.createRange(); r.selectNodeContents(e); return [...r.getClientRects()]; };
+  const tekst = [...linjer(document.querySelector('.faerdig h1')), ...linjer(document.querySelector('.faerdig-tekst'))];
+  let mindst = Infinity;
+  for (const s of document.querySelectorAll('.konfetti span')) {
+    const b = s.getBoundingClientRect();
+    for (const t of tekst) mindst = Math.min(mindst, Math.hypot(Math.max(t.left - b.right, b.left - t.right, 0), Math.max(t.top - b.bottom, b.top - t.bottom, 0)));
+  }
+  return Math.round(mindst);
+});
+
 // ---------- Hele vejen med pandekager ----------
 async function heleVejen(browser, skaerm) {
   const n = skaerm.navn;
@@ -462,17 +474,8 @@ async function heleVejen(browser, skaerm) {
     return ud;
   });
   tjek(!daekket.length, n + ': konfetti ligger oven på teksten på færdig-skærmen: ' + daekket.join(', '));
-  // … og den holder afstand til overskriften og teksten (målt til selve bogstaverne, ikke hele linjens bredde)
-  const afstand = await side.evaluate(() => {
-    const linjer = (e) => { const r = document.createRange(); r.selectNodeContents(e); return [...r.getClientRects()]; };
-    const tekst = [...linjer(document.querySelector('.faerdig h1')), ...linjer(document.querySelector('.faerdig-tekst'))];
-    let mindst = Infinity;
-    for (const s of document.querySelectorAll('.konfetti span')) {
-      const b = s.getBoundingClientRect();
-      for (const t of tekst) mindst = Math.min(mindst, Math.hypot(Math.max(t.left - b.right, b.left - t.right, 0), Math.max(t.top - b.bottom, b.top - t.bottom, 0)));
-    }
-    return Math.round(mindst);
-  });
+  // … og den holder afstand til overskriften og teksten
+  const afstand = await konfettiAfstand(side);
   tjek(afstand >= 16, n + ': konfettien skal holde mindst 16 px fra overskriften og teksten (nærmeste: ' + afstand + ' px)');
   await foto(side, n + '-7-faerdig');
   await tryk(side, '.faerdig .knap.primaer');
@@ -1054,6 +1057,20 @@ async function former(browser) {
     await vent(150);
     const optaget = await modBund(side, '.timer-optaget');
     tjek(optaget.bund <= optaget.bundTop, n + ' kødsovs trin 10 (en anden timer kører): forklaringen under «Start timer» med fokus ligger under den faste bund ' + JSON.stringify(optaget));
+
+    // Færdig-skærmen: «Læs op» og «Til forsiden» kan ses uden at rulle (på 844×390 lå de under kanten), og konfettien
+    // holder stadig afstand til teksten. Uden bevægelse står konfettien med det samme, hvor den ellers lander
+    await side.emulateMedia({ reducedMotion: 'reduce' });
+    await medGemt(side, {}, '#/ret/boller/faerdig');
+    await side.waitForSelector('.faerdig h1');
+    await side.waitForFunction(() => [...document.images].every((i) => i.complete && i.naturalWidth));
+    await tjekLayout(side, n + ' færdig');
+    const fk = await side.evaluate(() => ({ H: innerHeight, knapper: [...document.querySelectorAll('.faerdig .status-knapper .knap')].map((k) => Math.round(k.getBoundingClientRect().bottom + window.scrollY)) }));
+    tjek(fk.knapper.length === 2 && fk.knapper.every((b) => b <= fk.H), n + ' færdig: «Læs op» og «Til forsiden» skal kunne ses uden at rulle ' + JSON.stringify(fk));
+    const afstand = await konfettiAfstand(side);
+    tjek(afstand >= 16, n + ' færdig: konfettien skal holde mindst 16 px fra overskriften og teksten (nærmeste: ' + afstand + ' px)');
+    await foto(side, n + '-former-faerdig');
+    await side.emulateMedia({ reducedMotion: null });
     tjek(side.fejl.length === 0, n + ' (skærmformer): ' + side.fejl.join(' | '));
     await ctx.close();
   }

@@ -622,6 +622,13 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .handlinger .knap.primaer { min-height: 68px; font-size: 24px; padding: 0 26px; }
   .ret .handlinger .start { min-width: 0; }
   .trin, .ret { --bund: 96px; } /* bunden er én række på 85 px, også med «Fortsæt» */
+  /* Færdig: «Læs op» og «Til forsiden» skal kunne ses uden at rulle (på 844×390 lå de 101 px under kanten).
+     Mindre billede og overskrift, tættere afstande og knapper på 68 px som bunden på trinene */
+  .faerdig-indhold { gap: 6px; padding-bottom: 10px; }
+  .faerdig-billede { width: min(78vw, 28svh, 420px); }
+  .faerdig h1 { font-size: 40px; }
+  .faerdig .status-knapper { margin-top: 4px; }
+  .faerdig .status-knapper .knap { min-height: 68px; }
 }
 
 /* Små iPhones på langs (667 og 736 px): rettens tre knapper skal stå på én række. Fortsæt, Start forfra og print
