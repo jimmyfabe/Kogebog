@@ -388,6 +388,9 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 /* Timeren */
 .timer { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; }
 .timer-start { background: var(--blaa-lys); padding: 0 22px; min-height: 72px; }
+/* Kører en anden timer, er «Start timer» bleg. Den kan stadig trykkes og siger så, hvor timeren kører (kakao-blid 5,2:1) */
+.timer-start[aria-disabled="true"] { background: var(--creme-moerk); color: var(--kakao-blid); border-color: var(--kakao-blid); box-shadow: 0 5px 0 var(--kakao-blid); }
+.timer-start[aria-disabled="true"]:active { box-shadow: 0 1px 0 var(--kakao-blid); }
 .timer-start-tekst { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.05; }
 .timer-start-tekst span { font-size: 17px; }
 .timer-start-tekst strong { font-size: 26px; font-variant-numeric: tabular-nums; }
@@ -451,8 +454,10 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .konfetti .k1 { background: var(--sennep); }
 .konfetti .k2 { background: var(--urt); }
 .konfetti .k3 { background: var(--blaa); }
+/* Alle stykker lander over 40 %: overskriften står længere nede (53-65 % af højden på de skærme, vi tester),
+   så konfettien drysser om dyrene og holder sig væk fra «Færdig!» og teksten */
 .konfetti span:nth-child(1) { left: 6%; top: 20%; transform: rotate(20deg); }
-.konfetti span:nth-child(2) { left: 14%; top: 42%; transform: rotate(-30deg); }
+.konfetti span:nth-child(2) { left: 14%; top: 34%; transform: rotate(-30deg); }
 .konfetti span:nth-child(3) { left: 22%; top: 14%; transform: rotate(55deg); }
 .konfetti span:nth-child(4) { left: 30%; top: 30%; transform: rotate(10deg); }
 .konfetti span:nth-child(5) { left: 38%; top: 10%; transform: rotate(-60deg); }
@@ -462,9 +467,9 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .konfetti span:nth-child(9) { left: 70%; top: 16%; transform: rotate(-40deg); }
 .konfetti span:nth-child(10) { left: 78%; top: 36%; transform: rotate(25deg); }
 .konfetti span:nth-child(11) { left: 86%; top: 18%; transform: rotate(-70deg); }
-.konfetti span:nth-child(12) { left: 92%; top: 44%; transform: rotate(45deg); }
-.konfetti span:nth-child(13) { left: 10%; top: 60%; transform: rotate(-20deg); }
-.konfetti span:nth-child(14) { left: 88%; top: 62%; transform: rotate(15deg); }
+.konfetti span:nth-child(12) { left: 92%; top: 38%; transform: rotate(45deg); }
+.konfetti span:nth-child(13) { left: 3%; top: 30%; transform: rotate(-20deg); }
+.konfetti span:nth-child(14) { left: 93%; top: 26%; transform: rotate(15deg); }
 @media (prefers-reduced-motion: no-preference) {
   .konfetti span { animation: drys 2.6s ease-in 1 both; }
   .konfetti span:nth-child(3n) { animation-delay: .25s; }
@@ -554,9 +559,14 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .ret .handlinger .fortsaet { flex: 1 1 100%; order: -1; }
 }
 
-/* Under 400 px er der kun plads til «Start forfra» ved siden af print, når print-knappen er uden ikon (teksten siger det) */
+/* Under 400 px er der kun plads til «Start forfra» ved siden af print, når print-knappen er uden ikon (teksten siger det).
+   «Hent en voksen» står på én linje med mindre skrift og en mindre Bo (før brød den over to linjer på iPhone) */
 @media (max-width: 399px) {
   .ret .handlinger .print-knap .ikon { display: none; }
+  .voksen-maerke { gap: 8px; padding-right: 14px; font-size: 18px; }
+  .voksen-bo { width: 40px; height: 40px; }
+  .voksen-slags { gap: 4px; padding-left: 8px; font-size: 17px; }
+  .voksen-slags .ikon { width: 22px; height: 22px; }
 }
 
 /* Lave skærme på langs (fx iPhone på tværs): mindre billeder, og bunden står fast, så «Næste» og rettens knapper

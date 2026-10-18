@@ -461,6 +461,18 @@ async function heleVejen(browser, skaerm) {
     return ud;
   });
   tjek(!daekket.length, n + ': konfetti ligger oven på teksten på færdig-skærmen: ' + daekket.join(', '));
+  // … og den holder afstand til overskriften og teksten (målt til selve bogstaverne, ikke hele linjens bredde)
+  const afstand = await side.evaluate(() => {
+    const linjer = (e) => { const r = document.createRange(); r.selectNodeContents(e); return [...r.getClientRects()]; };
+    const tekst = [...linjer(document.querySelector('.faerdig h1')), ...linjer(document.querySelector('.faerdig-tekst'))];
+    let mindst = Infinity;
+    for (const s of document.querySelectorAll('.konfetti span')) {
+      const b = s.getBoundingClientRect();
+      for (const t of tekst) mindst = Math.min(mindst, Math.hypot(Math.max(t.left - b.right, b.left - t.right, 0), Math.max(t.top - b.bottom, b.top - t.bottom, 0)));
+    }
+    return Math.round(mindst);
+  });
+  tjek(afstand >= 16, n + ': konfettien skal holde mindst 16 px fra overskriften og teksten (nærmeste: ' + afstand + ' px)');
   await foto(side, n + '-7-faerdig');
   await tryk(side, '.faerdig .knap.primaer');
   await side.waitForSelector('.forside .kort');
@@ -655,12 +667,16 @@ async function timere(browser, skaerm) {
   // 1) Kødsovs: trin 8 (20 min) kører, og man trykker «Start timer» på trin 10. Den første timer må ikke forsvinde.
   await side.goto(BASE + '/index.html#/ret/koedsovs/trin/8');
   await side.waitForSelector('.timer-start');
+  const baggrund = () => side.locator('.timer-start').evaluate((b) => getComputedStyle(b).backgroundColor);
+  const normal = await baggrund();
   await tryk(side, '.timer-start');
   await side.evaluate(() => { location.hash = '#/ret/koedsovs/trin/10'; });
   await side.waitForFunction(() => location.hash.endsWith('/trin/10') && !!document.querySelector('.timer-start'));
   // Knappen har aria-disabled="true", men kan stadig trykkes (den siger, hvor timeren kører). Playwright venter
   // ellers for evigt på, at en aria-disabled knap bliver «enabled».
   tjek(await side.locator('.timer-start').getAttribute('aria-disabled') === 'true', n + ': «Start timer» på trin 10 skal være aria-disabled, mens trin 8 kører');
+  const optaget = await baggrund();
+  tjek(optaget !== normal, n + ': «Start timer» skal se blegere ud, mens en anden timer kører (baggrunden er ' + optaget + ' som ellers)');
   await tryk(side, '.timer-start', { force: true });
   const gemt = await side.evaluate(() => JSON.parse(localStorage.getItem('kog-v1')).timer);
   tjek(gemt && gemt.nr === 8, n + ': «Start timer» på trin 10 må ikke slette timeren på trin 8 (gemt: ' + JSON.stringify(gemt) + ')');
@@ -904,6 +920,15 @@ async function former(browser) {
       await side.waitForFunction((h) => location.hash === h && !!document.querySelector('.trin h1') && [...document.images].every((i) => i.complete && i.naturalWidth), hash);
       await tjekLayout(side, n + ' ' + ret + ' trin ' + nr, { knapperSes: true });
       if (nr === 10) await foto(side, n + '-former-trin-10');
+      if (nr === 10) {
+        // strong er et flex-element (en blok), så linjerne tælles på teksten: én kasse pr. linje
+        const linjer = await side.evaluate(() => {
+          const r = document.createRange();
+          r.selectNodeContents(document.querySelector('.voksen-maerke strong'));
+          return new Set([...r.getClientRects()].filter((k) => k.width > 0).map((k) => Math.round(k.top))).size;
+        });
+        tjek(linjer === 1, n + ' pandekager trin 10: «Hent en voksen» skal stå på én linje (' + linjer + ' linjer)');
+      }
       // Når «Start timer» får fokus (Tab, VoiceOver), skal den rulles op over den faste bund, ikke blive liggende under den
       if (nr === 10) {
         await side.evaluate(() => window.scrollTo(0, 0));
