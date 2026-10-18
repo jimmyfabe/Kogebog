@@ -95,7 +95,9 @@ test('modellen af pandekagerne', () => {
   assert.equal(m.ingredienser[0].ikon, 'mel');
   assert.equal(m.ingredienser[0].navn, 'hvedemel');
   assert.equal(m.trin[8].timerSek, 600);
-  assert.equal(m.trin[9].voksen, 'varme');
-  assert.equal(m.trin[0].voksen, null);
+  assert.equal(m.trin[9].voksen, true);
+  assert.equal(m.trin[9].voksenSlags, 'varme');
+  assert.equal(m.trin[0].voksen, false);
+  assert.equal(m.trin[0].voksenSlags, null);
   assert.equal(m.afproevet, false);
 });

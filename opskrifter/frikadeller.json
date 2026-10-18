@@ -22,7 +22,7 @@
   "tool": ["rivejern", "stor skål", "grydeske", "dl-mål", "spiseske", "pande", "paletkniv"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
-    { "@type": "HowToStep", "text": "Riv løget fint.", "tumbi": { "verbum": "skaere", "voksen_hjaelp": "kniv", "ikoner": ["loeg"], "note": "Rivejernet er skarpt, så den voksne river. Eller hak løget meget fint." } },
+    { "@type": "HowToStep", "text": "Riv løget fint.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["loeg"], "note": "Rivejernet er skarpt, så den voksne river. Eller hak løget meget fint." } },
     { "@type": "HowToStep", "text": "Kom kødet i den store skål.", "tumbi": { "verbum": "haelde", "ikoner": ["koed"] } },
     { "@type": "HowToStep", "text": "Kom løg, æg og havregryn i.", "tumbi": { "verbum": "haelde", "ikoner": ["loeg", "aeg", "havregryn"] } },
     { "@type": "HowToStep", "text": "Mål 1 dl mælk.", "tumbi": { "verbum": "maale", "ikoner": ["maelk"] } },
@@ -32,8 +32,8 @@
     { "@type": "HowToStep", "text": "Lad farsen hvile i 15 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 900, "note": "Gerne i køleskabet. Så er den lettere at forme." } },
     { "@type": "HowToStep", "text": "Form frikadeller med en våd ske.", "tumbi": { "verbum": "rulle", "ikoner": ["koed"], "note": "Ca. 16 stk. Dyp skeen i koldt vand mellem hver, og form dem i den våde hånd." } },
     { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt kød på hænderne." } },
-    { "@type": "HowToStep", "text": "Steg frikadellerne.", "tumbi": { "verbum": "stege", "voksen_hjaelp": "varme", "timer_sek": 300, "ikoner": ["smoer"], "note": "Smør på panden ved middel varme. Ca. 5 min på den første side." } },
-    { "@type": "HowToStep", "text": "Vend frikadellerne.", "tumbi": { "verbum": "vende", "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Steg ca. 5 min mere, til de er gennemstegte og ikke lyserøde indeni." } },
+    { "@type": "HowToStep", "text": "Steg frikadellerne.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "ikoner": ["smoer"], "note": "Smør på panden ved middel varme. Ca. 5 min på den første side." } },
+    { "@type": "HowToStep", "text": "Vend frikadellerne.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Steg ca. 5 min mere, til de er gennemstegte og ikke lyserøde indeni." } },
     { "@type": "HowToStep", "text": "Smag på en frikadelle.", "tumbi": { "verbum": "smage", "note": "Lad den køle lidt først." } }
   ],
   "tumbi": {

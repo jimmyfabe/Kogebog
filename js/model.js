@@ -14,7 +14,9 @@ export function lavModel(json) {
       nr: i + 1,
       tekst: s.text,
       verbum: st.verbum,
-      voksen: st.voksen_hjaelp || null,
+      // «voksen: true» = Hent en voksen; voksen_hjaelp siger hvorfor (kniv eller varme). Validatoren kræver begge.
+      voksen: st.voksen === true || Boolean(st.voksen_hjaelp),
+      voksenSlags: st.voksen_hjaelp || null,
       timerSek: Number.isInteger(st.timer_sek) && st.timer_sek > 0 ? st.timer_sek : null,
       note: st.note || '',
       ikoner: st.ikoner || [],

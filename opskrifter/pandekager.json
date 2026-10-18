@@ -29,8 +29,8 @@
     { "@type": "HowToStep", "text": "Rør æggene og resten af mælken i.", "tumbi": { "verbum": "roere", "ikoner": ["aeg", "maelk"], "note": "Slå æggene ud i en kop først, så er det let at fiske skaller op." } },
     { "@type": "HowToStep", "text": "Vask hænderne igen.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg på fingrene." } },
     { "@type": "HowToStep", "text": "Lad dejen hvile i 10 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 600 } },
-    { "@type": "HowToStep", "text": "Steg pandekagen.", "tumbi": { "verbum": "stege", "voksen_hjaelp": "varme", "timer_sek": 60, "ikoner": ["smoer"], "note": "Middel varme og lidt smør på panden. Ca. 1/2 dl dej pr. pandekage." } },
-    { "@type": "HowToStep", "text": "Vend pandekagen.", "tumbi": { "verbum": "vende", "voksen_hjaelp": "varme", "timer_sek": 45, "note": "Vend, når kanten slipper. Gentag med resten af dejen." } },
+    { "@type": "HowToStep", "text": "Steg pandekagen.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 60, "ikoner": ["smoer"], "note": "Middel varme og lidt smør på panden. Ca. 1/2 dl dej pr. pandekage." } },
+    { "@type": "HowToStep", "text": "Vend pandekagen.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 45, "note": "Vend, når kanten slipper. Gentag med resten af dejen." } },
     { "@type": "HowToStep", "text": "Smag! Sukker eller syltetøj?", "tumbi": { "verbum": "smage", "ikoner": ["sukker", "syltetoej"] } }
   ],
   "tumbi": {

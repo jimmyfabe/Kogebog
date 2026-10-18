@@ -61,9 +61,17 @@ test('timer skal være et positivt heltal', () => {
   forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[8].tumbi.timer_sek = '600'; }, 'trin 9: «timer_sek» skal være et positivt heltal');
 });
 
-test('kniv og varme kræver voksen_hjaelp', () => {
-  forventFejl('opskrifter/frikadeller.json', (d) => { delete d.recipeInstructions[1].tumbi.voksen_hjaelp; }, 'trin 2: verbet «skaere» skal have "voksen_hjaelp": "kniv"');
+test('kniv og varme kræver voksen: true og voksen_hjaelp', () => {
+  forventFejl('opskrifter/frikadeller.json', (d) => { delete d.recipeInstructions[1].tumbi.voksen_hjaelp; }, 'trin 2: verbet «skaere» skal have "voksen": true og "voksen_hjaelp": "kniv"');
+  forventFejl('opskrifter/frikadeller.json', (d) => { delete d.recipeInstructions[1].tumbi.voksen; }, 'trin 2: verbet «skaere» skal have "voksen": true');
   forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[9].tumbi.voksen_hjaelp = 'ja'; }, 'trin 10: «voksen_hjaelp» skal være "kniv", "varme"');
+});
+
+test('voksen og voksen_hjaelp følges ad', () => {
+  forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[9].tumbi.voksen = 'ja'; }, 'trin 10: «voksen» skal være true');
+  forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[2].tumbi.voksen = false; }, 'trin 3: «voksen» skal være true (udelad feltet');
+  forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[2].tumbi.voksen = true; }, 'trin 3: "voksen": true kræver også «voksen_hjaelp»');
+  forventFejl('opskrifter/boller.json', (d) => { delete d.recipeInstructions[12].tumbi.voksen; }, 'trin 13: «voksen_hjaelp» kræver også "voksen": true');
 });
 
 test('id skal passe til filnavnet', () => {

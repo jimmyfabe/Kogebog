@@ -20,7 +20,7 @@ const PAAKRAEVET = [
   '@context', '@type', 'name', 'description', 'image', 'inLanguage', 'recipeYield', 'totalTime',
   'recipeIngredient', 'tool', 'recipeInstructions', 'tumbi',
 ];
-const TRIN_NOEGLER = new Set(['verbum', 'voksen_hjaelp', 'timer_sek', 'note', 'ikoner']);
+const TRIN_NOEGLER = new Set(['verbum', 'voksen', 'voksen_hjaelp', 'timer_sek', 'note', 'ikoner']);
 const RET_TUMBI = new Set(['id', 'version', 'afproevet', 'kilde', 'ingredienser']);
 const ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const ISO_RE = /^P(?:\d+D)?(?:T(?:\d+H)?(?:\d+M)?(?:\d+S)?)?$/;
@@ -163,9 +163,13 @@ export function valider(rod = ROD) {
         for (const k of Object.keys(st)) if (!TRIN_NOEGLER.has(k)) f(hvor + ': ukendt felt «tumbi.' + k + '»');
         if (!(st.verbum in VERBER)) f(hvor + ': ukendt verbum ' + JSON.stringify(st.verbum) + ' — brug et af: ' + liste(Object.keys(VERBER)));
         if ('voksen_hjaelp' in st && !(st.voksen_hjaelp in VOKSEN_HJAELP)) f(hvor + ': «voksen_hjaelp» skal være ' + liste(Object.keys(VOKSEN_HJAELP).map((x) => '"' + x + '"')) + ', fandt ' + JSON.stringify(st.voksen_hjaelp));
+        // «voksen: true» viser «Hent en voksen»; «voksen_hjaelp» siger hvorfor. De to følges ad.
+        if ('voksen' in st && st.voksen !== true) f(hvor + ': «voksen» skal være true (udelad feltet, når barnet kan selv), fandt ' + JSON.stringify(st.voksen));
+        else if (st.voksen === true && !('voksen_hjaelp' in st)) f(hvor + ': "voksen": true kræver også «voksen_hjaelp» ("kniv" eller "varme")');
+        if ('voksen_hjaelp' in st && st.voksen !== true) f(hvor + ': «voksen_hjaelp» kræver også "voksen": true');
         const krav = VOKSEN_KRAV[st.verbum];
-        if (krav && st.voksen_hjaelp !== krav) f(hvor + ': verbet «' + st.verbum + '» skal have "voksen_hjaelp": "' + krav + '"');
-        if (st.voksen_hjaelp) tal.voksentrin++;
+        if (krav && (st.voksen !== true || st.voksen_hjaelp !== krav)) f(hvor + ': verbet «' + st.verbum + '» skal have "voksen": true og "voksen_hjaelp": "' + krav + '"');
+        if (st.voksen === true) tal.voksentrin++;
         if ('timer_sek' in st) {
           if (!Number.isInteger(st.timer_sek) || st.timer_sek <= 0) f(hvor + ': «timer_sek» skal være et positivt heltal (sekunder), fandt ' + JSON.stringify(st.timer_sek));
           else if (st.timer_sek > MAKS_TIMER_SEK) f(hvor + ': «timer_sek» er over 4 timer (' + st.timer_sek + ')');

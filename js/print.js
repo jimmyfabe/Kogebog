@@ -24,7 +24,7 @@ function tegn(m) {
     el('div', { class: 'trin-krop' },
       el('p', { class: 'trin-tekst' },
         el('span', { tekst: t.tekst }),
-        t.voksen ? el('span', { class: 'maerke' }, ikon(t.voksen === 'kniv' ? 'kniv' : 'flamme'), el('span', { tekst: t.voksen === 'kniv' ? 'Voksen: kniv' : 'Voksen: varme' })) : null,
+        t.voksen ? el('span', { class: 'maerke' }, ikon(t.voksenSlags === 'kniv' ? 'kniv' : 'flamme'), el('span', { tekst: t.voksenSlags === 'kniv' ? 'Voksen: kniv' : t.voksenSlags === 'varme' ? 'Voksen: varme' : 'Voksen' })) : null,
         t.timerSek ? el('span', { class: 'maerke' }, ikon('ur'), el('span', { tekst: varighedKort(t.timerSek) })) : null),
       t.note ? el('p', { class: 'note', tekst: t.note }) : null)));
 

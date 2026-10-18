@@ -64,7 +64,8 @@ Hver ret er én fil, `opskrifter/<id>.json`, og `opskrifter/liste.json` giver r�
 | `description`, `prepTime`, `cookTime`, `inLanguage` | retten, valgfri | standard schema.org |
 | `recipeInstructions` | retten, skal | en liste af `HowToStep`, hvor `text` er det, der vises og læses op |
 | `tumbi.verbum` | hvert trin, skal | et af de 12 verber: `roere` `haelde` `skaere` `aelte` `rulle` `vende` `stege` `koge` `maale` `vaske-haender` `vente` `smage` |
-| `tumbi.voksen_hjaelp` | trin, valgfri | `"kniv"` eller `"varme"` (komfur, ovn, kogende vand, varm pande) |
+| `tumbi.voksen` | trin, valgfri | `true`, når en voksen skal hjælpe (kniv, varme, ovn). Giver «Hent en voksen», og kræver `voksen_hjaelp` |
+| `tumbi.voksen_hjaelp` | trin, sammen med `voksen` | `"kniv"` eller `"varme"` (komfur, ovn, kogende vand, varm pande) |
 | `tumbi.timer_sek` | trin, valgfri | heltal sekunder, som giver en stor timer |
 | `tumbi.note` | trin, valgfri | detaljer til den voksne. Noten vises småt og på printet, men læses ikke op |
 | `tumbi.id`, `tumbi.version`, `tumbi.afproevet`, `tumbi.kilde` | retten, skal | id er det samme som filnavnet, `version` er `1`, og `afproevet` er `false`, til I har lavet retten |
@@ -84,7 +85,7 @@ Her er et forkortet eksempel. Det fulde eksempel står i `chatgpt-app-prompt.md`
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Hæld melet i skålen.", "tumbi": { "verbum": "haelde" } },
     { "@type": "HowToStep", "text": "Lad dejen hvile i 10 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 600 } },
-    { "@type": "HowToStep", "text": "Steg pandekagen.", "tumbi": { "verbum": "stege", "voksen_hjaelp": "varme", "timer_sek": 60, "note": "Middel varme, lidt smør på panden." } }
+    { "@type": "HowToStep", "text": "Steg pandekagen.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 60, "note": "Middel varme, lidt smør på panden." } }
   ],
   "tumbi": { "id": "pandekager", "version": 1, "afproevet": false, "kilde": "Egen tekst" }
 }

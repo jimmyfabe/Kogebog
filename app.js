@@ -315,7 +315,7 @@ function trinSkaerm(m, nr) {
     ? el('div', { class: 'voksen-maerke' },
       billede(grafikDyr('bo'), '', 'voksen-bo'),
       el('strong', { tekst: 'Hent en voksen' }),
-      el('span', { class: 'voksen-slags' }, ikon(t.voksen === 'kniv' ? 'kniv' : 'flamme'), el('span', { tekst: VOKSEN_HJAELP[t.voksen] || '' })))
+      t.voksenSlags ? el('span', { class: 'voksen-slags' }, ikon(t.voksenSlags === 'kniv' ? 'kniv' : 'flamme'), el('span', { tekst: VOKSEN_HJAELP[t.voksenSlags] || '' })) : null)
     : null;
 
   const ikoner = t.ikoner.length
