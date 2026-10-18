@@ -52,6 +52,7 @@ let laas = null;
 let laasForsoeg = 0;
 
 async function bedOmLaas() {
+  if (laas && laas.released === true) laas = null; // sluppet af systemet (fx skjult fane), også hvis «release» ikke kom
   if (!('wakeLock' in navigator) || !navigator.wakeLock || laas || document.visibilityState !== 'visible') return;
   const mit = ++laasForsoeg;
   try {
@@ -151,6 +152,9 @@ export function gendan() {
   aktiv = { ...t, faerdig: false };
   startUr();
   bedOmLaas();
+  // Lyden må først komme efter et tryk (iPad): gør den klar ved det første tryk efter genindlæsningen
+  document.addEventListener('pointerdown', klargoerLyd, { once: true, capture: true });
+  document.addEventListener('keydown', klargoerLyd, { once: true, capture: true });
 }
 
 document.addEventListener('visibilitychange', () => {
