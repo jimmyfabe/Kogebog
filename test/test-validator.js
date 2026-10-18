@@ -128,6 +128,45 @@ test('efter ovnen tager en voksen pladen eller formen ud', () => {
   // Bagningen som sidste trin: der er ingen til at tage det ud
   forventFejl('opskrifter/boller.json', (d) => { d.recipeInstructions.splice(ovn(d) + 1); },
     'trin 13: når tiden i ovnen er gået, tager en voksen det ud');
+  // Et voksen-trin med varme er ikke nok: udtagningen har sit eget verbum og billede, «tage-ud» (fra 19-10)
+  forventFejl('opskrifter/boller.json', (d) => { d.recipeInstructions[ovn(d) + 1].tumbi.verbum = 'haelde'; },
+    'trin 13: når tiden i ovnen er gået, tager en voksen det ud: trinnet efter skal have verbet "tage-ud"');
+  // Flutes bages i to omgange: et bage-trin lige efter et andet er stadig i ovnen, og «tage-ud» kommer efter det sidste
+  forventGyldig('opskrifter/hvidloegsflutes.json', () => {});
+  forventFejl('opskrifter/hvidloegsflutes.json', (d) => { d.recipeInstructions.find((s) => s.tumbi.verbum === 'tage-ud').tumbi.verbum = 'bage'; },
+    'når tiden i ovnen er gået, tager en voksen det ud');
+});
+
+// De fem verber fra 19-10. Tage ud af ovnen og si kogende vand er altid varme; kagerullen, staniolen og gæren kan barnet selv
+test('tage-ud og si kræver en voksen for varmens skyld; kagerulle, pakke-ind og smuldre kan barnet', () => {
+  for (const v of ['tage-ud', 'si']) {
+    forventFejl('opskrifter/koedsovs.json', (d) => { const st = d.recipeInstructions[2].tumbi; st.verbum = v; delete st.voksen; delete st.voksen_hjaelp; },
+      'trin 3: verbet «' + v + '» skal have "voksen": true og "voksen_hjaelp": "varme"');
+    forventFejl('opskrifter/koedsovs.json', (d) => { Object.assign(d.recipeInstructions[2].tumbi, { verbum: v, voksen: true, voksen_hjaelp: 'kniv' }); },
+      'trin 3: verbet «' + v + '» skal have "voksen": true og "voksen_hjaelp": "varme"');
+  }
+  for (const v of ['kagerulle', 'pakke-ind', 'smuldre']) {
+    forventGyldig('opskrifter/boller.json', (d) => { const st = d.recipeInstructions[10].tumbi; st.verbum = v; delete st.voksen; delete st.voksen_hjaelp; });
+  }
+});
+
+// Trinene, der fik de nye verber. Tunfrikadellernes «Hæld vandet fra tunen.» beholder «haelde»: si-billedet viser
+// en varm gryde over dørslaget, og tunen er kold og står i en dåse
+test('trinene med de nye verber', () => {
+  const forvent = [
+    ['boller', 'Tag pladen ud af ovnen.', 'tage-ud'], ['hytteostboller', 'Tag pladen ud af ovnen.', 'tage-ud'],
+    ['pizzasnegle', 'Tag pladen ud af ovnen.', 'tage-ud'], ['brownie', 'Tag formen ud af ovnen.', 'tage-ud'],
+    ['blondie', 'Tag formen ud af ovnen.', 'tage-ud'], ['hvidloegsflutes', 'Tag flutes ud af ovnen.', 'tage-ud'],
+    ['kartoffelmos', 'Hæld vandet fra i dørslaget.', 'si'], ['koedsovs', 'Hæld vandet fra spaghettien.', 'si'],
+    ['pizzasnegle', 'Rul dejen ud til en stor firkant.', 'kagerulle'], ['hvidloegsflutes', 'Pak flutes ind i staniol.', 'pakke-ind'],
+    ['boller', 'Smuldr gæren ned i skålen.', 'smuldre'], ['pizzasnegle', 'Smuldr gæren ned i en stor skål.', 'smuldre'],
+    ['tunfrikadeller', 'Hæld vandet fra tunen.', 'haelde'],
+  ];
+  for (const [id, tekst, verbum] of forvent) {
+    const trin = laes(ROD, 'opskrifter/' + id + '.json').recipeInstructions.find((s) => s.text === tekst);
+    assert.ok(trin, id + ': trinnet «' + tekst + '» findes ikke');
+    assert.equal(trin.tumbi.verbum, verbum, id + ': «' + tekst + '»');
+  }
 });
 
 // Ordvagten: nævner trinteksten kniv, rivejern eller varme (riv, bag, steg, kog, hak, skær, ovn), er det et voksen-trin,

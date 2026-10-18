@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="drain" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="sink">
+      <path d="M64 170 L192 170 Q216 170 216 194 L216 200 Q216 224 192 224 L64 224 Q40 224 40 200 L40 194 Q40 170 64 170 Z" fill="#8E9AA6"/>
+      <path d="M70 178 L186 178 Q206 178 206 196 L206 198 Q206 216 186 216 L70 216 Q50 216 50 198 L50 196 Q50 178 70 178 Z" fill="#6D7B8A"/>
+      <ellipse cx="184" cy="206" rx="10" ry="5" fill="#3B2A20"/>
+    </g>
+    <g id="dripping-water" fill="#3E8FB0">
+      <path d="M64 196 Q57 205 61 209 Q65 213 69 208 Q71 204 64 196 Z"/>
+      <path d="M134 194 Q127 203 131 207 Q135 211 139 206 Q141 202 134 194 Z"/>
+      <path d="M140 212 C150 206 166 206 174 210 C170 214 150 216 140 212 Z"/>
+    </g>
+    <g id="colander">
+      <path d="M40 142 L24 142 Q16 142 16 149 Q16 156 24 156 L40 156 Z" fill="#8E9AA6"/>
+      <path d="M156 142 L172 142 Q180 142 180 149 Q180 156 172 156 L156 156 Z" fill="#8E9AA6"/>
+      <path d="M78 192 L118 192 L124 206 L72 206 Z" fill="#6D7B8A"/>
+      <path d="M38 146 L158 146 Q154 194 98 200 Q42 194 38 146 Z" fill="#8E9AA6"/>
+      <ellipse cx="98" cy="146" rx="60" ry="14" fill="#6D7B8A"/>
+    </g>
+    <g id="colander-holes" fill="#3B2A20" stroke="none">
+      <circle cx="62" cy="164" r="4.5"/>
+      <circle cx="80" cy="164" r="4.5"/>
+      <circle cx="98" cy="164" r="4.5"/>
+      <circle cx="116" cy="164" r="4.5"/>
+      <circle cx="134" cy="164" r="4.5"/>
+      <circle cx="71" cy="177" r="4.5"/>
+      <circle cx="89" cy="177" r="4.5"/>
+      <circle cx="107" cy="177" r="4.5"/>
+      <circle cx="125" cy="177" r="4.5"/>
+      <circle cx="85" cy="188" r="4.5"/>
+      <circle cx="98" cy="188" r="4.5"/>
+      <circle cx="111" cy="188" r="4.5"/>
+    </g>
+    <g id="pasta" fill="#F2C14E">
+      <rect x="56" y="136" width="24" height="10" rx="5" transform="rotate(-18 68 141)"/>
+      <rect x="80" y="131" width="24" height="10" rx="5" transform="rotate(14 92 136)"/>
+      <rect x="108" y="137" width="24" height="10" rx="5" transform="rotate(-24 120 142)"/>
+      <rect x="74" y="144" width="22" height="10" rx="5" transform="rotate(8 85 149)"/>
+    </g>
+    <g id="pour-stream" fill="#3E8FB0">
+      <path d="M108 100 C102 112 98 124 98 142 L110 142 C110 128 114 116 122 106 Z"/>
+    </g>
+    <g id="pot" transform="translate(162 84) rotate(-60)">
+      <path d="M42 -26 L54 -26 Q62 -26 62 -18 L62 -8 Q62 0 54 0 L42 0 L42 -8 L54 -8 L54 -18 L42 -18 Z" fill="#8E9AA6"/>
+      <path d="M-44 -28 L-44 18 C-44 30 -24 34 0 34 C24 34 44 30 44 18 L44 -28 Z" fill="#8E9AA6"/>
+      <path d="M32 -22 L32 18 Q31 28 16 33 C34 32 44 27 44 18 L44 -28 Z" fill="#6D7B8A"/>
+      <ellipse cx="0" cy="-28" rx="44" ry="13" fill="#6D7B8A"/>
+      <ellipse cx="0" cy="-27" rx="35" ry="8" fill="#3E8FB0"/>
+    </g>
+    <g id="bo-upper-forearm">
+      <path d="M256 26 Q226 22 197 30 L197 58 Q226 68 256 66" fill="#9A6A44"/>
+    </g>
+    <g id="upper-oven-mitt" transform="translate(172 40)">
+      <path d="M29 -10 C22 -20 10 -25 2 -20 C-5 -16 -3 -8 4 -5 L12 -1 L1 -2 C-9 -3 -11 5 -4 11 C1 20 13 24 26 19 Z" fill="#E2513B"/>
+      <path d="M26 -13 L36 -10 L35 24 L25 22 Z" fill="#C3331D"/>
+      <path d="M12 -1 Q17 2 16 7" fill="none"/>
+    </g>
+    <g id="bo-lower-forearm">
+      <path d="M256 88 Q236 86 221 92 L221 122 Q236 130 256 128" fill="#9A6A44"/>
+    </g>
+    <g id="lower-oven-mitt" transform="translate(196 104)">
+      <path d="M29 -10 C22 -20 10 -25 2 -20 C-5 -16 -3 -8 4 -5 L12 -1 L1 -2 C-9 -3 -11 5 -4 11 C1 20 13 24 26 19 Z" fill="#E2513B"/>
+      <path d="M26 -13 L36 -10 L35 24 L25 22 Z" fill="#C3331D"/>
+      <path d="M12 -1 Q17 2 16 7" fill="none"/>
+    </g>
+    <g id="steam" fill="#FFFFFF">
+      <path d="M47 125 C35 115 36 105 46 98 C53 93 52 89 48 85 Q45 81 49 78 Q53 76 56 80 C65 90 60 100 52 105 C44 110 46 115 53 119 Q57 123 53 126 Q50 128 47 125 Z"/>
+      <path d="M79 116 C68 107 70 97 80 89 C88 83 87 78 83 73 Q80 69 84 67 Q88 65 91 69 C100 81 94 91 86 97 C79 102 79 106 85 110 Q89 114 85 117 Q82 119 79 116 Z"/>
+    </g>
+    <g id="down-the-drain-motion">
+      <path d="M187 136 L187 172 L180 172 Q177 172 179 175 L190 191 Q192 194 194 191 L205 175 Q207 172 204 172 L197 172 L197 136 Q192 131 187 136 Z" fill="#3E8FB0"/>
+    </g>
+  </g>
+</svg>

@@ -29,7 +29,7 @@
   "tool": ["stor skål", "lille skål", "grydeske", "dl-mål", "viskestykke", "kagerulle", "rivejern", "skarp kniv", "bageplade", "bagepapir", "kop", "gaffel", "pensel"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
-    { "@type": "HowToStep", "text": "Smuldr gæren ned i en stor skål.", "tumbi": { "verbum": "haelde", "ikoner": ["gaer"] } },
+    { "@type": "HowToStep", "text": "Smuldr gæren ned i en stor skål.", "tumbi": { "verbum": "smuldre", "ikoner": ["gaer"] } },
     { "@type": "HowToStep", "text": "Hæld 3 dl lunkent vand over gæren.", "tumbi": { "verbum": "haelde", "ikoner": ["vand", "gaer"], "note": "Lunkent er ca. 37 °C: det føles lunt på en finger. Rør, til gæren er opløst." } },
     { "@type": "HowToStep", "text": "Hæld sukker, salt og olie i.", "tumbi": { "verbum": "haelde", "ikoner": ["sukker", "salt", "olie"], "note": "1 tsk sukker (eller honning), 1 tsk salt og ½ dl olivenolie." } },
     { "@type": "HowToStep", "text": "Rør melet i lidt ad gangen.", "tumbi": { "verbum": "roere", "ikoner": ["mel"], "note": "Gem ca. 1 dl mel i en lille skål til at ælte med." } },
@@ -38,7 +38,7 @@
     { "@type": "HowToStep", "text": "Vask hænderne igen.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg i dejen." } },
     { "@type": "HowToStep", "text": "Lad dejen hæve i en time.", "tumbi": { "verbum": "vente", "timer_sek": 3600, "note": "Dæk skålen med et viskestykke. Dejen skal være ca. dobbelt så stor." } },
     { "@type": "HowToStep", "text": "Riv løg, skinke og ost.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["loeg", "skinke", "ost"], "note": "Det kan den voksne gøre, mens dejen hæver." } },
-    { "@type": "HowToStep", "text": "Rul dejen ud til en stor firkant.", "tumbi": { "verbum": "rulle", "ikoner": ["mel"], "note": "Ca. 35 × 45 cm og 5 mm tyk. Drys mel på bordet, så dejen ikke river i stykker." } },
+    { "@type": "HowToStep", "text": "Rul dejen ud til en stor firkant.", "tumbi": { "verbum": "kagerulle", "ikoner": ["mel"], "note": "Ca. 35 × 45 cm og 5 mm tyk. Drys mel på bordet, så dejen ikke river i stykker." } },
     { "@type": "HowToStep", "text": "Smør tomatpuréen ud på dejen.", "tumbi": { "verbum": "smoere", "ikoner": ["tomatpure"], "note": "Ca. 1,5 dl. Pesto kan også bruges." } },
     { "@type": "HowToStep", "text": "Drys løg og krydderier over.", "tumbi": { "verbum": "drysse", "ikoner": ["loeg", "krydderurt", "hvidloeg", "salt", "peber"], "note": "1 tsk oregano, 1 tsk hvidløgspulver og en knivspids salt og peber." } },
     { "@type": "HowToStep", "text": "Drys skinke og ost over.", "tumbi": { "verbum": "drysse", "ikoner": ["skinke", "ost"], "note": "Lad ca. 5 cm være fri langs den ene lange kant." } },
@@ -48,7 +48,7 @@
     { "@type": "HowToStep", "text": "Pisk ægget, og pensl sneglene.", "tumbi": { "verbum": "pensle", "ikoner": ["aeg"], "note": "Pisk ægget med en gaffel i en kop." } },
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg på fingrene." } },
     { "@type": "HowToStep", "text": "Bag sneglene i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900, "note": "15-20 min, til de er gyldne." } },
-    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme" } },
     { "@type": "HowToStep", "text": "Lad sneglene køle lidt af.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Bagepladen er meget varm." } },
     { "@type": "HowToStep", "text": "Smag en snegl!", "tumbi": { "verbum": "smage" } }
   ],

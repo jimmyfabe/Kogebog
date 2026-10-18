@@ -257,13 +257,17 @@ export function valider(rod = ROD) {
       for (const ik of RAA_IKONER) {
         if (retIkoner.has(ik) && !raaITrin.has(ik)) f('«' + ik + '» står i ingredienserne, men intet trin har ikonet, så det kan ikke ses, hvornår hænderne skal vaskes');
       }
-      // Når tiden i ovnen er gået, er pladen eller formen varm: trinnet efter et bage-trin med timer er den voksnes
+      // Når tiden i ovnen er gået, er pladen eller formen varm: efter et bage-trin med timer tager den voksne det ud
+      // («tage-ud», som altid er voksen og varme). Bages der videre (flutes uden staniol), kommer «tage-ud» efter det sidste
+      // bage-trin
+      const verbum = (s) => s && s.tumbi && s.tumbi.verbum;
       trin.forEach((s, i) => {
         const st = s && s.tumbi;
         if (!st || st.verbum !== 'bage' || !('timer_sek' in st)) return;
-        const efter = trin[i + 1] && trin[i + 1].tumbi;
-        if (!efter || efter.voksen !== true || efter.voksen_hjaelp !== 'varme') {
-          f('trin ' + (i + 1) + ': når tiden i ovnen er gået, tager en voksen det ud: trinnet efter skal være et voksen-trin med "voksen_hjaelp": "varme" (fx «Tag pladen ud af ovnen.»)');
+        let j = i + 1;
+        while (j < trin.length && verbum(trin[j]) === 'bage') j++;
+        if (verbum(trin[j]) !== 'tage-ud') {
+          f('trin ' + (i + 1) + ': når tiden i ovnen er gået, tager en voksen det ud: trinnet efter skal have verbet "tage-ud" (fx «Tag pladen ud af ovnen.»)');
         }
       });
       if (trin[0] && trin[0].tumbi && trin[0].tumbi.verbum !== 'vaske-haender') f('trin 1 skal være «Vask hænderne.» (verbum "vaske-haender")');

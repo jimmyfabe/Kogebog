@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="wrap" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="bread-and-foil" transform="translate(128 132) rotate(-25)">
+      <g id="bread">
+        <path d="M-104 0 C-102 -16 -86 -22 -68 -22 L76 -22 C92 -22 100 -14 100 0 C100 14 92 22 76 22 L-70 22 C-88 22 -106 16 -104 0 Z" fill="#E8C79A"/>
+        <path d="M-104 2 C-96 13 -86 14 -70 14 L76 14 C88 14 96 10 100 2 C100 14 92 22 76 22 L-70 22 C-88 22 -106 16 -104 2 Z" fill="#CFA976" stroke="none"/>
+        <path d="M-104 0 C-102 -16 -86 -22 -68 -22 L76 -22 C92 -22 100 -14 100 0 C100 14 92 22 76 22 L-70 22 C-88 22 -106 16 -104 0 Z" fill="none"/>
+        <g id="scores" fill="#FFF4E2">
+          <path d="M-90 6 Q-82 -12 -62 -10 Q-70 6 -90 6 Z"/>
+          <path d="M-60 6 Q-52 -12 -32 -10 Q-40 6 -60 6 Z"/>
+        </g>
+      </g>
+      <g id="foil">
+        <path d="M-4 -31 C20 -35 48 -29 74 -32 C94 -34 106 -24 110 -11 L118 -15 L121 0 L118 15 L110 11 C106 26 94 34 74 32 C48 30 20 35 -4 31 L3 21 L-5 11 L3 1 L-5 -9 L3 -19 Z" fill="#8E9AA6"/>
+        <path d="M22 -30 L34 -12 L26 4 L40 31 L58 30 L46 6 L56 -10 L48 -30 Z" fill="#6D7B8A" stroke="none"/>
+        <path d="M84 -32 L76 -8 L88 10 L80 32 L96 28 L102 8 L94 -10 L100 -28 Z" fill="#6D7B8A" stroke="none"/>
+        <path d="M-4 -31 C20 -35 48 -29 74 -32 C94 -34 106 -24 110 -11 L118 -15 L121 0 L118 15 L110 11 C106 26 94 34 74 32 C48 30 20 35 -4 31 L3 21 L-5 11 L3 1 L-5 -9 L3 -19 Z" fill="none"/>
+        <path d="M110 -11 Q114 0 110 11" fill="none"/>
+      </g>
+      <g id="wrap-around-motion">
+        <path d="M-28.5 43.4 A22 44 0 1 1 -28.5 -39.4 L-26.1 -48 L-13.6 -24.1 L-36.3 -21.4 L-31.9 -30 A12 34 0 1 0 -31.9 34 Q-30 40 -28.5 43.4 Z" fill="#3E8FB0"/>
+      </g>
+    </g>
+    <g id="rosa-top-forearm">
+      <path d="M182 88 C196 64 212 36 228 8 L262 28 C246 56 230 82 214 106 Z" fill="#F08A3C"/>
+    </g>
+    <g id="rosa-top-paw" transform="translate(198 97) rotate(-60)">
+      <path d="M-2 -19 C-13 -22 -18 -14 -14 -8 C-22 -4 -18 6 -11 6 C-15 14 -6 21 1 16 C9 23 17 14 13 7 C22 3 17 -8 9 -7 Q9 -17 -2 -19 Z" fill="#F08A3C"/>
+      <path d="M-7 -7 Q2 -12 8 -2 Q13 8 2 13 Q-9 14 -11 4 Q-13 -2 -7 -7 Z" fill="#FFF4E2"/>
+    </g>
+    <g id="rosa-bottom-forearm">
+      <path d="M126 166 C134 196 142 226 150 262 L186 254 C176 222 168 194 158 160 Z" fill="#F08A3C"/>
+    </g>
+    <g id="rosa-bottom-paw" transform="translate(142 160) rotate(76)">
+      <path d="M-2 -19 C-13 -22 -18 -14 -14 -8 C-22 -4 -18 6 -11 6 C-15 14 -6 21 1 16 C9 23 17 14 13 7 C22 3 17 -8 9 -7 Q9 -17 -2 -19 Z" fill="#F08A3C"/>
+      <path d="M-7 -7 Q2 -12 8 -2 Q13 8 2 13 Q-9 14 -11 4 Q-13 -2 -7 -7 Z" fill="#FFF4E2"/>
+    </g>
+  </g>
+</svg>

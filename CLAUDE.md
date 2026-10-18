@@ -47,9 +47,10 @@ Kør i Git Bash i `D:/Claude/Kogebog`.
 Standard schema.org/Recipe med egne felter under `tumbi`. Den fulde tabel står i `docs/gennemgang.md`. Validatoren (`test/test-opskrifter.js`) tjekker:
 
 - `tumbi.id` er filnavnet, og id'et står i præcis én gruppe i `opskrifter/index.json` (version 2: `grupper` med `id` og `retter`). Grupperne er `aftensmad`, `bagning` og `soede-sager` (`GRUPPER` i `js/katalog.js`, billedet `grafik/gruppe-<id>.svg`).
-- Hvert trin har `tumbi.verbum` fra de 19 verber i `js/katalog.js`: `roere haelde skaere aelte rulle vende stege koge maale vaske-haender vente smage smoere mose bage piske drysse rive pensle`.
+- Hvert trin har `tumbi.verbum` fra de 24 verber i `js/katalog.js`: `roere haelde skaere aelte rulle vende stege koge maale vaske-haender vente smage smoere mose bage piske drysse rive pensle tage-ud si kagerulle pakke-ind smuldre`.
 - Trinteksten (`text`, den der læses op) er højst 9 ord.
-- Kniv (`skaere`, `rive`) og varme (`stege`, `koge`, `vende`, `bage`) kræver `"voksen": true` og `voksen_hjaelp` (`"kniv"` eller `"varme"`). De to følges ad.
+- Kniv (`skaere`, `rive`) og varme (`stege`, `koge`, `vende`, `bage`, `tage-ud`, `si`) kræver `"voksen": true` og `voksen_hjaelp` (`"kniv"` eller `"varme"`). De to følges ad. `kagerulle`, `pakke-ind` og `smuldre` kan barnet selv.
+- Efter et `bage`-trin med timer kommer et `tage-ud`-trin («Tag pladen ud af ovnen.»). Bages der videre i et nyt `bage`-trin, kommer `tage-ud` efter det sidste.
 - `piske`, `pensle`, `mose` og `drysse` kan barnet selv. Er der varme med, skriver opskriften `"voksen": true`, og så skal hjælpen være `"varme"` (validatoren kan ikke selv se varmen).
 - Et trin med råt kød (`koed`) eller æg (`aeg`) i `ikoner` skal efterfølges af et `vaske-haender`-trin. Andre ingredienser må ikke røres før det.
 - Rå fisk og råt svinekød bruger også ikonet `koed`, så validatoren kræver håndvask. `tun` (på dåse) og `skinke` (pålæg) er ikke rå.
@@ -91,3 +92,4 @@ Standard schema.org/Recipe med egne felter under `tumbi`. Den fulde tabel står 
 - **WebKit afviser adresseskift ud over ca. 200 pr. 10 s i samme dokument** («Excessive navigation attempts blocked.», målt i Playwright WebKit). e2e åbner derfor hver ret i et nyt dokument, og et afvist skift meldes for sig. En test, der går gennem mange trin med `location.hash`, skal gøre det samme.
 - **Safari fjerner listesemantik,** når `list-style: none` er sat. Print-listen har derfor `role="list"`.
 - **Codex laver ikke billeder.** Den skriver SVG-tekst. Billederne laves i ChatGPT.
+- **Tunfrikadellernes «Hæld vandet fra tunen.» har `haelde`, ikke `si`** (en kendt skævhed). Si-billedet viser en varm gryde over dørslaget, og tunen er kold og står i en dåse. `si` bruges kun ved kogende vand (kartoffelmos og kødsovs).

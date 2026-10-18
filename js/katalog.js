@@ -22,9 +22,15 @@ export const VERBER = {
   'drysse': 'drysse',
   'rive': 'rive',
   'pensle': 'pensle',
+  'tage-ud': 'tage ud',
+  'si': 'si',
+  'kagerulle': 'rulle ud',
+  'pakke-ind': 'pakke ind',
+  'smuldre': 'smuldre',
 };
 
-// Verber, der altid kræver en voksen, og hvilken slags hjælp. Rivejernet skærer, og «bage» er altid ovnen.
+// Verber, der altid kræver en voksen, og hvilken slags hjælp. Rivejernet skærer, «bage» og «tage-ud» er altid ovnen,
+// og «si» er kogende vand gennem dørslaget.
 export const VOKSEN_KRAV = {
   'skaere': 'kniv',
   'rive': 'kniv',
@@ -32,6 +38,8 @@ export const VOKSEN_KRAV = {
   'koge': 'varme',
   'vende': 'varme',
   'bage': 'varme',
+  'tage-ud': 'varme',
+  'si': 'varme',
 };
 
 // Verber, barnet kan selv, når der er koldt: piske dej, pensle boller, mose, drysse ost. Er der varme med

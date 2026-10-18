@@ -23,7 +23,7 @@
     { "@type": "HowToStep", "text": "Skær kartoflerne i lige store stykker.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kartoffel"], "note": "Lige store stykker bliver møre på samme tid." } },
     { "@type": "HowToStep", "text": "Kom kartoflerne i gryden med koldt vand.", "tumbi": { "verbum": "haelde", "ikoner": ["kartoffel"], "note": "Vand nok til at dække dem. Ingen salt i vandet." } },
     { "@type": "HowToStep", "text": "Kog kartoflerne møre.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1200, "note": "Låg på. Start timeren, når vandet koger: ca. 20 min. En kniv skal glide let ind." } },
-    { "@type": "HowToStep", "text": "Hæld vandet fra i dørslaget.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne hælder. Pas på dampen. Kom kartoflerne tilbage i gryden." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra i dørslaget.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne hælder. Pas på dampen. Kom kartoflerne tilbage i gryden." } },
     { "@type": "HowToStep", "text": "Lad kartoflerne dampe af i 2 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 120 } },
     { "@type": "HowToStep", "text": "Mål 1,5 dl mælk.", "tumbi": { "verbum": "maale", "ikoner": ["maelk"] } },
     { "@type": "HowToStep", "text": "Varm mælk og smør i en lille gryde.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["maelk", "smoer"], "note": "Kun til smørret er smeltet. Det skal ikke koge." } },

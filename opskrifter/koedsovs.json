@@ -36,7 +36,7 @@
     { "@type": "HowToStep", "text": "Kog vand til spaghettien.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "note": "3-4 l vand og 1 spsk salt i en stor gryde." } },
     { "@type": "HowToStep", "text": "Kom spaghettien i vandet.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "ikoner": ["spaghetti"], "note": "Kog som anvist på pakken, ca. 8-10 min. Rør lidt i starten, så den ikke klistrer." } },
     { "@type": "HowToStep", "text": "Smag på sovsen.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "note": "Pust på skeen først. Mere salt eller peber?" } },
-    { "@type": "HowToStep", "text": "Hæld vandet fra spaghettien.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne hælder gennem dørslaget i vasken. Pas på dampen." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra spaghettien.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne hælder gennem dørslaget i vasken. Pas på dampen." } },
     { "@type": "HowToStep", "text": "Drys ost på maden.", "tumbi": { "verbum": "drysse", "ikoner": ["ost"] } }
   ],
   "tumbi": {
