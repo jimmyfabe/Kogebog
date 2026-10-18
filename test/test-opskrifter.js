@@ -25,6 +25,7 @@ const RET_TUMBI = new Set(['id', 'version', 'afproevet', 'kilde', 'ingredienser'
 const ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const ISO_RE = /^P(?:\d+D)?(?:T(?:\d+H)?(?:\d+M)?(?:\d+S)?)?$/;
 const MAKS_TIMER_SEK = 4 * 3600;
+const BLANDER = ['roere', 'haelde', 'piske']; // verber, der blander en ingrediens i dejen eller farsen
 const LYD_RE = /^([a-z0-9]+(?:-[a-z0-9]+)*)\/(\d+|navn)\.mp3$/;
 
 const erTekst = (v) => typeof v === 'string' && v.trim().length > 0;
@@ -152,6 +153,7 @@ export function valider(rod = ROD) {
       trinAntal.set(filId, trin.length);
       let timerSek = 0;
       const forurenet = new Set(); // trin, der allerede er meldt for at røre andet efter det rå
+      let raaDej = null; // { trin, ikoner }: det seneste trin, der blandede noget råt i dejen, indtil der æltes
       trin.forEach((s, i) => {
         const hvor = 'trin ' + (i + 1);
         tal.trin++;
@@ -185,19 +187,29 @@ export function valider(rod = ROD) {
             if (!Object.hasOwn(INGREDIENSER, ik)) f(hvor + ': ukendt ikon ' + JSON.stringify(ik));
             else if (!retIkoner.has(ik)) f(hvor + ': ikonet «' + ik + '» er ikke blandt rettens ingredienser');
           }
-          const raa = (Array.isArray(st.ikoner) ? st.ikoner : []).filter((ik) => RAA_IKONER.includes(ik));
-          const vask = trin.findIndex((x, k) => k > i && x && x.tumbi && x.tumbi.verbum === 'vaske-haender');
-          if (raa.length && vask < 0) {
-            f(hvor + ': rører råt kød eller æg (' + liste(raa) + '), men der kommer ikke et «vaske-haender»-trin bagefter');
-          } else if (raa.length) {
-            // Indtil hænderne er vasket, må barnet kun røre det rå (ellers kommer kødet over på mælkekartonen og saltet)
-            for (let k = i + 1; k < vask; k++) {
-              const ik = trin[k] && trin[k].tumbi && Array.isArray(trin[k].tumbi.ikoner) ? trin[k].tumbi.ikoner : [];
-              const andre = ik.filter((x) => !RAA_IKONER.includes(x));
-              if (andre.length && !forurenet.has(k)) {
-                forurenet.add(k);
-                f('trin ' + (k + 1) + ': rører ' + liste(andre) + ' med hænder, der har rørt råt kød eller æg i trin ' + (i + 1) + '. Flyt trinnet, så det rå kommer sidst før «vaske-haender»');
-              }
+        }
+        // Råt kød og æg. Dej eller fars med noget råt i er først indarbejdet efter æltningen: et «aelte»-trin efter et trin,
+        // der rører, hælder eller pisker det rå i, rører det rå igen, også selvom hænderne er vasket imellem
+        const egneRaa = (Array.isArray(st.ikoner) ? st.ikoner : []).filter((ik) => RAA_IKONER.includes(ik));
+        let raa = egneRaa;
+        let hvorfra = '';
+        if (st.verbum === 'aelte' && raaDej) {
+          raa = [...new Set([...egneRaa, ...raaDej.ikoner])];
+          hvorfra = ' (dejen med ' + liste(raaDej.ikoner) + ' fra trin ' + raaDej.trin + ' er først indarbejdet efter æltningen)';
+        }
+        if (st.verbum === 'aelte') raaDej = null;
+        if (BLANDER.includes(st.verbum) && egneRaa.length) raaDej = { trin: i + 1, ikoner: egneRaa };
+        const vask = trin.findIndex((x, k) => k > i && x && x.tumbi && x.tumbi.verbum === 'vaske-haender');
+        if (raa.length && vask < 0) {
+          f(hvor + ': rører råt kød eller æg (' + liste(raa) + ')' + hvorfra + ', men der kommer ikke et «vaske-haender»-trin bagefter');
+        } else if (raa.length) {
+          // Indtil hænderne er vasket, må barnet kun røre det rå (ellers kommer kødet over på mælkekartonen og saltet)
+          for (let k = i + 1; k < vask; k++) {
+            const ik = trin[k] && trin[k].tumbi && Array.isArray(trin[k].tumbi.ikoner) ? trin[k].tumbi.ikoner : [];
+            const andre = ik.filter((x) => !RAA_IKONER.includes(x));
+            if (andre.length && !forurenet.has(k)) {
+              forurenet.add(k);
+              f('trin ' + (k + 1) + ': rører ' + liste(andre) + ' med hænder, der har rørt råt kød eller æg i trin ' + (i + 1) + hvorfra + '. Flyt trinnet, så det rå kommer sidst før «vaske-haender»');
             }
           }
         }

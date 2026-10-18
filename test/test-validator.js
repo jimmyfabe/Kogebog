@@ -153,6 +153,35 @@ test('andre ingredienser mellem råt kød/æg og håndvasken', () => {
   }, 'trin 8: rører sukker med hænder, der har rørt råt kød eller æg i trin 7');
 });
 
+// Dej med råt æg (eller kød) er først indarbejdet efter æltningen: en vask mellem ægget og æltningen er ikke nok.
+// Boller får et æg i dejen før æltningen (trin 7), og efter æltningen rører barnet salt
+test('dej med råt æg: hænderne vaskes efter æltningen, ikke før', () => {
+  const aeg = { '@type': 'HowToStep', text: 'Rør ægget i dejen.', tumbi: { verbum: 'roere', ikoner: ['aeg'] } };
+  const vask = { '@type': 'HowToStep', text: 'Vask hænderne.', tumbi: { verbum: 'vaske-haender' } };
+  const salt = { '@type': 'HowToStep', text: 'Drys salt på.', tumbi: { verbum: 'drysse', ikoner: ['salt'] } };
+  const aelteIdx = (d) => d.recipeInstructions.findIndex((s) => s.tumbi.verbum === 'aelte');
+  // Æg, vask, ælt, salt: saltet røres med æg-dej på fingrene
+  forventFejl('opskrifter/boller.json', (d) => {
+    const a = aelteIdx(d);
+    d.recipeInstructions.splice(a, 0, aeg, vask);
+    d.recipeInstructions.splice(a + 3, 0, salt);
+  }, 'trin 10: rører salt med hænder, der har rørt råt kød eller æg i trin 9 (dejen med aeg fra trin 7');
+  // Æg, ælt, og ingen vask før saltet (meldes allerede fra æg-trinnet)
+  forventFejl('opskrifter/boller.json', (d) => {
+    const a = aelteIdx(d);
+    d.recipeInstructions.splice(a, 0, aeg);
+    delete d.recipeInstructions[a + 1].tumbi.ikoner;
+    d.recipeInstructions.splice(a + 2, 0, salt);
+  }, 'trin 9: rører salt med hænder, der har rørt råt kød eller æg i trin 7.');
+  // Æg, ælt, vask, salt: i orden
+  forventGyldig('opskrifter/boller.json', (d) => {
+    const a = aelteIdx(d);
+    d.recipeInstructions.splice(a, 0, aeg);
+    delete d.recipeInstructions[a + 1].tumbi.ikoner;
+    d.recipeInstructions.splice(a + 2, 0, vask, salt);
+  });
+});
+
 test('ingrediens-ikoner skal være kendte og passe til mængden', () => {
   forventFejl('opskrifter/pandekager.json', (d) => { d.tumbi.ingredienser[0].ikon = 'kanel'; }, 'ingrediens 1: ukendt ikon "kanel"');
   forventFejl('opskrifter/pandekager.json', (d) => { d.tumbi.ingredienser[0].maengde = '3 dl'; }, 'ingrediens 1: mængden «3 dl» passer ikke til «200 g hvedemel»');
