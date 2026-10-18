@@ -267,6 +267,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .kort-aabn .ikon { width: 22px; height: 22px; }
 .kort.valgt { background: var(--sennep-lys); box-shadow: 0 6px 0 var(--kakao), 0 0 0 6px var(--sennep); }
 .kort.valgt .kort-aabn { display: inline-flex; }
+/* Det gule kort har samme farve som den første rets cirkel: på det valgte kort bliver cirklen en hvid tallerken med streg */
+.kort.valgt .kort-billede { background: var(--hvid); box-shadow: inset 0 0 0 var(--streg) var(--kakao); }
 
 /* ---------- Retten ---------- */
 

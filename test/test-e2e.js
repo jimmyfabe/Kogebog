@@ -263,6 +263,19 @@ async function heleVejen(browser, skaerm) {
   // Første tryk siger navnet, andet åbner
   await tryk(side, '.kort[data-ret="pandekager"]');
   tjek(await side.locator('.kort.valgt[data-ret="pandekager"]').count() === 1, n + ': første tryk skal markere kortet');
+  // U14: den farvede cirkel bag billedet må ikke forsvinde i det gule, valgte kort (før var de samme farve)
+  await vent(300); // kortets baggrund skifter med en overgang på .15 s
+  const cirkel = await side.evaluate(() => {
+    const lum = (farve) => {
+      const [r, g, b] = farve.match(/[\d.]+/g).slice(0, 3).map((v) => { const c = v / 255; return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4; });
+      return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    };
+    const kort = document.querySelector('.kort.valgt');
+    const cs = getComputedStyle(kort.querySelector('.kort-billede'));
+    const [a, b] = [lum(cs.backgroundColor), lum(getComputedStyle(kort).backgroundColor)];
+    return { kontrast: (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05), kant: cs.boxShadow.includes('inset') || parseFloat(cs.borderTopWidth) >= 2 };
+  });
+  tjek(cirkel.kontrast >= 1.5 || cirkel.kant, n + ': cirklen bag billedet skal kunne ses på det valgte kort (kontrast ' + cirkel.kontrast.toFixed(2) + ', ingen kant)');
   tjek((await sidsteTale(side)).startsWith('Pandekager'), n + ': første tryk skal sige navnet');
   const stemme = await side.evaluate(() => window.__tale[window.__tale.length - 1]);
   tjek(stemme.lang === 'da-DK' && stemme.stemme === 'da-DK', n + ': oplæsning skal være da-DK med den danske stemme, fik ' + JSON.stringify(stemme));
