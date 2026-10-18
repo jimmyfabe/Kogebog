@@ -3,3 +3,4 @@ En lille kogebog til iPad, hvor et barn (ca. 5-9 år) og en voksen laver mad sam
 Tests: `node test/koer-alle.js` i `D:\Claude\Kogebog`. E2E i WebKit er tung og kører kun gennem `tung-koersel.sh`.
 Lokal server: `py -m http.server 8091 --bind 127.0.0.1 --directory D:/Claude/Kogebog`, og åbn http://127.0.0.1:8091/ (aldrig `file://`).
 Start med `LÆS-MIG-FØRST.md`. Kommandoer og regler står i `CLAUDE.md`, og status i `STATUS.md`.
+Ny opskrift: læg `opskrifter/<id>.json`, og skriv id'et i `opskrifter/index.json` (trinene står under «Ny opskrift» i `CLAUDE.md`).

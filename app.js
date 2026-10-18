@@ -157,7 +157,11 @@ function forside() {
   } else if (!S.ids) {
     indhold = el('div', { class: 'status-boks henter' }, billede(grafikDyr('pip'), '', 'status-dyr'), el('p', { tekst: 'Henter opskrifterne …' }));
   } else if (!S.ids.length) {
-    indhold = el('div', { class: 'status-boks' }, el('h2', { tekst: 'Der er ingen opskrifter endnu' }), el('p', { tekst: 'Læg en opskrift i mappen opskrifter, og skriv den i index.json.' }));
+    // Til forælderen, ikke til udvikleren: hvordan man lægger en opskrift ind, står i CLAUDE.md
+    indhold = el('div', { class: 'status-boks' },
+      el('h2', { tekst: 'Der er ingen opskrifter endnu' }),
+      el('p', { tekst: 'Kogebogen er tom lige nu. Hent listen igen om lidt.' }),
+      knap('Hent opskrifterne igen', { klasse: 'primaer', ikonNavn: 'igen', onclick: () => indlaes() }));
   } else {
     const fejlede = [];
     const kort = S.ids.map((id) => {

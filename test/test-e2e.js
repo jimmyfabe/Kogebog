@@ -702,6 +702,19 @@ async function fejltilstande(browser, skaerm) {
   await tryk(side, 'button:has-text("Prøv igen")');
   await side.waitForSelector('.kort[data-ret]').catch(() => tjek(false, 'fejl: «Prøv igen» skal hente opskrifterne'));
 
+  // U18: en tom liste taler til forælderen, ikke til udvikleren
+  await side.route('**/opskrifter/index.json', (r) => r.fulfill({ contentType: 'application/json', body: '{"version":1,"retter":[]}' }));
+  await side.goto(BASE + '/index.html');
+  await side.waitForSelector('text=Der er ingen opskrifter endnu').catch(() => tjek(false, 'tom: en tom liste skal sige «Der er ingen opskrifter endnu»'));
+  const tomTekst = await side.locator('.status-boks').textContent().catch(() => '');
+  tjek(!/index\.json|mappen/.test(tomTekst), 'tom: teksten må ikke handle om filer og mapper: ' + tomTekst);
+  tjek(await side.locator('button:has-text("Hent opskrifterne igen")').count() === 1, 'tom: «Hent opskrifterne igen» skal vises');
+  await tjekLayout(side, 'tom forside');
+  await foto(side, skaerm.navn + '-tom-forside');
+  await side.unroute('**/opskrifter/index.json');
+  await tryk(side, 'button:has-text("Hent opskrifterne igen")');
+  await side.waitForSelector('.kort[data-ret]').catch(() => tjek(false, 'tom: «Hent opskrifterne igen» skal hente listen'));
+
   await side.evaluate(() => { location.hash = '#/ret/findes-ikke'; });
   await side.waitForSelector('text=Den opskrift findes ikke').catch(() => tjek(false, 'fejl: ukendt ret skal give «Den opskrift findes ikke»'));
   await side.evaluate(() => { location.hash = '#/ret/pandekager/trin/99'; });
