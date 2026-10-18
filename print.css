@@ -50,12 +50,18 @@ ul.tjek li { position: relative; padding: 2px 0 2px 26px; break-inside: avoid; }
 ul.tjek li::before { content: ""; position: absolute; left: 0; top: 7px; width: 14px; height: 14px; border: 1.5px solid #111; border-radius: 2px; }
 .redskaber { color: #333; }
 
-ol.trin { margin: 0; padding-left: 26px; }
-ol.trin li { padding: 5px 0 6px 4px; break-inside: avoid; border-bottom: 1px dotted #999; }
+/* Nummer, ikon og tekst i hver sin kolonne. Et ikon, der flød, dækkede listenummeret,
+   og var et trin lavere end ikonet, rykkede det næste trin ind (en trappe). Nummeret er en tæller;
+   role="list" i js/print.js beholder listen for VoiceOver trods list-style: none. */
+ol.trin { list-style: none; margin: 0; padding: 0; counter-reset: trin; }
+ol.trin li {
+  display: grid; grid-template-columns: 1.6em 34px minmax(0, 1fr); column-gap: 8px; align-items: baseline;
+  padding: 5px 0 6px; counter-increment: trin; break-inside: avoid; border-bottom: 1px dotted #999;
+}
 ol.trin li:last-child { border-bottom: 0; }
-ol.trin li::marker { font-weight: 800; }
-.trin-ikon { float: left; width: 34px; height: 34px; margin: 0 10px 0 0; filter: grayscale(1) contrast(1.15); }
-.trin-krop { overflow: hidden; }
+ol.trin li::before { content: counter(trin) "."; font-weight: 800; text-align: right; }
+.trin-ikon { align-self: start; width: 34px; height: 34px; filter: grayscale(1) contrast(1.15); }
+.trin-krop { min-width: 0; }
 .trin-tekst { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-weight: 650; }
 .maerke { display: inline-flex; align-items: center; gap: 4px; padding: 0 7px; border: 1.5px solid #111; border-radius: 6px; font-size: 13px; font-weight: 700; white-space: nowrap; }
 .voksen .maerke:first-of-type { border-width: 2.5px; }
@@ -79,6 +85,7 @@ ol.trin li::marker { font-weight: 800; }
   .hoved h1 { font-size: 22pt; }
   h2 { font-size: 12.5pt; }
   .spalter { grid-template-columns: minmax(0, 1fr) minmax(0, 1.75fr); gap: 7mm; }
+  ol.trin li { grid-template-columns: 1.6em 9mm minmax(0, 1fr); }
   .trin-ikon { width: 9mm; height: 9mm; }
   .maerke { font-size: 8.5pt; }
   .note { font-size: 9pt; }

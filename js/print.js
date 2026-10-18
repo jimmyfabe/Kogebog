@@ -43,7 +43,7 @@ function tegn(m) {
         m.redskaber.length ? el('p', { class: 'redskaber', tekst: m.redskaber.join(', ') }) : null),
       el('section', { class: 'fremgang', 'aria-labelledby': 'p-trin' },
         el('h2', { id: 'p-trin', tekst: 'Sådan gør du' }),
-        el('ol', { class: 'trin' }, trin))),
+        el('ol', { class: 'trin', role: 'list' }, trin))),
     el('footer', { class: 'fod' },
       el('p', { tekst: 'Tjek selv pakkerne for allergener.' }),
       el('p', { tekst: 'Tumbi Køkken · ' + (m.kilde || 'Egen tekst') })));
