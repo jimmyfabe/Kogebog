@@ -99,15 +99,28 @@ async function nySide(browser, skaerm, ekstra = {}) {
   const side = await ctx.newPage();
   side.fejl = [];
   side.on('pageerror', (e) => side.fejl.push('pageerror: ' + e.message));
-  side.on('console', (m) => { if (m.type() === 'error') side.fejl.push('console: ' + m.text()); });
+  side.on('console', (m) => {
+    if (m.type() !== 'error') return;
+    if (side.iFoto && /^Refused to apply a stylesheet/.test(m.text())) return; // testens eget <style>, se foto()
+    side.fejl.push('console: ' + m.text());
+  });
   side.on('response', (r) => { if (r.status() >= 400) side.fejl.push('HTTP ' + r.status() + ': ' + r.url()); });
   side.on('requestfailed', (r) => side.fejl.push('requestfailed: ' + r.url() + ' (' + (r.failure() || {}).errorText + ')'));
   return { ctx, side };
 }
 
-// caret: 'initial': ellers lægger Playwright et <style> ind for at skjule markøren, og appens CSP (style-src 'self')
-// afviser det med en konsolfejl, som testen så tager for en fejl i appen
-const foto = (side, navn, ekstra = {}) => side.screenshot({ path: path.join(UD, navn + '.png'), caret: 'initial', ...ekstra });
+// I WebKit lægger Playwright altid et <style>body {}</style> ind før et skærmbillede (shouldToggleStyleSheetToSyncAnimations
+// i playwright-core, uanset caret og animations), og appens CSP (style-src 'self') afviser det med en konsolfejl.
+// Kun den fejl, og kun mens fotoet tages, tælles ikke. Alle andre CSP-fejl tæller stadig.
+async function foto(side, navn, ekstra = {}) {
+  side.iFoto = true;
+  try {
+    await side.screenshot({ path: path.join(UD, navn + '.png'), ...ekstra });
+    await side.evaluate(() => 0); // konsolbeskeden fra fotoet er nået frem før dette svar
+  } finally {
+    side.iFoto = false;
+  }
+}
 
 // Børnenes egne knapper skal være mindst 64 px (de voksnes, fx print og stop, mindst 48 px)
 const BOERNEKNAPPER = '.kort, .ingr, .start, .naeste, .tilbage, .laes-op, .timer-start, .stor-rund, .knap.primaer';
