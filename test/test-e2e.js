@@ -2,7 +2,8 @@
 // iPad på langs (1180×820, børnenes standard), iPhone (390×844) og desktop (1280×800).
 // Forside → pandekager → alle trin (med en timer og voksen-hold) → færdig, alle trin i alle 5 retter,
 // print-siden for alle 5 retter (også i printvisning på A4-bredde), tastatur, timere på tværs af skærme og genindlæsning,
-// fejltilstande og «mindre bevægelse». Delen «former» ser desuden 360 px, iPad mini på højkant og iPhones på langs.
+// fejltilstande og «mindre bevægelse». Delen «former» ser desuden 360 px, iPad mini på højkant og iPhones på langs
+// (667×375 til 932×430).
 // Tjekker hele vejen: ingen konsolfejl, ingen 404, ingen vandret rulning, billeder indlæst, og knapper mindst
 // 64 px for børnenes knapper (BOERNEKNAPPER) og 48 px for de voksnes (fx print og stop).
 //
@@ -866,7 +867,9 @@ async function beroering(browser, skaerm) {
 
 // ---------- Skærmformer, som de tre faste skærme ikke dækker ----------
 // Den smalleste iPhone (360 px), iPhone (390), iPad mini på højkant (768×1024 og den nye 744×1133) og iPhone på langs
-// (844×390), og de små iPhones på langs (667×375 og 736×414), som før fik iPhone-layoutet på højkant
+// (844×390), de små iPhones på langs (667×375 og 736×414), som før fik iPhone-layoutet på højkant, iPhone mini, X og
+// 11 Pro på langs (812×375) og iPhone Pro Max på langs (932×430). De to sidste er bredere end 800 px og får rettens
+// store knapper i bunden; den skal stadig være én række med «Fortsæt ved trin 12»
 const FORMER = [
   { navn: 'w360', viewport: { width: 360, height: 780 }, hasTouch: true },
   { navn: 'iphone', viewport: { width: 390, height: 844 }, hasTouch: true },
@@ -875,6 +878,8 @@ const FORMER = [
   { navn: 'land', viewport: { width: 844, height: 390 }, hasTouch: true },
   { navn: 'se-land', viewport: { width: 667, height: 375 }, hasTouch: true },
   { navn: 'plus-land', viewport: { width: 736, height: 414 }, hasTouch: true },
+  { navn: 'x-land', viewport: { width: 812, height: 375 }, hasTouch: true },
+  { navn: 'max-land', viewport: { width: 932, height: 430 }, hasTouch: true },
 ];
 
 // Hvor et element ligger i forhold til den faste bund: { top, bund } for elementet og bundens top (bundTop)
@@ -974,10 +979,11 @@ async function former(browser) {
 
     // Retten med og uden «Fortsæt»: knapperne kan ses uden at rulle, og «Fortsæt» står først, over de andre.
     // På langs er der kun højde til én række knapper: dér står «Fortsæt» til højre som på iPad.
-    // Kødsovs har den længste ingrediensliste (12): på 768×1024 lå print og «Start forfra» under kanten
+    // Kødsovs har den længste ingrediensliste (12): på 768×1024 lå print og «Start forfra» under kanten.
+    // Kødsovs har 13 trin: «Fortsæt ved trin 12» har to cifre, som den bredeste «Fortsæt»
     for (const ret of ['pandekager', 'koedsovs']) {
       for (const fortsaet of [false, true]) {
-        await medGemt(side, { sidste: fortsaet ? { ret, nr: 7 } : null }, '#/ret/' + ret);
+        await medGemt(side, { sidste: fortsaet ? { ret, nr: ret === 'koedsovs' ? 12 : 7 } : null }, '#/ret/' + ret);
         await side.waitForSelector(fortsaet ? '.ret .fortsaet' : '.ret .start');
         const hvor = n + ' ret ' + ret + (fortsaet ? ' med Fortsæt' : '');
         await tjekLayout(side, hvor, { knapperSes: true });
