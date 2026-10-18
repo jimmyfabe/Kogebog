@@ -75,8 +75,8 @@ test('timer skal være et positivt heltal', () => {
 });
 
 test('kniv og varme kræver voksen: true og voksen_hjaelp', () => {
-  forventFejl('opskrifter/frikadeller.json', (d) => { delete d.recipeInstructions[1].tumbi.voksen_hjaelp; }, 'trin 2: verbet «skaere» skal have "voksen": true og "voksen_hjaelp": "kniv"');
-  forventFejl('opskrifter/frikadeller.json', (d) => { delete d.recipeInstructions[1].tumbi.voksen; }, 'trin 2: verbet «skaere» skal have "voksen": true');
+  forventFejl('opskrifter/frikadeller.json', (d) => { delete d.recipeInstructions[1].tumbi.voksen_hjaelp; }, 'trin 2: verbet «rive» skal have "voksen": true og "voksen_hjaelp": "kniv"');
+  forventFejl('opskrifter/frikadeller.json', (d) => { delete d.recipeInstructions[1].tumbi.voksen; }, 'trin 2: verbet «rive» skal have "voksen": true');
   forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[9].tumbi.voksen_hjaelp = 'ja'; }, 'trin 10: «voksen_hjaelp» skal være "kniv", "varme"');
 });
 
@@ -143,7 +143,7 @@ test('manglende felter og for lange sætninger', () => {
 });
 
 test('råt kød uden «vask hænderne» bagefter', () => {
-  forventFejl('opskrifter/frikadeller.json', (d) => { d.recipeInstructions = d.recipeInstructions.filter((s, i) => i !== 10); },
+  forventFejl('opskrifter/frikadeller.json', (d) => { d.recipeInstructions = d.recipeInstructions.filter((s, i) => i !== 11); },
     'rører råt kød eller æg (koed), men der kommer ikke et «vaske-haender»-trin bagefter');
 });
 
