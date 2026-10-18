@@ -36,7 +36,7 @@ Alle køres i Git Bash eller PowerShell i `D:\Claude\Kogebog`.
 | Alle node-tests (opskrifter, validator, tid, service worker) | `node test/koer-alle.js` (eller `npm.cmd test`) |
 | Kun opskrifterne | `node test/test-opskrifter.js` |
 | Lokal server | `py -m http.server 8091 --bind 127.0.0.1 --directory D:/Claude/Kogebog` — åbn http://127.0.0.1:8091/ (aldrig `file://`) |
-| Browsertest (WebKit, 3 skærme) — tung, kør gennem låsen | `NODE_PATH=C:/Users/Jimmy/AppData/Roaming/npm/node_modules/@playwright/cli/node_modules bash ~/.claude/tung-koersel.sh "kogebog: e2e" node test/test-e2e.js` |
+| Browsertest (WebKit, 3 skærme) — tung, kør gennem låsen | `NODE_PATH=C:/Users/Jimmy/AppData/Roaming/npm/node_modules/@playwright/cli/node_modules bash ~/.claude/tung-koersel.sh "kogebog: e2e" node test/test-e2e.js [http://127.0.0.1:8091] [mappe-til-skærmbilleder]` — kun en del: `E2E_DELE=hele,print,tastatur,fejl` og `E2E_SKAERME=ipad,iphone,desktop` |
 | Lav hjemmeskærm-ikonerne (PNG) ud fra `ikoner/ikon.svg` | `NODE_PATH=… bash ~/.claude/tung-koersel.sh "kogebog: ikoner" node vaerktoej/lav-ikoner.js` |
 
 `?hurtig=1` i adressen gør alle timere 2 sekunder lange (kun til test).

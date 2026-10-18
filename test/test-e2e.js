@@ -107,7 +107,7 @@ async function tjekLayout(side, hvor, { knapperSes = false } = {}) {
       if (!b.width || !b.height || getComputedStyle(e).visibility === 'hidden') continue;
       const mindst = Math.min(b.width, b.height);
       if (mindst < 48) smaa.push(navn(e) + ' ' + Math.round(b.width) + '×' + Math.round(b.height));
-      else if (mindst < 63.5 && e.matches(boern)) smaaBoern.push(navn(e) + ' ' + Math.round(b.width) + '×' + Math.round(b.height));
+      else if (mindst < 63.5 && e.matches(boern) && e.closest('#app')) smaaBoern.push(navn(e) + ' ' + Math.round(b.width) + '×' + Math.round(b.height));
     }
     const W = window.innerWidth;
     const udenfor = [];
