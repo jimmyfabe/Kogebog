@@ -333,6 +333,20 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .start { min-width: 220px; }
 /* «Fortsæt» står først i bunden, så Tab når den først. På de brede skærme og på langs står den til højre som «Næste» */
 .ret .handlinger .fortsaet { order: 1; }
+/* Over 12 ingredienser (pizzasnegle har 15) kommer der en fjerde række på iPad'en på langs, og print og «Start» lå under kanten.
+   Så står bunden fast som på iPhone, og listen ruller ind under den. Kun ved de lange lister: ellers ses stregen over bunden på alle retter.
+   Bunden er 119 px høj (én række knapper), plus samme safe-area som dens padding */
+@media (min-width: 901px) and (min-height: 521px) {
+  .ret:has(.ingr-gitter > :nth-child(13)) { --bund: calc(110px + max(22px, env(safe-area-inset-bottom))); }
+  .ret:has(.ingr-gitter > :nth-child(13)) .handlinger {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    background: var(--creme);
+    border-top: 3px solid var(--creme-moerk);
+    padding-bottom: max(22px, env(safe-area-inset-bottom));
+  }
+}
 
 /* ---------- Trinene ---------- */
 
