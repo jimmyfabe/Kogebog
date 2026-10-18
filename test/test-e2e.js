@@ -456,10 +456,14 @@ async function tastatur(browser, skaerm) {
   const ring = await side.evaluate(() => { const s = getComputedStyle(document.activeElement); return { stil: s.outlineStyle, bredde: parseFloat(s.outlineWidth) }; });
   tjek(ring.stil !== 'none' && ring.bredde >= 3, 'tastatur: fokus skal kunne ses (outline ' + JSON.stringify(ring) + ')');
   await foto(side, 'desktop-tastatur-fokus');
-  await side.keyboard.press('Enter');
+  // Forsiden tegnes igen, når opskrifterne er hentet, og appen sluger tryk i 350 ms efter hver tegning:
+  // uden pausen her blev første Enter slugt, og andet Enter markerede kun kortet
   await vent(SPAERRE);
   await side.keyboard.press('Enter');
-  await side.waitForSelector('.ret h1');
+  tjek(await side.locator('.kort.valgt').count() === 1, 'tastatur: første Enter skal markere kortet');
+  await vent(SPAERRE);
+  await side.keyboard.press('Enter');
+  await side.waitForSelector('.ret h1', { timeout: 5000 });
   await side.focus('.start');
   await vent(SPAERRE);
   await side.keyboard.press('Enter');
