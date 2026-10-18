@@ -80,7 +80,9 @@ function naviger(hash, efter) {
 
 function timerPille() {
   const tal = el('span', { class: 'pille-tal' });
-  const b = el('button', { type: 'button', class: 'knap pille', hidden: true }, ikon('ur'), tal);
+  // «Tiden er gået» står ved siden af tallet; på smalle skærme viser topbaren kun «0:00» (app.css), så fremskridtet kan ses
+  const slut = el('span', { class: 'pille-slut', tekst: 'Tiden er gået' });
+  const b = el('button', { type: 'button', class: 'knap pille', hidden: true }, ikon('ur'), tal, slut);
   b.addEventListener('click', klik(() => {
     const t = Timer.aktuel();
     if (t) naviger(hashFor.trin(t.ret, t.nr));
@@ -95,7 +97,7 @@ function timerPille() {
     const m = S.retter.get(t.ret);
     const navn = m && m.navn ? m.navn + ', trin ' + t.nr : 'trin ' + t.nr;
     b.classList.toggle('faerdig', s.faerdig);
-    tal.textContent = s.faerdig ? 'Tiden er gået' : formaterTid(s.restSek);
+    tal.textContent = formaterTid(s.restSek);
     b.setAttribute('aria-label', (s.faerdig ? 'Timeren er færdig' : 'Timer: ' + formaterTid(s.restSek) + ' tilbage') + '. Gå til ' + navn + '.');
   }
   S.oprydning.push(Timer.lyt(tegn));

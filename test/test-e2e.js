@@ -180,6 +180,25 @@ async function venterPaa(side, fn, arg, hvor, ms = 6000) {
 
 const h1 = (side) => side.locator('h1').first().textContent();
 
+// Topbaren på et trin: hvor bred midten er, hvor fremskridtet står, og om «Trin x af y» er på én linje
+async function topbarMaal(side) {
+  return side.evaluate(() => {
+    const r = (s) => { const e = document.querySelector(s); return e ? e.getBoundingClientRect() : null; };
+    const midte = r('.topbar-midte');
+    const frem = r('.fremskridt');
+    const pille = document.querySelector('.topbar .pille:not([hidden])');
+    const nr = document.querySelector('.trin-nr');
+    const linjer = nr ? Math.round(nr.getBoundingClientRect().height / parseFloat(getComputedStyle(nr).lineHeight)) : 0;
+    return {
+      midte: midte ? Math.round(midte.width) : 0,
+      fremX: frem ? Math.round(frem.left) : null,
+      fremHoejre: frem ? Math.round(frem.right) : null,
+      pilleVenstre: pille ? Math.round(pille.getBoundingClientRect().left) : null,
+      linjer,
+    };
+  });
+}
+
 // ---------- Hele vejen med pandekager ----------
 async function heleVejen(browser, skaerm) {
   const n = skaerm.navn;
@@ -235,7 +254,12 @@ async function heleVejen(browser, skaerm) {
       const lyd = await side.evaluate(() => ({ toner: window.__toner, laas: window.__laas }));
       tjek(lyd.toner >= 3, n + ': der skal spilles tre toner ved slut (fik ' + lyd.toner + ')');
       tjek(lyd.laas.sluppet === 1 && lyd.laas.aktive === 0, n + ': wakeLock skal slippes, når timeren er slut ' + JSON.stringify(lyd.laas));
-      if (n === 'ipad') await foto(side, n + '-6-pille-faerdig');
+      // «Tiden er gået» i topbaren må ikke klemme fremskridtet (iPhone: midten var 61 px, og stregerne lå under pillen)
+      const top = await topbarMaal(side);
+      tjek(top.midte >= 140, n + ': topbarens midte med en færdig timer er kun ' + top.midte + ' px bred');
+      tjek(top.pilleVenstre !== null && top.fremHoejre <= top.pilleVenstre, n + ': fremskridtet løber ind under pillen (' + top.fremHoejre + ' > ' + top.pilleVenstre + ')');
+      tjek(top.linjer === 1, n + ': «Trin 10 af 12» skal stå på én linje med en færdig timer (' + top.linjer + ' linjer)');
+      await foto(side, n + '-6-pille-faerdig');
       await tryk(side, '.pille');
       await side.waitForFunction(() => location.hash.endsWith('/trin/9'));
       tjek(await side.locator('.timer.faerdig').count() === 1, n + ': trinnet skal vise, at tiden er gået');

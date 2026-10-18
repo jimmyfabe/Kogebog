@@ -5,7 +5,7 @@
    Derfor er VERSION bygget af INDHOLD: et tal for alle FILER. test/test-sw.js tjekker, at FILER er komplet,
    og fejler, når en fil er ændret. Fejlbeskeden viser den nye værdi; testen ændrer ikke sw.js, så den sættes her i hånden. */
 const PRAEFIKS = 'kog-';
-const INDHOLD = '750cf76146c4d708'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = 'c5d0c559cb276035'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const FILER = [
   './',

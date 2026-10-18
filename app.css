@@ -140,6 +140,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 
 .pille { min-height: 56px; padding: 0 18px; font-size: 22px; font-variant-numeric: tabular-nums; background: var(--blaa-lys); }
 .pille.faerdig { background: var(--sennep); }
+.pille-slut, .pille.faerdig .pille-tal { display: none; }
+.pille.faerdig .pille-slut { display: inline; }
 @media (prefers-reduced-motion: no-preference) {
   .pille.faerdig { animation: puls 1s ease-in-out infinite; }
 }
@@ -449,6 +451,9 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 @media (max-width: 760px) {
   body { font-size: 18px; }
   .topbar { gap: 10px; padding: 10px 12px 4px; }
+  /* «Tiden er gået» fylder for meget ved siden af fremskridtet: topbaren viser «0:00» på gul, pulserende pille */
+  .topbar .pille.faerdig .pille-tal { display: inline; }
+  .topbar .pille.faerdig .pille-slut { display: none; }
   .handlinger { gap: 12px; padding: 8px 12px 16px; }
   .knap.primaer { min-height: 76px; font-size: 24px; padding: 0 22px; }
 
