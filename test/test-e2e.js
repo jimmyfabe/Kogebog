@@ -1,7 +1,8 @@
 // test-e2e.js — går hele vejen i en rigtig browser (Playwright, WebKit = Safaris motor) på tre skærme:
 // iPad på langs (1180×820, børnenes standard), iPhone (390×844) og desktop (1280×800).
 // Forside → pandekager → alle trin (med en timer og voksen-hold) → færdig, alle trin i alle 5 retter,
-// print-siden for alle 5 retter, tastatur, fejltilstande og «mindre bevægelse».
+// print-siden for alle 5 retter (også i printvisning på A4-bredde), tastatur, timere på tværs af skærme og genindlæsning,
+// fejltilstande og «mindre bevægelse».
 // Tjekker hele vejen: ingen konsolfejl, ingen 404, ingen vandret rulning, knapper mindst 48 px, billeder indlæst.
 //
 // Kræver en lokal server:  py -m http.server 8091 --bind 127.0.0.1 --directory D:/Claude/Kogebog
@@ -68,11 +69,24 @@ function forfalskninger() {
     },
   });
 
+  // Lyd som i Safari: kun et betroet tryk, der giver brugeraktivering efter HTML-standarden, åbner for lyd (her i 1 s).
+  // Det er keydown, mousedown, touchend, pointerdown med mus og pointerup med finger — ikke pointerdown med finger.
+  let aktivTil = 0;
+  window.__tryk = [];
+  const aktiverer = (e) => e.isTrusted && ((e.type === 'keydown' && e.key !== 'Escape') || e.type === 'mousedown' || e.type === 'touchend'
+    || (e.type === 'pointerdown' && e.pointerType === 'mouse') || (e.type === 'pointerup' && e.pointerType !== 'mouse'));
+  for (const type of ['keydown', 'mousedown', 'touchend', 'pointerdown', 'pointerup']) {
+    window.addEventListener(type, (e) => {
+      window.__tryk.push(type + (e.pointerType ? ':' + e.pointerType : ''));
+      if (aktiverer(e)) aktivTil = performance.now() + 1000;
+    }, true);
+  }
+  const aktiveret = () => performance.now() < aktivTil;
   window.__toner = 0;
   window.AudioContext = class {
-    constructor() { this.state = 'running'; this.currentTime = 0; this.destination = {}; }
-    resume() { return Promise.resolve(); }
-    createOscillator() { return { type: '', frequency: { setValueAtTime() {} }, connect() {}, start() { window.__toner++; }, stop() {} }; }
+    constructor() { this.state = aktiveret() ? 'running' : 'suspended'; this.currentTime = 0; this.destination = {}; }
+    resume() { if (aktiveret()) this.state = 'running'; return Promise.resolve(); }
+    createOscillator() { const k = this; return { type: '', frequency: { setValueAtTime() {} }, connect() {}, start() { if (k.state === 'running') window.__toner++; }, stop() {} }; }
     createGain() { return { gain: { setValueAtTime() {}, exponentialRampToValueAtTime() {} }, connect() {} }; }
   };
   delete window.webkitAudioContext;
@@ -240,7 +254,12 @@ async function heleVejen(browser, skaerm) {
       await vent(150);
       tjek(side.url().endsWith('/trin/' + nr), n + ' trin ' + nr + ': et kort tryk må ikke gå videre ved voksen-hjælp');
       tjek((await sidsteTale(side)).startsWith('Hent en voksen'), n + ' trin ' + nr + ': et kort tryk siger «Hent en voksen»');
-      await hold(side, '.naeste');
+      // Trin 11 holdes i 3 s: klikket ved slip kommer efter appens spærre, så kun blokerTilSlip (hold.js) kan sluge det
+      await hold(side, '.naeste', nr === 11 ? 3000 : 2300);
+      if (nr === 11) {
+        await vent(300);
+        tjek(side.url().endsWith('/trin/12'), n + ' trin 11: et hold på 3 s må kun gå ét trin frem (adressen er ' + side.url() + ')');
+      }
     } else {
       await tryk(side, '.naeste');
     }
@@ -299,6 +318,14 @@ async function heleVejen(browser, skaerm) {
   await ctx.close();
 }
 
+// Trin-ikonerne på print-siden: står de i én lige kolonne, og er der plads til nummeret foran?
+async function trinKolonne(side) {
+  return side.evaluate(() => {
+    const x = [...document.querySelectorAll('ol.trin > li')].map((li) => li.querySelector('.trin-ikon').getBoundingClientRect().left - li.getBoundingClientRect().left);
+    return { spredning: Math.round(Math.max(...x) - Math.min(...x)), foran: Math.round(Math.min(...x)) };
+  });
+}
+
 // ---------- Print ----------
 async function print(browser, skaerm) {
   const n = skaerm.navn;
@@ -317,12 +344,21 @@ async function print(browser, skaerm) {
     tjek((await side.locator('.fod').textContent()).includes('Tjek selv pakkerne for allergener'), n + ' print ' + id + ': allergen-linjen');
     tjek((await side.locator('.ikke-afproevet').count() === 1) === !r.tumbi.afproevet, n + ' print ' + id + ': «Ikke afprøvet»');
     await tjekLayout(side, n + ' print ' + id);
+    const kol = await trinKolonne(side);
+    tjek(kol.spredning <= 1, n + ' print ' + id + ': trin-ikonerne skal stå i én lige kolonne (de rykker ' + kol.spredning + ' px)');
+    tjek(kol.foran >= 18, n + ' print ' + id + ': trinnummeret skal have plads foran ikonet (' + kol.foran + ' px)');
     if (n === 'desktop') {
+      // Printvisning på A4-bredde: 210 mm minus 2 × 14 mm margen = 182 mm ≈ 688 px
+      await side.setViewportSize({ width: 688, height: 1000 });
       await side.emulateMedia({ media: 'print' });
+      const kp = await trinKolonne(side);
+      tjek(kp.spredning <= 1, 'printvisning ' + id + ': trin-ikonerne skal stå i én lige kolonne (de rykker ' + kp.spredning + ' px)');
+      tjek(kp.foran >= 14, 'printvisning ' + id + ': trinnummeret skal have plads foran ikonet (' + kp.foran + ' px)');
       await side.screenshot({ path: path.join(UD, 'print-' + id + '.png'), fullPage: true });
       const a4 = await side.evaluate(() => document.documentElement.scrollHeight);
-      console.log('  print ' + id + ': ' + a4 + ' px høj i printvisning');
+      console.log('  print ' + id + ': ' + a4 + ' px høj i printvisning (688 px bred)');
       await side.emulateMedia({ media: 'screen' });
+      await side.setViewportSize(skaerm.viewport);
     } else if (id === 'boller') {
       await foto(side, n + '-print-boller');
     }
@@ -385,11 +421,87 @@ async function tastatur(browser, skaerm) {
   await side.evaluate(() => { location.hash = '#/ret/pandekager/trin/10'; });
   await side.waitForSelector('.voksen-hold');
   await side.focus('.voksen-hold');
+  await side.evaluate(() => { window.__gentagelser = 0; document.addEventListener('keydown', (e) => { if (e.repeat) window.__gentagelser++; }, true); });
   await side.keyboard.down(' ');
   await vent(2300);
-  await side.keyboard.up(' ');
   await side.waitForFunction(() => location.hash.endsWith('/trin/11')).catch(() => tjek(false, 'tastatur: hold mellemrum i 2 s skal gå videre fra et voksen-trin'));
+  // Tasten er stadig nede: tastaturets gentagelser må ikke læse det nye trin op igen og igen
+  const foerGentag = await side.evaluate(() => window.__tale.length);
+  for (let i = 0; i < 5; i++) { await side.keyboard.down(' '); await vent(40); }
+  const gentag = await side.evaluate(() => ({ tale: window.__tale.length, gentagelser: window.__gentagelser }));
+  tjek(gentag.gentagelser >= 5, 'tastatur: testen skal sende gentagne tastetryk (repeat), sendte ' + gentag.gentagelser);
+  tjek(gentag.tale === foerGentag, 'tastatur: mellemrum holdt inde efter et hold må ikke læse trinnet op igen (' + (gentag.tale - foerGentag) + ' gange)');
+  await side.keyboard.up(' ');
   tjek(side.fejl.length === 0, 'tastatur: ' + side.fejl.join(' | '));
+  await ctx.close();
+}
+
+// ---------- Timere på tværs af skærme og genindlæsning ----------
+const gemTimer = (side, timer) => side.evaluate((t) => {
+  const nu = Date.now();
+  localStorage.setItem('kog-v1', JSON.stringify({ v: 1, sidste: null, timer: { ret: t.ret, nr: t.nr, sek: t.sek, start: nu + t.slutOm - t.sek * 1000, slut: nu + t.slutOm } }));
+  location.hash = '#/';
+}, timer);
+
+async function timere(browser, skaerm) {
+  const n = skaerm.navn;
+  console.log('[' + n + '] timere: to timere, forsiden, genindlæsning');
+  const { ctx, side } = await nySide(browser, skaerm);
+
+  // 1) Kødsovs: trin 8 (20 min) kører, og man trykker «Start timer» på trin 10. Den første timer må ikke forsvinde.
+  await side.goto(BASE + '/index.html#/ret/koedsovs/trin/8');
+  await side.waitForSelector('.timer-start');
+  await tryk(side, '.timer-start');
+  await side.evaluate(() => { location.hash = '#/ret/koedsovs/trin/10'; });
+  await side.waitForFunction(() => location.hash.endsWith('/trin/10') && !!document.querySelector('.timer-start'));
+  await tryk(side, '.timer-start');
+  const gemt = await side.evaluate(() => JSON.parse(localStorage.getItem('kog-v1')).timer);
+  tjek(gemt && gemt.nr === 8, n + ': «Start timer» på trin 10 må ikke slette timeren på trin 8 (gemt: ' + JSON.stringify(gemt) + ')');
+  const sagt = await sidsteTale(side);
+  tjek(sagt.includes('trin 8'), n + ': trykket skal sige, at der kører en timer på trin 8 (sagde «' + sagt + '»)');
+  tjek((await side.locator('.timer').first().textContent()).includes('trin 8'), n + ': trin 10 skal vise, at timeren på trin 8 kører');
+  await tjekLayout(side, n + ' trin 10 med timer på trin 8', { knapperSes: true });
+  await foto(side, n + '-timer-optaget');
+
+  // 2) Forsiden viser timeren, og pillen fører til trinnet
+  await tryk(side, 'button[aria-label="Til forsiden"]');
+  await side.waitForSelector('.forside .kort');
+  const pilleForside = await side.locator('.pille:not([hidden])').count();
+  tjek(pilleForside === 1, n + ': forsiden skal vise timeren, der kører');
+  await tjekLayout(side, n + ' forside med timer');
+  await foto(side, n + '-forside-timer');
+  if (pilleForside === 1) {
+    await tryk(side, '.pille');
+    await side.waitForFunction(() => location.hash === '#/ret/koedsovs/trin/8').catch(() => tjek(false, n + ': pillen på forsiden skal føre til trin 8'));
+  } else {
+    await side.evaluate(() => { location.hash = '#/ret/koedsovs/trin/8'; });
+  }
+  await side.waitForSelector('button[aria-label="Stop timeren"]');
+  await tryk(side, 'button[aria-label="Stop timeren"]');
+
+  // 3) Timeren løb ud, mens fanen var væk (iOS smed den ud): efter genindlæsningen skal «Tiden er gået» stå på forsiden
+  await gemTimer(side, { ret: 'koedsovs', nr: 8, sek: 1200, slutOm: -60000 });
+  await side.reload();
+  await side.waitForSelector('.forside .kort');
+  const udloebet = side.locator('.pille.faerdig:not([hidden])');
+  const udloebetVist = await udloebet.count() === 1 && (await udloebet.textContent()).includes('Tiden er gået');
+  tjek(udloebetVist, n + ': en timer, der løb ud under genindlæsningen, skal vise «Tiden er gået» på forsiden');
+  await foto(side, n + '-forside-udloebet');
+  if (udloebetVist) {
+    await tryk(side, '.pille');
+    await side.waitForSelector('.timer.faerdig', { timeout: 5000 }).catch(() => tjek(false, n + ': trin 8 skal vise, at tiden er gået'));
+    await tryk(side, '.timer.faerdig .knap.primaer');
+    tjek(await side.evaluate(() => JSON.parse(localStorage.getItem('kog-v1')).timer) === null, n + ': «Ok» sletter den udløbne timer');
+  }
+
+  // 4) Lyden efter en genindlæsning: ét tryk med fingeren (pointerdown med finger tæller ikke som et tryk i Safari)
+  await gemTimer(side, { ret: 'koedsovs', nr: 8, sek: 1200, slutOm: 5000 });
+  await side.reload();
+  await side.waitForSelector('.forside .kort');
+  await side.tap('.forside-titel h1');
+  const bip = await venterPaa(side, () => window.__toner >= 3, null, n + ': efter genindlæsning og ét tryk med fingeren skal der komme tre toner, når tiden er gået', 12000);
+  if (!bip) maal.push(n + ': hændelser ved trykket: ' + (await side.evaluate(() => window.__tryk.join(', '))));
+  tjek(side.fejl.length === 0, n + ' (timere): ' + side.fejl.join(' | '));
   await ctx.close();
 }
 
@@ -427,13 +539,14 @@ async function fejltilstande(browser, skaerm) {
   await r.ctx.close();
 }
 
-// E2E_DELE=hele,print,tastatur,fejl (standard: alle) og E2E_SKAERME=ipad,iphone,desktop (standard: alle)
-const DELE = (process.env.E2E_DELE || 'hele,print,tastatur,fejl').split(',').map((x) => x.trim()).filter(Boolean);
+// E2E_DELE=hele,print,tastatur,timer,fejl (standard: alle) og E2E_SKAERME=ipad,iphone,desktop (standard: alle)
+const DELE = (process.env.E2E_DELE || 'hele,print,tastatur,timer,fejl').split(',').map((x) => x.trim()).filter(Boolean);
 const VALGTE = SKAERME.filter((s) => !process.env.E2E_SKAERME || process.env.E2E_SKAERME.split(',').includes(s.navn));
 const KOERSEL = [];
 for (const s of VALGTE) if (DELE.includes('hele')) KOERSEL.push(['hele vejen ' + s.navn, (b) => heleVejen(b, s)]);
 for (const s of VALGTE) if (DELE.includes('print')) KOERSEL.push(['print ' + s.navn, (b) => print(b, s)]);
 if (DELE.includes('tastatur')) KOERSEL.push(['tastatur', (b) => tastatur(b, SKAERME[2])]);
+if (DELE.includes('timer')) KOERSEL.push(['timere', (b) => timere(b, SKAERME[0])]);
 if (DELE.includes('fejl')) KOERSEL.push(['fejltilstande', (b) => fejltilstande(b, SKAERME[0])]);
 
 const browser = await webkit.launch();
