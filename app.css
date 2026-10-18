@@ -117,6 +117,12 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .hold-indhold { position: relative; display: inline-flex; align-items: center; gap: 12px; pointer-events: none; }
 .hold-tekst { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.05; }
 .hold-tekst small { font-size: 16px; font-weight: 700; }
+/* Et kort tryk på en hold-knap: ring i rævefarven (og et lille ryst), så man ser, at knappen skal holdes */
+.knap.hold.mind, .knap.hold.mind:hover { box-shadow: var(--loeft), 0 0 0 6px var(--raev); }
+@media (prefers-reduced-motion: no-preference) {
+  .knap.hold.mind { animation: ryst .4s ease-in-out 2; }
+}
+@keyframes ryst { 0%, 100% { translate: 0 0; } 25% { translate: -6px 0; } 75% { translate: 6px 0; } }
 
 /* Oplæsning i gang */
 .taler { background: var(--blaa-lys); }

@@ -45,8 +45,15 @@ export function holdKnap({ klasse = '', indhold = [], label, ms = 2000, naarFaer
     if (viaPointer) blokerTilSlip = true;
     naarFaerdig();
   }
-  // Kort tryk: under 2 sekunder og ikke et hold, der lige er lykkedes
+  // Kort tryk: under 2 sekunder og ikke et hold, der lige er lykkedes.
+  // Det skal også kunne SES (talen alene er ikke nok, og den kan være slået fra): knappen får en ring og ryster i 1,5 s.
+  let mindTid = 0;
   function kort() {
+    b.classList.remove('mind');
+    void b.offsetWidth; // start rystet forfra ved et nyt kort tryk
+    b.classList.add('mind');
+    clearTimeout(mindTid);
+    mindTid = setTimeout(() => b.classList.remove('mind'), 1500);
     if (naarKort) naarKort(b);
   }
 

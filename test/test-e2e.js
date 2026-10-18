@@ -283,10 +283,14 @@ async function heleVejen(browser, skaerm) {
       await tryk(side, '.naeste');
     } else if (voksen) {
       // Et kort tryk må ikke komme forbi en voksen-opgave
+      const skygge = () => side.locator('.naeste').first().evaluate((b) => getComputedStyle(b).boxShadow);
+      const skyggeFoer = await skygge();
       await tryk(side, '.naeste');
       await vent(150);
       tjek(side.url().endsWith('/trin/' + nr), n + ' trin ' + nr + ': et kort tryk må ikke gå videre ved voksen-hjælp');
       tjek((await sidsteTale(side)).startsWith('Hent en voksen'), n + ' trin ' + nr + ': et kort tryk siger «Hent en voksen»');
+      // … og det skal kunne ses: knappen får en ring (før var skærmen den samme før og efter trykket)
+      tjek(await skygge() !== skyggeFoer, n + ' trin ' + nr + ': et kort tryk på «Næste» skal kunne ses (knappen ændrede sig ikke)');
       // Trin 11 holdes i 3 s: klikket ved slip kommer efter appens spærre, så kun blokerTilSlip (hold.js) kan sluge det
       await hold(side, '.naeste', nr === 11 ? 3000 : 2300);
       if (nr === 11) {
