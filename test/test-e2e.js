@@ -1042,11 +1042,12 @@ async function former(browser) {
 
     // Retten med og uden «Fortsæt»: knapperne kan ses uden at rulle, og «Fortsæt» står først, over de andre.
     // På langs er der kun højde til én række knapper: dér står «Fortsæt» til højre som på iPad (og fra 901 px).
-    // Kødsovs har den længste ingrediensliste (12): på 768×1024 lå print og «Start forfra» under kanten.
-    // Kødsovs har 13 trin: «Fortsæt ved trin 12» har to cifre, som den bredeste «Fortsæt»
-    for (const ret of ['pandekager', 'koedsovs']) {
+    // Kødsovs har 12 ingredienser: på 768×1024 lå print og «Start forfra» under kanten. Pizzasnegle har den længste
+    // liste (15) og den længste «personer og tid». «Fortsæt» står ved det næstsidste trin, så kødsovs (13 trin) og
+    // pizzasnegle (22) har to cifre, som den bredeste «Fortsæt»
+    for (const ret of ['pandekager', 'koedsovs', 'pizzasnegle']) {
       for (const fortsaet of [false, true]) {
-        await medGemt(side, { sidste: fortsaet ? { ret, nr: ret === 'koedsovs' ? 12 : 7 } : null }, '#/ret/' + ret);
+        await medGemt(side, { sidste: fortsaet ? { ret, nr: ret === 'pandekager' ? 7 : RETTER[ret].recipeInstructions.length - 1 } : null }, '#/ret/' + ret);
         await side.waitForSelector(fortsaet ? '.ret .fortsaet' : '.ret .start');
         const hvor = n + ' ret ' + ret + (fortsaet ? ' med Fortsæt' : '');
         await tjekLayout(side, hvor, { knapperSes: true });
