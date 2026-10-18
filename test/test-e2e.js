@@ -534,6 +534,23 @@ async function heleVejen(browser, skaerm) {
       await tryk(side, '.pille', PULSERER);
       await side.waitForFunction((x) => location.hash.endsWith('/trin/' + x), TIMER_NR);
       tjek(await side.locator('.timer.faerdig').count() === 1, n + ': trinnet skal vise, at tiden er gået');
+      // Ringen pulserer (scale 1.06), når tiden er gået, og ingen forfader må skære den af. Før ramte færdig-skærmens
+      // .faerdig { overflow: hidden } også .timer.faerdig, så ringen blev klippet flad foroven og forneden
+      const klippet = await side.evaluate(() => {
+        const ring = document.querySelector('.timer.faerdig .timer-ring');
+        const r = ring.getBoundingClientRect();
+        const halv = ring.offsetWidth * 1.06 / 2;
+        const [cx, cy] = [r.left + r.width / 2, r.top + r.height / 2];
+        const ud = [];
+        for (let e = ring.parentElement; e && e !== document.body; e = e.parentElement) {
+          const cs = getComputedStyle(e);
+          if (cs.overflowX === 'visible' && cs.overflowY === 'visible') continue;
+          const a = e.getBoundingClientRect();
+          if (cx - halv < a.left - 0.5 || cx + halv > a.right + 0.5 || cy - halv < a.top - 0.5 || cy + halv > a.bottom + 0.5) ud.push(e.className + ' (overflow ' + cs.overflow + ')');
+        }
+        return ud;
+      });
+      tjek(!klippet.length, n + ': den pulserende ring skæres af ' + klippet.join(', '));
       await tryk(side, '.timer.faerdig .knap.primaer');
       tjek(await side.locator('.timer-start').count() === 1, n + ': «Ok» slår timeren fra');
       tjek(await side.locator('.pille:not([hidden])').count() === 0, n + ': pillen forsvinder efter «Ok»');
