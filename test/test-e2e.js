@@ -925,10 +925,19 @@ async function former(browser) {
 
     // Trinene: «Næste» kan ses uden at rulle, også på langs (et almindeligt trin, et voksen-trin med timer, en lang note)
     for (const [ret, nr] of [['pandekager', 3], ['pandekager', 10], ['boller', 9]]) {
+      // Den gamle skærm mærkes: adressen skifter med det samme, men skærmen først ved hashchange, og et trin ligner et andet.
+      // Uden mærket målte testen det forrige trin (rullet af fokus-tjekket nedenfor) og tog billede af det
       const hash = '#/ret/' + ret + '/trin/' + nr;
-      await side.evaluate((h) => { location.hash = h; }, hash);
-      await side.waitForFunction((h) => location.hash === h && !!document.querySelector('.trin h1') && [...document.images].every((i) => i.complete && i.naturalWidth), hash);
+      await side.evaluate((h) => { document.querySelector('#app > .skaerm').dataset.gammel = '1'; location.hash = h; }, hash);
+      await side.waitForFunction(() => !!document.querySelector('#app > .trin:not([data-gammel]) h1') && [...document.images].every((i) => i.complete && i.naturalWidth));
       await tjekLayout(side, n + ' ' + ret + ' trin ' + nr, { knapperSes: true });
+      // Billedet ses også uden at rulle: det står over den faste bund (på langs lå det midt i en høj tekstkolonne)
+      const bil = await side.evaluate(() => ({
+        rul: Math.round(window.scrollY),
+        billede: Math.round(document.querySelector('.verbum-ramme').getBoundingClientRect().bottom),
+        bund: Math.round(document.querySelector('.handlinger').getBoundingClientRect().top),
+      }));
+      tjek(bil.rul === 0 && bil.billede <= bil.bund, n + ' ' + ret + ' trin ' + nr + ': billedet skal ses over bunden uden at rulle ' + JSON.stringify(bil));
       if (nr === 10) await foto(side, n + '-former-trin-10');
       if (nr === 10) {
         // strong er et flex-element (en blok), så linjerne tælles på teksten: én kasse pr. linje

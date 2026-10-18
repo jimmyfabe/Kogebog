@@ -559,10 +559,14 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .ret .handlinger .fortsaet { flex: 1 1 100%; order: -1; }
 }
 
-/* Under 400 px er der kun plads til «Start forfra» ved siden af print, når print-knappen er uden ikon (teksten siger det).
-   «Hent en voksen» står på én linje med mindre skrift og en mindre Bo (før brød den over to linjer på iPhone) */
+/* Under 400 px er der kun plads til «Start forfra» ved siden af print, når print-knappen er uden ikon (teksten siger det) */
 @media (max-width: 399px) {
   .ret .handlinger .print-knap .ikon { display: none; }
+}
+
+/* «Hent en voksen» står på én linje med mindre skrift og en mindre Bo: under 400 px (før to linjer på iPhone)
+   og på lave skærme på langs, hvor mærket kun har tekstens kolonne */
+@media (max-width: 399px), (max-height: 520px) and (min-width: 761px) {
   .voksen-maerke { gap: 8px; padding-right: 14px; font-size: 18px; }
   .voksen-bo { width: 40px; height: 40px; }
   .voksen-slags { gap: 4px; padding-left: 8px; font-size: 17px; }
@@ -574,7 +578,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 @media (max-height: 520px) and (min-width: 761px) {
   /* Billedet skal kunne ses helt mellem topbaren og bunden: mærket står over teksten i stedet for over begge kolonner */
   .scene { grid-template-areas: "billede maerke" "billede tekst"; margin: 4px 24px; padding: 8px 20px; }
-  .verbum-ramme { width: min(100%, 44svh); }
+  /* Billedet står øverst: midt i en høj tekstkolonne (voksen-trin med timer og note) lå det under bunden */
+  .verbum-ramme { width: min(100%, 44svh); align-self: start; }
   /* Retten: billede og navn øverst (før stod navnet midt i den lange række og blev dækket af bunden) */
   .ret-indhold { align-items: start; }
   .ret-billede { width: min(100%, 28svh); }
