@@ -172,9 +172,13 @@ async function tjekLayout(side, hvor, { knapperSes = false } = {}) {
       .map((e) => navn(e) + ' bund ' + Math.round(e.getBoundingClientRect().bottom + window.scrollY) + ' > ' + H);
     const billeder = [...document.images].filter((i) => !i.complete || !i.naturalWidth).map((i) => i.getAttribute('src'));
     const udenAlt = [...document.images].filter((i) => !i.hasAttribute('alt')).map((i) => i.getAttribute('src'));
-    return { bred: document.documentElement.scrollWidth, vindue: W, udenfor: udenfor.slice(0, 6), smaa, smaaBoern, traengt, underKanten, billeder, udenAlt };
+    // Siden må ikke være højere end indholdet (UI-review 4: #meddelelse lå under #app og gav 1 px lodret rul)
+    const appBund = Math.ceil(document.getElementById('app').getBoundingClientRect().bottom + window.scrollY);
+    const ekstra = document.documentElement.scrollHeight - Math.max(H, appBund);
+    return { bred: document.documentElement.scrollWidth, vindue: W, udenfor: udenfor.slice(0, 6), smaa, smaaBoern, traengt, underKanten, billeder, udenAlt, ekstra };
   }, { boern: BOERNEKNAPPER, skaermknapper: SKAERMKNAPPER });
   tjek(r.bred <= r.vindue, hvor + ': vandret rulning (' + r.bred + ' > ' + r.vindue + ')');
+  tjek(r.ekstra <= 0, hvor + ': siden er ' + r.ekstra + ' px højere end indholdet (lodret rul uden grund)');
   tjek(!r.udenfor.length, hvor + ': indhold uden for skærmen i siden: ' + r.udenfor.join(', '));
   tjek(!r.smaa.length, hvor + ': knapper under 48 px: ' + r.smaa.join(', '));
   tjek(!r.smaaBoern.length, hvor + ': børneknapper under 64 px: ' + r.smaaBoern.join(', '));
