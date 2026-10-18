@@ -1,0 +1,40 @@
+// data.js — henter opskrifterne (opskrifter/index.json og opskrifter/<id>.json).
+import { lavModel } from './model.js';
+
+export const ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+export class HentFejl extends Error {
+  constructor(besked, { findesIkke = false } = {}) {
+    super(besked);
+    this.findesIkke = findesIkke;
+  }
+}
+
+async function hentJson(sti) {
+  let r;
+  try {
+    r = await fetch(sti);
+  } catch (e) {
+    throw new HentFejl('ingen forbindelse');
+  }
+  if (r.status === 404) throw new HentFejl('findes ikke', { findesIkke: true });
+  if (!r.ok) throw new HentFejl('serveren svarede ' + r.status);
+  try {
+    return await r.json();
+  } catch (e) {
+    throw new HentFejl('filen kan ikke læses');
+  }
+}
+
+export async function hentIndex() {
+  const j = await hentJson('opskrifter/index.json');
+  if (!j || !Array.isArray(j.retter)) throw new HentFejl('listen over retter mangler');
+  return j.retter.filter((id) => typeof id === 'string' && ID_RE.test(id));
+}
+
+export async function hentRet(id) {
+  if (!ID_RE.test(id)) throw new HentFejl('ugyldigt navn', { findesIkke: true });
+  const m = lavModel(await hentJson('opskrifter/' + id + '.json'));
+  if (!m.navn || !m.trin.length || m.id !== id) throw new HentFejl('opskriften er ufuldstændig');
+  return m;
+}
