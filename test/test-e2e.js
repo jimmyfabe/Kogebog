@@ -517,7 +517,10 @@ async function timere(browser, skaerm) {
   await tryk(side, '.timer-start');
   await side.evaluate(() => { location.hash = '#/ret/koedsovs/trin/10'; });
   await side.waitForFunction(() => location.hash.endsWith('/trin/10') && !!document.querySelector('.timer-start'));
-  await tryk(side, '.timer-start');
+  // Knappen har aria-disabled="true", men kan stadig trykkes (den siger, hvor timeren kører). Playwright venter
+  // ellers for evigt på, at en aria-disabled knap bliver «enabled».
+  tjek(await side.locator('.timer-start').getAttribute('aria-disabled') === 'true', n + ': «Start timer» på trin 10 skal være aria-disabled, mens trin 8 kører');
+  await tryk(side, '.timer-start', { force: true });
   const gemt = await side.evaluate(() => JSON.parse(localStorage.getItem('kog-v1')).timer);
   tjek(gemt && gemt.nr === 8, n + ': «Start timer» på trin 10 må ikke slette timeren på trin 8 (gemt: ' + JSON.stringify(gemt) + ')');
   const sagt = await sidsteTale(side);
