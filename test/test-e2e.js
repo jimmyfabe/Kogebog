@@ -297,6 +297,25 @@ async function forsideRulning(side) {
 // Forsiden har et afsnit pr. gruppe med en stor overskrift (ikon + ord), og kortene i et afsnit har samme farve på
 // cirklen. Før stod alle 13 kort i ét gitter, og grupperne kunne ikke ses: med to kort pr. række delte pizzasnegle
 // (bagning) og pandekager (søde sager) række. Rækkerne regnes efter index.json, så blandingen også kan måles uden afsnit
+// Underteksten «Hvad skal vi lave i dag?» må ikke ende med ét ord alene på sidste linje (før «dag?» alene på 390×844)
+async function tjekUndertekst(side, hvor) {
+  const ord = await side.evaluate(() => {
+    const tekst = document.querySelector('.forside-titel p').firstChild;
+    const ud = [];
+    const re = /\S+/g;
+    let m;
+    while ((m = re.exec(tekst.textContent))) {
+      const r = document.createRange();
+      r.setStart(tekst, m.index);
+      r.setEnd(tekst, m.index + m[0].length);
+      ud.push({ o: m[0], top: Math.round(r.getBoundingClientRect().top) });
+    }
+    const sidst = Math.max(...ud.map((o) => o.top));
+    return ud.filter((o) => o.top === sidst).map((o) => o.o);
+  });
+  tjek(ord.length >= 2, hvor + ': underteksten ender med ét ord alene på sidste linje («' + ord.join(' ') + '»)');
+}
+
 async function tjekGrupper(side, hvor) {
   const gruppeAf = Object.fromEntries(INDEX_GRUPPER.flatMap((g) => g.retter.map((id) => [id, g.id])));
   const g = await side.evaluate((gruppeAf) => {
@@ -427,6 +446,7 @@ async function heleVejen(browser, skaerm) {
   maal.push(n + ' forside: ' + rul.kort + ' kort, ' + rul.iFoersteRaekke + ' i første række, rullet ' + rul.rullet + ' px for at nå det sidste');
   const gr = await tjekGrupper(side, n + ' forside');
   maal.push(n + ' forside: ' + gr.afsnit.length + ' afsnit, højst ' + gr.iRaekke + ' kort pr. række');
+  await tjekUndertekst(side, n + ' forside');
   if (n === 'desktop') {
     // U16: med mus skal et kort ændre sig, når musen står over det
     const skygge = () => side.evaluate(() => getComputedStyle(document.querySelector('.kort[data-ret="frikadeller"]')).boxShadow);
@@ -1199,6 +1219,7 @@ async function former(browser) {
     maal.push(n + ' forside: ' + rul.iFoersteRaekke + ' kort i første række, rullet ' + rul.rullet + ' px for at nå det sidste');
     const gr = await tjekGrupper(side, n + ' forside');
     maal.push(n + ' forside: højst ' + gr.iRaekke + ' kort pr. række');
+    await tjekUndertekst(side, n + ' forside');
     await tjekLayout(side, n + ' forside');
     await foto(side, n + '-former-forside');
 

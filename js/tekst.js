@@ -8,13 +8,14 @@ export function isoTilMinutter(iso) {
   return d * 1440 + t * 60 + min + Math.round(s / 60);
 }
 
-// 105 → «1 t 45 min», 30 → «30 min»
+// 105 → «1 t 45 min», 30 → «30 min». Hårde mellemrum (U+00A0), så tiden aldrig brydes over to linjer
+const H = '\u00a0';
 export function minutterTekst(min) {
   if (min == null) return '';
   const t = Math.floor(min / 60);
   const r = min % 60;
-  if (!t) return r + ' min';
-  return r ? t + ' t ' + r + ' min' : t + ' t';
+  if (!t) return r + H + 'min';
+  return r ? t + H + 't' + H + r + H + 'min' : t + H + 't';
 }
 
 // Enheder skrevet ud, så stemmen siger «2,5 deciliter» og ikke «2,5 d l».

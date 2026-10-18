@@ -59,9 +59,11 @@ test('ISO 8601-varigheder', () => {
   assert.equal(isoTilMinutter('P1DT2H'), 1560);
   assert.equal(isoTilMinutter('50 min'), null);
   assert.equal(isoTilMinutter('PT'), null);
-  assert.equal(minutterTekst(105), '1 t 45 min');
-  assert.equal(minutterTekst(30), '30 min');
-  assert.equal(minutterTekst(60), '1 t');
+  // Hårde mellemrum: «2 t 30 min» brydes aldrig over to linjer (før stod «2 t 30» og «min» på hver sin linje på 901×800)
+  assert.equal(minutterTekst(105), '1\u00a0t\u00a045\u00a0min');
+  assert.equal(minutterTekst(30), '30\u00a0min');
+  assert.equal(minutterTekst(60), '1\u00a0t');
+  for (const min of [5, 30, 60, 105, 150, 600]) assert.ok(!/ /.test(minutterTekst(min)), minutterTekst(min) + ' har et almindeligt mellemrum');
 });
 
 test('enheder skrives ud til stemmen', () => {

@@ -146,7 +146,8 @@ function forside() {
     billede(grafikDyr('rosa'), '', 'forside-dyr'),
     el('div', { class: 'forside-titel' },
       el('h1', { tabindex: '-1', tekst: 'Tumbi Køkken' }),
-      el('p', { tekst: 'Hvad skal vi lave i dag?' })),
+      // Hårdt mellemrum: «dag?» stod alene på sidste linje på 390 px
+      el('p', { tekst: 'Hvad skal vi lave i\u00a0dag?' })),
     billede(grafikDyr('bo'), '', 'forside-dyr'));
 
   let indhold;
