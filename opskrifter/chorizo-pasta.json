@@ -35,7 +35,7 @@
     { "@type": "HowToStep", "text": "Kog med låg på i 10 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "note": "Eller som anvist på pakken. Rør tit, så pastaen ikke klistrer eller brænder på." } },
     { "@type": "HowToStep", "text": "Rør fløde og ost i.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["flode", "ost"], "note": "Også halvdelen af chorizoen. Småkog et par minutter, til saucen er cremet. Er den for tyk, så rør lidt vand i." } },
     { "@type": "HowToStep", "text": "Smag til med peber.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["peber"], "note": "Bouillon, ost og chorizo er salte, så smag, før der kommer salt i. Pust på skeen." } },
-    { "@type": "HowToStep", "text": "Drys resten af chorizoen over.", "tumbi": { "verbum": "haelde", "ikoner": ["chorizo", "ost"], "note": "Og lidt ekstra parmesan." } }
+    { "@type": "HowToStep", "text": "Drys resten af chorizoen over.", "tumbi": { "verbum": "drysse", "ikoner": ["chorizo", "ost"], "note": "Og lidt ekstra parmesan." } }
   ],
   "tumbi": {
     "id": "chorizo-pasta",

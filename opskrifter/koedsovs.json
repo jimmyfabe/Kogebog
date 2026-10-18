@@ -27,7 +27,7 @@
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
     { "@type": "HowToStep", "text": "Hak løg og hvidløg.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["loeg", "hvidloeg"], "note": "Hak dem fint. Barnet kan pille løget imens." } },
-    { "@type": "HowToStep", "text": "Riv gulerødderne.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skræl dem først. Rivejernet er skarpt." } },
+    { "@type": "HowToStep", "text": "Riv gulerødderne.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skræl dem først. Rivejernet er skarpt." } },
     { "@type": "HowToStep", "text": "Brun kødet i gryden.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 480, "ikoner": ["olie", "koed"], "note": "Olie i en stor gryde ved høj varme. Brun kødet i ca. 8 min, og rør løg, hvidløg og gulerod i de sidste 3 min." } },
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter råt kød." } },
     { "@type": "HowToStep", "text": "Hæld tomaterne i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["tomat"], "note": "Gryden er varm. Hold barnets hænder væk fra kanten." } },
@@ -37,7 +37,7 @@
     { "@type": "HowToStep", "text": "Kom spaghettien i vandet.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "ikoner": ["spaghetti"], "note": "Kog som anvist på pakken, ca. 8-10 min. Rør lidt i starten, så den ikke klistrer." } },
     { "@type": "HowToStep", "text": "Smag på sovsen.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "note": "Pust på skeen først. Mere salt eller peber?" } },
     { "@type": "HowToStep", "text": "Hæld vandet fra spaghettien.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne hælder gennem dørslaget i vasken. Pas på dampen." } },
-    { "@type": "HowToStep", "text": "Drys ost på maden.", "tumbi": { "verbum": "haelde", "ikoner": ["ost"] } }
+    { "@type": "HowToStep", "text": "Drys ost på maden.", "tumbi": { "verbum": "drysse", "ikoner": ["ost"] } }
   ],
   "tumbi": {
     "id": "koedsovs",
