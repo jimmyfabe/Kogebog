@@ -3,7 +3,8 @@
 // Forside → pandekager → alle trin (med en timer og voksen-hold) → færdig, alle trin i alle 5 retter,
 // print-siden for alle 5 retter (også i printvisning på A4-bredde), tastatur, timere på tværs af skærme og genindlæsning,
 // fejltilstande og «mindre bevægelse».
-// Tjekker hele vejen: ingen konsolfejl, ingen 404, ingen vandret rulning, knapper mindst 48 px, billeder indlæst.
+// Tjekker hele vejen: ingen konsolfejl, ingen 404, ingen vandret rulning, billeder indlæst, og knapper mindst
+// 64 px for børnenes knapper (BOERNEKNAPPER) og 48 px for de voksnes (fx print og stop).
 //
 // Kræver en lokal server:  py -m http.server 8091 --bind 127.0.0.1 --directory D:/Claude/Kogebog
 // Tungt — kør gennem låsen (Git Bash):
