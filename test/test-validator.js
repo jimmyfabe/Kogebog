@@ -158,6 +158,17 @@ test('noter om kilden og skøn står i tumbi.kilde, ikke i den synlige tekst', (
   forventGyldig(fil, (d) => { d.recipeInstructions[2].tumbi.note = 'Brug kildevand, hvis I har det. Skønt det tager tid.'; });
 });
 
+// Kildenoten står i printets fod. Har den flere sætninger, slutter den med punktum (UI-review 4: alle seks sluttede uden).
+// En kort betegnelse som «Egen tekst» er ikke en sætning og står uden punktum
+test('en kildenote med flere sætninger slutter med punktum', () => {
+  const fil = 'opskrifter/hytteostboller.json';
+  forventFejl(fil, (d) => { d.tumbi.kilde = 'Arla: «Hytteostboller» (arla.dk). Trinene er egen tekst'; }, '«tumbi.kilde» har flere sætninger og skal slutte med punktum');
+  forventGyldig(fil, (d) => { d.tumbi.kilde = 'Arla: «Hytteostboller» (arla.dk). Trinene er egen tekst.'; });
+  forventGyldig(fil, (d) => { d.tumbi.kilde = 'Egen tekst'; });
+  // «ca. 3 dl» er en forkortelse, ikke en ny sætning
+  forventGyldig(fil, (d) => { d.tumbi.kilde = 'Egen tekst med ca. 3 dl mælk'; });
+});
+
 test('voksen og voksen_hjaelp følges ad', () => {
   forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[9].tumbi.voksen = 'ja'; }, 'trin 10: «voksen» skal være true');
   forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[2].tumbi.voksen = false; }, 'trin 3: «voksen» skal være true (udelad feltet');

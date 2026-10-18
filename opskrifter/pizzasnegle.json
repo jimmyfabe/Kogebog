@@ -56,7 +56,7 @@
     "id": "pizzasnegle",
     "version": 1,
     "afproevet": false,
-    "kilde": "DR Mad: «Pizzasnegle» (dr.dk). Trinene er egen tekst. Kilden rører æggene i sammen med melet. Her kommer de sidst, så håndvasken kan komme lige efter æltningen",
+    "kilde": "DR Mad: «Pizzasnegle» (dr.dk). Trinene er egen tekst. Kilden rører æggene i sammen med melet. Her kommer de sidst, så håndvasken kan komme lige efter æltningen.",
     "ingredienser": [
       { "ikon": "gaer", "maengde": "50 g" },
       { "ikon": "vand", "maengde": "3 dl" },

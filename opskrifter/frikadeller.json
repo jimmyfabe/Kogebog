@@ -44,7 +44,7 @@
     "id": "frikadeller",
     "version": 1,
     "afproevet": false,
-    "kilde": "DR Mad, Brdr. Price: «Små frikadeller med surt» (dr.dk). Trinene er egen tekst, og det sure er ikke med. Kilden siger ca. 3 dl sødmælk og mindst en times hvile og rører kød og salt først. Her kommer kødet og æggene i til sidst. Kilden giver ingen stegetid, så 5 min pr. side er et skøn",
+    "kilde": "DR Mad, Brdr. Price: «Små frikadeller med surt» (dr.dk). Trinene er egen tekst, og det sure er ikke med. Kilden siger ca. 3 dl sødmælk og mindst en times hvile og rører kød og salt først. Her kommer kødet og æggene i til sidst. Kilden giver ingen stegetid, så 5 min pr. side er et skøn.",
     "ingredienser": [
       { "ikon": "koed", "maengde": "500 g" },
       { "ikon": "loeg", "maengde": "1 stort" },

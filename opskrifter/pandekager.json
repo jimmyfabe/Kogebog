@@ -36,7 +36,7 @@
     "id": "pandekager",
     "version": 1,
     "afproevet": false,
-    "kilde": "Tivoli, «Bake pancakes with Rasmus Klump» (tivoli.dk). Trinene er egen tekst. Antallet er et skøn",
+    "kilde": "Tivoli, «Bake pancakes with Rasmus Klump» (tivoli.dk). Trinene er egen tekst. Antallet er et skøn.",
     "ingredienser": [
       { "ikon": "mel", "maengde": "200 g" },
       { "ikon": "maelk", "maengde": "5 dl" },

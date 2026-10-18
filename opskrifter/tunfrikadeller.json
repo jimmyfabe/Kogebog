@@ -42,7 +42,7 @@
     "id": "tunfrikadeller",
     "version": 1,
     "afproevet": false,
-    "kilde": "Arla: «Tunfrikadeller» (arla.dk). Trinene er egen tekst",
+    "kilde": "Arla: «Tunfrikadeller» (arla.dk). Trinene er egen tekst.",
     "ingredienser": [
       { "ikon": "tun", "maengde": "2 dåser" },
       { "ikon": "aeg", "maengde": "2" },

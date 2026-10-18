@@ -144,6 +144,8 @@ export function valider(rod = ROD) {
       if (t.version !== 1) f('«tumbi.version» skal være 1');
       if (typeof t.afproevet !== 'boolean') f('«tumbi.afproevet» skal være true eller false');
       if (!erTekst(t.kilde)) f('«tumbi.kilde» skal være en tekst, fx "Egen tekst"');
+      // Punktum + mellemrum + stort bogstav er en ny sætning («ca. 3 dl» er det ikke)
+      else if (/\.\s+\p{Lu}/u.test(t.kilde) && !t.kilde.trim().endsWith('.')) f('«tumbi.kilde» har flere sætninger og skal slutte med punktum');
     } else if ('tumbi' in r) f('«tumbi» skal være et objekt');
 
     if ('image' in r && r.image !== grafikRet(filId)) f('«image» skal være "' + grafikRet(filId) + '", fandt ' + JSON.stringify(r.image));

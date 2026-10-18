@@ -55,7 +55,7 @@ Standard schema.org/Recipe med egne felter under `tumbi`. Den fulde tabel står 
 - Rå fisk og råt svinekød bruger også ikonet `koed`, så validatoren kræver håndvask. `tun` (på dåse) og `skinke` (pålæg) er ikke rå.
 - Dej med råt æg (eller kød) regnes først som indarbejdet efter æltningen: et `aelte`-trin efter et `roere`-, `haelde`- eller `piske`-trin med et råt ikon tæller som råt, så vasken kommer efter æltningen, ikke før.
 - `timer_sek` er et heltal, højst 4 timer. Billedfilerne findes.
-- Hvad kilden siger, og hvad der er et skøn, står i `tumbi.kilde` (vises kun i printets fod), ikke i navn, beskrivelse, antal, ingredienser, trin eller noter. Validatoren afviser ordene «kilde(n)» og «skøn» dér.
+- Hvad kilden siger, og hvad der er et skøn, står i `tumbi.kilde` (vises kun i printets fod), ikke i navn, beskrivelse, antal, ingredienser, trin eller noter. Validatoren afviser ordene «kilde(n)» og «skøn» dér. Har kildenoten flere sætninger, slutter den med punktum («Egen tekst» står uden).
 - En ny ret skrives med `"afproevet": false`, indtil den er lavet.
 
 ## Ny opskrift

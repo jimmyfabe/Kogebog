@@ -38,7 +38,7 @@
     "id": "hytteostboller",
     "version": 1,
     "afproevet": false,
-    "kilde": "Arla: «Hytteostboller» (arla.dk). Trinene er egen tekst",
+    "kilde": "Arla: «Hytteostboller» (arla.dk). Trinene er egen tekst.",
     "ingredienser": [
       { "ikon": "hytteost", "maengde": "500 g" },
       { "ikon": "havregryn", "maengde": "400 g" },
