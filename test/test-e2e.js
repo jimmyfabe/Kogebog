@@ -918,7 +918,8 @@ async function beroering(browser, skaerm) {
 // Den smalleste iPhone (360 px), iPhone (390), iPad mini på højkant (768×1024 og den nye 744×1133) og iPhone på langs
 // (844×390), de små iPhones på langs (667×375 og 736×414), som før fik iPhone-layoutet på højkant, iPhone mini, X og
 // 11 Pro på langs (812×375) og iPhone Pro Max på langs (932×430). På langs skal rettens bund være én række, også med
-// «Fortsæt ved trin 12»
+// «Fortsæt ved trin 12». Og et smalt desktopvindue (960×800): op til 970 px har ingredienserne tre kolonner, og
+// kødsovs' knapper lå under kanten
 const FORMER = [
   { navn: 'w360', viewport: { width: 360, height: 780 }, hasTouch: true },
   { navn: 'iphone', viewport: { width: 390, height: 844 }, hasTouch: true },
@@ -929,6 +930,7 @@ const FORMER = [
   { navn: 'plus-land', viewport: { width: 736, height: 414 }, hasTouch: true },
   { navn: 'x-land', viewport: { width: 812, height: 375 }, hasTouch: true },
   { navn: 'max-land', viewport: { width: 932, height: 430 }, hasTouch: true },
+  { navn: 'desk-960', viewport: { width: 960, height: 800 }, hasTouch: false },
 ];
 
 // Hvor et element ligger i forhold til den faste bund: { top, bund } for elementet og bundens top (bundTop)
@@ -983,6 +985,8 @@ async function former(browser) {
     const { ctx, side } = await nySide(browser, sk);
     // iPad mini på højkant har to kolonner som iPad'en (744×1133 fik før iPhone-layoutet: én kolonne og en 640 px bred «Næste»)
     const ipadKolonner = sk.viewport.width >= 701 && !lav;
+    // På langs og fra 901 px står «Fortsæt» til højre i samme række som de andre knapper (som på iPad'en på langs)
+    const fortsaetHoejre = lav || sk.viewport.width >= 901;
     const kolonner = (sel) => side.evaluate((s) => getComputedStyle(document.querySelector('#app > .skaerm:not([data-gammel]) ' + s)).gridTemplateColumns.split(' ').length, sel);
     await side.goto(BASE + '/index.html');
     await side.waitForSelector('.kort[data-ret]');
@@ -1037,7 +1041,7 @@ async function former(browser) {
     }
 
     // Retten med og uden «Fortsæt»: knapperne kan ses uden at rulle, og «Fortsæt» står først, over de andre.
-    // På langs er der kun højde til én række knapper: dér står «Fortsæt» til højre som på iPad.
+    // På langs er der kun højde til én række knapper: dér står «Fortsæt» til højre som på iPad (og fra 901 px).
     // Kødsovs har den længste ingrediensliste (12): på 768×1024 lå print og «Start forfra» under kanten.
     // Kødsovs har 13 trin: «Fortsæt ved trin 12» har to cifre, som den bredeste «Fortsæt»
     for (const ret of ['pandekager', 'koedsovs']) {
@@ -1082,15 +1086,15 @@ async function former(browser) {
           }));
           const tab = r.map((x) => x.navn).join(' → ');
           tjek(r[0].navn === 'Fortsæt', hvor + ': «Fortsæt» skal være den første knap i bunden med Tab (' + tab + ')');
-          if (!lav) {
+          if (!fortsaetHoejre) {
             const ses = [...r].sort((a, b) => (a.top < b.bund && b.top < a.bund ? a.venstre - b.venstre : a.top - b.top)).map((x) => x.navn).join(' → ');
             tjek(ses === tab, hvor + ': Tab skal følge knapperne, som de står (Tab ' + tab + ', ses ' + ses + ')');
           } else {
             const v = Object.fromEntries(r.map((x) => [x.navn, x.venstre]));
-            tjek(v['Fortsæt'] > v['Start forfra'], hvor + ': på langs skal «Fortsæt» stå til højre for «Start forfra» ' + JSON.stringify(v));
+            tjek(v['Fortsæt'] > v['Start forfra'], hvor + ': på langs og fra 901 px skal «Fortsæt» stå til højre for «Start forfra» ' + JSON.stringify(v));
           }
         }
-        if (fortsaet && !lav) {
+        if (fortsaet && !fortsaetHoejre) {
           const k = await side.evaluate(() => Object.fromEntries(['.fortsaet', '.forfra', '.print-knap']
             .map((s) => { const b = document.querySelector('.handlinger ' + s).getBoundingClientRect(); return [s, { top: Math.round(b.top), bund: Math.round(b.bottom), bredde: Math.round(b.width) }]; })));
           tjek(k['.fortsaet'].bund <= Math.min(k['.forfra'].top, k['.print-knap'].top) + 1, hvor + ': «Fortsæt» skal stå først, over de andre knapper ' + JSON.stringify(k));

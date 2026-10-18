@@ -333,19 +333,21 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .start { min-width: 220px; }
 /* «Fortsæt» står først i bunden, så Tab når den først. På de brede skærme og på langs står den til højre som «Næste» */
 .ret .handlinger .fortsaet { order: 1; }
-/* Over 12 ingredienser (pizzasnegle har 15) kommer der en fjerde række på iPad'en på langs, og print og «Start» lå under kanten.
-   Så står bunden fast som på iPhone, og listen ruller ind under den. Kun ved de lange lister: ellers ses stregen over bunden på alle retter.
-   Bunden er 119 px høj (én række knapper), plus samme safe-area som dens padding */
+/* Bunden står fast, så knapperne altid kan ses: over 12 ingredienser på iPad'en på langs lå print og «Start» 155 px under
+   kanten (pizzasnegle), og i et desktopvindue på 901-970 × 800, hvor ingredienserne har tre kolonner, op til 161 px
+   (frikadeller; 14 px endnu på 1024×800). Kan retten være der, står den faste bund samme sted som en almindelig og ses
+   ikke. Stregen over bunden kun ved de lange lister: ellers ses den på alle retter.
+   Bunden er 116 px høj (119 med stregen; én række knapper), plus samme safe-area som dens padding */
 @media (min-width: 901px) and (min-height: 521px) {
-  .ret:has(.ingr-gitter > :nth-child(13)) { --bund: calc(110px + max(22px, env(safe-area-inset-bottom))); }
-  .ret:has(.ingr-gitter > :nth-child(13)) .handlinger {
+  .ret { --bund: calc(110px + max(22px, env(safe-area-inset-bottom))); }
+  .ret .handlinger {
     position: sticky;
     bottom: 0;
     z-index: 2;
     background: var(--creme);
-    border-top: 3px solid var(--creme-moerk);
     padding-bottom: max(22px, env(safe-area-inset-bottom));
   }
+  .ret:has(.ingr-gitter > :nth-child(13)) .handlinger { border-top: 3px solid var(--creme-moerk); }
 }
 
 /* ---------- Trinene ---------- */
