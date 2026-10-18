@@ -150,6 +150,26 @@ async function tjekLayout(side, hvor, { knapperSes = false } = {}) {
   tjek(!r.udenAlt.length, hvor + ': billeder uden alt: ' + r.udenAlt.join(', '));
 }
 
+// Verbum-billedet er firkantet i en rund ramme: enten ligger hele billedet inden for cirklen, eller rammen klipper det
+async function tjekVerbum(side, hvor) {
+  const r = await side.evaluate(() => {
+    const ramme = document.querySelector('.verbum-ramme');
+    const img = document.querySelector('.verbum-billede');
+    if (!ramme || !img) return null;
+    const rr = ramme.getBoundingClientRect();
+    const b = img.getBoundingClientRect();
+    const cx = rr.left + rr.width / 2;
+    const cy = rr.top + rr.height / 2;
+    const radius = rr.width / 2;
+    const ude = Math.max(...[[b.left, b.top], [b.right, b.top], [b.left, b.bottom], [b.right, b.bottom]].map(([x, y]) => Math.hypot(x - cx, y - cy) - radius));
+    const cs = getComputedStyle(ramme);
+    const klipper = ['hidden', 'clip'].includes(cs.overflowX) && ['hidden', 'clip'].includes(cs.overflowY) && parseFloat(cs.borderTopLeftRadius) > 0;
+    return { ude: Math.round(ude), klipper };
+  });
+  if (!r) return;
+  tjek(r.ude <= 1 || r.klipper, hvor + ': verbum-billedet stikker ' + r.ude + ' px ud over den runde ramme');
+}
+
 async function sidsteTale(side) {
   return side.evaluate(() => (window.__tale[window.__tale.length - 1] || {}).tekst || '');
 }
@@ -324,6 +344,7 @@ async function heleVejen(browser, skaerm) {
       await side.waitForFunction((x) => document.querySelector('.trin h1') && document.querySelector('.trin h1').textContent === x, t.text, { timeout: 5000 })
         .catch(() => tjek(false, n + ' ' + id + ' trin ' + (i + 1) + ': viste ikke «' + t.text + '»'));
       await tjekLayout(side, n + ' ' + id + ' trin ' + (i + 1), { knapperSes: true });
+      await tjekVerbum(side, n + ' ' + id + ' trin ' + (i + 1));
       if (n === 'iphone' && id === 'chorizo-pasta' && i === 10) await foto(side, n + '-9-chorizo-trin-11');
       if (n === 'ipad' && id === 'boller' && i === 6) await foto(side, n + '-9-boller-trin-7');
     }

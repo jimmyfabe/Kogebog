@@ -351,6 +351,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   border: var(--kant);
   border-radius: 50%;
   background: var(--hvid);
+  overflow: hidden; /* billedet er firkantet: hjørnerne (fx skeen i «smage») må ikke stikke ud over den runde ramme */
 }
 .verbum-billede { width: 86%; }
 
