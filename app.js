@@ -215,10 +215,14 @@ function retSkaerm(m) {
   const sidste = Lager.hent().sidste;
   const fortsaetNr = sidste && sidste.ret === m.id && sidste.nr > 1 && sidste.nr <= m.trin.length && Date.now() - sidste.tid < FORTSAET_MS
     ? sidste.nr : 0;
-  // Gik man ud midt i retten, er «Fortsæt» den store knap, og «Start forfra» siger, hvad den gør
+  // Gik man ud midt i retten, er «Fortsæt» den store knap, og «Start forfra» siger, hvad den gør.
+  // «Fortsæt» står først i bunden, så Tab når den først (på iPhone og iPad på højkant står den også øverst);
+  // på de brede skærme flytter app.css den til højre som «Næste»
+  const fortsaet = fortsaetNr
+    ? knap('Fortsæt ved trin ' + fortsaetNr, { klasse: 'primaer fortsaet', ikonNavn: 'naeste', ikonEfter: true, onclick: () => gaaTilTrin(m, fortsaetNr) })
+    : null;
   const start = fortsaetNr
-    ? [knap('Start forfra', { klasse: 'start forfra', ikonNavn: 'igen', onclick: () => gaaTilTrin(m, 1) }),
-      knap('Fortsæt ved trin ' + fortsaetNr, { klasse: 'primaer fortsaet', ikonNavn: 'naeste', ikonEfter: true, onclick: () => gaaTilTrin(m, fortsaetNr) })]
+    ? knap('Start forfra', { klasse: 'start forfra', ikonNavn: 'igen', onclick: () => gaaTilTrin(m, 1) })
     : knap('Start', { klasse: 'primaer start', ikonNavn: 'naeste', ikonEfter: true, onclick: () => gaaTilTrin(m, 1) });
 
   const print = holdKnap({
@@ -245,6 +249,7 @@ function retSkaerm(m) {
         el('h2', { id: 'ingr-titel', tekst: 'Det skal I bruge' }),
         el('ul', { class: 'ingr-gitter' }, ingr))),
     el('footer', { class: 'handlinger' },
+      fortsaet,
       print,
       el('span', { class: 'skub' }),
       start));

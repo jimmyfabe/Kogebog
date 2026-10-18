@@ -632,6 +632,9 @@ async function tastatur(browser, skaerm) {
   // U17: «Fortsæt» er den store knap, og den anden siger, at den starter forfra
   tjek(await side.locator('.handlinger .knap.primaer').count() === 1 && await side.locator('.fortsaet.primaer').count() === 1, 'Fortsæt skal være den eneste store knap');
   tjek((await side.locator('.start').textContent().catch(() => '')).trim() === 'Start forfra', 'knappen ved siden af Fortsæt skal hedde «Start forfra»');
+  // «Fortsæt» står først i koden (Tab), men på den brede skærm til højre som «Næste»
+  const vh = await side.evaluate(() => Object.fromEntries(['fortsaet', 'forfra', 'print-knap'].map((k) => [k, Math.round(document.querySelector('.handlinger .' + k).getBoundingClientRect().left)])));
+  tjek(vh.fortsaet > vh.forfra && vh.forfra > vh['print-knap'], 'tastatur: print, «Start forfra» og «Fortsæt» skal stå fra venstre mod højre ' + JSON.stringify(vh));
   await tjekLayout(side, 'tastatur ret med Fortsæt', { knapperSes: true });
   await foto(side, 'desktop-ret-fortsaet');
   // Hold med tastaturet: mellemrum i 2 sekunder på et voksen-trin
@@ -957,6 +960,23 @@ async function former(browser) {
           const navn = await modBund(side, '.ret-titel h1');
           tjek(navn.hoejde <= navn.H * 0.25, hvor + ': bunden fylder ' + navn.hoejde + ' af ' + navn.H + ' px (højst 25 %)');
           tjek(navn.bund <= navn.bundTop, hvor + ': navnet ligger under den faste bund ' + JSON.stringify(navn));
+        }
+        if (fortsaet) {
+          // Tab-rækkefølgen: «Fortsæt» er den første knap i bunden (før kom den efter print og «Start forfra», selvom den stod øverst),
+          // og uden for «på langs» følger Tab knapperne, som de står. På langs står «Fortsæt» til højre som «Næste»
+          const r = await side.evaluate(() => [...document.querySelectorAll('#app > .skaerm:not([data-gammel]) .handlinger button')].map((b) => {
+            const k = b.getBoundingClientRect();
+            return { navn: b.classList.contains('fortsaet') ? 'Fortsæt' : b.classList.contains('forfra') ? 'Start forfra' : 'Print', top: Math.round(k.top), bund: Math.round(k.bottom), venstre: Math.round(k.left) };
+          }));
+          const tab = r.map((x) => x.navn).join(' → ');
+          tjek(r[0].navn === 'Fortsæt', hvor + ': «Fortsæt» skal være den første knap i bunden med Tab (' + tab + ')');
+          if (!lav) {
+            const ses = [...r].sort((a, b) => (a.top < b.bund && b.top < a.bund ? a.venstre - b.venstre : a.top - b.top)).map((x) => x.navn).join(' → ');
+            tjek(ses === tab, hvor + ': Tab skal følge knapperne, som de står (Tab ' + tab + ', ses ' + ses + ')');
+          } else {
+            const v = Object.fromEntries(r.map((x) => [x.navn, x.venstre]));
+            tjek(v['Fortsæt'] > v['Start forfra'], hvor + ': på langs skal «Fortsæt» stå til højre for «Start forfra» ' + JSON.stringify(v));
+          }
         }
         if (fortsaet && !lav) {
           const k = await side.evaluate(() => Object.fromEntries(['.fortsaet', '.forfra', '.print-knap']

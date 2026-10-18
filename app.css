@@ -330,6 +330,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .ingr-navn { font-size: 18px; color: var(--kakao); text-align: center; line-height: 1.2; overflow-wrap: anywhere; }
 
 .start { min-width: 220px; }
+/* «Fortsæt» står først i bunden, så Tab når den først. På de brede skærme og på langs står den til højre som «Næste» */
+.ret .handlinger .fortsaet { order: 1; }
 
 /* ---------- Trinene ---------- */
 
@@ -521,7 +523,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
      Teksten brydes ikke inde i knapperne: er der ikke plads, ryger knappen ned på en ny række */
   .ret .handlinger .knap { white-space: nowrap; }
   .ret .handlinger .start { flex: 1 1 0; min-width: auto; }
-  .ret .handlinger .fortsaet { flex: 1 1 100%; order: -1; }
+  .ret .handlinger .fortsaet { flex: 1 1 100%; order: 0; } /* øverst, som i koden */
   .ret .handlinger .forfra { font-size: 19px; padding: 0 16px; gap: 8px; }
   .ret .handlinger .forfra .ikon { width: 24px; height: 24px; }
   .ret .handlinger .print-knap { padding: 0 14px; }
@@ -565,7 +567,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 /* iPad på højkant (op til 900 px): «Fortsæt ved trin N» står først og fylder hele rækken, som på iPhone.
    Før faldt den ned på en række for sig under «Start forfra» (768 px) og lignede det mindst vigtige valg */
 @media (min-width: 701px) and (max-width: 900px) and (min-height: 521px) {
-  .ret .handlinger .fortsaet { flex: 1 1 100%; order: -1; }
+  .ret .handlinger .fortsaet { flex: 1 1 100%; order: 0; }
   /* Bunden står fast som på iPhone: med kødsovs' 12 ingredienser og «Fortsæt» lå print og «Start forfra» under kanten */
   .trin .handlinger, .ret .handlinger {
     position: sticky;
