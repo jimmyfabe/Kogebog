@@ -229,6 +229,7 @@ async function heleVejen(browser, skaerm) {
   // Trinene
   await tryk(side, '.start');
   const trin = RETTER.pandekager.recipeInstructions;
+  let fremUdenTimer = null; // fremskridtets x på trin 8 (før timeren): det må ikke flytte sig, når pillen kommer
   for (let i = 0; i < trin.length; i++) {
     const nr = i + 1;
     const t = trin[i];
@@ -239,6 +240,7 @@ async function heleVejen(browser, skaerm) {
     tjek((await side.locator('.voksen-maerke').count() === 1) === voksen, n + ' trin ' + nr + ': «Hent en voksen» skal ' + (voksen ? '' : 'ikke ') + 'vises');
     await tjekLayout(side, n + ' trin ' + nr, { knapperSes: n !== 'iphone' });
     if ([1, 3, 10, 12].includes(nr)) await foto(side, n + '-4-trin-' + nr);
+    if (nr === 8) fremUdenTimer = (await topbarMaal(side)).fremX;
 
     if (t.tumbi.timer_sek && nr === 9) {
       // Timeren: start, gå videre, se pillen, vent på slut, gå tilbage, kvittér
@@ -250,6 +252,7 @@ async function heleVejen(browser, skaerm) {
       await tryk(side, '.naeste');
       await side.waitForFunction(() => location.hash.endsWith('/trin/10'));
       tjek(await side.locator('.pille:not([hidden])').count() === 1, n + ': timer-pillen skal vises på næste trin');
+      const fremKoerer = (await topbarMaal(side)).fremX;
       await venterPaa(side, () => !!document.querySelector('.pille.faerdig'), null, n + ': pillen skal vise, at tiden er gået');
       const lyd = await side.evaluate(() => ({ toner: window.__toner, laas: window.__laas }));
       tjek(lyd.toner >= 3, n + ': der skal spilles tre toner ved slut (fik ' + lyd.toner + ')');
@@ -259,6 +262,10 @@ async function heleVejen(browser, skaerm) {
       tjek(top.midte >= 140, n + ': topbarens midte med en færdig timer er kun ' + top.midte + ' px bred');
       tjek(top.pilleVenstre !== null && top.fremHoejre <= top.pilleVenstre, n + ': fremskridtet løber ind under pillen (' + top.fremHoejre + ' > ' + top.pilleVenstre + ')');
       tjek(top.linjer === 1, n + ': «Trin 10 af 12» skal stå på én linje med en færdig timer (' + top.linjer + ' linjer)');
+      // Fremskridtet må ikke hoppe vandret efter pillens bredde (iPad: x 320 → 248 → 200). iPhone har ikke plads til at stå stille.
+      const xer = [fremUdenTimer, fremKoerer, top.fremX];
+      if (n === 'iphone') maal.push(n + ': fremskridtets x uden timer, med timer og færdig: ' + xer.join(', '));
+      else tjek(Math.max(...xer) - Math.min(...xer) <= 1, n + ': fremskridtet flytter sig, når timer-pillen kommer (x uden timer, med timer og færdig: ' + xer.join(', ') + ')');
       await foto(side, n + '-6-pille-faerdig');
       await tryk(side, '.pille');
       await side.waitForFunction(() => location.hash.endsWith('/trin/9'));
