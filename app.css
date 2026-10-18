@@ -477,9 +477,10 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 @media (max-width: 760px) {
   body { font-size: 18px; }
   .topbar { gap: 10px; padding: 10px 12px 4px; }
-  /* «Tiden er gået» fylder for meget ved siden af fremskridtet: topbaren viser «0:00» på gul, pulserende pille */
-  .topbar .pille.faerdig .pille-tal { display: inline; }
-  .topbar .pille.faerdig .pille-slut { display: none; }
+  /* Kører en timer på et andet trin, står pillen til højre for hjem, og fremskridtet får hele bredden nedenunder.
+     Ved siden af pillen blev 15 streger kun 4 px brede (boller på 360 px), og farverne kunne ikke ses */
+  .trin .topbar:has(> .pille:not([hidden])) { grid-template-columns: max-content minmax(0, 1fr); row-gap: 6px; }
+  .trin .topbar:has(> .pille:not([hidden])) > .topbar-midte { grid-column: 1 / -1; grid-row: 2; }
   .handlinger { gap: 12px; padding: 8px 12px 16px; }
   .knap.primaer { min-height: 76px; font-size: 24px; padding: 0 22px; }
 

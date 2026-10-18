@@ -2,7 +2,7 @@
 // iPad på langs (1180×820, børnenes standard), iPhone (390×844) og desktop (1280×800).
 // Forside → pandekager → alle trin (med en timer og voksen-hold) → færdig, alle trin i alle 5 retter,
 // print-siden for alle 5 retter (også i printvisning på A4-bredde), tastatur, timere på tværs af skærme og genindlæsning,
-// fejltilstande og «mindre bevægelse».
+// fejltilstande og «mindre bevægelse». Delen «former» ser desuden 360 px, iPad mini på højkant og iPhone på langs.
 // Tjekker hele vejen: ingen konsolfejl, ingen 404, ingen vandret rulning, billeder indlæst, og knapper mindst
 // 64 px for børnenes knapper (BOERNEKNAPPER) og 48 px for de voksnes (fx print og stop).
 //
@@ -252,20 +252,27 @@ async function venterPaa(side, fn, arg, hvor, ms = 6000) {
 
 const h1 = (side) => side.locator('h1').first().textContent();
 
-// Topbaren på et trin: hvor bred midten er, hvor fremskridtet står, og om «Trin x af y» er på én linje
+// Topbaren på et trin: hvor bred midten er, hvor fremskridtet står, om det overlapper pillen, den smalleste streg,
+// og om «Trin x af y» er på én linje
 async function topbarMaal(side) {
   return side.evaluate(() => {
     const r = (s) => { const e = document.querySelector(s); return e ? e.getBoundingClientRect() : null; };
     const midte = r('.topbar-midte');
     const frem = r('.fremskridt');
-    const pille = document.querySelector('.topbar .pille:not([hidden])');
+    const p = document.querySelector('.topbar .pille:not([hidden])');
+    const pille = p ? p.getBoundingClientRect() : null;
     const nr = document.querySelector('.trin-nr');
     const linjer = nr ? Math.round(nr.getBoundingClientRect().height / parseFloat(getComputedStyle(nr).lineHeight)) : 0;
+    const streger = [...document.querySelectorAll('.fremskridt > span')].map((s) => s.getBoundingClientRect().width);
+    const kasse = (b) => (b ? [Math.round(b.left), Math.round(b.top), Math.round(b.right), Math.round(b.bottom)] : null);
     return {
       midte: midte ? Math.round(midte.width) : 0,
       fremX: frem ? Math.round(frem.left) : null,
-      fremHoejre: frem ? Math.round(frem.right) : null,
-      pilleVenstre: pille ? Math.round(pille.getBoundingClientRect().left) : null,
+      frem: kasse(frem),
+      pille: kasse(pille),
+      overlap: !!(frem && pille && Math.min(frem.right, pille.right) - Math.max(frem.left, pille.left) > 0.5
+        && Math.min(frem.bottom, pille.bottom) - Math.max(frem.top, pille.top) > 0.5),
+      mindsteStreg: streger.length ? Math.round(Math.min(...streger) * 10) / 10 : null,
       linjer,
     };
   });
@@ -384,7 +391,7 @@ async function heleVejen(browser, skaerm) {
       // «Tiden er gået» i topbaren må ikke klemme fremskridtet (iPhone: midten var 61 px, og stregerne lå under pillen)
       const top = await topbarMaal(side);
       tjek(top.midte >= 140, n + ': topbarens midte med en færdig timer er kun ' + top.midte + ' px bred');
-      tjek(top.pilleVenstre !== null && top.fremHoejre <= top.pilleVenstre, n + ': fremskridtet løber ind under pillen (' + top.fremHoejre + ' > ' + top.pilleVenstre + ')');
+      tjek(top.pille !== null && !top.overlap, n + ': fremskridtet løber ind under pillen (fremskridt ' + top.frem + ', pille ' + top.pille + ')');
       tjek(top.linjer === 1, n + ': «Trin 10 af 12» skal stå på én linje med en færdig timer (' + top.linjer + ' linjer)');
       // Fremskridtet må ikke hoppe vandret efter pillens bredde (iPad: x 320 → 248 → 200). iPhone har ikke plads til at stå stille.
       const xer = [fremUdenTimer, fremKoerer, top.fremX];
@@ -813,8 +820,61 @@ async function beroering(browser, skaerm) {
   await ctx.close();
 }
 
-// E2E_DELE=hele,print,tastatur,timer,fejl,beroering (standard: alle) og E2E_SKAERME=ipad,iphone,desktop (standard: alle)
-const DELE = (process.env.E2E_DELE || 'hele,print,tastatur,timer,fejl,beroering').split(',').map((x) => x.trim()).filter(Boolean);
+// ---------- Skærmformer, som de tre faste skærme ikke dækker ----------
+// Den smalleste iPhone (360 px), iPhone (390), iPad mini på højkant (768×1024) og iPhone på langs (844×390)
+const FORMER = [
+  { navn: 'w360', viewport: { width: 360, height: 780 }, hasTouch: true },
+  { navn: 'iphone', viewport: { width: 390, height: 844 }, hasTouch: true },
+  { navn: 'tablet', viewport: { width: 768, height: 1024 }, hasTouch: true },
+  { navn: 'land', viewport: { width: 844, height: 390 }, hasTouch: true },
+];
+
+// Læg en gemt tilstand i «kog-v1», og indlæs siden igen: timeren og «Fortsæt» læses, når siden indlæses.
+// Adressen skiftes med replaceState, så appen ikke når at tegne (og hente billeder til) skærmen før genindlæsningen
+async function medGemt(side, { sidste = null, timer = null }, hash) {
+  await side.waitForFunction(() => [...document.images].every((i) => i.complete)); // en genindlæsning afbryder billeder på vej
+  await side.evaluate(({ sidste, timer, hash }) => {
+    const nu = Date.now();
+    localStorage.setItem('kog-v1', JSON.stringify({
+      v: 1,
+      sidste: sidste ? { ret: sidste.ret, nr: sidste.nr, tid: nu } : null,
+      timer: timer ? { ret: timer.ret, nr: timer.nr, sek: timer.sek, start: nu + timer.slutOm - timer.sek * 1000, slut: nu + timer.slutOm } : null,
+    }));
+    history.replaceState(null, '', hash);
+  }, { sidste, timer, hash });
+  await side.reload();
+}
+
+async function former(browser) {
+  for (const sk of FORMER) {
+    const n = sk.navn;
+    console.log('[' + n + '] skærmform ' + sk.viewport.width + '×' + sk.viewport.height);
+    const { ctx, side } = await nySide(browser, sk);
+    await side.goto(BASE + '/index.html');
+    await side.waitForSelector('.kort[data-ret]');
+
+    // Fremskridtet med timer-pillen: boller har 15 trin, og timeren fra trin 8 kører på trin 9 og er færdig på trin 13
+    if (sk.viewport.width <= 760) {
+      for (const [nr, slutOm, hvad] of [[9, 25 * 60000, 'kører'], [13, -1000, 'er færdig']]) {
+        await medGemt(side, { timer: { ret: 'boller', nr: 8, sek: 1800, slutOm } }, '#/ret/boller/trin/' + nr);
+        await side.waitForSelector('.trin .topbar .pille:not([hidden])');
+        const top = await topbarMaal(side);
+        const hvor = n + ' boller trin ' + nr + ' (timeren ' + hvad + ')';
+        tjek(top.mindsteStreg >= 10, hvor + ': fremskridtets streger skal være mindst 10 px brede (' + top.mindsteStreg + ' px)');
+        tjek(!top.overlap, hvor + ': fremskridtet ligger ind over pillen (fremskridt ' + top.frem + ', pille ' + top.pille + ')');
+        maal.push(hvor + ': mindste streg ' + top.mindsteStreg + ' px');
+        await tjekLayout(side, hvor, { knapperSes: true });
+        if (nr === 9) await foto(side, n + '-former-pille');
+      }
+    }
+    tjek(side.fejl.length === 0, n + ' (skærmformer): ' + side.fejl.join(' | '));
+    await ctx.close();
+  }
+}
+
+// E2E_DELE=hele,print,tastatur,timer,fejl,beroering,former (standard: alle) og E2E_SKAERME=ipad,iphone,desktop (standard: alle)
+// «former» kører på sine egne skærme (FORMER) og ser bort fra E2E_SKAERME
+const DELE = (process.env.E2E_DELE || 'hele,print,tastatur,timer,fejl,beroering,former').split(',').map((x) => x.trim()).filter(Boolean);
 const VALGTE = SKAERME.filter((s) => !process.env.E2E_SKAERME || process.env.E2E_SKAERME.split(',').includes(s.navn));
 const KOERSEL = [];
 for (const s of VALGTE) if (DELE.includes('hele')) KOERSEL.push(['hele vejen ' + s.navn, (b) => heleVejen(b, s)]);
@@ -823,6 +883,7 @@ if (DELE.includes('tastatur')) KOERSEL.push(['tastatur', (b) => tastatur(b, SKAE
 if (DELE.includes('timer')) KOERSEL.push(['timere', (b) => timere(b, SKAERME[0])]);
 if (DELE.includes('fejl')) KOERSEL.push(['fejltilstande', (b) => fejltilstande(b, SKAERME[0])]);
 if (DELE.includes('beroering')) KOERSEL.push(['berøring', (b) => beroering(b, SKAERME[0])]);
+if (DELE.includes('former')) KOERSEL.push(['skærmformer', (b) => former(b)]);
 
 const browser = await webkit.launch();
 const start = Date.now();

@@ -80,7 +80,7 @@ function naviger(hash, efter) {
 
 function timerPille() {
   const tal = el('span', { class: 'pille-tal' });
-  // «Tiden er gået» står ved siden af tallet; på smalle skærme viser topbaren kun «0:00» (app.css), så fremskridtet kan ses
+  // «Tiden er gået» afløser tallet, når tiden er gået. På smalle skærme får fremskridtet sin egen række under pillen (app.css)
   const slut = el('span', { class: 'pille-slut', tekst: 'Tiden er gået' });
   const b = el('button', { type: 'button', class: 'knap pille', hidden: true }, ikon('ur'), tal, slut);
   b.addEventListener('click', klik(() => {
