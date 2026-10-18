@@ -1,4 +1,8 @@
 {
   "version": 1,
-  "retter": ["pandekager", "frikadeller", "koedsovs", "boller", "chorizo-pasta", "kartoffelmos", "hvidloegsflutes", "brownie", "blondie", "hytteostboller", "havregrynskugler", "tunfrikadeller", "pizzasnegle"]
+  "retter": [
+    "frikadeller", "koedsovs", "chorizo-pasta", "tunfrikadeller", "kartoffelmos", "hvidloegsflutes",
+    "boller", "hytteostboller", "pizzasnegle",
+    "pandekager", "brownie", "blondie", "havregrynskugler"
+  ]
 }

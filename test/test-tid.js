@@ -84,6 +84,8 @@ test('enheder skrives ud til stemmen', () => {
   assert.equal(tilTale('2 stkæ'), '2 stkæ');
   assert.equal(tilTale('ca. 16 stk.'), 'ca. 16 stykker');
   assert.equal(tilTale('1 kg kartofler'), '1 kilo kartofler');
+  // Den bløde bindestreg i et kortnavn læses ikke op
+  assert.equal(tilTale('Havregryns­kugler. Tryk igen for at starte.'), 'Havregrynskugler. Tryk igen for at starte.');
 });
 
 test('ord tælles uden tegnsætning', () => {

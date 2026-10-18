@@ -32,8 +32,10 @@ const ENHEDER = [
   [/°C/g, 'grader'],
   [/(\d)\s*%/g, '$1 procent'],
 ];
+// Den bløde bindestreg (U+00AD) i et navn som «Havregryns­kugler» viser, hvor ordet må deles på et smalt kort.
+// Den er kun til skærmen og fjernes, før teksten læses op.
 export function tilTale(tekst) {
-  let t = String(tekst);
+  let t = String(tekst).replace(/­/g, '');
   for (const [re, ud] of ENHEDER) t = t.replace(re, ud);
   return t.replace(/\s+/g, ' ').trim();
 }

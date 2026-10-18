@@ -1,7 +1,7 @@
 // test-e2e.js — går hele vejen i en rigtig browser (Playwright, WebKit = Safaris motor) på tre skærme:
 // iPad på langs (1180×820, børnenes standard), iPhone (390×844) og desktop (1280×800).
-// Forside → pandekager → alle trin (med en timer og voksen-hold) → færdig, alle trin i alle 5 retter,
-// print-siden for alle 5 retter (også i printvisning på A4-bredde), tastatur, timere på tværs af skærme og genindlæsning,
+// Forside → pandekager → alle trin (med en timer og voksen-hold) → færdig, alle trin i alle retter,
+// print-siden for alle retter (også i printvisning på A4-bredde), tastatur, timere på tværs af skærme og genindlæsning,
 // fejltilstande og «mindre bevægelse». Delen «former» ser desuden 360 px, iPad mini på højkant og iPhones på langs.
 // Tjekker hele vejen: ingen konsolfejl, ingen 404, ingen vandret rulning, billeder indlæst, og knapper mindst
 // 64 px for børnenes knapper (BOERNEKNAPPER) og 48 px for de voksnes (fx print og stop).
@@ -244,6 +244,36 @@ async function hold(side, sel, ms = 2300) {
   await side.mouse.up();
 }
 
+// Forsiden med mange retter ruller: den første række kort skal ses uden at rulle, og det sidste kort skal kunne
+// rulles helt frem (kortenes kant på 6 px regnes med). Før skulle alle 5 kort ses på én skærm.
+async function forsideRulning(side) {
+  return side.evaluate(async () => {
+    const billede = () => new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    await billede();
+    const kort = [...document.querySelectorAll('.kort[data-ret]')];
+    const top = Math.min(...kort.map((k) => k.getBoundingClientRect().top));
+    const foersteRaekke = kort.filter((k) => Math.abs(k.getBoundingClientRect().top - top) < 2);
+    const foersteUnder = Math.round(Math.max(...foersteRaekke.map((k) => k.getBoundingClientRect().bottom + 6)) - innerHeight);
+    // Navnet skal blive inde i kortet («Havregrynskugler» stak ud på 360 px, hvor browseren ikke kunne dele ordet)
+    const navnUd = kort.filter((k) => {
+      const r = document.createRange();
+      r.selectNodeContents(k.querySelector('.kort-navn'));
+      const t = r.getBoundingClientRect();
+      const b = k.getBoundingClientRect();
+      return t.left < b.left - 0.5 || t.right > b.right + 0.5;
+    }).map((k) => k.dataset.ret);
+    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' });
+    await billede();
+    const b = kort[kort.length - 1].getBoundingClientRect();
+    const ud = { kort: kort.length, iFoersteRaekke: foersteRaekke.length, foersteUnder, navnUd, rullet: Math.round(window.scrollY), sidsteTop: Math.round(b.top), sidsteBund: Math.round(b.bottom + 6), H: innerHeight };
+    ud.sidsteSes = b.top >= 0 && b.bottom + 6 <= innerHeight + 1;
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    await billede();
+    return ud;
+  });
+}
+
 async function venterPaa(side, fn, arg, hvor, ms = 6000) {
   try {
     await side.waitForFunction(fn, arg, { timeout: ms });
@@ -319,6 +349,10 @@ async function heleVejen(browser, skaerm) {
     return Object.values(r);
   });
   tjek(raekker.every((h) => Math.max(...h) - Math.min(...h) <= 1), n + ': kortene i en række skal være lige høje: ' + JSON.stringify(raekker));
+  const rul = await forsideRulning(side);
+  tjek(rul.foersteUnder <= 0, n + ': den første række kort på forsiden skæres ' + rul.foersteUnder + ' px af forneden');
+  tjek(rul.sidsteSes, n + ': det sidste kort på forsiden skal kunne rulles helt frem ' + JSON.stringify(rul));
+  maal.push(n + ' forside: ' + rul.kort + ' kort, ' + rul.iFoersteRaekke + ' i første række, rullet ' + rul.rullet + ' px for at nå det sidste');
   if (n === 'desktop') {
     // U16: med mus skal et kort ændre sig, når musen står over det
     const skygge = () => side.evaluate(() => getComputedStyle(document.querySelector('.kort[data-ret="frikadeller"]')).boxShadow);
@@ -492,9 +526,14 @@ async function heleVejen(browser, skaerm) {
 
   // Alle trin i alle retter (direkte adresse)
   console.log('[' + n + '] alle trin i alle ' + index.length + ' retter');
+  // Et billede, der ses første gang (fx et nyt verbum), kan stadig være på vej, når overskriften står der:
+  // «boller trin 11: billeder ikke indlæst: grafik/verbum-pensle.svg» kom i én af to kørsler. Vent, til alle er færdige
+  // (også de fejlede, så tjekLayout melder et billede, der mangler)
+  const billederFaerdige = () => side.waitForFunction(() => [...document.images].every((i) => i.complete), null, { timeout: 5000 }).catch(() => {});
   for (const id of index) {
     await side.evaluate((h) => { location.hash = h; }, '#/ret/' + id);
     await side.waitForFunction((x) => document.querySelector('.ret h1') && document.querySelector('.ret h1').textContent === x, RETTER[id].name);
+    await billederFaerdige();
     await tjekLayout(side, n + ' ' + id + ' ret', { knapperSes: true });
     if (n !== 'ipad' && id === 'koedsovs') await foto(side, n + '-8-ret-koedsovs');
     for (let i = 0; i < RETTER[id].recipeInstructions.length; i++) {
@@ -502,6 +541,7 @@ async function heleVejen(browser, skaerm) {
       await side.evaluate((h) => { location.hash = h; }, '#/ret/' + id + '/trin/' + (i + 1));
       await side.waitForFunction((x) => document.querySelector('.trin h1') && document.querySelector('.trin h1').textContent === x, t.text, { timeout: 5000 })
         .catch(() => tjek(false, n + ' ' + id + ' trin ' + (i + 1) + ': viste ikke «' + t.text + '»'));
+      await billederFaerdige();
       await tjekLayout(side, n + ' ' + id + ' trin ' + (i + 1), { knapperSes: true });
       await tjekVerbum(side, n + ' ' + id + ' trin ' + (i + 1));
       if (n === 'iphone' && id === 'chorizo-pasta' && i === 10) await foto(side, n + '-9-chorizo-trin-11');
@@ -636,8 +676,8 @@ async function tastatur(browser, skaerm) {
   await vent(SPAERRE);
   await side.keyboard.press('ArrowRight');
   await side.waitForFunction(() => location.hash.endsWith('/trin/2'));
-  // «Fortsæt» husker trinnet
-  await side.evaluate(() => { location.hash = '#/ret/pandekager'; });
+  // «Fortsæt» husker trinnet (retten er det første kort, som Tab og Enter åbnede)
+  await side.evaluate((id) => { location.hash = '#/ret/' + id; }, index[0]);
   await side.waitForSelector('.ret h1');
   tjek((await side.locator('.fortsaet').textContent().catch(() => '')).includes('trin 2'), 'Fortsæt ved trin 2 skal vises');
   // U17: «Fortsæt» er den store knap, og den anden siger, at den starter forfra
@@ -724,10 +764,11 @@ async function timere(browser, skaerm) {
   const udloebet = side.locator('.pille.faerdig:not([hidden])');
   const udloebetVist = await udloebet.count() === 1 && (await udloebet.textContent()).includes('Tiden er gået');
   tjek(udloebetVist, n + ': en timer, der løb ud under genindlæsningen, skal vise «Tiden er gået» på forsiden');
-  // Pillen skubber kortene ned: den nederste række (med kortenes kant på 6 px) skal stadig kunne ses (før skåret af på iPad)
-  const kortUnder = await side.evaluate(() => Math.round(Math.max(...[...document.querySelectorAll('.kort[data-ret]')]
-    .map((k) => k.getBoundingClientRect().bottom + 6)) - innerHeight));
-  tjek(kortUnder <= 0, n + ': kortene på forsiden med «Tiden er gået» skæres ' + kortUnder + ' px af forneden');
+  // Pillen skubber kortene ned. Før skulle alle 5 kort ses (de blev skåret af på iPad); med 13 retter ruller forsiden,
+  // så nu skal den første række stadig ses uden at rulle, og det sidste kort skal kunne rulles frem
+  const rul = await forsideRulning(side);
+  tjek(rul.foersteUnder <= 0, n + ': den første række kort på forsiden med «Tiden er gået» skæres ' + rul.foersteUnder + ' px af forneden');
+  tjek(rul.sidsteSes, n + ': det sidste kort på forsiden med «Tiden er gået» skal kunne rulles frem ' + JSON.stringify(rul));
   await foto(side, n + '-forside-udloebet');
   if (udloebetVist) {
     await tryk(side, '.pille', PULSERER);
@@ -940,6 +981,16 @@ async function former(browser) {
     const kolonner = (sel) => side.evaluate((s) => getComputedStyle(document.querySelector('#app > .skaerm:not([data-gammel]) ' + s)).gridTemplateColumns.split(' ').length, sel);
     await side.goto(BASE + '/index.html');
     await side.waitForSelector('.kort[data-ret]');
+    await side.waitForFunction(() => [...document.images].every((i) => i.complete && i.naturalWidth));
+
+    // Forsiden med alle retter: første række uden at rulle, det sidste kort kan rulles frem, navnene bliver i kortene, og intet vandret rul
+    const rul = await forsideRulning(side);
+    tjek(rul.foersteUnder <= 0, n + ' forside: den første række kort skæres ' + rul.foersteUnder + ' px af forneden');
+    tjek(rul.sidsteSes, n + ' forside: det sidste kort skal kunne rulles helt frem ' + JSON.stringify(rul));
+    tjek(rul.navnUd.length === 0, n + ' forside: navnet stikker ud af kortet på ' + rul.navnUd.join(', '));
+    maal.push(n + ' forside: ' + rul.iFoersteRaekke + ' kort i første række, rullet ' + rul.rullet + ' px for at nå det sidste');
+    await tjekLayout(side, n + ' forside');
+    await foto(side, n + '-former-forside');
 
     // Fremskridtet med timer-pillen: boller har 15 trin, og timeren fra trin 8 kører på trin 9 og er færdig på trin 13
     if (sk.viewport.width <= 760) {
