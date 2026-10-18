@@ -735,8 +735,65 @@ async function fejltilstande(browser, skaerm) {
   await r.ctx.close();
 }
 
-// E2E_DELE=hele,print,tastatur,timer,fejl (standard: alle) og E2E_SKAERME=ipad,iphone,desktop (standard: alle)
-const DELE = (process.env.E2E_DELE || 'hele,print,tastatur,timer,fejl').split(',').map((x) => x.trim()).filter(Boolean);
+// ---------- Berøring: fingeren på en hold-knap (K10) ----------
+// Playwright kan ikke holde en finger nede, så fingeren er syntetiske PointerEvents med pointerType 'touch'.
+// Tjekker de tre linjer i hold.js, som kun berøring bruger: contextmenu, pointercancel på knappen og på document.
+async function beroering(browser, skaerm) {
+  const n = skaerm.navn + ' berøring';
+  console.log('[' + skaerm.navn + '] berøring');
+  const { ctx, side } = await nySide(browser, skaerm);
+  const finger = (type, hvor = '.voksen-hold') => side.evaluate(({ type, hvor }) => {
+    const e = hvor === 'document' ? document : document.querySelector(hvor);
+    const r = e === document ? { left: 0, top: 0, width: 0, height: 0 } : e.getBoundingClientRect();
+    e.dispatchEvent(new PointerEvent(type, { pointerType: 'touch', pointerId: 7, isPrimary: true, button: 0, bubbles: true, cancelable: true,
+      clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 }));
+  }, { type, hvor });
+  const adresse = () => side.evaluate(() => location.hash);
+  const tilTrin10 = async () => {
+    await side.evaluate(() => { location.hash = '#/ret/pandekager/trin/10'; });
+    await side.waitForFunction(() => location.hash.endsWith('/trin/10') && !!document.querySelector('.voksen-hold'));
+    await vent(SPAERRE);
+  };
+  await side.goto(BASE + '/index.html?hurtig=1#/ret/pandekager/trin/10');
+  await side.waitForSelector('.voksen-hold');
+  await vent(SPAERRE);
+
+  // 1. Et langt tryk må ikke åbne iPad'ens menu over knappen
+  const menuAaben = await side.evaluate(() => document.querySelector('.voksen-hold').dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true })));
+  tjek(menuAaben === false, n + ': contextmenu på hold-knappen skal afvises (ellers åbner et langt tryk en menu)');
+
+  // 2. Et kort tryk med fingeren går ikke videre, men knappen viser, at den skal holdes
+  await finger('pointerdown');
+  await vent(300);
+  await finger('pointerup');
+  await vent(200);
+  tjek((await adresse()).endsWith('/trin/10'), n + ': et kort tryk må ikke gå videre (' + await adresse() + ')');
+  tjek(await side.locator('.voksen-hold.mind').count() === 1, n + ': et kort tryk skal give hold-knappen ringen');
+
+  // 3. iPad'en afbryder berøringen (pointercancel, fx når den tror, man ruller): holdet stopper
+  await tilTrin10();
+  await finger('pointerdown');
+  await vent(500);
+  await finger('pointercancel');
+  await vent(2200);
+  tjek((await adresse()).endsWith('/trin/10'), n + ': et hold, der afbrydes med pointercancel, må ikke gå videre (' + await adresse() + ')');
+
+  // 4. Et hold lykkes, og iPad'en afbryder slippet (pointercancel i stedet for pointerup). Så skal spærren for
+  //    klikket ved slip løftes, ellers sluger den det næste tryk på det nye trin
+  await tilTrin10();
+  await finger('pointerdown');
+  await side.waitForFunction(() => location.hash.endsWith('/trin/11'), null, { timeout: 4000 })
+    .catch(() => tjek(false, n + ': et hold på 2 s med fingeren skal gå til trin 11'));
+  await finger('pointercancel', 'document');
+  await tryk(side, '.tilbage');
+  await side.waitForFunction(() => location.hash.endsWith('/trin/10'), null, { timeout: 2000 })
+    .catch(() => tjek(false, n + ': efter pointercancel skal næste tryk virke (Tilbage blev slugt)'));
+  tjek(side.fejl.length === 0, n + ': ' + side.fejl.join(' | '));
+  await ctx.close();
+}
+
+// E2E_DELE=hele,print,tastatur,timer,fejl,beroering (standard: alle) og E2E_SKAERME=ipad,iphone,desktop (standard: alle)
+const DELE = (process.env.E2E_DELE || 'hele,print,tastatur,timer,fejl,beroering').split(',').map((x) => x.trim()).filter(Boolean);
 const VALGTE = SKAERME.filter((s) => !process.env.E2E_SKAERME || process.env.E2E_SKAERME.split(',').includes(s.navn));
 const KOERSEL = [];
 for (const s of VALGTE) if (DELE.includes('hele')) KOERSEL.push(['hele vejen ' + s.navn, (b) => heleVejen(b, s)]);
@@ -744,6 +801,7 @@ for (const s of VALGTE) if (DELE.includes('print')) KOERSEL.push(['print ' + s.n
 if (DELE.includes('tastatur')) KOERSEL.push(['tastatur', (b) => tastatur(b, SKAERME[2])]);
 if (DELE.includes('timer')) KOERSEL.push(['timere', (b) => timere(b, SKAERME[0])]);
 if (DELE.includes('fejl')) KOERSEL.push(['fejltilstande', (b) => fejltilstande(b, SKAERME[0])]);
+if (DELE.includes('beroering')) KOERSEL.push(['berøring', (b) => beroering(b, SKAERME[0])]);
 
 const browser = await webkit.launch();
 const start = Date.now();
