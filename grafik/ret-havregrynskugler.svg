@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="plate">
+    <ellipse cx="128" cy="140" rx="108" ry="75" fill="#3E8FB0"/>
+    <ellipse cx="128" cy="140" rx="94" ry="61" fill="#FFF4E2"/>
+  </g>
+  <g id="back-balls" fill="#704D31">
+    <circle cx="98" cy="112" r="22"/>
+    <circle cx="158" cy="112" r="22"/>
+  </g>
+  <g id="front-balls" fill="#704D31">
+    <circle cx="70" cy="146" r="22"/>
+    <circle cx="128" cy="150" r="24"/>
+    <circle cx="186" cy="146" r="22"/>
+  </g>
+  <g id="coconut" fill="#FFFFFF" stroke-width="2">
+    <path d="M90 104 L94 102 M104 108 L108 107 M96 118 L100 119 M150 104 L154 103 M164 110 L168 111 M156 120 L160 119"/>
+    <path d="M62 138 L66 136 M76 144 L80 143 M68 154 L72 155 M120 140 L124 139 M134 146 L138 145 M124 160 L128 161 M178 138 L182 137 M192 146 L196 145 M184 154 L188 155"/>
+  </g>
+  <g id="shine" fill="none" stroke="#9A6A44" stroke-width="3">
+    <path d="M86 102 Q90 96 98 95 M146 102 Q150 96 158 95 M58 136 Q62 130 70 129 M114 140 Q118 133 127 132 M174 136 Q178 130 186 129"/>
+  </g>
+</g>
+</svg>

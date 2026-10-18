@@ -1,0 +1,47 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Havregrynskugler",
+  "description": "Søde kugler med kakao, rullet i kokosmel. Uden ovn og uden kniv.",
+  "image": "grafik/ret-havregrynskugler.svg",
+  "inLanguage": "da",
+  "recipeYield": "ca. 20 kugler (skøn)",
+  "prepTime": "PT15M",
+  "totalTime": "PT45M",
+  "recipeIngredient": [
+    "175 g finvalsede havregryn (ca. 5¾ dl)",
+    "100 g flormelis (ca. 2 dl)",
+    "4½ spsk kakao (ca. 25 g)",
+    "100 g blødt smør",
+    "2 spsk vand, kaffe eller juice",
+    "ca. 1 dl kokosmel, flormelis eller kakao til at rulle i"
+  ],
+  "tool": ["køkkenvægt", "dl-mål", "stor skål", "spiseske", "grydeske", "tallerken", "dåse med låg"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Mål 175 g havregryn.", "tumbi": { "verbum": "maale", "ikoner": ["havregryn"], "note": "Det er ca. 5¾ dl. Hæld dem i en stor skål." } },
+    { "@type": "HowToStep", "text": "Hæld flormelis og kakao i.", "tumbi": { "verbum": "haelde", "ikoner": ["sukker", "kakao"], "note": "100 g flormelis (ca. 2 dl) og 4½ spsk kakao." } },
+    { "@type": "HowToStep", "text": "Rør det tørre sammen.", "tumbi": { "verbum": "roere", "ikoner": ["havregryn", "sukker", "kakao"] } },
+    { "@type": "HowToStep", "text": "Ælt det bløde smør i.", "tumbi": { "verbum": "aelte", "ikoner": ["smoer"], "note": "Smørret skal være blødt, ikke smeltet. Ælt, til massen hænger sammen." } },
+    { "@type": "HowToStep", "text": "Hæld 2 spsk vand i.", "tumbi": { "verbum": "haelde", "ikoner": ["vand"], "note": "Eller kaffe eller juice." } },
+    { "@type": "HowToStep", "text": "Ælt massen igen.", "tumbi": { "verbum": "aelte" } },
+    { "@type": "HowToStep", "text": "Rul små kugler i hænderne.", "tumbi": { "verbum": "rulle" } },
+    { "@type": "HowToStep", "text": "Rul kuglerne i kokosmel.", "tumbi": { "verbum": "rulle", "ikoner": ["kokos"], "note": "Eller i flormelis eller kakao. Kom lidt på en tallerken, og trill kuglerne rundt i det." } },
+    { "@type": "HowToStep", "text": "Stil kuglerne i køleskabet i 30 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "Tildækket. Kilden siger 30-60 min. I en tæt dåse i køleskabet holder de sig ca. 4 dage." } },
+    { "@type": "HowToStep", "text": "Smag en kugle!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "havregrynskugler",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Arla: «Havregrynskugler - de nemme» (arla.dk). Trinene er egen tekst",
+    "ingredienser": [
+      { "ikon": "havregryn", "maengde": "175 g" },
+      { "ikon": "sukker", "maengde": "100 g" },
+      { "ikon": "kakao", "maengde": "4½ spsk" },
+      { "ikon": "smoer", "maengde": "100 g" },
+      { "ikon": "vand", "maengde": "2 spsk" },
+      { "ikon": "kokos", "maengde": "ca. 1 dl" }
+    ]
+  }
+}
