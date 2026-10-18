@@ -1,1 +1,40 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M74 220 Q120 160 184 52" fill="none" stroke="#448450" stroke-width="7"/><ellipse cx="96" cy="172" rx="16" ry="30" fill="#5BAA6A" transform="rotate(-60 96 172)"/><ellipse cx="130" cy="186" rx="14" ry="26" fill="#5BAA6A" transform="rotate(30 130 186)"/><ellipse cx="118" cy="128" rx="16" ry="30" fill="#5BAA6A" transform="rotate(-60 118 128)"/><ellipse cx="156" cy="140" rx="14" ry="26" fill="#5BAA6A" transform="rotate(30 156 140)"/><ellipse cx="146" cy="90" rx="14" ry="26" fill="#5BAA6A" transform="rotate(-60 146 90)"/><ellipse cx="176" cy="98" rx="12" ry="22" fill="#5BAA6A" transform="rotate(30 176 98)"/><ellipse cx="184" cy="52" rx="12" ry="20" fill="#5BAA6A"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="stems">
+    <path fill="none" stroke-width="7.5" d="M128 186 L74 98 M128 186 L98 72 M128 186 L128 62 M128 186 L158 72 M128 186 L182 98 M128 186 L116 222 M128 186 L127 224 M128 186 L138 222"/>
+    <path fill="none" stroke="#448450" stroke-width="3" d="M128 186 L74 98 M128 186 L98 72 M128 186 L128 62 M128 186 L158 72 M128 186 L182 98 M128 186 L116 222 M128 186 L127 224 M128 186 L138 222"/>
+  </g>
+  <g id="sprig-top" transform="translate(128 62)">
+    <g transform="rotate(-45)"><path fill="#5BAA6A" d="M0 0 C-12 -8 -12 -28 0 -36 C12 -28 12 -8 0 0 Z"/><path fill="none" stroke-width="2.5" d="M0 -6 L0 -26"/></g>
+    <g transform="rotate(45)"><path fill="#448450" d="M0 0 C-12 -8 -12 -28 0 -36 C12 -28 12 -8 0 0 Z"/><path fill="none" stroke-width="2.5" d="M0 -6 L0 -26"/></g>
+    <g><path fill="#5BAA6A" d="M0 0 C-12 -8 -12 -28 0 -36 C12 -28 12 -8 0 0 Z"/><path fill="none" stroke-width="2.5" d="M0 -6 L0 -26"/></g>
+  </g>
+  <g id="sprig-left" transform="translate(98 72) rotate(-14)">
+    <g transform="rotate(-45)"><path fill="#5BAA6A" d="M0 0 C-12 -8 -12 -28 0 -36 C12 -28 12 -8 0 0 Z"/><path fill="none" stroke-width="2.5" d="M0 -6 L0 -26"/></g>
+    <g transform="rotate(45)"><path fill="#448450" d="M0 0 C-12 -8 -12 -28 0 -36 C12 -28 12 -8 0 0 Z"/><path fill="none" stroke-width="2.5" d="M0 -6 L0 -26"/></g>
+    <g><path fill="#5BAA6A" d="M0 0 C-12 -8 -12 -28 0 -36 C12 -28 12 -8 0 0 Z"/><path fill="none" stroke-width="2.5" d="M0 -6 L0 -26"/></g>
+  </g>
+  <g id="sprig-right" transform="translate(158 72) rotate(14)">
+    <g transform="rotate(-45)"><path fill="#5BAA6A" d="M0 0 C-12 -8 -12 -28 0 -36 C12 -28 12 -8 0 0 Z"/><path fill="none" stroke-width="2.5" d="M0 -6 L0 -26"/></g>
+    <g transform="rotate(45)"><path fill="#448450" d="M0 0 C-12 -8 -12 -28 0 -36 C12 -28 12 -8 0 0 Z"/><path fill="none" stroke-width="2.5" d="M0 -6 L0 -26"/></g>
+    <g><path fill="#448450" d="M0 0 C-12 -8 -12 -28 0 -36 C12 -28 12 -8 0 0 Z"/><path fill="none" stroke-width="2.5" d="M0 -6 L0 -26"/></g>
+  </g>
+  <g id="sprig-far-left" transform="translate(74 98) rotate(-31)">
+    <g transform="rotate(-45)"><path fill="#5BAA6A" d="M0 0 C-12 -8 -12 -28 0 -36 C12 -28 12 -8 0 0 Z"/><path fill="none" stroke-width="2.5" d="M0 -6 L0 -26"/></g>
+    <g transform="rotate(45)"><path fill="#448450" d="M0 0 C-12 -8 -12 -28 0 -36 C12 -28 12 -8 0 0 Z"/><path fill="none" stroke-width="2.5" d="M0 -6 L0 -26"/></g>
+    <g><path fill="#5BAA6A" d="M0 0 C-12 -8 -12 -28 0 -36 C12 -28 12 -8 0 0 Z"/><path fill="none" stroke-width="2.5" d="M0 -6 L0 -26"/></g>
+  </g>
+  <g id="sprig-far-right" transform="translate(182 98) rotate(31)">
+    <g transform="rotate(-45)"><path fill="#5BAA6A" d="M0 0 C-12 -8 -12 -28 0 -36 C12 -28 12 -8 0 0 Z"/><path fill="none" stroke-width="2.5" d="M0 -6 L0 -26"/></g>
+    <g transform="rotate(45)"><path fill="#448450" d="M0 0 C-12 -8 -12 -28 0 -36 C12 -28 12 -8 0 0 Z"/><path fill="none" stroke-width="2.5" d="M0 -6 L0 -26"/></g>
+    <g><path fill="#448450" d="M0 0 C-12 -8 -12 -28 0 -36 C12 -28 12 -8 0 0 Z"/><path fill="none" stroke-width="2.5" d="M0 -6 L0 -26"/></g>
+  </g>
+  <g id="string-bow">
+    <path fill="none" stroke-width="9" d="M114 186 L142 186"/>
+    <path fill="none" stroke="#E2513B" stroke-width="4" d="M114 186 L142 186"/>
+    <path fill="#E2513B" d="M128 186 C112 172 102 190 118 196 Z M128 186 C144 172 154 190 138 196 Z"/>
+    <path fill="none" stroke-width="8.5" d="M126 189 L116 206 M130 189 L140 206"/>
+    <path fill="none" stroke="#E2513B" stroke-width="3.5" d="M126 189 L116 206 M130 189 L140 206"/>
+  </g>
+</g>
+</svg>

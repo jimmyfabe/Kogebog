@@ -4,29 +4,67 @@
     <ellipse cx="128" cy="140" rx="108" ry="75" fill="#3E8FB0"/>
     <ellipse cx="128" cy="140" rx="94" ry="61" fill="#FFF4E2"/>
   </g>
-  <g id="patties">
-    <ellipse cx="96" cy="114" rx="30" ry="18" fill="#CFA976"/>
-    <ellipse cx="96" cy="110" rx="28" ry="15" fill="#F2C14E"/>
-    <ellipse cx="160" cy="114" rx="30" ry="18" fill="#CFA976"/>
-    <ellipse cx="160" cy="110" rx="28" ry="15" fill="#F2C14E"/>
-    <ellipse cx="78" cy="154" rx="30" ry="18" fill="#CFA976"/>
-    <ellipse cx="78" cy="150" rx="28" ry="15" fill="#F2C14E"/>
-    <ellipse cx="140" cy="158" rx="30" ry="18" fill="#CFA976"/>
-    <ellipse cx="140" cy="154" rx="28" ry="15" fill="#F2C14E"/>
+  <g id="lemon" transform="translate(190 112) rotate(-20)">
+    <path fill="#F2C14E" d="M-22 -4 L22 -4 A22 22 0 0 1 -22 -4 Z"/>
+    <path fill="#FFF4E2" d="M-15 -4 L15 -4 A15 15 0 0 1 -15 -4 Z"/>
+    <path fill="none" stroke="#D9A52E" d="M0 -2 L10 6 M0 -2 L0 9 M0 -2 L-10 6"/>
+    <path fill="none" d="M-22 -4 L22 -4 A22 22 0 0 1 -22 -4 Z"/>
   </g>
-  <g id="parsley-flecks" fill="#5BAA6A" stroke-width="2">
-    <ellipse cx="88" cy="108" rx="3" ry="2"/>
-    <ellipse cx="104" cy="112" rx="3" ry="2"/>
-    <ellipse cx="152" cy="108" rx="3" ry="2"/>
-    <ellipse cx="168" cy="112" rx="3" ry="2"/>
-    <ellipse cx="70" cy="148" rx="3" ry="2"/>
-    <ellipse cx="86" cy="152" rx="3" ry="2"/>
-    <ellipse cx="132" cy="152" rx="3" ry="2"/>
-    <ellipse cx="148" cy="156" rx="3" ry="2"/>
+  <g id="patty-1" transform="translate(86 108) rotate(-8)">
+    <path fill="#D9A52E" d="M-32 2 C-32 -12 -14 -18 2 -18 C20 -18 34 -10 32 2 C30 14 12 18 -2 18 C-18 18 -32 14 -32 2 Z"/>
+    <path fill="#E8C79A" d="M-31 -2 C-30 -14 -12 -19 2 -19 C20 -19 33 -11 31 -2 C28 8 12 11 -2 11 C-18 11 -31 8 -31 -2 Z"/>
+    <path fill="#F2C14E" stroke="none" d="M-27 -4 C-26 -12 -10 -17 2 -17 C16 -17 30 -11 28 -4 C26 0 22 0 18 3 C10 7 -4 6 -12 4 C-20 3 -28 2 -27 -4 Z"/>
+    <g fill="#D9A52E" stroke="none"><circle cx="-14" cy="-12" r="2.5"/><circle cx="8" cy="0" r="2.5"/><circle cx="22" cy="-8" r="2.5"/><circle cx="-6" cy="-2" r="2"/></g>
+    <g fill="#5BAA6A" stroke="none">
+      <rect x="-22" y="-8" width="9" height="5" rx="2" transform="rotate(-20 -18 -6)"/>
+      <rect x="2" y="-14" width="9" height="5" rx="2" transform="rotate(30 5 -12)"/>
+      <rect x="16" y="-4" width="9" height="5" rx="2" transform="rotate(-10 19 -2)"/>
+    </g>
   </g>
-  <g id="parsley" fill="#5BAA6A">
-    <path d="M184 176 Q190 166 200 164" fill="none"/>
-    <path d="M190 170 C178 172 174 164 179 160 C172 153 181 148 186 153 C187 144 196 148 194 156 Q200 160 190 170 Z"/>
+  <g id="patty-2" transform="translate(146 100) rotate(6)">
+    <path fill="#D9A52E" d="M-32 2 C-32 -12 -14 -18 2 -18 C20 -18 34 -10 32 2 C30 14 12 18 -2 18 C-18 18 -32 14 -32 2 Z"/>
+    <path fill="#E8C79A" d="M-31 -2 C-30 -14 -12 -19 2 -19 C20 -19 33 -11 31 -2 C28 8 12 11 -2 11 C-18 11 -31 8 -31 -2 Z"/>
+    <path fill="#F2C14E" stroke="none" d="M-27 -4 C-26 -12 -10 -17 2 -17 C16 -17 30 -11 28 -4 C26 0 22 0 18 3 C10 7 -4 6 -12 4 C-20 3 -28 2 -27 -4 Z"/>
+    <g fill="#D9A52E" stroke="none"><circle cx="-14" cy="-12" r="2.5"/><circle cx="8" cy="0" r="2.5"/><circle cx="22" cy="-8" r="2.5"/><circle cx="-6" cy="-2" r="2"/></g>
+    <g fill="#5BAA6A" stroke="none">
+      <rect x="-20" y="-12" width="9" height="5" rx="2" transform="rotate(25 -16 -10)"/>
+      <rect x="-4" y="-4" width="9" height="5" rx="2" transform="rotate(-30 0 -2)"/>
+      <rect x="14" y="-12" width="9" height="5" rx="2" transform="rotate(15 18 -10)"/>
+    </g>
+  </g>
+  <g id="patty-3" transform="translate(80 154) rotate(5)">
+    <path fill="#D9A52E" d="M-32 2 C-32 -12 -14 -18 2 -18 C20 -18 34 -10 32 2 C30 14 12 18 -2 18 C-18 18 -32 14 -32 2 Z"/>
+    <path fill="#E8C79A" d="M-31 -2 C-30 -14 -12 -19 2 -19 C20 -19 33 -11 31 -2 C28 8 12 11 -2 11 C-18 11 -31 8 -31 -2 Z"/>
+    <path fill="#F2C14E" stroke="none" d="M-27 -4 C-26 -12 -10 -17 2 -17 C16 -17 30 -11 28 -4 C26 0 22 0 18 3 C10 7 -4 6 -12 4 C-20 3 -28 2 -27 -4 Z"/>
+    <g fill="#D9A52E" stroke="none"><circle cx="-14" cy="-12" r="2.5"/><circle cx="8" cy="0" r="2.5"/><circle cx="22" cy="-8" r="2.5"/><circle cx="-6" cy="-2" r="2"/></g>
+    <g fill="#5BAA6A" stroke="none">
+      <rect x="-18" y="-4" width="9" height="5" rx="2" transform="rotate(-35 -14 -2)"/>
+      <rect x="0" y="-14" width="9" height="5" rx="2" transform="rotate(10 4 -12)"/>
+      <rect x="18" y="-6" width="9" height="5" rx="2" transform="rotate(40 22 -4)"/>
+    </g>
+  </g>
+  <g id="patty-4" transform="translate(140 148) rotate(-5)">
+    <path fill="#D9A52E" d="M-32 2 C-32 -12 -14 -18 2 -18 C20 -18 34 -10 32 2 C30 14 12 18 -2 18 C-18 18 -32 14 -32 2 Z"/>
+    <path fill="#E8C79A" d="M-31 -2 C-30 -14 -12 -19 2 -19 C20 -19 33 -11 31 -2 C28 8 12 11 -2 11 C-18 11 -31 8 -31 -2 Z"/>
+    <path fill="#F2C14E" stroke="none" d="M-27 -4 C-26 -12 -10 -17 2 -17 C16 -17 30 -11 28 -4 C26 0 22 0 18 3 C10 7 -4 6 -12 4 C-20 3 -28 2 -27 -4 Z"/>
+    <g fill="#D9A52E" stroke="none"><circle cx="-14" cy="-12" r="2.5"/><circle cx="8" cy="0" r="2.5"/><circle cx="22" cy="-8" r="2.5"/><circle cx="-6" cy="-2" r="2"/></g>
+    <g fill="#5BAA6A" stroke="none">
+      <rect x="-22" y="-10" width="9" height="5" rx="2" transform="rotate(15 -18 -8)"/>
+      <rect x="-2" y="-14" width="9" height="5" rx="2" transform="rotate(-25 2 -12)"/>
+      <rect x="14" y="-2" width="9" height="5" rx="2" transform="rotate(30 18 0)"/>
+    </g>
+  </g>
+  <g id="yoghurt" transform="translate(184 168)">
+    <path fill="#FFFFFF" d="M-24 8 C-28 -2 -16 -8 -10 -8 C-10 -16 4 -20 8 -12 C18 -14 28 -4 24 8 C14 15 -14 15 -24 8 Z"/>
+    <path fill="#EDE8E0" stroke="none" d="M24 8 C28 -4 18 -14 8 -12 C18 -6 20 2 14 12 C18 11 21 10 24 8 Z"/>
+    <path fill="none" d="M-12 2 C-4 -4 6 -4 12 0"/>
+    <g fill="#5BAA6A" stroke="none">
+      <circle cx="-14" cy="-1" r="2.5"/>
+      <circle cx="0" cy="-10" r="2.5"/>
+      <circle cx="4" cy="6" r="2.5"/>
+      <circle cx="16" cy="-3" r="2.5"/>
+    </g>
+    <path fill="none" d="M-24 8 C-28 -2 -16 -8 -10 -8 C-10 -16 4 -20 8 -12 C18 -14 28 -4 24 8 C14 15 -14 15 -24 8 Z"/>
   </g>
 </g>
 </svg>

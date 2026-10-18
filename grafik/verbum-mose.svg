@@ -1,1 +1,65 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M36 140 L220 140 L206 216 Q202 228 188 228 L68 228 Q54 228 50 216 Z" fill="#8E9AA6"/><ellipse cx="128" cy="140" rx="92" ry="18" fill="#6D7B8A"/><ellipse cx="128" cy="142" rx="80" ry="12" fill="#FBEBC2"/><circle cx="76" cy="138" r="7" fill="#E8C79A"/><circle cx="182" cy="140" r="6" fill="#E8C79A"/><ellipse cx="128" cy="136" rx="36" ry="8" fill="#EDE8E0"/><path d="M106 134 L106 140 M118 132 L118 142 M130 132 L130 142 M142 132 L142 142 M152 134 L152 140" fill="none"/><rect x="122" y="62" width="12" height="72" rx="4" fill="#EDE8E0"/><rect x="94" y="46" width="68" height="20" rx="10" fill="#9A6A44"/><g transform="translate(128 52) rotate(180)"><rect x="-14" y="0" width="28" height="80" rx="14" fill="#F08A3C"/><ellipse cx="0" cy="0" rx="18" ry="15" fill="#F08A3C"/><ellipse cx="0" cy="2" rx="10" ry="8" fill="#FFF4E2"/></g><path d="M196 54 L196 104" fill="none" stroke="#3B2A20" stroke-width="13"/><path d="M184 66 L196 54 L208 66 M184 92 L196 104 L208 92" fill="none" stroke="#3B2A20" stroke-width="13"/><path d="M196 54 L196 104" fill="none" stroke="#3E8FB0" stroke-width="6.5"/><path d="M184 66 L196 54 L208 66 M184 92 L196 104 L208 92" fill="none" stroke="#3E8FB0" stroke-width="6.5"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="mash">
+    <g id="pot" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+      <g id="handles">
+        <path d="M66 145 L45 145 Q35 145 35 155 L35 167 Q35 177 46 177 L67 177 L67 166 L47 166 L47 156 L66 156 Z" fill="#8E9AA6"/>
+        <path d="M203 145 L220 145 Q229 145 229 155 L229 165 Q229 175 219 175 L203 175 L203 165 L218 165 L218 156 L203 156 Z" fill="#8E9AA6"/>
+      </g>
+      <g id="pot-body">
+        <path d="M62 143 L62 188 C62 206 91 217 135 217 C179 217 208 206 208 188 L208 143 Z" fill="#8E9AA6"/>
+        <path d="M190 153 L190 187 Q189 204 164 214 C191 210 208 200 208 188 L208 143 Z" fill="#6D7B8A"/>
+        <ellipse cx="135" cy="143" rx="73" ry="24" fill="#6D7B8A"/>
+      </g>
+      <g id="mashed-potatoes">
+        <path d="M69 145 C67 136 76 131 85 132 C87 123 102 122 112 126 C119 117 134 119 141 124 C152 118 165 122 170 128 C184 123 199 131 201 141 Q204 151 189 156 Q137 175 83 157 Q70 153 69 145 Z" fill="#E8C79A"/>
+      </g>
+    </g>
+    <g id="potato-swirls" fill="#CFA976">
+      <path d="M77 143 Q82 136 93 139 Q96 142 92 144 Q83 141 81 146 Q78 149 77 143 Z"/>
+      <path d="M174 145 Q186 140 194 145 Q197 149 192 150 Q184 146 177 150 Q172 151 174 145 Z"/>
+      <path d="M78 153 Q86 157 96 154 Q100 154 99 158 Q88 164 77 157 Q74 154 78 153 Z"/>
+    </g>
+    <g id="action" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+      <g id="potato-chunks">
+        <path d="M79 130 Q79 119 89 114 Q99 111 108 120 Q113 126 109 135 Q95 143 83 137 Q79 135 79 130 Z" fill="#E8C79A"/>
+        <path d="M163 123 Q166 113 178 115 Q191 117 193 129 Q194 139 183 142 Q172 144 164 136 Q160 130 163 123 Z" fill="#E8C79A"/>
+        <path d="M172 124 Q177 120 182 124" fill="none"/>
+      </g>
+      <g id="rosa-forearm">
+        <path d="M210 0 L246 0 C223 24 193 47 161 63 L146 45 C174 29 196 13 210 0 Z" fill="#F08A3C"/>
+      </g>
+      <g id="masher-shaft">
+        <path d="M130 70 L140 70 L140 151 L130 151 Z" fill="#8E9AA6"/>
+        <circle cx="135" cy="60" r="17" fill="#9A6A44"/>
+      </g>
+      <g id="rosa-gripping-paw">
+        <path d="M148 42 C152 34 162 38 160 46 C169 44 174 53 168 58 C174 64 169 71 162 69 C160 78 151 78 147 71 Q137 73 134 66 C130 59 135 54 142 57 Q139 46 148 42 Z" fill="#F08A3C"/>
+        <path d="M146 57 Q153 52 162 58 Q166 65 158 69 Q148 71 144 64 Q142 61 146 57 Z" fill="#FFF4E2"/>
+        <path d="M151 46 L154 51" fill="none"/>
+      </g>
+      <g id="masher-plate">
+        <ellipse cx="135" cy="156" rx="37" ry="18" fill="#8E9AA6"/>
+        <path d="M128 143 Q135 138 142 143" fill="none"/>
+        <g id="six-holes" fill="#E8C79A">
+          <circle cx="114" cy="150" r="4"/>
+          <circle cx="135" cy="150" r="4"/>
+          <circle cx="156" cy="150" r="4"/>
+          <circle cx="114" cy="162" r="4"/>
+          <circle cx="135" cy="162" r="4"/>
+          <circle cx="156" cy="162" r="4"/>
+        </g>
+      </g>
+      <g id="bo-forearm">
+        <path d="M0 146 Q18 144 33 149 L39 176 Q20 183 0 183 Z" fill="#9A6A44"/>
+      </g>
+      <g id="oven-mitt">
+        <path d="M29 151 C37 139 48 135 56 141 C64 146 60 154 53 155 L47 159 L58 158 C68 157 72 165 64 172 C57 181 45 184 32 177 Z" fill="#E2513B"/>
+        <path d="M26 148 L36 146 L39 180 L29 183 Z" fill="#C3331D"/>
+        <path d="M47 159 Q42 162 43 167" fill="none"/>
+      </g>
+      <g id="downward-motion">
+        <path d="M91 59 Q91 54 96 54 Q101 54 101 59 L101 88 L110 88 L96 106 L82 88 L91 88 Z" fill="#3E8FB0"/>
+      </g>
+    </g>
+  </g>
+</svg>

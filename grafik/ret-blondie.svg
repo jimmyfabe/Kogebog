@@ -4,21 +4,29 @@
     <ellipse cx="128" cy="140" rx="108" ry="75" fill="#3E8FB0"/>
     <ellipse cx="128" cy="140" rx="94" ry="61" fill="#FFF4E2"/>
   </g>
-  <g id="back-piece">
-    <path d="M118 96 L170 88 L196 108 L196 126 L144 136 L118 114 Z" fill="#CFA976"/>
-    <path d="M118 96 L170 88 L196 108 L144 118 Z" fill="#E8C79A"/>
-    <path d="M140 98 L147 96 L149 102 L142 104 Z M164 104 L171 102 L173 108 L166 110 Z" fill="#FFFFFF"/>
+  <g id="piece-back" transform="translate(128 108)">
+    <path fill="#D9A52E" d="M-40 -12 L0 4 L0 34 L-40 18 Z"/>
+    <path fill="#CFA976" d="M0 4 L46 -14 L46 16 L0 34 Z"/>
+    <path fill="#E8C79A" d="M-40 -12 L6 -30 L46 -14 L0 4 Z"/>
+    <path fill="none" stroke="#D9A52E" d="M-26 -10 L-16 -14 L-10 -10 M12 -6 L20 -10 L30 -8"/>
+    <path fill="#FFFFFF" d="M0 -26 L8 -27 L12 -21 L7 -16 L-1 -18 Z"/>
+    <path fill="#FFFFFF" d="M-12 -2 L-4 -3 L0 3 L-6 7 L-13 4 Z"/>
   </g>
-  <g id="front-piece">
-    <path d="M58 128 L114 118 L142 140 L142 162 L86 174 L58 150 Z" fill="#CFA976"/>
-    <path d="M58 128 L114 118 L142 140 L86 152 Z" fill="#E8C79A"/>
-    <path d="M80 128 L87 126 L89 132 L82 134 Z M104 136 L111 134 L113 140 L106 142 Z M92 144 L99 142 L101 148 L94 150 Z" fill="#FFFFFF"/>
-    <path d="M100 160 L106 158 L108 164 L102 166 Z M120 154 L126 152 L128 158 L122 160 Z" fill="#FFFFFF"/>
+  <g id="piece-left" transform="translate(88 146)">
+    <path fill="#D9A52E" d="M-40 -12 L0 4 L0 34 L-40 18 Z"/>
+    <path fill="#CFA976" d="M0 4 L46 -14 L46 16 L0 34 Z"/>
+    <path fill="#E8C79A" d="M-40 -12 L6 -30 L46 -14 L0 4 Z"/>
+    <path fill="none" stroke="#D9A52E" d="M-26 -12 L-16 -16 L-10 -12 M8 -4 L16 -8 L26 -6"/>
+    <path fill="#FFFFFF" d="M12 -24 L20 -25 L24 -19 L19 -14 L11 -16 Z"/>
+    <path fill="#FFFFFF" d="M-12 -6 L-4 -7 L0 -1 L-6 3 L-13 0 Z"/>
   </g>
-  <g id="crumbs" fill="#E8C79A">
-    <ellipse cx="164" cy="160" rx="5" ry="3.5"/>
-    <ellipse cx="178" cy="150" rx="4" ry="3"/>
-    <ellipse cx="156" cy="172" rx="3.5" ry="2.5"/>
+  <g id="piece-right" transform="translate(170 148)">
+    <path fill="#D9A52E" d="M-40 -12 L0 4 L0 34 L-40 18 Z"/>
+    <path fill="#CFA976" d="M0 4 L46 -14 L46 16 L0 34 Z"/>
+    <path fill="#E8C79A" d="M-40 -12 L6 -30 L46 -14 L0 4 Z"/>
+    <path fill="none" stroke="#D9A52E" d="M-24 -12 L-14 -16 L-8 -12 M10 -4 L18 -8 L28 -6"/>
+    <path fill="#FFFFFF" d="M-4 -26 L4 -27 L8 -21 L3 -16 L-5 -18 Z"/>
+    <path fill="#FFFFFF" d="M18 -18 L26 -19 L30 -13 L25 -8 L17 -10 Z"/>
   </g>
 </g>
 </svg>

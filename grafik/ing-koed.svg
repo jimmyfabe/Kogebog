@@ -1,1 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="36" y="128" width="184" height="82" rx="24" fill="#EDE8E0"/><path d="M58 146 Q60 104 128 102 Q196 104 198 146 Q190 186 128 188 Q66 186 58 146 Z" fill="#E2513B"/><path d="M82 130 q10 -8 20 0 M120 120 q10 -8 20 0 M156 134 q10 -8 20 0 M96 160 q10 -8 20 0 M140 160 q10 -8 20 0" fill="none" stroke="#C3331D" stroke-width="5"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <path id="tray" fill="#FFFFFF" d="M40 150 L216 150 Q228 150 226 162 L218 206 Q216 216 204 216 L52 216 Q40 216 38 206 L30 162 Q28 150 40 150 Z"/>
+  <path id="tray-floor" fill="#EDE8E0" d="M50 160 L206 160 Q214 160 213 168 L208 198 Q207 204 200 204 L56 204 Q49 204 48 198 L43 168 Q42 160 50 160 Z"/>
+  <path id="mince" fill="#E2513B" d="M52 186 C46 160 70 120 104 112 C112 88 150 82 166 100 C196 102 214 140 206 186 C170 198 90 198 52 186 Z"/>
+  <path fill="#C3331D" stroke="none" d="M206 186 C214 140 196 102 166 100 C184 118 192 150 184 192 C192 190 200 188 206 186 Z"/>
+  <path fill="none" d="M52 186 C46 160 70 120 104 112 C112 88 150 82 166 100 C196 102 214 140 206 186 C170 198 90 198 52 186 Z"/>
+  <path id="mince-curls-left" fill="none" d="M66 172 q3 -5 6 0 t6 0 M94 150 q3 -5 6 0 t6 0 M82 132 q3 -5 6 0 t6 0 M108 172 q3 -5 6 0 t6 0"/>
+  <path id="mince-curls-mid" fill="none" d="M118 128 q3 -5 6 0 t6 0 M144 112 q3 -5 6 0 t6 0 M134 154 q3 -5 6 0 t6 0 M120 100 q3 -5 6 0 t6 0 M148 180 q3 -5 6 0 t6 0"/>
+  <path id="mince-curls-right" fill="none" d="M160 136 q3 -5 6 0 t6 0 M182 160 q3 -5 6 0 t6 0 M170 116 q3 -5 6 0 t6 0 M186 180 q3 -5 6 0 t6 0"/>
+</g>
+</svg>

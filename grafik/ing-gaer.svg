@@ -1,1 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="58" y="96" width="140" height="96" rx="14" fill="#CFA976"/><path d="M58 150 L198 150 L198 178 Q198 192 184 192 L72 192 Q58 192 58 178 Z" fill="#EDE8E0"/><circle cx="84" cy="120" r="6" fill="#E8C79A"/><circle cx="126" cy="112" r="5" fill="#E8C79A"/><circle cx="164" cy="124" r="6" fill="#E8C79A"/><circle cx="212" cy="186" r="7" fill="#CFA976"/><circle cx="46" cy="204" r="6" fill="#CFA976"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="wrapper">
+    <path fill="#F2C14E" d="M26 138 L140 98 L230 130 L112 178 Z"/>
+    <path fill="#D9A52E" stroke="none" d="M230 130 L112 178 L112 166 L212 131 Z"/>
+    <path fill="none" d="M44 138 L140 109 L212 131 L112 166 Z"/>
+  </g>
+  <g id="yeast-cube" transform="translate(126 136)">
+    <path fill="#E8C79A" d="M-32 -16 L0 0 L0 36 L-32 20 Z"/>
+    <path fill="#CFA976" d="M0 0 L32 -16 L32 20 L0 36 Z"/>
+    <path fill="#E8C79A" d="M-32 -16 L0 -32 L32 -16 L0 0 Z"/>
+    <path fill="#CFA976" d="M14 -25 L22 -21 L32 -16 L32 -2 L26 -6 L24 -12 L18 -14 Z"/>
+    <path fill="none" d="M-20 -10 L-14 -13 M-8 -22 L-2 -24"/>
+  </g>
+  <g id="crumbs" fill="#E8C79A">
+    <path d="M168 140 L176 136 L180 142 L172 146 Z"/>
+    <path d="M182 150 L188 147 L191 152 L185 155 Z"/>
+    <path d="M76 146 L83 143 L86 149 L79 152 Z"/>
+  </g>
+</g>
+</svg>

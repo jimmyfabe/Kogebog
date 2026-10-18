@@ -1,1 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M128 64 L200 100 L128 136 L56 100 Z" fill="#F2C14E"/><path d="M56 100 L128 136 L128 214 L56 178 Z" fill="#D9A52E"/><path d="M200 100 L128 136 L128 214 L200 178 Z" fill="#CFA976"/><path d="M74 128 L74 170 M182 128 L182 170" fill="none"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="foil-cube" transform="translate(86 116)">
+    <path fill="#F2C14E" d="M-46 -23 L0 0 L0 52 L-46 29 Z"/>
+    <path fill="#D9A52E" d="M0 0 L46 -23 L46 29 L0 52 Z"/>
+    <path fill="#F2C14E" d="M-46 -23 L0 -46 L46 -23 L0 0 Z"/>
+    <path fill="#D9A52E" d="M-46 -23 L-24 -11 L-46 0 Z"/>
+    <path fill="none" d="M-40 -12 L-30 4 L-26 2 L-16 20 L-12 18 L-4 36 M8 44 L16 30 L20 32 L28 14 L32 16 L40 -6 M-34 -26 L-14 -30 L-10 -26 L12 -36"/>
+  </g>
+  <g id="brown-cube" transform="translate(170 178)">
+    <path fill="#9A6A44" d="M-42 -21 L0 0 L0 46 L-42 25 Z"/>
+    <path fill="#704D31" d="M0 0 L42 -21 L42 25 L0 46 Z"/>
+    <path fill="#9A6A44" d="M-42 -21 L0 -42 L42 -21 L0 0 Z"/>
+    <path fill="none" stroke="#704D31" d="M-16 -20 L-8 -24 M6 -14 L14 -18 M-4 -32 L4 -34"/>
+  </g>
+  <g id="crumbs" fill="#9A6A44">
+    <path d="M110 214 L118 210 L122 216 L114 220 Z"/>
+    <path d="M98 202 L104 199 L107 204 L101 207 Z"/>
+    <path d="M216 198 L224 195 L226 202 L218 205 Z"/>
+  </g>
+</g>
+</svg>

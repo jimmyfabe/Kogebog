@@ -4,24 +4,53 @@
     <ellipse cx="128" cy="140" rx="108" ry="75" fill="#3E8FB0"/>
     <ellipse cx="128" cy="140" rx="94" ry="61" fill="#FFF4E2"/>
   </g>
-  <g id="snail-back">
-    <ellipse cx="96" cy="110" rx="34" ry="24" fill="#CFA976"/>
-    <ellipse cx="96" cy="106" rx="32" ry="21" fill="#E8C79A"/>
-    <path d="M96 106 m-4 0 a4 3 0 1 1 8 0 a10 7 0 1 1 -18 0 a16 11 0 1 1 30 0 a22 15 0 1 1 -40 0" fill="none" stroke="#E2513B" stroke-width="5"/>
-    <ellipse cx="160" cy="110" rx="34" ry="24" fill="#CFA976"/>
-    <ellipse cx="160" cy="106" rx="32" ry="21" fill="#E8C79A"/>
-    <path d="M160 106 m-4 0 a4 3 0 1 1 8 0 a10 7 0 1 1 -18 0 a16 11 0 1 1 30 0 a22 15 0 1 1 -40 0" fill="none" stroke="#E2513B" stroke-width="5"/>
+  <g id="scroll-1" transform="translate(98 106) rotate(20)">
+    <circle r="30" fill="#CFA976"/>
+    <circle r="26" fill="#E8C79A" stroke="none"/>
+    <path fill="none" stroke="#E2513B" stroke-width="4" d="M5 0 A5 5 0 0 0 -5 0 A10 10 0 0 0 15 0 A15 15 0 0 0 -15 0 A20 20 0 0 0 25 0 A25 25 0 0 0 -25 0"/>
+    <path fill="#F2C14E" d="M-8 -26 C0 -30 14 -28 18 -20 C20 -14 14 -10 10 -14 C6 -10 0 -12 0 -16 C-4 -14 -10 -16 -10 -20 C-12 -22 -11 -25 -8 -26 Z"/>
+    <path fill="#F2C14E" d="M-26 4 C-24 -2 -16 -2 -14 4 C-12 8 -16 10 -18 8 C-20 12 -26 10 -26 4 Z"/>
+    <path fill="#E2513B" d="M2 6 L15 4 L17 17 L4 19 Z"/>
+    <path fill="#FFF4E2" stroke="none" d="M4.5 16.5 L15.2 15 L15.6 17.3 L4.9 18.9 Z"/>
+    <circle r="30" fill="none"/>
   </g>
-  <g id="snail-front">
-    <ellipse cx="128" cy="160" rx="36" ry="25" fill="#CFA976"/>
-    <ellipse cx="128" cy="156" rx="34" ry="22" fill="#E8C79A"/>
-    <path d="M128 156 m-4 0 a4 3 0 1 1 8 0 a10 7 0 1 1 -18 0 a16 11 0 1 1 30 0 a22 15 0 1 1 -40 0" fill="none" stroke="#E2513B" stroke-width="5"/>
+  <g id="scroll-2" transform="translate(158 104) rotate(-40)">
+    <circle r="30" fill="#CFA976"/>
+    <circle r="26" fill="#E8C79A" stroke="none"/>
+    <path fill="none" stroke="#E2513B" stroke-width="4" d="M5 0 A5 5 0 0 0 -5 0 A10 10 0 0 0 15 0 A15 15 0 0 0 -15 0 A20 20 0 0 0 25 0 A25 25 0 0 0 -25 0"/>
+    <path fill="#F2C14E" d="M-8 -26 C0 -30 14 -28 18 -20 C20 -14 14 -10 10 -14 C6 -10 0 -12 0 -16 C-4 -14 -10 -16 -10 -20 C-12 -22 -11 -25 -8 -26 Z"/>
+    <path fill="#F2C14E" d="M-26 4 C-24 -2 -16 -2 -14 4 C-12 8 -16 10 -18 8 C-20 12 -26 10 -26 4 Z"/>
+    <path fill="#E2513B" d="M2 6 L15 4 L17 17 L4 19 Z"/>
+    <path fill="#FFF4E2" stroke="none" d="M4.5 16.5 L15.2 15 L15.6 17.3 L4.9 18.9 Z"/>
+    <circle r="30" fill="none"/>
   </g>
-  <g id="cheese" fill="#F2C14E" stroke-width="2.5">
-    <path d="M84 96 L92 94 M106 116 L113 118 M150 96 L158 94 M170 116 L177 118 M114 146 L122 144 M138 168 L146 170"/>
-    <ellipse cx="80" cy="112" rx="4" ry="3"/>
-    <ellipse cx="174" cy="102" rx="4" ry="3"/>
-    <ellipse cx="146" cy="150" rx="4" ry="3"/>
+  <g id="scroll-3" transform="translate(72 158) rotate(70)">
+    <circle r="30" fill="#CFA976"/>
+    <circle r="26" fill="#E8C79A" stroke="none"/>
+    <path fill="none" stroke="#E2513B" stroke-width="4" d="M5 0 A5 5 0 0 0 -5 0 A10 10 0 0 0 15 0 A15 15 0 0 0 -15 0 A20 20 0 0 0 25 0 A25 25 0 0 0 -25 0"/>
+    <path fill="#F2C14E" d="M-8 -26 C0 -30 14 -28 18 -20 C20 -14 14 -10 10 -14 C6 -10 0 -12 0 -16 C-4 -14 -10 -16 -10 -20 C-12 -22 -11 -25 -8 -26 Z"/>
+    <path fill="#E2513B" d="M2 6 L15 4 L17 17 L4 19 Z"/>
+    <path fill="#FFF4E2" stroke="none" d="M4.5 16.5 L15.2 15 L15.6 17.3 L4.9 18.9 Z"/>
+    <circle r="30" fill="none"/>
+  </g>
+  <g id="scroll-4" transform="translate(128 160) rotate(-10)">
+    <circle r="30" fill="#CFA976"/>
+    <circle r="26" fill="#E8C79A" stroke="none"/>
+    <path fill="none" stroke="#E2513B" stroke-width="4" d="M5 0 A5 5 0 0 0 -5 0 A10 10 0 0 0 15 0 A15 15 0 0 0 -15 0 A20 20 0 0 0 25 0 A25 25 0 0 0 -25 0"/>
+    <path fill="#F2C14E" d="M-8 -26 C0 -30 14 -28 18 -20 C20 -14 14 -10 10 -14 C6 -10 0 -12 0 -16 C-4 -14 -10 -16 -10 -20 C-12 -22 -11 -25 -8 -26 Z"/>
+    <path fill="#F2C14E" d="M-26 4 C-24 -2 -16 -2 -14 4 C-12 8 -16 10 -18 8 C-20 12 -26 10 -26 4 Z"/>
+    <path fill="#E2513B" d="M2 6 L15 4 L17 17 L4 19 Z"/>
+    <path fill="#FFF4E2" stroke="none" d="M4.5 16.5 L15.2 15 L15.6 17.3 L4.9 18.9 Z"/>
+    <circle r="30" fill="none"/>
+  </g>
+  <g id="scroll-5" transform="translate(184 158) rotate(150)">
+    <circle r="30" fill="#CFA976"/>
+    <circle r="26" fill="#E8C79A" stroke="none"/>
+    <path fill="none" stroke="#E2513B" stroke-width="4" d="M5 0 A5 5 0 0 0 -5 0 A10 10 0 0 0 15 0 A15 15 0 0 0 -15 0 A20 20 0 0 0 25 0 A25 25 0 0 0 -25 0"/>
+    <path fill="#F2C14E" d="M-8 -26 C0 -30 14 -28 18 -20 C20 -14 14 -10 10 -14 C6 -10 0 -12 0 -16 C-4 -14 -10 -16 -10 -20 C-12 -22 -11 -25 -8 -26 Z"/>
+    <path fill="#E2513B" d="M2 6 L15 4 L17 17 L4 19 Z"/>
+    <path fill="#FFF4E2" stroke="none" d="M4.5 16.5 L15.2 15 L15.6 17.3 L4.9 18.9 Z"/>
+    <circle r="30" fill="none"/>
   </g>
 </g>
 </svg>

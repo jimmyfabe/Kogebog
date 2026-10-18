@@ -1,1 +1,26 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="160" cy="112" rx="50" ry="36" fill="#CFA976" transform="rotate(22 160 112)"/><ellipse cx="104" cy="158" rx="62" ry="44" fill="#E8C79A" transform="rotate(-12 104 158)"/><circle cx="82" cy="146" r="3.5" fill="#9A6A44" stroke="none"/><circle cx="118" cy="174" r="3.5" fill="#9A6A44" stroke="none"/><circle cx="130" cy="140" r="3" fill="#9A6A44" stroke="none"/><circle cx="170" cy="100" r="3" fill="#9A6A44" stroke="none"/><circle cx="186" cy="124" r="3" fill="#9A6A44" stroke="none"/><ellipse cx="80" cy="132" rx="10" ry="6" fill="#FFF4E2" stroke="none" transform="rotate(-20 80 132)"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="potato-back">
+    <path fill="#E8C79A" stroke="none" d="M100 104 C96 76 118 54 148 50 C164 48 172 56 186 52 C210 46 228 64 226 88 C224 108 214 120 202 128 C186 140 168 146 150 144 C128 142 104 132 100 104 Z"/>
+    <path fill="#CFA976" stroke="none" d="M226 88 C224 108 214 120 202 128 C186 140 168 146 150 144 C170 136 192 126 204 112 C214 100 222 96 226 88 Z"/>
+    <g id="eyes-back" fill="none" stroke="#9A6A44">
+      <path d="M132 72 Q136 67 141 71"/>
+      <path d="M174 74 Q179 78 184 74"/>
+      <path d="M156 97 Q160 92 165 96"/>
+      <path d="M196 104 Q200 108 205 103"/>
+    </g>
+    <path fill="none" d="M100 104 C96 76 118 54 148 50 C164 48 172 56 186 52 C210 46 228 64 226 88 C224 108 214 120 202 128 C186 140 168 146 150 144 C128 142 104 132 100 104 Z"/>
+  </g>
+  <g id="potato-front">
+    <path fill="#E8C79A" stroke="none" d="M36 150 C32 120 58 104 88 106 C104 107 112 114 128 112 C156 108 182 122 184 150 C186 178 168 200 140 206 C116 211 100 204 82 206 C56 208 38 182 36 150 Z"/>
+    <path fill="#CFA976" stroke="none" d="M184 150 C186 178 168 200 140 206 C116 211 100 204 82 206 C108 192 146 190 162 174 C172 164 180 158 184 150 Z"/>
+    <g id="eyes-front" fill="none" stroke="#9A6A44">
+      <path d="M62 141 Q66 136 71 140"/>
+      <path d="M108 131 Q113 135 118 130"/>
+      <path d="M78 177 Q83 173 88 177"/>
+      <path d="M140 156 Q145 151 150 155"/>
+    </g>
+    <path fill="none" d="M36 150 C32 120 58 104 88 106 C104 107 112 114 128 112 C156 108 182 122 184 150 C186 178 168 200 140 206 C116 211 100 204 82 206 C56 208 38 182 36 150 Z"/>
+  </g>
+</g>
+</svg>

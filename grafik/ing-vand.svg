@@ -1,1 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M70 64 L186 64 L170 220 L86 220 Z" fill="#FFFFFF"/><path d="M76 112 L180 112 L170 220 L86 220 Z" fill="#3E8FB0"/><path d="M100 128 L94 196" fill="none" stroke="#FFFFFF" stroke-width="8"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <path id="glass" fill="#FFFFFF" d="M70 80 L186 80 L174 222 C174 226 170 228 166 228 L90 228 C86 228 82 226 82 222 Z"/>
+  <path fill="#EDE8E0" stroke="none" d="M186 80 L174 222 C174 226 170 228 166 228 L160 228 C164 226 166 222 166 216 L177 80 Z"/>
+  <path id="water" fill="#3E8FB0" stroke="none" d="M74 129 L182 129 L174 222 C174 226 170 228 166 228 L90 228 C86 228 82 226 82 222 Z"/>
+  <path fill="#2E6A83" stroke="none" d="M182 129 L174 222 C174 226 170 228 166 228 L160 228 C164 226 166 222 166 216 L173 133 Z"/>
+  <ellipse id="surface" cx="128" cy="129" rx="54" ry="10" fill="#3E8FB0"/>
+  <path fill="#2E6A83" stroke="none" d="M76 128 C78 123 100 120.5 128 120.5 C156 120.5 178 123 180 128 C168 125.5 150 125 128 125 C106 125 88 125.5 76 128 Z"/>
+  <path fill="none" d="M70 80 L186 80 L174 222 C174 226 170 228 166 228 L90 228 C86 228 82 226 82 222 Z"/>
+  <ellipse id="rim" cx="128" cy="80" rx="58" ry="10" fill="#FFFFFF"/>
+  <path id="drop" fill="#3E8FB0" d="M178 26 C184 38 194 46 194 56 C194 64 186 70 178 70 C170 70 162 64 162 56 C162 46 172 38 178 26 Z"/>
+  <path fill="none" stroke="#FFFFFF" stroke-width="4" d="M169 53 Q169 60 175 62"/>
+</g>
+</svg>

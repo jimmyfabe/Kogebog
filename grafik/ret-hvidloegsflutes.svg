@@ -4,23 +4,34 @@
     <ellipse cx="128" cy="140" rx="108" ry="75" fill="#3E8FB0"/>
     <ellipse cx="128" cy="140" rx="94" ry="61" fill="#FFF4E2"/>
   </g>
-  <g id="foil">
-    <path d="M44 150 L70 106 L214 118 L196 170 Z" fill="#EDE8E0"/>
-    <path d="M70 106 L80 122 L204 132 L214 118 M80 122 L62 158" fill="none"/>
+  <g id="garlic">
+    <path fill="#FFFFFF" d="M190 142 C192 150 204 154 208 164 C214 178 204 192 190 192 C176 192 166 178 172 164 C176 154 188 150 190 142 Z"/>
+    <path fill="#EDE8E0" stroke="none" d="M190 154 C198 160 204 170 202 180 C200 186 196 190 190 191 C196 180 196 166 190 154 Z"/>
+    <path fill="none" d="M190 154 C182 164 182 180 190 191 M190 154 C198 164 198 180 192 191 M190 142 L189 134"/>
   </g>
-  <g id="flute">
-    <path d="M60 140 C56 124 70 114 90 116 L186 124 C204 126 212 140 202 152 C196 160 180 160 170 158 L84 152 C70 152 62 148 60 140 Z" fill="#CFA976"/>
-    <path d="M64 134 C62 122 74 116 90 118 L184 126 C200 128 206 138 198 146 L88 140 C76 140 66 140 64 134 Z" fill="#E8C79A"/>
-  </g>
-  <g id="cuts" fill="#5BAA6A">
-    <path d="M88 118 L84 150 L90 151 L95 119 Z"/>
-    <path d="M110 120 L106 152 L112 152 L117 121 Z"/>
-    <path d="M132 122 L128 154 L134 154 L139 123 Z"/>
-    <path d="M154 124 L150 156 L156 156 L161 125 Z"/>
-    <path d="M176 126 L172 157 L178 157 L183 127 Z"/>
-  </g>
-  <g id="crumbs" fill="none">
-    <path d="M98 126 L101 125 M143 130 L146 129 M120 128 L123 127 M165 132 L168 131"/>
+  <g id="baguette" transform="translate(118 132) rotate(-30)">
+    <path fill="#E8C79A" d="M-98 0 C-96 -20 -76 -26 -60 -26 L60 -26 C80 -26 98 -18 98 -2 C98 14 82 22 64 22 L-62 22 C-84 22 -100 14 -98 0 Z"/>
+    <path fill="#CFA976" stroke="none" d="M-96 -6 C-92 -20 -76 -24 -60 -24 L60 -24 C78 -24 94 -18 96 -8 C80 -14 60 -14 40 -14 L-40 -14 C-64 -14 -84 -12 -96 -6 Z"/>
+    <path fill="none" d="M-96 -6 C-84 -12 -64 -14 -40 -14 L40 -14 C60 -14 80 -14 96 -8"/>
+    <g id="cuts">
+      <path fill="#FFF4E2" d="M-75 -27 L-53 -27 L-62 16 L-66 16 Z"/>
+      <path fill="#5BAA6A" stroke="none" d="M-70 -25 L-58 -25 L-63 10 L-65 10 Z"/>
+      <path fill="#FFF4E2" d="M-43 -27 L-21 -27 L-30 16 L-34 16 Z"/>
+      <path fill="#5BAA6A" stroke="none" d="M-38 -25 L-26 -25 L-31 10 L-33 10 Z"/>
+      <path fill="#FFF4E2" d="M-11 -27 L11 -27 L2 16 L-2 16 Z"/>
+      <path fill="#5BAA6A" stroke="none" d="M-6 -25 L6 -25 L1 10 L-1 10 Z"/>
+      <path fill="#FFF4E2" d="M21 -27 L43 -27 L34 16 L30 16 Z"/>
+      <path fill="#5BAA6A" stroke="none" d="M26 -25 L38 -25 L33 10 L31 10 Z"/>
+      <path fill="#FFF4E2" d="M53 -27 L75 -27 L66 16 L62 16 Z"/>
+      <path fill="#5BAA6A" stroke="none" d="M58 -25 L70 -25 L65 10 L63 10 Z"/>
+    </g>
+    <g id="flecks" fill="#448450" stroke="none">
+      <circle cx="-64" cy="-14" r="2.5"/>
+      <circle cx="-32" cy="-10" r="2.5"/>
+      <circle cx="0" cy="-15" r="2.5"/>
+      <circle cx="32" cy="-11" r="2.5"/>
+      <circle cx="64" cy="-15" r="2.5"/>
+    </g>
   </g>
 </g>
 </svg>

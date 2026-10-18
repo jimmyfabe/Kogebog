@@ -1,1 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="150" cy="114" rx="70" ry="46" fill="#FFFFFF" transform="rotate(14 150 114)"/><ellipse cx="148" cy="112" rx="60" ry="38" fill="#F9DCD6" stroke="none" transform="rotate(14 148 112)"/><ellipse cx="106" cy="156" rx="74" ry="48" fill="#FFFFFF" transform="rotate(-10 106 156)"/><ellipse cx="108" cy="156" rx="63" ry="39" fill="#F9DCD6" stroke="none" transform="rotate(-10 108 156)"/><path d="M76 150 Q100 136 128 146 M88 172 Q112 160 140 168" fill="none" stroke="#E2513B" stroke-width="3"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="slice-back">
+    <path fill="#E2513B" stroke="none" d="M84 100 C74 66 104 42 136 44 C152 45 162 38 180 40 C208 44 228 72 218 100 C212 116 224 128 214 144 C204 160 186 156 172 164 C150 176 96 140 84 100 Z"/>
+    <path fill="#C3331D" stroke="none" d="M218 100 C212 116 224 128 214 144 C204 160 186 156 172 164 C188 148 204 136 206 118 C208 110 212 104 218 100 Z"/>
+    <path fill="#FFF4E2" stroke="none" d="M84 100 C74 66 104 42 136 44 C152 45 162 38 180 40 C164 52 152 61 136 61 C112 60 90 74 84 100 Z"/>
+    <path fill="none" d="M180 40 C164 52 152 61 136 61 C112 60 90 74 84 100"/>
+    <path fill="none" stroke="#C3331D" d="M146 80 C166 74 186 80 200 94"/>
+    <path fill="none" d="M84 100 C74 66 104 42 136 44 C152 45 162 38 180 40 C208 44 228 72 218 100 C212 116 224 128 214 144 C204 160 186 156 172 164 C150 176 96 140 84 100 Z"/>
+  </g>
+  <g id="slice-front">
+    <path fill="#E2513B" stroke="none" d="M36 150 C34 120 62 98 96 98 C112 98 122 106 140 102 C168 96 192 116 188 144 C186 160 194 176 178 192 C160 210 132 204 112 212 C80 220 40 196 36 150 Z"/>
+    <path fill="#C3331D" stroke="none" d="M140 102 C168 96 192 116 188 144 C170 140 150 128 140 102 Z"/>
+    <path fill="#FFF4E2" stroke="none" d="M145.8 205.8 C134 207.5 122 208 112 212 C80 220 40 196 36 150 C46 178 76 196 112 194 C126 193 138 194 145.8 205.8 Z"/>
+    <path fill="none" d="M36 150 C46 178 76 196 112 194 C126 193 138 194 145.8 205.8"/>
+    <path fill="none" stroke="#C3331D" d="M60 140 C78 126 102 124 122 132 M78 166 C98 156 124 156 146 164"/>
+    <path fill="none" d="M188 144 C170 140 150 128 140 102"/>
+    <path fill="none" d="M36 150 C34 120 62 98 96 98 C112 98 122 106 140 102 C168 96 192 116 188 144 C186 160 194 176 178 192 C160 210 132 204 112 212 C80 220 40 196 36 150 Z"/>
+  </g>
+</g>
+</svg>

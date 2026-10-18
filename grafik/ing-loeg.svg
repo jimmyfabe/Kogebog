@@ -1,1 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M128 40 Q140 70 168 88 Q206 116 196 164 Q184 214 128 216 Q72 214 60 164 Q50 116 88 88 Q116 70 128 40 Z" fill="#CFA976"/><path d="M128 46 Q96 120 118 214 M128 46 Q160 120 138 214" fill="none"/><path d="M112 216 l-6 14 M128 218 l0 14 M144 216 l6 14" fill="none"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <path id="dry-tip" fill="#D9A52E" d="M123 52 L127 30 L134 32 L133 52 Z"/>
+  <path id="bulb" fill="#F2C14E" d="M128 44 C136 64 150 74 170 86 C204 106 216 150 200 182 C186 210 158 218 128 218 C98 218 70 210 56 182 C40 150 52 106 86 86 C106 74 120 64 128 44 Z"/>
+  <path fill="#D9A52E" stroke="none" d="M170 86 C204 106 216 150 200 182 C186 210 158 218 128 218 C162 206 186 180 186 146 C186 118 176 100 156 78 C160 81 165 83 170 86 Z"/>
+  <path fill="none" d="M120 66 C100 104 98 170 112 214"/>
+  <path fill="none" d="M136 66 C156 104 160 170 148 214"/>
+  <path fill="none" d="M100 84 C76 116 74 168 86 200"/>
+  <path fill="none" d="M128 44 C136 64 150 74 170 86 C204 106 216 150 200 182 C186 210 158 218 128 218 C98 218 70 210 56 182 C40 150 52 106 86 86 C106 74 120 64 128 44 Z"/>
+  <path id="roots" fill="none" d="M114 219 L108 228 M124 220 L122 230 M134 220 L136 230 M143 218 L149 227"/>
+</g>
+</svg>

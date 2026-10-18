@@ -4,20 +4,29 @@
     <ellipse cx="128" cy="140" rx="108" ry="75" fill="#3E8FB0"/>
     <ellipse cx="128" cy="140" rx="94" ry="61" fill="#FFF4E2"/>
   </g>
-  <g id="back-piece">
-    <path d="M118 96 L170 88 L196 108 L196 126 L144 136 L118 114 Z" fill="#3B2A20"/>
-    <path d="M118 96 L170 88 L196 108 L144 118 Z" fill="#704D31"/>
-    <path d="M140 100 Q150 97 160 101 M156 108 Q166 105 176 108" fill="none" stroke="#9A6A44"/>
+  <g id="piece-back" transform="translate(128 108)">
+    <path fill="#704D31" d="M-40 -12 L0 4 L0 34 L-40 18 Z"/>
+    <path fill="#704D31" d="M0 4 L46 -14 L46 16 L0 34 Z"/>
+    <path fill="#9A6A44" d="M-40 -12 L6 -30 L46 -14 L0 4 Z"/>
+    <path fill="none" stroke="#E8C79A" d="M-22 -12 L-12 -16 L-6 -12 L4 -17 M10 -8 L18 -12 L26 -9"/>
+    <path fill="#E8C79A" d="M8 -24 C10 -29 18 -29 20 -25 C22 -21 16 -18 12 -19 C9 -20 7 -22 8 -24 Z"/>
+    <path fill="#E8C79A" d="M-14 -4 C-12 -9 -4 -9 -2 -5 C0 -1 -6 2 -10 1 C-13 0 -15 -2 -14 -4 Z"/>
   </g>
-  <g id="front-piece">
-    <path d="M58 128 L114 118 L142 140 L142 162 L86 174 L58 150 Z" fill="#3B2A20"/>
-    <path d="M58 128 L114 118 L142 140 L86 152 Z" fill="#704D31"/>
-    <path d="M78 132 Q88 128 98 132 M96 140 Q106 136 118 140" fill="none" stroke="#9A6A44"/>
+  <g id="piece-left" transform="translate(88 146)">
+    <path fill="#704D31" d="M-40 -12 L0 4 L0 34 L-40 18 Z"/>
+    <path fill="#704D31" d="M0 4 L46 -14 L46 16 L0 34 Z"/>
+    <path fill="#9A6A44" d="M-40 -12 L6 -30 L46 -14 L0 4 Z"/>
+    <path fill="none" stroke="#E8C79A" d="M-24 -12 L-14 -17 L-8 -13 L2 -18 M8 -6 L16 -10 L26 -8"/>
+    <path fill="#E8C79A" d="M14 -22 C16 -27 24 -27 26 -23 C28 -19 22 -16 18 -17 C15 -18 13 -20 14 -22 Z"/>
+    <path fill="#E8C79A" d="M-12 -4 C-10 -9 -2 -9 0 -5 C2 -1 -4 2 -8 1 C-11 0 -13 -2 -12 -4 Z"/>
   </g>
-  <g id="crumbs" fill="#704D31">
-    <ellipse cx="164" cy="160" rx="5" ry="3.5"/>
-    <ellipse cx="178" cy="150" rx="4" ry="3"/>
-    <ellipse cx="156" cy="172" rx="3.5" ry="2.5"/>
+  <g id="piece-right" transform="translate(170 148)">
+    <path fill="#704D31" d="M-40 -12 L0 4 L0 34 L-40 18 Z"/>
+    <path fill="#704D31" d="M0 4 L46 -14 L46 16 L0 34 Z"/>
+    <path fill="#9A6A44" d="M-40 -12 L6 -30 L46 -14 L0 4 Z"/>
+    <path fill="none" stroke="#E8C79A" d="M-20 -14 L-10 -18 L-4 -14 L6 -19 M6 -6 L14 -10 L24 -7"/>
+    <path fill="#E8C79A" d="M-6 -26 C-4 -31 4 -31 6 -27 C8 -23 2 -20 -2 -21 C-5 -22 -7 -24 -6 -26 Z"/>
+    <path fill="#E8C79A" d="M20 -14 C22 -19 30 -19 32 -15 C34 -11 28 -8 24 -9 C21 -10 19 -12 20 -14 Z"/>
   </g>
 </g>
 </svg>

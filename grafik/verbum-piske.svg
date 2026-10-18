@@ -1,1 +1,39 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M40 150 Q40 230 128 230 Q216 230 216 150 Z" fill="#FFF4E2"/><ellipse cx="128" cy="150" rx="88" ry="18" fill="#EEDDBF"/><ellipse cx="128" cy="152" rx="74" ry="12" fill="#FBEBC2"/><g transform="rotate(18 128 120)"><path d="M118 82 Q92 130 128 158 Q164 130 138 82 Z" fill="#EDE8E0"/><path d="M123 82 Q110 130 128 158 Q146 130 133 82" fill="none"/><path d="M128 82 L128 158" fill="none"/><rect x="118" y="24" width="20" height="62" rx="9" fill="#9A6A44"/><g transform="translate(128 32) rotate(180)"><rect x="-14" y="0" width="28" height="80" rx="14" fill="#F08A3C"/><ellipse cx="0" cy="0" rx="18" ry="15" fill="#F08A3C"/><ellipse cx="0" cy="2" rx="10" ry="8" fill="#FFF4E2"/></g></g><path d="M70 130 Q38 110 62 82" fill="none" stroke="#3B2A20" stroke-width="13"/><path d="M50 86 L64 80 L70 96" fill="none" stroke="#3B2A20" stroke-width="13"/><path d="M70 130 Q38 110 62 82" fill="none" stroke="#3E8FB0" stroke-width="6.5"/><path d="M50 86 L64 80 L70 96" fill="none" stroke="#3E8FB0" stroke-width="6.5"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="whisk" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="mixing-bowl">
+      <path d="M38 160 L218 160 C212 200 184 224 128 227 C72 224 44 200 38 160 Z" fill="#FFF4E2"/>
+      <path d="M196 176 Q184 208 148 222 C184 218 208 198 213 172 Z" fill="#EEDDBF"/>
+      <ellipse cx="128" cy="160" rx="90" ry="28" fill="#EEDDBF"/>
+      <ellipse cx="128" cy="163" rx="80" ry="21" fill="#F2C14E"/>
+    </g>
+    <g id="egg-foam" fill="#FFFFFF">
+      <circle cx="66" cy="162" r="5.5"/>
+      <circle cx="166" cy="176" r="5"/>
+      <circle cx="184" cy="164" r="5.5"/>
+      <circle cx="198" cy="155" r="4.5"/>
+    </g>
+    <g id="balloon-whisk" transform="translate(124 172) rotate(25)">
+      <path id="whisk-handle" d="M-8 -94 L-8 -146 Q-8 -154 0 -154 Q8 -154 8 -146 L8 -94 Z" fill="#9A6A44"/>
+      <path id="wire-outline" fill="none" stroke-width="7" d="M-4 -84 C-46 -60 -46 -16 0 0 C46 -16 46 -60 4 -84 M-3 -84 C-31 -60 -31 -16 0 0 C31 -16 31 -60 3 -84 M-2 -84 C-16 -60 -16 -16 0 0 C16 -16 16 -60 2 -84 M0 -84 L0 0"/>
+      <path id="wire-steel" fill="none" stroke="#8E9AA6" stroke-width="3" d="M-4 -84 C-46 -60 -46 -16 0 0 C46 -16 46 -60 4 -84 M-3 -84 C-31 -60 -31 -16 0 0 C31 -16 31 -60 3 -84 M-2 -84 C-16 -60 -16 -16 0 0 C16 -16 16 -60 2 -84 M0 -84 L0 0"/>
+      <rect id="whisk-ferrule" x="-9" y="-97" width="18" height="15" rx="3" fill="#8E9AA6"/>
+    </g>
+    <g id="dipping-tip">
+      <path fill="#F2C14E" stroke="none" d="M104 170 Q114 165 124 168 Q134 171 144 166 L144 180 L104 180 Z"/>
+      <path fill="none" d="M104 170 Q114 165 124 168 Q134 171 144 166"/>
+    </g>
+    <g id="rosa-forearm">
+      <path d="M217 0 L256 0 L256 17 C233 36 207 56 180 69 L165 51 C184 36 202 15 217 0 Z" fill="#F08A3C"/>
+    </g>
+    <g id="rosa-gripping-paw" transform="translate(-3 4)">
+      <path d="M174 39 C178 31 187 35 186 43 C194 40 201 48 195 54 C203 58 199 67 192 67 C192 75 182 78 178 71 Q168 74 164 67 C159 61 163 55 170 56 Q163 45 174 39 Z" fill="#F08A3C"/>
+      <path d="M173 55 Q180 50 188 56 Q194 63 186 68 Q176 71 171 64 Q168 59 173 55 Z" fill="#FFF4E2"/>
+      <path d="M179 43 L182 48" fill="none"/>
+    </g>
+    <g id="round-whisking-motion">
+      <path fill="none" stroke-width="15" d="M96 172.6 A60 60 0 0 1 129.5 75.3"/>
+      <path fill="none" stroke="#3E8FB0" stroke-width="8" d="M96 172.6 A60 60 0 0 1 129.5 75.3"/>
+      <path fill="#3E8FB0" d="M127 63 L147 72 L132 88 Z"/>
+    </g>
+  </g>
+</svg>

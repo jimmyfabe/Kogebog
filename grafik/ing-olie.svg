@@ -1,1 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="112" y="36" width="32" height="22" rx="6" fill="#8E9AA6"/><path d="M114 58 L142 58 L142 86 Q180 104 178 150 L178 210 Q128 226 78 210 L78 150 Q76 104 114 86 Z" fill="#F2C14E"/><path d="M96 140 Q96 112 118 100" fill="none"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <path id="glass" fill="#FFFFFF" d="M116 56 L140 56 L140 84 C140 96 164 104 164 124 L164 214 C164 222 158 226 150 226 L106 226 C98 226 92 222 92 214 L92 124 C92 104 116 96 116 84 Z"/>
+  <path fill="#EDE8E0" stroke="none" d="M140 56 L140 84 C140 96 164 104 164 124 L154 124 C154 108 132 98 132 86 L132 56 Z"/>
+  <path id="oil" fill="#F2C14E" stroke="none" d="M92 124 L164 124 L164 214 C164 222 158 226 150 226 L106 226 C98 226 92 222 92 214 Z"/>
+  <path fill="#D9A52E" stroke="none" d="M150 124 L164 124 L164 214 C164 222 158 226 150 226 L142 226 C148 222 150 216 150 208 Z"/>
+  <path fill="none" d="M92 124 L164 124"/>
+  <rect id="label" x="102" y="150" width="52" height="54" rx="6" fill="#FFF4E2"/>
+  <path id="olive-leaf" fill="#5BAA6A" d="M128 196 C112 190 110 170 128 158 C146 170 144 190 128 196 Z" transform="rotate(30 128 177)"/>
+  <path fill="none" d="M128 192 L128 164" transform="rotate(30 128 177)"/>
+  <path fill="none" d="M116 56 L140 56 L140 84 C140 96 164 104 164 124 L164 214 C164 222 158 226 150 226 L106 226 C98 226 92 222 92 214 L92 124 C92 104 116 96 116 84 Z"/>
+  <path id="cap" fill="#9A6A44" d="M112 30 L144 30 Q148 30 148 34 L148 58 L108 58 L108 34 Q108 30 112 30 Z"/>
+  <path fill="#704D31" stroke="none" d="M138 32 L144 32 Q146 32 146 34 L146 56 L138 56 Z"/>
+  <path fill="none" d="M108 44 L148 44"/>
+</g>
+</svg>

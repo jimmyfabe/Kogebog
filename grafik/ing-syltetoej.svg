@@ -1,1 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="92" y="40" width="72" height="30" rx="8" fill="#F2C14E"/><path d="M80 78 L176 78 Q190 78 190 92 L190 206 Q190 222 174 222 L82 222 Q66 222 66 206 L66 92 Q66 78 80 78 Z" fill="#E2513B"/><rect x="86" y="116" width="84" height="64" rx="10" fill="#FFF4E2"/><path d="M128 126 Q104 138 116 166 Q128 176 140 166 Q152 138 128 126 Z" fill="#E2513B"/><ellipse cx="128" cy="128" rx="12" ry="6" fill="#5BAA6A"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <path id="jar" fill="#FFFFFF" d="M60 108 L196 108 C200 116 202 124 202 136 L202 202 C202 218 190 226 172 226 L84 226 C66 226 54 218 54 202 L54 136 C54 124 56 116 60 108 Z"/>
+  <path id="jam" fill="#E2513B" stroke="none" d="M55 126 L201 126 L202 202 C202 218 190 226 172 226 L84 226 C66 226 54 218 54 202 Z"/>
+  <path fill="#C3331D" stroke="none" d="M186 126 L201 126 L202 202 C202 218 190 226 172 226 L168 226 C180 220 186 212 186 200 Z"/>
+  <path fill="none" d="M55 126 L201 126"/>
+  <rect id="label" x="92" y="148" width="72" height="54" rx="6" fill="#FFF4E2"/>
+  <path id="strawberry" fill="#E2513B" d="M128 194 C112 184 108 168 116 164 C120 162 124 164 128 166 C132 164 136 162 140 164 C148 168 144 184 128 194 Z"/>
+  <path fill="#5BAA6A" d="M116 162 L128 154 L140 162 L128 167 Z"/>
+  <g fill="#FFF4E2" stroke="none"><circle cx="122" cy="174" r="2"/><circle cx="134" cy="174" r="2"/><circle cx="128" cy="183" r="2"/></g>
+  <path fill="none" d="M60 108 L196 108 C200 116 202 124 202 136 L202 202 C202 218 190 226 172 226 L84 226 C66 226 54 218 54 202 L54 136 C54 124 56 116 60 108 Z"/>
+  <path id="cloth" fill="#FFFFFF" d="M46 84 C42 64 66 42 128 40 C190 42 214 64 210 84 L218 108 Q203 100 188 108 Q173 100 158 108 Q143 100 128 108 Q113 100 98 108 Q83 100 68 108 Q53 100 38 108 Z"/>
+  <g id="checks" fill="#E2513B" stroke="none">
+    <path d="M47 80 C44 64 62 48 98 43 L98 80 Z"/>
+    <path d="M158 43 C194 48 212 64 209 80 L158 80 Z"/>
+    <path d="M98 80 L158 80 L158 108 Q143 100 128 108 Q113 100 98 108 Z"/>
+  </g>
+  <path fill="none" d="M98 43 L98 108 M158 43 L158 108 M45 80 L211 80"/>
+  <path fill="none" d="M46 84 C42 64 66 42 128 40 C190 42 214 64 210 84 L218 108 Q203 100 188 108 Q173 100 158 108 Q143 100 128 108 Q113 100 98 108 Q83 100 68 108 Q53 100 38 108 Z"/>
+  <path id="string" fill="none" d="M44 94 Q128 106 212 94"/>
+  <path fill="#FFF4E2" d="M128 100 C116 90 108 102 118 106 Z M128 100 C140 90 148 102 138 106 Z"/>
+</g>
+</svg>

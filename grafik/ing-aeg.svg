@@ -1,1 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="150" cy="140" rx="46" ry="60" fill="#EDE8E0" transform="rotate(16 150 140)"/><ellipse cx="106" cy="150" rx="48" ry="62" fill="#FFF4E2" transform="rotate(-10 106 150)"/><ellipse cx="92" cy="124" rx="10" ry="16" fill="#FFFFFF" transform="rotate(-10 92 124)"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="egg-upright">
+    <path fill="#FFF4E2" d="M110 38 C146 38 170 98 166 138 C162 174 140 192 110 192 C80 192 58 174 54 138 C50 98 74 38 110 38 Z"/>
+    <path fill="#EEDDBF" stroke="none" d="M110 38 C146 38 170 98 166 138 C162 174 140 192 110 192 C134 184 150 162 150 134 C150 98 134 54 110 38 Z"/>
+    <path fill="none" stroke="#FFFFFF" stroke-width="7" d="M84 74 Q76 90 74 108"/>
+    <path fill="none" d="M110 38 C146 38 170 98 166 138 C162 174 140 192 110 192 C80 192 58 174 54 138 C50 98 74 38 110 38 Z"/>
+  </g>
+  <g id="egg-lying" transform="translate(158 178) rotate(-75)">
+    <path fill="#FFFFFF" d="M0 -62 C30 -62 50 -14 48 14 C46 44 28 58 0 58 C-28 58 -46 44 -48 14 C-50 -14 -30 -62 0 -62 Z"/>
+    <path fill="#EDE8E0" stroke="none" d="M0 -62 C-30 -62 -50 -14 -48 14 C-46 44 -28 58 0 58 C-20 50 -34 36 -34 12 C-34 -14 -20 -50 0 -62 Z"/>
+    <path fill="none" d="M24 -30 Q32 -14 34 4"/>
+    <path fill="none" d="M0 -62 C30 -62 50 -14 48 14 C46 44 28 58 0 58 C-28 58 -46 44 -48 14 C-50 -14 -30 -62 0 -62 Z"/>
+  </g>
+</g>
+</svg>

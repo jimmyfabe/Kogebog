@@ -1,1 +1,64 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="124" cy="218" rx="78" ry="14" fill="#F2C14E"/><path d="M90 214 l6 -8 M120 220 l4 -9 M152 214 l-4 -9" fill="none"/><rect x="104" y="20" width="40" height="20" rx="10" fill="#6D7B8A"/><path d="M92 38 L156 38 L182 206 L66 206 Z" fill="#8E9AA6"/><path d="M98 74 q6 -6 12 0 M120 74 q6 -6 12 0 M142 74 q6 -6 12 0 M94 104 q6 -6 12 0 M118 104 q6 -6 12 0 M142 104 q6 -6 12 0 M90 134 q6 -6 12 0 M116 134 q6 -6 12 0 M142 134 q6 -6 12 0 M86 164 q6 -6 12 0 M114 164 q6 -6 12 0 M142 164 q6 -6 12 0" fill="none"/><ellipse cx="188" cy="118" rx="16" ry="42" fill="#F08A3C" transform="rotate(-24 188 118)"/><path d="M200 82 l10 -14 M206 86 l14 -8" fill="none" stroke="#5BAA6A" stroke-width="6"/><g transform="translate(206 128) rotate(232)"><rect x="-17" y="0" width="34" height="90" rx="16" fill="#9A6A44"/><ellipse cx="0" cy="0" rx="22" ry="18" fill="#9A6A44"/><ellipse cx="0" cy="3" rx="12" ry="9" fill="#E8C79A"/></g><path d="M40 92 L40 150" fill="none" stroke="#3B2A20" stroke-width="13"/><path d="M28 104 L40 92 L52 104 M28 138 L40 150 L52 138" fill="none" stroke="#3B2A20" stroke-width="13"/><path d="M40 92 L40 150" fill="none" stroke="#3E8FB0" stroke-width="6.5"/><path d="M28 104 L40 92 L52 104 M28 138 L40 150 L52 138" fill="none" stroke="#3E8FB0" stroke-width="6.5"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="grate" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="small-board">
+      <path d="M73 190 L183 190 Q191 190 195 197 L202 210 Q205 217 196 220 Q128 234 60 220 Q51 217 54 210 L61 197 Q65 190 73 190 Z" fill="#FFF4E2"/>
+      <path d="M58 213 Q128 226 198 213" fill="none"/>
+    </g>
+    <g id="rosa-left-forearm">
+      <path d="M43 0 L80 0 C86 13 96 24 111 34 L103 55 C78 48 60 28 43 0 Z" fill="#F08A3C"/>
+    </g>
+    <g id="grater-handle">
+      <path d="M101 67 L101 44 Q101 28 117 28 L135 28 Q151 28 151 44 L151 67 L139 67 L139 45 Q139 40 134 40 L118 40 Q113 40 113 45 L113 67 Z" fill="#6D7B8A"/>
+    </g>
+    <g id="grater-body">
+      <path d="M93 64 L159 64 L177 75 L187 201 L170 206 L79 201 Z" fill="#6D7B8A"/>
+      <path d="M93 64 L159 64 L170 201 L79 201 Z" fill="#8E9AA6"/>
+      <path d="M93 64 L159 64 L160 76 L92 76 Z" fill="#6D7B8A"/>
+      <path d="M79 194 L170 194 L170 201 L79 201 Z" fill="#6D7B8A"/>
+    </g>
+    <g id="grating-holes" fill="#6D7B8A">
+      <path d="M91 128 Q98 116 105 128 Q98 132 91 128 Z"/>
+      <path d="M115 128 Q122 116 129 128 Q122 132 115 128 Z"/>
+      <path d="M139 128 Q146 116 153 128 Q146 132 139 128 Z"/>
+      <path d="M91 148 Q98 136 105 148 Q98 152 91 148 Z"/>
+      <path d="M115 148 Q122 136 129 148 Q122 152 115 148 Z"/>
+      <path d="M139 148 Q146 136 153 148 Q146 152 139 148 Z"/>
+      <path d="M91 168 Q98 156 105 168 Q98 172 91 168 Z"/>
+      <path d="M115 168 Q122 156 129 168 Q122 172 115 168 Z"/>
+      <path d="M139 168 Q146 156 153 168 Q146 172 139 168 Z"/>
+      <path d="M91 188 Q98 176 105 188 Q98 192 91 188 Z"/>
+      <path d="M115 188 Q122 176 129 188 Q122 192 115 188 Z"/>
+      <path d="M139 188 Q146 176 153 188 Q146 192 139 188 Z"/>
+    </g>
+    <g id="rosa-handle-paw">
+      <path d="M104 29 C94 27 89 34 94 41 C88 46 92 55 99 54 C100 62 110 65 114 58 C122 62 128 55 124 49 C131 43 124 34 117 37 Q115 27 104 29 Z" fill="#F08A3C"/>
+      <path d="M103 40 Q111 35 118 43 Q122 50 113 55 Q102 57 101 48 Q100 44 103 40 Z" fill="#FFF4E2"/>
+    </g>
+    <g id="rosa-right-forearm">
+      <path d="M256 60 C227 63 208 71 189 78 L190 101 C210 105 234 104 256 99" fill="#F08A3C"/>
+    </g>
+    <g id="cheese-block">
+      <path d="M124 76 L173 76 L185 84 L185 122 L173 116 L124 116 Z" fill="#D9A52E"/>
+      <rect x="124" y="76" width="49" height="40" rx="3" fill="#F2C14E"/>
+      <path d="M173 80 L184 86 M173 115 L184 121" fill="none"/>
+      <circle cx="139" cy="89" r="4" fill="#D9A52E"/>
+      <path d="M150 103 Q155 96 160 103 Q155 109 150 103 Z" fill="#D9A52E"/>
+    </g>
+    <g id="rosa-cheese-paw">
+      <path d="M188 74 Q177 70 173 79 C164 79 162 89 170 93 C164 100 171 108 179 104 C184 112 193 107 193 100 C203 101 207 91 200 86 Q202 76 193 75 Z" fill="#F08A3C"/>
+      <path d="M179 83 Q189 79 194 89 Q197 99 186 101 Q176 101 175 92 Q174 87 179 83 Z" fill="#FFF4E2"/>
+    </g>
+    <g id="grating-motion">
+      <path d="M208 113 Q213 109 217 114 C222 126 221 139 216 149 L224 153 L205 164 Q203 165 202 162 L198 141 L207 145 Q214 129 208 119 Q206 116 208 113 Z" fill="#3E8FB0"/>
+    </g>
+    <g id="grated-cheese" fill="#F2C14E">
+      <rect x="96" y="202" width="24" height="7" rx="3.5" transform="rotate(-15 108 205.5)"/>
+      <rect x="129" y="201" width="24" height="7" rx="3.5" transform="rotate(19 141 204.5)"/>
+      <rect x="114" y="198" width="23" height="7" rx="3.5" transform="rotate(-25 125.5 201.5)"/>
+      <rect x="111" y="208" width="25" height="7" rx="3.5" transform="rotate(12 123.5 211.5)"/>
+      <rect x="145" y="209" width="20" height="7" rx="3.5" transform="rotate(-18 155 212.5)"/>
+      <rect x="86" y="211" width="20" height="7" rx="3.5" transform="rotate(16 96 214.5)"/>
+      <rect x="129" y="215" width="21" height="7" rx="3.5" transform="rotate(-9 139.5 218.5)"/>
+    </g>
+  </g>
+</svg>

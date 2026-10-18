@@ -1,1 +1,45 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="24" y="186" width="208" height="26" rx="10" fill="#8E9AA6"/><path d="M38 188 Q40 136 92 136 Q144 136 146 188 Z" fill="#E8C79A"/><ellipse cx="82" cy="154" rx="24" ry="8" fill="#F2C14E"/><path d="M148 188 Q150 148 186 148 Q222 148 224 188 Z" fill="#E8C79A"/><ellipse cx="180" cy="162" rx="18" ry="6" fill="#F2C14E"/><g transform="rotate(-35 150 100)"><rect x="140" y="34" width="20" height="72" rx="8" fill="#9A6A44"/><rect x="136" y="104" width="28" height="12" rx="3" fill="#8E9AA6"/><path d="M136 116 L164 116 L166 142 Q150 148 134 142 Z" fill="#F2C14E"/></g><g transform="translate(114 50) rotate(158)"><rect x="-14" y="0" width="28" height="80" rx="14" fill="#F08A3C"/><ellipse cx="0" cy="0" rx="18" ry="15" fill="#F08A3C"/><ellipse cx="0" cy="2" rx="10" ry="8" fill="#FFF4E2"/></g><path d="M176 72 L228 72" fill="none" stroke="#3B2A20" stroke-width="13"/><path d="M188 60 L176 72 L188 84 M216 60 L228 72 L216 84" fill="none" stroke="#3B2A20" stroke-width="13"/><path d="M176 72 L228 72" fill="none" stroke="#3E8FB0" stroke-width="6.5"/><path d="M188 60 L176 72 L188 84 M216 60 L228 72 L216 84" fill="none" stroke="#3E8FB0" stroke-width="6.5"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="brush-buns" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="baking-tray">
+      <path d="M46 147 L210 147 Q218 147 217 156 L210 197 Q209 204 200 206 L56 206 Q47 204 46 197 L39 156 Q38 147 46 147 Z" fill="#8E9AA6"/>
+      <path d="M50 155 L206 155 L200 193 Q128 207 56 193 Z" fill="#6D7B8A"/>
+    </g>
+    <g id="left-bun">
+      <path d="M52 179 C49 162 60 151 76 151 C93 151 103 162 100 179 C98 192 90 198 76 198 C62 198 54 191 52 179 Z" fill="#E8C79A"/>
+      <path d="M54 176 C53 163 63 154 76 154 C90 154 99 163 98 176 Q94 188 76 188 Q60 188 54 176 Z" fill="#CFA976"/>
+      <path d="M59 168 C64 159 75 158 83 161 C92 163 97 169 94 175 C89 182 76 183 66 179 Q58 176 59 168 Z" fill="#F2C14E"/>
+    </g>
+    <g id="middle-bun">
+      <path d="M104 179 C101 162 112 151 128 151 C145 151 155 162 152 179 C150 192 142 198 128 198 C114 198 106 191 104 179 Z" fill="#E8C79A"/>
+      <path d="M106 176 C105 163 115 154 128 154 C142 154 151 163 150 176 Q146 188 128 188 Q112 188 106 176 Z" fill="#CFA976"/>
+      <path d="M113 164 Q121 157 131 160 L142 166 Q148 171 142 177 L136 175 Q128 182 119 178 L114 174 Q108 172 113 164 Z" fill="#F2C14E"/>
+    </g>
+    <g id="plain-bun">
+      <path d="M156 179 C153 162 164 151 180 151 C197 151 207 162 204 179 C202 192 194 198 180 198 C166 198 158 191 156 179 Z" fill="#E8C79A"/>
+      <path d="M158 176 C157 163 167 154 180 154 C194 154 203 163 202 176 Q198 188 180 188 Q164 188 158 176 Z" fill="#CFA976"/>
+    </g>
+    <g id="egg-cup">
+      <path d="M80 119 C102 111 104 140 80 141 L79 133 C93 134 94 121 81 127 Z" fill="#FFF4E2"/>
+      <path d="M43 113 L47 139 Q49 146 63 147 Q77 146 79 139 L83 113 Z" fill="#FFF4E2"/>
+      <ellipse cx="63" cy="113" rx="20" ry="8" fill="#EEDDBF"/>
+      <ellipse cx="63" cy="114" rx="15" ry="5" fill="#F2C14E"/>
+    </g>
+    <g id="brushing-motion">
+      <path d="M88 94 C96 75 120 74 135 85 L142 78 L146 99 L124 100 L129 93 C118 86 104 88 98 100 Q92 104 88 94 Z" fill="#3E8FB0"/>
+    </g>
+    <g id="rosa-forearm">
+      <path d="M256 16 C225 29 205 43 187 61 L202 82 C222 75 239 67 256 59" fill="#F08A3C"/>
+    </g>
+    <g id="pastry-brush">
+      <path d="M181 55 Q186 49 192 54 Q198 58 194 65 L157 122 L143 113 Z" fill="#E2513B"/>
+      <path d="M187 67 L153 117 L157 122 L194 65 Q196 60 193 57 Z" fill="#C3331D"/>
+      <path d="M130 119 L157 136 L145 158 Q130 159 117 145 Z" fill="#F2C14E"/>
+      <path d="M137 107 L164 124 L157 136 L130 119 Z" fill="#8E9AA6"/>
+      <path d="M134 130 L124 146 M143 135 L133 151 M151 140 L142 154" fill="none"/>
+    </g>
+    <g id="rosa-brush-paw">
+      <path d="M185 57 Q174 54 171 63 C161 65 160 74 168 79 C161 85 168 94 176 90 C181 99 192 93 190 86 C200 86 203 75 195 71 Q196 60 185 57 Z" fill="#F08A3C"/>
+      <path d="M176 68 Q184 62 191 73 Q195 82 185 86 Q173 88 171 78 Q170 72 176 68 Z" fill="#FFF4E2"/>
+    </g>
+  </g>
+</svg>

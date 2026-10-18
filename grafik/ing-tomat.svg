@@ -1,1 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="64" y="64" width="128" height="156" rx="14" fill="#8E9AA6"/><ellipse cx="128" cy="64" rx="64" ry="14" fill="#6D7B8A"/><rect x="64" y="104" width="128" height="76" rx="0" fill="#FFF4E2"/><circle cx="128" cy="144" r="26" fill="#E2513B"/><path d="M116 120 L128 130 L140 120 M128 130 L128 116" fill="none"/><ellipse cx="128" cy="220" rx="64" ry="12" fill="#8E9AA6"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <path id="tomato" fill="#E2513B" d="M128 66 C176 58 224 90 224 140 C224 190 182 224 128 224 C74 224 32 190 32 140 C32 90 80 58 128 66 Z"/>
+  <path fill="#C3331D" stroke="none" d="M224 140 C224 190 182 224 128 224 C168 214 200 184 204 140 C206 110 194 88 176 74 C206 86 224 110 224 140 Z"/>
+  <path fill="none" d="M100 74 C82 100 80 128 88 150 M156 74 C174 100 176 128 168 150"/>
+  <path fill="none" d="M128 66 C176 58 224 90 224 140 C224 190 182 224 128 224 C74 224 32 190 32 140 C32 90 80 58 128 66 Z"/>
+  <path id="stem" fill="#448450" d="M124 66 L124 50 C124 44 130 40 136 40 L138 46 C132 46 131 50 131 54 L131 66 Z"/>
+  <path id="calyx" fill="#5BAA6A" d="M134 48 L140 60 L166 62 L142 72 L152 90 L128 78 L106 92 L114 72 L90 64 L118 60 Z"/>
+  <path fill="#448450" stroke="none" d="M141 61 L164 62.5 L142 71 Z M142 73 L150 87 L130 77 Z"/>
+  <path fill="none" d="M134 48 L140 60 L166 62 L142 72 L152 90 L128 78 L106 92 L114 72 L90 64 L118 60 Z"/>
+</g>
+</svg>

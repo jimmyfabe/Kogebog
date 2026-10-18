@@ -5,21 +5,24 @@
     <ellipse cx="128" cy="140" rx="94" ry="61" fill="#FFF4E2"/>
   </g>
   <g id="mash">
-    <path d="M58 160 C52 140 66 122 84 118 C88 98 110 88 130 92 C150 84 176 94 182 114 C202 118 210 140 198 158 C186 176 76 178 58 160 Z" fill="#E8C79A"/>
-    <path d="M62 152 C58 136 72 124 88 122 C92 104 112 96 130 100 C148 92 172 102 176 118 C194 122 202 140 192 152 C176 164 78 166 62 152 Z" fill="#FBEBC2"/>
-    <path d="M84 140 Q100 130 118 138 Q136 146 152 134 Q166 126 180 136" fill="none"/>
-    <path d="M100 118 Q114 110 128 116 Q142 122 156 112" fill="none"/>
+    <path fill="#E8C79A" stroke="none" d="M46 172 C42 142 66 116 94 100 C100 90 156 90 162 100 C190 116 214 142 210 172 C186 192 70 192 46 172 Z"/>
+    <path fill="#CFA976" stroke="none" d="M162 100 C190 116 214 142 210 172 C202 178 192 182 180 184 C192 160 186 128 162 100 Z"/>
+    <path fill="none" stroke="#CFA976" d="M62 164 C80 150 100 154 116 146 M134 160 C150 150 166 152 178 162 M78 130 C92 120 104 124 114 118 M148 124 C158 118 168 122 176 130"/>
+    <path fill="none" d="M46 172 C42 142 66 116 94 100 C100 90 156 90 162 100 C190 116 214 142 210 172 C186 192 70 192 46 172 Z"/>
   </g>
   <g id="butter">
-    <path d="M114 104 L140 98 L150 108 L148 116 L122 122 L112 114 Z" fill="#D9A52E"/>
-    <path d="M114 104 L140 98 L150 108 L124 114 L112 110 Z" fill="#F2C14E"/>
-    <path d="M122 122 Q120 132 126 136 Q132 132 130 120" fill="#F2C14E"/>
+    <ellipse cx="128" cy="100" rx="32" ry="10" fill="#CFA976"/>
+    <path fill="#F2C14E" d="M100 102 C104 96 152 96 156 102 L150 108 C152 116 154 124 150 130 C147 134 141 132 142 126 C143 120 141 114 138 110 L118 110 C118 114 118 118 116 120 C113 123 109 121 110 117 C111 114 111 111 108 108 Z"/>
+    <path fill="#D9A52E" d="M118 96 L132 92 L142 98 L128 102 Z"/>
+    <path fill="#F2C14E" stroke="none" d="M120 96 L132 93 L139 97.5 L128 100.5 Z"/>
   </g>
-  <g id="parsley" fill="#5BAA6A">
-    <ellipse cx="86" cy="150" rx="4" ry="3"/>
-    <ellipse cx="170" cy="148" rx="4" ry="3"/>
-    <ellipse cx="148" cy="156" rx="3" ry="2.5"/>
-    <ellipse cx="104" cy="158" rx="3" ry="2.5"/>
+  <g id="chives" fill="#5BAA6A">
+    <rect x="64" y="144" width="13" height="6" rx="2" transform="rotate(-20 70 147)"/>
+    <rect x="94" y="160" width="13" height="6" rx="2" transform="rotate(25 100 163)"/>
+    <rect x="158" y="140" width="13" height="6" rx="2" transform="rotate(15 164 143)"/>
+    <rect x="184" y="160" width="13" height="6" rx="2" transform="rotate(-30 190 163)"/>
+    <rect x="128" y="170" width="13" height="6" rx="2" transform="rotate(-10 134 173)"/>
+    <rect x="88" y="120" width="13" height="6" rx="2" transform="rotate(30 94 123)"/>
   </g>
 </g>
 </svg>

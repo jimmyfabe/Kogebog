@@ -1,1 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M56 110 L200 110 L186 210 Q128 222 70 210 Z" fill="#FFFFFF"/><path d="M60 140 L196 140 L190 180 Q128 190 66 180 Z" fill="#3E8FB0"/><ellipse cx="128" cy="110" rx="72" ry="17" fill="#EDE8E0"/><ellipse cx="128" cy="110" rx="62" ry="11" fill="#FFF4E2"/><g fill="#FFFFFF"><circle cx="100" cy="102" r="9"/><circle cx="120" cy="94" r="10"/><circle cx="142" cy="98" r="9"/><circle cx="160" cy="106" r="8"/><circle cx="112" cy="108" r="7"/><circle cx="136" cy="110" r="7"/></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="tub">
+    <path fill="#FFF4E2" stroke="none" d="M30 118 L46 196 A82 20 0 0 0 210 196 L226 118 Z"/>
+    <path fill="#EEDDBF" stroke="none" d="M226 118 L210 196 A82 20 0 0 1 190 209.1 L204 134.4 A98 26 0 0 0 226 118 Z"/>
+    <path fill="#3E8FB0" stroke="none" d="M36.6 150 A91.4 23 0 0 0 219.4 150 L213.7 178 A85.7 21.5 0 0 1 42.3 178 Z"/>
+    <path fill="#2E6A83" stroke="none" d="M219.4 150 L213.7 178 A85.7 21.5 0 0 1 193.2 191.9 L198.2 164.7 A91.4 23 0 0 0 219.4 150 Z"/>
+    <path fill="none" d="M36.6 150 A91.4 23 0 0 0 219.4 150 M213.7 178 A85.7 21.5 0 0 1 42.3 178"/>
+    <path fill="none" d="M30 118 L46 196 A82 20 0 0 0 210 196 L226 118"/>
+    <ellipse cx="128" cy="118" rx="98" ry="26" fill="#FFF4E2"/>
+  </g>
+  <g id="cottage-cheese">
+    <path fill="#FFFFFF" stroke="none" d="M38 118 A10 10 0 0 1 42 100.3 A10 10 0 0 1 50 88.1 A10 10 0 0 1 62 77.2 A10 10 0 0 1 77 68.6 A10 10 0 0 1 94 62.4 A10 10 0 0 1 111 59.1 A10 10 0 0 1 128 58 A10 10 0 0 1 145 59.1 A10 10 0 0 1 162 62.4 A10 10 0 0 1 179 68.6 A10 10 0 0 1 194 77.2 A10 10 0 0 1 206 88.1 A10 10 0 0 1 214 100.3 A10 10 0 0 1 218 118 A90 18 0 0 1 38 118 Z"/>
+    <path fill="#EDE8E0" stroke="none" d="M206 88.1 A10 10 0 0 1 214 100.3 A10 10 0 0 1 218 118 A90 18 0 0 1 150 135.5 C178 128 198 112 206 88.1 Z"/>
+    <g id="curds" fill="none">
+      <path d="M72 92 a9 9 0 0 1 17 0"/>
+      <path d="M100 82 a9 9 0 0 1 17 0"/>
+      <path d="M130 80 a9 9 0 0 1 17 0"/>
+      <path d="M160 86 a9 9 0 0 1 17 0"/>
+      <path d="M54 112 a9 9 0 0 1 17 0"/>
+      <path d="M86 104 a9 9 0 0 1 17 0"/>
+      <path d="M116 101 a9 9 0 0 1 17 0"/>
+      <path d="M146 103 a9 9 0 0 1 17 0"/>
+      <path d="M176 108 a9 9 0 0 1 17 0"/>
+      <path d="M78 128 a9 9 0 0 1 17 0"/>
+      <path d="M112 131 a9 9 0 0 1 17 0"/>
+      <path d="M148 129 a9 9 0 0 1 17 0"/>
+    </g>
+    <path fill="none" d="M38 118 A10 10 0 0 1 42 100.3 A10 10 0 0 1 50 88.1 A10 10 0 0 1 62 77.2 A10 10 0 0 1 77 68.6 A10 10 0 0 1 94 62.4 A10 10 0 0 1 111 59.1 A10 10 0 0 1 128 58 A10 10 0 0 1 145 59.1 A10 10 0 0 1 162 62.4 A10 10 0 0 1 179 68.6 A10 10 0 0 1 194 77.2 A10 10 0 0 1 206 88.1 A10 10 0 0 1 214 100.3 A10 10 0 0 1 218 118 A90 18 0 0 1 38 118 Z"/>
+  </g>
+</g>
+</svg>

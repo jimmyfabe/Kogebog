@@ -1,1 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M44 168 L188 82 L212 168 Z" fill="#F2C14E"/><path d="M44 168 L212 168 L212 206 L44 206 Z" fill="#F2C14E"/><path d="M188 82 L212 168" fill="none"/><circle cx="156" cy="140" r="10" fill="#D9A52E"/><circle cx="112" cy="150" r="8" fill="#D9A52E"/><circle cx="88" cy="186" r="10" fill="#D9A52E"/><circle cx="170" cy="188" r="8" fill="#D9A52E"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <path id="end" fill="#D9A52E" d="M170 150 L214 72 L214 118 L170 196 Z"/>
+  <path id="end-rind" fill="#E2513B" d="M170 150 L214 72 L214 82 L170 160 Z"/>
+  <path id="front" fill="#D9A52E" d="M28 130 L170 150 L170 196 L28 176 Z"/>
+  <path id="top" fill="#F2C14E" d="M28 130 L170 150 L214 72 Z"/>
+  <path id="top-rind" fill="#E2513B" d="M170 150 L214 72 L204.5 75 L162 149 Z"/>
+  <g id="holes" fill="#D9A52E">
+    <circle cx="120" cy="120" r="11"/>
+    <circle cx="156" cy="106" r="7"/>
+    <circle cx="90" cy="126" r="6"/>
+    <circle cx="170" cy="122" r="6.5"/>
+    <circle cx="70" cy="158" r="8"/>
+    <circle cx="132" cy="172" r="6"/>
+  </g>
+</g>
+</svg>

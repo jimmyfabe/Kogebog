@@ -1,1 +1,32 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M40 114 L40 178 Q40 206 128 206 Q216 206 216 178 L216 114 Z" fill="#3E8FB0"/><ellipse cx="128" cy="114" rx="88" ry="26" fill="#8E9AA6"/><ellipse cx="128" cy="114" rx="72" ry="18" fill="#6D7B8A"/><circle cx="182" cy="108" r="8" fill="#EDE8E0"/><path d="M88 166 Q124 140 160 166 Q124 192 88 166 Z" fill="#FFF4E2"/><path d="M160 166 L182 152 L182 180 Z" fill="#FFF4E2"/><circle cx="104" cy="162" r="3.5" fill="#3B2A20" stroke="none"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="lid" transform="rotate(-4 128 58)">
+    <ellipse cx="128" cy="58" rx="80" ry="26" fill="#8E9AA6"/>
+    <path fill="#6D7B8A" stroke="none" d="M208 58 A80 26 0 0 1 128 84 C160 78 196 70 204 52 Z"/>
+    <ellipse cx="128" cy="58" rx="62" ry="17" fill="none" stroke="#6D7B8A"/>
+    <ellipse cx="128" cy="58" rx="80" ry="26" fill="none"/>
+    <ellipse cx="96" cy="44" rx="16" ry="9" fill="#8E9AA6"/>
+    <ellipse cx="96" cy="44" rx="7" ry="3.5" fill="#6D7B8A"/>
+  </g>
+  <g id="can">
+    <path fill="#8E9AA6" stroke="none" d="M38 108 L38 188 A90 24 0 0 0 218 188 L218 108 Z"/>
+    <path fill="#6D7B8A" stroke="none" d="M194 108 L194 204.3 A90 24 0 0 0 218 188 L218 108 Z"/>
+    <path fill="#3E8FB0" stroke="none" d="M38 126 A90 24 0 0 0 218 126 L218 164 A90 24 0 0 1 38 164 Z"/>
+    <path fill="#2E6A83" stroke="none" d="M194 142.3 A90 24 0 0 0 218 126 L218 164 A90 24 0 0 1 194 180.3 Z"/>
+    <path fill="none" d="M38 126 A90 24 0 0 0 218 126 M218 164 A90 24 0 0 1 38 164"/>
+    <path fill="none" d="M38 116 A90 24 0 0 0 218 116 M38 175 A90 24 0 0 0 218 175"/>
+    <g id="fish">
+      <path fill="#FFFFFF" d="M150 168 L164 158 L162 168 L164 178 Z"/>
+      <path fill="#FFFFFF" d="M96 168 C106 156 134 155 150 168 C134 181 106 180 96 168 Z"/>
+    </g>
+    <path fill="none" d="M38 108 L38 188 A90 24 0 0 0 218 188 L218 108"/>
+  </g>
+  <g id="top">
+    <ellipse cx="128" cy="108" rx="90" ry="24" fill="#8E9AA6"/>
+    <ellipse cx="128" cy="108" rx="81" ry="18" fill="#E8C79A"/>
+    <path fill="#CFA976" stroke="none" d="M207 106 A81 18 0 0 1 168 123.7 C186 120 202 114 207 106 Z"/>
+    <path fill="none" stroke="#CFA976" d="M76 106 Q86 99 96 105 M114 98 Q124 92 134 98 M148 110 Q158 104 168 110 M96 116 Q104 111 112 116"/>
+    <ellipse cx="128" cy="108" rx="81" ry="18" fill="none"/>
+  </g>
+</g>
+</svg>

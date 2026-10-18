@@ -1,1 +1,31 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="60" y="44" width="136" height="172" rx="10" fill="#9A6A44"/><path d="M60 80 L196 80 M60 116 L196 116 M128 44 L128 136" fill="none"/><rect x="70" y="52" width="48" height="20" rx="4" fill="#CFA976" stroke="none"/><rect x="138" y="52" width="48" height="20" rx="4" fill="#CFA976" stroke="none"/><path d="M52 136 L204 136 L204 208 Q204 224 188 224 L68 224 Q52 224 52 208 Z" fill="#E2513B"/><path d="M52 136 L72 148 L92 136 L112 148 L132 136 L152 148 L172 136 L192 148 L204 140" fill="none"/><rect x="92" y="166" width="72" height="34" rx="8" fill="#FFF4E2"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="bar" transform="translate(96 124) rotate(-10)">
+    <g id="bar-sides" fill="#704D31">
+      <path d="M50 -47 L56 -42 L56 26 L50 22 Z"/>
+      <path d="M0 -85 L6 -80 L6 -47 L0 -47 Z"/>
+    </g>
+    <path id="bar-front" fill="#704D31" d="M-50 -85 L0 -85 L0 -47 L50 -47 L50 30 L-50 30 Z"/>
+    <g id="squares" fill="#9A6A44" stroke="none">
+      <rect x="-46" y="-81" width="42" height="30" rx="3"/>
+      <rect x="-46" y="-43" width="42" height="30" rx="3"/>
+      <rect x="4" y="-43" width="42" height="30" rx="3"/>
+      <rect x="-46" y="-5" width="42" height="30" rx="3"/>
+      <rect x="4" y="-5" width="42" height="30" rx="3"/>
+    </g>
+    <g id="wrapper">
+      <path fill="#E2513B" stroke="none" d="M-54 24 Q2 15 58 20 L58 87 L-54 87 Z"/>
+      <path fill="#C3331D" stroke="none" d="M40 18.6 Q49 18.9 58 20 L58 87 L40 87 Z"/>
+      <path fill="#FFF4E2" stroke="none" d="M-54 44 L58 41 L58 61 L-54 64 Z"/>
+      <path fill="#EEDDBF" stroke="none" d="M40 41.5 L58 41 L58 61 L40 61.5 Z"/>
+      <path fill="none" d="M-54 44 L58 41 M-54 64 L58 61"/>
+      <path fill="none" d="M-54 24 Q2 15 58 20 L58 87 L-54 87 Z"/>
+    </g>
+  </g>
+  <g id="broken-piece" transform="translate(184 56) rotate(14)">
+    <path fill="#704D31" d="M25 -19 L31 -14 L31 24 L-19 24 L-25 19 L25 19 Z"/>
+    <rect x="-25" y="-19" width="50" height="38" fill="#704D31"/>
+    <rect x="-21" y="-15" width="42" height="30" rx="3" fill="#9A6A44" stroke="none"/>
+  </g>
+</g>
+</svg>

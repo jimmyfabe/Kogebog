@@ -1,1 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="86" y="92" width="84" height="124" rx="26" fill="#EDE8E0"/><path d="M92 104 Q128 54 164 104 Z" fill="#8E9AA6"/><circle cx="116" cy="84" r="3.5" fill="#3B2A20" stroke="none"/><circle cx="128" cy="78" r="3.5" fill="#3B2A20" stroke="none"/><circle cx="140" cy="84" r="3.5" fill="#3B2A20" stroke="none"/><rect x="100" y="136" width="56" height="52" rx="10" fill="#FFFFFF"/><circle cx="70" cy="60" r="3" fill="#EDE8E0" stroke="none"/><circle cx="186" cy="70" r="3" fill="#EDE8E0" stroke="none"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <path id="glass" fill="#FFFFFF" d="M76 110 C76 98 86 92 98 92 L142 92 C154 92 164 98 164 110 L168 206 C168 220 158 226 144 226 L96 226 C82 226 72 220 72 206 Z"/>
+  <path fill="#EDE8E0" stroke="none" d="M164 110 L168 206 C168 220 158 226 144 226 L140 226 C150 220 154 212 154 202 L152 110 C152 102 148 95 142 92 C154 93 164 98 164 110 Z"/>
+  <path fill="none" d="M80 128 Q100 120 120 128 T160 128"/>
+  <g fill="#EDE8E0" stroke="none"><circle cx="96" cy="150" r="2.5"/><circle cx="118" cy="168" r="2.5"/><circle cx="104" cy="194" r="2.5"/><circle cx="136" cy="146" r="2.5"/><circle cx="130" cy="206" r="2.5"/></g>
+  <path fill="none" d="M76 110 C76 98 86 92 98 92 L142 92 C154 92 164 98 164 110 L168 206 C168 220 158 226 144 226 L96 226 C82 226 72 220 72 206 Z"/>
+  <path id="cap-band" fill="#8E9AA6" d="M80 92 L160 92 L160 74 L80 74 Z"/>
+  <path id="cap-dome" fill="#8E9AA6" d="M80 74 C80 26 160 26 160 74 Z"/>
+  <path fill="#6D7B8A" stroke="none" d="M160 74 C160 50 152 38 138 34 C148 46 150 60 148 74 Z"/>
+  <path fill="none" d="M80 74 C80 26 160 26 160 74"/>
+  <g fill="#3B2A20" stroke="none"><circle cx="104" cy="60" r="3.5"/><circle cx="120" cy="50" r="3.5"/><circle cx="136" cy="60" r="3.5"/><circle cx="112" cy="68" r="3"/><circle cx="128" cy="68" r="3"/></g>
+  <g id="falling-salt" fill="#FFFFFF">
+    <rect x="182" y="96" width="10" height="10" rx="2" transform="rotate(20 187 101)"/>
+    <rect x="196" y="122" width="9" height="9" rx="2" transform="rotate(-15 200.5 126.5)"/>
+    <rect x="184" y="148" width="10" height="10" rx="2" transform="rotate(35 189 153)"/>
+  </g>
+</g>
+</svg>

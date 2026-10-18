@@ -1,1 +1,29 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M40 120 Q40 206 128 206 Q216 206 216 120 Z" fill="#9A6A44"/><path d="M52 122 Q54 192 128 192 Q202 192 204 122 Z" fill="#FFFFFF"/><ellipse cx="128" cy="120" rx="88" ry="20" fill="#9A6A44"/><ellipse cx="128" cy="120" rx="74" ry="13" fill="#FFFFFF"/><path d="M78 160 l8 -4 M110 176 l6 -6 M150 172 l8 -2 M176 152 l4 -7" fill="none" stroke="#CFA976"/><g fill="#FFFFFF"><rect x="60" y="64" width="12" height="6" rx="3" transform="rotate(-30 66 67)"/><rect x="118" y="52" width="12" height="6" rx="3" transform="rotate(20 124 55)"/><rect x="176" y="70" width="12" height="6" rx="3" transform="rotate(-10 182 73)"/></g></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="half-back">
+    <path fill="#9A6A44" stroke="none" d="M116 116 C116 78 140 54 170 54 C200 54 224 78 224 116 A54 12 0 0 1 116 116 Z"/>
+    <path fill="#704D31" stroke="none" d="M170 54 C200 54 224 78 224 116 A54 12 0 0 1 192 127 C206 110 204 74 170 54 Z"/>
+    <path fill="none" d="M144 72 L150 80 M166 64 L169 74 M190 70 L188 80 M156 92 L160 101"/>
+    <path fill="none" d="M116 116 C116 78 140 54 170 54 C200 54 224 78 224 116 A54 12 0 0 1 116 116 Z"/>
+  </g>
+  <g id="half-front">
+    <ellipse cx="116" cy="152" rx="70" ry="62" fill="#704D31"/>
+    <path fill="none" d="M150 204 L156 196 M176 178 L184 174"/>
+    <ellipse cx="106" cy="144" rx="70" ry="62" fill="#9A6A44"/>
+    <ellipse cx="106" cy="144" rx="59" ry="51" fill="#FFFFFF"/>
+    <path fill="#EDE8E0" stroke="none" d="M165 144 A59 51 0 0 1 106 195 C140 186 158 166 160 140 Z"/>
+    <ellipse cx="104" cy="140" rx="38" ry="31" fill="#FFF4E2"/>
+    <path fill="#EEDDBF" stroke="none" d="M66 140 A38 31 0 0 1 142 140 C130 126 116 120 104 120 C88 120 74 128 66 140 Z"/>
+    <ellipse cx="104" cy="140" rx="38" ry="31" fill="none"/>
+    <ellipse cx="106" cy="144" rx="59" ry="51" fill="none"/>
+  </g>
+  <g id="flakes" fill="#FFFFFF">
+    <path d="M160 206 Q170 194 182 200 Q172 200 166 210 Z"/>
+    <path d="M184 208 Q190 194 204 196 Q194 200 190 210 Z"/>
+    <path d="M206 210 Q212 198 222 202 Q214 204 212 212 Z"/>
+    <path d="M172 192 Q182 180 194 186 Q184 186 178 196 Z"/>
+    <path d="M196 190 Q204 178 214 184 Q206 186 202 194 Z"/>
+    <path d="M184 178 Q192 168 202 172 Q194 174 190 182 Z"/>
+  </g>
+</g>
+</svg>

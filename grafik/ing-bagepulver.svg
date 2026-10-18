@@ -1,1 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="76" y="56" width="104" height="156" rx="8" fill="#FFFFFF"/><path d="M76 56 L180 56 L180 84 L76 84 Z" fill="#E2513B"/><path d="M76 70 L86 64 L96 70 L106 64 L116 70 L126 64 L136 70 L146 64 L156 70 L166 64 L176 70" fill="none"/><path d="M98 158 Q92 136 112 132 Q118 114 138 120 Q158 116 160 136 Q174 146 162 160 Z" fill="#EDE8E0"/><path d="M108 182 L148 182" fill="none" stroke="#E2513B" stroke-width="6"/><circle cx="56" cy="190" r="4" fill="#EDE8E0"/><circle cx="200" cy="176" r="4" fill="#EDE8E0"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="sachet">
+    <path fill="#EDE8E0" d="M66 44 L77 34 L88 42 L99 33 L110 42 L121 33 L132 42 L143 33 L154 42 L165 34 L178 44 L178 60 L66 60 Z"/>
+    <path fill="#FFFFFF" stroke="none" d="M64 50 L76 42 L88 50 L100 42 L112 50 L124 42 L136 50 L148 42 L160 50 L172 42 L182 50 L183 192 Q123 199 62 192 Z"/>
+    <path fill="#EDE8E0" stroke="none" d="M160 50 L172 42 L182 50 L183 192 Q172 193.5 160 194.5 Z"/>
+    <path fill="#F2C14E" stroke="none" d="M63 100 L182.4 100 L182.6 146 L62.6 146 Z"/>
+    <path fill="#D9A52E" stroke="none" d="M160 100 L182.4 100 L182.6 146 L160 146 Z"/>
+    <path fill="#E2513B" stroke="none" d="M62.8 116 L182.5 116 L182.5 130 L62.7 130 Z"/>
+    <path fill="#C3331D" stroke="none" d="M160 116 L182.5 116 L182.5 130 L160 130 Z"/>
+    <path fill="none" d="M63 100 L182.4 100 M62.6 146 L182.6 146 M62.8 116 L182.5 116 M62.7 130 L182.5 130 M62.4 178 L182.8 178"/>
+    <path fill="none" d="M64 50 L76 42 L88 50 L100 42 L112 50 L124 42 L136 50 L148 42 L160 50 L172 42 L182 50 L183 192 Q123 199 62 192 Z"/>
+  </g>
+  <g id="spoon">
+    <line x1="146" y1="200" x2="42" y2="214" stroke-width="12.5"/>
+    <line x1="146" y1="200" x2="42" y2="214" stroke="#8E9AA6" stroke-width="5.5"/>
+    <ellipse cx="176" cy="198" rx="34" ry="16" transform="rotate(-6 176 198)" fill="#8E9AA6"/>
+    <path fill="#6D7B8A" stroke="none" d="M208 194 A34 16 0 0 1 180 213.7 C194 210 204 204 208 194 Z"/>
+    <path fill="#FFFFFF" d="M150 200 C150 182 166 174 178 176 C192 176 204 186 202 198 C186 204 166 205 150 200 Z"/>
+    <path fill="#EDE8E0" stroke="none" d="M178 176 C192 176 204 186 202 198 C196 200.4 190 201.9 184 202.8 C190 194 188 182 178 176 Z"/>
+    <path fill="none" d="M150 200 C150 182 166 174 178 176 C192 176 204 186 202 198 C186 204 166 205 150 200 Z"/>
+    <ellipse cx="176" cy="198" rx="34" ry="16" transform="rotate(-6 176 198)" fill="none"/>
+  </g>
+</g>
+</svg>

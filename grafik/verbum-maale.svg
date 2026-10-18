@@ -1,26 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-  <g id="measuring" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-    <g id="cup-handle">
-      <path d="M73 86 L52 86 Q32 86 32 106 L32 143 Q32 164 53 164 L74 164 L74 151 L54 151 Q45 151 45 141 L45 108 Q45 99 54 99 L73 99 Z" fill="#FFF4E2"/>
+  <g id="measure" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="jug-handle">
+      <path d="M169 83 C198 75 219 84 222 108 C225 135 207 155 177 156 L174 141 C194 141 208 128 207 111 C206 96 190 95 174 101 Z" fill="#FFFFFF"/>
     </g>
-    <g id="measuring-cup">
-      <path d="M68 44 L160 44 L178 56 Q181 59 177 63 L165 74 L165 190 Q165 208 148 210 L86 210 Q68 208 68 190 Z" fill="#FFF4E2"/>
-      <path d="M76 54 L156 54 L166 58" fill="none"/>
-      <path d="M76 126 L157 126 L157 188 Q157 201 145 202 L89 202 Q76 201 76 188 Z" fill="#FFFFFF"/>
-      <path d="M142 100 L157 100 M137 126 L157 126 M142 152 L157 152" fill="none"/>
+    <g id="measuring-jug">
+      <path d="M68 55 L173 55 Q181 55 181 64 L174 199 Q173 213 157 216 L104 216 Q87 215 86 200 L80 82 L64 65 Q59 60 61 56 Q63 53 68 55 Z" fill="#FFFFFF"/>
+      <path d="M80 67 L168 67" fill="none"/>
+    </g>
+    <g id="water">
+      <path d="M89 114 L175 114 L169 197 Q168 209 154 210 L108 210 Q95 209 94 197 Z" fill="#3E8FB0"/>
+      <path d="M89 114 L175 114 L174 123 L89.5 123 Z" fill="#2E6A83"/>
+    </g>
+    <g id="water-level-arrow">
+      <path d="M28 109 L55 109 L55 102 Q55 99 58 101 L74 112 Q77 114 74 116 L58 127 Q55 129 55 126 L55 119 L28 119 Q23 114 28 109 Z" fill="#3E8FB0"/>
     </g>
     <g id="rosa-forearm">
-      <path d="M0 132 C13 134 24 133 36 127 L46 151 Q30 170 0 166" fill="#F08A3C"/>
+      <path d="M256 103 C241 103 225 107 212 111 L212 135 C226 143 241 146 256 144" fill="#F08A3C"/>
     </g>
-    <g id="holding-paw">
-      <path d="M35 124 C35 116 43 113 48 119 C51 111 60 115 59 122 C67 119 72 126 66 132 C72 138 67 145 61 143 C57 153 43 154 36 148 Q29 143 32 134 Z" fill="#F08A3C"/>
-      <path d="M39 132 Q47 127 56 134 Q61 141 53 146 Q41 147 39 138 Z" fill="#FFF4E2"/>
-      <path d="M47 122 L48 127 M58 125 L57 129" fill="none"/>
+    <g id="rosa-handle-paw">
+      <path d="M214 105 C203 102 198 110 202 116 C194 120 198 130 205 130 C201 138 210 145 217 140 C225 147 233 138 229 131 C238 127 233 116 225 117 Q225 107 214 105 Z" fill="#F08A3C"/>
+      <path d="M209 117 Q218 112 224 122 Q229 132 218 137 Q207 138 205 128 Q203 122 209 117 Z" fill="#FFF4E2"/>
     </g>
-    <g id="measuring-spoon">
-      <path d="M226 118 C214 114 203 125 201 139 C199 151 204 158 211 161 L187 222 Q185 228 191 231 Q197 233 200 227 L221 164 C231 163 237 152 236 140 C237 129 233 121 226 118 Z" fill="#8E9AA6"/>
-      <path d="M220 128 C213 128 207 139 209 147 Q211 154 218 155 C225 155 230 148 229 140 Q229 130 220 128 Z" fill="#6D7B8A"/>
-      <path d="M205 141 Q207 135 212 134 Q216 123 223 129 Q228 129 232 142 Q219 150 205 141 Z" fill="#FFFFFF"/>
-    </g>
+  </g>
+  <g id="measurement-ticks" fill="#3B2A20">
+    <rect x="100" y="79.5" width="16" height="5" rx="2.5"/>
+    <rect x="100" y="111.5" width="30" height="5" rx="2.5"/>
+    <rect x="100" y="143.5" width="16" height="5" rx="2.5"/>
+    <rect x="100" y="175.5" width="30" height="5" rx="2.5"/>
   </g>
 </svg>

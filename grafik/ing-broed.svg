@@ -1,1 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="128" cy="132" rx="108" ry="34" fill="#D9A52E" transform="rotate(-24 128 132)"/><ellipse cx="124" cy="128" rx="92" ry="20" fill="#F2C14E" stroke="none" transform="rotate(-24 124 128)"/><path d="M60 170 Q72 150 92 150 M92 152 Q104 132 124 132 M124 134 Q136 114 156 114 M156 116 Q168 96 188 96" fill="none"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="baguette" transform="translate(126 128) rotate(-40)">
+    <path fill="#E8C79A" stroke="none" d="M-120 2 C-114 -20 -78 -29 -42 -30 L44 -30 C80 -29 116 -20 122 0 C124 18 96 31 58 32 L-54 32 C-92 31 -124 20 -120 2 Z"/>
+    <path fill="#CFA976" stroke="none" d="M122 0 C124 18 96 31 58 32 L-54 32 C-92 31 -124 20 -120 2 C-100 16 -78 21 -52 21 L56 21 C90 21 110 14 122 0 Z"/>
+    <g id="scores" fill="#FFF4E2">
+      <path d="M-86 4 Q-70 -14 -46 -11 Q-62 7 -86 4 Z"/>
+      <path d="M-42 4 Q-26 -14 -2 -11 Q-18 7 -42 4 Z"/>
+      <path d="M2 4 Q18 -14 42 -11 Q26 7 2 4 Z"/>
+      <path d="M46 4 Q62 -14 86 -11 Q70 7 46 4 Z"/>
+    </g>
+    <g id="score-shade" fill="#EEDDBF" stroke="none">
+      <path d="M-83 3.5 Q-62 5 -49 -9 Q-63 1 -83 3.5 Z"/>
+      <path d="M-39 3.5 Q-18 5 -5 -9 Q-19 1 -39 3.5 Z"/>
+      <path d="M5 3.5 Q26 5 39 -9 Q25 1 5 3.5 Z"/>
+      <path d="M49 3.5 Q70 5 83 -9 Q69 1 49 3.5 Z"/>
+    </g>
+    <path fill="none" d="M-120 2 C-114 -20 -78 -29 -42 -30 L44 -30 C80 -29 116 -20 122 0 C124 18 96 31 58 32 L-54 32 C-92 31 -124 20 -120 2 Z"/>
+  </g>
+</g>
+</svg>

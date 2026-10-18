@@ -1,1 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><rect x="104" y="36" width="10" height="184" rx="5" fill="#CFA976" transform="rotate(-18 109 128)"/><rect x="110" y="36" width="10" height="184" rx="5" fill="#E8C79A" transform="rotate(-10 115 128)"/><rect x="116" y="36" width="10" height="184" rx="5" fill="#CFA976" transform="rotate(-3 121 128)"/><rect x="122" y="36" width="10" height="184" rx="5" fill="#E8C79A" transform="rotate(4 127 128)"/><rect x="128" y="36" width="10" height="184" rx="5" fill="#CFA976" transform="rotate(11 133 128)"/><rect x="134" y="36" width="10" height="184" rx="5" fill="#E8C79A" transform="rotate(18 139 128)"/><rect x="84" y="124" width="88" height="22" rx="8" fill="#E2513B"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="bundle" transform="translate(128 128) rotate(-35)" stroke-width="2.5">
+    <rect x="-108" y="-17" width="216" height="8" rx="2" fill="#F2C14E" transform="rotate(-7)"/>
+    <rect x="-108" y="-14.64" width="216" height="8" rx="2" fill="#F2C14E" transform="rotate(5.73)"/>
+    <rect x="-108" y="-12.27" width="216" height="8" rx="2" fill="#F2C14E" transform="rotate(-4.45)"/>
+    <rect x="-108" y="-9.91" width="216" height="8" rx="2" fill="#F2C14E" transform="rotate(3.18)"/>
+    <rect x="-108" y="-7.55" width="216" height="8" rx="2" fill="#F2C14E" transform="rotate(-1.91)"/>
+    <rect x="-108" y="-5.18" width="216" height="8" rx="2" fill="#F2C14E" transform="rotate(0.64)"/>
+    <rect x="-108" y="-2.82" width="216" height="8" rx="2" fill="#F2C14E" transform="rotate(0.64)"/>
+    <rect x="-108" y="-0.45" width="216" height="8" rx="2" fill="#F2C14E" transform="rotate(-1.91)"/>
+    <rect x="-108" y="1.91" width="216" height="8" rx="2" fill="#D9A52E" transform="rotate(3.18)"/>
+    <rect x="-108" y="4.27" width="216" height="8" rx="2" fill="#D9A52E" transform="rotate(-4.45)"/>
+    <rect x="-108" y="6.64" width="216" height="8" rx="2" fill="#D9A52E" transform="rotate(5.73)"/>
+    <rect x="-108" y="9" width="216" height="8" rx="2" fill="#D9A52E" transform="rotate(-7)"/>
+    <path id="band" fill="#E2513B" stroke-width="3.5" d="M-20 -24 L20 -24 L20 24 L-20 24 Z"/>
+    <path fill="#C3331D" stroke="none" d="M-18.25 13 L18.25 13 L18.25 22.25 L-18.25 22.25 Z"/>
+    <path fill="none" stroke-width="3.5" d="M-20 -15 L20 -15"/>
+    <path fill="none" stroke-width="3.5" d="M-20 24 L20 24 L20 -24"/>
+  </g>
+</g>
+</svg>

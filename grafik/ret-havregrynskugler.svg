@@ -4,21 +4,55 @@
     <ellipse cx="128" cy="140" rx="108" ry="75" fill="#3E8FB0"/>
     <ellipse cx="128" cy="140" rx="94" ry="61" fill="#FFF4E2"/>
   </g>
-  <g id="back-balls" fill="#704D31">
-    <circle cx="98" cy="112" r="22"/>
-    <circle cx="158" cy="112" r="22"/>
+  <g id="ball-1" transform="translate(84 108)">
+    <circle r="22" fill="#9A6A44"/>
+    <path fill="#704D31" stroke="none" d="M22 0 A22 22 0 0 1 -15 16 C4 16 16 8 20 -8 C21 -6 22 -3 22 0 Z"/>
+    <circle r="22" fill="none"/>
+    <path fill="none" stroke-width="7.5" d="M-12 -10 l6 -2 M3 -15 l5 3 M-15 3 l3 5 M-1 -1 l6 0 M11 4 l-2 6 M-4 11 l5 3 M12 -8 l4 4"/>
+    <path fill="none" stroke="#FFFFFF" d="M-12 -10 l6 -2 M3 -15 l5 3 M-15 3 l3 5 M-1 -1 l6 0 M11 4 l-2 6 M-4 11 l5 3 M12 -8 l4 4"/>
   </g>
-  <g id="front-balls" fill="#704D31">
-    <circle cx="70" cy="146" r="22"/>
-    <circle cx="128" cy="150" r="24"/>
-    <circle cx="186" cy="146" r="22"/>
+  <g id="ball-2" transform="translate(132 98)">
+    <circle r="22" fill="#9A6A44"/>
+    <path fill="#704D31" stroke="none" d="M22 0 A22 22 0 0 1 -15 16 C4 16 16 8 20 -8 C21 -6 22 -3 22 0 Z"/>
+    <circle r="22" fill="none"/>
+    <path fill="none" stroke-width="7.5" d="M-10 -12 l5 3 M5 -14 l6 -1 M-14 0 l2 6 M0 -3 l5 3 M12 2 l3 5 M-6 10 l6 -1 M8 12 l4 -4"/>
+    <path fill="none" stroke="#FFFFFF" d="M-10 -12 l5 3 M5 -14 l6 -1 M-14 0 l2 6 M0 -3 l5 3 M12 2 l3 5 M-6 10 l6 -1 M8 12 l4 -4"/>
   </g>
-  <g id="coconut" fill="#FFFFFF" stroke-width="2">
-    <path d="M90 104 L94 102 M104 108 L108 107 M96 118 L100 119 M150 104 L154 103 M164 110 L168 111 M156 120 L160 119"/>
-    <path d="M62 138 L66 136 M76 144 L80 143 M68 154 L72 155 M120 140 L124 139 M134 146 L138 145 M124 160 L128 161 M178 138 L182 137 M192 146 L196 145 M184 154 L188 155"/>
+  <g id="ball-3" transform="translate(180 108)">
+    <circle r="22" fill="#9A6A44"/>
+    <path fill="#704D31" stroke="none" d="M22 0 A22 22 0 0 1 -15 16 C4 16 16 8 20 -8 C21 -6 22 -3 22 0 Z"/>
+    <circle r="22" fill="none"/>
+    <path fill="none" stroke-width="7.5" d="M-13 -8 l6 -3 M2 -14 l5 2 M-12 6 l5 4 M-2 0 l6 -2 M10 -4 l3 5 M2 12 l6 0 M12 8 l2 4"/>
+    <path fill="none" stroke="#FFFFFF" d="M-13 -8 l6 -3 M2 -14 l5 2 M-12 6 l5 4 M-2 0 l6 -2 M10 -4 l3 5 M2 12 l6 0 M12 8 l2 4"/>
   </g>
-  <g id="shine" fill="none" stroke="#9A6A44" stroke-width="3">
-    <path d="M86 102 Q90 96 98 95 M146 102 Q150 96 158 95 M58 136 Q62 130 70 129 M114 140 Q118 133 127 132 M174 136 Q178 130 186 129"/>
+  <g id="ball-4" transform="translate(82 156)">
+    <circle r="22" fill="#9A6A44"/>
+    <path fill="#704D31" stroke="none" d="M22 0 A22 22 0 0 1 -15 16 C4 16 16 8 20 -8 C21 -6 22 -3 22 0 Z"/>
+    <circle r="22" fill="none"/>
+    <path fill="none" stroke-width="7.5" d="M-12 -10 l6 -2 M4 -15 l5 3 M-14 -1 l4 4 M0 -4 l6 1 M12 -4 l3 5"/>
+    <path fill="none" stroke="#FFFFFF" d="M-12 -10 l6 -2 M4 -15 l5 3 M-14 -1 l4 4 M0 -4 l6 1 M12 -4 l3 5"/>
+    <path fill="#F2C14E" d="M-27 4 Q-24 0 -21 4 Q-18 0 -15 4 Q-12 0 -9 4 Q-6 0 -3 4 Q0 0 3 4 Q6 0 9 4 Q12 0 15 4 Q18 0 21 4 Q24 0 27 4 L21 26 L-21 26 Z"/>
+    <path fill="#D9A52E" stroke="none" d="M15 6 Q18 2 21 6 Q24 2 25.5 6 L20 24.5 L13 24.5 Z"/>
+    <path fill="none" d="M-15 6 L-13 25 M-3 6 L-3 25 M9 6 L8 25"/>
+    <path fill="none" d="M-27 4 Q-24 0 -21 4 Q-18 0 -15 4 Q-12 0 -9 4 Q-6 0 -3 4 Q0 0 3 4 Q6 0 9 4 Q12 0 15 4 Q18 0 21 4 Q24 0 27 4 L21 26 L-21 26 Z"/>
+  </g>
+  <g id="ball-5" transform="translate(134 166)">
+    <circle r="22" fill="#9A6A44"/>
+    <path fill="#704D31" stroke="none" d="M22 0 A22 22 0 0 1 -15 16 C4 16 16 8 20 -8 C21 -6 22 -3 22 0 Z"/>
+    <circle r="22" fill="none"/>
+    <path fill="none" stroke-width="7.5" d="M-11 -12 l6 1 M4 -14 l5 -2 M-15 2 l3 5 M-1 -2 l5 4 M12 -2 l2 6 M-6 11 l6 0 M7 10 l4 3"/>
+    <path fill="none" stroke="#FFFFFF" d="M-11 -12 l6 1 M4 -14 l5 -2 M-15 2 l3 5 M-1 -2 l5 4 M12 -2 l2 6 M-6 11 l6 0 M7 10 l4 3"/>
+  </g>
+  <g id="ball-6" transform="translate(186 154)">
+    <circle r="22" fill="#9A6A44"/>
+    <path fill="#704D31" stroke="none" d="M22 0 A22 22 0 0 1 -15 16 C4 16 16 8 20 -8 C21 -6 22 -3 22 0 Z"/>
+    <circle r="22" fill="none"/>
+    <path fill="none" stroke-width="7.5" d="M-12 -8 l5 -3 M3 -15 l6 2 M-13 -2 l6 2 M2 -5 l4 4 M12 -6 l2 5"/>
+    <path fill="none" stroke="#FFFFFF" d="M-12 -8 l5 -3 M3 -15 l6 2 M-13 -2 l6 2 M2 -5 l4 4 M12 -6 l2 5"/>
+    <path fill="#F2C14E" d="M-27 4 Q-24 0 -21 4 Q-18 0 -15 4 Q-12 0 -9 4 Q-6 0 -3 4 Q0 0 3 4 Q6 0 9 4 Q12 0 15 4 Q18 0 21 4 Q24 0 27 4 L21 26 L-21 26 Z"/>
+    <path fill="#D9A52E" stroke="none" d="M15 6 Q18 2 21 6 Q24 2 25.5 6 L20 24.5 L13 24.5 Z"/>
+    <path fill="none" d="M-15 6 L-13 25 M-3 6 L-3 25 M9 6 L8 25"/>
+    <path fill="none" d="M-27 4 Q-24 0 -21 4 Q-18 0 -15 4 Q-12 0 -9 4 Q-6 0 -3 4 Q0 0 3 4 Q6 0 9 4 Q12 0 15 4 Q18 0 21 4 Q24 0 27 4 L21 26 L-21 26 Z"/>
   </g>
 </g>
 </svg>
