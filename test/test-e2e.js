@@ -176,10 +176,13 @@ async function sidsteTale(side) {
   return side.evaluate(() => (window.__tale[window.__tale.length - 1] || {}).tekst || '');
 }
 
-async function tryk(side, sel) {
+// valg går videre til Playwrights click, fx { force: true } til en knap, der pulserer (Playwright venter ellers på,
+// at den står stille, og det gør «Tiden er gået»-pillen aldrig)
+async function tryk(side, sel, valg = {}) {
   await vent(SPAERRE);
-  await side.locator(sel).first().click();
+  await side.locator(sel).first().click(valg);
 }
+const PULSERER = { force: true };
 
 async function hold(side, sel, ms = 2300) {
   await vent(SPAERRE);
@@ -290,7 +293,7 @@ async function heleVejen(browser, skaerm) {
       if (n === 'iphone') maal.push(n + ': fremskridtets x uden timer, med timer og færdig: ' + xer.join(', '));
       else tjek(Math.max(...xer) - Math.min(...xer) <= 1, n + ': fremskridtet flytter sig, når timer-pillen kommer (x uden timer, med timer og færdig: ' + xer.join(', ') + ')');
       await foto(side, n + '-6-pille-faerdig');
-      await tryk(side, '.pille');
+      await tryk(side, '.pille', PULSERER);
       await side.waitForFunction(() => location.hash.endsWith('/trin/9'));
       tjek(await side.locator('.timer.faerdig').count() === 1, n + ': trinnet skal vise, at tiden er gået');
       await tryk(side, '.timer.faerdig .knap.primaer');
@@ -548,7 +551,7 @@ async function timere(browser, skaerm) {
   tjek(udloebetVist, n + ': en timer, der løb ud under genindlæsningen, skal vise «Tiden er gået» på forsiden');
   await foto(side, n + '-forside-udloebet');
   if (udloebetVist) {
-    await tryk(side, '.pille');
+    await tryk(side, '.pille', PULSERER);
     await side.waitForSelector('.timer.faerdig', { timeout: 5000 }).catch(() => tjek(false, n + ': trin 8 skal vise, at tiden er gået'));
     await tryk(side, '.timer.faerdig .knap.primaer');
     tjek(await side.evaluate(() => JSON.parse(localStorage.getItem('kog-v1')).timer) === null, n + ': «Ok» sletter den udløbne timer');
