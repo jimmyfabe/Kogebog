@@ -89,5 +89,6 @@ ol.trin li::before { content: counter(trin) "."; font-weight: 800; text-align: r
   .trin-ikon { width: 9mm; height: 9mm; }
   .maerke { font-size: 8.5pt; }
   .note { font-size: 9pt; }
-  .fod { font-size: 9pt; }
+  /* Foden står ikke alene øverst på side 2 og deles ikke: er der ikke plads, følger det sidste trin med over */
+  .fod { font-size: 9pt; break-before: avoid; break-inside: avoid; }
 }

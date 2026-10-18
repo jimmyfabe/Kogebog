@@ -51,3 +51,16 @@ test('--bund regner med samme safe-area som den faste bund', () => {
     }
   }
 });
+
+// Printet: foden («Tjek selv pakkerne …» og kilden) må ikke stå alene øverst på side 2 eller deles over to sider.
+// Playwrights WebKit deler ikke i sider, så reglen tjekkes her. Skønnet i WebKit med A4's bredde (UI-review 4):
+// blondies fod startede 11 mm under side 1, og frikadellers fod (to linjer) blev delt
+test('printets fod holdes sammen med det sidste trin', () => {
+  const PRINT = fs.readFileSync(path.join(ROD, 'print.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+  const alle = [];
+  const saml = (b) => { alle.push(b); b.regler.forEach(saml); };
+  saml(blokke(PRINT));
+  const fod = alle.filter((b) => b.hoved.split(',').map((s) => s.trim()).includes('.fod')).map((b) => b.deklarationer).join(';');
+  assert.match(fod, /break-before\s*:\s*avoid/, '.fod skal have break-before: avoid, så den ikke står alene på side 2');
+  assert.match(fod, /break-inside\s*:\s*avoid/, '.fod skal have break-inside: avoid, så den ikke deles over to sider');
+});
