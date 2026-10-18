@@ -82,5 +82,6 @@ Standard schema.org/Recipe med egne felter under `tumbi`. Den fulde tabel står 
 - **Lyd på iPad:** brugeraktivering tæller ved `pointerup`, `touchend`, `click` og `keydown`, ikke ved `pointerdown` med en finger. Lyden klargøres ved første tryk efter en genindlæsning (`timer.js`). Ikke afprøvet på iPad.
 - **`scrollWidth` fanger ikke overløb,** fordi `body` har `overflow-x: hidden`. e2e måler elementernes placering i stedet (`tjekLayout`).
 - **En holdt tast gentager handlingen,** medmindre der tjekkes `e.repeat` (`app.js`).
+- **Tab i rettens bund følger med vilje ikke skærmen** fra 901 px og på lave skærme på langs: man ser print, Start forfra, Fortsæt, men Tab går Fortsæt → print → Start forfra, så den vigtigste knap nås først (`order` i `app.css`). Ikke en fejl, der skal rettes.
 - **Safari fjerner listesemantik,** når `list-style: none` er sat. Print-listen har derfor `role="list"`.
 - **Codex laver ikke billeder.** Den skriver SVG-tekst. Billederne laves i ChatGPT.
