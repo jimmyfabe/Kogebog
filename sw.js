@@ -5,7 +5,7 @@
    Derfor er VERSION bygget af INDHOLD: et tal for alle FILER. test/test-sw.js tjekker, at FILER er komplet,
    og fejler, når en fil er ændret. Fejlbeskeden viser den nye værdi; testen ændrer ikke sw.js, så den sættes her i hånden. */
 const PRAEFIKS = 'kog-';
-const INDHOLD = 'c4ed2c099bf500ca'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = 'd3bb7af9cdfe8383'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const FILER = [
   './',
@@ -43,10 +43,15 @@ const FILER = [
   'grafik/ing-loeg.svg', 'grafik/ing-maelk.svg', 'grafik/ing-mel.svg', 'grafik/ing-olie.svg', 'grafik/ing-ost.svg',
   'grafik/ing-peber.svg', 'grafik/ing-salt.svg', 'grafik/ing-smoer.svg', 'grafik/ing-spaghetti.svg', 'grafik/ing-sukker.svg',
   'grafik/ing-syltetoej.svg', 'grafik/ing-tomat.svg', 'grafik/ing-tomatpure.svg', 'grafik/ing-vand.svg',
+  'grafik/ing-bagepulver.svg', 'grafik/ing-broed.svg', 'grafik/ing-chokolade.svg', 'grafik/ing-hytteost.svg', 'grafik/ing-kakao.svg',
+  'grafik/ing-kartoffel.svg', 'grafik/ing-kerner.svg', 'grafik/ing-kokos.svg', 'grafik/ing-rasp.svg', 'grafik/ing-skinke.svg',
+  'grafik/ing-tun.svg', 'grafik/ing-yoghurt.svg',
   'grafik/ret-boller.svg', 'grafik/ret-chorizo-pasta.svg', 'grafik/ret-frikadeller.svg', 'grafik/ret-koedsovs.svg', 'grafik/ret-pandekager.svg',
   'grafik/verbum-aelte.svg', 'grafik/verbum-haelde.svg', 'grafik/verbum-koge.svg', 'grafik/verbum-maale.svg', 'grafik/verbum-roere.svg',
   'grafik/verbum-rulle.svg', 'grafik/verbum-skaere.svg', 'grafik/verbum-smage.svg', 'grafik/verbum-stege.svg',
   'grafik/verbum-vaske-haender.svg', 'grafik/verbum-vende.svg', 'grafik/verbum-vente.svg',
+  'grafik/verbum-bage.svg', 'grafik/verbum-drysse.svg', 'grafik/verbum-mose.svg', 'grafik/verbum-pensle.svg', 'grafik/verbum-piske.svg',
+  'grafik/verbum-rive.svg', 'grafik/verbum-smoere.svg',
 ];
 
 const iScope = (url) => url.href.startsWith(self.registration.scope);

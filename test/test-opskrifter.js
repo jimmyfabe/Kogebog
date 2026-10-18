@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
-  VERBER, VOKSEN_KRAV, VOKSEN_HJAELP, INGREDIENSER, RAA_IKONER, DYR, MAKS_ORD,
+  VERBER, VOKSEN_KRAV, KUN_VARME_HJAELP, VOKSEN_HJAELP, INGREDIENSER, RAA_IKONER, DYR, MAKS_ORD,
   grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, GRAFIK_FAERDIG,
 } from '../js/katalog.js';
 import { isoTilMinutter, antalOrd } from '../js/tekst.js';
@@ -170,6 +170,8 @@ export function valider(rod = ROD) {
         if ('voksen_hjaelp' in st && st.voksen !== true) f(hvor + ': «voksen_hjaelp» kræver også "voksen": true');
         const krav = Object.hasOwn(VOKSEN_KRAV, st.verbum) ? VOKSEN_KRAV[st.verbum] : undefined;
         if (krav && (st.voksen !== true || st.voksen_hjaelp !== krav)) f(hvor + ': verbet «' + st.verbum + '» skal have "voksen": true og "voksen_hjaelp": "' + krav + '"');
+        // Piske, pensle, mose og drysse kan barnet selv; hjælper den voksne, er det for varmens skyld (varmt fedt, gryde, pande)
+        if (KUN_VARME_HJAELP.includes(st.verbum) && 'voksen_hjaelp' in st && st.voksen_hjaelp !== 'varme') f(hvor + ': verbet «' + st.verbum + '» kan barnet selv. Hjælper den voksne, er det for varmens skyld: brug "voksen_hjaelp": "varme", fandt ' + JSON.stringify(st.voksen_hjaelp));
         if (st.voksen === true) tal.voksentrin++;
         if ('timer_sek' in st) {
           if (!Number.isInteger(st.timer_sek) || st.timer_sek <= 0) f(hvor + ': «timer_sek» skal være et positivt heltal (sekunder), fandt ' + JSON.stringify(st.timer_sek));

@@ -1,7 +1,7 @@
 // katalog.js — de faste id'er, som opskrifterne må bruge. Én kilde for appen og for test/test-opskrifter.js.
 // Billederne ligger i grafik/ med præcis disse navne (verbum-<id>, ing-<id>, dyr-<navn>, ret-<id>).
 
-// De 12 verber fra docs/gennemgang.md. Navnet bruges som alt-tekst.
+// De 12 verber fra docs/gennemgang.md og 7 nye (18-10-2026). Navnet bruges som alt-tekst.
 export const VERBER = {
   'roere': 'røre',
   'haelde': 'hælde',
@@ -15,15 +15,29 @@ export const VERBER = {
   'vaske-haender': 'vaske hænder',
   'vente': 'vente',
   'smage': 'smage',
+  'smoere': 'smøre',
+  'mose': 'mose',
+  'bage': 'bage',
+  'piske': 'piske',
+  'drysse': 'drysse',
+  'rive': 'rive',
+  'pensle': 'pensle',
 };
 
-// Verber, der altid kræver en voksen, og hvilken slags hjælp.
+// Verber, der altid kræver en voksen, og hvilken slags hjælp. Rivejernet skærer, og «bage» er altid ovnen.
 export const VOKSEN_KRAV = {
   'skaere': 'kniv',
+  'rive': 'kniv',
   'stege': 'varme',
   'koge': 'varme',
   'vende': 'varme',
+  'bage': 'varme',
 };
+
+// Verber, barnet kan selv, når der er koldt: piske dej, pensle boller, mose, drysse ost. Er der varme med
+// (varmt fedt, en varm gryde eller pande), skal den voksne hjælpe, og så er det for varmens skyld, aldrig kniven.
+// Validatoren kan ikke se, om der er varme; det skriver opskriften med «voksen». Den tjekker, at hjælpen er «varme».
+export const KUN_VARME_HJAELP = ['piske', 'pensle', 'mose', 'drysse'];
 
 export const VOKSEN_HJAELP = {
   kniv: 'Kniv',
@@ -56,9 +70,22 @@ export const INGREDIENSER = {
   'bouillon': 'bouillon',
   'havregryn': 'havregryn',
   'syltetoej': 'syltetøj',
+  'kartoffel': 'kartofler',
+  'broed': 'brød',
+  'chokolade': 'chokolade',
+  'kakao': 'kakao',
+  'rasp': 'rasp',
+  'hytteost': 'hytteost',
+  'kerner': 'kerner',
+  'tun': 'tun',
+  'yoghurt': 'yoghurt',
+  'skinke': 'skinke',
+  'bagepulver': 'bagepulver',
+  'kokos': 'kokosmel',
 };
 
 // Ikoner for råt kød og råt æg: efter dem skal der komme et trin med «vaske-haender».
+// Tun på dåse og skinke er ikke rå, så de står ikke her.
 export const RAA_IKONER = ['koed', 'aeg'];
 
 export const DYR = {

@@ -47,16 +47,17 @@ Kør i Git Bash i `D:/Claude/Kogebog`.
 Standard schema.org/Recipe med egne felter under `tumbi`. Den fulde tabel står i `docs/gennemgang.md`. Validatoren (`test/test-opskrifter.js`) tjekker:
 
 - `tumbi.id` er filnavnet, og id'et står i `opskrifter/index.json`.
-- Hvert trin har `tumbi.verbum` fra de 12 verber: `roere haelde skaere aelte rulle vende stege koge maale vaske-haender vente smage`.
+- Hvert trin har `tumbi.verbum` fra de 19 verber i `js/katalog.js`: `roere haelde skaere aelte rulle vende stege koge maale vaske-haender vente smage smoere mose bage piske drysse rive pensle`.
 - Trinteksten (`text`, den der læses op) er højst 9 ord.
-- Kniv (`skaere`) og varme (`stege`, `koge`, `vende`) kræver `"voksen": true` og `voksen_hjaelp` (`"kniv"` eller `"varme"`). De to følges ad.
+- Kniv (`skaere`, `rive`) og varme (`stege`, `koge`, `vende`, `bage`) kræver `"voksen": true` og `voksen_hjaelp` (`"kniv"` eller `"varme"`). De to følges ad.
+- `piske`, `pensle`, `mose` og `drysse` kan barnet selv. Er der varme med, skriver opskriften `"voksen": true`, og så skal hjælpen være `"varme"` (validatoren kan ikke selv se varmen).
 - Et trin med råt kød (`koed`) eller æg (`aeg`) i `ikoner` skal efterfølges af et `vaske-haender`-trin. Andre ingredienser må ikke røres før det.
 - `timer_sek` er et heltal, højst 4 timer. Billedfilerne findes.
 - En ny ret skrives med `"afproevet": false`, indtil den er lavet.
 
 ## Ny opskrift
 
-1. Kopiér en af de fem `opskrifter/<id>.json`, og skriv id'et i `opskrifter/index.json`.
+1. Kopiér en af `opskrifter/<id>.json`, og skriv id'et i `opskrifter/index.json` (rækkefølgen: aftensmad, bagning, søde sager).
 2. Kør `node test/test-opskrifter.js`. Den siger præcis, hvad der er galt.
 3. Læg `grafik/ret-<id>.svg` (og nye verbum- eller ingrediens-billeder). Tilføj filerne i `FILER` i `sw.js`.
 4. Kør `node test/test-sw.js`, og sæt den nye `INDHOLD` (se regel 3 nedenfor).

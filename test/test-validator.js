@@ -34,11 +34,24 @@ function forventFejl(fil, ret, forventet) {
   } finally { ryd(m); }
 }
 
+const ANTAL_RETTER = laes(ROD, 'opskrifter/index.json').retter.length;
+
 test('de rigtige opskrifter er gyldige', () => {
   const { fejl, tal } = valider(ROD);
   assert.deepEqual(fejl, []);
-  assert.equal(tal.retter, 5);
+  assert.equal(tal.retter, ANTAL_RETTER);
 });
+
+// Ret opskriften, og forvent, at alt stadig er gyldigt
+function forventGyldig(fil, ret) {
+  const m = kopi();
+  try {
+    const data = laes(m, fil);
+    ret(data);
+    skriv(m, fil, data);
+    assert.deepEqual(valider(m).fejl, []);
+  } finally { ryd(m); }
+}
 
 test('ødelagt JSON giver filnavn og «ikke gyldig JSON»', () => {
   const m = kopi();
@@ -65,6 +78,44 @@ test('kniv og varme kræver voksen: true og voksen_hjaelp', () => {
   forventFejl('opskrifter/frikadeller.json', (d) => { delete d.recipeInstructions[1].tumbi.voksen_hjaelp; }, 'trin 2: verbet «skaere» skal have "voksen": true og "voksen_hjaelp": "kniv"');
   forventFejl('opskrifter/frikadeller.json', (d) => { delete d.recipeInstructions[1].tumbi.voksen; }, 'trin 2: verbet «skaere» skal have "voksen": true');
   forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[9].tumbi.voksen_hjaelp = 'ja'; }, 'trin 10: «voksen_hjaelp» skal være "kniv", "varme"');
+});
+
+test('rive og bage kræver altid en voksen: rivejernet er kniv, og ovnen er varme', () => {
+  const rive = (st) => { st.verbum = 'rive'; };
+  forventFejl('opskrifter/koedsovs.json', (d) => { const st = d.recipeInstructions[2].tumbi; rive(st); delete st.voksen; delete st.voksen_hjaelp; },
+    'trin 3: verbet «rive» skal have "voksen": true og "voksen_hjaelp": "kniv"');
+  forventFejl('opskrifter/koedsovs.json', (d) => { const st = d.recipeInstructions[2].tumbi; rive(st); st.voksen_hjaelp = 'varme'; },
+    'trin 3: verbet «rive» skal have "voksen": true og "voksen_hjaelp": "kniv"');
+  forventGyldig('opskrifter/koedsovs.json', (d) => { rive(d.recipeInstructions[2].tumbi); });
+  const bage = (st) => { st.verbum = 'bage'; };
+  forventFejl('opskrifter/boller.json', (d) => { const st = d.recipeInstructions[12].tumbi; bage(st); delete st.voksen; delete st.voksen_hjaelp; },
+    'trin 13: verbet «bage» skal have "voksen": true og "voksen_hjaelp": "varme"');
+  forventFejl('opskrifter/boller.json', (d) => { const st = d.recipeInstructions[12].tumbi; bage(st); st.voksen_hjaelp = 'kniv'; },
+    'trin 13: verbet «bage» skal have "voksen": true og "voksen_hjaelp": "varme"');
+  forventGyldig('opskrifter/boller.json', (d) => { bage(d.recipeInstructions[12].tumbi); });
+});
+
+test('piske, pensle, mose og drysse: barnet selv, eller en voksen for varmens skyld', () => {
+  // Boller trin 11 (pisk ægget, og pensl) har ingen voksen: det er koldt
+  for (const v of ['piske', 'pensle', 'mose', 'drysse']) {
+    forventGyldig('opskrifter/boller.json', (d) => { const st = d.recipeInstructions[10].tumbi; st.verbum = v; delete st.voksen; delete st.voksen_hjaelp; });
+    forventGyldig('opskrifter/boller.json', (d) => { Object.assign(d.recipeInstructions[10].tumbi, { verbum: v, voksen: true, voksen_hjaelp: 'varme' }); });
+    forventFejl('opskrifter/boller.json', (d) => { Object.assign(d.recipeInstructions[10].tumbi, { verbum: v, voksen: true, voksen_hjaelp: 'kniv' }); },
+      'trin 11: verbet «' + v + '» kan barnet selv. Hjælper den voksne, er det for varmens skyld: brug "voksen_hjaelp": "varme", fandt "kniv"');
+  }
+  // smøre har ingen fast regel: barnet smører selv med en sløv kniv
+  forventGyldig('opskrifter/boller.json', (d) => { const st = d.recipeInstructions[10].tumbi; st.verbum = 'smoere'; });
+});
+
+test('tun på dåse og skinke er ikke rå: ingen håndvask bagefter', () => {
+  for (const [ikon, tekst] of [['tun', '1 dåse tun'], ['skinke', '100 g skinke']]) {
+    forventGyldig('opskrifter/koedsovs.json', (d) => {
+      d.recipeIngredient.push(tekst);
+      d.tumbi.ingredienser.push({ ikon, maengde: tekst.split(' ').slice(0, 2).join(' ') });
+      // Lige efter trinnet med tun eller skinke rører barnet tomatpuré og salt, uden at vaske hænder først
+      d.recipeInstructions.splice(6, 0, { '@type': 'HowToStep', text: 'Kom ' + ikon + ' i.', tumbi: { verbum: 'haelde', ikoner: [ikon] } });
+    });
+  }
 });
 
 test('voksen og voksen_hjaelp følges ad', () => {
@@ -144,6 +195,6 @@ test('kommandolinjen giver exit 1 og fejlen på stderr', () => {
     assert.match(k.stderr, /opskrifter\/chorizo-pasta\.json: trin 1: ukendt verbum "vaske"/);
     const ok = spawnSync(process.execPath, [path.join(ROD, 'test/test-opskrifter.js')], { encoding: 'utf8' });
     assert.equal(ok.status, 0, ok.stderr);
-    assert.match(ok.stdout, /^OK: 5 retter/);
+    assert.match(ok.stdout, new RegExp('^OK: ' + ANTAL_RETTER + ' retter'));
   } finally { ryd(m); }
 });
