@@ -267,23 +267,51 @@ function timerBlok(m, t) {
   const ringBoks = el('div', { class: 'timer-ring', role: 'timer', 'aria-label': 'Tid tilbage' }, ring, tal);
   const startKnap = knap('', { klasse: 'timer-start', label: 'Start timeren på ' + varighedTale(sek) });
   startKnap.append(ikon('ur'), el('span', { class: 'timer-start-tekst' }, el('span', { tekst: 'Start timer' }), el('strong', { tekst: formaterTid(sek) })));
+  // Appen har én timer ad gangen: kører en anden, sletter et tryk her den ikke (fx sovsen på trin 8, når spaghettien skal i)
+  const optagetTekst = el('p', { class: 'timer-optaget' });
+  const andenTimer = () => {
+    const a = Timer.aktuel();
+    return a && !a.faerdig && !(a.ret === m.id && a.nr === t.nr) ? a : null;
+  };
+  const hvor = (a) => {
+    const r = S.retter.get(a.ret);
+    return a.ret === m.id || !r || r instanceof Error ? 'trin ' + a.nr : r.navn + ', trin ' + a.nr;
+  };
   startKnap.addEventListener('click', klik(() => {
+    const a = andenTimer();
+    if (a) {
+      Tale.sig('Der kører allerede en timer på ' + hvor(a) + '. Stop den først.', { knap: startKnap });
+      return;
+    }
     Timer.start(m.id, t.nr, sek);
     annoncer('Timeren er startet: ' + varighedTale(sek) + '.');
   }));
   const stopKnap = knap('Stop', { klasse: 'lille', ikonNavn: 'stop', label: 'Stop timeren', onclick: () => Timer.stop() });
   const okKnap = knap('Ok', { klasse: 'primaer lille-primaer', ikonNavn: 'tjek', label: 'Ok, tiden er gået. Slå timeren fra.', onclick: () => Timer.stop() });
   let varFaerdig = false;
+  let vistUden = ''; // 'start' eller 'optaget': tegn kun om, når det skifter (ellers mister knappen fokus hvert kvarte sekund)
 
   function tegn() {
     const a = Timer.aktuel();
     const min = a && a.ret === m.id && a.nr === t.nr;
     if (!min) {
       varFaerdig = false;
-      blok.className = 'timer';
-      blok.replaceChildren(startKnap);
+      const anden = andenTimer();
+      if (anden) {
+        const tekst = 'Der kører allerede en timer på ' + hvor(anden) + '.';
+        if (optagetTekst.textContent !== tekst) optagetTekst.textContent = tekst;
+      }
+      const ny = anden ? 'optaget' : 'start';
+      if (vistUden !== ny) {
+        vistUden = ny;
+        blok.className = 'timer' + (anden ? ' optaget' : '');
+        startKnap.setAttribute('aria-disabled', anden ? 'true' : 'false');
+        if (anden) blok.replaceChildren(startKnap, optagetTekst);
+        else blok.replaceChildren(startKnap);
+      }
       return;
     }
+    vistUden = '';
     const s = Timer.status();
     rest.setAttribute('stroke-dashoffset', (RING_OMKREDS * (1 - s.andel)).toFixed(2));
     tal.textContent = formaterTid(s.restSek);

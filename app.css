@@ -362,6 +362,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .timer-tal { position: absolute; inset: 0; display: grid; place-items: center; font-size: clamp(28px, 4.4svh, 38px); font-weight: 800; font-variant-numeric: tabular-nums; }
 .timer.faerdig .timer-ring { border-radius: 50%; background: var(--sennep-lys); }
 .timer-faerdig-tekst { font-size: 26px; font-weight: 800; }
+.timer-optaget { flex: 1 1 14em; max-width: 22em; font-size: 18px; font-weight: 700; line-height: 1.3; }
 .lille-primaer { min-height: 64px; font-size: 22px; padding: 0 24px; }
 @media (prefers-reduced-motion: no-preference) {
   .timer.faerdig .timer-ring { animation: puls 1s ease-in-out infinite; }
