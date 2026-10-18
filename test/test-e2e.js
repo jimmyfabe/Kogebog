@@ -932,6 +932,9 @@ const FORMER = [
   { navn: 'max-land', viewport: { width: 932, height: 430 }, hasTouch: true },
   { navn: 'desk-960', viewport: { width: 960, height: 800 }, hasTouch: false },
 ];
+// Retterne, som «former» går helt igennem (knapper, Tab, fokus), og skærmene, hvor alle retters hoved også måles
+const RET_FORMER = ['pandekager', 'koedsovs', 'pizzasnegle'];
+const RET_ALLE_PAA = ['se-land', 'plus-land', 'x-land'];
 
 // Hvor et element ligger i forhold til den faste bund: { top, bund } for elementet og bundens top (bundTop)
 const modBund = (side, sel) => side.evaluate((sel) => {
@@ -1045,7 +1048,9 @@ async function former(browser) {
     // Kødsovs har 12 ingredienser: på 768×1024 lå print og «Start forfra» under kanten. Pizzasnegle har den længste
     // liste (15) og den længste «personer og tid». «Fortsæt» står ved det næstsidste trin, så kødsovs (13 trin) og
     // pizzasnegle (22) har to cifre, som den bredeste «Fortsæt»
-    for (const ret of ['pandekager', 'koedsovs', 'pizzasnegle']) {
+    let mindst = null; // den mindste luft mellem personer og tid og bunden på langs (skrives ud som måling)
+    const noterLuft = (meta, hvor) => { if (!mindst || meta.bundTop - meta.bund < mindst.luft) mindst = { luft: meta.bundTop - meta.bund, hvor }; };
+    for (const ret of RET_FORMER) {
       for (const fortsaet of [false, true]) {
         await medGemt(side, { sidste: fortsaet ? { ret, nr: ret === 'pandekager' ? 7 : RETTER[ret].recipeInstructions.length - 1 } : null }, '#/ret/' + ret);
         await side.waitForSelector(fortsaet ? '.ret .fortsaet' : '.ret .start');
@@ -1066,6 +1071,7 @@ async function former(browser) {
           // … og det gør personer og tid også (på 844×390 lå linjen halvt under bunden)
           const meta = await modBund(side, '.meta');
           tjek(meta.bund <= meta.bundTop, hvor + ': personer og tid ligger under den faste bund ' + JSON.stringify(meta));
+          noterLuft(meta, hvor);
           // Knapperne står på én række (de er centreret lodret, så rækken tælles på midten: print er lavere end «Start»).
           // Luften i rækken (skubbet mellem knapperne) skrives ud: WebKit på Windows tegner med Trebuchet MS, iPhonen med
           // ui-rounded, så bredderne her er kun omtrentlige
@@ -1117,6 +1123,26 @@ async function former(browser) {
         tjek(sidst.knap <= sidst.bund, hvor + ': den sidste ingrediens med fokus ligger under den faste bund (knappens bund ' + sidst.knap + ' > bundens top ' + sidst.bund + ')');
       }
     }
+
+    // De øvrige retter på de laveste iPhones på langs: navnet og personer og tid står også over den faste bund, med og
+    // uden «Fortsæt». På 667×375 brydes «personer og tid» på to linjer for pizzasnegle, brownie og blondie, og med et
+    // billede på 22svh lå den anden linje 18 px under bunden. Kun målingen her: resten af retten er tjekket ovenfor
+    if (RET_ALLE_PAA.includes(n)) {
+      for (const ret of index.filter((r) => !RET_FORMER.includes(r))) {
+        for (const fortsaet of [false, true]) {
+          await medGemt(side, { sidste: fortsaet ? { ret, nr: RETTER[ret].recipeInstructions.length - 1 } : null }, '#/ret/' + ret);
+          await side.waitForSelector(fortsaet ? '.ret .fortsaet' : '.ret .start');
+          await side.waitForFunction(() => [...document.images].every((i) => i.complete && i.naturalWidth)); // billedet giver højden
+          const hvor = n + ' ret ' + ret + (fortsaet ? ' med Fortsæt' : '');
+          const navn = await modBund(side, '.ret-titel h1');
+          tjek(navn.bund <= navn.bundTop, hvor + ': navnet ligger under den faste bund ' + JSON.stringify(navn));
+          const meta = await modBund(side, '.meta');
+          tjek(meta.bund <= meta.bundTop, hvor + ': personer og tid ligger under den faste bund ' + JSON.stringify(meta));
+          noterLuft(meta, hvor);
+        }
+      }
+    }
+    if (mindst) maal.push(n + ' ret: mindst ' + mindst.luft + ' px luft mellem personer og tid og bunden (' + mindst.hvor + ')');
 
     // Trinene: «Næste» kan ses uden at rulle, også på langs (et almindeligt trin, et voksen-trin med timer, en lang note)
     for (const [ret, nr] of [['pandekager', 3], ['pandekager', 10], ['boller', 9]]) {
