@@ -126,6 +126,20 @@ async function tjekLayout(side, hvor, { knapperSes = false } = {}) {
       if (mindst < 48) smaa.push(navn(e) + ' ' + Math.round(b.width) + '×' + Math.round(b.height));
       else if (mindst < 63.5 && e.matches(boern) && e.closest('#app')) smaaBoern.push(navn(e) + ' ' + Math.round(b.width) + '×' + Math.round(b.height));
     }
+    // Tekst og ikon i en knap skal have luft til kanten (U13: «Tilbage» stod 3 px fra kanten på iPhone)
+    const traengt = [];
+    for (const k of document.querySelectorAll('#app .knap')) {
+      const b = k.getBoundingClientRect();
+      if (!b.width || !b.height) continue;
+      for (const c of k.children) {
+        const cs = getComputedStyle(c);
+        if (cs.position === 'absolute' || cs.display === 'none' || c.classList.contains('hold-fyld')) continue;
+        const r = c.getBoundingClientRect();
+        if (!r.width || !r.height) continue;
+        const luft = Math.min(r.left - b.left, b.right - r.right);
+        if (luft < 6) traengt.push(navn(k) + ' (' + Math.round(luft) + ' px)');
+      }
+    }
     const W = window.innerWidth;
     const udenfor = [];
     for (const e of document.querySelectorAll('body *')) {
@@ -140,12 +154,13 @@ async function tjekLayout(side, hvor, { knapperSes = false } = {}) {
       .map((e) => navn(e) + ' bund ' + Math.round(e.getBoundingClientRect().bottom + window.scrollY) + ' > ' + H);
     const billeder = [...document.images].filter((i) => !i.complete || !i.naturalWidth).map((i) => i.getAttribute('src'));
     const udenAlt = [...document.images].filter((i) => !i.hasAttribute('alt')).map((i) => i.getAttribute('src'));
-    return { bred: document.documentElement.scrollWidth, vindue: W, udenfor: udenfor.slice(0, 6), smaa, smaaBoern, underKanten, billeder, udenAlt };
+    return { bred: document.documentElement.scrollWidth, vindue: W, udenfor: udenfor.slice(0, 6), smaa, smaaBoern, traengt, underKanten, billeder, udenAlt };
   }, { boern: BOERNEKNAPPER, skaermknapper: SKAERMKNAPPER });
   tjek(r.bred <= r.vindue, hvor + ': vandret rulning (' + r.bred + ' > ' + r.vindue + ')');
   tjek(!r.udenfor.length, hvor + ': indhold uden for skærmen i siden: ' + r.udenfor.join(', '));
   tjek(!r.smaa.length, hvor + ': knapper under 48 px: ' + r.smaa.join(', '));
   tjek(!r.smaaBoern.length, hvor + ': børneknapper under 64 px: ' + r.smaaBoern.join(', '));
+  tjek(!r.traengt.length, hvor + ': tekst eller ikon under 6 px fra knappens kant: ' + r.traengt.join(', '));
   if (knapperSes) tjek(!r.underKanten.length, hvor + ': knapperne nederst kræver rulning: ' + r.underKanten.join(', '));
   else if (r.underKanten.length) maal.push(hvor + ': rul for at nå ' + r.underKanten.join(', '));
   tjek(!r.billeder.length, hvor + ': billeder ikke indlæst: ' + r.billeder.join(', '));

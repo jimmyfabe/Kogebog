@@ -385,7 +385,7 @@ function trinSkaerm(m, nr) {
         el('div', { class: 'trin-knapper' }, laesOp, t.timerSek ? timerBlok(m, t) : null),
         t.note ? el('p', { class: 'note' }, el('span', { class: 'note-hvem', tekst: 'Til den voksne: ' }), t.note) : null)),
     el('footer', { class: 'handlinger' },
-      knap('Tilbage', { klasse: 'tilbage', ikonNavn: 'tilbage', onclick: tilbage }),
+      knap('Tilbage', { klasse: 'tilbage', ikonNavn: 'tilbage', label: 'Tilbage', onclick: tilbage }),
       el('span', { class: 'skub' }),
       naeste));
   // En tast, der holdes inde (e.repeat), gør ikke noget igen — fx mellemrum, der stadig er nede efter et voksen-hold

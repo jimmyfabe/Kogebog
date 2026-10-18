@@ -511,7 +511,10 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
     padding-bottom: max(16px, env(safe-area-inset-bottom));
   }
   .naeste { min-width: 0; flex: 1 1 60%; }
-  .tilbage { min-width: 0; flex: 1 1 30%; padding: 0 14px; }
+  /* Tilbage er kun pilen, som husknappen (navnet står i aria-label): ellers gik teksten ud til kanten,
+     og «Næste · Voksen: hold» fik ikke plads ned til 360 px */
+  .tilbage { min-width: 0; flex: none; width: var(--tryk); padding: 0; }
+  .tilbage > span { display: none; }
 }
 
 /* Lave skærme på langs (fx iPhone på tværs): mindre billeder, så knapperne kan ses */
