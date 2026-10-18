@@ -534,15 +534,24 @@ async function heleVejen(browser, skaerm) {
   // «boller trin 11: billeder ikke indlæst: grafik/verbum-pensle.svg» kom i én af to kørsler. Vent, til alle er færdige
   // (også de fejlede, så tjekLayout melder et billede, der mangler)
   const billederFaerdige = () => side.waitForFunction(() => [...document.images].every((i) => i.complete), null, { timeout: 5000 }).catch(() => {});
+  // WebKit afviser adresseskift ud over ca. 200 pr. 10 s i samme dokument («Excessive navigation attempts blocked.»,
+  // målt 18-10-2026). Alle trin i alle retter er over 200 skift, og så stod «havregrynskugler trin 11» aldrig frem.
+  // Hver ret åbnes derfor i et nyt dokument, hvilket nulstiller tælleren. Omvejen over about:blank er nødvendig, fordi goto
+  // til en adresse, der kun skifter efter #, bliver i samme dokument. Et afvist skift meldes som det, det er
+  const gaaTil = async (h, hvad) => {
+    const ok = await side.evaluate((x) => { location.hash = x; return location.hash === x; }, h);
+    tjek(ok, n + ' ' + hvad + ': WebKit afviste adresseskiftet til ' + h + ' (for mange skift i samme dokument)');
+  };
   for (const id of index) {
-    await side.evaluate((h) => { location.hash = h; }, '#/ret/' + id);
+    await side.goto('about:blank');
+    await side.goto(BASE + '/index.html?hurtig=1#/ret/' + id);
     await side.waitForFunction((x) => document.querySelector('.ret h1') && document.querySelector('.ret h1').textContent === x, RETTER[id].name);
     await billederFaerdige();
     await tjekLayout(side, n + ' ' + id + ' ret', { knapperSes: true });
     if (n !== 'ipad' && id === 'koedsovs') await foto(side, n + '-8-ret-koedsovs');
     for (let i = 0; i < RETTER[id].recipeInstructions.length; i++) {
       const t = RETTER[id].recipeInstructions[i];
-      await side.evaluate((h) => { location.hash = h; }, '#/ret/' + id + '/trin/' + (i + 1));
+      await gaaTil('#/ret/' + id + '/trin/' + (i + 1), id + ' trin ' + (i + 1));
       await side.waitForFunction((x) => document.querySelector('.trin h1') && document.querySelector('.trin h1').textContent === x, t.text, { timeout: 5000 })
         .catch(() => tjek(false, n + ' ' + id + ' trin ' + (i + 1) + ': viste ikke «' + t.text + '»'));
       await billederFaerdige();
