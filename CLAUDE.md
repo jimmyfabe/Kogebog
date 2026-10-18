@@ -84,5 +84,6 @@ Standard schema.org/Recipe med egne felter under `tumbi`. Den fulde tabel står 
 - **`scrollWidth` fanger ikke overløb,** fordi `body` har `overflow-x: hidden`. e2e måler elementernes placering i stedet (`tjekLayout`).
 - **En holdt tast gentager handlingen,** medmindre der tjekkes `e.repeat` (`app.js`).
 - **Tab i rettens bund følger med vilje ikke skærmen** fra 901 px og på lave skærme på langs: man ser print, Start forfra, Fortsæt, men Tab går Fortsæt → print → Start forfra, så den vigtigste knap nås først (`order` i `app.css`). Ikke en fejl, der skal rettes.
+- **WebKit på Windows tegner med Trebuchet MS,** ikke iPhonens/iPadens `ui-rounded` (første skrift i `--skrift`, der findes på pc'en). Tekstbredder i e2e er derfor kun omtrentlige, så hold luft i knaprækker.
 - **Safari fjerner listesemantik,** når `list-style: none` er sat. Print-listen har derfor `role="list"`.
 - **Codex laver ikke billeder.** Den skriver SVG-tekst. Billederne laves i ChatGPT.
