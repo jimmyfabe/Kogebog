@@ -28,6 +28,7 @@
     { "@type": "HowToStep", "text": "Pak flutes ind i staniol.", "tumbi": { "verbum": "rulle", "ikoner": ["broed"], "note": "Hver flute i sit eget stykke staniol." } },
     { "@type": "HowToStep", "text": "Bag flutes i staniol i 15 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900 } },
     { "@type": "HowToStep", "text": "Åbn staniolen, og bag dem 5 minutter mere.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Den voksne åbner: der kommer varm damp ud." } },
+    { "@type": "HowToStep", "text": "Tag flutes ud af ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme" } },
     { "@type": "HowToStep", "text": "Smag en varm skive.", "tumbi": { "verbum": "smage", "ikoner": ["broed"], "note": "Lad den køle lidt først." } }
   ],
   "tumbi": {

@@ -48,7 +48,8 @@
     { "@type": "HowToStep", "text": "Pisk ægget, og pensl sneglene.", "tumbi": { "verbum": "pensle", "ikoner": ["aeg"], "note": "Pisk ægget med en gaffel i en kop." } },
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg på fingrene." } },
     { "@type": "HowToStep", "text": "Bag sneglene i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900, "note": "15-20 min, til de er gyldne." } },
-    { "@type": "HowToStep", "text": "Lad sneglene køle lidt af.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Bagepladen er meget varm. Den voksne tager den ud." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Lad sneglene køle lidt af.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Bagepladen er meget varm." } },
     { "@type": "HowToStep", "text": "Smag en snegl!", "tumbi": { "verbum": "smage" } }
   ],
   "tumbi": {

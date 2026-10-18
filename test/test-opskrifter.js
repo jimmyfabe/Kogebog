@@ -220,6 +220,15 @@ export function valider(rod = ROD) {
           }
         }
       });
+      // Når tiden i ovnen er gået, er pladen eller formen varm: trinnet efter et bage-trin med timer er den voksnes
+      trin.forEach((s, i) => {
+        const st = s && s.tumbi;
+        if (!st || st.verbum !== 'bage' || !('timer_sek' in st)) return;
+        const efter = trin[i + 1] && trin[i + 1].tumbi;
+        if (!efter || efter.voksen !== true || efter.voksen_hjaelp !== 'varme') {
+          f('trin ' + (i + 1) + ': når tiden i ovnen er gået, tager en voksen det ud: trinnet efter skal være et voksen-trin med "voksen_hjaelp": "varme" (fx «Tag pladen ud af ovnen.»)');
+        }
+      });
       if (trin[0] && trin[0].tumbi && trin[0].tumbi.verbum !== 'vaske-haender') f('trin 1 skal være «Vask hænderne.» (verbum "vaske-haender")');
       const total = isoTilMinutter(r.totalTime);
       if (total != null && timerSek / 60 > total) f('«totalTime» (' + total + ' min) er kortere end timerne tilsammen (' + Math.ceil(timerSek / 60) + ' min)');

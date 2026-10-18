@@ -118,6 +118,17 @@ test('tun på dåse og skinke er ikke rå: ingen håndvask bagefter', () => {
   }
 });
 
+// Når tiden i ovnen er gået, er pladen eller formen varm: trinnet efter bagningen er den voksnes.
+// Trinnet lige efter boller i ovnen fjernes, så barnets næste trin kommer direkte efter ovnen
+test('efter ovnen tager en voksen pladen eller formen ud', () => {
+  const ovn = (d) => d.recipeInstructions.findIndex((s) => s.tumbi.verbum === 'bage' && 'timer_sek' in s.tumbi);
+  forventFejl('opskrifter/boller.json', (d) => { d.recipeInstructions.splice(ovn(d) + 1, 1); },
+    'trin 13: når tiden i ovnen er gået, tager en voksen det ud');
+  // Bagningen som sidste trin: der er ingen til at tage det ud
+  forventFejl('opskrifter/boller.json', (d) => { d.recipeInstructions.splice(ovn(d) + 1); },
+    'trin 13: når tiden i ovnen er gået, tager en voksen det ud');
+});
+
 test('voksen og voksen_hjaelp følges ad', () => {
   forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[9].tumbi.voksen = 'ja'; }, 'trin 10: «voksen» skal være true');
   forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[2].tumbi.voksen = false; }, 'trin 3: «voksen» skal være true (udelad feltet');

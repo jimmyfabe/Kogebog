@@ -34,7 +34,8 @@
     { "@type": "HowToStep", "text": "Pisk ægget, og pensl bollerne.", "tumbi": { "verbum": "pensle", "ikoner": ["aeg"], "note": "Pisk ægget med en gaffel i en kop. Pensl forsigtigt, så bollerne ikke falder sammen." } },
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter råt æg." } },
     { "@type": "HowToStep", "text": "Bag bollerne i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 720, "note": "220 °C i ca. 12 min midt i ovnen. De er færdige, når de er gyldne og lyder hule, når man banker under dem." } },
-    { "@type": "HowToStep", "text": "Lad bollerne køle lidt af.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Bagepladen er meget varm. Den voksne tager den ud." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Lad bollerne køle lidt af.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Bagepladen er meget varm." } },
     { "@type": "HowToStep", "text": "Smag en bolle med smør.", "tumbi": { "verbum": "smage", "ikoner": ["smoer"] } }
   ],
   "tumbi": {

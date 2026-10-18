@@ -1004,7 +1004,7 @@ async function former(browser) {
     await tjekLayout(side, n + ' forside');
     await foto(side, n + '-former-forside');
 
-    // Fremskridtet med timer-pillen: boller har 15 trin, og timeren fra trin 8 kører på trin 9 og er færdig på trin 13
+    // Fremskridtet med timer-pillen: boller har 16 trin, og timeren fra trin 8 kører på trin 9 og er færdig på trin 13
     if (sk.viewport.width <= 760) {
       for (const [nr, slutOm, hvad] of [[9, 25 * 60000, 'kører'], [13, -1000, 'er færdig']]) {
         await medGemt(side, { timer: { ret: 'boller', nr: 8, sek: 1800, slutOm } }, '#/ret/boller/trin/' + nr);
@@ -1047,7 +1047,7 @@ async function former(browser) {
     // På langs er der kun højde til én række knapper: dér står «Fortsæt» til højre som på iPad (og fra 901 px).
     // Kødsovs har 12 ingredienser: på 768×1024 lå print og «Start forfra» under kanten. Pizzasnegle har den længste
     // liste (15) og den længste «personer og tid». «Fortsæt» står ved det næstsidste trin, så kødsovs (13 trin) og
-    // pizzasnegle (22) har to cifre, som den bredeste «Fortsæt»
+    // pizzasnegle (23) har to cifre, som den bredeste «Fortsæt»
     let mindst = null; // den mindste luft mellem personer og tid og bunden på langs (skrives ud som måling)
     const noterLuft = (meta, hvor) => { if (!mindst || meta.bundTop - meta.bund < mindst.luft) mindst = { luft: meta.bundTop - meta.bund, hvor }; };
     for (const ret of RET_FORMER) {

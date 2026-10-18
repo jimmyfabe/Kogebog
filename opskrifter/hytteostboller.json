@@ -30,7 +30,8 @@
     { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg på hænderne." } },
     { "@type": "HowToStep", "text": "Drys lidt flere kerner på.", "tumbi": { "verbum": "drysse", "ikoner": ["kerner"], "note": "Kan springes over." } },
     { "@type": "HowToStep", "text": "Bag bollerne i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1500, "note": "200 °C varmluft i 25-30 min, til de er gyldne og gennembagte." } },
-    { "@type": "HowToStep", "text": "Lad bollerne køle af på en rist.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Bagepladen er meget varm. Den voksne tager den ud." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Lad bollerne køle af på en rist.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Bagepladen er meget varm." } },
     { "@type": "HowToStep", "text": "Smag en bolle!", "tumbi": { "verbum": "smage" } }
   ],
   "tumbi": {
