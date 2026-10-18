@@ -173,7 +173,7 @@ function forside() {
       el('ul', { class: 'kort-gitter', 'aria-label': 'Retter' }, kort),
       fejlede.length ? el('p', { class: 'fejl-linje', role: 'status', tekst: (fejlede.length === 1 ? 'Én opskrift' : fejlede.length + ' opskrifter') + ' kunne ikke læses (' + fejlede.join(', ') + '). Prøv at genindlæse siden.' }) : null);
   }
-  return el('main', { class: 'skaerm forside' }, top, indhold);
+  return el('main', { class: 'skaerm forside' }, top, el('div', { class: 'forside-timer' }, timerPille()), indhold);
 }
 
 function kortTryk(id, b) {
