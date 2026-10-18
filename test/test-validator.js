@@ -145,6 +145,18 @@ test('trinteksten om kniv eller varme kræver et voksen-trin', () => {
   });
 });
 
+// Det, der vises og læses op, er til køkkenet. Hvad kilden siger, og hvad der er et skøn, står i «tumbi.kilde»
+test('noter om kilden og skøn står i tumbi.kilde, ikke i den synlige tekst', () => {
+  const fil = 'opskrifter/koedsovs.json';
+  forventFejl(fil, (d) => { d.recipeInstructions[2].tumbi.note = 'Kilden siger to gulerødder.'; }, 'trin 3 (noten): «Kilden» er en redaktionel note');
+  forventFejl(fil, (d) => { d.recipeInstructions[2].text = 'Riv dem, som kilden siger.'; }, 'trin 3: «kilden» er en redaktionel note');
+  forventFejl(fil, (d) => { d.recipeYield = 'ca. 4 personer (skøn)'; }, '«recipeYield»: «skøn» er en redaktionel note');
+  forventFejl(fil, (d) => { d.recipeIngredient[0] = '1 spsk olie (kildens mål)'; }, 'ingrediens 1: «kildens» er en redaktionel note');
+  forventFejl(fil, (d) => { d.description = 'Kødsovs, som kilden laver den.'; }, '«description»: «kilden» er en redaktionel note');
+  // Ordene inde i andre ord tæller ikke
+  forventGyldig(fil, (d) => { d.recipeInstructions[2].tumbi.note = 'Brug kildevand, hvis I har det. Skønt det tager tid.'; });
+});
+
 test('voksen og voksen_hjaelp følges ad', () => {
   forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[9].tumbi.voksen = 'ja'; }, 'trin 10: «voksen» skal være true');
   forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[2].tumbi.voksen = false; }, 'trin 3: «voksen» skal være true (udelad feltet');

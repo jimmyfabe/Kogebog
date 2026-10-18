@@ -26,7 +26,7 @@
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
     { "@type": "HowToStep", "text": "Riv løget groft.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["loeg"], "note": "Rivejernet er skarpt, så den voksne river." } },
-    { "@type": "HowToStep", "text": "Hak hvidløg og persille fint.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["hvidloeg", "krydderurt"], "note": "Kilden siger 2 dl hakket persille. Det er meget, men det giver farsen farve." } },
+    { "@type": "HowToStep", "text": "Hak hvidløg og persille fint.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["hvidloeg", "krydderurt"], "note": "2 dl hakket persille. Det er meget, men det giver farsen farve." } },
     { "@type": "HowToStep", "text": "Hæld vandet fra tunen.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["tun"], "note": "Den voksne åbner dåserne: kanten er skarp. Tryk låget ned, og hæld vandet ud." } },
     { "@type": "HowToStep", "text": "Kom tun, løg og hvidløg i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["tun", "loeg", "hvidloeg"] } },
     { "@type": "HowToStep", "text": "Kom yoghurt, havregryn og persille i.", "tumbi": { "verbum": "haelde", "ikoner": ["yoghurt", "havregryn", "krydderurt"], "note": "3 spsk yoghurt og 3 spsk havregryn." } },

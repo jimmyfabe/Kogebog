@@ -5,7 +5,7 @@
   "description": "Tynde pandekager efter Rasmus Klumps opskrift fra Tivoli.",
   "image": "grafik/ret-pandekager.svg",
   "inLanguage": "da",
-  "recipeYield": "ca. 10-12 stk. (skøn)",
+  "recipeYield": "ca. 10-12 stk.",
   "prepTime": "PT10M",
   "cookTime": "PT25M",
   "totalTime": "PT35M",
@@ -36,7 +36,7 @@
     "id": "pandekager",
     "version": 1,
     "afproevet": false,
-    "kilde": "Tivoli, «Bake pancakes with Rasmus Klump» (tivoli.dk). Trinene er egen tekst",
+    "kilde": "Tivoli, «Bake pancakes with Rasmus Klump» (tivoli.dk). Trinene er egen tekst. Antallet er et skøn",
     "ingredienser": [
       { "ikon": "mel", "maengde": "200 g" },
       { "ikon": "maelk", "maengde": "5 dl" },

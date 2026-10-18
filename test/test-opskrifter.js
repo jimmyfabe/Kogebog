@@ -28,7 +28,10 @@ const MAKS_TIMER_SEK = 4 * 3600;
 const BLANDER = ['roere', 'haelde', 'piske']; // verber, der blander en ingrediens i dejen eller farsen
 // Ord i trinteksten, der betyder kniv, rivejern eller varme. Hele ord (ikke «bagepapir» eller «rivejern»), men «ovn» overalt
 const ORDVAGT = /(?<!\p{L})(riv|bag|steg|kog|hak|skær)(?!\p{L})|ovn/iu;
-const LYD_RE = /^([a-z0-9]+(?:-[a-z0-9]+)*)\/(\d+|navn)\.mp3$/;
+// Redaktionelle noter («Kilden siger …», «(skøn)») står i «tumbi.kilde», ikke i det, der vises og læses op i køkkenet.
+// Hele ord: «kildevand» og «skønt» tæller ikke
+const REDAKTION = /(?<!\p{L})(kilden?s?|skøn)(?!\p{L})/iu;
+const LYD_RE =/^([a-z0-9]+(?:-[a-z0-9]+)*)\/(\d+|navn)\.mp3$/;
 
 const erTekst = (v) => typeof v === 'string' && v.trim().length > 0;
 const liste = (a) => a.join(', ');
@@ -97,6 +100,10 @@ export function valider(rod = ROD) {
     tal.retter++;
     const filId = fil.slice(0, -5);
     const f = (besked) => fejlI(rel, besked);
+    const redaktion = (hvor, v) => {
+      const m = typeof v === 'string' && v.match(REDAKTION);
+      if (m) f(hvor + ': «' + m[0] + '» er en redaktionel note: den hører til i «tumbi.kilde», ikke i teksten, der vises: «' + v + '»');
+    };
     if (typeof r !== 'object' || Array.isArray(r)) { f('skal være ét JSON-objekt'); continue; }
 
     for (const k of PAAKRAEVET) if (!(k in r)) f('mangler «' + k + '»');
@@ -104,6 +111,7 @@ export function valider(rod = ROD) {
     if ('@context' in r && r['@context'] !== 'https://schema.org') f('«@context» skal være "https://schema.org"');
     if ('@type' in r && r['@type'] !== 'Recipe') f('«@type» skal være "Recipe", fandt ' + JSON.stringify(r['@type']));
     for (const k of ['name', 'description', 'recipeYield']) if (k in r && !erTekst(r[k])) f('«' + k + '» skal være en tekst, der ikke er tom');
+    for (const k of ['name', 'description', 'recipeYield']) redaktion('«' + k + '»', r[k]);
     if ('inLanguage' in r && r.inLanguage !== 'da') f('«inLanguage» skal være "da"');
     for (const k of ['prepTime', 'cookTime', 'totalTime']) {
       if (k in r && (typeof r[k] !== 'string' || !ISO_RE.test(r[k]) || isoTilMinutter(r[k]) == null)) f('«' + k + '» skal være en ISO 8601-varighed som "PT15M" eller "PT1H10M", fandt ' + JSON.stringify(r[k]));
@@ -131,6 +139,7 @@ export function valider(rod = ROD) {
     const ingr = r.recipeIngredient;
     const retIkoner = new Set();
     if ('recipeIngredient' in r && (!Array.isArray(ingr) || !ingr.length || !ingr.every(erTekst))) f('«recipeIngredient» skal være en liste med tekster');
+    if (Array.isArray(ingr)) ingr.forEach((x, i) => redaktion('ingrediens ' + (i + 1), x));
     if ('tool' in r && (!Array.isArray(r.tool) || !r.tool.every(erTekst))) f('«tool» skal være en liste med tekster');
     if (t && typeof t === 'object' && Array.isArray(ingr)) {
       const ti = t.ingredienser;
@@ -163,6 +172,7 @@ export function valider(rod = ROD) {
         if (!s || !erTekst(s.text)) { f(hvor + ': mangler «text»'); return; }
         const ord = antalOrd(s.text);
         if (ord > MAKS_ORD) f(hvor + ': teksten er for lang (' + ord + ' ord, højst ' + MAKS_ORD + '): «' + s.text + '»');
+        redaktion(hvor, s.text);
         const st = s.tumbi;
         if (!st || typeof st !== 'object') { f(hvor + ': mangler «tumbi» med et verbum'); return; }
         for (const k of Object.keys(st)) if (!TRIN_NOEGLER.has(k)) f(hvor + ': ukendt felt «tumbi.' + k + '»');
@@ -186,6 +196,7 @@ export function valider(rod = ROD) {
           else { timerSek += st.timer_sek; tal.timere++; }
         }
         if ('note' in st && !erTekst(st.note)) f(hvor + ': «note» skal være en tekst, der ikke er tom');
+        redaktion(hvor + ' (noten)', st.note);
         if ('ikoner' in st) {
           if (!Array.isArray(st.ikoner) || !st.ikoner.length) f(hvor + ': «ikoner» skal være en liste med mindst ét ikon');
           else for (const ik of st.ikoner) {

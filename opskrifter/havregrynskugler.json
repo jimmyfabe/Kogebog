@@ -5,7 +5,7 @@
   "description": "Søde kugler med kakao, rullet i kokosmel. Uden ovn og uden kniv.",
   "image": "grafik/ret-havregrynskugler.svg",
   "inLanguage": "da",
-  "recipeYield": "ca. 20 kugler (skøn)",
+  "recipeYield": "ca. 20 kugler",
   "prepTime": "PT15M",
   "totalTime": "PT45M",
   "recipeIngredient": [
@@ -27,14 +27,14 @@
     { "@type": "HowToStep", "text": "Ælt massen igen.", "tumbi": { "verbum": "aelte" } },
     { "@type": "HowToStep", "text": "Rul små kugler i hænderne.", "tumbi": { "verbum": "rulle" } },
     { "@type": "HowToStep", "text": "Rul kuglerne i kokosmel.", "tumbi": { "verbum": "rulle", "ikoner": ["kokos"], "note": "Eller i flormelis eller kakao. Kom lidt på en tallerken, og trill kuglerne rundt i det." } },
-    { "@type": "HowToStep", "text": "Stil kuglerne i køleskabet i 30 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "Tildækket. Kilden siger 30-60 min. I en tæt dåse i køleskabet holder de sig ca. 4 dage." } },
+    { "@type": "HowToStep", "text": "Stil kuglerne i køleskabet i 30 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "Tildækket i 30-60 min. I en tæt dåse i køleskabet holder de sig ca. 4 dage." } },
     { "@type": "HowToStep", "text": "Smag en kugle!", "tumbi": { "verbum": "smage" } }
   ],
   "tumbi": {
     "id": "havregrynskugler",
     "version": 1,
     "afproevet": false,
-    "kilde": "Arla: «Havregrynskugler - de nemme» (arla.dk). Trinene er egen tekst",
+    "kilde": "Arla: «Havregrynskugler - de nemme» (arla.dk). Trinene er egen tekst. Antallet er et skøn",
     "ingredienser": [
       { "ikon": "havregryn", "maengde": "175 g" },
       { "ikon": "sukker", "maengde": "100 g" },

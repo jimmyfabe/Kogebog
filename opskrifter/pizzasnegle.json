@@ -33,7 +33,7 @@
     { "@type": "HowToStep", "text": "Hæld 3 dl lunkent vand over gæren.", "tumbi": { "verbum": "haelde", "ikoner": ["vand", "gaer"], "note": "Lunkent er ca. 37 °C: det føles lunt på en finger. Rør, til gæren er opløst." } },
     { "@type": "HowToStep", "text": "Hæld sukker, salt og olie i.", "tumbi": { "verbum": "haelde", "ikoner": ["sukker", "salt", "olie"], "note": "1 tsk sukker (eller honning), 1 tsk salt og ½ dl olivenolie." } },
     { "@type": "HowToStep", "text": "Rør melet i lidt ad gangen.", "tumbi": { "verbum": "roere", "ikoner": ["mel"], "note": "Gem ca. 1 dl mel i en lille skål til at ælte med." } },
-    { "@type": "HowToStep", "text": "Rør to æg i dejen.", "tumbi": { "verbum": "roere", "ikoner": ["aeg"], "note": "Slå dem ud i en kop først. Det tredje æg gemmes til pensling. Kilden rører æggene i sammen med melet; her kommer de sidst, så håndvasken kan komme lige efter æltningen." } },
+    { "@type": "HowToStep", "text": "Rør to æg i dejen.", "tumbi": { "verbum": "roere", "ikoner": ["aeg"], "note": "Slå dem ud i en kop først. Det tredje æg gemmes til pensling." } },
     { "@type": "HowToStep", "text": "Ælt dejen i 8 minutter.", "tumbi": { "verbum": "aelte", "timer_sek": 480, "note": "Drys melet fra den lille skål på bordet. Dejen skal være glat og let at arbejde med." } },
     { "@type": "HowToStep", "text": "Vask hænderne igen.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg i dejen." } },
     { "@type": "HowToStep", "text": "Lad dejen hæve i en time.", "tumbi": { "verbum": "vente", "timer_sek": 3600, "note": "Dæk skålen med et viskestykke. Dejen skal være ca. dobbelt så stor." } },
@@ -56,7 +56,7 @@
     "id": "pizzasnegle",
     "version": 1,
     "afproevet": false,
-    "kilde": "DR Mad: «Pizzasnegle» (dr.dk). Trinene er egen tekst",
+    "kilde": "DR Mad: «Pizzasnegle» (dr.dk). Trinene er egen tekst. Kilden rører æggene i sammen med melet. Her kommer de sidst, så håndvasken kan komme lige efter æltningen",
     "ingredienser": [
       { "ikon": "gaer", "maengde": "50 g" },
       { "ikon": "vand", "maengde": "3 dl" },
