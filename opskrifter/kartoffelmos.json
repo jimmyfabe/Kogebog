@@ -1,0 +1,47 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Kartoffelmos",
+  "description": "Blød kartoffelmos med varm mælk og smør.",
+  "image": "grafik/ret-kartoffelmos.svg",
+  "inLanguage": "da",
+  "recipeYield": "6 personer",
+  "prepTime": "PT20M",
+  "cookTime": "PT30M",
+  "totalTime": "PT50M",
+  "recipeIngredient": [
+    "1,2 kg melede kartofler",
+    "1,5 dl sødmælk",
+    "100 g smør",
+    "2 tsk salt",
+    "evt. lidt muskat"
+  ],
+  "tool": ["kartoffelskræller", "kniv", "skærebræt", "stor gryde med låg", "dørslag", "lille gryde", "dl-mål", "kartoffelmoser eller moser-fod til stavblenderen", "grydeske"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Skræl kartoflerne.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kartoffel"], "note": "Med en kartoffelskræller. Barnet kan skrælle med, når den voksne er ved siden af." } },
+    { "@type": "HowToStep", "text": "Skær kartoflerne i lige store stykker.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kartoffel"], "note": "Lige store stykker bliver møre på samme tid." } },
+    { "@type": "HowToStep", "text": "Kom kartoflerne i gryden med koldt vand.", "tumbi": { "verbum": "haelde", "ikoner": ["kartoffel"], "note": "Vand nok til at dække dem. Ingen salt i vandet." } },
+    { "@type": "HowToStep", "text": "Kog kartoflerne møre.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1200, "note": "Låg på. Start timeren, når vandet koger: ca. 20 min. En kniv skal glide let ind." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra i dørslaget.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne hælder. Pas på dampen. Kom kartoflerne tilbage i gryden." } },
+    { "@type": "HowToStep", "text": "Lad kartoflerne dampe af i 2 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 120 } },
+    { "@type": "HowToStep", "text": "Mål 1,5 dl mælk.", "tumbi": { "verbum": "maale", "ikoner": ["maelk"] } },
+    { "@type": "HowToStep", "text": "Varm mælk og smør i en lille gryde.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["maelk", "smoer"], "note": "Kun til smørret er smeltet. Det skal ikke koge." } },
+    { "@type": "HowToStep", "text": "Mos kartoflerne med moseren.", "tumbi": { "verbum": "mose", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["kartoffel"], "note": "Brug en kartoffelmoser eller moser-foden til stavblenderen, aldrig kniven: så bliver mosen klistret. Den voksne holder den varme gryde." } },
+    { "@type": "HowToStep", "text": "Rør mælk og smør i lidt ad gangen.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["maelk", "smoer"] } },
+    { "@type": "HowToStep", "text": "Smag til med salt.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt", "krydderurt"], "note": "Pust på skeen. Lidt muskat, hvis I vil." } }
+  ],
+  "tumbi": {
+    "id": "kartoffelmos",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift",
+    "ingredienser": [
+      { "ikon": "kartoffel", "maengde": "1,2 kg" },
+      { "ikon": "maelk", "maengde": "1,5 dl" },
+      { "ikon": "smoer", "maengde": "100 g" },
+      { "ikon": "salt", "maengde": "2 tsk" },
+      { "ikon": "krydderurt", "maengde": "" }
+    ]
+  }
+}
