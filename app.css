@@ -231,6 +231,11 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 /* En timer, der kører (eller er færdig), vises også på forsiden — lige under dugen */
 .forside-timer { display: flex; justify-content: center; padding: 0 16px; }
 .forside-timer .pille { margin-top: 16px; }
+/* Pillen skubber kortene ned: på iPad på langs bliver kortenes billeder lidt mindre, så den nederste række kan ses
+   (før blev den skåret af på 1180×820) */
+@media (min-width: 761px) and (min-height: 521px) {
+  .forside:has(.forside-timer .pille:not([hidden])) .kort-billede { width: min(100%, 20svh, 200px); }
+}
 
 .forside-indhold { flex: 1; display: flex; flex-direction: column; justify-content: center; }
 .kort-gitter {

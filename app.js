@@ -131,7 +131,7 @@ function fejlSkaermRet(id, fejl) {
     titel: findesIkke ? 'Den opskrift findes ikke' : 'Opskriften kunne ikke hentes',
     tekst: findesIkke
       ? 'Måske er den blevet omdøbt. Vælg en ret på forsiden.'
-      : 'Tjek, at iPad\'en er på nettet, og prøv igen. Virker det stadig ikke, så vælg en anden ret.',
+      : 'Tjek internetforbindelsen, og prøv igen. Virker det stadig ikke, så vælg en anden ret.',
     handling: el('div', { class: 'status-knapper' },
       findesIkke ? null : knap('Prøv igen', { klasse: 'primaer', ikonNavn: 'igen', onclick: () => { S.retter.delete(id); indlaes(); } }),
       knap('Til forsiden', { ikonNavn: 'hjem', onclick: () => naviger(hashFor.forside()) })),
@@ -151,14 +151,16 @@ function forside() {
   let indhold;
   if (S.indexFejl) {
     indhold = el('div', { class: 'status-boks' },
+      billede(grafikDyr('bo'), '', 'status-dyr'),
       el('h2', { tekst: 'Opskrifterne kunne ikke hentes' }),
-      el('p', { tekst: 'Tjek, at iPad\'en er på nettet, og prøv igen.' }),
+      el('p', { tekst: 'Tjek internetforbindelsen, og prøv igen.' }),
       knap('Prøv igen', { klasse: 'primaer', ikonNavn: 'igen', onclick: () => indlaes() }));
   } else if (!S.ids) {
     indhold = el('div', { class: 'status-boks henter' }, billede(grafikDyr('pip'), '', 'status-dyr'), el('p', { tekst: 'Henter opskrifterne …' }));
   } else if (!S.ids.length) {
     // Til forælderen, ikke til udvikleren: hvordan man lægger en opskrift ind, står i CLAUDE.md
     indhold = el('div', { class: 'status-boks' },
+      billede(grafikDyr('bo'), '', 'status-dyr'),
       el('h2', { tekst: 'Der er ingen opskrifter endnu' }),
       el('p', { tekst: 'Kogebogen er tom lige nu. Hent listen igen om lidt.' }),
       knap('Hent opskrifterne igen', { klasse: 'primaer', ikonNavn: 'igen', onclick: () => indlaes() }));

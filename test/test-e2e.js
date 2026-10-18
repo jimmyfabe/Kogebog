@@ -693,6 +693,10 @@ async function timere(browser, skaerm) {
   const udloebet = side.locator('.pille.faerdig:not([hidden])');
   const udloebetVist = await udloebet.count() === 1 && (await udloebet.textContent()).includes('Tiden er gået');
   tjek(udloebetVist, n + ': en timer, der løb ud under genindlæsningen, skal vise «Tiden er gået» på forsiden');
+  // Pillen skubber kortene ned: den nederste række (med kortenes kant på 6 px) skal stadig kunne ses (før skåret af på iPad)
+  const kortUnder = await side.evaluate(() => Math.round(Math.max(...[...document.querySelectorAll('.kort[data-ret]')]
+    .map((k) => k.getBoundingClientRect().bottom + 6)) - innerHeight));
+  tjek(kortUnder <= 0, n + ': kortene på forsiden med «Tiden er gået» skæres ' + kortUnder + ' px af forneden');
   await foto(side, n + '-forside-udloebet');
   if (udloebetVist) {
     await tryk(side, '.pille', PULSERER);
@@ -720,6 +724,9 @@ async function fejltilstande(browser, skaerm) {
   await side.goto(BASE + '/index.html');
   await side.waitForSelector('text=Opskrifterne kunne ikke hentes');
   tjek(await side.locator('button:has-text("Prøv igen")').count() === 1, 'fejl: «Prøv igen» skal vises, når listen ikke kan hentes');
+  const fejlTekst = await side.locator('.status-boks').textContent().catch(() => '');
+  tjek(!/iPad/.test(fejlTekst), 'fejl: teksten må ikke gå ud fra, at det er en iPad: ' + fejlTekst);
+  tjek(await side.locator('.status-boks .status-dyr').count() === 1, 'fejl: Bo skal stå over fejlen, som på rettens fejlskærm');
   await tjekLayout(side, 'fejl forside');
   await foto(side, skaerm.navn + '-fejl-forside');
   await side.unroute('**/opskrifter/index.json');
@@ -733,6 +740,7 @@ async function fejltilstande(browser, skaerm) {
   const tomTekst = await side.locator('.status-boks').textContent().catch(() => '');
   tjek(!/index\.json|mappen/.test(tomTekst), 'tom: teksten må ikke handle om filer og mapper: ' + tomTekst);
   tjek(await side.locator('button:has-text("Hent opskrifterne igen")').count() === 1, 'tom: «Hent opskrifterne igen» skal vises');
+  tjek(await side.locator('.status-boks .status-dyr').count() === 1, 'tom: Bo skal stå over beskeden, som på fejlskærmen');
   await tjekLayout(side, 'tom forside');
   await foto(side, skaerm.navn + '-tom-forside');
   await side.unroute('**/opskrifter/index.json');
