@@ -2,7 +2,7 @@
 // iPad på langs (1180×820, børnenes standard), iPhone (390×844) og desktop (1280×800).
 // Forside → pandekager → alle trin (med en timer og voksen-hold) → færdig, alle trin i alle 5 retter,
 // print-siden for alle 5 retter (også i printvisning på A4-bredde), tastatur, timere på tværs af skærme og genindlæsning,
-// fejltilstande og «mindre bevægelse». Delen «former» ser desuden 360 px, iPad mini på højkant og iPhone på langs.
+// fejltilstande og «mindre bevægelse». Delen «former» ser desuden 360 px, iPad mini på højkant og iPhones på langs.
 // Tjekker hele vejen: ingen konsolfejl, ingen 404, ingen vandret rulning, billeder indlæst, og knapper mindst
 // 64 px for børnenes knapper (BOERNEKNAPPER) og 48 px for de voksnes (fx print og stop).
 //
@@ -859,13 +859,24 @@ async function beroering(browser, skaerm) {
 }
 
 // ---------- Skærmformer, som de tre faste skærme ikke dækker ----------
-// Den smalleste iPhone (360 px), iPhone (390), iPad mini på højkant (768×1024) og iPhone på langs (844×390)
+// Den smalleste iPhone (360 px), iPhone (390), iPad mini på højkant (768×1024) og iPhone på langs (844×390),
+// og de små iPhones på langs under 761 px (667×375 og 736×414), som før fik iPhone-layoutet på højkant
 const FORMER = [
   { navn: 'w360', viewport: { width: 360, height: 780 }, hasTouch: true },
   { navn: 'iphone', viewport: { width: 390, height: 844 }, hasTouch: true },
   { navn: 'tablet', viewport: { width: 768, height: 1024 }, hasTouch: true },
   { navn: 'land', viewport: { width: 844, height: 390 }, hasTouch: true },
+  { navn: 'se-land', viewport: { width: 667, height: 375 }, hasTouch: true },
+  { navn: 'plus-land', viewport: { width: 736, height: 414 }, hasTouch: true },
 ];
+
+// Hvor et element ligger i forhold til den faste bund: { top, bund } for elementet og bundens top (bundTop)
+const modBund = (side, sel) => side.evaluate((sel) => {
+  const e = document.querySelector('#app > .skaerm:not([data-gammel]) ' + sel);
+  const b = e ? e.getBoundingClientRect() : null;
+  const h = document.querySelector('#app > .skaerm:not([data-gammel]) .handlinger').getBoundingClientRect();
+  return { top: b ? Math.round(b.top) : null, bund: b ? Math.round(b.bottom) : null, bundTop: Math.round(h.top), hoejde: Math.round(h.height), H: innerHeight };
+}, sel);
 
 // Læg en gemt tilstand i «kog-v1», og indlæs siden igen: timeren og «Fortsæt» læses, når siden indlæses.
 // Adressen skiftes med replaceState, så appen ikke når at tegne (og hente billeder til) skærmen før genindlæsningen
@@ -884,8 +895,11 @@ async function medGemt(side, { sidste = null, timer = null }, hash) {
 }
 
 async function former(browser) {
-  for (const sk of FORMER) {
+  // E2E_FORMER=se-land,land begrænser skærmformerne (standard: alle)
+  const valgte = FORMER.filter((s) => !process.env.E2E_FORMER || process.env.E2E_FORMER.split(',').includes(s.navn));
+  for (const sk of valgte) {
     const n = sk.navn;
+    const lav = sk.viewport.height <= 520;
     console.log('[' + n + '] skærmform ' + sk.viewport.width + '×' + sk.viewport.height);
     const { ctx, side } = await nySide(browser, sk);
     await side.goto(BASE + '/index.html');
@@ -908,12 +922,17 @@ async function former(browser) {
 
     // Retten med og uden «Fortsæt»: knapperne kan ses uden at rulle, og «Fortsæt» står først, over de andre.
     // På langs er der kun højde til én række knapper: dér står «Fortsæt» til højre som på iPad
-    const lav = sk.viewport.height <= 520;
     for (const fortsaet of [false, true]) {
       await medGemt(side, { sidste: fortsaet ? { ret: 'pandekager', nr: 7 } : null }, '#/ret/pandekager');
       await side.waitForSelector(fortsaet ? '.ret .fortsaet' : '.ret .start');
       const hvor = n + ' ret' + (fortsaet ? ' med Fortsæt' : '');
       await tjekLayout(side, hvor, { knapperSes: true });
+      if (lav) {
+        // På langs er bunden én række, og navnet står over den (667×375 fik iPhone-bunden: 179 px = 48 %, navnet under den)
+        const navn = await modBund(side, '.ret-titel h1');
+        tjek(navn.hoejde <= navn.H * 0.25, hvor + ': bunden fylder ' + navn.hoejde + ' af ' + navn.H + ' px (højst 25 %)');
+        tjek(navn.bund <= navn.bundTop, hvor + ': navnet ligger under den faste bund ' + JSON.stringify(navn));
+      }
       if (fortsaet && !lav) {
         const k = await side.evaluate(() => Object.fromEntries(['.fortsaet', '.forfra', '.print-knap']
           .map((s) => { const b = document.querySelector('.handlinger ' + s).getBoundingClientRect(); return [s, { top: Math.round(b.top), bund: Math.round(b.bottom), bredde: Math.round(b.width) }]; })));
@@ -938,6 +957,9 @@ async function former(browser) {
         bund: Math.round(document.querySelector('.handlinger').getBoundingClientRect().top),
       }));
       tjek(bil.rul === 0 && bil.billede <= bil.bund, n + ' ' + ret + ' trin ' + nr + ': billedet skal ses over bunden uden at rulle ' + JSON.stringify(bil));
+      // … og det samme gør trinteksten (på 667×375 lå den under bunden)
+      const tekst = await modBund(side, '#trin-tekst');
+      tjek(tekst.bund <= tekst.bundTop, n + ' ' + ret + ' trin ' + nr + ': trinteksten skal ses over bunden uden at rulle ' + JSON.stringify(tekst));
       if (nr === 10) await foto(side, n + '-former-trin-10');
       if (nr === 10) {
         // strong er et flex-element (en blok), så linjerne tælles på teksten: én kasse pr. linje

@@ -485,7 +485,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 
 /* ---------- Smalle skærme (iPhone på højkant) ---------- */
 
-@media (max-width: 760px) {
+/* Ikke lave skærme på langs: en iPhone på langs under 761 px (667×375, 736×414) får reglen for lave skærme nederst */
+@media (max-width: 760px) and (min-height: 521px), (max-width: 760px) and (orientation: portrait) {
   body { font-size: 18px; }
   .topbar { gap: 10px; padding: 10px 12px 4px; }
   /* Kører en timer på et andet trin, står pillen til højre for hjem, og fremskridtet får hele bredden nedenunder.
@@ -566,22 +567,25 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 
 /* «Hent en voksen» står på én linje med mindre skrift og en mindre Bo: under 400 px (før to linjer på iPhone)
    og på lave skærme på langs, hvor mærket kun har tekstens kolonne */
-@media (max-width: 399px), (max-height: 520px) and (min-width: 761px) {
+@media (max-width: 399px), (max-height: 520px) and (orientation: landscape) {
   .voksen-maerke { gap: 8px; padding-right: 14px; font-size: 18px; }
   .voksen-bo { width: 40px; height: 40px; }
   .voksen-slags { gap: 4px; padding-left: 8px; font-size: 17px; }
   .voksen-slags .ikon { width: 22px; height: 22px; }
 }
 
-/* Lave skærme på langs (fx iPhone på tværs): mindre billeder, og bunden står fast, så «Næste» og rettens knapper
-   kan ses uden at rulle (før lå de under kanten på 844×390) */
-@media (max-height: 520px) and (min-width: 761px) {
-  /* Billedet skal kunne ses helt mellem topbaren og bunden: mærket står over teksten i stedet for over begge kolonner */
-  .scene { grid-template-areas: "billede maerke" "billede tekst"; margin: 4px 24px; padding: 8px 20px; }
+/* Lave skærme på langs (iPhone på tværs, fra 667×375 til 932×430): mindre billeder, og bunden står fast, så «Næste» og
+   rettens knapper kan ses uden at rulle (før lå de under kanten på 844×390). Under 761 px fik de før iPhone-layoutet
+   på højkant, med en bund på op til 48 % af skærmen */
+@media (max-height: 520px) and (orientation: landscape) {
+  /* Billedet skal kunne ses helt mellem topbaren og bunden: mærket står over teksten i stedet for over begge kolonner.
+     Billedets kolonne er kun så bred som billedet, så teksten og «Hent en voksen» har plads ned til 667 px */
+  .scene { grid-template-columns: min(44svh, 40%) minmax(0, 1fr); grid-template-areas: "billede maerke" "billede tekst"; column-gap: 28px; margin: 4px 24px; padding: 8px 20px; }
   /* Billedet står øverst: midt i en høj tekstkolonne (voksen-trin med timer og note) lå det under bunden */
   .verbum-ramme { width: min(100%, 44svh); align-self: start; }
-  /* Retten: billede og navn øverst (før stod navnet midt i den lange række og blev dækket af bunden) */
-  .ret-indhold { align-items: start; }
+  /* Retten: billede og navn øverst (før stod navnet midt i den lange række og blev dækket af bunden).
+     To lige brede kolonner: på 667 px fik navnet ellers tre linjer i den smalle venstre kolonne */
+  .ret-indhold { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px 24px; padding: 6px 24px 10px; align-items: start; }
   .ret-billede { width: min(100%, 28svh); }
   .forside-dyr { display: none; }
   .kort-billede { width: min(100%, 120px); }
@@ -596,4 +600,16 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .handlinger .knap.primaer { min-height: 68px; font-size: 24px; padding: 0 26px; }
   .ret .handlinger .start { min-width: 0; }
   html { scroll-padding-bottom: 96px; } /* bunden er 85 px: fokus ruller ikke ind under den (se de smalle skærme) */
+}
+
+/* Små iPhones på langs (667 og 736 px): rettens tre knapper skal stå på én række. Fortsæt, Start forfra og print
+   fyldte 787 px, så bunden brød på to rækker (44 % af skærmen). Print står uden ikon, som under 400 px */
+@media (max-height: 520px) and (orientation: landscape) and (max-width: 800px) {
+  .ret .handlinger { gap: 12px; padding-left: 16px; padding-right: 16px; }
+  .ret .handlinger .knap { white-space: nowrap; }
+  .ret .handlinger .print-knap { padding: 0 14px; }
+  .ret .handlinger .print-knap .ikon { display: none; }
+  .ret .handlinger .forfra { font-size: 19px; padding: 0 16px; gap: 8px; }
+  .ret .handlinger .forfra .ikon { width: 24px; height: 24px; }
+  .ret .handlinger .fortsaet { font-size: 22px; padding: 0 20px; }
 }
