@@ -930,8 +930,8 @@ async function beroering(browser, skaerm) {
 // Den smalleste iPhone (360 px), iPhone (390), iPad mini på højkant (768×1024 og den nye 744×1133) og iPhone på langs
 // (844×390), de små iPhones på langs (667×375 og 736×414), som før fik iPhone-layoutet på højkant, iPhone mini, X og
 // 11 Pro på langs (812×375) og iPhone Pro Max på langs (932×430). På langs skal rettens bund være én række, også med
-// «Fortsæt ved trin 12». Og et smalt desktopvindue (960×800): op til 970 px har ingredienserne tre kolonner, og
-// kødsovs' knapper lå under kanten
+// «Fortsæt ved trin 12». Og to smalle desktopvinduer: 901×800 er det smalleste med desktop-layoutet (grænsen i app.css),
+// og op til 970 px (960×800) har ingredienserne tre kolonner, og kødsovs' knapper lå under kanten
 const FORMER = [
   { navn: 'w360', viewport: { width: 360, height: 780 }, hasTouch: true },
   { navn: 'iphone', viewport: { width: 390, height: 844 }, hasTouch: true },
@@ -942,6 +942,7 @@ const FORMER = [
   { navn: 'plus-land', viewport: { width: 736, height: 414 }, hasTouch: true },
   { navn: 'x-land', viewport: { width: 812, height: 375 }, hasTouch: true },
   { navn: 'max-land', viewport: { width: 932, height: 430 }, hasTouch: true },
+  { navn: 'desk-901', viewport: { width: 901, height: 800 }, hasTouch: false },
   { navn: 'desk-960', viewport: { width: 960, height: 800 }, hasTouch: false },
 ];
 // Retterne, som «former» går helt igennem (knapper, Tab, fokus), og skærmene, hvor alle retters hoved også måles
