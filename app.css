@@ -663,8 +663,9 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .ret-hoved { gap: 6px; }
   .ret-billede { width: min(100%, 16svh); }
   .forside-dyr { display: none; }
-  /* Højst 30 % af højden: på 812×375 blev den første række kort skåret 1 px af (titlen er højere end på 667 px) */
-  .kort-billede { width: min(100%, 120px, 30svh); }
+  /* Højst 26 % af højden: med 30 % kiggede næste række kun 17 px frem på 667×375 og 812×375, så intet viste, at siden
+     kan rulles. Nu ca. 32 px (på 812×375 blev den første række før skåret 1 px af, da titlen er højere end på 667 px) */
+  .kort-billede { width: min(100%, 120px, 26svh); }
   /* Dugen, afsnittenes overskrifter og kortene er lavere, så den første række kort ses under den første overskrift
      (på 667×375 lå «Kødsovs med spaghetti» på to linjer 10 px under kanten) */
   .kort { padding: 10px 10px 10px; }

@@ -270,6 +270,7 @@ async function hold(side, sel, ms = 2300) {
 
 // Forsiden med mange retter ruller: den første række kort skal ses uden at rulle, og det sidste kort skal kunne
 // rulles helt frem (kortenes kant på 6 px regnes med). Før skulle alle 5 kort ses på én skærm.
+const KIG_MIN = 24;
 async function forsideRulning(side) {
   return side.evaluate(async () => {
     const billede = () => new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
@@ -279,6 +280,9 @@ async function forsideRulning(side) {
     const top = Math.min(...kort.map((k) => k.getBoundingClientRect().top));
     const foersteRaekke = kort.filter((k) => Math.abs(k.getBoundingClientRect().top - top) < 2);
     const foersteUnder = Math.round(Math.max(...foersteRaekke.map((k) => k.getBoundingClientRect().bottom + 6)) - innerHeight);
+    // Hvor meget af næste række der ses uden at rulle (UI-review 4: på 844×390 og 667×375 viste intet, at siden kunne rulles)
+    const naeste = kort.map((k) => k.getBoundingClientRect().top).filter((t) => t > top + 2);
+    const kig = naeste.length ? Math.round(innerHeight - Math.min(...naeste)) : null;
     // Navnet skal blive inde i kortet («Havregrynskugler» stak ud på 360 px, hvor browseren ikke kunne dele ordet)
     const navnUd = kort.filter((k) => {
       const r = document.createRange();
@@ -290,7 +294,7 @@ async function forsideRulning(side) {
     window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' });
     await billede();
     const b = kort[kort.length - 1].getBoundingClientRect();
-    const ud = { kort: kort.length, iFoersteRaekke: foersteRaekke.length, foersteUnder, navnUd, rullet: Math.round(window.scrollY), sidsteTop: Math.round(b.top), sidsteBund: Math.round(b.bottom + 6), H: innerHeight };
+    const ud = { kort: kort.length, iFoersteRaekke: foersteRaekke.length, foersteUnder, kig, navnUd, rullet: Math.round(window.scrollY), sidsteTop: Math.round(b.top), sidsteBund: Math.round(b.bottom + 6), H: innerHeight };
     ud.sidsteSes = b.top >= 0 && b.bottom + 6 <= innerHeight + 1;
     window.scrollTo({ top: 0, behavior: 'instant' });
     await billede();
@@ -446,6 +450,7 @@ async function heleVejen(browser, skaerm) {
   tjek(raekker.every((h) => Math.max(...h) - Math.min(...h) <= 1), n + ': kortene i en række skal være lige høje: ' + JSON.stringify(raekker));
   const rul = await forsideRulning(side);
   tjek(rul.foersteUnder <= 0, n + ': den første række kort på forsiden skæres ' + rul.foersteUnder + ' px af forneden');
+  tjek(rul.kig == null || rul.kig >= KIG_MIN, n + ': næste række på forsiden kigger kun ' + rul.kig + ' px frem (mindst ' + KIG_MIN + ')');
   tjek(rul.sidsteSes, n + ': det sidste kort på forsiden skal kunne rulles helt frem ' + JSON.stringify(rul));
   maal.push(n + ' forside: ' + rul.kort + ' kort, ' + rul.iFoersteRaekke + ' i første række, rullet ' + rul.rullet + ' px for at nå det sidste');
   const gr = await tjekGrupper(side, n + ' forside');
@@ -1218,6 +1223,7 @@ async function former(browser) {
     // Forsiden med alle retter: første række uden at rulle, det sidste kort kan rulles frem, navnene bliver i kortene, og intet vandret rul
     const rul = await forsideRulning(side);
     tjek(rul.foersteUnder <= 0, n + ' forside: den første række kort skæres ' + rul.foersteUnder + ' px af forneden');
+    tjek(rul.kig == null || rul.kig >= KIG_MIN, n + ' forside: næste række kigger kun ' + rul.kig + ' px frem (mindst ' + KIG_MIN + ', så man kan se, at siden kan rulles)');
     tjek(rul.sidsteSes, n + ' forside: det sidste kort skal kunne rulles helt frem ' + JSON.stringify(rul));
     tjek(rul.navnUd.length === 0, n + ' forside: navnet stikker ud af kortet på ' + rul.navnUd.join(', '));
     maal.push(n + ' forside: ' + rul.iFoersteRaekke + ' kort i første række, rullet ' + rul.rullet + ' px for at nå det sidste');
