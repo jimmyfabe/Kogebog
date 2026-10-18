@@ -17,7 +17,7 @@ Kør i Git Bash i `D:/Claude/Kogebog`.
 | Kun dele af e2e | sæt foran kommandoen: `E2E_DELE=tastatur,timer` og/eller `E2E_SKAERME=ipad,iphone,desktop`. Dele: `hele,print,tastatur,timer,fejl,beroering,former` (`former` = 360 px, 768×1024 og 844×390) |
 | Hjemmeskærm-ikoner (PNG) | `NODE_PATH=C:/Users/Jimmy/AppData/Roaming/npm/node_modules/@playwright/cli/node_modules bash ~/.claude/tung-koersel.sh "kogebog: ikoner" node vaerktoej/lav-ikoner.js` |
 
-- E2E er tung og kører kun gennem `tung-koersel.sh`. Exit 75 = låst af en anden kørsel (Lystårnets e2e kan tage 30-60 min). Exit 76 = under 4 GB fri RAM. Prøv igen senere med pauser, og skriv «ikke kørt: låst», hvis det ikke lykkes.
+- E2E er tung og kører kun gennem `tung-koersel.sh`. Exit 75 = låst af en anden kørsel (Lystårnets e2e kan tage 30-90 min; 18-10 holdt den låsen i 85 min). Exit 76 = under 4 GB fri RAM. Prøv igen senere med pauser, og skriv «ikke kørt: låst», hvis det ikke lykkes.
 - Skærmbilleder fra e2e går til `test-resultater/`, som er gitignored.
 - `?hurtig=1` i adressen gør alle timere 2 sekunder. Kun til test.
 

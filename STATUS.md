@@ -1,5 +1,43 @@
 # STATUS – Tumbi Køkken
 
+## 18-10-2026 kl. 16:50: grafik og rettelser efter review 2 (e82d280 → 5e66251)
+
+**Gjort:**
+- e82d280: 14 nye SVG'er fra Codex (5 ret-billeder, 9 verber).
+- Review 2 gav 9 punkter. De er rettet i 11 commits med en test først:
+  - et hold stopper, når skærmen skiftes;
+  - på iPhone får fremskridtet sin egen række, når timer-pillen vises (mindste streg før 4 px, nu 17,7 px);
+  - verbum-billedet er 100 % bredt;
+  - rettens knapper står fast i bunden på iPhone og på 844×390;
+  - på iPad på højkant står «Fortsæt» først;
+  - fokus havner ikke under bunden (`scroll-padding-bottom`);
+  - forsiden med «Tiden er gået» på iPad;
+  - Bo står på tom- og fejlskærmen, og fejlteksten er neutral;
+  - «Hent en voksen» står på én linje;
+  - «Start timer» er bleg, når en anden timer kører;
+  - konfettien holder sig væk fra teksten;
+  - hele code review-listen er taget.
+- Diffen er læst af Saga.
+
+**Tests 18-10 kl. 16:47:**
+- E2E i WebKit: 5e66251 er grøn med 3283 tjek på 128 s.
+- De nye tests mod e82d280 giver 238 fejl. Hvert nyt tjek fejler.
+- Node-testene: 4/4 grønne. `INDHOLD = '911f176f0b75c623'`.
+
+**Kører nu:** UI-review 3 (`ui-reviewer`) på 360–1440 px, med 844×390 og 667×375.
+
+**Ikke gjort eller ikke afprøvet:**
+- iPhone SE på langs (667×375): bunden står på to rækker (174 px).
+- Gamle iPads uden `:has` (Safari under 15.4).
+- Rigtig iPad og iPhone.
+- 5 billeder passer ikke til trinet, fx en stegepande ved «Bag bollerne i ovnen». De rettes i grafikrunde 2.
+
+**Afventer Jimmy (18-10):**
+- dit «ja» til de nye opskrifter: Bos pandekager efter Rasmus Klump, Price-frikadeller, kartoffelmos, hvidløgsflutes, brownie, blondie, hytteostboller, havregrynskugler, pizzasnegle og tunfrikadeller. Kandidaterne står på Drev i `Claude/Kogebog/opskrift-kandidater-18-10.md`;
+- dit «ja» til grafikrunde 2;
+- om kogebogen må ligge offentligt på GitHub Pages.
+- Intet er pushet.
+
 ## 18-10-2026 kl. 14:28: rettelser efter reviewet (29737f9 → fb5ba9c, 21 commits)
 
 **Gjort:**
