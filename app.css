@@ -560,6 +560,15 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
    Før faldt den ned på en række for sig under «Start forfra» (768 px) og lignede det mindst vigtige valg */
 @media (min-width: 701px) and (max-width: 900px) and (min-height: 521px) {
   .ret .handlinger .fortsaet { flex: 1 1 100%; order: -1; }
+  /* Bunden står fast som på iPhone: med kødsovs' 12 ingredienser og «Fortsæt» lå print og «Start forfra» under kanten */
+  .trin .handlinger, .ret .handlinger {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    background: var(--creme);
+    border-top: 3px solid var(--creme-moerk);
+    padding-bottom: max(22px, env(safe-area-inset-bottom));
+  }
 }
 
 /* Under 400 px er der kun plads til «Start forfra» ved siden af print, når print-knappen er uden ikon (teksten siger det) */

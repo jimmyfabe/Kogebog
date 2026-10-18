@@ -925,26 +925,29 @@ async function former(browser) {
     }
 
     // Retten med og uden «Fortsæt»: knapperne kan ses uden at rulle, og «Fortsæt» står først, over de andre.
-    // På langs er der kun højde til én række knapper: dér står «Fortsæt» til højre som på iPad
-    for (const fortsaet of [false, true]) {
-      await medGemt(side, { sidste: fortsaet ? { ret: 'pandekager', nr: 7 } : null }, '#/ret/pandekager');
-      await side.waitForSelector(fortsaet ? '.ret .fortsaet' : '.ret .start');
-      const hvor = n + ' ret' + (fortsaet ? ' med Fortsæt' : '');
-      await tjekLayout(side, hvor, { knapperSes: true });
-      if (ipadKolonner) tjek(await kolonner('.ret-indhold') === 2, hvor + ': billedet og ingredienserne skal stå i to kolonner som på iPad (' + await kolonner('.ret-indhold') + ')');
-      if (lav) {
-        // På langs er bunden én række, og navnet står over den (667×375 fik iPhone-bunden: 179 px = 48 %, navnet under den)
-        const navn = await modBund(side, '.ret-titel h1');
-        tjek(navn.hoejde <= navn.H * 0.25, hvor + ': bunden fylder ' + navn.hoejde + ' af ' + navn.H + ' px (højst 25 %)');
-        tjek(navn.bund <= navn.bundTop, hvor + ': navnet ligger under den faste bund ' + JSON.stringify(navn));
+    // På langs er der kun højde til én række knapper: dér står «Fortsæt» til højre som på iPad.
+    // Kødsovs har den længste ingrediensliste (12): på 768×1024 lå print og «Start forfra» under kanten
+    for (const ret of ['pandekager', 'koedsovs']) {
+      for (const fortsaet of [false, true]) {
+        await medGemt(side, { sidste: fortsaet ? { ret, nr: 7 } : null }, '#/ret/' + ret);
+        await side.waitForSelector(fortsaet ? '.ret .fortsaet' : '.ret .start');
+        const hvor = n + ' ret ' + ret + (fortsaet ? ' med Fortsæt' : '');
+        await tjekLayout(side, hvor, { knapperSes: true });
+        if (ipadKolonner) tjek(await kolonner('.ret-indhold') === 2, hvor + ': billedet og ingredienserne skal stå i to kolonner som på iPad (' + await kolonner('.ret-indhold') + ')');
+        if (lav) {
+          // På langs er bunden én række, og navnet står over den (667×375 fik iPhone-bunden: 179 px = 48 %, navnet under den)
+          const navn = await modBund(side, '.ret-titel h1');
+          tjek(navn.hoejde <= navn.H * 0.25, hvor + ': bunden fylder ' + navn.hoejde + ' af ' + navn.H + ' px (højst 25 %)');
+          tjek(navn.bund <= navn.bundTop, hvor + ': navnet ligger under den faste bund ' + JSON.stringify(navn));
+        }
+        if (fortsaet && !lav) {
+          const k = await side.evaluate(() => Object.fromEntries(['.fortsaet', '.forfra', '.print-knap']
+            .map((s) => { const b = document.querySelector('.handlinger ' + s).getBoundingClientRect(); return [s, { top: Math.round(b.top), bund: Math.round(b.bottom), bredde: Math.round(b.width) }]; })));
+          tjek(k['.fortsaet'].bund <= Math.min(k['.forfra'].top, k['.print-knap'].top) + 1, hvor + ': «Fortsæt» skal stå først, over de andre knapper ' + JSON.stringify(k));
+          tjek(k['.fortsaet'].bredde > k['.forfra'].bredde, hvor + ': «Fortsæt» skal være bredere end «Start forfra» ' + JSON.stringify(k));
+        }
+        await foto(side, n + '-former-ret-' + ret + (fortsaet ? '-fortsaet' : ''));
       }
-      if (fortsaet && !lav) {
-        const k = await side.evaluate(() => Object.fromEntries(['.fortsaet', '.forfra', '.print-knap']
-          .map((s) => { const b = document.querySelector('.handlinger ' + s).getBoundingClientRect(); return [s, { top: Math.round(b.top), bund: Math.round(b.bottom), bredde: Math.round(b.width) }]; })));
-        tjek(k['.fortsaet'].bund <= Math.min(k['.forfra'].top, k['.print-knap'].top) + 1, hvor + ': «Fortsæt» skal stå først, over de andre knapper ' + JSON.stringify(k));
-        tjek(k['.fortsaet'].bredde > k['.forfra'].bredde, hvor + ': «Fortsæt» skal være bredere end «Start forfra» ' + JSON.stringify(k));
-      }
-      await foto(side, n + '-former-ret' + (fortsaet ? '-fortsaet' : ''));
     }
 
     // Trinene: «Næste» kan ses uden at rulle, også på langs (et almindeligt trin, et voksen-trin med timer, en lang note)
