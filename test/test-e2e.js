@@ -341,6 +341,27 @@ async function heleVejen(browser, skaerm) {
   tjek((await sidsteTale(side)).startsWith('Færdig!'), n + ': færdig-skærmen siger «Færdig!»');
   await tjekLayout(side, n + ' færdig');
   await vent(2800); // konfettien er landet
+  // Konfettien må ikke ligge oven på tekst og knapper: hvor de overlapper, skal teksten være øverst.
+  // pointer-events slås til på stykkerne (kun her), så elementFromPoint kan se, hvad der er tegnet øverst.
+  const daekket = await side.evaluate(() => {
+    const stykker = [...document.querySelectorAll('.konfetti span')];
+    for (const s of stykker) s.style.pointerEvents = 'auto';
+    const ud = [];
+    for (const m of document.querySelectorAll('.faerdig h1, .faerdig-tekst, .faerdig .knap')) {
+      const a = m.getBoundingClientRect();
+      for (const s of stykker) {
+        const b = s.getBoundingClientRect();
+        const x1 = Math.max(a.left, b.left); const x2 = Math.min(a.right, b.right);
+        const y1 = Math.max(a.top, b.top); const y2 = Math.min(a.bottom, b.bottom);
+        if (x2 - x1 < 2 || y2 - y1 < 2) continue;
+        const oeverst = document.elementFromPoint((x1 + x2) / 2, (y1 + y2) / 2);
+        if (oeverst === s) ud.push((m.className || m.tagName.toLowerCase()) + ' ved ' + Math.round(x1) + ',' + Math.round(y1));
+      }
+    }
+    for (const s of stykker) s.style.pointerEvents = '';
+    return ud;
+  });
+  tjek(!daekket.length, n + ': konfetti ligger oven på teksten på færdig-skærmen: ' + daekket.join(', '));
   await foto(side, n + '-7-faerdig');
   await tryk(side, '.faerdig .knap.primaer');
   await side.waitForSelector('.forside .kort');

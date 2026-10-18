@@ -419,13 +419,14 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 
 /* ---------- Færdig ---------- */
 
-.faerdig { position: relative; overflow: hidden; }
+/* isolation + z-index -1: konfettien ligger bag tekst, billede og knapper (før dækkede den overskriften på iPhone) */
+.faerdig { position: relative; overflow: hidden; isolation: isolate; }
 .faerdig-indhold { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 0 24px 28px; text-align: center; }
 .faerdig-billede { width: min(78vw, 48svh, 420px); }
 .faerdig h1 { font-size: clamp(44px, 7vw, 72px); line-height: 1; }
 .faerdig-tekst { font-size: 24px; }
 
-.konfetti { position: absolute; inset: 0; pointer-events: none; }
+.konfetti { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
 .konfetti span { position: absolute; top: 12%; width: 14px; height: 9px; border: 2px solid var(--kakao); border-radius: 3px; }
 .konfetti .k0 { background: var(--tomat); }
 .konfetti .k1 { background: var(--sennep); }
