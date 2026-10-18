@@ -10,8 +10,8 @@ Kør i Git Bash i `D:/Claude/Kogebog`.
 
 | Hvad | Kommando |
 |---|---|
-| Alle node-tests (4 filer, ingen browser) | `node test/koer-alle.js` eller `npm.cmd test` |
-| Én testfil | `node test/test-opskrifter.js` (også grafik og index.json), `test-validator.js`, `test-tid.js`, `test-sw.js` |
+| Alle node-tests (5 filer, ingen browser) | `node test/koer-alle.js` eller `npm.cmd test` |
+| Én testfil | `node test/test-opskrifter.js` (også grafik og index.json), `test-validator.js`, `test-tid.js`, `test-sw.js`, `test-css.js` (regler i `app.css`, som browseren ikke kan se, fx safe-area) |
 | Lokal server | `py -m http.server 8091 --bind 127.0.0.1 --directory D:/Claude/Kogebog`, og åbn http://127.0.0.1:8091/. Aldrig `file://` |
 | E2E i WebKit (TUNG) | `NODE_PATH=C:/Users/Jimmy/AppData/Roaming/npm/node_modules/@playwright/cli/node_modules bash ~/.claude/tung-koersel.sh "kogebog: e2e" node test/test-e2e.js http://127.0.0.1:8091` |
 | Kun dele af e2e | sæt foran kommandoen: `E2E_DELE=tastatur,timer` og/eller `E2E_SKAERME=ipad,iphone,desktop`. Dele: `hele,print,tastatur,timer,fejl,beroering,former` (`former` = 360 px, 390×844, 768×1024 og iPhones på langs: 844×390, 667×375, 736×414). `E2E_FORMER=se-land,land` begrænser `former` til nogle af dem |

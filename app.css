@@ -555,9 +555,10 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
     border-top: 3px solid var(--creme-moerk);
     padding-bottom: max(16px, env(safe-area-inset-bottom));
   }
-  /* Bunden er 103 px høj, på retten med «Fortsæt» 179 px (to rækker) */
-  .trin, .ret { --bund: 116px; }
-  .ret:has(.fortsaet) { --bund: 192px; }
+  /* Bunden er 103 px høj, på retten med «Fortsæt» 179 px (to rækker). Samme safe-area som bundens padding:
+     på en iPhone (34 px på højkant) er bunden højere end i Playwright, hvor env() er 0 (test/test-css.js) */
+  .trin, .ret { --bund: calc(100px + max(16px, env(safe-area-inset-bottom))); }
+  .ret:has(.fortsaet) { --bund: calc(176px + max(16px, env(safe-area-inset-bottom))); }
   .naeste { min-width: 0; flex: 1 1 60%; }
   /* Tilbage er kun pilen, som husknappen (navnet står i aria-label): ellers gik teksten ud til kanten,
      og «Næste · Voksen: hold» fik ikke plads ned til 360 px */
@@ -578,9 +579,9 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
     border-top: 3px solid var(--creme-moerk);
     padding-bottom: max(22px, env(safe-area-inset-bottom));
   }
-  /* Bunden er 119 px høj, på retten med «Fortsæt» 199 px (to rækker) */
-  .trin, .ret { --bund: 132px; }
-  .ret:has(.fortsaet) { --bund: 212px; }
+  /* Bunden er 119 px høj, på retten med «Fortsæt» 199 px (to rækker), plus samme safe-area som bundens padding */
+  .trin, .ret { --bund: calc(110px + max(22px, env(safe-area-inset-bottom))); }
+  .ret:has(.fortsaet) { --bund: calc(190px + max(22px, env(safe-area-inset-bottom))); }
 }
 
 /* Under 400 px er der kun plads til «Start forfra» ved siden af print, når print-knappen er uden ikon (teksten siger det) */
@@ -632,7 +633,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   }
   .handlinger .knap.primaer { min-height: 68px; font-size: 24px; padding: 0 26px; }
   .ret .handlinger .start { min-width: 0; }
-  .trin, .ret { --bund: 96px; } /* bunden er én række på 85 px, også med «Fortsæt» */
+  /* Bunden er én række på 85 px, også med «Fortsæt», plus samme safe-area som bundens padding (21 px på en iPhone på langs) */
+  .trin, .ret { --bund: calc(88px + max(8px, env(safe-area-inset-bottom))); }
   /* Færdig: «Læs op» og «Til forsiden» skal kunne ses uden at rulle (på 844×390 lå de 101 px under kanten).
      Mindre billede og overskrift, tættere afstande og knapper på 68 px som bunden på trinene */
   .faerdig-indhold { gap: 6px; padding-bottom: 10px; }
