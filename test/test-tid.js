@@ -177,11 +177,25 @@ test('«en» eller «et» efter navneordets køn, og decimaler som man siger dem
   assert.deepEqual(ukendtKoen('1 æg og 1'), []);
 });
 
-// Alt, appen siger (lav-taleliste.js), uden et eneste ciffer eller tegn, som stemmen læser forkert eller slet ikke
-test('talformen af alle replikker har ingen cifre og ingen + = × ÷ % ° ½ ¼ ¾', () => {
+// Alt, appen siger (lav-taleliste.js), uden et eneste ciffer eller tegn, som stemmen læser forkert eller slet ikke.
+// En positivliste (bogstaver, mellemrum og almindelig tegnsætning), ikke en sortliste: sortlisten lod «3/4 dl»
+// («tre/fire»), «&», «—», «x» og «10 min.» («ti min.») gå igennem. Forkortelser, stemmen ikke kender, er forbudt.
+// «min» giver et falsk fund ved «min» (mit), det sikre fejlvalg: skriv så teksten om
+const TALE_TEGN = /[^\p{L}\s.,!?;:()«»'-]/u;
+const TALE_FORKORTET = /(?<!\p{L})(?:min|kl\.|f\.eks\.|fx\.|x)(?!\p{L})/iu;
+const kanSiges = (t) => !TALE_TEGN.test(t) && !TALE_FORKORTET.test(t);
+
+test('talformens positivliste fanger de tegn og forkortelser, sortlisten lod gå igennem', () => {
+  for (const t of ['tre/fire deciliter', 'salt & peber', 'to x tre', 'otte — ti', 'ti min.', 'ti min', 'Kl. tolv', 'f.eks. mel',
+    'fx. mel', 'B12', 'et halvt ½', 'hundrede °', 'tre + fire', 'otte–ti', 'en * to', 'rør "godt"']) assert.ok(!kanSiges(t), t);
+  for (const t of ['Mål halvanden deciliter mælk.', 'Hent en voksen. Steg pandekagen!', 'Tumbi siger: «Smag» (forsigtigt); godt?',
+    'Rør-rør', "kokkens'", 'Vent i ti minutter, til den er gylden.']) assert.ok(kanSiges(t), t);
+});
+
+test('talformen af alle replikker har kun bogstaver og almindelig tegnsætning (ingen cifre, tegn eller forkortelser)', () => {
   const liste = lavTaleliste();
   assert.ok(liste.length >= 377, 'fandt kun ' + liste.length + ' replikker');
-  const tilbage = liste.filter((x) => /[\d+=×÷%°½¼¾–]/.test(x.tekst)).map((x) => x.fil + ': ' + x.tekst);
+  const tilbage = liste.filter((x) => !kanSiges(x.tekst)).map((x) => x.fil + ': ' + x.tekst);
   assert.deepEqual(tilbage, []);
 });
 
