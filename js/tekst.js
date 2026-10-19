@@ -20,7 +20,18 @@ export function minutterTekst(min) {
 
 // Enheder skrevet ud, så stemmen siger «2,5 deciliter» og ikke «2,5 d l».
 // Grænserne er Unicode (\p{L}), ikke \b: \b kender kun a-z, så «l» i «1 løg» og «g» i «2 gås» lignede en enhed.
+// Brøker, «8-10» og forkortelser skrives også ud: Røst-stemmen (lyd/) læser teksten, som den står, og «ca.» blev kortere
+// end «cirka» (målt 19-10-2026), dvs. sandsynligvis «ka».
+const BROEK = { '½': 'en halv', '¼': 'en kvart', '¾': 'trekvart' };
 const ENHEDER = [
+  // «½ tsk» er «en halv teskefuld» (ental). «4½ spsk» er «4 og en halv spiseskefulde», «5¾ dl» er «5 og trekvart deciliter»
+  [/(?<!\d)([½¼¾])\s*(spsk|tsk)(?![\p{L}\p{N}])/gu, (_, b, e) => BROEK[b] + (e === 'tsk' ? ' teskefuld' : ' spiseskefuld')],
+  [/(\d)([½¼¾])/gu, (_, n, b) => n + ' og ' + BROEK[b]],
+  [/[½¼¾]/gu, (b) => BROEK[b]],
+  [/(\d)\s*-\s*(\d)/g, '$1 til $2'],
+  [/(?<!\p{L})ca\.(?![\p{L}\p{N}])/gu, 'cirka'],
+  [/(?<!\p{L})evt\.(?![\p{L}\p{N}])/gu, 'eventuelt'],
+  [/(?<!\p{L})fx(?![\p{L}\p{N}])/gu, 'for eksempel'],
   [/(?<!\p{L})dl(?![\p{L}\p{N}])/gu, 'deciliter'],
   [/(\d+(?:,\d+)?)\s*spsk(?![\p{L}\p{N}])/gu, (_, n) => n + (n === '1' ? ' spiseskefuld' : ' spiseskefulde')],
   [/(\d+(?:,\d+)?)\s*tsk(?![\p{L}\p{N}])/gu, (_, n) => n + (n === '1' ? ' teskefuld' : ' teskefulde')],

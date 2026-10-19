@@ -86,10 +86,27 @@ test('enheder skrives ud til stemmen', () => {
   assert.equal(tilTale('1 spskæ'), '1 spskæ');
   assert.equal(tilTale('1 tskø'), '1 tskø');
   assert.equal(tilTale('2 stkæ'), '2 stkæ');
-  assert.equal(tilTale('ca. 16 stk.'), 'ca. 16 stykker');
+  assert.equal(tilTale('ca. 16 stk.'), 'cirka 16 stykker');
   assert.equal(tilTale('1 kg kartofler'), '1 kilo kartofler');
   // Den bløde bindestreg i et kortnavn læses ikke op
   assert.equal(tilTale('Havregryns­kugler. Tryk igen for at starte.'), 'Havregrynskugler. Tryk igen for at starte.');
+});
+
+// Røst-stemmen læser teksten, som den står: brøker, «8-10» og forkortelser skrives ud (som i opskrifterne)
+test('brøker, intervaller og forkortelser skrives ud til stemmen', () => {
+  assert.equal(tilTale('½ tsk salt'), 'en halv teskefuld salt');
+  assert.equal(tilTale('¾ tsk groft salt'), 'trekvart teskefuld groft salt');
+  assert.equal(tilTale('¼ tsk salt'), 'en kvart teskefuld salt');
+  assert.equal(tilTale('½ dl olivenolie'), 'en halv deciliter olivenolie');
+  assert.equal(tilTale('4½ spsk kakao (ca. 25 g)'), '4 og en halv spiseskefulde kakao (cirka 25 gram)');
+  assert.equal(tilTale('175 g finvalsede havregryn (ca. 5¾ dl)'), '175 gram finvalsede havregryn (cirka 5 og trekvart deciliter)');
+  assert.equal(tilTale('8-10 g salt'), '8 til 10 gram salt');
+  assert.equal(tilTale('peber (og evt. salt)'), 'peber (og eventuelt salt)');
+  assert.equal(tilTale('2 dl kerner, fx græskarkerner'), '2 deciliter kerner, for eksempel græskarkerner');
+  // Kun hele ord: «ca» inde i et ord, «fx» i «fxo» og bindestregen i «hvede-, pizza-» røres ikke
+  assert.equal(tilTale('Mexicansk sauce.'), 'Mexicansk sauce.');
+  assert.equal(tilTale('fxo'), 'fxo');
+  assert.equal(tilTale('500 g mel (hvede-, pizza- eller grahamsmel)'), '500 gram mel (hvede-, pizza- eller grahamsmel)');
 });
 
 test('ord tælles uden tegnsætning', () => {
