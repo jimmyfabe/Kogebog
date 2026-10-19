@@ -10,6 +10,7 @@
 //   5. Fejl og pause udefra slipper knappens markering
 //   6. Uden net tager reserven over med det samme
 //   7. stop() under en lydfil
+//   8. En lydfil, der hverken spiller eller fejler: iPad-stemmen efter 6 s (falske timere)
 // Ikke afprøvet på iPad.
 // Kør:  node test/test-tale.js
 import { test } from 'node:test';
@@ -40,6 +41,7 @@ let afvist = 0; // play(), der blev afvist, fordi elementet ikke var låst op
 let elementer = 0;
 let spilFejl = null; // sat til en DOMException: play() afvises (fx filen kunne ikke hentes)
 let holdSvar = false; // true: play() venter, til testen selv afgør det (a.svar)
+let stum = false; // true: play() svarer aldrig, og der kommer ingen hændelser (set i WebKit: kun loadstart, readyState 0)
 class FalskAudio {
   constructor(src) {
     elementer++;
@@ -48,10 +50,11 @@ class FalskAudio {
     this.paused = true;
     this.ended = false;
     this.error = null;
+    this.readyState = 0;
     this._src = '';
     if (src !== undefined) this.src = src;
   }
-  set src(v) { this._src = String(v); this.paused = true; this.ended = false; this.error = null; }
+  set src(v) { this._src = String(v); this.paused = true; this.ended = false; this.error = null; this.readyState = 0; }
   get src() { return this._src; }
   addEventListener(type, fn) { (this.lyttere[type] ||= []).push(fn); }
   send(type) { for (const fn of this.lyttere[type] || []) fn({ type }); }
@@ -61,8 +64,12 @@ class FalskAudio {
     if (this.laast) { afvist++; return Promise.reject(new DOMException('Kræver et tryk', 'NotAllowedError')); }
     if (spilFejl) return Promise.reject(spilFejl);
     this.paused = false;
-    if (holdSvar) return new Promise((ja, nej) => { this.svar = { ja, nej }; });
+    if (stum) return new Promise(() => {});
+    // Når lyden kører: readyState 4 og «playing» (en opgave senere, som i browseren)
+    const spiller = () => { this.readyState = 4; setImmediate(() => { if (!this.paused) this.send('playing'); }); };
+    if (holdSvar) return new Promise((ja, nej) => { this.svar = { ja: () => { spiller(); ja(); }, nej }; });
     spillet.push(this._src);
+    spiller();
     return Promise.resolve();
   }
   pause() { if (!this.paused) { this.paused = true; setImmediate(() => this.send('pause')); } }
@@ -242,4 +249,41 @@ test('stop() under en lydfil: ingen reserve og ingen markering bagefter', async 
   await naesteOpgave();
   assert.equal(talt.length, antal);
   assert.ok(!k.classList.contains('taler'));
+});
+
+test('en lydfil, der hverken spiller eller fejler, giver plads til iPad-stemmen efter 6 s', async (t) => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const k = lavKnap();
+  stum = true;
+  try {
+    Tale.sig({ tekst: 'Hænger.', fil: 'pandekager/1.mp3' }, { knap: k });
+    const a = sidsteLyd();
+    await naesteOpgave();
+    const antal = talt.length;
+    t.mock.timers.tick(5000);
+    assert.equal(talt.length, antal, 'iPad-stemmen tog over før tid');
+    assert.ok(k.classList.contains('taler'));
+    t.mock.timers.tick(1500);
+    assert.deepEqual(talt.slice(antal), ['Hænger.'], 'efter 6 s uden «playing» skal iPad-stemmen sige replikken');
+    assert.ok(a.paused, 'lydfilen skal stoppes, så den ikke spiller oven i iPad-stemmen bagefter');
+    assert.ok(k.classList.contains('taler'), 'knappen er markeret, mens iPad-stemmen taler');
+
+    // Et nyere tryk overskrives ikke: den første replik hænger, den anden spiller
+    const k1 = lavKnap();
+    const k2 = lavKnap();
+    Tale.sig({ tekst: 'Første.', fil: 'pandekager/2.mp3' }, { knap: k1 });
+    t.mock.timers.tick(3000);
+    stum = false;
+    Tale.sig({ tekst: 'Anden.', fil: 'pandekager/3.mp3' }, { knap: k2 });
+    await naesteOpgave();
+    await naesteOpgave();
+    const efter = talt.length;
+    t.mock.timers.tick(7000);
+    assert.equal(talt.length, efter, 'tidsgrænsen fra den første replik må ikke ramme den nye');
+    assert.ok(k2.classList.contains('taler'), 'den nye replik spiller stadig');
+    assert.ok(!sidsteLyd().paused, 'den nye lydfil blev stoppet');
+    sidsteLyd().slut();
+  } finally {
+    stum = false;
+  }
 });

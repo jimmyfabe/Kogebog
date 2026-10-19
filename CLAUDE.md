@@ -33,7 +33,7 @@ Kør i Git Bash i `D:/Claude/Kogebog`.
 | `js/tekst.js`, `js/tid.js` | Rene funktioner, uden DOM: talformen til stemmen (tal som ord, «en»/«et» efter `KOEN`, enheder, brøker, forkortelser), ordtælling, timerens tid |
 | `js/timer.js` | Én timer ad gangen: sluttid, lyd, skærm-lås |
 | `js/replikker.js` | Alt, appen siger, med sin lydfil (`{ tekst, fil }`). `app.js` læser kun op gennem den (`test-lyd.js` tjekker det) |
-| `js/tale.js` | Oplæsning: `lyd/<fil>` (Røst), hvis den står i `lyd/liste.json`, ellers iPad-stemmen (`speechSynthesis`, `da-DK`). Afviser `play()`, eller er filen ikke gemt uden net, tager iPad-stemmen over. Ét fælles lydelement, der låses op ved første tryk |
+| `js/tale.js` | Oplæsning: `lyd/<fil>` (Røst), hvis den står i `lyd/liste.json`, ellers iPad-stemmen (`speechSynthesis`, `da-DK`). Afviser `play()`, er filen ikke gemt uden net, eller kommer der ingen `playing` inden 6 s, tager iPad-stemmen over. Ét fælles lydelement, der låses op ved første tryk (touchend, click eller keydown; pointerup alene slipper ikke lytterne) |
 | `lyd/` | Røst-stemmens mp3 (`lyd/<ret>/<navn>.mp3` og `lyd/faelles/`), `liste.json` (filerne, appen spiller) og `tekster.json` (teksten, hver fil er lavet af; kun til tests) |
 | `vaerktoej/lav-taleliste.js`, `vaerktoej/indsaet-lyd.js` | Listen over alt, appen siger (til Røst), og indsætning af de færdige mp3-filer i `lyd/`. Se «Stemmen» |
 | `js/hold.js` | Knap, der skal holdes inde i 2 s (voksen-trin og print) |

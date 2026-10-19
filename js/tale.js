@@ -11,6 +11,10 @@ import { tilTale } from './tekst.js';
 
 const LYD_CACHE = 'kog-lyd-'; // sw.js gemmer lydfilerne i «kog-lyd-<LYD>»
 const TRYK = ['pointerup', 'touchend', 'click', 'keydown']; // brugeraktivering (som i timer.js)
+// Kommer der ingen «playing» så længe efter play(), tager iPad-stemmen over. Set i WebKit: lydelementet nåede kun
+// loadstart (readyState 0) og hverken spillede eller fejlede, så knappen stod som «taler» for evigt.
+// Længere end sw.js' 4 s til nettet, så en langsom hentning først når at fejle (så tager reserven over med det samme)
+const SPIL_GRAENSE_MS = 6000;
 
 let filer = new Set();
 const gemte = new Set(); // lydfiler, der ligger i service workerens cache (kan spilles uden net)
@@ -19,6 +23,7 @@ let nr = 0; // løbenummer: en gammel replik's catch/fejl må ikke ramme den, de
 let spiller = null; // { nr, tekst, fil, knap } mens en lydfil spiller
 let aktuel = null; // ytringen, der tales nu (holdes fast, ellers kan nogle browsere glemme onend)
 let knap = null;
+let vagt = 0; // tidsgrænsen for den lydfil, der skal til at spille (SPIL_GRAENSE_MS)
 
 export function hentLydListe() {
   hentGemte();
@@ -79,6 +84,7 @@ function syntese(tekst) {
 // Lydfilen kunne ikke spilles (afvist, fejl ved hentningen): iPad-stemmen siger det samme
 function reserve(mit) {
   if (!spiller || spiller.nr !== mit) return;
+  clearTimeout(vagt);
   const { tekst, knap: b } = spiller;
   spiller = null;
   markerKnap(b);
@@ -104,6 +110,9 @@ function lydElement() {
     markerKnap(null);
   });
   a.addEventListener('error', () => { if (spiller && a.error) reserve(spiller.nr); });
+  // Lyden kører: tidsgrænsen slippes. readyState sikrer, at en «playing» fra den forrige replik ikke tæller
+  // (en ny src sætter readyState til 0 med det samme)
+  a.addEventListener('playing', () => { if (spiller && !a.paused && a.readyState >= 3) clearTimeout(vagt); });
   lyd = a;
   return a;
 }
@@ -149,11 +158,19 @@ export function sig({ tekst, fil }, { knap: b } = {}) {
     if (p && typeof p.catch === 'function') p.catch(() => reserve(mit));
   } catch (e) {
     reserve(mit);
+    return;
   }
+  // Hverken «playing» eller en fejl: lyden stoppes, og iPad-stemmen siger det (løbenummeret: kun denne replik)
+  vagt = setTimeout(() => {
+    if (!spiller || spiller.nr !== mit) return;
+    reserve(mit);
+    try { a.pause(); } catch (e) { /* intet lydelement */ }
+  }, SPIL_GRAENSE_MS);
 }
 
 export function stop() {
   nr++;
+  clearTimeout(vagt);
   if (spiller) {
     spiller = null;
     try { lyd.pause(); } catch (e) { /* intet lydelement */ }
