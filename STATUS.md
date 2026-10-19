@@ -1,5 +1,22 @@
 # STATUS – Tumbi Køkken
 
+## 19-10-2026 kl. 16:45: Røst-stemmen på grenen `stemme-roest`, reviewet, ikke flettet (venter på Jimmys lytning og iPad)
+
+**Gjort:** alle 377 replikker har Røst-lyd. Tal, brøker og tegn skrives ud som ord (`tilTale`), og 176 replikker er lavet igen. Lyden har sin egen cache, en tidsgrænse på 4 s og Range efter RFC 9110. Der er ét fælles lydelement, og iPad-stemmen tager over efter 6 s uden `playing`. Ingrediensen bliver lyseblå, mens den læses op.
+- **ASR (cer2, 377 filer):** over 0,25: 39 → 27; over 0,40: 12 → 0; snit for replikker med tal: 0,162 → 0,105. Seks filer er blevet værre. Sammenligningsscriptet er ikke reviewet.
+- **Review:** code-review (15 fund, 3 rettet) og to UI-reviews (1 + 1 fund rettet). Hver rettelse blev bevist med en test, der fejlede mod den gamle kode. Seneste commit er e13de51.
+- **Tests:** `koer-alle` 7/7. Hele e2e: 12.002 tjek grønne kl. 16:21. Den forrige kørsel på samme kode (15:57) havde 2 fejl ved timer-pillen på iPad, og den del var grøn alene. Den kendes som ustabil, men årsagen er ikke fundet.
+
+**Jimmys testliste (før fletning i main):**
+1. Lyt: `lyd\chorizo-pasta\ingrediens-1.mp3`, `lyd\kartoffelmos\8.mp3`, `lyd\pizzasnegle\ingrediens-14.mp3`, `ingrediens-7.mp3`, `ingrediens-8.mp3`.
+2. På iPad: tryk Læs op på et trin og en ingrediens. Prøv et voksen-hold som første tryk efter genindlæsning, og prøv uden wifi.
+
+**Kan vente (fra reviewene):**
+- sw: dobbelt hentning ved `bytes=0-1` + `bytes=0-`; intet ur på selve filens krop; ny `LYD` sletter alle gemte lydfiler; intet tjek af Content-Type.
+- tekst.js: «nul grad», «1.000 g» og «10000 g». `LYD_RE` tager «ingrediens-x1». `indsaet-lyd --ryd` med en ufuldstændig `kvalitet.json`. test-lyd læser kildeteksten.
+- UI: kun ca. 2 px luft over ikonet ved skala 1,15. Lyseblå mod hvid er kun ca. 1,2:1. «grahamsm|el» deles midt i ordet (`overflow-wrap: anywhere`).
+- `D:\Stemmer\efterbehandl_kogebog.py`: kandidater med en anden tekst end den seneste måling bør ikke tælle (gammel seed 43/44).
+
 ## 19-10-2026 kl. 05:36: 13 retter, ny grafik og fire reviews flettet ind i main (6bbe740 → 344e580, 65 commits, ikke pushet)
 
 **Gjort (grenen `opskrifter-2`, Saga og agenter 18.–19-10):**
