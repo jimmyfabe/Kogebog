@@ -4,6 +4,7 @@
 import { el, ikon, svgEl } from './js/dom.js';
 import { hentIndex, hentRet } from './js/data.js';
 import * as Tale from './js/tale.js';
+import * as R from './js/replikker.js';
 import * as Timer from './js/timer.js';
 import * as Lager from './js/lager.js';
 import { holdKnap } from './js/hold.js';
@@ -214,7 +215,7 @@ function hopKnap(id, navn) {
     if (!h) return;
     h.closest('.gruppe').scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
     h.focus({ preventScroll: true });
-    Tale.sig(navn);
+    Tale.sig(R.gruppe(id));
   } });
   b.dataset.gruppe = id;
   b.append(billede(grafikGruppe(id), ''));
@@ -225,26 +226,26 @@ function kortTryk(id, b) {
   const m = S.retter.get(id);
   if (S.valgtKort === id) {
     S.valgtKort = null;
-    naviger(hashFor.ret(id), () => Tale.sig(m.navn + '. Det skal I bruge.', { fil: id + '/navn.mp3' }));
+    naviger(hashFor.ret(id), () => Tale.sig(R.retAaben(m)));
     return;
   }
   S.valgtKort = id;
   for (const k of rod.querySelectorAll('.kort.valgt')) k.classList.remove('valgt');
   b.classList.add('valgt');
   S.spaerTil = performance.now() + SPAERRE_MS;
-  Tale.sig(m.navn + '. Tryk igen for at starte.', { fil: id + '/navn.mp3' });
+  Tale.sig(R.retValgt(m));
 }
 
 // ---------- Retten ----------
 
 function retSkaerm(m) {
   const meta = [m.portioner, m.minutter ? minutterTekst(m.minutter) : ''].filter(Boolean).join(' · ');
-  const ingr = m.ingredienser.map((x) => {
+  const ingr = m.ingredienser.map((x, i) => {
     const b = el('button', { type: 'button', class: 'ingr', 'aria-label': x.tekst },
       x.ikon ? billede(grafikIngrediens(x.ikon), '', 'ingr-ikon') : null,
       x.maengde ? el('span', { class: 'ingr-maengde', tekst: x.maengde }) : null,
       el('span', { class: 'ingr-navn', tekst: x.navn }));
-    b.addEventListener('click', klik(() => Tale.sig(x.tekst, { knap: b })));
+    b.addEventListener('click', klik(() => Tale.sig(R.ingrediens(m, i), { knap: b })));
     return el('li', {}, b);
   });
 
@@ -266,11 +267,11 @@ function retSkaerm(m) {
     label: 'Print opskriften til den voksne. Hold knappen inde i 2 sekunder.',
     indhold: [ikon('print'), el('span', { tekst: 'Print: hold' })],
     naarFaerdig: () => { location.href = 'print.html?ret=' + encodeURIComponent(m.id); },
-    naarKort: () => Tale.sig('Den voksne holder knappen inde for at printe.'),
+    naarKort: () => Tale.sig(R.PRINT_HOLD),
   });
 
   const hoejttaler = knap('', { klasse: 'rund stor-rund', ikonNavn: 'hoejttaler', label: 'Læs op' });
-  hoejttaler.addEventListener('click', klik(() => Tale.sig(m.navn + '. Det skal I bruge.', { fil: m.id + '/navn.mp3', knap: hoejttaler })));
+  hoejttaler.addEventListener('click', klik(() => Tale.sig(R.retAaben(m), { knap: hoejttaler })));
 
   return el('main', { class: 'skaerm ret' },
     topbar(),
@@ -294,8 +295,7 @@ function retSkaerm(m) {
 // ---------- Trinene ----------
 
 function sigTrin(m, t, b) {
-  const tekst = t.voksen ? 'Hent en voksen. ' + t.tekst : t.tekst;
-  Tale.sig(tekst, { fil: m.id + '/' + t.nr + '.mp3', knap: b || rod.querySelector('.laes-op') });
+  Tale.sig(R.trin(m, t), { knap: b || rod.querySelector('.laes-op') });
 }
 
 function gaaTilTrin(m, nr) {
@@ -334,14 +334,16 @@ function timerBlok(m, t) {
     const a = Timer.aktuel();
     return a && !a.faerdig && !(a.ret === m.id && a.nr === t.nr) ? a : null;
   };
-  const hvor = (a) => {
+  // Rettens model, hvis den er hentet (ellers siger teksten kun «trin 8»)
+  const timerRet = (a) => {
     const r = S.retter.get(a.ret);
-    return a.ret === m.id || !r || r instanceof Error ? 'trin ' + a.nr : r.navn + ', trin ' + a.nr;
+    return r && !(r instanceof Error) ? r : null;
   };
+  const hvor = (a) => R.timerHvor(timerRet(a), a.nr, a.ret === m.id);
   startKnap.addEventListener('click', klik(() => {
     const a = andenTimer();
     if (a) {
-      Tale.sig('Der kører allerede en timer på ' + hvor(a) + '. Stop den først.', { knap: startKnap });
+      Tale.sig(R.timerOptaget(timerRet(a), a.nr, a.ret === m.id), { knap: startKnap });
       rulFrem(blok);
       return;
     }
@@ -426,7 +428,7 @@ function trinSkaerm(m, nr) {
     : null;
 
   const frem = () => {
-    if (sidst) naviger(hashFor.faerdig(m.id), () => Tale.sig('Færdig! Godt gået. Velbekomme.'));
+    if (sidst) naviger(hashFor.faerdig(m.id), () => Tale.sig(R.FAERDIG));
     else gaaTilTrin(m, nr + 1);
   };
   const tilbage = () => {
@@ -441,7 +443,7 @@ function trinSkaerm(m, nr) {
       label: naesteTekst + '. Den voksne holder knappen inde i 2 sekunder.',
       indhold: [el('span', { class: 'hold-tekst' }, el('span', { tekst: naesteTekst }), el('small', { tekst: 'Voksen: hold' })), ikon('naeste')],
       naarFaerdig: frem,
-      naarKort: (b) => Tale.sig('Hent en voksen. Den voksne holder knappen inde.', { knap: b }),
+      naarKort: (b) => Tale.sig(R.VOKSEN_HOLD, { knap: b }),
     })
     : knap(naesteTekst, { klasse: 'primaer naeste', ikonNavn: sidst ? 'tjek' : 'naeste', ikonEfter: true, onclick: frem });
 
@@ -475,7 +477,7 @@ function faerdigSkaerm() {
   Lager.gem({ sidste: null });
   const konfetti = el('div', { class: 'konfetti', 'aria-hidden': 'true' }, Array.from({ length: 14 }, (_, i) => el('span', { class: 'k' + (i % 4) })));
   const hoejttaler = knap('Læs op', { ikonNavn: 'hoejttaler' });
-  hoejttaler.addEventListener('click', klik(() => Tale.sig('Færdig! Godt gået. Velbekomme.', { knap: hoejttaler })));
+  hoejttaler.addEventListener('click', klik(() => Tale.sig(R.FAERDIG, { knap: hoejttaler })));
   return el('main', { class: 'skaerm faerdig' },
     topbar(),
     konfetti,

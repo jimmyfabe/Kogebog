@@ -1,5 +1,7 @@
 // tale.js — oplæsning. Kun når nogen trykker (kaldes altid fra et tryk).
-// 1) lyd/<ret>/<trin>.mp3, hvis filen står i lyd/liste.json (så spørger vi aldrig efter filer, der ikke findes).
+// Hvad der siges, og hvilken lydfil der hører til, står i js/replikker.js ({ tekst, fil }).
+// 1) lyd/<fil> (Røst, en forud lavet computerstemme), hvis filen står i lyd/liste.json (så spørger vi aldrig efter filer,
+//    der ikke findes). vaerktoej/lav-taleliste.js laver listen over tekster til lydfilerne.
 // 2) Ellers enhedens egen stemme (speechSynthesis) på dansk, lang 'da-DK', og en dansk stemme, hvis der er en.
 import { tilTale } from './tekst.js';
 
@@ -49,8 +51,8 @@ function syntese(tekst) {
   }
 }
 
-// sig('Hæld melet i skålen.', { fil: 'pandekager/3.mp3', knap })
-export function sig(tekst, { fil, knap: b } = {}) {
+// sig(R.trin(m, t), { knap }) — replikken er { tekst, fil } fra js/replikker.js
+export function sig({ tekst, fil }, { knap: b } = {}) {
   stop();
   markerKnap(b);
   if (fil && filer.has(fil)) {
