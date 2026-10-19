@@ -102,10 +102,21 @@ function indholdAf(filer) {
   return h.digest('hex').slice(0, 16);
 }
 
+// Lydfilerne (lyd/<ret>/<navn>.mp3) står ikke i FILER (de gemmes, når de spilles), men de er også cache først.
+// Derfor tæller de med i INDHOLD: en ny udgave af en lydfil skal også give en ny VERSION
+function lydfiler() {
+  const ud = [];
+  for (const d of fs.readdirSync(path.join(ROD, 'lyd'), { withFileTypes: true })) {
+    if (!d.isDirectory()) continue;
+    for (const f of fs.readdirSync(path.join(ROD, 'lyd', d.name))) if (f.endsWith('.mp3')) ud.push('lyd/' + d.name + '/' + f);
+  }
+  return ud.sort();
+}
+
 // app.js, js/*.js, grafikken osv. er «cache først»: kun en ny VERSION får dem ud til en enhed, der allerede har appen
 test('INDHOLD i sw.js passer til filerne, og VERSION følger med', () => {
   const { FILER, VERSION, INDHOLD } = lavSw({ caches: falskeCaches(), fetch: async () => ok('') });
-  const nu = indholdAf(FILER);
+  const nu = indholdAf([...FILER, ...lydfiler()]);
   assert.equal(INDHOLD, nu, 'filerne er ændret: sæt INDHOLD i sw.js til \'' + nu + '\' (så skifter VERSION, og enhederne henter den nye udgave)');
   assert.equal(VERSION, 'kog-' + INDHOLD, 'VERSION skal være \'kog-\' + INDHOLD');
 });
@@ -179,4 +190,52 @@ test('andre apps på samme origin og andet end GET bliver ikke rørt', () => {
     sw.haendelser.fetch(h);
     assert.equal(h.svar, null, 'håndterede ' + req.method + ' ' + req.url);
   }
+});
+
+test('lydfilerne gemmes hele, når de spilles, og Safaris bidder (Range) skæres ud af dem', async () => {
+  const fil = SCOPE + 'lyd/pandekager/1.mp3';
+  const indhold = new Uint8Array([0x49, 0x44, 0x33, 1, 2, 3, 4, 5, 6, 7]); // 10 byte
+  const hentet = [];
+  let net = true;
+  const caches = falskeCaches();
+  const sw = lavSw({ caches, fetch: async (req) => {
+    hentet.push({ url: absolut(req), range: typeof req === 'string' ? null : req.headers.get('range') });
+    if (!net) throw new TypeError('offline');
+    return absolut(req) === fil ? new Response(indhold, { status: 200, headers: { 'Content-Type': 'audio/mpeg' } }) : new Response('', { status: 404 });
+  } });
+  const spil = async (range, sti = 'lyd/pandekager/1.mp3') => {
+    const h = haendelse(new SwRequest(sti, range ? { headers: { Range: range } } : {}));
+    sw.haendelser.fetch(h);
+    assert.ok(h.svar, 'service workeren skal svare på ' + sti);
+    const svar = await h.svar;
+    await Promise.all(h.ventet);
+    return { status: svar.status, range: svar.headers.get('content-range'), data: [...new Uint8Array(await svar.arrayBuffer())] };
+  };
+
+  // Første tryk: Safari beder om de første 2 byte. Nettet spørges om hele filen, og den gemmes
+  let s = await spil('bytes=0-1');
+  assert.deepEqual([s.status, s.range, s.data], [206, 'bytes 0-1/10', [0x49, 0x44]]);
+  assert.deepEqual(hentet, [{ url: fil, range: null }], 'nettet skal spørges om hele filen, uden Range');
+  const gemt = await (await caches.open(sw.VERSION)).match(fil);
+  assert.equal((await gemt.arrayBuffer()).byteLength, 10, 'hele filen skal ligge i cachen');
+
+  // Resten kommer fra cachen, også uden net
+  net = false;
+  s = await spil('bytes=2-');
+  assert.deepEqual([s.status, s.range, s.data], [206, 'bytes 2-9/10', [0x33, 1, 2, 3, 4, 5, 6, 7]]);
+  s = await spil('bytes=-3');
+  assert.deepEqual([s.status, s.range, s.data], [206, 'bytes 7-9/10', [5, 6, 7]]);
+  s = await spil('bytes=8-99');
+  assert.deepEqual([s.status, s.range, s.data], [206, 'bytes 8-9/10', [6, 7]]);
+  s = await spil(null);
+  assert.deepEqual([s.status, s.data.length], [200, 10]);
+  s = await spil('bytes=10-');
+  assert.deepEqual([s.status, s.range], [416, 'bytes */10']);
+  assert.equal(hentet.length, 1, 'kun det første tryk må gå til nettet');
+
+  // En fil, der ikke findes (404), gemmes ikke
+  net = true;
+  s = await spil('bytes=0-1', 'lyd/pandekager/99.mp3');
+  assert.equal(s.status, 404);
+  assert.equal(await (await caches.open(sw.VERSION)).match(SCOPE + 'lyd/pandekager/99.mp3'), undefined);
 });

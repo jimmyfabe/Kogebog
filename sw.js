@@ -2,10 +2,10 @@
    Samme origin som Lystårnet («mat-») og LEGO («lego-»): denne fil rører KUN caches, der starter med «kog-».
    Opskrifterne (opskrifter/*.json og lyd/liste.json) hentes netværk først, så en rettet opskrift slår igennem;
    alt andet er cache først, så en ændret fil kun når ud til enhederne, hvis cachens navn (VERSION) skifter.
-   Derfor er VERSION bygget af INDHOLD: et tal for alle FILER. test/test-sw.js tjekker, at FILER er komplet,
+   Derfor er VERSION bygget af INDHOLD: et tal for alle FILER og lydfilerne. test/test-sw.js tjekker, at FILER er komplet,
    og fejler, når en fil er ændret. Fejlbeskeden viser den nye værdi; testen ændrer ikke sw.js, så den sættes her i hånden. */
 const PRAEFIKS = 'kog-';
-const INDHOLD = '189c1213a1625c29'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = '189c1213a1625c29'; // sha256 (16 tegn) af FILER og lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const FILER = [
   './',
@@ -126,10 +126,48 @@ async function cacheFoerst(e, req) {
   }
 }
 
+// Lydfilerne (Røst-stemmen, lyd/<ret>/<navn>.mp3) står ikke i FILER: de er ca. 5 MB, over ti gange resten af appen, og
+// hentes derfor først, når de spilles (cache først som resten). INDHOLD regnes også af dem (test/test-sw.js), så en ny
+// udgave af en lydfil giver en ny VERSION. Safari beder om lyd i bidder (Range: bytes=0-1), og et svar med en bid (206)
+// kan ikke gemmes i en cache. Derfor hentes og gemmes altid hele filen, og bidden skæres ud af den.
+async function lyd(e, req) {
+  const cache = await caches.open(VERSION);
+  let svar = await cache.match(req.url, { ignoreSearch: true });
+  if (!svar) {
+    svar = await fetch(req.url); // uden Range: hele filen. Uden net: fejl, og tale.js tager iPad-stemmen
+    if (svar.status !== 200) return svar;
+    e.waitUntil(cache.put(req.url, svar.clone()).catch(() => {}));
+  }
+  const omraade = req.headers.get('range');
+  return omraade ? bid(svar, omraade) : svar;
+}
+
+async function bid(svar, omraade) {
+  const data = await svar.arrayBuffer();
+  const n = data.byteLength;
+  const m = /^bytes=(\d*)-(\d*)$/.exec(omraade.trim());
+  let fra = -1;
+  let til = -1;
+  if (m && m[1] !== '') { fra = Number(m[1]); til = m[2] === '' ? n - 1 : Math.min(Number(m[2]), n - 1); }
+  else if (m && m[2] !== '') { fra = Math.max(0, n - Number(m[2])); til = n - 1; } // «bytes=-500»: de sidste 500
+  if (fra < 0 || fra >= n || fra > til) return new Response(null, { status: 416, headers: { 'Content-Range': 'bytes */' + n } });
+  return new Response(data.slice(fra, til + 1), {
+    status: 206,
+    headers: {
+      'Content-Type': svar.headers.get('Content-Type') || 'audio/mpeg',
+      'Content-Range': 'bytes ' + fra + '-' + til + '/' + n,
+      'Content-Length': String(til - fra + 1),
+      'Accept-Ranges': 'bytes',
+    },
+  });
+}
+
+const erLyd = (url) => /\/lyd\/[a-z0-9-]+\/[a-z0-9-]+\.mp3$/.test(url.pathname);
+
 self.addEventListener('fetch', (e) => {
   const req = e.request;
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin || !iScope(url)) return; // andre apps på samme origin: ikke vores sag
-  e.respondWith(erOpskrift(url) ? netvaerkFoerst(e, req) : cacheFoerst(e, req));
+  e.respondWith(erOpskrift(url) ? netvaerkFoerst(e, req) : erLyd(url) ? lyd(e, req) : cacheFoerst(e, req));
 });
