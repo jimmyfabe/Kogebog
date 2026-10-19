@@ -49,7 +49,8 @@ function falskeCaches(start = {}) {
   };
 }
 
-function lavSw({ caches, fetch }) {
+// ur: falsk setTimeout/clearTimeout (standard: de rigtige), så testen selv kan lade tiden gå
+function lavSw({ caches, fetch, ur = { setTimeout, clearTimeout } }) {
   const haendelser = {};
   const self = {
     addEventListener: (type, fn) => { haendelser[type] = fn; },
@@ -58,9 +59,10 @@ function lavSw({ caches, fetch }) {
     clients: { claim: async () => {} },
     skipWaiting: async () => {},
   };
-  const ctx = vm.createContext({ self, caches, fetch, Request: SwRequest, Response, URL, console });
-  vm.runInContext(KILDE + '\n;globalThis.__FILER = FILER; globalThis.__VERSION = VERSION; globalThis.__INDHOLD = typeof INDHOLD === \'undefined\' ? undefined : INDHOLD;', ctx);
-  return { haendelser, FILER: ctx.__FILER, VERSION: ctx.__VERSION, INDHOLD: ctx.__INDHOLD };
+  const ctx = vm.createContext({ self, caches, fetch, Request: SwRequest, Response, URL, AbortController, console, setTimeout: ur.setTimeout, clearTimeout: ur.clearTimeout });
+  vm.runInContext(KILDE + '\n;globalThis.__FILER = FILER; globalThis.__VERSION = VERSION; globalThis.__INDHOLD = typeof INDHOLD === \'undefined\' ? undefined : INDHOLD;'
+    + ' globalThis.__LYD = typeof LYD === \'undefined\' ? undefined : LYD; globalThis.__LYD_CACHE = typeof LYD_CACHE === \'undefined\' ? undefined : LYD_CACHE;', ctx);
+  return { haendelser, FILER: ctx.__FILER, VERSION: ctx.__VERSION, INDHOLD: ctx.__INDHOLD, LYD: ctx.__LYD, LYD_CACHE: ctx.__LYD_CACHE };
 }
 
 function haendelse(req) {
@@ -103,7 +105,8 @@ function indholdAf(filer) {
 }
 
 // Lydfilerne (lyd/<ret>/<navn>.mp3) står ikke i FILER (de gemmes, når de spilles), men de er også cache først.
-// Derfor tæller de med i INDHOLD: en ny udgave af en lydfil skal også give en ny VERSION
+// Derfor har de deres eget tal (LYD) og deres egen cache: en ny udgave af en lydfil giver en ny LYD_CACHE, og en ny
+// udgave af appen (INDHOLD) sletter ikke den lyd, der allerede er gemt
 function lydfiler() {
   const ud = [];
   for (const d of fs.readdirSync(path.join(ROD, 'lyd'), { withFileTypes: true })) {
@@ -116,19 +119,29 @@ function lydfiler() {
 // app.js, js/*.js, grafikken osv. er «cache først»: kun en ny VERSION får dem ud til en enhed, der allerede har appen
 test('INDHOLD i sw.js passer til filerne, og VERSION følger med', () => {
   const { FILER, VERSION, INDHOLD } = lavSw({ caches: falskeCaches(), fetch: async () => ok('') });
-  const nu = indholdAf([...FILER, ...lydfiler()]);
+  const nu = indholdAf(FILER);
   assert.equal(INDHOLD, nu, 'filerne er ændret: sæt INDHOLD i sw.js til \'' + nu + '\' (så skifter VERSION, og enhederne henter den nye udgave)');
   assert.equal(VERSION, 'kog-' + INDHOLD, 'VERSION skal være \'kog-\' + INDHOLD');
 });
 
-test('activate sletter kun gamle «kog-»-caches', async () => {
-  const caches = falskeCaches({ 'mat-2026-10-14-v163': {}, 'lego-v3': {}, 'kog-2026-01-01-v0': {}, 'andet': {} });
-  const { haendelser, VERSION } = lavSw({ caches, fetch: async () => ok('') });
+test('LYD i sw.js passer til lydfilerne, og LYD_CACHE følger med', () => {
+  const { LYD, LYD_CACHE, VERSION } = lavSw({ caches: falskeCaches(), fetch: async () => ok('') });
+  const nu = indholdAf(lydfiler());
+  assert.equal(LYD, nu, 'lydfilerne er ændret: sæt LYD i sw.js til \'' + nu + '\' (så får lyden en ny cache, og enhederne henter den nye lyd)');
+  assert.equal(LYD_CACHE, 'kog-lyd-' + LYD, 'LYD_CACHE skal være \'kog-lyd-\' + LYD');
+  assert.notEqual(LYD_CACHE, VERSION);
+});
+
+test('activate sletter kun gamle «kog-»-caches og beholder lyden, så længe lydfilerne er de samme', async () => {
+  const caches = falskeCaches({ 'mat-2026-10-14-v163': {}, 'lego-v3': {}, 'kog-2026-01-01-v0': {}, 'kog-lyd-gammel': {}, 'andet': {} });
+  const { haendelser, VERSION, LYD_CACHE } = lavSw({ caches, fetch: async () => ok('') });
   await caches.open(VERSION);
+  await (await caches.open(LYD_CACHE)).put(SCOPE + 'lyd/pandekager/1.mp3', ok('lyd'));
   const h = haendelse(null);
   haendelser.activate(h);
   await Promise.all(h.ventet);
-  assert.deepEqual((await caches.keys()).sort(), ['andet', 'lego-v3', 'mat-2026-10-14-v163', VERSION].sort());
+  assert.deepEqual((await caches.keys()).sort(), ['andet', 'lego-v3', 'mat-2026-10-14-v163', VERSION, LYD_CACHE].sort());
+  assert.ok(await (await caches.open(LYD_CACHE)).match(SCOPE + 'lyd/pandekager/1.mp3'), 'den gemte lyd skal være der endnu');
 });
 
 test('install gemmer alle filer — eller ingen, hvis én mangler', async () => {
@@ -198,8 +211,8 @@ test('lydfilerne gemmes hele, når de spilles, og Safaris bidder (Range) skæres
   const hentet = [];
   let net = true;
   const caches = falskeCaches();
-  const sw = lavSw({ caches, fetch: async (req) => {
-    hentet.push({ url: absolut(req), range: typeof req === 'string' ? null : req.headers.get('range') });
+  const sw = lavSw({ caches, fetch: async (req, init = {}) => {
+    hentet.push({ url: absolut(req), range: typeof req === 'string' ? null : req.headers.get('range'), cache: init.cache, signal: !!init.signal });
     if (!net) throw new TypeError('offline');
     return absolut(req) === fil ? new Response(indhold, { status: 200, headers: { 'Content-Type': 'audio/mpeg' } }) : new Response('', { status: 404 });
   } });
@@ -212,12 +225,13 @@ test('lydfilerne gemmes hele, når de spilles, og Safaris bidder (Range) skæres
     return { status: svar.status, range: svar.headers.get('content-range'), data: [...new Uint8Array(await svar.arrayBuffer())] };
   };
 
-  // Første tryk: Safari beder om de første 2 byte. Nettet spørges om hele filen, og den gemmes
+  // Første tryk: Safari beder om de første 2 byte. Nettet spørges om hele filen (uden HTTP-cachen), og den gemmes
   let s = await spil('bytes=0-1');
   assert.deepEqual([s.status, s.range, s.data], [206, 'bytes 0-1/10', [0x49, 0x44]]);
-  assert.deepEqual(hentet, [{ url: fil, range: null }], 'nettet skal spørges om hele filen, uden Range');
-  const gemt = await (await caches.open(sw.VERSION)).match(fil);
-  assert.equal((await gemt.arrayBuffer()).byteLength, 10, 'hele filen skal ligge i cachen');
+  assert.deepEqual(hentet, [{ url: fil, range: null, cache: 'no-cache', signal: true }], 'nettet skal spørges om hele filen, uden Range, uden HTTP-cachen og med en tidsgrænse');
+  const gemt = await (await caches.open(sw.LYD_CACHE)).match(fil);
+  assert.equal((await gemt.arrayBuffer()).byteLength, 10, 'hele filen skal ligge i lydens cache');
+  assert.equal(await (await caches.open(sw.VERSION)).match(fil), undefined, 'lyden ligger ikke i appens cache (den slettes ved hver ny udgave)');
 
   // Resten kommer fra cachen, også uden net
   net = false;
@@ -225,17 +239,57 @@ test('lydfilerne gemmes hele, når de spilles, og Safaris bidder (Range) skæres
   assert.deepEqual([s.status, s.range, s.data], [206, 'bytes 2-9/10', [0x33, 1, 2, 3, 4, 5, 6, 7]]);
   s = await spil('bytes=-3');
   assert.deepEqual([s.status, s.range, s.data], [206, 'bytes 7-9/10', [5, 6, 7]]);
+  s = await spil('bytes=-30');
+  assert.deepEqual([s.status, s.range, s.data.length], [206, 'bytes 0-9/10', 10]);
   s = await spil('bytes=8-99');
   assert.deepEqual([s.status, s.range, s.data], [206, 'bytes 8-9/10', [6, 7]]);
+  // RFC 9110, 14.1: enheden kendes uden forskel på store og små bogstaver
+  s = await spil('Bytes=0-1');
+  assert.deepEqual([s.status, s.range, s.data], [206, 'bytes 0-1/10', [0x49, 0x44]]);
   s = await spil(null);
   assert.deepEqual([s.status, s.data.length], [200, 10]);
-  s = await spil('bytes=10-');
-  assert.deepEqual([s.status, s.range], [416, 'bytes */10']);
+  // Gyldig, men efter filens slutning: 416
+  for (const r of ['bytes=10-', 'bytes=10-20', 'bytes=-0']) {
+    s = await spil(r);
+    assert.deepEqual([s.status, s.range], [416, 'bytes */10'], r);
+  }
+  // Kan ikke læses (anden enhed, flere intervaller, slut før start, ikke tal): hele filen som 200 (RFC 9110, 14.2)
+  for (const r of ['items=0-1', 'bytes=0-1,4-5', 'bytes=5-2', 'bytes=abc', 'bytes=-', 'bytes 0-1', '']) {
+    s = await spil(r || ' ');
+    assert.deepEqual([s.status, s.range, s.data.length], [200, null, 10], JSON.stringify(r));
+  }
   assert.equal(hentet.length, 1, 'kun det første tryk må gå til nettet');
 
   // En fil, der ikke findes (404), gemmes ikke
   net = true;
   s = await spil('bytes=0-1', 'lyd/pandekager/99.mp3');
   assert.equal(s.status, 404);
-  assert.equal(await (await caches.open(sw.VERSION)).match(SCOPE + 'lyd/pandekager/99.mp3'), undefined);
+  assert.equal(await (await caches.open(sw.LYD_CACHE)).match(SCOPE + 'lyd/pandekager/99.mp3'), undefined);
+});
+
+// Wifi uden internet: nettet svarer aldrig. Efter HENT_MS afbrydes hentningen, så lydelementet får en fejl, og tale.js
+// tager iPad-stemmen (før ventede den, til Safari selv gav op)
+test('en lydfil, nettet ikke svarer på, afbrydes efter 4 sekunder', async () => {
+  const ure = [];
+  const ur = { setTimeout: (fn, ms) => { ure.push({ fn, ms, stoppet: false }); return ure.length; }, clearTimeout: (id) => { if (ure[id - 1]) ure[id - 1].stoppet = true; } };
+  const sw = lavSw({ caches: falskeCaches(), ur, fetch: (req, init = {}) => new Promise((_, nej) => {
+    init.signal.addEventListener('abort', () => nej(new DOMException('afbrudt', 'AbortError')));
+  }) });
+  const h = haendelse(new SwRequest('lyd/pandekager/1.mp3', { headers: { Range: 'bytes=0-1' } }));
+  sw.haendelser.fetch(h);
+  await new Promise((r) => setImmediate(r));
+  assert.equal(ure.length, 1, 'der skal være et ur på hentningen');
+  assert.equal(ure[0].ms, 4000);
+  ure[0].fn();
+  await assert.rejects(h.svar, /afbrudt/);
+  assert.equal(ure[0].stoppet, true, 'uret skal stoppes bagefter');
+
+  // Et svar i tide stopper uret, så resten af filen ikke skæres over
+  const ure2 = [];
+  const ur2 = { setTimeout: (fn, ms) => { ure2.push({ fn, ms, stoppet: false }); return ure2.length; }, clearTimeout: (id) => { if (ure2[id - 1]) ure2[id - 1].stoppet = true; } };
+  const sw2 = lavSw({ caches: falskeCaches(), ur: ur2, fetch: async () => new Response(new Uint8Array([1, 2, 3]), { status: 200 }) });
+  const h2 = haendelse(new SwRequest('lyd/pandekager/1.mp3'));
+  sw2.haendelser.fetch(h2);
+  assert.equal((await h2.svar).status, 200);
+  assert.equal(ure2[0].stoppet, true, 'uret skal stoppes, når svaret er kommet');
 });

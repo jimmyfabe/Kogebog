@@ -797,9 +797,11 @@ async function heleVejen(browser, skaerm) {
       const bid = await side.evaluate(async (fil) => {
         if (!navigator.serviceWorker.controller) return { styret: false };
         const r = await fetch('lyd/' + fil, { headers: { Range: 'bytes=0-1' } });
-        const ud = { styret: true, status: r.status, omraade: r.headers.get('Content-Range'), laengde: (await r.arrayBuffer()).byteLength, gemt: 0 };
+        const ud = { styret: true, status: r.status, omraade: r.headers.get('Content-Range'), laengde: (await r.arrayBuffer()).byteLength, gemt: 0, cache: null };
         for (let i = 0; i < 20 && !ud.gemt; i++) {
-          const gemt = await (await caches.open((await caches.keys())[0])).match('lyd/' + fil);
+          // Lyden ligger i sin egen cache («kog-lyd-…»), som en ny udgave af appen ikke sletter
+          ud.cache = (await caches.keys()).find((k) => k.startsWith('kog-lyd-')) || null;
+          const gemt = ud.cache && await (await caches.open(ud.cache)).match('lyd/' + fil);
           if (gemt) ud.gemt = (await gemt.arrayBuffer()).byteLength;
           else await new Promise((v) => setTimeout(v, 100));
         }
@@ -810,7 +812,7 @@ async function heleVejen(browser, skaerm) {
       else {
         tjek(bid.status === 206 && bid.omraade === 'bytes 0-1/' + stoerrelse && bid.laengde === 2,
           n + ': lyd med Range: bytes=0-1 skal give 206 og bytes 0-1/' + stoerrelse + ', fik ' + JSON.stringify(bid));
-        tjek(bid.gemt === stoerrelse, n + ': hele lydfilen (' + stoerrelse + ' bytes) skal være gemt, fik ' + bid.gemt);
+        tjek(bid.gemt === stoerrelse, n + ': hele lydfilen (' + stoerrelse + ' bytes) skal være gemt i «kog-lyd-…», fik ' + bid.gemt + ' i ' + bid.cache);
       }
     }
   }

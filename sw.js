@@ -2,11 +2,16 @@
    Samme origin som Lystårnet («mat-») og LEGO («lego-»): denne fil rører KUN caches, der starter med «kog-».
    Opskrifterne (opskrifter/*.json og lyd/liste.json) hentes netværk først, så en rettet opskrift slår igennem;
    alt andet er cache først, så en ændret fil kun når ud til enhederne, hvis cachens navn (VERSION) skifter.
-   Derfor er VERSION bygget af INDHOLD: et tal for alle FILER og lydfilerne. test/test-sw.js tjekker, at FILER er komplet,
-   og fejler, når en fil er ændret. Fejlbeskeden viser den nye værdi; testen ændrer ikke sw.js, så den sættes her i hånden. */
+   Derfor er VERSION bygget af INDHOLD: et tal for alle FILER. Lydfilerne ligger i deres egen cache (LYD_CACHE, bygget af
+   LYD: et tal for lydfilerne), så en ændring i appen ikke sletter den lyd, iPad'en allerede har gemt.
+   test/test-sw.js tjekker, at FILER er komplet, og fejler, når en fil er ændret. Fejlbeskeden viser den nye værdi;
+   testen ændrer ikke sw.js, så den sættes her i hånden. */
 const PRAEFIKS = 'kog-';
-const INDHOLD = 'e109b4f9d8cd2c77'; // sha256 (16 tegn) af FILER og lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = 'c37261a31a3a7cca'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
+const LYD = '38273bc13d65df02'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
+const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
+const HENT_MS = 4000; // så længe venter en lydfil på svar fra nettet (wifi uden internet), før iPad-stemmen tager over
 const FILER = [
   './',
   'index.html',
@@ -85,9 +90,10 @@ self.addEventListener('install', (e) => {
 
 self.addEventListener('activate', (e) => {
   e.waitUntil((async () => {
-    // Kun vores egne, gamle udgaver. Lystårnets «mat-…» og LEGO's «lego-…» lader vi være.
+    // Kun vores egne, gamle udgaver. Lystårnets «mat-…» og LEGO's «lego-…» lader vi være, og lyden beholdes,
+    // så længe lydfilerne er de samme (LYD_CACHE).
     const navne = await caches.keys();
-    await Promise.all(navne.filter((n) => n.startsWith(PRAEFIKS) && n !== VERSION).map((n) => caches.delete(n)));
+    await Promise.all(navne.filter((n) => n.startsWith(PRAEFIKS) && n !== VERSION && n !== LYD_CACHE).map((n) => caches.delete(n)));
     await self.clients.claim();
   })());
 });
@@ -127,14 +133,24 @@ async function cacheFoerst(e, req) {
 }
 
 // Lydfilerne (Røst-stemmen, lyd/<ret>/<navn>.mp3) står ikke i FILER: de er ca. 8 MB, 18 gange resten af appen, og
-// hentes derfor først, når de spilles (cache først som resten). INDHOLD regnes også af dem (test/test-sw.js), så en ny
-// udgave af en lydfil giver en ny VERSION. Safari beder om lyd i bidder (Range: bytes=0-1), og et svar med en bid (206)
-// kan ikke gemmes i en cache. Derfor hentes og gemmes altid hele filen, og bidden skæres ud af den.
+// hentes derfor først, når de spilles (cache først som resten). De gemmes i LYD_CACHE, som kun skifter navn, når
+// lydfilerne ændres (LYD, test/test-sw.js), så en ny udgave af appen ikke sletter lyden. Safari beder om lyd i bidder
+// (Range: bytes=0-1), og et svar med en bid (206) kan ikke gemmes i en cache. Derfor hentes og gemmes altid hele filen,
+// og bidden skæres ud af den.
 async function lyd(e, req) {
-  const cache = await caches.open(VERSION);
+  const cache = await caches.open(LYD_CACHE);
   let svar = await cache.match(req.url, { ignoreSearch: true });
   if (!svar) {
-    svar = await fetch(req.url); // uden Range: hele filen. Uden net: fejl, og tale.js tager iPad-stemmen
+    // Uden Range: hele filen. «no-cache»: en ny udgave tages ikke fra browserens HTTP-cache. Svarer nettet ikke inden for
+    // HENT_MS (wifi uden internet), afbrydes hentningen, og tale.js tager iPad-stemmen. Uret stopper ved svarets
+    // første del, så en langsom, men levende forbindelse ikke skærer filen over
+    const afbryd = new AbortController();
+    const ur = setTimeout(() => afbryd.abort(), HENT_MS);
+    try {
+      svar = await fetch(req.url, { cache: 'no-cache', signal: afbryd.signal });
+    } finally {
+      clearTimeout(ur);
+    }
     if (svar.status !== 200) return svar;
     e.waitUntil(cache.put(req.url, svar.clone()).catch(() => {}));
   }
@@ -142,15 +158,19 @@ async function lyd(e, req) {
   return omraade ? bid(svar, omraade) : svar;
 }
 
+// RFC 9110, afsnit 14: en Range, der ikke kan læses (en anden enhed end bytes, flere intervaller, «bytes=5-2»), ignoreres,
+// og hele filen sendes (200). Enheden kendes uden forskel på store og små bogstaver («Bytes=0-1» er en bid).
+// En gyldig bid, der ligger efter filens slutning («bytes=10-» af 10 byte, «bytes=-0»), giver 416
 async function bid(svar, omraade) {
+  const m = /^bytes=(\d*)-(\d*)$/i.exec(omraade.trim());
+  if (!m || (m[1] === '' && m[2] === '') || (m[1] !== '' && m[2] !== '' && Number(m[2]) < Number(m[1]))) return svar;
   const data = await svar.arrayBuffer();
   const n = data.byteLength;
-  const m = /^bytes=(\d*)-(\d*)$/.exec(omraade.trim());
-  let fra = -1;
-  let til = -1;
-  if (m && m[1] !== '') { fra = Number(m[1]); til = m[2] === '' ? n - 1 : Math.min(Number(m[2]), n - 1); }
-  else if (m && m[2] !== '') { fra = Math.max(0, n - Number(m[2])); til = n - 1; } // «bytes=-500»: de sidste 500
-  if (fra < 0 || fra >= n || fra > til) return new Response(null, { status: 416, headers: { 'Content-Range': 'bytes */' + n } });
+  let fra;
+  let til = n - 1;
+  if (m[1] !== '') { fra = Number(m[1]); if (m[2] !== '') til = Math.min(Number(m[2]), n - 1); }
+  else fra = Number(m[2]) > 0 ? Math.max(0, n - Number(m[2])) : n; // «bytes=-500»: de sidste 500
+  if (fra >= n) return new Response(null, { status: 416, headers: { 'Content-Range': 'bytes */' + n } });
   return new Response(data.slice(fra, til + 1), {
     status: 206,
     headers: {
