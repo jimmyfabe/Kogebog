@@ -26,6 +26,7 @@ const ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const ISO_RE = /^P(?:\d+D)?(?:T(?:\d+H)?(?:\d+M)?(?:\d+S)?)?$/;
 const MAKS_TIMER_SEK = 4 * 3600;
 const BLANDER = ['roere', 'haelde', 'piske']; // verber, der blander en ingrediens i dejen eller farsen
+const HAENDER_I_DEJ = ['aelte', 'rulle', 'kagerulle']; // verber, hvor hænderne rører dejen eller farsen
 // Ord i trinteksten, der betyder kniv, rivejern eller varme. Hele ord (ikke «bagepapir», «rivejern», «kogebog» eller
 // «knivspids»), men «ovn» overalt. Ikke «varm» og «brun»: de står i «en varm skive» og «brun farin»
 const ORDVAGT = /(?<!\p{L})(riv|bag|steg|kog(?:e|er|ende|t)?|hak|skær(?:er)?|kniv(?!spids)\p{L}*|komfur\p{L}*|kogeplade\p{L}*|smelt|skræl)(?!\p{L})|ovn/iu;
@@ -221,17 +222,18 @@ export function valider(rod = ROD) {
             else if (!retIkoner.has(ik)) f(hvor + ': ikonet «' + ik + '» er ikke blandt rettens ingredienser');
           }
         }
-        // Råt kød og æg. Dej eller fars med noget råt i er først indarbejdet efter æltningen: et «aelte»-trin efter et trin,
-        // der rører, hælder eller pisker det rå i, rører det rå igen, også selvom hænderne er vasket imellem
+        // Råt kød og æg. Dej eller fars med noget råt i er først indarbejdet efter æltningen: et trin, der ælter, former eller
+        // ruller dejen ud efter et trin, der rører, hælder eller pisker det rå i, rører det rå igen, også selvom hænderne er
+        // vasket imellem
         const egneRaa = (Array.isArray(st.ikoner) ? st.ikoner : []).filter((ik) => RAA_IKONER.includes(ik));
         let raa = egneRaa;
         let hvorfra = '';
-        if (st.verbum === 'aelte' && raaDej) {
+        if (HAENDER_I_DEJ.includes(st.verbum) && raaDej) {
           raa = [...new Set([...egneRaa, ...raaDej.ikoner])];
-          hvorfra = ' (dejen med ' + liste(raaDej.ikoner) + ' fra trin ' + raaDej.trin + ' er først indarbejdet efter æltningen)';
+          hvorfra = ' (dejen med ' + liste(raaDej.ikoner) + ' fra trin ' + raaDej.trin + ' er stadig rå)';
         }
         if (st.verbum === 'aelte') raaDej = null;
-        if (BLANDER.includes(st.verbum) && egneRaa.length) raaDej = { trin: i + 1, ikoner: egneRaa };
+        if (BLANDER.includes(st.verbum) && egneRaa.length) raaDej = { trin: i + 1, ikoner: [...new Set([...(raaDej?.ikoner ?? []), ...egneRaa])] };
         const vask = trin.findIndex((x, k) => k > i && x && x.tumbi && x.tumbi.verbum === 'vaske-haender');
         if (raa.length && vask < 0) {
           f(hvor + ': rører råt kød eller æg (' + liste(raa) + ')' + hvorfra + ', men der kommer ikke et «vaske-haender»-trin bagefter');

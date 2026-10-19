@@ -259,9 +259,24 @@ test('manglende felter og for lange sætninger', () => {
   forventFejl('opskrifter/koedsovs.json', (d) => { d.recipeInstructions[3].tumbi.farve = 'rød'; }, 'trin 4: ukendt felt «tumbi.farve»');
 });
 
+// Frikadeller trin 12 former farsen, som har både kød og æg i (trin 8 og 9). Uden vasken i trin 13 meldes begge
 test('råt kød uden «vask hænderne» bagefter', () => {
   forventFejl('opskrifter/frikadeller.json', (d) => { d.recipeInstructions = d.recipeInstructions.filter((s, i) => i !== 12); },
-    'rører råt kød eller æg (koed), men der kommer ikke et «vaske-haender»-trin bagefter');
+    'trin 12: rører råt kød eller æg (koed, aeg) (dejen med koed, aeg fra trin 9 er stadig rå), men der kommer ikke et «vaske-haender»-trin bagefter');
+});
+
+// At forme farsen eller rulle dejen ud rører det rå lige så meget som at ælte den (code review 19-10).
+// Tunfrikadeller: hænderne vaskes mellem æggene (trin 8) og formningen, og bagefter er der ingen vask
+test('fars og dej med råt æg: hænderne vaskes efter formningen, ikke før', () => {
+  for (const v of ['rulle', 'kagerulle']) {
+    forventFejl('opskrifter/tunfrikadeller.json', (d) => {
+      const r = d.recipeInstructions;
+      const form = r.findIndex((s) => s.tumbi.verbum === 'rulle');
+      r[form].tumbi.verbum = v;
+      const [vask] = r.splice(form + 1, 1);
+      r.splice(form, 0, vask);
+    }, 'trin 10: rører råt kød eller æg (aeg) (dejen med aeg fra trin 8 er stadig rå), men der kommer ikke et «vaske-haender»-trin bagefter');
+  }
 });
 
 test('andre ingredienser mellem råt kød/æg og håndvasken', () => {
