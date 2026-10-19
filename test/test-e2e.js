@@ -1044,7 +1044,7 @@ async function timere(browser, skaerm) {
   const gemt = await side.evaluate(() => JSON.parse(localStorage.getItem('kog-v1')).timer);
   tjek(gemt && gemt.nr === 8, n + ': «Start timer» på trin 10 må ikke slette timeren på trin 8 (gemt: ' + JSON.stringify(gemt) + ')');
   const sagt = await sidsteTale(side);
-  tjek(sagt.includes('trin 8'), n + ': trykket skal sige, at der kører en timer på trin 8 (sagde «' + sagt + '»)');
+  tjek(sagt.includes(tilTale('trin 8')), n + ': trykket skal sige, at der kører en timer på trin 8 (sagde «' + sagt + '»)');
   tjek((await side.locator('.timer').first().textContent()).includes('trin 8'), n + ': trin 10 skal vise, at timeren på trin 8 kører');
   await tjekLayout(side, n + ' trin 10 med timer på trin 8', { knapperSes: true });
   await foto(side, n + '-timer-optaget');
