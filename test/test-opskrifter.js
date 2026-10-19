@@ -26,8 +26,9 @@ const ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const ISO_RE = /^P(?:\d+D)?(?:T(?:\d+H)?(?:\d+M)?(?:\d+S)?)?$/;
 const MAKS_TIMER_SEK = 4 * 3600;
 const BLANDER = ['roere', 'haelde', 'piske']; // verber, der blander en ingrediens i dejen eller farsen
-// Ord i trinteksten, der betyder kniv, rivejern eller varme. Hele ord (ikke «bagepapir» eller «rivejern»), men «ovn» overalt
-const ORDVAGT = /(?<!\p{L})(riv|bag|steg|kog|hak|skær)(?!\p{L})|ovn/iu;
+// Ord i trinteksten, der betyder kniv, rivejern eller varme. Hele ord (ikke «bagepapir», «rivejern», «kogebog» eller
+// «knivspids»), men «ovn» overalt. Ikke «varm» og «brun»: de står i «en varm skive» og «brun farin»
+const ORDVAGT = /(?<!\p{L})(riv|bag|steg|kog(?:e|er|ende|t)?|hak|skær(?:er)?|kniv(?!spids)\p{L}*|komfur\p{L}*|kogeplade\p{L}*|smelt|skræl)(?!\p{L})|ovn/iu;
 // Redaktionelle noter («Kilden siger …», «(skøn)») står i «tumbi.kilde», ikke i det, der vises og læses op i køkkenet.
 // Hele ord: «kildevand» og «skønt» tæller ikke
 const REDAKTION = /(?<!\p{L})(kilden?s?|skøn)(?!\p{L})/iu;

@@ -169,15 +169,28 @@ test('trinene med de nye verber', () => {
   }
 });
 
-// Ordvagten: nævner trinteksten kniv, rivejern eller varme (riv, bag, steg, kog, hak, skær, ovn), er det et voksen-trin,
+// Ordvagten: nævner trinteksten kniv, rivejern eller varme (riv, bag, steg, kog/koge/kogende, hak, skær, kniv, komfur,
+// kogeplade, smelt, skræl, ovn), er det et voksen-trin,
 // uanset hvilket verbum trinnet har fået
 test('trinteksten om kniv eller varme kræver et voksen-trin', () => {
   const tekst = (t) => (d) => { d.recipeInstructions[2].text = t; };
   forventFejl('opskrifter/pandekager.json', tekst('Tænd ovnen.'), 'trin 3: teksten nævner «ovn»');
   forventFejl('opskrifter/pandekager.json', tekst('Riv lidt citronskal.'), 'trin 3: teksten nævner «Riv»');
   forventFejl('opskrifter/pandekager.json', tekst('Hak melet fint.'), 'trin 3: teksten nævner «Hak»');
-  // Ordene inde i andre ord tæller ikke: bagepapir, rivejern, kogebog
+  // Ikke kun bydeformen: kogende vand, kniven, komfuret, smelte og skrælle (code review 19-10)
+  forventFejl('opskrifter/pandekager.json', tekst('Lad vandet koge.'), 'trin 3: teksten nævner «koge»');
+  forventFejl('opskrifter/pandekager.json', tekst('Hæld det kogende vand fra.'), 'trin 3: teksten nævner «kogende»');
+  forventFejl('opskrifter/pandekager.json', tekst('Brug kniven forsigtigt.'), 'trin 3: teksten nævner «kniven»');
+  forventFejl('opskrifter/pandekager.json', tekst('Smelt smørret.'), 'trin 3: teksten nævner «Smelt»');
+  forventFejl('opskrifter/pandekager.json', tekst('Skræl kartoflerne.'), 'trin 3: teksten nævner «Skræl»');
+  forventFejl('opskrifter/pandekager.json', tekst('Tænd komfuret.'), 'trin 3: teksten nævner «komfuret»');
+  // Ordene inde i andre ord tæller ikke: bagepapir, rivejern, kogebog, skærebræt
   forventGyldig('opskrifter/pandekager.json', tekst('Læg bagepapir ved rivejernet.'));
+  forventGyldig('opskrifter/pandekager.json', tekst('Læg kogebogen ved skærebrættet.'));
+  // «varm», «brun» og «knivspids» er ikke kniv eller varme: en varm skive brød, brun farin, en knivspids salt
+  forventGyldig('opskrifter/pandekager.json', tekst('Smag en varm skive.'));
+  forventGyldig('opskrifter/pandekager.json', tekst('Mål 1,5 dl brun farin.'));
+  forventGyldig('opskrifter/pandekager.json', tekst('Kom en knivspids salt i.'));
   // Som voksen-trin er det i orden
   forventGyldig('opskrifter/pandekager.json', (d) => {
     d.recipeInstructions[2].text = 'Tænd ovnen.';
