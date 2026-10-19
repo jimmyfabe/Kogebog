@@ -28,16 +28,50 @@ const MAKS_TIMER_SEK = 4 * 3600;
 const BLANDER = ['roere', 'haelde', 'piske']; // verber, der blander en ingrediens i dejen eller farsen
 const HAENDER_I_DEJ = ['aelte', 'rulle', 'kagerulle']; // verber, hvor hænderne rører dejen eller farsen
 const TAGE_UD = ['tage-ud', 'tage-ud-form']; // efter ovnen: en flad plade eller en dyb form
-// Ord i trinteksten, der betyder kniv eller rivejern (KNIV_ORD) eller varme (VARME_ORD). Hele ord (ikke «bagepapir»,
-// «rivejern», «kogebog» eller «knivspids»), men «ovn» overalt. Ikke «varm» og «brun»: de står i «en varm skive» og «brun farin»
-const KNIV_ORD = /(?<!\p{L})(riv|hak|skær(?:er)?|kniv(?!spids)\p{L}*|skræl)(?!\p{L})/iu;
-const VARME_ORD = /(?<!\p{L})(bag|steg|kog(?:e|er|ende|t)?|komfur\p{L}*|kogeplade\p{L}*|smelt)(?!\p{L})|ovn/iu;
+// Ordvagten går efter stammen: hvert ord, der begynder med stammen (eller har den inde i sig, hvor det står), fanges med
+// alle bøjninger («smelte», «skære», «æggeblommer»). En liste over tilladte former mangler altid en form, og så slipper
+// den igennem i stilhed. De få ord, der ikke er kniv, varme eller råt, står som hele ord i UNDTAGELSER. Mangler et ord
+// dér, giver det et falsk fund, som man ser og retter: skriv ordet i UNDTAGELSER med grunden.
+// Kniv og rivejern i trinteksten. «kniv» også inde i ord (brødkniven, køkkenkniven)
+const KNIV_ORD = /(?<!\p{L})(?:riv|hak|skær|skræl)\p{L}*|\p{L}*kniv\p{L}*/giu;
+// Varme i trinteksten. «kog» dækker også «kogeplade». «steg», «kog», «smelt», «komfur» og «ovn» også inde i ord
+// (småkoge, gennemstegt, gaskomfur, bageovnen), «bag» kun forrest (ikke «tilbage»). Ikke «varm» og «brun»: de står i
+// «en varm skive» og «brun farin»
+const VARME_ORD = /(?<!\p{L})bag\p{L}*|\p{L}*(?:steg|kog|smelt|komfur|ovn)\p{L}*/giu;
 // Redaktionelle noter («Kilden siger …», «(skøn)») står i «tumbi.kilde», ikke i det, der vises og læses op i køkkenet.
 // Hele ord: «kildevand», «skønt» og «skønne» tæller ikke
 const REDAKTION = /(?<!\p{L})(kild(?:e|en|es|ens|er|erne)|skøn(?:net|nes|smæssigt)?)(?!\p{L})/iu;
 // Råt kød og æg i en ingredienslinje. Så skal ikonet være et af RAA_IKONER, ellers kræver validatoren ingen håndvask.
+// «æg» kun forrest (ikke «læg» og «vægt»), resten også inde i ord (oksekød, oksefars, stegeflæsk, tigerrejer).
 // Tun (på dåse) og skinke (pålæg) er ikke rå og står ikke her
-const RAA_ORD = /(?<!\p{L})(æg|æggene|ægget|\p{L}*kød|\p{L}*fars|flæsk|kylling\p{L}*|bacon|laks|fisk\p{L}*|rejer)(?!\p{L})/iu;
+const RAA_ORD = /(?<!\p{L})æg\p{L}*|\p{L}*(?:kød|fars|flæsk|kylling|bacon|laks|torsk|fisk|reje|medister)\p{L}*/giu;
+// Hele ord (små bogstaver), som stammerne rammer, men som ikke er kniv, varme eller råt
+const UNDTAGELSER = new Set([
+  // Kniv
+  'knivspids', 'knivspidsen', 'knivspidser', // et mål: «en knivspids salt»
+  'skærebræt', 'skærebrættet', 'hakkebræt', 'hakkebrættet', // brættet skærer ikke
+  'rivejern', 'rivejernet', // redskabet nævnt for sig («Læg rivejernet frem»). At rive er «riv», «river», «rive»
+  'smørekniv', 'smørekniven', // sløv: barnet smører selv (verbet «smoere» har intet krav)
+  'paletkniv', 'paletkniven', // flad og sløv. Vendes der på panden, er det varmen, og den kræver verbet «vende»
+  'hakket', 'hakkede', // allerede hakket («de hakkede tomater»), ligesom «skåret» og «revet», som stammerne ikke rammer
+  'hakkebøf', 'hakkebøffen', 'hakkebøffer', 'hakkebøfferne', // en ret af fars, ikke en kniv
+  // Varme. Ikke «bageplade»: pladen kan være varm
+  'bagepapir', 'bagepapiret', // papiret, ikke ovnen
+  'bagepulver', 'bagepulveret', // en ingrediens («Rør mel og bagepulver forsigtigt i.», blondie trin 10)
+  'baguette', 'baguetten', 'baguetter', 'bagel', 'bagels', // brød, ikke ovnen
+  'kogebog', 'kogebogen', // bogen
+  'bagefter', 'bagved', // tid og sted. «bag» alene (forholdsordet) kan ikke skelnes fra «Bag bollerne.»: falsk fund med vilje
+  'hovne', 'hovner', 'hovnet', 'dovne', 'sovne', // «ovn» inde i ordet: «Lad rosinerne hovne op.»
+  // Råt
+  'ægte', // «ægte vanilje»
+  'kyllingebouillon', 'kyllingefond', 'kødbouillon', 'fiskebouillon', 'fiskefond', 'fiskesauce', // kogt og færdig: ikonet «bouillon»
+]);
+// Det første ord i teksten, som stammen rammer, og som ikke er en undtagelse. Ellers null
+function fund(re, tekst) {
+  if (typeof tekst !== 'string') return null;
+  for (const m of tekst.matchAll(re)) if (!UNDTAGELSER.has(m[0].toLowerCase())) return m;
+  return null;
+}
 const LYD_RE =/^([a-z0-9]+(?:-[a-z0-9]+)*)\/(\d+|navn)\.mp3$/;
 
 const erTekst = (v) => typeof v === 'string' && v.trim().length > 0;
@@ -175,7 +209,7 @@ export function valider(rod = ROD) {
           if (!x || typeof x !== 'object') { f(hvor + ': skal være { "ikon", "maengde" }'); return; }
           if (!Object.hasOwn(INGREDIENSER, x.ikon)) f(hvor + ': ukendt ikon ' + JSON.stringify(x.ikon) + ' — brug et af: ' + liste(Object.keys(INGREDIENSER)));
           else retIkoner.add(x.ikon);
-          const raaOrd = typeof ingr[i] === 'string' && RAA_ORD.exec(ingr[i]);
+          const raaOrd = fund(RAA_ORD, ingr[i]);
           if (raaOrd && !RAA_IKONER.includes(x.ikon)) f(hvor + ': «' + raaOrd[0] + '» er råt kød eller æg, så ikonet skal være ' + RAA_IKONER.map((r) => '"' + r + '"').join(' eller ') + ', fandt ' + JSON.stringify(x.ikon));
           if (typeof x.maengde !== 'string') f(hvor + ': «maengde» skal være en tekst (tom, hvis der ingen mængde er)');
           else if (x.maengde && typeof ingr[i] === 'string' && !ingr[i].startsWith(x.maengde + ' ')) f(hvor + ': mængden «' + x.maengde + '» passer ikke til «' + ingr[i] + '»');
@@ -214,8 +248,8 @@ export function valider(rod = ROD) {
         if (KUN_VARME_HJAELP.includes(st.verbum) && 'voksen_hjaelp' in st && st.voksen_hjaelp !== 'varme') f(hvor + ': verbet «' + st.verbum + '» kan barnet selv. Hjælper den voksne, er det for varmens skyld: brug "voksen_hjaelp": "varme", fandt ' + JSON.stringify(st.voksen_hjaelp));
         // Ordvagten: nævner teksten kniv, rivejern eller varme, er det den voksnes trin, uanset verbet, og hjælpen passer
         // til ordet. «voksen_hjaelp» er én værdi, så et trin med både kniv og varme skal deles i to
-        const kniv = KNIV_ORD.exec(s.text);
-        const varme = VARME_ORD.exec(s.text);
+        const kniv = fund(KNIV_ORD, s.text);
+        const varme = fund(VARME_ORD, s.text);
         const farlig = kniv || varme;
         if (farlig && st.voksen !== true) f(hvor + ': teksten nævner «' + farlig[0] + '» (kniv, rivejern eller varme), så trinnet skal have "voksen": true og «voksen_hjaelp»: «' + s.text + '»');
         else if (kniv && varme) f(hvor + ': teksten nævner både «' + kniv[0] + '» (kniv) og «' + varme[0] + '» (varme), men «voksen_hjaelp» kan kun være én af dem: del trinnet i to: «' + s.text + '»');

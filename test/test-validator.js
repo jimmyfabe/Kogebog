@@ -182,12 +182,12 @@ test('trinene med de nye verber', () => {
   }
 });
 
-// Ordvagten: nævner trinteksten kniv, rivejern eller varme (riv, bag, steg, kog/koge/kogende, hak, skær, kniv, komfur,
-// kogeplade, smelt, skræl, ovn), er det et voksen-trin,
-// uanset hvilket verbum trinnet har fået
+// Ordvagten: nævner trinteksten kniv, rivejern eller varme, er det et voksen-trin, uanset hvilket verbum trinnet har fået.
+// Den går efter stammen (riv, hak, skær, skræl, kniv, bag, steg, kog, smelt, komfur, ovn) og fanger alle bøjninger.
+// Ordene, der ikke er kniv eller varme, står i UNDTAGELSER i test-opskrifter.js
 test('trinteksten om kniv eller varme kræver et voksen-trin', () => {
   const tekst = (t) => (d) => { d.recipeInstructions[2].text = t; };
-  forventFejl('opskrifter/pandekager.json', tekst('Tænd ovnen.'), 'trin 3: teksten nævner «ovn»');
+  forventFejl('opskrifter/pandekager.json', tekst('Tænd ovnen.'), 'trin 3: teksten nævner «ovnen»');
   forventFejl('opskrifter/pandekager.json', tekst('Riv lidt citronskal.'), 'trin 3: teksten nævner «Riv»');
   forventFejl('opskrifter/pandekager.json', tekst('Hak melet fint.'), 'trin 3: teksten nævner «Hak»');
   // Ikke kun bydeformen: kogende vand, kniven, komfuret, smelte og skrælle (code review 19-10)
@@ -197,9 +197,24 @@ test('trinteksten om kniv eller varme kræver et voksen-trin', () => {
   forventFejl('opskrifter/pandekager.json', tekst('Smelt smørret.'), 'trin 3: teksten nævner «Smelt»');
   forventFejl('opskrifter/pandekager.json', tekst('Skræl kartoflerne.'), 'trin 3: teksten nævner «Skræl»');
   forventFejl('opskrifter/pandekager.json', tekst('Tænd komfuret.'), 'trin 3: teksten nævner «komfuret»');
-  // Ordene inde i andre ord tæller ikke: bagepapir, rivejern, kogebog, skærebræt
+  // Bøjninger, som listen over tilladte former manglede (code review 3, 19-10), og sammensatte ord med stammen inde i
+  forventFejl('opskrifter/pandekager.json', tekst('Lad smørret smelte.'), 'trin 3: teksten nævner «smelte»');
+  forventFejl('opskrifter/pandekager.json', tekst('Lad den voksne skære løget.'), 'trin 3: teksten nævner «skære»');
+  forventFejl('opskrifter/pandekager.json', tekst('Lad sovsen småkoge.'), 'trin 3: teksten nævner «småkoge»');
+  forventFejl('opskrifter/pandekager.json', tekst('Brug brødkniven.'), 'trin 3: teksten nævner «brødkniven»');
+  forventFejl('opskrifter/pandekager.json', tekst('Stil den i bageovnen.'), 'trin 3: teksten nævner «bageovnen»');
+  // Undtagelserne: redskabet i sig selv (bagepapir, rivejern, kogebog, skærebræt, smørekniv), et mål (knivspids),
+  // tid (bagefter), det, der allerede er hakket, og «ovn» inde i et andet ord (hovne)
   forventGyldig('opskrifter/pandekager.json', tekst('Læg bagepapir ved rivejernet.'));
   forventGyldig('opskrifter/pandekager.json', tekst('Læg kogebogen ved skærebrættet.'));
+  forventGyldig('opskrifter/pandekager.json', tekst('Læg bagepapir på pladen.'));
+  forventGyldig('opskrifter/pandekager.json', tekst('Lad rosinerne hovne op.'));
+  forventGyldig('opskrifter/pandekager.json', tekst('Smør med smørekniven.'));
+  forventGyldig('opskrifter/pandekager.json', tekst('Kom de hakkede tomater i.'));
+  forventGyldig('opskrifter/pandekager.json', tekst('Vask hænderne bagefter.'));
+  // «bag» som forholdsord kan ikke skelnes fra «og bag dem» (hvidløgsflutes trin 10): et falsk fund med vilje. Skriv «bagved»
+  forventFejl('opskrifter/pandekager.json', tekst('Stil skålen bag gryden.'), 'trin 3: teksten nævner «bag»');
+  forventGyldig('opskrifter/pandekager.json', tekst('Stil skålen bagved gryden.'));
   // «varm», «brun» og «knivspids» er ikke kniv eller varme: en varm skive brød, brun farin, en knivspids salt
   forventGyldig('opskrifter/pandekager.json', tekst('Smag en varm skive.'));
   forventGyldig('opskrifter/pandekager.json', tekst('Mål 1,5 dl brun farin.'));
@@ -222,12 +237,28 @@ test('trinteksten om kniv eller varme kræver den rigtige voksen_hjaelp', () => 
     d.recipeInstructions[2].text = text;
     Object.assign(d.recipeInstructions[2].tumbi, { voksen: true, voksen_hjaelp });
   };
-  forventFejl('opskrifter/pandekager.json', trin3('Tænd ovnen.', 'kniv'), 'trin 3: teksten nævner «ovn» (varme), så «voksen_hjaelp» skal være "varme", fandt "kniv"');
+  forventFejl('opskrifter/pandekager.json', trin3('Tænd ovnen.', 'kniv'), 'trin 3: teksten nævner «ovnen» (varme), så «voksen_hjaelp» skal være "varme", fandt "kniv"');
   forventFejl('opskrifter/pandekager.json', trin3('Hak melet fint.', 'varme'), 'trin 3: teksten nævner «Hak» (kniv eller rivejern), så «voksen_hjaelp» skal være "kniv", fandt "varme"');
   for (const hjaelp of ['kniv', 'varme']) {
     forventFejl('opskrifter/pandekager.json', trin3('Hak smørret, og smelt det.', hjaelp),
       'trin 3: teksten nævner både «Hak» (kniv) og «smelt» (varme), men «voksen_hjaelp» kan kun være én af dem: del trinnet i to');
   }
+});
+
+// «Lad bollerne bage» er ovnen, også med verbet «vente» (code review 3, 19-10): teksten kræver en voksen og varme.
+// Med verbet «bage» skal «tage-ud» komme bagefter. Boller trin 13 er «Bag bollerne i ovnen.», og trin 14 tager pladen ud
+test('en pause, hvor der bages, kræver en voksen og varme', () => {
+  const fil = 'opskrifter/boller.json';
+  const bager = (verbum, voksen) => (d) => {
+    const s = d.recipeInstructions[12];
+    s.text = 'Lad bollerne bage i 12 minutter.';
+    s.tumbi.verbum = verbum;
+    if (!voksen) { delete s.tumbi.voksen; delete s.tumbi.voksen_hjaelp; }
+  };
+  forventFejl(fil, bager('vente', false), 'trin 13: teksten nævner «bage» (kniv, rivejern eller varme), så trinnet skal have "voksen": true');
+  forventGyldig(fil, bager('vente', true));
+  forventGyldig(fil, bager('bage', true));
+  forventFejl(fil, (d) => { bager('bage', true)(d); d.recipeInstructions.splice(13, 1); }, 'trin 13: når tiden i ovnen er gået, tager en voksen det ud');
 });
 
 // Det, der vises og læses op, er til køkkenet. Hvad kilden siger, og hvad der er et skøn, står i «tumbi.kilde»
@@ -350,6 +381,28 @@ test('æg og kød i ingredienserne skal have ikonet koed eller aeg', () => {
     d.tumbi.ingredienser[1].ikon = 'tomat';
     for (const s of d.recipeInstructions) if (s.tumbi.ikoner) s.tumbi.ikoner = s.tumbi.ikoner.filter((x) => x !== 'koed');
   }, 'ingrediens 2: «oksekød» er råt kød eller æg, så ikonet skal være "koed" eller "aeg", fandt "tomat"');
+  // Stammen fanger alle bøjninger og sammensatte ord (code review 3, 19-10): æggeblommer, laksefilet, baconterninger,
+  // og kød, fars, flæsk og rejer inde i ordet
+  forventFejl('opskrifter/pandekager.json', (d) => {
+    d.recipeIngredient[2] = '3 æggeblommer';
+    d.tumbi.ingredienser[2].ikon = 'maelk';
+    for (const s of d.recipeInstructions) if (s.tumbi.ikoner) s.tumbi.ikoner = s.tumbi.ikoner.map((x) => (x === 'aeg' ? 'maelk' : x));
+  }, 'ingrediens 3: «æggeblommer» er råt kød eller æg, så ikonet skal være "koed" eller "aeg", fandt "maelk"');
+  // En ny linje sidst i kødsovsen (ingrediens 13) med et ikon, der ikke er råt. Mængden er tallet og enheden
+  const ny = (linje, ikon) => (d) => {
+    d.recipeIngredient.push(linje);
+    d.tumbi.ingredienser.push({ ikon, maengde: linje.split(' ').slice(0, linje.split(' ').length > 2 ? 2 : 1).join(' ') });
+  };
+  for (const [linje, ord] of [
+    ['200 g laksefilet', 'laksefilet'], ['100 g baconterninger', 'baconterninger'], ['300 g torskefilet', 'torskefilet'],
+    ['200 g tigerrejer', 'tigerrejer'], ['200 g stegeflæsk', 'stegeflæsk'], ['400 g kyllingebryst', 'kyllingebryst'],
+    ['1 stk medisterpølse', 'medisterpølse'], ['500 g oksefars', 'oksefars'], ['2 æggehvider', 'æggehvider'],
+  ]) {
+    forventFejl('opskrifter/koedsovs.json', ny(linje, 'ost'), 'ingrediens 13: «' + ord + '» er råt kød eller æg, så ikonet skal være "koed" eller "aeg", fandt "ost"');
+  }
+  // Undtagelserne: kogt bouillon og fond, fiskesauce og «ægte»
+  for (const linje of ['1 l kyllingebouillon', '1 l kyllingefond', '2 tsk fiskesauce', '1 l fiskefond']) forventGyldig('opskrifter/koedsovs.json', ny(linje, 'bouillon'));
+  forventGyldig('opskrifter/koedsovs.json', ny('1 tsk ægte vanilje', 'sukker'));
 });
 
 // En pause (vente) med råt kød eller æg på hænderne: barnet går fra køkkenet uden at vaske sig.
