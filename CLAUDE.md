@@ -10,8 +10,8 @@ Kør i Git Bash i `D:/Claude/Kogebog`.
 
 | Hvad | Kommando |
 |---|---|
-| Alle node-tests (6 filer, ingen browser) | `node test/koer-alle.js` eller `npm.cmd test` |
-| Én testfil | `node test/test-opskrifter.js` (også grafik og index.json), `test-validator.js`, `test-tid.js`, `test-sw.js`, `test-css.js` (regler i `app.css`, som browseren ikke kan se, fx safe-area), `test-lyd.js` (lydfilerne passer til det, appen siger) |
+| Alle node-tests (7 filer, ingen browser) | `node test/koer-alle.js` eller `npm.cmd test` |
+| Én testfil | `node test/test-opskrifter.js` (også grafik og index.json), `test-validator.js`, `test-tid.js`, `test-sw.js`, `test-css.js` (regler i `app.css`, som browseren ikke kan se, fx safe-area), `test-lyd.js` (lydfilerne passer til det, appen siger), `test-tale.js` (oplæsningen med en falsk iPad: lyd efter et voksen-hold, reserven, uden net) |
 | Lokal server | `py -m http.server 8091 --bind 127.0.0.1 --directory D:/Claude/Kogebog`, og åbn http://127.0.0.1:8091/. Aldrig `file://` |
 | E2E i WebKit (TUNG) | `NODE_PATH=C:/Users/Jimmy/AppData/Roaming/npm/node_modules/@playwright/cli/node_modules bash ~/.claude/tung-koersel.sh "kogebog: e2e" node test/test-e2e.js http://127.0.0.1:8091` |
 | Kun dele af e2e | sæt foran kommandoen: `E2E_DELE=tastatur,timer` og/eller `E2E_SKAERME=ipad,iphone,desktop`. Dele: `hele,print,tastatur,timer,fejl,beroering,former` (`former` = 360 px, 390×844, 744×1133, 768×1024 og iPhones på langs: 844×390, 667×375, 736×414, 812×375, 932×430, og tre smalle desktopvinduer: 901×800, 960×800 og 1024×800). `E2E_FORMER=se-land,land` begrænser `former` til nogle af dem (navnene står i `FORMER` i `test-e2e.js`) |
@@ -30,10 +30,10 @@ Kør i Git Bash i `D:/Claude/Kogebog`.
 | `js/model.js` | Gør en opskrift til det skærmene og printet bruger. Ingen DOM |
 | `js/data.js` | Henter `opskrifter/index.json` og `opskrifter/<id>.json` |
 | `js/katalog.js` | Faste navne: verber, voksen-krav, ingredienser, `MAKS_ORD = 9`, grafik-stier. Nyt verbum eller ingrediens kræver også et billede i `grafik/` |
-| `js/tekst.js`, `js/tid.js` | Rene funktioner, uden DOM: enheder og forkortelser til stemmen, ordtælling, timerens tid |
+| `js/tekst.js`, `js/tid.js` | Rene funktioner, uden DOM: talformen til stemmen (tal som ord, «en»/«et» efter `KOEN`, enheder, brøker, forkortelser), ordtælling, timerens tid |
 | `js/timer.js` | Én timer ad gangen: sluttid, lyd, skærm-lås |
 | `js/replikker.js` | Alt, appen siger, med sin lydfil (`{ tekst, fil }`). `app.js` læser kun op gennem den (`test-lyd.js` tjekker det) |
-| `js/tale.js` | Oplæsning: `lyd/<fil>` (Røst), hvis den står i `lyd/liste.json`, ellers iPad-stemmen (`speechSynthesis`, `da-DK`). Afviser `play()`, tager iPad-stemmen over |
+| `js/tale.js` | Oplæsning: `lyd/<fil>` (Røst), hvis den står i `lyd/liste.json`, ellers iPad-stemmen (`speechSynthesis`, `da-DK`). Afviser `play()`, eller er filen ikke gemt uden net, tager iPad-stemmen over. Ét fælles lydelement, der låses op ved første tryk |
 | `lyd/` | Røst-stemmens mp3 (`lyd/<ret>/<navn>.mp3` og `lyd/faelles/`), `liste.json` (filerne, appen spiller) og `tekster.json` (teksten, hver fil er lavet af; kun til tests) |
 | `vaerktoej/lav-taleliste.js`, `vaerktoej/indsaet-lyd.js` | Listen over alt, appen siger (til Røst), og indsætning af de færdige mp3-filer i `lyd/`. Se «Stemmen» |
 | `js/hold.js` | Knap, der skal holdes inde i 2 s (voksen-trin og print) |
@@ -82,16 +82,17 @@ Al oplæsning er Røst v3 500m fra Alexandra Instituttet (referencestemmen «Nic
 2. `bash ~/.claude/tung-koersel.sh "stemmer/roest: kogebog" bash /d/Stemmer/koer-kogebog.sh 25`, igen og igen, til loggen (`D:/Stemmer/kogebog-500m/koersel-log.txt`) siger «ALT LAVET». Et kald laver ca. 20 replikker på 7 minutter og kan altid genoptages. Kun nye og ændrede tekster laves.
 3. `D:/Stemmer/roest-venv/Scripts/python.exe -I D:/Stemmer/efterbehandl_kogebog.py D:/Stemmer/kogebog-500m/taleliste.json D:/Stemmer/kogebog-500m` finder de mistænkelige (varighed pr. tegn, clipping, lange pauser, modellens tvungne slut) og skriver dem i `mistaenkelige.txt`. Lav dem igen med seed 43 og 44: `… koer-kogebog.sh 25 43 D:/Stemmer/kogebog-500m/mistaenkelige.txt` og samme med `44`.
 4. Samme efterbehandling med `--mp3` til sidst: vælger den bedste udgave, skærer stilheden til 0,15 s, sætter lydstyrken til -23 LUFS (spidser højst -1,5 dBFS) og laver mono mp3 24 kHz 64 kbit/s. Den skriver hvilke filer, der stadig bør lyttes til.
-5. `node vaerktoej/indsaet-lyd.js D:/Stemmer/kogebog-500m` kopierer kun mp3-filer, der er lavet af den tekst, appen siger nu, og skriver `lyd/liste.json` og `lyd/tekster.json`. Sæt så den nye `INDHOLD` i `sw.js` (regel 3).
+5. `node vaerktoej/indsaet-lyd.js D:/Stemmer/kogebog-500m` kopierer kun mp3-filer, der er lavet af den tekst, appen siger nu, og skriver `lyd/liste.json` og `lyd/tekster.json`. Den nævner gamle mp3-filer i `lyd/`, som ingen replik bruger nu; `--ryd` sletter dem. Sæt så den nye `INDHOLD` og `LYD` i `sw.js` (regel 3).
 
-- Lydfilerne gemmes på iPad'en, første gang de spilles (ikke ved installationen: 377 filer på ca. 8 MB, 18 gange resten af appen). Uden net læses en replik, der ikke er spillet før, af iPad-stemmen.
+- **Røst læser cifre og tegn forkert** («130 gram» → «tretnulsnul», «7 + 5 = 12» → «syv procent fem simpel tolv»; talegenkenderen 19-10-2026). `tilTale` i `js/tekst.js` skriver derfor alt ud som ord, og `test-tid.js` fejler, hvis en replik stadig har et ciffer eller et tegn, eller hvis ordet efter 1, ½ eller x,5 ikke står i `KOEN` (så skrives det på listen).
+- Lydfilerne gemmes på iPad'en, første gang de spilles (ikke ved installationen: 377 filer på ca. 8 MB, 18 gange resten af appen), i deres egen cache `kog-lyd-<LYD>`, som en ny udgave af appen ikke sletter. Uden net læses en replik, der ikke er spillet før, af iPad-stemmen med det samme. Svarer nettet ikke inden for 4 s (wifi uden internet), afbryder `sw.js` hentningen, og iPad-stemmen tager over.
 - Safari beder om lyd i bidder (`Range`). `sw.js` gemmer hele filen og skærer bidden ud (en 206 kan ikke gemmes i en cache).
 
 ## Regler
 
 1. **Ingen afhængigheder i appen.** Playwright er kun testværktøj, og `NODE_PATH` peger på den globale installation. Ingen `npm install` uden at spørge Jimmy.
 2. **Kun `textContent`.** Ingen `innerHTML`. CSP i `index.html` og `print.html` tillader kun egne filer (`default-src 'self'`).
-3. **Ændres en fil i `FILER` i `sw.js`** (kode, css, json eller grafik), skal `INDHOLD` følge med. `test/test-sw.js` fejler og viser den nye værdi, men skriver den ikke selv. Sæt den i `sw.js`. Ellers henter iPads ikke den nye udgave. `INDHOLD` er sha256 over stier og indhold, med LF i tekstfiler, så CRLF fra Git på Windows ikke ændrer tallet. Lydfilerne i `lyd/` tæller også med (de står ikke i `FILER`, men gemmes, når de spilles), så nye mp3-filer kræver også en ny `INDHOLD`.
+3. **Ændres en fil i `FILER` i `sw.js`** (kode, css, json eller grafik), skal `INDHOLD` følge med. `test/test-sw.js` fejler og viser den nye værdi, men skriver den ikke selv. Sæt den i `sw.js`. Ellers henter iPads ikke den nye udgave. `INDHOLD` er sha256 over stier og indhold, med LF i tekstfiler, så CRLF fra Git på Windows ikke ændrer tallet. Lydfilerne i `lyd/` har deres eget tal, `LYD` (de står ikke i `FILER`, men gemmes, når de spilles), så nye mp3-filer kræver en ny `LYD`; testen viser også den.
 4. **Cache-præfiks `kog-`.** `sw.js` rører kun `kog-`-caches. Lystårnet (`mat-`) og LEGO (`lego-`) ligger på samme origin.
 5. **`kog-v1` i `localStorage`** er `{ v, sidste, timer }`. Ændres formatet, skal der skrives en migrering, så gemte data ikke forsvinder (Jimmys regel). Koden nulstiller i dag ved en anden version (`rens()` i `lager.js`). Det er ikke en migrering, så afklar det før første formatændring.
 6. **Ingen persondata om børn** i filer, prompter eller commit-beskeder. Skriv «børn ca. 5-9 år». Ingen fotos af børn.
@@ -105,7 +106,7 @@ Al oplæsning er Røst v3 500m fra Alexandra Instituttet (referencestemmen «Nic
 - **`\b` i regex kender kun a-z.** «1 løg» blev til «1 literøg». Brug `\p{L}` med `u`-flaget (`tekst.js`). Testen ligger i `test-tid.js`.
 - **`obj[navn]` finder også arvede egenskaber.** Et opslag i `VERBER` med `constructor` eller `toString` gav et objekt og slap igennem. Brug `Object.hasOwn` (validatoren).
 - **Skærm-låsen kan forsvinde uden `release`**, fx når fanen skjules. Tjek `released` ved næste tryk, og bed om låsen igen (`timer.js`).
-- **Lyd på iPad:** brugeraktivering tæller ved `pointerup`, `touchend`, `click` og `keydown`, ikke ved `pointerdown` med en finger. Lyden klargøres ved første tryk efter en genindlæsning (`timer.js`). Ikke afprøvet på iPad.
+- **Lyd på iPad:** brugeraktivering tæller ved `pointerup`, `touchend`, `click` og `keydown`, ikke ved `pointerdown` med en finger. Lyden klargøres ved første tryk efter en genindlæsning (`timer.js`). Et nyt lydelement kræver sit eget tryk, så `tale.js` genbruger ét element, der låses op (`load()`) ved første tryk, og siger en tavs ytring, så iPad-stemmen også kan tale efter et voksen-hold (det lykkes i `requestAnimationFrame`, uden tryk). Er det allerførste tryk efter en genindlæsning et voksen-hold, er det trin tavst. Ikke afprøvet på iPad.
 - **`scrollWidth` fanger ikke overløb,** fordi `body` har `overflow-x: hidden`. e2e måler elementernes placering i stedet (`tjekLayout`).
 - **En holdt tast gentager handlingen,** medmindre der tjekkes `e.repeat` (`app.js`).
 - **Tab i rettens bund følger med vilje ikke skærmen** fra 901 px og på lave skærme på langs: man ser print, Start forfra, Fortsæt, men Tab går Fortsæt → print → Start forfra, så den vigtigste knap nås først (`order` i `app.css`). Ikke en fejl, der skal rettes.
