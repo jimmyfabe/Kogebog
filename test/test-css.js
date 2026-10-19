@@ -54,13 +54,15 @@ test('--bund regner med samme safe-area som den faste bund', () => {
 
 // Printet: foden («Tjek selv pakkerne …» og kilden) må ikke stå alene øverst på side 2 eller deles over to sider.
 // Playwrights WebKit deler ikke i sider, så reglen tjekkes her. Skønnet i WebKit med A4's bredde (UI-review 4):
-// blondies fod startede 11 mm under side 1, og frikadellers fod (to linjer) blev delt
+// blondies fod startede 11 mm under side 1, og frikadellers fod (to linjer) blev delt. Det sidste trin og foden står
+// i blokken .slut (js/print.js), som ikke må deles: Safari kender ikke break-before: avoid, så den regel virker ikke dér.
+// At foden og det sidste trin faktisk står i blokken, tjekker browsertesten (test-e2e.js, print)
 test('printets fod holdes sammen med det sidste trin', () => {
   const PRINT = fs.readFileSync(path.join(ROD, 'print.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
   const alle = [];
   const saml = (b) => { alle.push(b); b.regler.forEach(saml); };
   saml(blokke(PRINT));
-  const fod = alle.filter((b) => b.hoved.split(',').map((s) => s.trim()).includes('.fod')).map((b) => b.deklarationer).join(';');
-  assert.match(fod, /break-before\s*:\s*avoid/, '.fod skal have break-before: avoid, så den ikke står alene på side 2');
-  assert.match(fod, /break-inside\s*:\s*avoid/, '.fod skal have break-inside: avoid, så den ikke deles over to sider');
+  const regler = (sel) => alle.filter((b) => b.hoved.split(',').map((s) => s.trim()).includes(sel)).map((b) => b.deklarationer).join(';');
+  assert.match(regler('.slut'), /break-inside\s*:\s*avoid/, '.slut (det sidste trin og foden) skal have break-inside: avoid, så foden ikke står alene på side 2');
+  assert.doesNotMatch(regler('.fod'), /break-before/, '.fod må ikke bruge break-before: Safari kender ikke break-before: avoid, og blokken .slut holder foden sammen med det sidste trin');
 });

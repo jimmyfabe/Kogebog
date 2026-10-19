@@ -28,6 +28,16 @@ function tegn(m) {
         t.timerSek ? el('span', { class: 'maerke' }, ikon('ur'), el('span', { tekst: varighedKort(t.timerSek) })) : null),
       t.note ? el('p', { class: 'note', tekst: t.note }) : null)));
 
+  // Det sidste trin og foden står i én blok, der ikke deles over to sider: foden står ikke alene øverst på side 2, og er
+  // der ikke plads, kommer det sidste trin med over. Safari kender ikke break-before: avoid (webkit.org/b/294559), men nok
+  // break-inside: avoid. Blokkens liste fortsætter nummereringen fra den første (CSS-tælleren «trin»)
+  const sidste = trin.pop();
+  let slutListe = null;
+  if (sidste) {
+    slutListe = el('ol', { class: 'trin', role: 'list', start: trin.length + 1 }, sidste);
+    slutListe.style.counterReset = 'trin ' + trin.length;
+  }
+
   ark.replaceChildren(
     el('header', { class: 'hoved' },
       el('div', {},
@@ -43,10 +53,12 @@ function tegn(m) {
         m.redskaber.length ? el('p', { class: 'redskaber', tekst: m.redskaber.join(', ') }) : null),
       el('section', { class: 'fremgang', 'aria-labelledby': 'p-trin' },
         el('h2', { id: 'p-trin', tekst: 'Sådan gør du' }),
-        el('ol', { class: 'trin', role: 'list' }, trin))),
-    el('footer', { class: 'fod' },
-      el('p', { tekst: 'Tjek selv pakkerne for allergener.' }),
-      el('p', { tekst: 'Tumbi Køkken · ' + (m.kilde || 'Egen tekst') })));
+        trin.length ? el('ol', { class: 'trin', role: 'list' }, trin) : null,
+        el('div', { class: 'slut' },
+          slutListe,
+          el('footer', { class: 'fod' },
+            el('p', { tekst: 'Tjek selv pakkerne for allergener.' }),
+            el('p', { tekst: 'Tumbi Køkken · ' + (m.kilde || 'Egen tekst') }))))));
   printKnap.disabled = false;
 }
 

@@ -793,6 +793,26 @@ async function print(browser, skaerm) {
     await side.waitForSelector('ol.trin li');
     tjek(await h1(side) === r.name, n + ' print ' + id + ': titlen');
     tjek(await side.locator('ol.trin > li').count() === r.recipeInstructions.length, n + ' print ' + id + ': alle trin');
+    // Det sidste trin og foden står i blokken .slut, som ikke deles over to sider (Safari kender ikke break-before: avoid).
+    // Nummereringen fortsætter i blokkens liste, og hvert trin står én gang og i opskriftens rækkefølge
+    const slut = await side.evaluate(() => {
+      const s = document.querySelector('.fremgang > .slut');
+      const lister = [...document.querySelectorAll('.fremgang ol.trin')];
+      return {
+        findes: !!s,
+        brud: s ? getComputedStyle(s).breakInside : null,
+        fod: !!(s && s.lastElementChild && s.lastElementChild.matches('footer.fod')),
+        lister: lister.map((ol) => ({ i: ol.children.length, iSlut: !!ol.closest('.slut'), nulstil: getComputedStyle(ol).counterReset })),
+        tekster: lister.flatMap((ol) => [...ol.children].map((li) => li.querySelector('.trin-tekst > span').textContent)),
+      };
+    });
+    const antal = r.recipeInstructions.length;
+    tjek(slut.findes && slut.fod && slut.brud === 'avoid', n + ' print ' + id + ': det sidste trin og foden skal stå i én blok med break-inside: avoid ' + JSON.stringify({ findes: slut.findes, fod: slut.fod, brud: slut.brud }));
+    tjek(slut.lister.length === 2 && slut.lister[0].i === antal - 1 && !slut.lister[0].iSlut && slut.lister[1].i === 1 && slut.lister[1].iSlut,
+      n + ' print ' + id + ': trin 1-' + (antal - 1) + ' i den første liste og trin ' + antal + ' alene i blokken ' + JSON.stringify(slut.lister));
+    tjek(slut.lister.length === 2 && /^trin 0$|^trin$/.test(slut.lister[0].nulstil) && slut.lister[1].nulstil === 'trin ' + (antal - 1),
+      n + ' print ' + id + ': blokkens liste skal fortsætte nummereringen ved ' + antal + ' (counter-reset ' + slut.lister.map((l) => l.nulstil).join(' / ') + ')');
+    tjek(slut.tekster.join('|') === r.recipeInstructions.map((t) => t.text).join('|'), n + ' print ' + id + ': trinene skal stå én gang og i opskriftens rækkefølge');
     tjek(await side.locator('ul.tjek > li').count() === r.recipeIngredient.length, n + ' print ' + id + ': alle ingredienser');
     tjek(await side.locator('ol.trin img.trin-ikon').count() === r.recipeInstructions.length, n + ' print ' + id + ': et verbum-ikon pr. trin');
     const voksen = r.recipeInstructions.filter((t) => t.tumbi.voksen === true).length;

@@ -58,7 +58,10 @@ ol.trin li {
   display: grid; grid-template-columns: 1.6em 34px minmax(0, 1fr); column-gap: 8px; align-items: baseline;
   padding: 5px 0 6px; counter-increment: trin; break-inside: avoid; border-bottom: 1px dotted #999;
 }
-ol.trin li:last-child { border-bottom: 0; }
+/* Det sidste trin og foden deles ikke over to sider (se js/print.js): foden står ikke alene øverst på side 2.
+   Det sidste trin står i blokkens egen liste og har ingen streg under sig */
+.slut { break-inside: avoid; }
+.slut ol.trin li { border-bottom: 0; }
 ol.trin li::before { content: counter(trin) "."; font-weight: 800; text-align: right; }
 .trin-ikon { align-self: start; width: 34px; height: 34px; filter: grayscale(1) contrast(1.15); }
 .trin-krop { min-width: 0; }
@@ -89,6 +92,5 @@ ol.trin li::before { content: counter(trin) "."; font-weight: 800; text-align: r
   .trin-ikon { width: 9mm; height: 9mm; }
   .maerke { font-size: 8.5pt; }
   .note { font-size: 9pt; }
-  /* Foden står ikke alene øverst på side 2 og deles ikke: er der ikke plads, følger det sidste trin med over */
-  .fod { font-size: 9pt; break-before: avoid; break-inside: avoid; }
+  .fod { font-size: 9pt; }
 }
