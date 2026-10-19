@@ -258,16 +258,13 @@ export function valider(rod = ROD) {
       for (const ik of RAA_IKONER) {
         if (retIkoner.has(ik) && !raaITrin.has(ik)) f('«' + ik + '» står i ingredienserne, men intet trin har ikonet, så det kan ikke ses, hvornår hænderne skal vaskes');
       }
-      // Når tiden i ovnen er gået, er pladen eller formen varm: efter et bage-trin med timer tager den voksne det ud
-      // («tage-ud», som altid er voksen og varme). Bages der videre (flutes uden staniol), kommer «tage-ud» efter det sidste
-      // bage-trin
+      // Når tiden i ovnen er gået, er pladen eller formen varm: efter et bage-trin (med eller uden timer) tager den voksne
+      // det ud («tage-ud», som altid er voksen og varme). Bages der videre (flutes uden staniol), kommer «tage-ud» efter det
+      // sidste bage-trin
       const verbum = (s) => s && s.tumbi && s.tumbi.verbum;
       trin.forEach((s, i) => {
-        const st = s && s.tumbi;
-        if (!st || st.verbum !== 'bage' || !('timer_sek' in st)) return;
-        let j = i + 1;
-        while (j < trin.length && verbum(trin[j]) === 'bage') j++;
-        if (verbum(trin[j]) !== 'tage-ud') {
+        if (verbum(s) !== 'bage' || verbum(trin[i + 1]) === 'bage') return;
+        if (verbum(trin[i + 1]) !== 'tage-ud') {
           f('trin ' + (i + 1) + ': når tiden i ovnen er gået, tager en voksen det ud: trinnet efter skal have verbet "tage-ud" (fx «Tag pladen ud af ovnen.»)');
         }
       });

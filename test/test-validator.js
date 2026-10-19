@@ -131,6 +131,9 @@ test('efter ovnen tager en voksen pladen eller formen ud', () => {
   // Et voksen-trin med varme er ikke nok: udtagningen har sit eget verbum og billede, «tage-ud» (fra 19-10)
   forventFejl('opskrifter/boller.json', (d) => { d.recipeInstructions[ovn(d) + 1].tumbi.verbum = 'haelde'; },
     'trin 13: når tiden i ovnen er gået, tager en voksen det ud: trinnet efter skal have verbet "tage-ud"');
+  // Også uden timer: pladen er lige varm (code review 19-10)
+  forventFejl('opskrifter/boller.json', (d) => { const i = ovn(d); delete d.recipeInstructions[i].tumbi.timer_sek; d.recipeInstructions.splice(i + 1, 1); },
+    'trin 13: når tiden i ovnen er gået, tager en voksen det ud');
   // Flutes bages i to omgange: et bage-trin lige efter et andet er stadig i ovnen, og «tage-ud» kommer efter det sidste
   forventGyldig('opskrifter/hvidloegsflutes.json', () => {});
   forventFejl('opskrifter/hvidloegsflutes.json', (d) => { d.recipeInstructions.find((s) => s.tumbi.verbum === 'tage-ud').tumbi.verbum = 'bage'; },
