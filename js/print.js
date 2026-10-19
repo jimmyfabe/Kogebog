@@ -58,7 +58,8 @@ function tegn(m) {
           slutListe,
           el('footer', { class: 'fod' },
             el('p', { tekst: 'Tjek selv pakkerne for allergener.' }),
-            el('p', { tekst: 'Tumbi Køkken · ' + (m.kilde || 'Egen tekst') }))))));
+            el('p', { tekst: 'Tumbi Køkken · ' + (m.kilde || 'Egen tekst') }),
+            el('p', { tekst: 'Stemmen er en computerstemme (Røst fra Alexandra Instituttet).' }))))));
   printKnap.disabled = false;
 }
 
