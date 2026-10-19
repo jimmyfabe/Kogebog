@@ -1,9 +1,16 @@
 // test-tale.js — oplæsningen (js/tale.js) med en falsk browser, der opfører sig som iPad'en:
-// et lydelement må først spille, når det har fået et tryk (load(), play() eller en ny src i et tryk), og
-// speechSynthesis taler kun, hvis den første ytring kom i et tryk. Uden tryk afvises play(), og stemmen er tavs.
-// Tjekker: lyden spiller også lige efter et voksen-hold (uden tryk), reserven (iPad-stemmen) kan tale uden tryk,
-// en gammel replik's fejl rammer ikke den nye, uden net tager reserven over med det samme, og knappens markering
-// slippes ved fejl og pause. Ikke afprøvet på iPad.
+// et lydelement må først spille, når load() eller play() er kaldt i et tryk (en ny src alene låser ikke op, så testen
+// fanger, hvis load() forsvinder fra oplåsningen), og speechSynthesis taler kun, hvis den første ytring kom i et tryk.
+// Uden tryk afvises play(), og stemmen er tavs.
+// Rækkefølgen betyder noget: tale.js indlæses én gang, og oplåsningen sker kun ved det første rigtige tryk.
+//   1. Det første tryk: pointerup tæller ikke (WebKit), touchend gør. Bagefter et voksen-hold uden tryk
+//   2. Lyden spiller lige efter et voksen-hold, ét fælles lydelement
+//   3. Reserven (iPad-stemmen) kan tale uden tryk
+//   4. En gammel replik's fejl rammer ikke den nye
+//   5. Fejl og pause udefra slipper knappens markering
+//   6. Uden net tager reserven over med det samme
+//   7. stop() under en lydfil
+// Ikke afprøvet på iPad.
 // Kør:  node test/test-tale.js
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -15,9 +22,10 @@ const doc = {
   addEventListener: (type, fn) => { (dokLyttere[type] ||= new Set()).add(fn); },
   removeEventListener: (type, fn) => { if (dokLyttere[type]) dokLyttere[type].delete(fn); },
 };
-// Et tryk: dokumentets lyttere (opfanger først), så knappens egen handling (fn) — alt i samme tryk
-function tryk(fn, type = 'pointerup') {
-  iTryk = true;
+// Et tryk: dokumentets lyttere (opfanger først), så knappens egen handling (fn) — alt i samme tryk.
+// aktiv = false: WebKit regner ikke hændelsen som et tryk (fx pointerup med en finger), så intet låses op
+function tryk(fn, type = 'pointerup', aktiv = true) {
+  iTryk = aktiv;
   try {
     for (const l of [...(dokLyttere[type] || [])]) l({ type, isTrusted: true });
     if (fn) fn();
@@ -43,7 +51,7 @@ class FalskAudio {
     this._src = '';
     if (src !== undefined) this.src = src;
   }
-  set src(v) { this._src = String(v); this.paused = true; this.ended = false; this.error = null; if (iTryk) this.laast = false; }
+  set src(v) { this._src = String(v); this.paused = true; this.ended = false; this.error = null; }
   get src() { return this._src; }
   addEventListener(type, fn) { (this.lyttere[type] ||= []).push(fn); }
   send(type) { for (const fn of this.lyttere[type] || []) fn({ type }); }
@@ -108,7 +116,24 @@ const sidsteLyd = () => FalskAudio.sidste;
 const origPlay = FalskAudio.prototype.play;
 FalskAudio.prototype.play = function play() { FalskAudio.sidste = this; return origPlay.call(this); };
 
-// ---------- Testene (i rækkefølge: det første tryk låser op) ----------
+// ---------- Testene (i rækkefølge: det første tryk låser op, se filens hoved) ----------
+
+test('første tryk: en pointerup, der ikke tæller, slipper ikke oplåsningen, og touchend låser op', async () => {
+  // Et fingertryk et sted uden knap: pointerup (ingen brugeraktivering i WebKit), så touchend og click
+  tryk(null, 'pointerup', false);
+  tryk(null, 'touchend');
+  tryk(null, 'click');
+  // Senere et voksen-hold (requestAnimationFrame, uden tryk)
+  Tale.sig({ tekst: 'Hent en voksen. Steg pandekagen.', fil: 'pandekager/2.mp3' });
+  await naesteOpgave();
+  assert.equal(afvist, 0, 'lydelementet blev ikke låst op af touchend (lytterne var væk efter pointerup, eller load() mangler)');
+  assert.deepEqual(spillet, ['lyd/pandekager/2.mp3']);
+  sidsteLyd().slut();
+  Tale.sig({ tekst: 'Der kører allerede en timer.', fil: 'faelles/findes-ikke.mp3' });
+  assert.deepEqual(talt, ['Der kører allerede en timer.'], 'iPad-stemmen blev ikke låst op af touchend');
+  spillet.length = 0;
+  talt.length = 0;
+});
 
 test('lydfilen spiller også lige efter et voksen-hold, uden et tryk', async () => {
   tryk(() => Tale.sig({ tekst: 'Mål mel.', fil: 'pandekager/1.mp3' }));
@@ -125,8 +150,9 @@ test('lydfilen spiller også lige efter et voksen-hold, uden et tryk', async () 
 });
 
 test('reserven (iPad-stemmen) kan tale uden tryk, fordi den blev låst op ved første tryk', async () => {
+  const foer = stemmeAfvist;
   Tale.sig({ tekst: 'Der kører allerede en timer.', fil: 'faelles/findes-ikke.mp3' });
-  assert.equal(stemmeAfvist, 0, 'iPad-stemmen var ikke låst op');
+  assert.equal(stemmeAfvist, foer, 'iPad-stemmen var ikke låst op');
   assert.deepEqual(talt, ['Der kører allerede en timer.']);
 });
 

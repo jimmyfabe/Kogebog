@@ -108,10 +108,12 @@ function lydElement() {
   return a;
 }
 
-// Første tryk: lydelementet og speechSynthesis låses op, så de også kan tale lige efter et hold
+// Første tryk: lydelementet og speechSynthesis låses op, så de også kan tale lige efter et hold.
+// WebKit regner ikke altid pointerup som et tryk (som i timer.js): lytterne bliver derfor, til der er kommet et
+// touchend, click eller keydown, ellers er et senere voksen-hold uden tryk tavst
 function laasOp(e) {
   if (e && (e.isTrusted === false || (e.type === 'keydown' && e.key === 'Escape'))) return;
-  for (const type of TRYK) document.removeEventListener(type, laasOp, true);
+  if (!e || e.type !== 'pointerup') for (const type of TRYK) document.removeEventListener(type, laasOp, true);
   const a = lydElement();
   if (a && !spiller) {
     try { a.load(); } catch (err) { /* intet lydelement */ }
