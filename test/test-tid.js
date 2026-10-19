@@ -1,4 +1,5 @@
-// test-tid.js — timerens tidslogik (js/tid.js), tekstfunktionerne (js/tekst.js) og modellen (js/model.js).
+// test-tid.js — timerens tidslogik (js/tid.js), tekstfunktionerne (js/tekst.js), modellen (js/model.js) og index.json
+// gennem hentIndex (js/data.js).
 // Kør:  node test/test-tid.js
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -8,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { nyTimer, timerStatus, formaterTid, varighed, varighedKort, varighedTale, HURTIG_SEK } from '../js/tid.js';
 import { isoTilMinutter, minutterTekst, tilTale, antalOrd, delIngrediens } from '../js/tekst.js';
 import { lavModel } from '../js/model.js';
+import { hentIndex } from '../js/data.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -116,4 +118,30 @@ test('modellen af pandekagerne', () => {
   assert.equal(m.trin[0].voksen, false);
   assert.equal(m.trin[0].voksenSlags, null);
   assert.equal(m.afproevet, false);
+});
+
+// hentIndex (js/data.js) med en falsk fetch, der svarer med index.json
+async function medIndex(index, fn) {
+  const gammel = globalThis.fetch;
+  globalThis.fetch = async () => new Response(JSON.stringify(index), { status: 200, headers: { 'content-type': 'application/json' } });
+  try { return await fn(); } finally { globalThis.fetch = gammel; }
+}
+
+test('hentIndex giver de rigtige retter i forsidens rækkefølge', async () => {
+  const index = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter/index.json'), 'utf8'));
+  const ix = await medIndex(index, hentIndex);
+  assert.deepEqual(ix.ids, index.grupper.flatMap((g) => g.retter));
+  assert.deepEqual(ix.grupper.map((g) => g.id), ['aftensmad', 'bagning', 'soede-sager']);
+});
+
+// Validatoren tillader ingen dubletter, men står en ret to gange (også i samme gruppe), vises den kun første gang,
+// og en gruppe, der står to gange, springes over anden gang (code review 19-10)
+test('hentIndex viser hver ret og hver gruppe kun første gang', async () => {
+  const ix = await medIndex({ version: 2, grupper: [
+    { id: 'aftensmad', retter: ['frikadeller', 'koedsovs', 'frikadeller'] },
+    { id: 'bagning', retter: ['boller', 'koedsovs', 'boller'] },
+    { id: 'aftensmad', retter: ['chorizo-pasta'] },
+  ] }, hentIndex);
+  assert.deepEqual(ix.ids, ['frikadeller', 'koedsovs', 'boller']);
+  assert.deepEqual(ix.grupper, [{ id: 'aftensmad', retter: ['frikadeller', 'koedsovs'] }, { id: 'bagning', retter: ['boller'] }]);
 });
