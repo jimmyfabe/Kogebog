@@ -2,7 +2,9 @@
 // Kun filer, hvis tekst er præcis den, appen siger nu (lavTaleliste), kommer med: teksten, lyden blev lavet af, står i
 // <udmappe>/maalinger.jsonl, og den valgte udgave (seed) i <udmappe>/kvalitet.json (D:/Stemmer/efterbehandl_kogebog.py).
 // Resten læses af iPad-stemmen, som før. Se CLAUDE.md, «Stemmen».
-// Kør:  node vaerktoej/indsaet-lyd.js D:/Stemmer/kogebog-500m
+// Gamle mp3-filer i lyd/, som ikke kom på den nye liste (replikken findes ikke mere, eller dens tekst er ændret uden
+// ny lyd), nævnes bagefter. Med --ryd slettes de (kun .mp3 i lyd/<mappe>/, og tomme mapper i lyd/).
+// Kør:  node vaerktoej/indsaet-lyd.js D:/Stemmer/kogebog-500m [--ryd]
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -12,9 +14,11 @@ const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const STEMME = 'Røst v3 500m fra Alexandra Instituttet (referencestemmen «Nic»)';
 const NAVN = /^[a-z0-9-]+\/[a-z0-9-]+\.mp3$/;
 
-const ud = process.argv[2];
+const argumenter = process.argv.slice(2);
+const ryd = argumenter.includes('--ryd');
+const ud = argumenter.find((a) => a !== '--ryd');
 if (!ud || !fs.existsSync(path.join(ud, 'kvalitet.json'))) {
-  console.error('Brug: node vaerktoej/indsaet-lyd.js <udmappe med kvalitet.json, maalinger.jsonl og mp3/>');
+  console.error('Brug: node vaerktoej/indsaet-lyd.js <udmappe med kvalitet.json, maalinger.jsonl og mp3/> [--ryd]');
   process.exit(2);
 }
 const kvalitet = JSON.parse(fs.readFileSync(path.join(ud, 'kvalitet.json'), 'utf8')).filer;
@@ -50,3 +54,26 @@ skriv('lyd/tekster.json', { version: 1, stemme: STEMME, tekster: Object.fromEntr
 const bytes = med.reduce((s, x) => s + fs.statSync(path.join(ROD, 'lyd', x.fil)).size, 0);
 console.log(med.length + ' lydfiler i lyd/ (' + (bytes / 1e6).toFixed(2) + ' MB); ' + uden.length + ' uden lyd (iPad-stemmen)');
 for (const u of uden) console.log('  ' + u);
+
+// Gamle filer: mp3 i lyd/<mappe>/, som ikke står på den nye liste (appen spiller dem aldrig, og test-lyd.js fejler)
+const paaListen = new Set(med.map((x) => x.fil));
+const LYD = path.join(ROD, 'lyd');
+const gamle = [];
+for (const d of fs.readdirSync(LYD, { withFileTypes: true })) {
+  if (!d.isDirectory()) continue;
+  for (const f of fs.readdirSync(path.join(LYD, d.name))) {
+    if (f.endsWith('.mp3') && !paaListen.has(d.name + '/' + f)) gamle.push(d.name + '/' + f);
+  }
+}
+if (gamle.length) {
+  console.log(gamle.length + ' gamle lydfiler i lyd/, som ingen replik bruger nu' + (ryd ? ' (slettet):' : ' (slet dem med --ryd):'));
+  for (const g of gamle) {
+    console.log('  ' + g);
+    if (ryd) fs.unlinkSync(path.join(LYD, g));
+  }
+  if (ryd) {
+    for (const d of fs.readdirSync(LYD, { withFileTypes: true })) {
+      if (d.isDirectory() && !fs.readdirSync(path.join(LYD, d.name)).length) fs.rmdirSync(path.join(LYD, d.name));
+    }
+  }
+}

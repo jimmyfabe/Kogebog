@@ -7,6 +7,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
+import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { lavTaleliste } from '../vaerktoej/lav-taleliste.js';
 
@@ -64,9 +66,54 @@ test('app.js læser kun op gennem js/replikker.js', () => {
   const kald = [...app.matchAll(/Tale\.sig\(\s*([^,)]*)/g)].map((m) => m[1].trim());
   assert.ok(kald.length >= 10, 'fandt kun ' + kald.length + ' kald til Tale.sig i app.js');
   assert.deepEqual(kald.filter((k) => !/^R\.[A-Za-z_]+(?:\(|$)/.test(k)), [], 'Tale.sig skal have en replik fra js/replikker.js (R.…)');
+  // Hver replik, app.js læser op (R.NAVN), skal også stå på talelisten (vaerktoej/lav-taleliste.js). Ellers får den
+  // aldrig en lydfil, og alle tjek ovenfor er grønne alligevel (bevist med en ny R.NY i code review 19-10)
+  const taleliste = fs.readFileSync(path.join(ROD, 'vaerktoej/lav-taleliste.js'), 'utf8');
+  const paaListen = new Set([...taleliste.matchAll(/\bR\.([A-Za-z_]+)/g)].map((m) => m[1]));
+  const brugt = [...new Set(kald.map((k) => /^R\.([A-Za-z_]+)/.exec(k)).filter(Boolean).map((m) => m[1]))];
+  assert.deepEqual(brugt.filter((n) => !paaListen.has(n)), [], 'app.js læser disse replikker op, men de mangler i vaerktoej/lav-taleliste.js (så får de ingen lydfil)');
   // Ingen andre filer læser op
   for (const f of fs.readdirSync(path.join(ROD, 'js'))) {
     if (f === 'tale.js') continue;
     assert.ok(!/\bsig\(|speechSynthesis/.test(fs.readFileSync(path.join(ROD, 'js', f), 'utf8')), 'js/' + f + ' læser op uden om tale.js');
+  }
+});
+
+// indsaet-lyd.js i en midlertidig kopi af appen: gamle mp3-filer nævnes, og --ryd sletter kun dem (code review 19-10)
+test('indsaet-lyd.js nævner gamle mp3-filer og sletter dem kun med --ryd', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kog-indsaet-'));
+  try {
+    for (const d of ['js', 'vaerktoej', 'opskrifter']) fs.cpSync(path.join(ROD, d), path.join(tmp, d), { recursive: true });
+    fs.copyFileSync(path.join(ROD, 'package.json'), path.join(tmp, 'package.json'));
+    const mp3 = Buffer.from('ID3 falsk');
+    const laeg = (sti) => { fs.mkdirSync(path.dirname(sti), { recursive: true }); fs.writeFileSync(sti, mp3); };
+    // Røst-mappen: kun «Færdig!» er lavet, af den tekst appen siger nu
+    const ud = path.join(tmp, 'roest');
+    const faerdig = TALE.find((x) => x.fil === 'faelles/faerdig.mp3');
+    fs.mkdirSync(ud);
+    fs.writeFileSync(path.join(ud, 'kvalitet.json'), JSON.stringify({ filer: { 'faelles/faerdig.mp3': { valgt: 42 } } }));
+    fs.writeFileSync(path.join(ud, 'maalinger.jsonl'), JSON.stringify({ fil: faerdig.fil, seed: 42, tekst: faerdig.tekst }) + '\n');
+    laeg(path.join(ud, 'mp3', 'faelles', 'faerdig.mp3'));
+    // lyd/ har en fil fra en ret, der ikke findes mere, og en, hvis tekst er ændret uden ny lyd
+    laeg(path.join(tmp, 'lyd', 'gammel-ret', '1.mp3'));
+    laeg(path.join(tmp, 'lyd', 'faelles', 'print-hold.mp3'));
+    const koer = (...a) => spawnSync(process.execPath, [path.join(tmp, 'vaerktoej', 'indsaet-lyd.js'), ud, ...a], { encoding: 'utf8' });
+
+    let k = koer();
+    assert.equal(k.status, 0, k.stderr);
+    assert.match(k.stdout, /2 gamle lydfiler i lyd\/.*--ryd/);
+    assert.match(k.stdout, /faelles\/print-hold\.mp3/);
+    assert.ok(fs.existsSync(path.join(tmp, 'lyd', 'gammel-ret', '1.mp3')), 'uden --ryd slettes intet');
+
+    k = koer('--ryd');
+    assert.equal(k.status, 0, k.stderr);
+    assert.match(k.stdout, /2 gamle lydfiler i lyd\/.*\(slettet\)/);
+    assert.ok(!fs.existsSync(path.join(tmp, 'lyd', 'gammel-ret')), 'den tomme mappe skal væk');
+    assert.ok(!fs.existsSync(path.join(tmp, 'lyd', 'faelles', 'print-hold.mp3')));
+    assert.ok(fs.existsSync(path.join(tmp, 'lyd', 'faelles', 'faerdig.mp3')), 'filen på listen må ikke slettes');
+    assert.deepEqual(JSON.parse(fs.readFileSync(path.join(tmp, 'lyd', 'liste.json'), 'utf8')).filer, ['faelles/faerdig.mp3']);
+    assert.ok(fs.existsSync(path.join(tmp, 'lyd', 'tekster.json')));
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
   }
 });
