@@ -233,6 +233,12 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 }
 .forside-titel h1 { font-size: clamp(32px, 4.4vw, 52px); line-height: 1.05; letter-spacing: -0.01em; }
 .forside-titel p { font-size: clamp(18px, 2vw, 22px); color: var(--kakao-blid); margin-top: 4px; }
+/* En rund knap pr. afsnit med afsnittets billede og farve, som overskriften: ved første visning ses kun det første afsnit
+   (UI-review 5), og et tryk hopper til de andre. Knapperne står i titlens række, så toppen ikke bliver højere på iPad og
+   på langs. På iPhone på højkant står de under titlen mellem Rosa og Bo (længere nede) */
+.forside-hop { display: flex; gap: 12px; align-self: center; margin-bottom: 14px; }
+.knap.hop { width: 72px; min-height: 72px; background: var(--ret-farve); }
+.hop img { width: 78%; }
 
 /* En timer, der kører (eller er færdig), vises også på forsiden — lige under dugen */
 .forside-timer { display: flex; justify-content: center; padding: 0 16px; }
@@ -249,9 +255,10 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
    Før stod alle 13 kort i ét gitter, og med to kort pr. række delte pizzasnegle og pandekager række */
 .gruppe { width: min(100%, 990px); margin: 0 auto; padding: 22px 24px 0; }
 .gruppe + .gruppe { margin-top: 10px; }
-.gruppe[data-gruppe="aftensmad"] { --ret-farve: var(--urt-lys); }
-.gruppe[data-gruppe="bagning"] { --ret-farve: var(--sennep-lys); }
-.gruppe[data-gruppe="soede-sager"] { --ret-farve: var(--tomat-lys); }
+/* Afsnittet og dets knap i toppen har samme farve */
+[data-gruppe="aftensmad"] { --ret-farve: var(--urt-lys); }
+[data-gruppe="bagning"] { --ret-farve: var(--sennep-lys); }
+[data-gruppe="soede-sager"] { --ret-farve: var(--tomat-lys); }
 .gruppe-navn { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; font-size: 34px; font-weight: 800; line-height: 1.1; }
 /* En streg ud til højre skiller afsnittene ad */
 .gruppe-navn::after { content: ''; flex: 1; min-width: 24px; height: var(--streg); border-radius: 2px; background: var(--creme-moerk); }
@@ -538,6 +545,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 
   .forside-top { gap: 8px; padding: 12px 10px 0; }
   .forside-titel { padding: 8px 16px 10px; }
+  .forside-hop { gap: 8px; margin-bottom: 12px; }
+  .knap.hop { width: var(--tryk); min-height: var(--tryk); }
   .gruppe { padding: 16px 12px 0; }
   .gruppe-navn { gap: 10px; margin-bottom: 12px; font-size: 26px; }
   .gruppe-ikon { width: 56px; height: 56px; }
@@ -621,6 +630,29 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   /* Bunden er 119 px høj, på retten med «Fortsæt» 199 px (to rækker), plus samme safe-area som bundens padding */
   .trin, .ret { --bund: calc(110px + max(22px, env(safe-area-inset-bottom))); }
   .ret:has(.fortsaet) { --bund: calc(190px + max(22px, env(safe-area-inset-bottom))); }
+  /* Forsidens top står i én række som på iPad på langs, med mindre luft og knapper på 64 px: på to rækker blev toppen
+     80 px højere på 768×1024. Rækken er ca. 710 px bred på 768 px og 700 px på 744 px (iPad mini) */
+  .forside-top { gap: 12px; }
+  .forside-hop { gap: 8px; }
+  .knap.hop { width: var(--tryk); min-height: var(--tryk); }
+}
+
+/* Forsidens top på iPhone på højkant: titlen, afsnittenes knapper og dyrene kan ikke stå i én række. Titlen står øverst
+   og har hele bredden (på 390 px før to linjer mellem dyrene), og knapperne står mellem Rosa og Bo nedenunder.
+   Dyrene bliver smallere, når der ikke er plads (360 px) */
+@media (max-width: 700px) and (min-height: 521px), (max-width: 700px) and (orientation: portrait) {
+  .forside-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    grid-template-areas: "titel titel titel" "rosa hop bo";
+    align-items: end;
+    gap: 0 8px;
+  }
+  .forside-titel { grid-area: titel; justify-self: center; margin-bottom: 8px; }
+  .forside-top > .forside-dyr { width: min(100%, clamp(72px, 9vw, 112px)); }
+  .forside-top > .forside-dyr:first-child { grid-area: rosa; justify-self: end; }
+  .forside-top > .forside-dyr:last-child { grid-area: bo; justify-self: start; }
+  .forside-hop { grid-area: hop; align-self: end; }
 }
 
 /* Under 400 px er der kun plads til «Start forfra» ved siden af print, når print-knappen er uden ikon (teksten siger det) */
@@ -674,6 +706,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .forside-titel { margin-bottom: 10px; padding: 6px 22px 8px; }
   .forside-titel h1 { font-size: 30px; }
   .forside-titel p { margin-top: 2px; font-size: 17px; }
+  .forside-hop { gap: 10px; margin-bottom: 10px; }
+  .knap.hop { width: var(--tryk); min-height: var(--tryk); }
   .gruppe { padding-top: 12px; }
   .gruppe-navn { gap: 10px; margin-bottom: 8px; font-size: 26px; }
   .gruppe-ikon { width: 48px; height: 48px; }

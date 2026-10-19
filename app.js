@@ -142,15 +142,8 @@ function fejlSkaermRet(id, fejl) {
 // ---------- Forsiden ----------
 
 function forside() {
-  const top = el('header', { class: 'forside-top' },
-    billede(grafikDyr('rosa'), '', 'forside-dyr'),
-    el('div', { class: 'forside-titel' },
-      el('h1', { tabindex: '-1', tekst: 'Tumbi Køkken' }),
-      // Hårdt mellemrum: «dag?» stod alene på sidste linje på 390 px
-      el('p', { tekst: 'Hvad skal vi lave i\u00a0dag?' })),
-    billede(grafikDyr('bo'), '', 'forside-dyr'));
-
   let indhold;
+  let hop = null;
   if (S.indexFejl) {
     indhold = el('div', { class: 'status-boks' },
       billede(grafikDyr('bo'), '', 'status-dyr'),
@@ -182,20 +175,47 @@ function forside() {
     };
     // Et afsnit pr. gruppe: gryden, ovnen og kagen står i overskriften og har samme farve som kortenes cirkel.
     // Et afsnit uden kort (alle dets opskrifter fejlede) vises ikke
+    const hopKnapper = [];
     const afsnit = S.grupper.map((g) => {
       const kort = g.retter.map(kortTil).filter(Boolean);
       if (!kort.length) return null;
       const navn = Object.hasOwn(GRUPPER, g.id) ? GRUPPER[g.id] : null;
+      if (navn) hopKnapper.push(hopKnap(g.id, navn));
       return el('section', { class: 'gruppe', 'data-gruppe': g.id, 'aria-labelledby': navn ? 'gruppe-' + g.id : null },
-        navn ? el('h2', { class: 'gruppe-navn', id: 'gruppe-' + g.id },
+        navn ? el('h2', { class: 'gruppe-navn', id: 'gruppe-' + g.id, tabindex: '-1' },
           el('span', { class: 'gruppe-ikon' }, billede(grafikGruppe(g.id), '')), el('span', { tekst: navn })) : null,
         el('ul', { class: 'kort-gitter' }, kort));
     });
+    // Ved første visning ses kun det første afsnit: en knap pr. afsnit i toppen viser, at der er mere, og hopper dertil
+    if (hopKnapper.length > 1) hop = el('nav', { class: 'forside-hop', 'aria-label': 'Gå til et afsnit' }, hopKnapper);
     indhold = el('div', { class: 'forside-indhold' },
       afsnit,
       fejlede.length ? el('p', { class: 'fejl-linje', role: 'status', tekst: (fejlede.length === 1 ? 'Én opskrift' : fejlede.length + ' opskrifter') + ' kunne ikke læses (' + fejlede.join(', ') + '). Prøv at genindlæse siden.' }) : null);
   }
+  const top = el('header', { class: 'forside-top' },
+    billede(grafikDyr('rosa'), '', 'forside-dyr'),
+    el('div', { class: 'forside-titel' },
+      el('h1', { tabindex: '-1', tekst: 'Tumbi Køkken' }),
+      // Hårdt mellemrum: «dag?» stod alene på sidste linje på 390 px
+      el('p', { tekst: 'Hvad skal vi lave i\u00a0dag?' })),
+    hop,
+    billede(grafikDyr('bo'), '', 'forside-dyr'));
   return el('main', { class: 'skaerm forside' }, top, el('div', { class: 'forside-timer' }, timerPille()), indhold);
+}
+
+// En rund knap med afsnittets billede og farve (som overskriften). Tryk: rul til afsnittet, sig navnet, og flyt fokus
+// til overskriften, så Tab fortsætter derfra. Uden animation ved «mindre bevægelse»
+function hopKnap(id, navn) {
+  const b = knap('', { klasse: 'rund hop', label: navn, onclick: () => {
+    const h = document.getElementById('gruppe-' + id);
+    if (!h) return;
+    h.closest('.gruppe').scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    h.focus({ preventScroll: true });
+    Tale.sig(navn);
+  } });
+  b.dataset.gruppe = id;
+  b.append(billede(grafikGruppe(id), ''));
+  return b;
 }
 
 function kortTryk(id, b) {

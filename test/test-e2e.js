@@ -128,7 +128,7 @@ async function foto(side, navn, ekstra = {}) {
 }
 
 // Børnenes egne knapper skal være mindst 64 px (de voksnes, fx print og stop, mindst 48 px)
-const BOERNEKNAPPER = '.kort, .ingr, .start, .naeste, .tilbage, .laes-op, .timer-start, .stor-rund, .knap.primaer';
+const BOERNEKNAPPER = '.kort, .ingr, .start, .naeste, .tilbage, .laes-op, .timer-start, .stor-rund, .knap.primaer, .hop';
 const SKAERMKNAPPER = '.handlinger .knap'; // skal kunne ses uden at rulle på iPad og desktop
 
 // Ingen vandret rulning (heller ikke indhold, som body's overflow-x skjuler), knapper mindst 48/64 px, alle billeder indlæst
@@ -374,6 +374,43 @@ async function tjekGrupper(side, hvor) {
   return g;
 }
 
+// Toppen (dugen) har en stor knap pr. afsnit med afsnittets billede og farve (UI-review 5: ved første visning sås kun
+// Aftensmad). Et tryk ruller til afsnittets overskrift og flytter fokus dertil. Med «mindre bevægelse» står siden det rette
+// sted med det samme (behavior: 'auto'). Toppens højde skrives ud som måling
+async function tjekHop(side, hvor) {
+  const knapper = await side.evaluate(() => [...document.querySelectorAll('.forside-top button')].map((b) => {
+    const k = b.getBoundingClientRect();
+    const img = b.querySelector('img');
+    return { navn: b.getAttribute('aria-label'), gruppe: b.dataset.gruppe, b: Math.round(k.width), h: Math.round(k.height), farve: getComputedStyle(b).backgroundColor, img: img ? { src: img.getAttribute('src'), alt: img.getAttribute('alt'), ok: img.complete && img.naturalWidth > 0 } : null };
+  }));
+  const forventet = INDEX_GRUPPER.map((g) => GRUPPER[g.id]);
+  tjek(knapper.map((k) => k.navn).join() === forventet.join(), hvor + ': toppen skal have knapperne ' + forventet.join(', ') + ' (fandt ' + knapper.map((k) => k.navn).join(', ') + ')');
+  const cirkler = await side.evaluate(() => Object.fromEntries([...document.querySelectorAll('.forside .gruppe')].map((s) => [s.dataset.gruppe, getComputedStyle(s.querySelector('.kort-billede')).backgroundColor])));
+  for (const k of knapper) {
+    tjek(k.img && k.img.ok && k.img.alt === '' && k.img.src === 'grafik/gruppe-' + k.gruppe + '.svg', hvor + ': knappen «' + k.navn + '» skal vise afsnittets billede ' + JSON.stringify(k.img));
+    tjek(k.farve === cirkler[k.gruppe], hvor + ': knappen «' + k.navn + '» skal have afsnittets farve (' + k.farve + ' mod ' + cirkler[k.gruppe] + ')');
+    tjek(Math.abs(k.b - k.h) <= 1 && k.b >= 64, hvor + ': knappen «' + k.navn + '» skal være rund og mindst 64 px (' + k.b + '×' + k.h + ')');
+  }
+  maal.push(hvor + ': toppen er ' + await side.evaluate(() => Math.round(document.querySelector('.forside-top').getBoundingClientRect().height)) + ' px høj');
+  await side.emulateMedia({ reducedMotion: 'reduce' });
+  for (const k of knapper) {
+    await side.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+    await tryk(side, '.forside-top button[data-gruppe="' + k.gruppe + '"]');
+    const straks = await side.evaluate(() => Math.round(scrollY));
+    const til = await stille(side);
+    const r = await side.evaluate((id) => {
+      const h = document.getElementById('gruppe-' + id).getBoundingClientRect();
+      const bund = document.documentElement.scrollHeight - innerHeight - scrollY < 1;
+      return { top: Math.round(h.top), bund: Math.round(h.bottom), H: innerHeight, nederst: bund, fokus: document.activeElement && document.activeElement.id };
+    }, k.gruppe);
+    tjek(r.top >= 0 && r.bund <= r.H && (r.top <= 40 || r.nederst), hvor + ': knappen «' + k.navn + '» skal rulle til afsnittets overskrift ' + JSON.stringify(r));
+    tjek(r.fokus === 'gruppe-' + k.gruppe, hvor + ': efter knappen «' + k.navn + '» skal fokus stå på afsnittets overskrift (står på ' + r.fokus + ')');
+    tjek(straks === til, hvor + ': med «mindre bevægelse» skal knappen «' + k.navn + '» rulle uden animation (straks ' + straks + ', til sidst ' + til + ')');
+  }
+  await side.emulateMedia({ reducedMotion: null });
+  await side.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+}
+
 async function venterPaa(side, fn, arg, hvor, ms = 6000) {
   try {
     await side.waitForFunction(fn, arg, { timeout: ms });
@@ -457,6 +494,7 @@ async function heleVejen(browser, skaerm) {
   const gr = await tjekGrupper(side, n + ' forside');
   maal.push(n + ' forside: ' + gr.afsnit.length + ' afsnit, højst ' + gr.iRaekke + ' kort pr. række');
   await tjekUndertekst(side, n + ' forside');
+  await tjekHop(side, n + ' forside');
   if (n === 'desktop') {
     // U16: med mus skal et kort ændre sig, når musen står over det
     const skygge = () => side.evaluate(() => getComputedStyle(document.querySelector('.kort[data-ret="frikadeller"]')).boxShadow);
@@ -1288,6 +1326,7 @@ async function former(browser) {
     await tjekUndertekst(side, n + ' forside');
     await tjekLayout(side, n + ' forside');
     await foto(side, n + '-former-forside');
+    await tjekHop(side, n + ' forside');
 
     // Fremskridtet med timer-pillen: boller har 16 trin, og timeren fra trin 8 kører på trin 9 og er færdig på trin 13
     if (sk.viewport.width <= 760) {
