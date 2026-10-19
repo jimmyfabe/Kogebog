@@ -228,8 +228,17 @@ test('noter om kilden og skøn står i tumbi.kilde, ikke i den synlige tekst', (
   forventFejl(fil, (d) => { d.recipeYield = 'ca. 4 personer (skøn)'; }, '«recipeYield»: «skøn» er en redaktionel note');
   forventFejl(fil, (d) => { d.recipeIngredient[0] = '1 spsk olie (kildens mål)'; }, 'ingrediens 1: «kildens» er en redaktionel note');
   forventFejl(fil, (d) => { d.description = 'Kødsovs, som kilden laver den.'; }, '«description»: «kilden» er en redaktionel note');
-  // Ordene inde i andre ord tæller ikke
+  // Flere bøjninger: kilder, kilderne, skønnet, skønnes, skønsmæssigt (code review 19-10)
+  forventFejl(fil, (d) => { d.recipeInstructions[2].tumbi.note = 'Kilderne siger to gulerødder.'; }, 'trin 3 (noten): «Kilderne» er en redaktionel note');
+  forventFejl(fil, (d) => { d.description = 'Kødsovs fra to kilder.'; }, '«description»: «kilder» er en redaktionel note');
+  forventFejl(fil, (d) => { d.recipeYield = 'ca. 4 personer (skønnet)'; }, '«recipeYield»: «skønnet» er en redaktionel note');
+  forventFejl(fil, (d) => { d.recipeYield = 'ca. 4 personer, skønnes det'; }, '«recipeYield»: «skønnes» er en redaktionel note');
+  forventFejl(fil, (d) => { d.recipeIngredient[0] = '1 spsk olie (skønsmæssigt)'; }, 'ingrediens 1: «skønsmæssigt» er en redaktionel note');
+  // Redskaberne står i printet under «Redskaber»
+  forventFejl(fil, (d) => { d.tool.push('træske (kilden siger grydeske)'); }, 'redskab 8: «kilden» er en redaktionel note');
+  // Ordene inde i andre ord tæller ikke, og «skønne» (smukke) er ikke et skøn
   forventGyldig(fil, (d) => { d.recipeInstructions[2].tumbi.note = 'Brug kildevand, hvis I har det. Skønt det tager tid.'; });
+  forventGyldig(fil, (d) => { d.recipeInstructions[2].tumbi.note = 'To skønne gulerødder.'; });
 });
 
 // Kildenoten står i printets fod. Har den flere sætninger, slutter den med punktum (UI-review 4: alle seks sluttede uden).
@@ -238,6 +247,9 @@ test('en kildenote med flere sætninger slutter med punktum', () => {
   const fil = 'opskrifter/hytteostboller.json';
   forventFejl(fil, (d) => { d.tumbi.kilde = 'Arla: «Hytteostboller» (arla.dk). Trinene er egen tekst'; }, '«tumbi.kilde» har flere sætninger og skal slutte med punktum');
   forventGyldig(fil, (d) => { d.tumbi.kilde = 'Arla: «Hytteostboller» (arla.dk). Trinene er egen tekst.'; });
+  // Udråbstegn og spørgsmålstegn slutter også en sætning (code review 19-10)
+  forventGyldig(fil, (d) => { d.tumbi.kilde = 'Arla: «Hytteostboller» (arla.dk). Trinene er egen tekst!'; });
+  forventGyldig(fil, (d) => { d.tumbi.kilde = 'Arla: «Hytteostboller» (arla.dk). Er trinene egen tekst?'; });
   forventGyldig(fil, (d) => { d.tumbi.kilde = 'Egen tekst'; });
   // «ca. 3 dl» er en forkortelse, ikke en ny sætning
   forventGyldig(fil, (d) => { d.tumbi.kilde = 'Egen tekst med ca. 3 dl mælk'; });

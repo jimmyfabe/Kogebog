@@ -32,8 +32,8 @@ const HAENDER_I_DEJ = ['aelte', 'rulle', 'kagerulle']; // verber, hvor hænderne
 const KNIV_ORD = /(?<!\p{L})(riv|hak|skær(?:er)?|kniv(?!spids)\p{L}*|skræl)(?!\p{L})/iu;
 const VARME_ORD = /(?<!\p{L})(bag|steg|kog(?:e|er|ende|t)?|komfur\p{L}*|kogeplade\p{L}*|smelt)(?!\p{L})|ovn/iu;
 // Redaktionelle noter («Kilden siger …», «(skøn)») står i «tumbi.kilde», ikke i det, der vises og læses op i køkkenet.
-// Hele ord: «kildevand» og «skønt» tæller ikke
-const REDAKTION = /(?<!\p{L})(kilden?s?|skøn)(?!\p{L})/iu;
+// Hele ord: «kildevand», «skønt» og «skønne» tæller ikke
+const REDAKTION = /(?<!\p{L})(kild(?:e|en|es|ens|er|erne)|skøn(?:net|nes|smæssigt)?)(?!\p{L})/iu;
 // Råt kød og æg i en ingredienslinje. Så skal ikonet være et af RAA_IKONER, ellers kræver validatoren ingen håndvask.
 // Tun (på dåse) og skinke (pålæg) er ikke rå og står ikke her
 const RAA_ORD = /(?<!\p{L})(æg|æggene|ægget|\p{L}*kød|\p{L}*fars|flæsk|kylling\p{L}*|bacon|laks|fisk\p{L}*|rejer)(?!\p{L})/iu;
@@ -151,7 +151,7 @@ export function valider(rod = ROD) {
       if (typeof t.afproevet !== 'boolean') f('«tumbi.afproevet» skal være true eller false');
       if (!erTekst(t.kilde)) f('«tumbi.kilde» skal være en tekst, fx "Egen tekst"');
       // Punktum + mellemrum + stort bogstav er en ny sætning («ca. 3 dl» er det ikke)
-      else if (/\.\s+\p{Lu}/u.test(t.kilde) && !t.kilde.trim().endsWith('.')) f('«tumbi.kilde» har flere sætninger og skal slutte med punktum');
+      else if (/\.\s+\p{Lu}/u.test(t.kilde) && !/[.!?]$/.test(t.kilde.trim())) f('«tumbi.kilde» har flere sætninger og skal slutte med punktum');
     } else if ('tumbi' in r) f('«tumbi» skal være et objekt');
 
     if ('image' in r && r.image !== grafikRet(filId)) f('«image» skal være "' + grafikRet(filId) + '", fandt ' + JSON.stringify(r.image));
@@ -163,6 +163,7 @@ export function valider(rod = ROD) {
     if ('recipeIngredient' in r && (!Array.isArray(ingr) || !ingr.length || !ingr.every(erTekst))) f('«recipeIngredient» skal være en liste med tekster');
     if (Array.isArray(ingr)) ingr.forEach((x, i) => redaktion('ingrediens ' + (i + 1), x));
     if ('tool' in r && (!Array.isArray(r.tool) || !r.tool.every(erTekst))) f('«tool» skal være en liste med tekster');
+    if (Array.isArray(r.tool)) r.tool.forEach((x, i) => redaktion('redskab ' + (i + 1), x)); // printet viser dem under «Redskaber»
     if (t && typeof t === 'object' && Array.isArray(ingr)) {
       const ti = t.ingredienser;
       if (!Array.isArray(ti)) f('«tumbi.ingredienser» mangler: én { "ikon", "maengde" } pr. linje i recipeIngredient');
