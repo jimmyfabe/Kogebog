@@ -1229,7 +1229,10 @@ async function timerFrem(browser) {
     await side.goto(BASE + '/index.html');
     await side.waitForSelector('.kort[data-ret]');
     const gaa = async (id, nr) => {
-      await side.evaluate((h) => { location.hash = h; }, '#/ret/' + id + '/trin/' + nr);
+      // Den gamle skærm mærkes som i «former»: adressen skifter med det samme, men skærmen først ved hashchange, og det
+      // forrige trin har også «Start timer». Uden mærket målte knapFrem indimellem det forrige trin, og trykket (force)
+      // ramte så den faste bund på det nye trin (fx «land pandekager 9» og 5 af 33 på «se-land»)
+      await side.evaluate((h) => { document.querySelector('#app > .skaerm').dataset.gammel = '1'; location.hash = h; }, '#/ret/' + id + '/trin/' + nr);
       await side.waitForFunction((x) => location.hash.endsWith(x) && !document.querySelector('.skaerm[data-gammel]') && document.querySelector('#app > .skaerm .timer-start'), '/' + id + '/trin/' + nr);
       // Billedet skubber timeren ned, når det er hentet: før det kunne «Start timer» se ud til at stå over bunden
       await side.waitForFunction(() => [...document.images].every((i) => i.complete), null, { timeout: 5000 }).catch(() => {});
