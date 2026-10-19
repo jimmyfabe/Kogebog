@@ -138,11 +138,16 @@ test('efter ovnen tager en voksen pladen eller formen ud', () => {
   forventGyldig('opskrifter/hvidloegsflutes.json', () => {});
   forventFejl('opskrifter/hvidloegsflutes.json', (d) => { d.recipeInstructions.find((s) => s.tumbi.verbum === 'tage-ud').tumbi.verbum = 'bage'; },
     'når tiden i ovnen er gået, tager en voksen det ud');
+  // En dyb form (brownie, blondie) har sit eget billede, «tage-ud-form», og tæller også som udtagningen (fra 19-10)
+  forventGyldig('opskrifter/boller.json', (d) => { d.recipeInstructions[ovn(d) + 1].tumbi.verbum = 'tage-ud-form'; });
+  forventFejl('opskrifter/brownie.json', (d) => { d.recipeInstructions.find((s) => s.tumbi.verbum === 'tage-ud-form').tumbi.verbum = 'haelde'; },
+    'trinnet efter skal have verbet "tage-ud" (fx «Tag pladen ud af ovnen.») eller "tage-ud-form"');
 });
 
-// De fem verber fra 19-10. Tage ud af ovnen og si kogende vand er altid varme; kagerullen, staniolen og gæren kan barnet selv
-test('tage-ud og si kræver en voksen for varmens skyld; kagerulle, pakke-ind og smuldre kan barnet', () => {
-  for (const v of ['tage-ud', 'si']) {
+// De fem verber fra 19-10 og «tage-ud-form». Tage ud af ovnen og si kogende vand er altid varme; kagerullen, staniolen og
+// gæren kan barnet selv
+test('tage-ud, tage-ud-form og si kræver en voksen for varmens skyld; kagerulle, pakke-ind og smuldre kan barnet', () => {
+  for (const v of ['tage-ud', 'tage-ud-form', 'si']) {
     forventFejl('opskrifter/koedsovs.json', (d) => { const st = d.recipeInstructions[2].tumbi; st.verbum = v; delete st.voksen; delete st.voksen_hjaelp; },
       'trin 3: verbet «' + v + '» skal have "voksen": true og "voksen_hjaelp": "varme"');
     forventFejl('opskrifter/koedsovs.json', (d) => { Object.assign(d.recipeInstructions[2].tumbi, { verbum: v, voksen: true, voksen_hjaelp: 'kniv' }); },
@@ -158,8 +163,8 @@ test('tage-ud og si kræver en voksen for varmens skyld; kagerulle, pakke-ind og
 test('trinene med de nye verber', () => {
   const forvent = [
     ['boller', 'Tag pladen ud af ovnen.', 'tage-ud'], ['hytteostboller', 'Tag pladen ud af ovnen.', 'tage-ud'],
-    ['pizzasnegle', 'Tag pladen ud af ovnen.', 'tage-ud'], ['brownie', 'Tag formen ud af ovnen.', 'tage-ud'],
-    ['blondie', 'Tag formen ud af ovnen.', 'tage-ud'], ['hvidloegsflutes', 'Tag flutes ud af ovnen.', 'tage-ud'],
+    ['pizzasnegle', 'Tag pladen ud af ovnen.', 'tage-ud'], ['brownie', 'Tag formen ud af ovnen.', 'tage-ud-form'],
+    ['blondie', 'Tag formen ud af ovnen.', 'tage-ud-form'], ['hvidloegsflutes', 'Tag flutes ud af ovnen.', 'tage-ud'],
     ['kartoffelmos', 'Hæld vandet fra i dørslaget.', 'si'], ['koedsovs', 'Hæld vandet fra spaghettien.', 'si'],
     ['pizzasnegle', 'Rul dejen ud til en stor firkant.', 'kagerulle'], ['hvidloegsflutes', 'Pak flutes ind i staniol.', 'pakke-ind'],
     ['boller', 'Smuldr gæren ned i skålen.', 'smuldre'], ['pizzasnegle', 'Smuldr gæren ned i en stor skål.', 'smuldre'],
@@ -169,6 +174,11 @@ test('trinene med de nye verber', () => {
     const trin = laes(ROD, 'opskrifter/' + id + '.json').recipeInstructions.find((s) => s.text === tekst);
     assert.ok(trin, id + ': trinnet «' + tekst + '» findes ikke');
     assert.equal(trin.tumbi.verbum, verbum, id + ': «' + tekst + '»');
+  }
+  // Si-trinene viser, hvad der er i dørslaget (UI-review 5)
+  for (const [id, tekst, ikon] of [['kartoffelmos', 'Hæld vandet fra i dørslaget.', 'kartoffel'], ['koedsovs', 'Hæld vandet fra spaghettien.', 'spaghetti']]) {
+    const trin = laes(ROD, 'opskrifter/' + id + '.json').recipeInstructions.find((s) => s.text === tekst);
+    assert.deepEqual(trin.tumbi.ikoner, [ikon], id + ': «' + tekst + '» skal have ikonet ' + ikon);
   }
 });
 

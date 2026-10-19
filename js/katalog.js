@@ -23,14 +23,15 @@ export const VERBER = {
   'rive': 'rive',
   'pensle': 'pensle',
   'tage-ud': 'tage ud',
+  'tage-ud-form': 'tage formen ud',
   'si': 'si',
   'kagerulle': 'rulle ud',
   'pakke-ind': 'pakke ind',
   'smuldre': 'smuldre',
 };
 
-// Verber, der altid kræver en voksen, og hvilken slags hjælp. Rivejernet skærer, «bage» og «tage-ud» er altid ovnen,
-// og «si» er kogende vand gennem dørslaget.
+// Verber, der altid kræver en voksen, og hvilken slags hjælp. Rivejernet skærer, «bage» og «tage-ud» er altid ovnen
+// («tage-ud» er en flad plade, «tage-ud-form» en dyb form), og «si» er kogende vand gennem dørslaget.
 export const VOKSEN_KRAV = {
   'skaere': 'kniv',
   'rive': 'kniv',
@@ -39,6 +40,7 @@ export const VOKSEN_KRAV = {
   'vende': 'varme',
   'bage': 'varme',
   'tage-ud': 'varme',
+  'tage-ud-form': 'varme',
   'si': 'varme',
 };
 

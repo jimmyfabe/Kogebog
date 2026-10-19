@@ -31,7 +31,7 @@
     { "@type": "HowToStep", "text": "Rør mel, kakao og salt forsigtigt i.", "tumbi": { "verbum": "roere", "ikoner": ["mel", "kakao", "salt"], "note": "1 spsk kakao og en knivspids salt. Rør kun, til melet er væk." } },
     { "@type": "HowToStep", "text": "Hæld dejen i formen.", "tumbi": { "verbum": "haelde", "note": "Læg bagepapir i formen først. Dejen fylder en lille form, ca. en halv alubakke." } },
     { "@type": "HowToStep", "text": "Bag brownien i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1200, "note": "20-25 min. Den skal være blød i midten: en tandstik skal komme op med fugtige krummer." } },
-    { "@type": "HowToStep", "text": "Tag formen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Tag formen ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme" } },
     { "@type": "HowToStep", "text": "Lad brownien køle helt af.", "tumbi": { "verbum": "vente", "note": "Formen er meget varm." } },
     { "@type": "HowToStep", "text": "Skær kagen i 6 stykker.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv" } },
     { "@type": "HowToStep", "text": "Smag en bid!", "tumbi": { "verbum": "smage" } }

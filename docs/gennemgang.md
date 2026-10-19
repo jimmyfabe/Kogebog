@@ -63,7 +63,7 @@ Hver ret er én fil, `opskrifter/<id>.json`, og `opskrifter/liste.json` giver r�
 | `name`, `image`, `recipeYield`, `totalTime`, `recipeIngredient`, `tool` | retten, skal | standard schema.org. Tider skrives som `PT15M`, og `image` er `billeder/ret-<id>.png` |
 | `description`, `prepTime`, `cookTime`, `inLanguage` | retten, valgfri | standard schema.org |
 | `recipeInstructions` | retten, skal | en liste af `HowToStep`, hvor `text` er det, der vises og læses op |
-| `tumbi.verbum` | hvert trin, skal | et af de 24 verber: `roere` `haelde` `skaere` `aelte` `rulle` `vende` `stege` `koge` `maale` `vaske-haender` `vente` `smage` og (fra 18-10) `smoere` `mose` `bage` `piske` `drysse` `rive` `pensle` og (fra 19-10) `tage-ud` `si` `kagerulle` `pakke-ind` `smuldre` |
+| `tumbi.verbum` | hvert trin, skal | et af de 25 verber: `roere` `haelde` `skaere` `aelte` `rulle` `vende` `stege` `koge` `maale` `vaske-haender` `vente` `smage` og (fra 18-10) `smoere` `mose` `bage` `piske` `drysse` `rive` `pensle` og (fra 19-10) `tage-ud` `tage-ud-form` `si` `kagerulle` `pakke-ind` `smuldre` |
 | `tumbi.voksen` | trin, valgfri | `true`, når en voksen skal hjælpe (kniv, varme, ovn). Giver «Hent en voksen», og kræver `voksen_hjaelp` |
 | `tumbi.voksen_hjaelp` | trin, sammen med `voksen` | `"kniv"` eller `"varme"` (komfur, ovn, kogende vand, varm pande) |
 | `tumbi.timer_sek` | trin, valgfri | heltal sekunder, som giver en stor timer |

@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
-  <g id="take-out" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="take-out-tray" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
     <g id="oven-body">
       <path d="M48 46 L132 46 Q142 46 142 56 L142 146 Q142 154 134 154 L46 154 Q38 154 38 146 L38 56 Q38 46 48 46 Z" fill="#8E9AA6"/>
       <path d="M39 72 L141 72" fill="none"/>
@@ -28,21 +28,34 @@
       <path d="M163 107 C151 97 152 87 162 80 C169 75 168 71 164 67 Q161 63 165 60 Q169 58 172 62 C181 72 176 82 168 87 C160 92 162 97 169 101 Q173 105 169 108 Q166 110 163 107 Z"/>
       <path d="M189 109 C178 100 180 90 189 83 C196 78 197 74 193 70 Q190 66 194 63 Q198 61 201 65 C210 75 205 85 197 91 C190 96 189 100 195 103 Q200 107 195 111 Q192 113 189 109 Z"/>
     </g>
-    <g id="baking-tin">
-      <path d="M108 112 L198 112 L212 138 L94 138 Z" fill="#8E9AA6"/>
-      <path d="M116 117 L190 117 L201 133 L105 133 Z" fill="#E8C79A"/>
-      <path d="M94 138 L212 138 L208 158 L98 158 Z" fill="#6D7B8A"/>
+    <g id="tray">
+      <path d="M122 112 L174 112 L196 172 L100 172 Z" fill="#8E9AA6"/>
+      <path d="M100 172 L196 172 L196 177 L100 177 Z" fill="#6D7B8A"/>
+    </g>
+    <g id="buns">
+      <g transform="translate(123 160)">
+        <path d="M-15 3 C-15 -6 -8 -10 0 -10 C9 -10 16 -4 15 3 Q13 10 0 10 Q-13 10 -15 3 Z" fill="#E8C79A"/>
+        <path d="M-12 -2 C-8 -11 8 -11 12 -2 Q0 4 -12 -2 Z" fill="#CFA976"/>
+      </g>
+      <g transform="translate(149 160)">
+        <path d="M-15 3 C-15 -6 -8 -10 0 -10 C9 -10 16 -4 15 3 Q13 10 0 10 Q-13 10 -15 3 Z" fill="#E8C79A"/>
+        <path d="M-12 -2 C-8 -11 8 -11 12 -2 Q0 4 -12 -2 Z" fill="#CFA976"/>
+      </g>
+      <g transform="translate(175 160)">
+        <path d="M-15 3 C-15 -6 -8 -10 0 -10 C9 -10 16 -4 15 3 Q13 10 0 10 Q-13 10 -15 3 Z" fill="#E8C79A"/>
+        <path d="M-12 -2 C-8 -11 8 -11 12 -2 Q0 4 -12 -2 Z" fill="#CFA976"/>
+      </g>
     </g>
     <g id="bo-forearm">
-      <path d="M256 129 Q237 126 225 133 L225 161 Q237 168 256 166" fill="#9A6A44"/>
+      <path d="M256 150 C246 152 236 154 227 156 L226 182 Q241 184 256 183 Z" fill="#9A6A44"/>
     </g>
     <g id="oven-mitt">
-      <path d="M229 131 C222 121 210 116 202 121 C195 125 197 133 204 136 L212 140 L201 139 C191 138 189 146 196 152 C201 161 213 165 226 160 Z" fill="#E2513B"/>
-      <path d="M226 128 L236 131 L235 165 L225 163 Z" fill="#C3331D"/>
-      <path d="M212 140 Q217 143 216 148" fill="none"/>
+      <path d="M233 158 C225 147 213 145 205 151 C197 156 201 163 208 163 L213 166 L198 165 C188 164 184 172 193 179 C201 188 215 189 229 183 Z" fill="#E2513B"/>
+      <path d="M238 155 L227 155 L225 187 L236 187 Z" fill="#C3331D"/>
+      <path d="M213 166 Q218 170 216 175" fill="none"/>
     </g>
     <g id="out-of-oven-motion">
-      <path d="M150 212 C166 200 184 196 202 196 L202 187 L222 200 L202 213 L202 204 C186 204 172 208 160 218 Q154 222 150 218 Q148 215 150 212 Z" fill="#3E8FB0"/>
+      <path d="M150 221 C166 209 184 205 202 205 L202 196 L222 209 L202 222 L202 213 C186 213 172 217 160 227 Q154 231 150 227 Q148 224 150 221 Z" fill="#3E8FB0"/>
     </g>
   </g>
 </svg>

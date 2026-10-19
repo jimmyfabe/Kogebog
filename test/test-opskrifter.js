@@ -27,6 +27,7 @@ const ISO_RE = /^P(?:\d+D)?(?:T(?:\d+H)?(?:\d+M)?(?:\d+S)?)?$/;
 const MAKS_TIMER_SEK = 4 * 3600;
 const BLANDER = ['roere', 'haelde', 'piske']; // verber, der blander en ingrediens i dejen eller farsen
 const HAENDER_I_DEJ = ['aelte', 'rulle', 'kagerulle']; // verber, hvor hænderne rører dejen eller farsen
+const TAGE_UD = ['tage-ud', 'tage-ud-form']; // efter ovnen: en flad plade eller en dyb form
 // Ord i trinteksten, der betyder kniv eller rivejern (KNIV_ORD) eller varme (VARME_ORD). Hele ord (ikke «bagepapir»,
 // «rivejern», «kogebog» eller «knivspids»), men «ovn» overalt. Ikke «varm» og «brun»: de står i «en varm skive» og «brun farin»
 const KNIV_ORD = /(?<!\p{L})(riv|hak|skær(?:er)?|kniv(?!spids)\p{L}*|skræl)(?!\p{L})/iu;
@@ -276,13 +277,13 @@ export function valider(rod = ROD) {
         if (retIkoner.has(ik) && !raaITrin.has(ik)) f('«' + ik + '» står i ingredienserne, men intet trin har ikonet, så det kan ikke ses, hvornår hænderne skal vaskes');
       }
       // Når tiden i ovnen er gået, er pladen eller formen varm: efter et bage-trin (med eller uden timer) tager den voksne
-      // det ud («tage-ud», som altid er voksen og varme). Bages der videre (flutes uden staniol), kommer «tage-ud» efter det
-      // sidste bage-trin
+      // det ud («tage-ud» med pladen eller «tage-ud-form» med en dyb form, begge altid voksen og varme). Bages der videre
+      // (flutes uden staniol), kommer udtagningen efter det sidste bage-trin
       const verbum = (s) => s && s.tumbi && s.tumbi.verbum;
       trin.forEach((s, i) => {
         if (verbum(s) !== 'bage' || verbum(trin[i + 1]) === 'bage') return;
-        if (verbum(trin[i + 1]) !== 'tage-ud') {
-          f('trin ' + (i + 1) + ': når tiden i ovnen er gået, tager en voksen det ud: trinnet efter skal have verbet "tage-ud" (fx «Tag pladen ud af ovnen.»)');
+        if (!TAGE_UD.includes(verbum(trin[i + 1]))) {
+          f('trin ' + (i + 1) + ': når tiden i ovnen er gået, tager en voksen det ud: trinnet efter skal have verbet "tage-ud" (fx «Tag pladen ud af ovnen.») eller "tage-ud-form" (fx «Tag formen ud af ovnen.»)');
         }
       });
       if (trin[0] && trin[0].tumbi && trin[0].tumbi.verbum !== 'vaske-haender') f('trin 1 skal være «Vask hænderne.» (verbum "vaske-haender")');

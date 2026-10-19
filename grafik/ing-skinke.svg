@@ -1,17 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
 <g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-  <g id="rye-bread" transform="rotate(-6 128 160)">
-    <path fill="#704D31" d="M58 104 L198 104 Q218 104 218 124 L218 200 Q218 220 198 220 L58 220 Q38 220 38 200 L38 124 Q38 104 58 104 Z"/>
-    <path fill="#9A6A44" stroke="none" d="M60 114 L196 114 Q208 114 208 126 L208 198 Q208 210 196 210 L60 210 Q48 210 48 198 L48 126 Q48 114 60 114 Z"/>
-    <g id="grains" fill="#E8C79A" stroke="none">
-      <ellipse cx="66" cy="196" rx="6" ry="4" transform="rotate(-20 66 196)"/>
-      <ellipse cx="190" cy="194" rx="6" ry="4" transform="rotate(25 190 194)"/>
-      <ellipse cx="128" cy="202" rx="6" ry="4" transform="rotate(10 128 202)"/>
-    </g>
+  <g id="ham-slice-back" transform="translate(96 104) rotate(-12)">
+    <path fill="#FFF4E2" d="M-58 4 C-60 -25 -35 -50 -1 -50 C32 -50 54 -33 58 -10 C64 14 55 36 36 46 C15 55 -28 54 -44 41 C-55 33 -58 19 -58 4 Z"/>
+    <path fill="#F2A0A0" d="M-56 22 C-52 -7 -31 -33 -1 -33 C26 -33 46 -22 53 -1 C58 17 54 36 36 46 C15 55 -28 54 -44 41 C-52 35 -55 29 -56 22 Z"/>
   </g>
-  <g id="ham-slice">
-    <path fill="#F9DCD6" d="M40 118 C38 88 68 64 104 64 C130 64 146 56 170 60 C202 66 220 92 216 120 C214 140 222 156 208 168 C194 180 170 172 150 178 C126 186 94 184 74 174 C52 164 42 142 40 118 Z"/>
-    <path fill="#F9DCD6" d="M44 140 C68 126 96 136 122 128 C148 120 174 128 198 116 C208 112 216 116 217 124 C216 142 222 156 208 168 C194 180 170 172 150 178 C126 186 94 184 74 174 C58 166 48 154 44 140 Z"/>
+  <g id="ham-slice-middle" transform="translate(132 128) rotate(-4)">
+    <path fill="#FFF4E2" d="M-58 4 C-60 -25 -35 -50 -1 -50 C32 -50 54 -33 58 -10 C64 14 55 36 36 46 C15 55 -28 54 -44 41 C-55 33 -58 19 -58 4 Z"/>
+    <path fill="#F2A0A0" d="M-56 22 C-52 -7 -31 -33 -1 -33 C26 -33 46 -22 53 -1 C58 17 54 36 36 46 C15 55 -28 54 -44 41 C-52 35 -55 29 -56 22 Z"/>
+  </g>
+  <g id="ham-slice-front" transform="translate(166 152) rotate(6)">
+    <path fill="#FFF4E2" d="M-58 4 C-60 -25 -35 -50 -1 -50 C32 -50 54 -33 58 -10 C64 14 55 36 36 46 C15 55 -28 54 -44 41 C-55 33 -58 19 -58 4 Z"/>
+    <path fill="#F2A0A0" d="M-56 22 C-52 -7 -31 -33 -1 -33 C26 -33 46 -22 53 -1 C58 17 54 36 36 46 C15 55 -28 54 -44 41 C-52 35 -55 29 -56 22 Z"/>
+    <path fill="#E07E80" stroke="none" d="M55 18 C53 33 47 41 36 46 C15 55 -28 54 -44 41 C-24 47 15 46 34 39 C45 34 52 28 55 18 Z"/>
+    <path fill="none" d="M-58 4 C-60 -25 -35 -50 -1 -50 C32 -50 54 -33 58 -10 C64 14 55 36 36 46 C15 55 -28 54 -44 41 C-55 33 -58 19 -58 4 Z"/>
   </g>
 </g>
 </svg>

@@ -15,7 +15,7 @@
       <path d="M156 142 L172 142 Q180 142 180 149 Q180 156 172 156 L156 156 Z" fill="#8E9AA6"/>
       <path d="M78 192 L118 192 L124 206 L72 206 Z" fill="#6D7B8A"/>
       <path d="M38 146 L158 146 Q154 194 98 200 Q42 194 38 146 Z" fill="#8E9AA6"/>
-      <ellipse cx="98" cy="146" rx="60" ry="14" fill="#6D7B8A"/>
+      <ellipse cx="98" cy="146" rx="60" ry="6" fill="#6D7B8A"/>
     </g>
     <g id="colander-holes" fill="#3B2A20" stroke="none">
       <circle cx="62" cy="164" r="4.5"/>
@@ -31,14 +31,8 @@
       <circle cx="98" cy="188" r="4.5"/>
       <circle cx="111" cy="188" r="4.5"/>
     </g>
-    <g id="pasta" fill="#F2C14E">
-      <rect x="56" y="136" width="24" height="10" rx="5" transform="rotate(-18 68 141)"/>
-      <rect x="80" y="131" width="24" height="10" rx="5" transform="rotate(14 92 136)"/>
-      <rect x="108" y="137" width="24" height="10" rx="5" transform="rotate(-24 120 142)"/>
-      <rect x="74" y="144" width="22" height="10" rx="5" transform="rotate(8 85 149)"/>
-    </g>
     <g id="pour-stream" fill="#3E8FB0">
-      <path d="M108 100 C102 112 98 124 98 142 L110 142 C110 128 114 116 122 106 Z"/>
+      <path d="M108 100 C102 112 98 124 98 145 L110 145 C110 128 114 116 122 106 Z"/>
     </g>
     <g id="pot" transform="translate(162 84) rotate(-60)">
       <path d="M42 -26 L54 -26 Q62 -26 62 -18 L62 -8 Q62 0 54 0 L42 0 L42 -8 L54 -8 L54 -18 L42 -18 Z" fill="#8E9AA6"/>
@@ -64,8 +58,8 @@
       <path d="M12 -1 Q17 2 16 7" fill="none"/>
     </g>
     <g id="steam" fill="#FFFFFF">
-      <path d="M47 125 C35 115 36 105 46 98 C53 93 52 89 48 85 Q45 81 49 78 Q53 76 56 80 C65 90 60 100 52 105 C44 110 46 115 53 119 Q57 123 53 126 Q50 128 47 125 Z"/>
-      <path d="M79 116 C68 107 70 97 80 89 C88 83 87 78 83 73 Q80 69 84 67 Q88 65 91 69 C100 81 94 91 86 97 C79 102 79 106 85 110 Q89 114 85 117 Q82 119 79 116 Z"/>
+      <path d="M47 133 C35 123 36 113 46 106 C53 101 52 97 48 93 Q45 89 49 86 Q53 84 56 88 C65 98 60 108 52 113 C44 118 46 123 53 127 Q57 131 53 134 Q50 136 47 133 Z"/>
+      <path d="M79 132 C68 123 70 113 80 105 C88 99 87 94 83 89 Q80 85 84 83 Q88 81 91 85 C100 97 94 107 86 113 C79 118 79 122 85 126 Q89 130 85 133 Q82 135 79 132 Z"/>
     </g>
     <g id="down-the-drain-motion">
       <path d="M187 136 L187 172 L180 172 Q177 172 179 175 L190 191 Q192 194 194 191 L205 175 Q207 172 204 172 L197 172 L197 136 Q192 131 187 136 Z" fill="#3E8FB0"/>
