@@ -50,13 +50,16 @@ Standard schema.org/Recipe med egne felter under `tumbi`. Den fulde tabel står 
 - Hvert trin har `tumbi.verbum` fra de 24 verber i `js/katalog.js`: `roere haelde skaere aelte rulle vende stege koge maale vaske-haender vente smage smoere mose bage piske drysse rive pensle tage-ud si kagerulle pakke-ind smuldre`.
 - Trinteksten (`text`, den der læses op) er højst 9 ord.
 - Kniv (`skaere`, `rive`) og varme (`stege`, `koge`, `vende`, `bage`, `tage-ud`, `si`) kræver `"voksen": true` og `voksen_hjaelp` (`"kniv"` eller `"varme"`). De to følges ad. `kagerulle`, `pakke-ind` og `smuldre` kan barnet selv.
-- Efter et `bage`-trin med timer kommer et `tage-ud`-trin («Tag pladen ud af ovnen.»). Bages der videre i et nyt `bage`-trin, kommer `tage-ud` efter det sidste.
+- **Ordvagten** (kun `text`, uanset verbet): nævner trinteksten kniv eller rivejern (`riv`, `hak`, `skær`, `skærer`, `kniv…`, `skræl`), skal trinnet have `"voksen": true` og `"voksen_hjaelp": "kniv"`. Nævner den varme (`bag`, `steg`, `kog`, `koge`, `koger`, `kogende`, `kogt`, `komfur…`, `kogeplade…`, `smelt` og `ovn` overalt), skal hjælpen være `"varme"`. Står der begge slags, afvises trinnet: `voksen_hjaelp` er én værdi, så trinnet deles i to. Kun hele ord: «bagepapir», «rivejern», «kogebog», «skærebræt» og «knivspids» tæller ikke. «varm» og «brun» er ikke med («en varm skive», «brun farin»).
+- Efter hvert `bage`-trin (med eller uden timer) kommer et `tage-ud`-trin («Tag pladen ud af ovnen.»). Bages der videre i et nyt `bage`-trin, kommer `tage-ud` efter det sidste.
 - `piske`, `pensle`, `mose` og `drysse` kan barnet selv. Er der varme med, skriver opskriften `"voksen": true`, og så skal hjælpen være `"varme"` (validatoren kan ikke selv se varmen).
-- Et trin med råt kød (`koed`) eller æg (`aeg`) i `ikoner` skal efterfølges af et `vaske-haender`-trin. Andre ingredienser må ikke røres før det.
+- Et trin med råt kød (`koed`) eller æg (`aeg`) i `ikoner` skal efterfølges af et `vaske-haender`-trin. Andre ingredienser må ikke røres før det, og der må ikke være en `vente`-pause imellem (så går barnet fra køkkenet med råt på hænderne).
+- Råt kød og æg i ingredienserne skal stå i `ikoner` på mindst ét trin. Ellers kan validatoren ikke se, hvornår hænderne skal vaskes.
+- Nævner en ingredienslinje æg eller kød (`æg`, `ægget`, `æggene`, `…kød`, `…fars`, `flæsk`, `kylling…`, `bacon`, `laks`, `fisk…`, `rejer`), skal ikonet være `koed` eller `aeg`. Ellers slipper «3 æg» med mælke-ikonet uden håndvask.
 - Rå fisk og råt svinekød bruger også ikonet `koed`, så validatoren kræver håndvask. `tun` (på dåse) og `skinke` (pålæg) er ikke rå.
-- Dej med råt æg (eller kød) regnes først som indarbejdet efter æltningen: et `aelte`-trin efter et `roere`-, `haelde`- eller `piske`-trin med et råt ikon tæller som råt, så vasken kommer efter æltningen, ikke før.
+- Dej eller fars med råt æg (eller kød) regnes først som indarbejdet efter æltningen: et `aelte`-, `rulle`- eller `kagerulle`-trin efter et `roere`-, `haelde`- eller `piske`-trin med et råt ikon tæller som råt (med de rå ikoner fra alle blandetrinene), så vasken kommer efter æltningen eller formningen, ikke før. Efter `aelte` er det rå indarbejdet.
 - `timer_sek` er et heltal, højst 4 timer. Billedfilerne findes.
-- Hvad kilden siger, og hvad der er et skøn, står i `tumbi.kilde` (vises kun i printets fod), ikke i navn, beskrivelse, antal, ingredienser, trin eller noter. Validatoren afviser ordene «kilde(n)» og «skøn» dér. Har kildenoten flere sætninger, slutter den med punktum («Egen tekst» står uden).
+- Hvad kilden siger, og hvad der er et skøn, står i `tumbi.kilde` (vises kun i printets fod), ikke i navn, beskrivelse, antal, ingredienser, redskaber, trin eller noter. Validatoren afviser dér ordene «kilde», «kilden», «kildes», «kildens», «kilder», «kilderne», «skøn», «skønnet», «skønnes» og «skønsmæssigt» (ikke «kildevand», «skønt» og «skønne»). Har kildenoten flere sætninger, slutter den med punktum, ! eller ? («Egen tekst» står uden).
 - En ny ret skrives med `"afproevet": false`, indtil den er lavet.
 
 ## Ny opskrift
@@ -92,4 +95,6 @@ Standard schema.org/Recipe med egne felter under `tumbi`. Den fulde tabel står 
 - **WebKit afviser adresseskift ud over ca. 200 pr. 10 s i samme dokument** («Excessive navigation attempts blocked.», målt i Playwright WebKit). e2e åbner derfor hver ret i et nyt dokument, og et afvist skift meldes for sig. En test, der går gennem mange trin med `location.hash`, skal gøre det samme.
 - **Safari fjerner listesemantik,** når `list-style: none` er sat. Print-listen har derfor `role="list"`.
 - **Codex laver ikke billeder.** Den skriver SVG-tekst. Billederne laves i ChatGPT.
+- **`note` vises med «Til den voksne:» foran** (`app.js:423`). Derfor gælder ordvagten kun `text`: noten må gerne nævne kniven og ovnen. Printet (`js/print.js:29`) viser noten uden den etiket. Kendt, ikke rettet.
+- **`sw.js` henter `index.json` netværk først, men koden, der læser den (`js/data.js`), cache først.** Efter en formatændring kan en iPad derfor køre den gamle `data.js` mod den nye `index.json`, indtil den nye service worker er installeret. En formatændring i `index.json` skal derfor kunne læses af både den gamle og den nye `data.js`. Der er ingen brugere endnu.
 - **Tunfrikadellernes «Hæld vandet fra tunen.» har `haelde`, ikke `si`** (en kendt skævhed). Si-billedet viser en varm gryde over dørslaget, og tunen er kold og står i en dåse. `si` bruges kun ved kogende vand (kartoffelmos og kødsovs).
