@@ -275,9 +275,13 @@ test('noter om kilden og skøn står i tumbi.kilde, ikke i den synlige tekst', (
   forventFejl(fil, (d) => { d.recipeYield = 'ca. 4 personer (skønnet)'; }, '«recipeYield»: «skønnet» er en redaktionel note');
   forventFejl(fil, (d) => { d.recipeYield = 'ca. 4 personer, skønnes det'; }, '«recipeYield»: «skønnes» er en redaktionel note');
   forventFejl(fil, (d) => { d.recipeIngredient[0] = '1 spsk olie (skønsmæssigt)'; }, 'ingrediens 1: «skønsmæssigt» er en redaktionel note');
+  // Stammen fanger alle bøjninger og sammensatte ord (code review 3, 19-10)
+  forventFejl(fil, (d) => { d.recipeInstructions[2].tumbi.note = 'Kildeteksten siger to gulerødder.'; }, 'trin 3 (noten): «Kildeteksten» er en redaktionel note');
+  forventFejl(fil, (d) => { d.recipeYield = 'ca. 4 personer (skønsmæssig)'; }, '«recipeYield»: «skønsmæssig» er en redaktionel note');
+  forventFejl(fil, (d) => { d.description = 'Kødsovs. Mængderne er skønnede.'; }, '«description»: «skønnede» er en redaktionel note');
   // Redskaberne står i printet under «Redskaber»
   forventFejl(fil, (d) => { d.tool.push('træske (kilden siger grydeske)'); }, 'redskab 8: «kilden» er en redaktionel note');
-  // Ordene inde i andre ord tæller ikke, og «skønne» (smukke) er ikke et skøn
+  // Undtagelserne: «kildevand», «skønt» (selvom) og «skønne» (smukke) er ikke et skøn
   forventGyldig(fil, (d) => { d.recipeInstructions[2].tumbi.note = 'Brug kildevand, hvis I har det. Skønt det tager tid.'; });
   forventGyldig(fil, (d) => { d.recipeInstructions[2].tumbi.note = 'To skønne gulerødder.'; });
 });

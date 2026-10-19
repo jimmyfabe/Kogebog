@@ -39,13 +39,13 @@ const KNIV_ORD = /(?<!\p{L})(?:riv|hak|skær|skræl)\p{L}*|\p{L}*kniv\p{L}*/giu;
 // «en varm skive» og «brun farin»
 const VARME_ORD = /(?<!\p{L})bag\p{L}*|\p{L}*(?:steg|kog|smelt|komfur|ovn)\p{L}*/giu;
 // Redaktionelle noter («Kilden siger …», «(skøn)») står i «tumbi.kilde», ikke i det, der vises og læses op i køkkenet.
-// Hele ord: «kildevand», «skønt» og «skønne» tæller ikke
-const REDAKTION = /(?<!\p{L})(kild(?:e|en|es|ens|er|erne)|skøn(?:net|nes|smæssigt)?)(?!\p{L})/iu;
+// Også efter stammen: «Kildeteksten», «skønsmæssig», «skønnede». «kildevand», «skønt» og «skønne» står i UNDTAGELSER
+const REDAKTION = /(?<!\p{L})(?:kild|skøn)\p{L}*/giu;
 // Råt kød og æg i en ingredienslinje. Så skal ikonet være et af RAA_IKONER, ellers kræver validatoren ingen håndvask.
 // «æg» kun forrest (ikke «læg» og «vægt»), resten også inde i ord (oksekød, oksefars, stegeflæsk, tigerrejer).
 // Tun (på dåse) og skinke (pålæg) er ikke rå og står ikke her
 const RAA_ORD = /(?<!\p{L})æg\p{L}*|\p{L}*(?:kød|fars|flæsk|kylling|bacon|laks|torsk|fisk|reje|medister)\p{L}*/giu;
-// Hele ord (små bogstaver), som stammerne rammer, men som ikke er kniv, varme eller råt
+// Hele ord (små bogstaver), som stammerne rammer, men som ikke er kniv, varme, råt eller en redaktionel note
 const UNDTAGELSER = new Set([
   // Kniv
   'knivspids', 'knivspidsen', 'knivspidser', // et mål: «en knivspids salt»
@@ -65,6 +65,10 @@ const UNDTAGELSER = new Set([
   // Råt
   'ægte', // «ægte vanilje»
   'kyllingebouillon', 'kyllingefond', 'kødbouillon', 'fiskebouillon', 'fiskefond', 'fiskesauce', // kogt og færdig: ikonet «bouillon»
+  // Redaktionelle ord (REDAKTION)
+  'kildevand', // vand, ikke en kilde
+  'skønt', // «skønt det tager tid» (selvom)
+  'skønne', 'skønneste', // smukke: «to skønne gulerødder»
 ]);
 // Det første ord i teksten, som stammen rammer, og som ikke er en undtagelse. Ellers null
 function fund(re, tekst) {
@@ -156,7 +160,7 @@ export function valider(rod = ROD) {
     const filId = fil.slice(0, -5);
     const f = (besked) => fejlI(rel, besked);
     const redaktion = (hvor, v) => {
-      const m = typeof v === 'string' && v.match(REDAKTION);
+      const m = fund(REDAKTION, v);
       if (m) f(hvor + ': «' + m[0] + '» er en redaktionel note: den hører til i «tumbi.kilde», ikke i teksten, der vises: «' + v + '»');
     };
     if (typeof r !== 'object' || Array.isArray(r)) { f('skal være ét JSON-objekt'); continue; }
