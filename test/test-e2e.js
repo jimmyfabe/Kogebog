@@ -1204,6 +1204,61 @@ async function timerFrem(browser) {
   await ctx.close();
 }
 
+// Når tiden er gået, afløser «Tiden er gået!» og «Ok» knappen «Stop», og blokken bliver højere. «Ok» og teksten skal ses
+// over den faste bund (UI-review 5: på 667×375 og 390×844 lå «Ok» under bunden, og på 390×844 også teksten). Fokus må
+// ikke falde til body, når en knap forsvinder: fra «Stop» til «Ok», når tiden er gået, og fra «Ok» og «Stop» til
+// «Start timer». Kødsovs trin 4 og pizzasnegle trin 20 er dem, reviewet målte. Ny side pr. ret (WebKits grænse for adresseskift)
+const FAERDIG_TRIN = [['koedsovs', 4], ['pizzasnegle', 20]];
+async function timerFaerdig(browser) {
+  for (const sk of FORMER.filter((f) => TIMER_PAA.includes(f.navn))) {
+    const n = sk.navn;
+    console.log('[' + n + '] timeren er færdig: «Ok» over bunden, og fokus bliver i timeren');
+    for (const [id, nr] of FAERDIG_TRIN) {
+      const hvor = n + ' ' + id + ' trin ' + nr;
+      const { ctx, side } = await nySide(browser, sk);
+      await side.goto(BASE + '/index.html?hurtig=1#/ret/' + id + '/trin/' + nr);
+      await side.waitForSelector('.timer-start');
+      await side.waitForFunction(() => [...document.images].every((i) => i.complete), null, { timeout: 5000 }).catch(() => {});
+      const fokus = () => side.evaluate(() => {
+        const a = document.activeElement;
+        return a === document.body || !a ? 'body' : (a.getAttribute('aria-label') || a.textContent.trim());
+      });
+      // Enter på knappen med fokus. Er fokus tabt (et fund, der allerede er talt), trykkes knappen direkte, så resten kan måles
+      const enter = async (sel) => {
+        await vent(SPAERRE);
+        if (await side.evaluate((s) => !!document.activeElement && document.activeElement.matches(s), sel)) await side.keyboard.press('Enter');
+        else await side.locator(sel).evaluate((b) => b.click());
+      };
+      const START = 'Start timeren på 2 sekunder';
+      // Med tastaturet (eller VoiceOver): «Start timer» → «Stop» → tiden går → «Ok» → «Start timer»
+      await side.locator('.timer-start').focus();
+      await enter('.timer-start');
+      await side.waitForSelector('.timer.koerer');
+      tjek(await fokus() === 'Stop timeren', hvor + ': fokus skal stå på «Stop», når timeren er startet med tastaturet (står på ' + await fokus() + ')');
+      await side.locator('.timer .knap').focus();
+      await side.waitForSelector('.timer.faerdig', { timeout: 6000 });
+      await stille(side);
+      const r = await overBunden(side, ['.timer-faerdig-tekst', '.timer .knap.primaer']);
+      tjek(r.ses, hvor + ': «Tiden er gået!» og «Ok» skal ses over den faste bund, når tiden er gået ' + JSON.stringify(r));
+      tjek(await fokus() === 'Ok, tiden er gået. Slå timeren fra.', hvor + ': fokus skal flytte fra «Stop» til «Ok», når tiden er gået (står på ' + await fokus() + ')');
+      if (n === 'se-land' && id === 'koedsovs') await foto(side, n + '-timer-faerdig');
+      await enter('.timer .knap.primaer');
+      await side.waitForSelector('.timer-start');
+      tjek(await fokus() === START, hvor + ': fokus skal stå på «Start timer» efter «Ok» (står på ' + await fokus() + ')');
+      // «Stop», mens timeren kører
+      await side.locator('.timer-start').focus();
+      await enter('.timer-start');
+      await side.waitForSelector('.timer.koerer');
+      await side.locator('.timer .knap').focus();
+      await enter('.timer .knap');
+      await side.waitForSelector('.timer-start');
+      tjek(await fokus() === START, hvor + ': fokus skal stå på «Start timer» efter «Stop» (står på ' + await fokus() + ')');
+      tjek(side.fejl.length === 0, hvor + ' (timeren er færdig): ' + side.fejl.join(' | '));
+      await ctx.close();
+    }
+  }
+}
+
 async function former(browser) {
   // E2E_FORMER=se-land,land begrænser skærmformerne (standard: alle)
   const valgte = FORMER.filter((s) => !process.env.E2E_FORMER || process.env.E2E_FORMER.split(',').includes(s.navn));
@@ -1465,6 +1520,7 @@ for (const s of VALGTE) if (DELE.includes('print')) KOERSEL.push(['print ' + s.n
 if (DELE.includes('tastatur')) KOERSEL.push(['tastatur', (b) => tastatur(b, SKAERME[2])]);
 if (DELE.includes('timer')) KOERSEL.push(['timere', (b) => timere(b, SKAERME[0])]);
 if (DELE.includes('timer')) KOERSEL.push(['timeren rulles frem', (b) => timerFrem(b)]);
+if (DELE.includes('timer')) KOERSEL.push(['timeren er færdig', (b) => timerFaerdig(b)]);
 if (DELE.includes('fejl')) KOERSEL.push(['fejltilstande', (b) => fejltilstande(b, SKAERME[0])]);
 if (DELE.includes('beroering')) KOERSEL.push(['berøring', (b) => beroering(b, SKAERME[0])]);
 if (DELE.includes('former')) KOERSEL.push(['skærmformer', (b) => former(b)]);

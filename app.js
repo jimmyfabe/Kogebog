@@ -287,8 +287,9 @@ function fremskridt(m, nr) {
     el('p', { class: 'trin-nr', tekst: 'Trin ' + nr + ' af ' + m.trin.length }));
 }
 
-// Timeren rulles frem over den faste bund, når den starter, og når «Start timer» siger, at en anden timer kører: på lave
-// skærme lå ringen, «Stop» og forklaringen under bunden (667×375, 844×390 og 390×844). Uden animation ved «mindre bevægelse»
+// Timeren rulles frem over den faste bund, når den starter, når «Start timer» siger, at en anden timer kører, og når tiden
+// er gået: på lave skærme lå ringen, «Stop» og forklaringen under bunden (667×375, 844×390 og 390×844), og «Ok» kom under
+// bunden, når blokken voksede med «Tiden er gået!» (UI-review 5). Uden animation ved «mindre bevægelse»
 function rulFrem(e) {
   e.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
 }
@@ -330,6 +331,14 @@ function timerBlok(m, t) {
   let varFaerdig = false;
   let vistUden = ''; // 'start' eller 'optaget': tegn kun om, når det skifter (ellers mister knappen fokus hvert kvarte sekund)
 
+  // Nyt indhold i blokken. Stod fokus i blokken (Tab, VoiceOver), flyttes det til knappen, der afløser den gamle:
+  // ellers faldt fokus til body, når «Start timer», «Stop» eller «Ok» forsvandt (UI-review 5)
+  function skift(fokus, ...born) {
+    const havdeFokus = blok.contains(document.activeElement);
+    blok.replaceChildren(...born);
+    if (havdeFokus) fokus.focus({ preventScroll: true });
+  }
+
   function tegn() {
     const a = Timer.aktuel();
     const min = a && a.ret === m.id && a.nr === t.nr;
@@ -345,8 +354,8 @@ function timerBlok(m, t) {
         vistUden = ny;
         blok.className = 'timer' + (anden ? ' optaget' : '');
         startKnap.setAttribute('aria-disabled', anden ? 'true' : 'false');
-        if (anden) blok.replaceChildren(startKnap, optagetTekst);
-        else blok.replaceChildren(startKnap);
+        if (anden) skift(startKnap, startKnap, optagetTekst);
+        else skift(startKnap, startKnap);
       }
       return;
     }
@@ -358,11 +367,14 @@ function timerBlok(m, t) {
     if (s.faerdig) {
       if (!varFaerdig) {
         varFaerdig = true;
-        blok.replaceChildren(ringBoks, el('p', { class: 'timer-faerdig-tekst', tekst: 'Tiden er gået!' }), okKnap);
+        skift(okKnap, ringBoks, el('p', { class: 'timer-faerdig-tekst', tekst: 'Tiden er gået!' }), okKnap);
         annoncer('Tiden er gået.');
+        // Blokken er højere nu: rul «Ok» frem over bunden. Kun når tiden går, mens trinnet ses. Kommer man til trinnet
+        // med en timer, der allerede er færdig (fx fra pillen), er blokken ikke på siden endnu, og skærmen står øverst
+        if (blok.isConnected) rulFrem(blok);
       }
     } else if (!blok.contains(stopKnap)) {
-      blok.replaceChildren(ringBoks, stopKnap);
+      skift(stopKnap, ringBoks, stopKnap);
     }
   }
   S.oprydning.push(Timer.lyt(tegn));
