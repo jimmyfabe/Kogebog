@@ -351,6 +351,19 @@ test('fars og dej med råt æg: hænderne vaskes efter formningen, ikke før', (
   }
 });
 
+// Efter stegningen eller bagningen er dejen ikke rå længere (code review 3, 19-10): at rulle pandekagen sammen eller
+// bollerne i et viskestykke rører ikke råt æg. «koge» tæller med vilje ikke: det er ofte noget andet, der varmes
+// (smør eller mælk i en lille gryde), mens dejen er rå
+test('dejen er ikke rå efter stegning eller bagning', () => {
+  const rul = (text) => ({ '@type': 'HowToStep', text, tumbi: { verbum: 'rulle' } });
+  forventGyldig('opskrifter/pandekager.json', (d) => { d.recipeInstructions.splice(10, 0, rul('Rul pandekagen sammen.')); });
+  forventGyldig('opskrifter/hytteostboller.json', (d) => { d.recipeInstructions.splice(13, 0, rul('Rul bollerne i et viskestykke.')); });
+  forventFejl('opskrifter/pandekager.json', (d) => {
+    d.recipeInstructions[8].tumbi.verbum = 'koge';
+    d.recipeInstructions.splice(10, 0, rul('Rul pandekagen sammen.'));
+  }, 'trin 11: rører råt kød eller æg (aeg) (dejen med aeg fra trin 7 er stadig rå)');
+});
+
 test('andre ingredienser mellem råt kød/æg og håndvasken', () => {
   forventFejl('opskrifter/pandekager.json', (d) => {
     d.recipeInstructions.splice(7, 0, { '@type': 'HowToStep', text: 'Hæld sukker i.', tumbi: { verbum: 'haelde', ikoner: ['sukker'] } });

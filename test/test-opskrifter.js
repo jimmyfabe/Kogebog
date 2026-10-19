@@ -224,7 +224,7 @@ export function valider(rod = ROD) {
       trinAntal.set(filId, trin.length);
       let timerSek = 0;
       const forurenet = new Set(); // trin, der allerede er meldt for at røre andet efter det rå
-      let raaDej = null; // { trin, ikoner }: det seneste trin, der blandede noget råt i dejen, indtil der æltes
+      let raaDej = null; // { trin, ikoner }: det seneste trin, der blandede noget råt i dejen, indtil der æltes, steges eller bages
       trin.forEach((s, i) => {
         const hvor = 'trin ' + (i + 1);
         tal.trin++;
@@ -282,7 +282,9 @@ export function valider(rod = ROD) {
           raa = [...new Set([...egneRaa, ...raaDej.ikoner])];
           hvorfra = ' (dejen med ' + liste(raaDej.ikoner) + ' fra trin ' + raaDej.trin + ' er stadig rå)';
         }
-        if (st.verbum === 'aelte') raaDej = null;
+        // Efter æltningen er det rå indarbejdet, og efter stegningen eller bagningen er dejen ikke rå. «koge» med vilje ikke:
+        // det er ofte noget andet, der varmes (smør eller mælk i en lille gryde), mens dejen er rå
+        if (['aelte', 'bage', 'stege'].includes(st.verbum)) raaDej = null;
         if (BLANDER.includes(st.verbum) && egneRaa.length) raaDej = { trin: i + 1, ikoner: [...new Set([...(raaDej?.ikoner ?? []), ...egneRaa])] };
         const vask = trin.findIndex((x, k) => k > i && x && x.tumbi && x.tumbi.verbum === 'vaske-haender');
         if (raa.length && vask < 0) {
