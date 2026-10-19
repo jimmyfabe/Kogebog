@@ -7,9 +7,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { nyTimer, timerStatus, formaterTid, varighed, varighedKort, varighedTale, HURTIG_SEK } from '../js/tid.js';
-import { isoTilMinutter, minutterTekst, tilTale, antalOrd, delIngrediens } from '../js/tekst.js';
+import { isoTilMinutter, minutterTekst, tilTale, talOrd, ukendtKoen, KOEN, antalOrd, delIngrediens } from '../js/tekst.js';
 import { lavModel } from '../js/model.js';
 import { hentIndex } from '../js/data.js';
+import { lavTaleliste, alleReplikker } from '../vaerktoej/lav-taleliste.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -69,25 +70,25 @@ test('ISO 8601-varigheder', () => {
 });
 
 test('enheder skrives ud til stemmen', () => {
-  assert.equal(tilTale('Mål 2,5 dl mel.'), 'Mål 2,5 deciliter mel.');
-  assert.equal(tilTale('1 spsk sukker'), '1 spiseskefuld sukker');
-  assert.equal(tilTale('3 spsk olie'), '3 spiseskefulde olie');
-  assert.equal(tilTale('500 g hakket kød'), '500 gram hakket kød');
-  assert.equal(tilTale('1,25 l kogende vand'), '1,25 liter kogende vand');
-  assert.equal(tilTale('2,5 dl madlavningsfløde 15 %'), '2,5 deciliter madlavningsfløde 15 procent');
+  assert.equal(tilTale('Mål 2,5 dl mel.'), 'Mål to og en halv deciliter mel.');
+  assert.equal(tilTale('1 spsk sukker'), 'en spiseskefuld sukker');
+  assert.equal(tilTale('3 spsk olie'), 'tre spiseskefulde olie');
+  assert.equal(tilTale('500 g hakket kød'), 'fem hundrede gram hakket kød');
+  assert.equal(tilTale('1,25 l kogende vand'), 'en og en kvart liter kogende vand');
+  assert.equal(tilTale('2,5 dl madlavningsfløde 15 %'), 'to og en halv deciliter madlavningsfløde femten procent');
   assert.equal(tilTale('Lad dejen hvile.'), 'Lad dejen hvile.');
   // æ, ø og å er bogstaver: «l» i «løg» og «g» i «gås» er ikke en enhed
-  assert.equal(tilTale('1 løg'), '1 løg');
-  assert.equal(tilTale('1 stort løg'), '1 stort løg');
-  assert.equal(tilTale('2 gås'), '2 gås');
-  assert.equal(tilTale('25 g gær'), '25 gram gær');
-  assert.equal(tilTale('1 dlø'), '1 dlø');
-  assert.equal(tilTale('2 kgå'), '2 kgå');
-  assert.equal(tilTale('1 spskæ'), '1 spskæ');
-  assert.equal(tilTale('1 tskø'), '1 tskø');
-  assert.equal(tilTale('2 stkæ'), '2 stkæ');
-  assert.equal(tilTale('ca. 16 stk.'), 'cirka 16 stykker');
-  assert.equal(tilTale('1 kg kartofler'), '1 kilo kartofler');
+  assert.equal(tilTale('1 løg'), 'et løg');
+  assert.equal(tilTale('1 stort løg'), 'et stort løg');
+  assert.equal(tilTale('2 gås'), 'to gås');
+  assert.equal(tilTale('25 g gær'), 'femogtyve gram gær');
+  assert.equal(tilTale('1 dlø'), 'en dlø');
+  assert.equal(tilTale('2 kgå'), 'to kgå');
+  assert.equal(tilTale('1 spskæ'), 'en spskæ');
+  assert.equal(tilTale('1 tskø'), 'en tskø');
+  assert.equal(tilTale('2 stkæ'), 'to stkæ');
+  assert.equal(tilTale('ca. 16 stk.'), 'cirka seksten stykker');
+  assert.equal(tilTale('1 kg kartofler'), 'et kilo kartofler');
   // Den bløde bindestreg i et kortnavn læses ikke op
   assert.equal(tilTale('Havregryns­kugler. Tryk igen for at starte.'), 'Havregrynskugler. Tryk igen for at starte.');
 });
@@ -98,15 +99,88 @@ test('brøker, intervaller og forkortelser skrives ud til stemmen', () => {
   assert.equal(tilTale('¾ tsk groft salt'), 'trekvart teskefuld groft salt');
   assert.equal(tilTale('¼ tsk salt'), 'en kvart teskefuld salt');
   assert.equal(tilTale('½ dl olivenolie'), 'en halv deciliter olivenolie');
-  assert.equal(tilTale('4½ spsk kakao (ca. 25 g)'), '4 og en halv spiseskefulde kakao (cirka 25 gram)');
-  assert.equal(tilTale('175 g finvalsede havregryn (ca. 5¾ dl)'), '175 gram finvalsede havregryn (cirka 5 og trekvart deciliter)');
-  assert.equal(tilTale('8-10 g salt'), '8 til 10 gram salt');
+  assert.equal(tilTale('4½ spsk kakao (ca. 25 g)'), 'fire og en halv spiseskefulde kakao (cirka femogtyve gram)');
+  assert.equal(tilTale('175 g finvalsede havregryn (ca. 5¾ dl)'), 'hundrede og femoghalvfjerds gram finvalsede havregryn (cirka fem og trekvart deciliter)');
+  assert.equal(tilTale('8-10 g salt'), 'otte til ti gram salt');
   assert.equal(tilTale('peber (og evt. salt)'), 'peber (og eventuelt salt)');
-  assert.equal(tilTale('2 dl kerner, fx græskarkerner'), '2 deciliter kerner, for eksempel græskarkerner');
+  assert.equal(tilTale('2 dl kerner, fx græskarkerner'), 'to deciliter kerner, for eksempel græskarkerner');
   // Kun hele ord: «ca» inde i et ord, «fx» i «fxo» og bindestregen i «hvede-, pizza-» røres ikke
   assert.equal(tilTale('Mexicansk sauce.'), 'Mexicansk sauce.');
   assert.equal(tilTale('fxo'), 'fxo');
-  assert.equal(tilTale('500 g mel (hvede-, pizza- eller grahamsmel)'), '500 gram mel (hvede-, pizza- eller grahamsmel)');
+  assert.equal(tilTale('500 g mel (hvede-, pizza- eller grahamsmel)'), 'fem hundrede gram mel (hvede-, pizza- eller grahamsmel)');
+});
+
+// Røst oversætter ikke cifre: «130 gram» blev «tretnulsnul…», «1,5 deciliter» «en kommer fem» (talegenkenderen, 19-10)
+test('tal 0-9999 skrives som danske talord', () => {
+  const tal = {
+    0: 'nul', 1: 'en', 2: 'to', 7: 'syv', 10: 'ti', 11: 'elleve', 16: 'seksten', 19: 'nitten', 20: 'tyve', 21: 'enogtyve',
+    22: 'toogtyve', 25: 'femogtyve', 30: 'tredive', 40: 'fyrre', 50: 'halvtreds', 60: 'tres', 70: 'halvfjerds', 75: 'femoghalvfjerds',
+    80: 'firs', 90: 'halvfems', 99: 'nioghalvfems', 100: 'hundrede', 101: 'hundrede og en', 130: 'hundrede og tredive',
+    150: 'hundrede og halvtreds', 175: 'hundrede og femoghalvfjerds', 185: 'hundrede og femogfirs', 200: 'to hundrede',
+    250: 'to hundrede og halvtreds', 400: 'fire hundrede', 650: 'seks hundrede og halvtreds', 999: 'ni hundrede og nioghalvfems',
+    1000: 'tusind', 1001: 'tusind og en', 1150: 'tusind et hundrede og halvtreds', 1200: 'tusind to hundrede',
+    2000: 'to tusind', 2025: 'to tusind og femogtyve', 9999: 'ni tusind ni hundrede og nioghalvfems',
+  };
+  for (const [n, ord] of Object.entries(tal)) assert.equal(talOrd(Number(n)), ord, String(n));
+  assert.equal(talOrd(1, 't'), 'et');
+  assert.equal(talOrd(101, 't'), 'hundrede og et');
+  assert.equal(talOrd(21, 't'), 'enogtyve', '«enogtyve» bøjes ikke');
+  assert.equal(talOrd(12345), 'en to tre fire fem', 'over 9999: ciffer for ciffer');
+  assert.throws(() => talOrd(-1));
+  assert.throws(() => talOrd(1.5));
+});
+
+test('«en» eller «et» efter navneordets køn, og decimaler som man siger dem til børn', () => {
+  const eks = {
+    // 1 efter enhedens og navneordets køn
+    '1 stort løg': 'et stort løg', '1 æg til pensling': 'et æg til pensling', '1 dl hvedemel': 'en deciliter hvedemel',
+    '1 tsk salt': 'en teskefuld salt', '1 knivspids peber': 'en knivspids peber', '1 g gær': 'et gram gær', '1 l mælk': 'en liter mælk',
+    '1 lille løg': 'et lille løg', '1 stk. citron': 'et stykke citron', '6 stk.': 'seks stykker', '1 fed hvidløg': 'et fed hvidløg',
+    'i 1 minut': 'i et minut', '101 æg': 'hundrede og et æg',
+    // Uden navneord efter tallet: kønnet på det sidst talte navneord
+    '3 æg (2 til dejen og 1 til pensling)': 'tre æg (to til dejen og et til pensling)',
+    // Timeren på trin 1: «trin et»
+    'Der kører allerede en timer på trin 1. Stop den først.': 'Der kører allerede en timer på trin et. Stop den først.',
+    // Decimaler
+    '0,5 dl mælk': 'en halv deciliter mælk', '0,5 kg': 'et halvt kilo', '1,5 dl sødmælk': 'halvanden deciliter sødmælk',
+    'Mål 1,5 dl mælk.': 'Mål halvanden deciliter mælk.', '1,5 kg': 'halvandet kilo', '1,5 tsk': 'halvanden teskefuld',
+    '1,25 l kogende vand': 'en og en kvart liter kogende vand', '1,75 dl hvedemel': 'en og trekvart deciliter hvedemel',
+    '1,2 kg melede kartofler': 'en komma to kilo melede kartofler', '2,5 dl': 'to og en halv deciliter', '2,35 l': 'to komma femogtredive liter',
+    '1,05 l': 'en komma nul fem liter', '2,25 tsk': 'to og en kvart teskefulde',
+    // Brøker efter køn (reviewets fund)
+    '½ kg kartofler': 'et halvt kilo kartofler', '½ løg': 'et halvt løg', '1 ½ dl mælk': 'halvanden deciliter mælk',
+    '1½ kg': 'halvandet kilo', '½-1 tsk salt': 'en halv til en teskefuld salt', '¼ kg smør': 'et kvart kilo smør',
+    '¾ tsk groft salt': 'trekvart teskefuld groft salt', '5¾ dl': 'fem og trekvart deciliter', '2½ æg': 'to og et halvt æg',
+    // Grader, procent, intervaller, regnestykker
+    'Tænd ovnen på 180°C.': 'Tænd ovnen på hundrede og firs grader.', '200 °C': 'to hundrede grader', '1 °C': 'en grad',
+    '15 %': 'femten procent', '8–10 g salt': 'otte til ti gram salt', '8 - 10 minutter': 'otte til ti minutter',
+    '7 + 5 = 12': 'syv plus fem er tolv', '3 × 4 = 12': 'tre gange fire er tolv', '12 ÷ 4 = 3': 'tolv delt med fire er tre',
+    // Forkortelser med stort forbogstav
+    'Ca. 16 stk.': 'Cirka seksten stykker', 'ca. 650 g hvedemel': 'cirka seks hundrede og halvtreds gram hvedemel',
+    'Evt. salt.': 'Eventuelt salt.', 'Fx persille.': 'For eksempel persille.',
+    // Eksemplerne fra talegenkenderen 19-10
+    '130 g revet ost': 'hundrede og tredive gram revet ost', '150 g blødt smør': 'hundrede og halvtreds gram blødt smør',
+    '1 spsk olie': 'en spiseskefuld olie', 'Rul dejen til 16 kugler.': 'Rul dejen til seksten kugler.',
+  };
+  for (const [ind, ud] of Object.entries(eks)) assert.equal(tilTale(ind), ud, ind);
+  // Kønnet kan ikke ses: stemmen siger «en», og test-tid.js melder ordet (så det skrives i KOEN)
+  assert.deepEqual(ukendtKoen('1 dlø'), ['1 dlø']);
+  assert.deepEqual(ukendtKoen('½ blomkål'), ['½ blomkål']);
+  assert.deepEqual(ukendtKoen('2 blomkål og 3 gulerødder'), [], 'kønnet betyder kun noget efter 1, ½ og x,5');
+});
+
+// Alt, appen siger (lav-taleliste.js), uden et eneste ciffer eller tegn, som stemmen læser forkert eller slet ikke
+test('talformen af alle replikker har ingen cifre og ingen + = × ÷ % ° ½ ¼ ¾', () => {
+  const liste = lavTaleliste();
+  assert.ok(liste.length >= 377, 'fandt kun ' + liste.length + ' replikker');
+  const tilbage = liste.filter((x) => /[\d+=×÷%°½¼¾–]/.test(x.tekst)).map((x) => x.fil + ': ' + x.tekst);
+  assert.deepEqual(tilbage, []);
+});
+
+test('kønnet efter 1, ½ og x,5 kan ses i alle replikker (navneordet står i KOEN)', () => {
+  const ukendte = [...new Set(alleReplikker().flatMap((x) => ukendtKoen(x.tekst).map((u) => x.fil + ': «' + u + '»')))];
+  assert.deepEqual(ukendte, [], 'skriv navneordets køn i KOEN i js/tekst.js');
+  for (const [ord, k] of Object.entries(KOEN)) assert.ok(k === 't' || k === 'n' || k === null, ord + ': ' + k);
 });
 
 test('ord tælles uden tegnsætning', () => {

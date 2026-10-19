@@ -18,38 +18,175 @@ export function minutterTekst(min) {
   return r ? t + H + 't' + H + r + H + 'min' : t + H + 't';
 }
 
-// Enheder skrevet ud, så stemmen siger «2,5 deciliter» og ikke «2,5 d l».
+// ---------- Teksten til stemmen ----------
+// Røst-stemmen (lyd/) læser teksten, som den står, og oversætter ikke cifre og tegn: «130 gram» blev til «tretnulsnul»,
+// og «7 + 5 = 12» til «syv procent fem simpel tolv» (målt med talegenkenderen 19-10-2026: fejlrate 0,57 med cifre,
+// 0,12 med ordene skrevet ud). Derfor skrives alle tal, enheder, brøker, tegn og forkortelser ud her.
+// Skærmen viser stadig teksten med cifre; kun stemmen får ordene.
 // Grænserne er Unicode (\p{L}), ikke \b: \b kender kun a-z, så «l» i «1 løg» og «g» i «2 gås» lignede en enhed.
-// Brøker, «8-10» og forkortelser skrives også ud: Røst-stemmen (lyd/) læser teksten, som den står, og «ca.» blev kortere
-// end «cirka» (målt 19-10-2026), dvs. sandsynligvis «ka».
-const BROEK = { '½': 'en halv', '¼': 'en kvart', '¾': 'trekvart' };
-const ENHEDER = [
-  // «½ tsk» er «en halv teskefuld» (ental). «4½ spsk» er «4 og en halv spiseskefulde», «5¾ dl» er «5 og trekvart deciliter»
-  [/(?<!\d)([½¼¾])\s*(spsk|tsk)(?![\p{L}\p{N}])/gu, (_, b, e) => BROEK[b] + (e === 'tsk' ? ' teskefuld' : ' spiseskefuld')],
-  [/(\d)([½¼¾])/gu, (_, n, b) => n + ' og ' + BROEK[b]],
-  [/[½¼¾]/gu, (b) => BROEK[b]],
-  [/(\d)\s*-\s*(\d)/g, '$1 til $2'],
-  [/(?<!\p{L})ca\.(?![\p{L}\p{N}])/gu, 'cirka'],
-  [/(?<!\p{L})evt\.(?![\p{L}\p{N}])/gu, 'eventuelt'],
-  [/(?<!\p{L})fx(?![\p{L}\p{N}])/gu, 'for eksempel'],
+
+const EN = ['nul', 'en', 'to', 'tre', 'fire', 'fem', 'seks', 'syv', 'otte', 'ni', 'ti', 'elleve', 'tolv', 'tretten', 'fjorten',
+  'femten', 'seksten', 'sytten', 'atten', 'nitten'];
+const TIERE = ['', '', 'tyve', 'tredive', 'fyrre', 'halvtreds', 'tres', 'halvfjerds', 'firs', 'halvfems'];
+
+// 0-9999 som dansk talord: 21 «enogtyve», 130 «hundrede og tredive», 250 «to hundrede og halvtreds», 1000 «tusind».
+// koen 't' (intetkøn) giver «et» for 1 («et æg»), ellers «en» («en deciliter»). Større tal læses ciffer for ciffer
+export function talOrd(n, koen = 'n') {
+  if (!Number.isInteger(n) || n < 0) throw new RangeError('talOrd: ' + n);
+  if (n > 9999) return [...String(n)].map((c) => EN[Number(c)]).join(' ');
+  if (n === 1) return koen === 't' ? 'et' : 'en';
+  if (n < 20) return EN[n];
+  if (n < 100) return (n % 10 ? EN[n % 10] + 'og' : '') + TIERE[Math.floor(n / 10)];
+  if (n < 1000) {
+    const h = Math.floor(n / 100);
+    const s = h === 1 ? 'hundrede' : EN[h] + ' hundrede';
+    return n % 100 ? s + ' og ' + talOrd(n % 100, koen) : s;
+  }
+  const r = n % 1000;
+  const s = n < 2000 ? 'tusind' : EN[Math.floor(n / 1000)] + ' tusind';
+  if (!r) return s;
+  return s + (r < 100 ? ' og ' : r < 200 ? ' et ' : ' ') + talOrd(r, koen); // 1150 «tusind et hundrede og halvtreds»
+}
+
+// Enhederne efter et tal: [ental, flertal, køn]. «1 tsk» er «en teskefuld», «2 tsk» «to teskefulde», «1 g» «et gram»
+const ENHED = {
+  dl: ['deciliter', 'deciliter', 'n'],
+  l: ['liter', 'liter', 'n'],
+  g: ['gram', 'gram', 't'],
+  kg: ['kilo', 'kilo', 't'],
+  tsk: ['teskefuld', 'teskefulde', 'n'],
+  spsk: ['spiseskefuld', 'spiseskefulde', 'n'],
+  stk: ['stykke', 'stykker', 't'],
+  '%': ['procent', 'procent', 'n'],
+  '°': ['grad', 'grader', 'n'],
+};
+
+// Navneordets køn, når der ikke står en enhed: «1 stort løg» er «et stort løg», «½ løg» «et halvt løg».
+// Kun ord, der står (eller kan stå) efter et tal i opskrifterne. null = et tillægsord uden køn («lille»): se på næste ord.
+// Står et ord, der ikke er her, efter 1, ½ eller x,5, fejler test-tid.js og nævner ordet (så skrives det på listen)
+export const KOEN = Object.freeze({
+  'løg': 't', 'æg': 't', 'fed': 't', 'minut': 't', 'sekund': 't', 'stykke': 't', 'trin': 't', 'glas': 't', 'æble': 't', 'bæger': 't',
+  'stort': 't', 'helt': 't', 'mildt': 't',
+  'knivspids': 'n', 'dåse': 'n', 'gulerod': 'n', 'flute': 'n', 'bouillonterning': 'n', 'grøntsagsbouillonterning': 'n',
+  'kugle': 'n', 'bolle': 'n', 'snegl': 'n', 'skive': 'n', 'time': 'n', 'citron': 'n', 'tomat': 'n', 'kartoffel': 'n',
+  'pakke': 'n', 'pose': 'n', 'portion': 'n', 'kage': 'n', 'chorizo': 'n',
+  'stor': 'n', 'hel': 'n', 'mild': 'n',
+  'lille': null,
+});
+
+const BROEK = { '½': 0.5, '¼': 0.25, '¾': 0.75 };
+const TAL = '\\d+(?:,\\d+)?[½¼¾]?|[½¼¾]';
+const MAENGDE = new RegExp('(?<![\\p{L}\\p{N}])(' + TAL + ')(?:\\s*-\\s*(' + TAL + '))?(?:\\s*(kg|dl|spsk|tsk|stk\\.?|g|l|%|°C|°)(?![\\p{L}\\p{N}]))?', 'gu');
+
+// «1,5» → { hel: 1, rest: 0.5 }, «4½» → { hel: 4, rest: 0.5 }, «1,2» → { hel: 1, rest: 0.2, decimaler: '2' }
+function delMaengde(a) {
+  const [, hel, dec, b] = /^(\d*)(?:,(\d+))?([½¼¾])?$/.exec(a);
+  const h = hel === '' ? 0 : Number(hel);
+  if (b) return { hel: h, rest: BROEK[b] };
+  if (dec && /^(?:50?|25|75)$/.test(dec)) return { hel: h, rest: Number('0.' + dec) };
+  return { hel: h, rest: dec ? Number('0.' + dec) : 0, decimaler: dec };
+}
+
+// Mængden som ord, som man siger det til et barn: 0,5 «en halv» (intetkøn «et halvt»), 1,5 «halvanden» («halvandet kilo»),
+// 1,25 «en og en kvart», 1,75 «en og trekvart», 2,5 «to og en halv», ellers «en komma to»
+function maengdeOrd(a, koen) {
+  const { hel, rest, decimaler } = delMaengde(a);
+  if (decimaler) return talOrd(hel) + ' komma ' + (decimaler.startsWith('0') ? [...decimaler].map((c) => EN[Number(c)]).join(' ') : talOrd(Number(decimaler)));
+  const t = koen === 't';
+  const broek = rest === 0.5 ? (t ? 'et halvt' : 'en halv') : rest === 0.25 ? (t ? 'et kvart' : 'en kvart') : rest === 0.75 ? 'trekvart' : '';
+  if (!broek) return talOrd(hel, koen);
+  if (!hel) return broek;
+  if (hel === 1 && rest === 0.5) return t ? 'halvandet' : 'halvanden';
+  return talOrd(hel, koen) + ' og ' + broek;
+}
+
+// Ental efter højst 1 og efter «halvanden» («halvanden teskefuld»), ellers flertal
+function flertal(a) {
+  const { hel, rest } = delMaengde(a);
+  return hel + rest > 1 && !(hel === 1 && rest === 0.5);
+}
+
+// Hvor ordet efter tallet afgør, om det er «en» eller «et»: 1 (også 1,75), ½, ¼ og x,5/x,25 (ikke 2, 3 … eller ¾)
+function koenBetyder(a) {
+  const { hel, rest, decimaler } = delMaengde(a);
+  return !decimaler && (rest === 0.5 || rest === 0.25 || hel % 100 === 1);
+}
+
+// Køn fra ordene efter tallet (højst to: «1 lille løg»). undefined = ukendt
+function koenEfter(rest) {
+  const ord = rest.match(/^(?:\s+\p{L}+){1,2}/u);
+  if (!ord) return undefined;
+  for (const o of ord[0].trim().split(/\s+/)) {
+    const k = Object.hasOwn(KOEN, o.toLowerCase()) ? KOEN[o.toLowerCase()] : undefined;
+    if (k !== null) return k;
+  }
+  return undefined;
+}
+
+function talTilOrd(tekst, ukendte) {
+  let sidste = null; // kønnet på det sidst talte navneord: «3 æg (2 til dejen og 1 til pensling)» → «et til pensling»
+  return tekst.replace(MAENGDE, (hele, a, b, enhed, pos, alt) => {
+    let koen;
+    let efter = '';
+    if (enhed) {
+      const [ental, flere, k] = ENHED[enhed.replace(/\.$/, '').replace('°C', '°')];
+      koen = k;
+      efter = ' ' + (flertal(b || a) ? flere : ental);
+    } else if (/(?<!\p{L})trin\s+$/iu.test(alt.slice(0, pos))) koen = 't'; // «trin 1» er «trin et»
+    else {
+      koen = koenEfter(alt.slice(pos + hele.length));
+      if (koen) sidste = koen;
+      else {
+        if (ukendte && (koenBetyder(a) || (b && koenBetyder(b))) && !sidste) ukendte.push(hele + alt.slice(pos + hele.length).split(/[.,;:!?)]/)[0]);
+        koen = sidste || 'n';
+      }
+    }
+    return maengdeOrd(a, koen) + (b ? ' til ' + maengdeOrd(b, koen) : '') + efter;
+  });
+}
+
+const FORKORTELSER = [
+  [/(?<!\p{L})([Cc])a\.(?![\p{L}\p{N}])/gu, (_, c) => (c === 'C' ? 'Cirka' : 'cirka')],
+  [/(?<!\p{L})([Ee])vt\.(?![\p{L}\p{N}])/gu, (_, e) => (e === 'E' ? 'Eventuelt' : 'eventuelt')],
+  [/(?<!\p{L})([Ff])x(?![\p{L}\p{N}])/gu, (_, f) => (f === 'F' ? 'For eksempel' : 'for eksempel')],
+];
+// Enheder uden tal foran («Mål mel i dl»)
+const ENHEDER_ALENE = [
   [/(?<!\p{L})dl(?![\p{L}\p{N}])/gu, 'deciliter'],
-  [/(\d+(?:,\d+)?)\s*spsk(?![\p{L}\p{N}])/gu, (_, n) => n + (n === '1' ? ' spiseskefuld' : ' spiseskefulde')],
-  [/(\d+(?:,\d+)?)\s*tsk(?![\p{L}\p{N}])/gu, (_, n) => n + (n === '1' ? ' teskefuld' : ' teskefulde')],
   [/(?<!\p{L})spsk(?![\p{L}\p{N}])/gu, 'spiseskefulde'],
   [/(?<!\p{L})tsk(?![\p{L}\p{N}])/gu, 'teskefulde'],
   [/(?<!\p{L})kg(?![\p{L}\p{N}])/gu, 'kilo'],
   [/(?<!\p{L})stk\.?(?=\s|$)/gu, 'stykker'],
-  [/(\d)\s*g(?![\p{L}\p{N}])/gu, '$1 gram'],
-  [/(\d)\s*l(?![\p{L}\p{N}])/gu, '$1 liter'],
-  [/°C/g, 'grader'],
-  [/(\d)\s*%/g, '$1 procent'],
+  [/\s*%/g, ' procent'],
+  [/\s*°C?/g, ' grader'],
 ];
-// Den bløde bindestreg (U+00AD) i et navn som «Havregryns­kugler» viser, hvor ordet må deles på et smalt kort.
-// Den er kun til skærmen og fjernes, før teksten læses op.
-export function tilTale(tekst) {
-  let t = String(tekst).replace(/­/g, '');
-  for (const [re, ud] of ENHEDER) t = t.replace(re, ud);
+
+function talegrund(tekst, ukendte) {
+  let t = String(tekst)
+    .replace(/­/g, '') // den bløde bindestreg (U+00AD) i «Havregryns­kugler» er kun til skærmen
+    .replace(/([\d½¼¾])\s*[–—]\s*(?=[\d½¼¾])/g, '$1-') // tankestreg i «8–10» som bindestreg
+    .replace(/(\d)\s+([½¼¾])/g, '$1$2') // «1 ½ dl» er «1½ dl»
+    .replace(/\s*\+\s*/g, ' plus ')
+    .replace(/\s*=\s*/g, ' er ')
+    .replace(/\s*×\s*/g, ' gange ')
+    .replace(/\s*÷\s*/g, ' delt med ');
+  for (const [re, ud] of FORKORTELSER) t = t.replace(re, ud);
+  t = talTilOrd(t, ukendte);
+  for (const [re, ud] of ENHEDER_ALENE) t = t.replace(re, ud);
+  t = t.replace(/\d+/g, (n) => talOrd(Number(n))); // cifre inde i et ord («B12»)
   return t.replace(/\s+/g, ' ').trim();
+}
+
+// Teksten, som stemmen siger den: «Mål 1,5 dl mælk.» → «Mål halvanden deciliter mælk.»
+export function tilTale(tekst) {
+  return talegrund(tekst, null);
+}
+
+// Til test-tid.js: tal (1, ½, x,5), hvor kønnet ikke kunne ses (ordet efter står ikke i KOEN), så stemmen gætter «en»
+export function ukendtKoen(tekst) {
+  const ukendte = [];
+  talegrund(tekst, ukendte);
+  return ukendte;
 }
 
 // Antal ord i en sætning (tegnsætning tæller ikke)

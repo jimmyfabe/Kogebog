@@ -19,7 +19,8 @@ export function alleRetter() {
   return ids.map((id) => lavModel(laesJson('opskrifter/' + id + '.json')));
 }
 
-export function lavTaleliste(retter = alleRetter()) {
+// Alle replikker ({ tekst, fil }), som de står på skærmen (før tilTale). Samme fil kan stå flere gange
+export function alleReplikker(retter = alleRetter()) {
   const replikker = [R.FAERDIG, R.PRINT_HOLD, R.VOKSEN_HOLD, ...Object.keys(GRUPPER).map(R.gruppe)];
   for (const m of retter) {
     replikker.push(R.retValgt(m), R.retAaben(m));
@@ -31,8 +32,12 @@ export function lavTaleliste(retter = alleRetter()) {
   for (const m of retter) {
     for (const t of m.trin) if (t.timerSek) replikker.push(R.timerOptaget(m, t.nr, false), R.timerOptaget(m, t.nr, true));
   }
+  return replikker;
+}
+
+export function lavTaleliste(retter = alleRetter()) {
   const liste = new Map();
-  for (const x of replikker) {
+  for (const x of alleReplikker(retter)) {
     const tekst = tilTale(x.tekst);
     const foer = liste.get(x.fil);
     if (foer && foer.tekst !== tekst) throw new Error(x.fil + ' bruges til to tekster: «' + foer.tekst + '» og «' + tekst + '»');
