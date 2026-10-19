@@ -76,7 +76,10 @@ function fund(re, tekst) {
   for (const m of tekst.matchAll(re)) if (!UNDTAGELSER.has(m[0].toLowerCase())) return m;
   return null;
 }
-const LYD_RE =/^([a-z0-9]+(?:-[a-z0-9]+)*)\/(\d+|navn)\.mp3$/;
+// Lydfilerne (js/replikker.js): <ret>/<trin>.mp3, <ret>/navn.mp3, <ret>/valgt.mp3, <ret>/ingrediens-<n>.mp3,
+// <ret>/timer-optaget-<trin>.mp3 og faelles/<navn>.mp3
+const LYD_RE = /^([a-z0-9]+(?:-[a-z0-9]+)*)\/(\d+|navn|valgt|ingrediens-\d+|timer-optaget-\d+|[a-z]+(?:-[a-z0-9]+)*)\.mp3$/;
+const LYD_FAELLES = new Set(['faerdig', 'print-hold', 'voksen-hold', ...Object.keys(GRUPPER).map((g) => 'gruppe-' + g)]);
 
 const erTekst = (v) => typeof v === 'string' && v.trim().length > 0;
 const liste = (a) => a.join(', ');
@@ -151,6 +154,8 @@ export function valider(rod = ROD) {
   }
 
   const trinAntal = new Map(); // id → antal trin (til lydlisten)
+  const ingrAntal = new Map(); // id → antal ingredienser (til lydlisten)
+  let flestTrin = 0;
   const sete = new Set();
   for (const fil of filer) {
     const rel = 'opskrifter/' + fil;
@@ -201,6 +206,7 @@ export function valider(rod = ROD) {
     const retIkoner = new Set();
     if ('recipeIngredient' in r && (!Array.isArray(ingr) || !ingr.length || !ingr.every(erTekst))) f('«recipeIngredient» skal være en liste med tekster');
     if (Array.isArray(ingr)) ingr.forEach((x, i) => redaktion('ingrediens ' + (i + 1), x));
+    if (Array.isArray(ingr)) ingrAntal.set(filId, ingr.length);
     if ('tool' in r && (!Array.isArray(r.tool) || !r.tool.every(erTekst))) f('«tool» skal være en liste med tekster');
     if (Array.isArray(r.tool)) r.tool.forEach((x, i) => redaktion('redskab ' + (i + 1), x)); // printet viser dem under «Redskaber»
     if (t && typeof t === 'object' && Array.isArray(ingr)) {
@@ -226,6 +232,7 @@ export function valider(rod = ROD) {
     if (!('recipeInstructions' in r)) { /* allerede meldt */ } else if (!Array.isArray(trin) || trin.length < 3) f('«recipeInstructions» skal være en liste med mindst 3 trin');
     else {
       trinAntal.set(filId, trin.length);
+      flestTrin = Math.max(flestTrin, trin.length);
       let timerSek = 0;
       const forurenet = new Set(); // trin, der allerede er meldt for at røre andet efter det rå
       let raaDej = null; // { trin, ikoner }: det seneste trin, der blandede noget råt i dejen, indtil der æltes, steges eller bages
@@ -332,7 +339,8 @@ export function valider(rod = ROD) {
     }
   }
 
-  // Lydlisten: hver fil skal findes og høre til en rigtig ret og et rigtigt trin
+  // Lydlisten: hver fil skal findes og høre til en rigtig ret og et rigtigt trin (eller en ingrediens).
+  // At hver fil også er en replik, appen siger, og er lavet af den rigtige tekst, tjekker test-lyd.js
   if (findes('lyd/liste.json')) {
     const lyd = laesJson('lyd/liste.json');
     if (lyd) {
@@ -340,9 +348,18 @@ export function valider(rod = ROD) {
       if (!Array.isArray(lyd.filer)) fejlI('lyd/liste.json', '«filer» skal være en liste');
       else for (const fil of lyd.filer) {
         const m = LYD_RE.exec(String(fil));
-        if (!m) { fejlI('lyd/liste.json', 'ugyldigt filnavn ' + JSON.stringify(fil) + ' (forventer "<ret>/<trin>.mp3" eller "<ret>/navn.mp3")'); continue; }
-        if (!trinAntal.has(m[1])) fejlI('lyd/liste.json', '«' + fil + '»: retten «' + m[1] + '» findes ikke');
-        else if (m[2] !== 'navn' && (Number(m[2]) < 1 || Number(m[2]) > trinAntal.get(m[1]))) fejlI('lyd/liste.json', '«' + fil + '»: retten har kun ' + trinAntal.get(m[1]) + ' trin');
+        if (!m) { fejlI('lyd/liste.json', 'ugyldigt filnavn ' + JSON.stringify(fil) + ' (forventer fx "<ret>/<trin>.mp3", "<ret>/navn.mp3" eller "faelles/faerdig.mp3")'); continue; }
+        const nr = Number((/\d+$/.exec(m[2]) || [])[0]);
+        if (m[1] === 'faelles') {
+          const timer = /^timer-optaget-\d+$/.test(m[2]);
+          if (!LYD_FAELLES.has(m[2]) && !timer) fejlI('lyd/liste.json', '«' + fil + '»: ukendt fælles replik');
+          else if (timer && (nr < 1 || nr > flestTrin)) fejlI('lyd/liste.json', '«' + fil + '»: ingen ret har ' + nr + ' trin');
+        } else if (!trinAntal.has(m[1])) fejlI('lyd/liste.json', '«' + fil + '»: retten «' + m[1] + '» findes ikke');
+        else if (/^ingrediens-/.test(m[2])) {
+          if (nr < 1 || nr > (ingrAntal.get(m[1]) || 0)) fejlI('lyd/liste.json', '«' + fil + '»: retten har kun ' + ingrAntal.get(m[1]) + ' ingredienser');
+        } else if (/^(\d+|timer-optaget-\d+)$/.test(m[2])) {
+          if (nr < 1 || nr > trinAntal.get(m[1])) fejlI('lyd/liste.json', '«' + fil + '»: retten har kun ' + trinAntal.get(m[1]) + ' trin');
+        } else if (m[2] !== 'navn' && m[2] !== 'valgt') fejlI('lyd/liste.json', '«' + fil + '»: ukendt replik for en ret');
         if (!findes('lyd/' + fil)) fejlI('lyd/liste.json', '«' + fil + '» står på listen, men filen lyd/' + fil + ' findes ikke');
       }
     }

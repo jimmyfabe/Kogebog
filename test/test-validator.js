@@ -1,5 +1,5 @@
 // test-validator.js — viser, at test-opskrifter.js fejler med en tydelig besked, når en fil er ødelagt.
-// Hver test kopierer opskrifter/, grafik/ og lyd/ til en midlertidig mappe og ødelægger én ting.
+// Hver test kopierer opskrifter/ og grafik/ (og en tom lydliste) til en midlertidig mappe og ødelægger én ting.
 // Kør:  node test/test-validator.js
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -14,7 +14,11 @@ const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 function kopi() {
   const ny = fs.mkdtempSync(path.join(os.tmpdir(), 'kog-val-'));
-  for (const m of ['opskrifter', 'grafik', 'lyd']) fs.cpSync(path.join(ROD, m), path.join(ny, m), { recursive: true });
+  for (const m of ['opskrifter', 'grafik']) fs.cpSync(path.join(ROD, m), path.join(ny, m), { recursive: true });
+  // Lydfilerne (377 filer, ca. 8 MB) kopieres ikke, det gjorde testen fire gange langsommere: kopien får en tom
+  // lydliste. De rigtige lydfiler tjekkes af «de rigtige opskrifter er gyldige» og af test-lyd.js
+  fs.mkdirSync(path.join(ny, 'lyd'));
+  fs.writeFileSync(path.join(ny, 'lyd/liste.json'), JSON.stringify({ version: 1, filer: [] }));
   return ny;
 }
 const ryd = (mappe) => fs.rmSync(mappe, { recursive: true, force: true });
@@ -490,6 +494,11 @@ test('manglende grafik for et verbum, en ret eller en gruppe', () => {
 test('lydlisten må kun nævne filer, der findes', () => {
   forventFejl('lyd/liste.json', (d) => { d.filer = ['pandekager/3.mp3']; }, '«pandekager/3.mp3» står på listen, men filen lyd/pandekager/3.mp3 findes ikke');
   forventFejl('lyd/liste.json', (d) => { d.filer = ['pandekager/99.mp3']; }, 'retten har kun 11 trin');
+  forventFejl('lyd/liste.json', (d) => { d.filer = ['pandekager/timer-optaget-99.mp3']; }, 'retten har kun 11 trin');
+  forventFejl('lyd/liste.json', (d) => { d.filer = ['pandekager/ingrediens-99.mp3']; }, 'ingredienser');
+  forventFejl('lyd/liste.json', (d) => { d.filer = ['pandekager/hej.mp3']; }, 'ukendt replik for en ret');
+  forventFejl('lyd/liste.json', (d) => { d.filer = ['faelles/hej.mp3']; }, 'ukendt fælles replik');
+  forventFejl('lyd/liste.json', (d) => { d.filer = ['faelles/timer-optaget-99.mp3']; }, 'ingen ret har 99 trin');
 });
 
 test('kommandolinjen giver exit 1 og fejlen på stderr', () => {

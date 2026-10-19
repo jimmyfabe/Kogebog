@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const MAPPE = path.dirname(fileURLToPath(import.meta.url));
-const TESTS = ['test-opskrifter.js', 'test-validator.js', 'test-tid.js', 'test-sw.js', 'test-css.js'];
+const TESTS = ['test-opskrifter.js', 'test-validator.js', 'test-tid.js', 'test-sw.js', 'test-css.js', 'test-lyd.js'];
 
 let fejl = 0;
 for (const t of TESTS) {

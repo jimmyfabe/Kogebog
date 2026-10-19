@@ -5,7 +5,7 @@
    Derfor er VERSION bygget af INDHOLD: et tal for alle FILER og lydfilerne. test/test-sw.js tjekker, at FILER er komplet,
    og fejler, når en fil er ændret. Fejlbeskeden viser den nye værdi; testen ændrer ikke sw.js, så den sættes her i hånden. */
 const PRAEFIKS = 'kog-';
-const INDHOLD = '1229695116a56b6a'; // sha256 (16 tegn) af FILER og lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = 'f3505b24706dc412'; // sha256 (16 tegn) af FILER og lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const FILER = [
   './',
@@ -126,7 +126,7 @@ async function cacheFoerst(e, req) {
   }
 }
 
-// Lydfilerne (Røst-stemmen, lyd/<ret>/<navn>.mp3) står ikke i FILER: de er ca. 5 MB, over ti gange resten af appen, og
+// Lydfilerne (Røst-stemmen, lyd/<ret>/<navn>.mp3) står ikke i FILER: de er ca. 8 MB, 18 gange resten af appen, og
 // hentes derfor først, når de spilles (cache først som resten). INDHOLD regnes også af dem (test/test-sw.js), så en ny
 // udgave af en lydfil giver en ny VERSION. Safari beder om lyd i bidder (Range: bytes=0-1), og et svar med en bid (206)
 // kan ikke gemmes i en cache. Derfor hentes og gemmes altid hele filen, og bidden skæres ud af den.
