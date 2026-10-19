@@ -162,11 +162,14 @@ function forside() {
       knap('Hent opskrifterne igen', { klasse: 'primaer', ikonNavn: 'igen', onclick: () => { S.ids = null; indlaes(); } }));
   } else {
     const fejlede = [];
-    const kortTil = (id) => {
+    // Afsnittets billede (gryden, ovnen, kagen) står også i kortets hjørne: den grønne og den røde cirkel kan ikke skelnes
+    // ved farveblindhed (UI-review 5). Pynt for skærmlæseren: kortets navn er rettens navn
+    const kortTil = (id, gruppe) => {
       const m = S.retter.get(id);
       if (!m) return el('li', { class: 'kort-plads' }, el('div', { class: 'kort tomt', 'aria-hidden': 'true' }));
       if (m instanceof Error) { fejlede.push(id); return null; }
       const b = el('button', { type: 'button', class: 'kort' + (S.valgtKort === id ? ' valgt' : ''), 'data-ret': id },
+        Object.hasOwn(GRUPPER, gruppe) ? el('span', { class: 'kort-gruppe', 'aria-hidden': 'true' }, billede(grafikGruppe(gruppe), '')) : null,
         el('span', { class: 'kort-billede' }, billede(grafikRet(id), '')),
         el('span', { class: 'kort-navn', tekst: m.navn }),
         el('span', { class: 'kort-aabn', 'aria-hidden': 'true' }, ikon('naeste'), el('span', { tekst: 'Tryk igen' })));
@@ -177,7 +180,7 @@ function forside() {
     // Et afsnit uden kort (alle dets opskrifter fejlede) vises ikke
     const hopKnapper = [];
     const afsnit = S.grupper.map((g) => {
-      const kort = g.retter.map(kortTil).filter(Boolean);
+      const kort = g.retter.map((id) => kortTil(id, g.id)).filter(Boolean);
       if (!kort.length) return null;
       const navn = Object.hasOwn(GRUPPER, g.id) ? GRUPPER[g.id] : null;
       if (navn) hopKnapper.push(hopKnap(g.id, navn));

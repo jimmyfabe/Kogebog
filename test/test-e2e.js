@@ -411,6 +411,26 @@ async function tjekHop(side, hvor) {
   await side.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
 }
 
+// Hvert kort har afsnittets billede i hjørnet (aria-hidden): grøn og rød cirkel kan ikke skelnes ved farveblindhed
+// (UI-review 5). Mærket ligger inde i kortet og ikke oven på navnet
+async function tjekKortMaerke(side, hvor) {
+  const gruppeAf = Object.fromEntries(INDEX_GRUPPER.flatMap((g) => g.retter.map((id) => [id, g.id])));
+  const forkert = await side.evaluate((gruppeAf) => [...document.querySelectorAll('.forside .kort[data-ret]')].filter((k) => {
+    const m = k.querySelector('.kort-gruppe');
+    const img = m && m.querySelector('img');
+    if (!m || !img || m.getAttribute('aria-hidden') !== 'true' || img.getAttribute('src') !== 'grafik/gruppe-' + gruppeAf[k.dataset.ret] + '.svg' || !img.complete || !img.naturalWidth) return true;
+    const a = m.getBoundingClientRect();
+    const b = k.getBoundingClientRect();
+    const r = document.createRange();
+    r.selectNodeContents(k.querySelector('.kort-navn'));
+    const t = r.getBoundingClientRect();
+    const iKortet = a.left >= b.left && a.right <= b.right && a.top >= b.top && a.bottom <= b.bottom;
+    const overNavn = a.left < t.right && t.left < a.right && a.top < t.bottom && t.top < a.bottom;
+    return !iKortet || overNavn || a.width < 24;
+  }).map((k) => k.dataset.ret), gruppeAf);
+  tjek(!forkert.length, hvor + ': hvert kort skal have afsnittets billede i hjørnet (aria-hidden, mindst 24 px, inde i kortet, ikke over navnet): ' + forkert.join(', '));
+}
+
 async function venterPaa(side, fn, arg, hvor, ms = 6000) {
   try {
     await side.waitForFunction(fn, arg, { timeout: ms });
@@ -494,6 +514,7 @@ async function heleVejen(browser, skaerm) {
   const gr = await tjekGrupper(side, n + ' forside');
   maal.push(n + ' forside: ' + gr.afsnit.length + ' afsnit, højst ' + gr.iRaekke + ' kort pr. række');
   await tjekUndertekst(side, n + ' forside');
+  await tjekKortMaerke(side, n + ' forside');
   await tjekHop(side, n + ' forside');
   if (n === 'desktop') {
     // U16: med mus skal et kort ændre sig, når musen står over det
@@ -1326,6 +1347,7 @@ async function former(browser) {
     await tjekUndertekst(side, n + ' forside');
     await tjekLayout(side, n + ' forside');
     await foto(side, n + '-former-forside');
+    await tjekKortMaerke(side, n + ' forside');
     await tjekHop(side, n + ' forside');
 
     // Fremskridtet med timer-pillen: boller har 16 trin, og timeren fra trin 8 kører på trin 9 og er færdig på trin 13

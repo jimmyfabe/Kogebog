@@ -269,6 +269,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 /* display: flex, så kortet fylder hele rækkens højde: et navn på to linjer (Kødsovs med spaghetti) gør ikke ét kort højere */
 .kort-plads { min-width: 0; display: flex; }
 .kort {
+  position: relative;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -293,6 +294,9 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   background: var(--ret-farve, var(--sennep-lys));
 }
 .kort-billede img { width: 92%; }
+/* Afsnittets billede i hjørnet, som i overskriften: farven alene kan ikke skelnes ved farveblindhed (UI-review 5) */
+.kort-gruppe { position: absolute; top: 10px; left: 10px; display: grid; place-items: center; width: 40px; aspect-ratio: 1; border: var(--kant); border-radius: 50%; background: var(--ret-farve); }
+.kort-gruppe img { width: 80%; }
 /* Lange ord deles med bindestreg (lang="da"), ikke midt i ordet uden tegn */
 .kort-navn { font-size: 26px; font-weight: 800; line-height: 1.1; text-align: center; overflow-wrap: break-word; -webkit-hyphens: auto; hyphens: auto; }
 .kort-aabn { display: none; align-items: center; gap: 6px; font-size: 17px; font-weight: 750; }
@@ -547,6 +551,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .forside-titel { padding: 8px 16px 10px; }
   .forside-hop { gap: 8px; margin-bottom: 12px; }
   .knap.hop { width: var(--tryk); min-height: var(--tryk); }
+  .kort-gruppe { top: 7px; left: 7px; width: 32px; }
   .gruppe { padding: 16px 12px 0; }
   .gruppe-navn { gap: 10px; margin-bottom: 12px; font-size: 26px; }
   .gruppe-ikon { width: 56px; height: 56px; }
