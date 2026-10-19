@@ -48,9 +48,26 @@ function tjek(betingelse, besked) {
   if (!betingelse) { fejl.push(besked); console.log('  FEJL: ' + besked); }
 }
 
-// Falsk stemme, falsk Wake Lock og falsk WebAudio, så testen kan se, hvad appen gør
-function forfalskninger() {
+// Røst-stemmens tekster (lyd/tekster.json, laves af vaerktoej/indsaet-lyd.js): hvad hver lydfil siger
+const LYD_TEKSTER = fs.existsSync(path.join(ROD, 'lyd/tekster.json'))
+  ? JSON.parse(fs.readFileSync(path.join(ROD, 'lyd/tekster.json'), 'utf8')).tekster : {};
+
+// Falsk stemme, falske lydfiler, falsk Wake Lock og falsk WebAudio, så testen kan se, hvad appen gør
+function forfalskninger(lydTekster) {
   const tale = [];
+  // Røst-lydfilerne (lyd/<fil>): en falsk Audio skriver filen og dens tekst i __tale og slutter efter 30 ms.
+  // Med window.__lydFejl = true afviser play() (som når filen ikke kan hentes), og tale.js skal tage iPad-stemmen
+  window.Audio = class {
+    constructor(src) { this.fil = String(src).replace(/^lyd\//, ''); this.lyttere = []; }
+    addEventListener(type, fn) { if (type === 'ended') this.lyttere.push(fn); }
+    play() {
+      if (window.__lydFejl) return Promise.reject(new DOMException('Filen kunne ikke hentes', 'NotSupportedError'));
+      tale.push({ fil: this.fil, tekst: lydTekster[this.fil] });
+      setTimeout(() => this.lyttere.forEach((fn) => fn()), 30);
+      return Promise.resolve();
+    }
+    pause() {}
+  };
   const falsk = {
     speaking: false, pending: false, paused: false,
     getVoices: () => [{ name: 'Falsk engelsk', lang: 'en-US' }, { name: 'Falsk dansk', lang: 'da-DK' }],
@@ -100,7 +117,7 @@ function forfalskninger() {
 
 async function nySide(browser, skaerm, ekstra = {}) {
   const ctx = await browser.newContext({ viewport: skaerm.viewport, hasTouch: skaerm.hasTouch, deviceScaleFactor: 1, locale: 'da-DK', ...ekstra });
-  await ctx.addInitScript(forfalskninger);
+  await ctx.addInitScript(forfalskninger, LYD_TEKSTER);
   const side = await ctx.newPage();
   side.fejl = [];
   side.on('pageerror', (e) => side.fejl.push('pageerror: ' + e.message));
@@ -547,10 +564,16 @@ async function heleVejen(browser, skaerm) {
   tjek(cirkel.kontrast >= 1.5 || cirkel.kant, n + ': cirklen bag billedet skal kunne ses på det valgte kort (kontrast ' + cirkel.kontrast.toFixed(2) + ', ingen kant)');
   tjek((await sidsteTale(side)).startsWith(VEJ_NAVN), n + ': første tryk skal sige navnet');
   const stemme = await side.evaluate(() => window.__tale[window.__tale.length - 1]);
-  tjek(stemme.lang === 'da-DK' && stemme.stemme === 'da-DK', n + ': oplæsning skal være da-DK med den danske stemme, fik ' + JSON.stringify(stemme));
+  tjek(stemme.fil === VEJ + '/valgt.mp3', n + ': oplæsningen skal være Røst-filen ' + VEJ + '/valgt.mp3, fik ' + JSON.stringify(stemme));
   if (n === 'ipad') await foto(side, n + '-2-forside-valgt');
+  // Kan lydfilen ikke spilles (fx uden net, før den er gemt), læser iPad-stemmen samme tekst på dansk
+  await side.evaluate(() => { window.__lydFejl = true; });
   await tryk(side, '.kort[data-ret="pandekager"]');
   await side.waitForSelector('.ret h1');
+  await vent(50);
+  const reserve = await side.evaluate(() => { window.__lydFejl = false; return window.__tale[window.__tale.length - 1]; });
+  tjek(reserve.lang === 'da-DK' && reserve.stemme === 'da-DK' && reserve.tekst === LYD_TEKSTER[VEJ + '/navn.mp3'],
+    n + ': uden lydfilen skal iPad-stemmen (da-DK, dansk stemme) sige «' + LYD_TEKSTER[VEJ + '/navn.mp3'] + '», fik ' + JSON.stringify(reserve));
   tjek(await h1(side) === VEJ_NAVN, n + ': retten skal hedde ' + VEJ_NAVN);
   tjek(await side.locator('.ingr').count() === RETTER.pandekager.recipeIngredient.length, n + ': alle ingredienser skal vises');
   // Start (og print) skal kunne ses uden at rulle på alle skærme. På iPhone står bunden fast (før skulle man rulle)
@@ -769,6 +792,26 @@ async function heleVejen(browser, skaerm) {
       tjek(sw.scope === BASE + '/', n + ': service workerens scope skal være appens mappe, var ' + sw.scope);
       tjek(sw.noegler.length === 1 && sw.noegler[0].startsWith('kog-'), n + ': kun én cache, og den starter med «kog-»: ' + sw.noegler.join(', '));
       tjek(sw.filer > 60, n + ': service workeren skal have gemt appens filer (fik ' + sw.filer + ')');
+      // Safari beder om lyd i bidder (Range). Service workeren svarer med bidden (206) og gemmer hele filen
+      const fil = VEJ + '/valgt.mp3';
+      const bid = await side.evaluate(async (fil) => {
+        if (!navigator.serviceWorker.controller) return { styret: false };
+        const r = await fetch('lyd/' + fil, { headers: { Range: 'bytes=0-1' } });
+        const ud = { styret: true, status: r.status, omraade: r.headers.get('Content-Range'), laengde: (await r.arrayBuffer()).byteLength, gemt: 0 };
+        for (let i = 0; i < 20 && !ud.gemt; i++) {
+          const gemt = await (await caches.open((await caches.keys())[0])).match('lyd/' + fil);
+          if (gemt) ud.gemt = (await gemt.arrayBuffer()).byteLength;
+          else await new Promise((v) => setTimeout(v, 100));
+        }
+        return ud;
+      }, fil);
+      const stoerrelse = fs.existsSync(path.join(ROD, 'lyd', fil)) ? fs.statSync(path.join(ROD, 'lyd', fil)).size : -1;
+      if (!bid.styret) maal.push(n + ': siden var ikke styret af service workeren, så lydens bidder (Range) er kun testet i node');
+      else {
+        tjek(bid.status === 206 && bid.omraade === 'bytes 0-1/' + stoerrelse && bid.laengde === 2,
+          n + ': lyd med Range: bytes=0-1 skal give 206 og bytes 0-1/' + stoerrelse + ', fik ' + JSON.stringify(bid));
+        tjek(bid.gemt === stoerrelse, n + ': hele lydfilen (' + stoerrelse + ' bytes) skal være gemt, fik ' + bid.gemt);
+      }
     }
   }
   await ctx.close();
@@ -818,6 +861,7 @@ async function print(browser, skaerm) {
     const voksen = r.recipeInstructions.filter((t) => t.tumbi.voksen === true).length;
     tjek(await side.locator('ol.trin > li.voksen').count() === voksen, n + ' print ' + id + ': voksen-trinene er mærket');
     tjek((await side.locator('.fod').textContent()).includes('Tjek selv pakkerne for allergener'), n + ' print ' + id + ': allergen-linjen');
+    tjek((await side.locator('.fod').textContent()).includes('Stemmen er en computerstemme (Røst fra Alexandra Instituttet).'), n + ' print ' + id + ': oplysningen om stemmen');
     tjek((await side.locator('.ikke-afproevet').count() === 1) === !r.tumbi.afproevet, n + ' print ' + id + ': «Ikke afprøvet»');
     await tjekLayout(side, n + ' print ' + id);
     const smaat = await skrift(side, '.note, .maerke, .fod');
