@@ -349,6 +349,12 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .ingr-ikon { width: clamp(52px, 10svh, 84px); height: auto; aspect-ratio: 1; margin-bottom: 2px; }
 .ingr-maengde { font-size: 19px; font-weight: 800; }
 .ingr-navn { font-size: 18px; color: var(--kakao); text-align: center; line-height: 1.2; overflow-wrap: anywhere; -webkit-hyphens: auto; hyphens: auto; }
+/* En ingrediens, der læses op: samme lyseblå og samme bevægelse som trin-knapperne. .ingr står efter .taler og sætter
+   sin egen hvide baggrund, så reglen skal veje mere, og ikonet er img.ingr-ikon, som .taler .ikon ikke rammer */
+.ingr.taler { background: var(--blaa-lys); }
+@media (prefers-reduced-motion: no-preference) {
+  .ingr.taler .ingr-ikon { animation: tale 0.9s ease-in-out infinite; }
+}
 
 .start { min-width: 220px; }
 /* «Fortsæt» står først i bunden, så Tab når den først. På de brede skærme og på langs står den til højre som «Næste» */
