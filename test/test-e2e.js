@@ -56,23 +56,61 @@ const LYD_TEKSTER = fs.existsSync(path.join(ROD, 'lyd/tekster.json'))
 function forfalskninger(lydTekster) {
   const tale = [];
   // Røst-lydfilerne (lyd/<fil>): en falsk Audio skriver filen og dens tekst i __tale og slutter efter 30 ms.
+  // Som på iPad må et lydelement først spille, når det har fået et tryk (load(), play() eller en ny src under et tryk);
+  // ellers afviser play() (window.__lydAfvist tæller). window.__lydElementer tæller lydelementerne.
   // Med window.__lydFejl = true afviser play() (som når filen ikke kan hentes), og tale.js skal tage iPad-stemmen
+  window.__lydElementer = 0;
+  window.__lydAfvist = 0;
   window.Audio = class {
-    constructor(src) { this.fil = String(src).replace(/^lyd\//, ''); this.lyttere = []; }
-    addEventListener(type, fn) { if (type === 'ended') this.lyttere.push(fn); }
+    constructor(src) {
+      window.__lydElementer++;
+      Object.assign(this, { laast: true, lyttere: {}, paused: true, ended: false, error: null, _src: '', fil: '', spil: 0 });
+      if (src !== undefined) this.src = src;
+    }
+    set src(v) {
+      Object.assign(this, { _src: String(v), fil: String(v).replace(/^lyd\//, ''), paused: true, ended: false, error: null, spil: this.spil + 1 });
+      if (aktiveret()) this.laast = false;
+    }
+    get src() { return this._src; }
+    addEventListener(type, fn) { (this.lyttere[type] ||= []).push(fn); }
+    send(type) { for (const fn of this.lyttere[type] || []) fn({ type }); }
+    load() { if (aktiveret()) this.laast = false; }
     play() {
+      if (aktiveret()) this.laast = false;
+      if (this.laast) { window.__lydAfvist++; return Promise.reject(new DOMException('Kræver et tryk', 'NotAllowedError')); }
       if (window.__lydFejl) return Promise.reject(new DOMException('Filen kunne ikke hentes', 'NotSupportedError'));
       tale.push({ fil: this.fil, tekst: lydTekster[this.fil] });
-      setTimeout(() => this.lyttere.forEach((fn) => fn()), 30);
+      this.paused = false;
+      const mit = this.spil;
+      setTimeout(() => {
+        if (this.spil !== mit || this.paused) return;
+        this.paused = true;
+        this.ended = true;
+        this.send('pause');
+        this.send('ended');
+      }, 30);
       return Promise.resolve();
     }
-    pause() {}
+    pause() { if (!this.paused) { this.paused = true; setTimeout(() => this.send('pause'), 0); } }
   };
+  // iPad-stemmen taler først, når den første ytring kom i et tryk (window.__taleAfvist tæller dem, der blev tavse).
+  // Den tavse ytring, tale.js låser stemmen op med ved første tryk, tælles i window.__taleLaas, ikke i __tale
+  let stemmeAaben = false;
+  window.__taleAfvist = 0;
+  window.__taleLaas = 0;
   const falsk = {
     speaking: false, pending: false, paused: false,
     getVoices: () => [{ name: 'Falsk engelsk', lang: 'en-US' }, { name: 'Falsk dansk', lang: 'da-DK' }],
     addEventListener() {}, removeEventListener() {}, resume() {}, pause() {},
-    speak(u) { tale.push({ tekst: u.text, lang: u.lang, stemme: u.voice ? u.voice.lang : null }); setTimeout(() => { if (u.onend) u.onend(); }, 30); },
+    speak(u) {
+      if (!stemmeAaben) {
+        if (!aktiveret()) { window.__taleAfvist++; return; }
+        stemmeAaben = true;
+      }
+      if (!String(u.text).trim()) { window.__taleLaas++; return; }
+      tale.push({ tekst: u.text, lang: u.lang, stemme: u.voice ? u.voice.lang : null });
+      setTimeout(() => { if (u.onend) u.onend(); }, 30);
+    },
     cancel() {},
   };
   Object.defineProperty(window, 'speechSynthesis', { value: falsk, configurable: true });
@@ -610,6 +648,11 @@ async function heleVejen(browser, skaerm) {
     tjek(await h1(side) === t.text, n + ' trin ' + nr + ': teksten skal være «' + t.text + '», var «' + (await h1(side)) + '»');
     const voksen = t.tumbi.voksen === true;
     tjek(await sidsteTale(side) === tilTale((voksen ? 'Hent en voksen. ' : '') + t.text), n + ' trin ' + nr + ': trykket læser trinnet op');
+    // Også efter et voksen-hold (holdet lykkes uden et tryk) skal det være Røst-filen: ét fælles lydelement, der blev
+    // låst op ved første tryk. Før afviste iPad'en play() på et nyt element, og reserven var heller ikke låst op
+    const lydNu = await side.evaluate(() => ({ fil: (window.__tale[window.__tale.length - 1] || {}).fil, afvist: window.__lydAfvist, elementer: window.__lydElementer }));
+    tjek(lydNu.fil === 'pandekager/' + nr + '.mp3' && lydNu.afvist === 0 && lydNu.elementer === 1,
+      n + ' trin ' + nr + ': oplæsningen skal være Røst-filen pandekager/' + nr + '.mp3 fra ét lydelement, fik ' + JSON.stringify(lydNu));
     tjek((await side.locator('.voksen-maerke').count() === 1) === voksen, n + ' trin ' + nr + ': «Hent en voksen» skal ' + (voksen ? '' : 'ikke ') + 'vises');
     // Tilbage og Næste skal kunne ses uden at rulle på alle skærme, også iPhone (på retten må man rulle til Start)
     await tjekLayout(side, n + ' trin ' + nr, { knapperSes: true });
