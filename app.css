@@ -665,6 +665,13 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .ret .handlinger .print-knap .ikon { display: none; }
 }
 
+/* Under 400 px er kortet kun 161-176 px bredt: mærket på 32 px lå ind over rettens cirkel (−5 px på 360 px, 1 px luft
+   på 390 px, UI-review 6). Mindre og tættere på hjørnet giver 3 px luft på 360 px og 8 px på 390 px. En mindre cirkel
+   (124 px) gav kun 1 px mere og et mindre billede */
+@media (max-width: 399px) {
+  .kort-gruppe { top: 5px; left: 5px; width: 28px; }
+}
+
 /* «Hent en voksen» står på én linje med mindre skrift og en mindre Bo: under 400 px (før to linjer på iPhone)
    og på lave skærme på langs, hvor mærket kun har tekstens kolonne */
 @media (max-width: 399px), (max-height: 520px) and (orientation: landscape) {
