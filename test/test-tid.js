@@ -167,6 +167,14 @@ test('«en» eller «et» efter navneordets køn, og decimaler som man siger dem
   assert.deepEqual(ukendtKoen('1 dlø'), ['1 dlø']);
   assert.deepEqual(ukendtKoen('½ blomkål'), ['½ blomkål']);
   assert.deepEqual(ukendtKoen('2 blomkål og 3 gulerødder'), [], 'kønnet betyder kun noget efter 1, ½ og x,5');
+  // Kønnet fra et tidligere navneord gælder kun, når intet ord følger efter tallet, eller ordet er til, og eller eller.
+  // Følger et ukendt navneord, meldes det (før: «et æg og et banan», og ukendtKoen gav [])
+  assert.equal(tilTale('1 æg og 1 banan'), 'et æg og en banan');
+  assert.deepEqual(ukendtKoen('1 æg og 1 banan'), ['1 banan'], 'et ukendt navneord efter et kendt skal meldes');
+  assert.deepEqual(ukendtKoen('1 æg og 1 lille banan'), ['1 lille banan']);
+  assert.equal(tilTale('1 æg, gerne 1 eller 2'), 'et æg, gerne et eller to', 'intet navneord efter tallet: det sidste køn');
+  assert.deepEqual(ukendtKoen('3 æg (2 til dejen og 1 til pensling)'), []);
+  assert.deepEqual(ukendtKoen('1 æg og 1'), []);
 });
 
 // Alt, appen siger (lav-taleliste.js), uden et eneste ciffer eller tegn, som stemmen læser forkert eller slet ikke

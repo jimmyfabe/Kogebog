@@ -123,8 +123,13 @@ function koenEfter(rest) {
   return undefined;
 }
 
+// Intet ord efter tallet, eller til/og/eller: tallet står for det sidst talte navneord («og 1 til pensling»)
+const UDEN_NAVNEORD = /^(?:\s+(?:til|og|eller)(?!\p{L})|(?!\s+\p{L}))/iu;
+
 function talTilOrd(tekst, ukendte) {
-  let sidste = null; // kønnet på det sidst talte navneord: «3 æg (2 til dejen og 1 til pensling)» → «et til pensling»
+  // Kønnet på det sidst talte navneord: «3 æg (2 til dejen og 1 til pensling)» → «et til pensling». Kun når intet
+  // navneord følger efter tallet: i «1 æg og 1 banan» er «banan» ukendt og meldes, ikke «et banan»
+  let sidste = null;
   return tekst.replace(MAENGDE, (hele, a, b, enhed, pos, alt) => {
     let koen;
     let efter = '';
@@ -134,11 +139,13 @@ function talTilOrd(tekst, ukendte) {
       efter = ' ' + (flertal(b || a) ? flere : ental);
     } else if (/(?<!\p{L})trin\s+$/iu.test(alt.slice(0, pos))) koen = 't'; // «trin 1» er «trin et»
     else {
-      koen = koenEfter(alt.slice(pos + hele.length));
+      const rest = alt.slice(pos + hele.length);
+      koen = koenEfter(rest);
       if (koen) sidste = koen;
       else {
-        if (ukendte && (koenBetyder(a) || (b && koenBetyder(b))) && !sidste) ukendte.push(hele + alt.slice(pos + hele.length).split(/[.,;:!?)]/)[0]);
-        koen = sidste || 'n';
+        const forrige = UDEN_NAVNEORD.test(rest) ? sidste : null;
+        if (ukendte && (koenBetyder(a) || (b && koenBetyder(b))) && !forrige) ukendte.push(hele + rest.split(/[.,;:!?)]/)[0]);
+        koen = forrige || 'n';
       }
     }
     return maengdeOrd(a, koen) + (b ? ' til ' + maengdeOrd(b, koen) : '') + efter;
