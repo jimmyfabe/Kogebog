@@ -33,6 +33,9 @@ const ORDVAGT = /(?<!\p{L})(riv|bag|steg|kog(?:e|er|ende|t)?|hak|skær(?:er)?|kn
 // Redaktionelle noter («Kilden siger …», «(skøn)») står i «tumbi.kilde», ikke i det, der vises og læses op i køkkenet.
 // Hele ord: «kildevand» og «skønt» tæller ikke
 const REDAKTION = /(?<!\p{L})(kilden?s?|skøn)(?!\p{L})/iu;
+// Råt kød og æg i en ingredienslinje. Så skal ikonet være et af RAA_IKONER, ellers kræver validatoren ingen håndvask.
+// Tun (på dåse) og skinke (pålæg) er ikke rå og står ikke her
+const RAA_ORD = /(?<!\p{L})(æg|æggene|ægget|\p{L}*kød|\p{L}*fars|flæsk|kylling\p{L}*|bacon|laks|fisk\p{L}*|rejer)(?!\p{L})/iu;
 const LYD_RE =/^([a-z0-9]+(?:-[a-z0-9]+)*)\/(\d+|navn)\.mp3$/;
 
 const erTekst = (v) => typeof v === 'string' && v.trim().length > 0;
@@ -169,6 +172,8 @@ export function valider(rod = ROD) {
           if (!x || typeof x !== 'object') { f(hvor + ': skal være { "ikon", "maengde" }'); return; }
           if (!Object.hasOwn(INGREDIENSER, x.ikon)) f(hvor + ': ukendt ikon ' + JSON.stringify(x.ikon) + ' — brug et af: ' + liste(Object.keys(INGREDIENSER)));
           else retIkoner.add(x.ikon);
+          const raaOrd = typeof ingr[i] === 'string' && RAA_ORD.exec(ingr[i]);
+          if (raaOrd && !RAA_IKONER.includes(x.ikon)) f(hvor + ': «' + raaOrd[0] + '» er råt kød eller æg, så ikonet skal være ' + RAA_IKONER.map((r) => '"' + r + '"').join(' eller ') + ', fandt ' + JSON.stringify(x.ikon));
           if (typeof x.maengde !== 'string') f(hvor + ': «maengde» skal være en tekst (tom, hvis der ingen mængde er)');
           else if (x.maengde && typeof ingr[i] === 'string' && !ingr[i].startsWith(x.maengde + ' ')) f(hvor + ': mængden «' + x.maengde + '» passer ikke til «' + ingr[i] + '»');
         });

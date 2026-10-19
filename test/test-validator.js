@@ -298,6 +298,19 @@ test('råt kød og æg i ingredienserne skal stå på et trin', () => {
   forventFejl('opskrifter/frikadeller.json', udenIkon('koed'), '«koed» står i ingredienserne, men intet trin har ikonet');
 });
 
+// Reglerne for råt kød og æg bygger på ikonet. Står der æg eller kød i ingrediensen, skal ikonet være «koed» eller «aeg»,
+// ellers slipper «3 æg» med mælke-ikonet uden håndvask (code review 19-10). Trinenes ikon skiftes med, så kun ordet afslører det
+test('æg og kød i ingredienserne skal have ikonet koed eller aeg', () => {
+  forventFejl('opskrifter/pandekager.json', (d) => {
+    d.tumbi.ingredienser[2].ikon = 'maelk';
+    for (const s of d.recipeInstructions) if (s.tumbi.ikoner) s.tumbi.ikoner = s.tumbi.ikoner.map((x) => (x === 'aeg' ? 'maelk' : x));
+  }, 'ingrediens 3: «æg» er råt kød eller æg, så ikonet skal være "koed" eller "aeg", fandt "maelk"');
+  forventFejl('opskrifter/koedsovs.json', (d) => {
+    d.tumbi.ingredienser[1].ikon = 'tomat';
+    for (const s of d.recipeInstructions) if (s.tumbi.ikoner) s.tumbi.ikoner = s.tumbi.ikoner.filter((x) => x !== 'koed');
+  }, 'ingrediens 2: «oksekød» er råt kød eller æg, så ikonet skal være "koed" eller "aeg", fandt "tomat"');
+});
+
 // En pause (vente) med råt kød eller æg på hænderne: barnet går fra køkkenet uden at vaske sig.
 // Pandekager får en pause mellem æggene (trin 7) og vasken
 test('ingen pause med råt kød eller æg på hænderne', () => {
