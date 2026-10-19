@@ -27,9 +27,10 @@ const ISO_RE = /^P(?:\d+D)?(?:T(?:\d+H)?(?:\d+M)?(?:\d+S)?)?$/;
 const MAKS_TIMER_SEK = 4 * 3600;
 const BLANDER = ['roere', 'haelde', 'piske']; // verber, der blander en ingrediens i dejen eller farsen
 const HAENDER_I_DEJ = ['aelte', 'rulle', 'kagerulle']; // verber, hvor hænderne rører dejen eller farsen
-// Ord i trinteksten, der betyder kniv, rivejern eller varme. Hele ord (ikke «bagepapir», «rivejern», «kogebog» eller
-// «knivspids»), men «ovn» overalt. Ikke «varm» og «brun»: de står i «en varm skive» og «brun farin»
-const ORDVAGT = /(?<!\p{L})(riv|bag|steg|kog(?:e|er|ende|t)?|hak|skær(?:er)?|kniv(?!spids)\p{L}*|komfur\p{L}*|kogeplade\p{L}*|smelt|skræl)(?!\p{L})|ovn/iu;
+// Ord i trinteksten, der betyder kniv eller rivejern (KNIV_ORD) eller varme (VARME_ORD). Hele ord (ikke «bagepapir»,
+// «rivejern», «kogebog» eller «knivspids»), men «ovn» overalt. Ikke «varm» og «brun»: de står i «en varm skive» og «brun farin»
+const KNIV_ORD = /(?<!\p{L})(riv|hak|skær(?:er)?|kniv(?!spids)\p{L}*|skræl)(?!\p{L})/iu;
+const VARME_ORD = /(?<!\p{L})(bag|steg|kog(?:e|er|ende|t)?|komfur\p{L}*|kogeplade\p{L}*|smelt)(?!\p{L})|ovn/iu;
 // Redaktionelle noter («Kilden siger …», «(skøn)») står i «tumbi.kilde», ikke i det, der vises og læses op i køkkenet.
 // Hele ord: «kildevand» og «skønt» tæller ikke
 const REDAKTION = /(?<!\p{L})(kilden?s?|skøn)(?!\p{L})/iu;
@@ -209,9 +210,17 @@ export function valider(rod = ROD) {
         if (krav && (st.voksen !== true || st.voksen_hjaelp !== krav)) f(hvor + ': verbet «' + st.verbum + '» skal have "voksen": true og "voksen_hjaelp": "' + krav + '"');
         // Piske, pensle, mose og drysse kan barnet selv; hjælper den voksne, er det for varmens skyld (varmt fedt, gryde, pande)
         if (KUN_VARME_HJAELP.includes(st.verbum) && 'voksen_hjaelp' in st && st.voksen_hjaelp !== 'varme') f(hvor + ': verbet «' + st.verbum + '» kan barnet selv. Hjælper den voksne, er det for varmens skyld: brug "voksen_hjaelp": "varme", fandt ' + JSON.stringify(st.voksen_hjaelp));
-        // Ordvagten: nævner teksten kniv, rivejern eller varme, er det den voksnes trin, uanset verbet
-        const farlig = ORDVAGT.exec(s.text);
+        // Ordvagten: nævner teksten kniv, rivejern eller varme, er det den voksnes trin, uanset verbet, og hjælpen passer
+        // til ordet. «voksen_hjaelp» er én værdi, så et trin med både kniv og varme skal deles i to
+        const kniv = KNIV_ORD.exec(s.text);
+        const varme = VARME_ORD.exec(s.text);
+        const farlig = kniv || varme;
         if (farlig && st.voksen !== true) f(hvor + ': teksten nævner «' + farlig[0] + '» (kniv, rivejern eller varme), så trinnet skal have "voksen": true og «voksen_hjaelp»: «' + s.text + '»');
+        else if (kniv && varme) f(hvor + ': teksten nævner både «' + kniv[0] + '» (kniv) og «' + varme[0] + '» (varme), men «voksen_hjaelp» kan kun være én af dem: del trinnet i to: «' + s.text + '»');
+        else if (farlig && Object.hasOwn(VOKSEN_HJAELP, st.voksen_hjaelp)) {
+          const skal = kniv ? 'kniv' : 'varme';
+          if (st.voksen_hjaelp !== skal) f(hvor + ': teksten nævner «' + farlig[0] + '» (' + (kniv ? 'kniv eller rivejern' : 'varme') + '), så «voksen_hjaelp» skal være "' + skal + '", fandt ' + JSON.stringify(st.voksen_hjaelp) + ': «' + s.text + '»');
+        }
         if (st.voksen === true) tal.voksentrin++;
         if ('timer_sek' in st) {
           if (!Number.isInteger(st.timer_sek) || st.timer_sek <= 0) f(hvor + ': «timer_sek» skal være et positivt heltal (sekunder), fandt ' + JSON.stringify(st.timer_sek));

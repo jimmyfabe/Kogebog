@@ -199,6 +199,25 @@ test('trinteksten om kniv eller varme kræver et voksen-trin', () => {
     d.recipeInstructions[2].text = 'Tænd ovnen.';
     Object.assign(d.recipeInstructions[2].tumbi, { voksen: true, voksen_hjaelp: 'varme' });
   });
+  forventGyldig('opskrifter/pandekager.json', (d) => {
+    d.recipeInstructions[2].text = 'Hak melet fint.';
+    Object.assign(d.recipeInstructions[2].tumbi, { voksen: true, voksen_hjaelp: 'kniv' });
+  });
+});
+
+// Ordvagten kræver også den rigtige hjælp: kniv-ord giver "kniv", varme-ord giver "varme" (code review 19-10).
+// «voksen_hjaelp» er én værdi, så et trin med både kniv og varme skal deles i to
+test('trinteksten om kniv eller varme kræver den rigtige voksen_hjaelp', () => {
+  const trin3 = (text, voksen_hjaelp) => (d) => {
+    d.recipeInstructions[2].text = text;
+    Object.assign(d.recipeInstructions[2].tumbi, { voksen: true, voksen_hjaelp });
+  };
+  forventFejl('opskrifter/pandekager.json', trin3('Tænd ovnen.', 'kniv'), 'trin 3: teksten nævner «ovn» (varme), så «voksen_hjaelp» skal være "varme", fandt "kniv"');
+  forventFejl('opskrifter/pandekager.json', trin3('Hak melet fint.', 'varme'), 'trin 3: teksten nævner «Hak» (kniv eller rivejern), så «voksen_hjaelp» skal være "kniv", fandt "varme"');
+  for (const hjaelp of ['kniv', 'varme']) {
+    forventFejl('opskrifter/pandekager.json', trin3('Hak smørret, og smelt det.', hjaelp),
+      'trin 3: teksten nævner både «Hak» (kniv) og «smelt» (varme), men «voksen_hjaelp» kan kun være én af dem: del trinnet i to');
+  }
 });
 
 // Det, der vises og læses op, er til køkkenet. Hvad kilden siger, og hvad der er et skøn, står i «tumbi.kilde»
