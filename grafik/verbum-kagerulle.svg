@@ -18,18 +18,18 @@
       <path d="M86 120 L154 120" fill="none"/>
     </g>
     <g id="rosa-left-forearm">
-      <path d="M-6 156 C10 150 24 144 36 138 L54 158 C36 168 16 178 -6 190 Z" fill="#F08A3C"/>
+      <path d="M-20 155 C-6 147 10 138 24 130 L38 152 C24 162 10 172 -2 182 Z" fill="#F08A3C"/>
     </g>
-    <g id="rosa-left-paw" transform="translate(45 134) rotate(-37)">
-      <path d="M-2 -19 C-13 -22 -18 -14 -14 -8 C-22 -4 -18 6 -11 6 C-15 14 -6 21 1 16 C9 23 17 14 13 7 C22 3 17 -8 9 -7 Q9 -17 -2 -19 Z" fill="#F08A3C"/>
-      <path d="M-7 -7 Q2 -12 8 -2 Q13 8 2 13 Q-9 14 -11 4 Q-13 -2 -7 -7 Z" fill="#FFF4E2"/>
+    <g id="rosa-left-paw" transform="translate(33 133) rotate(10) scale(0.9)" stroke-width="3.9">
+      <path d="M-14 22 C-18 12 -20 2 -18 -6 C-21 -14 -13 -19 -9 -13 C-9 -22 1 -23 0 -14 C1 -23 11 -22 9 -12 C12 -19 20 -16 17 -6 C19 0 19 4 17 6 C25 4 29 12 22 16 C18 19 14 22 12 24 Q0 27 -14 22 Z" fill="#F08A3C"/>
+      <path d="M-9 -13 L-8 -8 M0 -14 L0 -9 M9 -12 L8 -7 M17 6 Q15 10 16 13" fill="none"/>
     </g>
     <g id="rosa-right-forearm">
-      <path d="M262 156 C246 150 232 144 220 138 L202 158 C220 168 240 178 262 190 Z" fill="#F08A3C"/>
+      <path d="M276 155 C262 147 246 138 232 130 L218 152 C232 162 246 172 258 182 Z" fill="#F08A3C"/>
     </g>
-    <g id="rosa-right-paw" transform="translate(211 134) rotate(-143)">
-      <path d="M-2 -19 C-13 -22 -18 -14 -14 -8 C-22 -4 -18 6 -11 6 C-15 14 -6 21 1 16 C9 23 17 14 13 7 C22 3 17 -8 9 -7 Q9 -17 -2 -19 Z" fill="#F08A3C"/>
-      <path d="M-7 -7 Q2 -12 8 -2 Q13 8 2 13 Q-9 14 -11 4 Q-13 -2 -7 -7 Z" fill="#FFF4E2"/>
+    <g id="rosa-right-paw" transform="translate(223 133) scale(-1 1) rotate(10) scale(0.9)" stroke-width="3.9">
+      <path d="M-14 22 C-18 12 -20 2 -18 -6 C-21 -14 -13 -19 -9 -13 C-9 -22 1 -23 0 -14 C1 -23 11 -22 9 -12 C12 -19 20 -16 17 -6 C19 0 19 4 17 6 C25 4 29 12 22 16 C18 19 14 22 12 24 Q0 27 -14 22 Z" fill="#F08A3C"/>
+      <path d="M-9 -13 L-8 -8 M0 -14 L0 -9 M9 -12 L8 -7 M17 6 Q15 10 16 13" fill="none"/>
     </g>
     <g id="back-and-forth-motion" fill="#3E8FB0">
       <path d="M122 104 L122 78 L114 78 Q110 78 113 74 L125 58 Q128 54 131 58 L143 74 Q146 78 142 78 L134 78 L134 104 Q128 110 122 104 Z"/>
