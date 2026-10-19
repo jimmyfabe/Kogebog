@@ -1,5 +1,58 @@
 # STATUS – Tumbi Køkken
 
+## 19-10-2026 kl. 05:36: 13 retter, ny grafik og fire reviews flettet ind i main (6bbe740 → 344e580, 65 commits, ikke pushet)
+
+**Gjort (grenen `opskrifter-2`, Saga og agenter 18.–19-10):**
+- 13 retter. Forsiden er delt i Aftensmad, Bagning og Søde sager med tre hop-knapper i dugen (gryde, ovn, kage) og et gruppemærke på hvert kort (farveblinde).
+- Grafik: 25 verber. Nye er tage-ud (flad plade), tage-ud-form (dyb form), si, kagerulle, pakke-ind og smuldre. Skinken er tegnet om. Hver tegning er godkendt ved siden af hvert trin, der bruger den (task-observer 0078).
+- Sikkerhed i opskrifterne: håndvask efter æltning og formning, og den voksne tager ud af ovnen. Validatoren tjekker nu:
+  - kniv-, varme- og rå-ord efter stammen, med en liste over undtagelser;
+  - at æg og kød i ingredienserne har det rigtige ikon;
+  - at hjælpen passer til ordet (kniv eller varme).
+- Timer: ringen, «Stop» og «Ok» rulles frem over bunden, og fokus bliver i timeren.
+- Print: det sidste trin og foden står i én blok (`break-inside: avoid`). Ikke afprøvet i Safari-print.
+- e2e åbner en ny side pr. ret (WebKit-grænsen for navigationer). Den ustabile `timerFrem` er rettet: testen målte den gamle skærm. Den fejlede i 9 af 30 kørsler og fejler nu i 0 af 30.
+- De to åbne punkter fra 18-10 er lukket: (a) 11d446d og (b) ceff126.
+
+**Tests 19-10 kl. 05:26–05:35:**
+- e2e i WebKit på 344e580: 11.925 tjek grønne (514 s).
+- `node test/koer-alle.js`: 5/5 grønne, også efter fletningen i main.
+- Code review 2 og 3 og UI-review 5 og 6: alle fund er rettet med en test, der fejlede før rettelsen. Undtagelserne står herunder.
+
+**Åbne småting (lav):**
+- Flutes vises som runde boller ved «Tag ud».
+- «maale» viser et målebæger, hvor noten siger «køkkenvægten» (hytteostboller 3, pandekager 2).
+- Drys-billedet viser en rund pizza (pizzasnegle 14).
+- Spaghetti-ikonet er tyndt.
+- Kortene er 384 px brede på 844×390.
+- Færdig-ringens spor er svagt.
+- Ingrediensnavne brydes uden bindestreg på 390 px (tjek på iPhone).
+- Printets note har ingen «Til den voksne».
+- e2e `fejltilstande` (ca. linje 1046) har samme gamle-skærm-mønster.
+- `stege`/`bage` af noget andet nulstiller den rå dej i validatoren.
+- `docs/chatgpt-app-prompt.md` nævner 12 verber, og kommentaren øverst i `katalog.js` er forældet.
+
+**Ikke afprøvet:**
+- Rigtig iPad og iPhone.
+- Safari-print.
+- Hop med «mindre bevægelse».
+- Oplæsningen ved hop er ikke hørt.
+
+**Afventer Jimmy (18-10, stadig åbne):**
+- Må kogebogen ligge offentligt på GitHub Pages? Intet er pushet (regel 7).
+- Navnet «Bos pandekager efter Rasmus Klump»: rettigheder til navnet?
+- Stemmen: i dag iPad-stemmen (`lyd/liste.json` er tom). Røst (Nic) kræver dit ja til licensen.
+- Dit «ja» til opskrifterne og grafikrunde 2 kom 18-10 («du forsætter bare»).
+
+**Jimmys testliste** (pc: `py -m http.server 8091 --bind 127.0.0.1 --directory D:/Claude/Kogebog` → http://127.0.0.1:8091/?hurtig=1, eller på iPad efter dit ja til Pages):
+1. Forsiden: gryde, ovn og kage hopper hver til sit afsnit.
+2. Pizzasnegle: billede, navn og tid ses uden at rulle.
+3. Start en timer (2 s med `?hurtig=1`): når tiden er gået, ses «Ok» over bunden.
+4. Boller: «Tag pladen ud af ovnen» viser pladen og en pil ud mod dig.
+5. Brownie: «Tag formen ud» viser formen.
+6. Print af frikadeller: det sidste trin og foden står sammen.
+7. Kartoffelmos trin 6: dørslaget passer til kartofler.
+
 ## 18-10-2026 kl. 16:50: grafik og rettelser efter review 2 (e82d280 → 5e66251)
 
 **Gjort:**
