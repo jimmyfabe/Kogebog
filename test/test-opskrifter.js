@@ -353,12 +353,12 @@ export function valider(rod = ROD) {
         if (m[1] === 'faelles') {
           const timer = /^timer-optaget-\d+$/.test(m[2]);
           if (!LYD_FAELLES.has(m[2]) && !timer) fejlI('lyd/liste.json', '«' + fil + '»: ukendt fælles replik');
-          else if (timer && (nr < 1 || nr > flestTrin)) fejlI('lyd/liste.json', '«' + fil + '»: ingen ret har ' + nr + ' trin');
+          else if (timer && (!Number.isInteger(nr) || nr < 1 || nr > flestTrin)) fejlI('lyd/liste.json', '«' + fil + '»: ingen ret har ' + nr + ' trin');
         } else if (!trinAntal.has(m[1])) fejlI('lyd/liste.json', '«' + fil + '»: retten «' + m[1] + '» findes ikke');
         else if (/^ingrediens-/.test(m[2])) {
-          if (nr < 1 || nr > (ingrAntal.get(m[1]) || 0)) fejlI('lyd/liste.json', '«' + fil + '»: retten har kun ' + ingrAntal.get(m[1]) + ' ingredienser');
+          if (!Number.isInteger(nr) || nr < 1 || nr > (ingrAntal.get(m[1]) || 0)) fejlI('lyd/liste.json', '«' + fil + '»: retten har kun ' + ingrAntal.get(m[1]) + ' ingredienser');
         } else if (/^(\d+|timer-optaget-\d+)$/.test(m[2])) {
-          if (nr < 1 || nr > trinAntal.get(m[1])) fejlI('lyd/liste.json', '«' + fil + '»: retten har kun ' + trinAntal.get(m[1]) + ' trin');
+          if (!Number.isInteger(nr) || nr < 1 || nr > trinAntal.get(m[1])) fejlI('lyd/liste.json', '«' + fil + '»: retten har kun ' + trinAntal.get(m[1]) + ' trin');
         } else if (m[2] !== 'navn' && m[2] !== 'valgt') fejlI('lyd/liste.json', '«' + fil + '»: ukendt replik for en ret');
         if (!findes('lyd/' + fil)) fejlI('lyd/liste.json', '«' + fil + '» står på listen, men filen lyd/' + fil + ' findes ikke');
       }

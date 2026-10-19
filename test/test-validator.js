@@ -496,6 +496,9 @@ test('lydlisten må kun nævne filer, der findes', () => {
   forventFejl('lyd/liste.json', (d) => { d.filer = ['pandekager/99.mp3']; }, 'retten har kun 11 trin');
   forventFejl('lyd/liste.json', (d) => { d.filer = ['pandekager/timer-optaget-99.mp3']; }, 'retten har kun 11 trin');
   forventFejl('lyd/liste.json', (d) => { d.filer = ['pandekager/ingrediens-99.mp3']; }, 'ingredienser');
+  // Uden tal efter «ingrediens-» blev nummeret NaN, og NaN < 1 og NaN > 7 er begge falske (code review 19-10)
+  forventFejl('lyd/liste.json', (d) => { d.filer = ['pandekager/ingrediens-x.mp3']; }, 'ingredienser');
+  forventFejl('lyd/liste.json', (d) => { d.filer = ['pandekager/ingrediens-1x.mp3']; }, 'ingredienser');
   forventFejl('lyd/liste.json', (d) => { d.filer = ['pandekager/hej.mp3']; }, 'ukendt replik for en ret');
   forventFejl('lyd/liste.json', (d) => { d.filer = ['faelles/hej.mp3']; }, 'ukendt fælles replik');
   forventFejl('lyd/liste.json', (d) => { d.filer = ['faelles/timer-optaget-99.mp3']; }, 'ingen ret har 99 trin');
