@@ -380,6 +380,47 @@ test('pynte efter en pensling med æg rører det rå æg, indtil der er bagt', (
   forventGyldig('opskrifter/oejeboller.json', () => {});
 });
 
+// Code review 2, 20-10: at pakke ind og smuldre rører også det penslede, og det samme gør de verber, der former dejen.
+// En pensling med æg, der aldrig bages eller steges, spises rå. Alle penslinger i retterne er med æg, så en pensling
+// uden æg kan ikke prøves her
+test('pakke ind, smuldre og forme efter en pensling med æg kræver en ny håndvask', () => {
+  for (const v of ['pakke-ind', 'smuldre']) {
+    forventFejl('opskrifter/mumiepoelser.json', (d) => {
+      const r = d.recipeInstructions;
+      const [rul] = r.splice(r.findIndex((s) => s.tumbi.verbum === 'pakke-ind'), 1);
+      rul.tumbi.verbum = v;
+      r.splice(r.findIndex((s) => s.tumbi.verbum === 'bage'), 0, rul);
+    }, 'trin 5: rører råt kød eller æg (aeg) (aeg fra penslingen i trin 3 er stadig råt), men der kommer ikke et «vaske-haender»-trin bagefter');
+  }
+  for (const v of ['rulle', 'kagerulle', 'aelte']) {
+    forventFejl('opskrifter/heksefingre.json', (d) => {
+      const r = d.recipeInstructions;
+      const pensl = r.findIndex((s) => s.tumbi.verbum === 'pensle');
+      const flyt = r.splice(pensl, 2); // penslingen og håndvasken efter den
+      const form = r.findIndex((s) => s.tumbi.verbum === 'rulle');
+      r[form].tumbi.verbum = v;
+      r.splice(form, 0, ...flyt);
+    }, 'trin 6: rører råt kød eller æg (aeg) (aeg fra penslingen i trin 4 er stadig råt), men der kommer ikke et «vaske-haender»-trin bagefter');
+  }
+});
+
+test('en pensling med æg skal bages eller steges bagefter', () => {
+  const fil = 'opskrifter/graeskar-calzone.json';
+  forventFejl(fil, (d) => {
+    const r = d.recipeInstructions;
+    const flyt = r.splice(r.findIndex((s) => s.tumbi.verbum === 'pensle'), 2); // penslingen og håndvasken efter den
+    r.splice(r.findIndex((s) => s.tumbi.verbum === 'tage-ud') + 1, 0, ...flyt);
+  }, 'trin 12: penslet med råt æg (aeg), men der bages eller steges ikke bagefter');
+  // Stegning tæller som bagning: efter den er ægget ikke råt, og stilken må stikkes i uden en ny håndvask
+  forventGyldig(fil, (d) => {
+    const r = d.recipeInstructions;
+    const [stilk] = r.splice(r.findIndex((s) => s.tumbi.verbum === 'pynte'), 1);
+    const bag = r.findIndex((s) => s.tumbi.verbum === 'bage');
+    r[bag].tumbi.verbum = 'stege';
+    r.splice(bag + 1, 0, stilk);
+  });
+});
+
 // Efter stegningen eller bagningen er dejen ikke rå længere (code review 3, 19-10): at rulle pandekagen sammen eller
 // bollerne i et viskestykke rører ikke råt æg. «koge» tæller med vilje ikke: det er ofte noget andet, der varmes
 // (smør eller mælk i en lille gryde), mens dejen er rå

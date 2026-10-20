@@ -27,7 +27,7 @@ const ISO_RE = /^P(?:\d+D)?(?:T(?:\d+H)?(?:\d+M)?(?:\d+S)?)?$/;
 const MAKS_TIMER_SEK = 4 * 3600;
 const BLANDER = ['roere', 'haelde', 'piske']; // verber, der blander en ingrediens i dejen eller farsen
 const HAENDER_I_DEJ = ['aelte', 'rulle', 'kagerulle']; // verber, hvor hænderne rører dejen eller farsen
-const HAENDER_PAA_OVERFLADEN = ['pynte', ...HAENDER_I_DEJ]; // verber, hvor hænderne rører det, der er penslet
+const HAENDER_PAA_OVERFLADEN = ['pynte', 'pakke-ind', 'smuldre', ...HAENDER_I_DEJ]; // verber, hvor hænderne rører det, der er penslet
 const TAGE_UD = ['tage-ud', 'tage-ud-form']; // efter ovnen: en flad plade eller en dyb form
 // Ordvagten går efter stammen: hvert ord, der begynder med stammen (eller har den inde i sig, hvor det står), fanges med
 // alle bøjninger («smelte», «skære», «æggeblommer»). En liste over tilladte former mangler altid en form, og så slipper
@@ -306,7 +306,8 @@ export function valider(rod = ROD) {
         // Efter æltningen er det rå indarbejdet, og efter stegningen eller bagningen er dejen ikke rå. «koge» med vilje ikke:
         // det er ofte noget andet, der varmes (smør eller mælk i en lille gryde), mens dejen er rå
         if (['aelte', 'bage', 'stege'].includes(st.verbum)) raaDej = null;
-        if (['bage', 'stege'].includes(st.verbum)) raaPensling = null;
+        // «Lad bollerne bage» er også ovnen: en pause med varme (verbet «vente», voksen og varme) bager ægget
+        if (['bage', 'stege'].includes(st.verbum) || (st.verbum === 'vente' && st.voksen_hjaelp === 'varme')) raaPensling = null;
         if (st.verbum === 'pensle' && egneRaa.length) raaPensling = { trin: i + 1, ikoner: egneRaa };
         if (BLANDER.includes(st.verbum) && egneRaa.length) raaDej = { trin: i + 1, ikoner: [...new Set([...(raaDej?.ikoner ?? []), ...egneRaa])] };
         const vask = trin.findIndex((x, k) => k > i && x && x.tumbi && x.tumbi.verbum === 'vaske-haender');
@@ -330,6 +331,8 @@ export function valider(rod = ROD) {
           }
         }
       });
+      // Æg til pensling er råt, til retten bages eller steges: uden det spises ægget råt (code review 2, 20-10)
+      if (raaPensling) f('trin ' + raaPensling.trin + ': penslet med råt æg (' + liste(raaPensling.ikoner) + '), men der bages eller steges ikke bagefter');
       // Råt kød og æg skal stå på det trin, hvor de røres: ellers kan validatoren ikke se, hvornår hænderne skal vaskes
       const raaITrin = new Set(trin.flatMap((s) => (s && s.tumbi && Array.isArray(s.tumbi.ikoner) ? s.tumbi.ikoner : [])));
       for (const ik of RAA_IKONER) {
