@@ -1,6 +1,6 @@
 # CLAUDE.md – Tumbi Køkken (D:\Claude\Kogebog)
 
-Kogebog til et barn (ca. 5-9 år) og en voksen, der laver mad sammen på iPad i landskab. Ét trin pr. skærm, billeder, oplæsning, timer og et A4-print til den voksne. Statisk PWA uden byggetrin og uden afhængigheder. **Ikke udgivet.** Eget git-repo, gren `main`.
+Kogebog til et barn (ca. 5-9 år) og en voksen, der laver mad sammen på iPad i landskab. Ét trin pr. skærm, billeder, oplæsning, timer og et A4-print til den voksne. Statisk PWA uden byggetrin og uden afhængigheder. **Udgives fra `main` på GitHub Pages (https://jimmyfabe.github.io/Kogebog/), når Jimmy har pushet.** Eget git-repo, gren `main`.
 
 Hvor man starter: `LÆS-MIG-FØRST.md`. Status: `STATUS.md`. Plan og begrundelser: `docs/gennemgang.md`.
 

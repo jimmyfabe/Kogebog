@@ -19,7 +19,7 @@
   ],
   "tool": ["skål", "ske", "smørekniv", "skarp kniv", "skærebræt", "bageplade", "bagepapir"],
   "recipeInstructions": [
-    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Pres vandet ud af spinaten. Den skal være tøet op i forvejen: det tager et par timer i køleskabet." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Pres vandet ud af spinaten. Den skal være tøet op i forvejen: i køleskabet natten over eller et par minutter i mikroovnen." } },
     { "@type": "HowToStep", "text": "Rør flødeost og spinat sammen til grønt slim.", "tumbi": { "verbum": "roere", "ikoner": ["flodeost", "spinat"], "note": "Grøn pesto ligner også slim, men har ofte nødder i. Flødeost med spinat er nøddefri." } },
     { "@type": "HowToStep", "text": "Smør slimet ud på dejen.", "tumbi": { "verbum": "smoere", "ikoner": ["flodeost", "spinat"], "note": "Tænd ovnen på 200 °C, eller det pakken siger. Rul dejen ud med papiret under. Lad ca. 2 cm være fri langs den ene lange kant." } },
     { "@type": "HowToStep", "text": "Drys ost og skinke over.", "tumbi": { "verbum": "drysse", "ikoner": ["ost", "skinke"] } },

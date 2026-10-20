@@ -1,6 +1,6 @@
 # LÆS MIG FØRST – Tumbi Køkken
 
-**Hvad:** en lille kogebog til iPad, hvor et barn (ca. 5-9 år) og en voksen laver mad sammen. Ikke udgivet. Repoet ligger i `D:\Claude\Kogebog`.
+**Hvad:** en lille kogebog til iPad, hvor et barn (ca. 5-9 år) og en voksen laver mad sammen. Udgives fra `main` på https://jimmyfabe.github.io/Kogebog/. Repoet ligger i `D:\Claude\Kogebog`.
 
 ## Hvor du starter
 
