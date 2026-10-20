@@ -157,7 +157,7 @@
 
 **Ting, der IKKE virkede:**
 - Codex kan ikke lave billeder. Den skrev SVG-tekst, og ChatGPT-kvoten løb tør efter 6 af 20 filer.
-- Google Chirp 3 HD er udelukket for børneapps (Googles vilkår 20(d), Heimdal 18-10). Ifølge Heimdal-dokumentet bruger Lystårnet den samme stemme. Det er ikke set i Matematik-koden, og det er ikke rettet her.
+- Google Chirp 3 HD er udelukket for børneapps (Googles vilkår 20(d), Heimdal 18-10).
 - Piper-mandestemmen er afvist.
 - `scrollWidth`-tjekket i e2e fangede ikke indhold uden for skærmen, fordi `body` har `overflow-x: hidden`. Testen er rettet og kørt 18-10.
 

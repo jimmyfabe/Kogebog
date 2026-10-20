@@ -250,6 +250,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 }
 
 .forside-indhold { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-bottom: 28px; }
+/* Til den voksne: lille og blid nederst på forsiden */
+.forside-fod { text-align: center; color: var(--kakao-blid); font-size: 15px; padding: 0 24px 14px; }
 /* Tre afsnit (opskrifter/index.json): aftensmad, bagning og søde sager. Overskriften er et billede på afsnittets farve og
    et ord, og kortenes cirkel har samme farve, så børnene kan kende gryden, ovnen og kagen igen uden at læse.
    Før stod alle 13 kort i ét gitter, og med to kort pr. række delte pizzasnegle og pandekager række */

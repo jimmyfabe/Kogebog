@@ -569,6 +569,9 @@ async function heleVejen(browser, skaerm) {
   const gr = await tjekGrupper(side, n + ' forside');
   maal.push(n + ' forside: ' + gr.afsnit.length + ' afsnit, højst ' + gr.iRaekke + ' kort pr. række');
   await tjekUndertekst(side, n + ' forside');
+  // Røsts licens: forsiden siger, at stemmen er en computerstemme (før stod det kun på printet, sikkerhedsreview 20-10)
+  const fod = await side.evaluate(() => document.querySelector('.forside-fod')?.textContent || '');
+  tjek(fod.includes('computerstemme'), n + ': forsiden skal sige, at stemmen er en computerstemme, fandt «' + fod + '»');
   await tjekKortMaerke(side, n + ' forside');
   await tjekHop(side, n + ' forside');
   if (n === 'desktop') {

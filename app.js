@@ -204,7 +204,10 @@ function forside() {
       el('p', { tekst: 'Hvad skal vi lave i\u00a0dag?' })),
     hop,
     billede(grafikDyr('bo'), '', 'forside-dyr'));
-  return el('main', { class: 'skaerm forside' }, top, el('div', { class: 'forside-timer' }, timerPille()), indhold);
+  // Røsts licens kræver, at man får at vide, at stemmen er en computerstemme, før den taler (sikkerhedsreview 20-10).
+  // Før stod det kun på printet
+  return el('main', { class: 'skaerm forside' }, top, el('div', { class: 'forside-timer' }, timerPille()), indhold,
+    el('p', { class: 'forside-fod', tekst: 'Stemmen er en computerstemme (Røst fra Alexandra Instituttet).' }));
 }
 
 // En rund knap med afsnittets billede og farve (som overskriften). Tryk: rul til afsnittet, sig navnet, og flyt fokus
