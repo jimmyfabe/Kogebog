@@ -1,5 +1,65 @@
 # STATUS – Tumbi Køkken
 
+## 20-10-2026 kl. 18:24: seks Halloween-retter + Røst flettet ind i `main` (fast-forward, 33 commits), klar til udgivelse (ikke pushet)
+
+**Udgiv (Jimmy kører det selv, `gh` er ikke installeret):**
+1. Opret repoet i browseren: https://github.com/new → *Repository name* `Kogebog` → **Public** → slå *Add README* fra (repoet skal være tomt) → **Create repository**.
+2. **PowerShell:** forbind den lokale kogebog til repoet (ændrer kun `.git\config`):
+   ```powershell
+   cd D:\Claude\Kogebog; git remote add origin https://github.com/jimmyfabe/Kogebog.git
+   ```
+3. **PowerShell:** send `main` derop (kun `main`, ikke de andre grene):
+   ```powershell
+   cd D:\Claude\Kogebog; git push -u origin main
+   ```
+4. Slå Pages til: https://github.com/jimmyfabe/Kogebog/settings/pages → *Build and deployment* → *Source*: **Deploy from a branch** → *Branch*: **main** og **/ (root)** → **Save**.
+5. Efter 1-2 minutter: https://jimmyfabe.github.io/Kogebog/. Skriv «kørt» i chatten, så læser Claude den live `sw.js` og tjekker, at den passer til `main`.
+- Stien `/Kogebog/` følger repoets navn. Omdøbes repoet, skifter adressen, og genvejen på iPad'ens hjemmeskærm virker ikke mere.
+
+**Gjort:**
+- **Retterne:** mumiepølser, edderkoppeboller, øjeboller, græskar-calzone, heksefingre og slimsnegle ligger i Bagning med `"afproevet": false`. Teksten er skrevet om fra Sagas opskrifter: korte trin, og den voksne tager kniv og ovn. Pynten kommer før æg-penslingen. «Bos pandekager efter Rasmus Klump» hedder nu «Tynde pandekager», og kilden nævner stadig bogen.
+- **Grafik:** 16 nye tegninger (6 retter, 2 verber og 8 ingredienser). Hver er set ved hvert trin, der bruger den (task-observer 0078). De 6 ret-tegninger har damp, en lille flagermus og glans. Oversigten og trin-arket ligger på Drev (se testlisten).
+- **Validatoren:** pynt, pakke ind, smuldre, rulle, kagerulle og ælte efter en pensling med æg kræver en ny håndvask, indtil der bages eller steges. En pensling, der aldrig bliver bagt, giver en fejl. Hver regel har en test, der fejler mod den gamle validator. Kyllingepølser → `poelse` og kyllingepålæg → `skinke` er undtaget med en grund. `kyllingetern` er med vilje ikke undtaget.
+- **Lyd:** alle 520 replikker har Røst-lyd (10,75 MB, -24,5 til -23,3 LUFS). Pandekagerne siger «Tynde pandekager» (navn, valgt og timer-optaget 9 og 10 er lavet igen). 70 replikker er stadig mistænkelige (mest «lang hale» på timer-optaget) og bør lyttes til.
+- **Udgivelse:** `.nojekyll`. Alle stier er relative, og sw-scope er `./`. Testet under en understi (`http://127.0.0.1:8092/Kogebog/`). Forsiden og README siger nu, at stemmen er en computerstemme, som Røsts licens kræver.
+- **Lækscan** af hele historikken (alle grene, diffs, commit-beskeder og forfattere) efter børnenes data, nøgler og tokens: 0 fund. security-auditor fandt heller intet.
+- **Review:**
+  - code-reviewer 1 (13 fund) og 2 (6), security-auditor (7) og en dommer (Fable). Dommeren fandt, at alt holder, undtagen det gamle navn i 4 mp3-filer. Det er løst med den nye lyd, og `test-lyd` bekræfter det.
+  - ui-reviewer: 0 blokerende og 5 andre fund. 2 er rettet: «Edderkoppeboller» stak ud af kortet på 360 px, og fodens parentes blev delt. 3 venter (se nedenfor).
+  - Commits 7af62c2 → 9268c58.
+- **Tests:** `koer-alle` 7/7 grønne. Hele e2e i WebKit under `/Kogebog/` kl. 18:24: 15.812 tjek grønne. Kørslen før (17:55) fandt 1 fejl («Edderkoppeboller» på 360 px), som nu er rettet.
+
+**Jimmys testliste:**
+1. Godkend tegningerne: `G:\Mit drev\Claude\Kogebog\halloween-tegninger-20-10.png` (alle 16) og `halloween-trin-20-10.pdf` (hvert trin med sit billede, 12 sider).
+2. Lyttetest af Røst på den udgivne app (iPad):
+   - Tryk Læs op på et par trin i to af Halloween-retterne og på pandekagerne.
+   - Lyt også til de fem fra 19-10: chorizo-pasta ingrediens 1, kartoffelmos trin 8 og pizzasnegle ingrediens 7, 8 og 14.
+   - Prøv et voksen-hold som første tryk efter en genindlæsning.
+   - Brug den rigtige adresse uden `?hurtig=1`: den gør alle timere 2 sekunder lange.
+3. Uden wifi: åbn appen én gang med net, slå wifi fra, og åbn en ret.
+4. Orddeling på iPad: deler ret-siden lange ingredienser med en bindestreg? Fx «mozzarellakugler» i Øjeboller og «grøntsagsbouillonterninger» i Chorizo-pasta. På pc'en (WebKit på Windows) deles de midt i ordet uden bindestreg.
+5. Bag én af Halloween-retterne, og sæt `afproevet` til `true`, når den virker.
+
+**Afventer Jimmy (20-10):**
+- Skal Halloween-retterne have deres egen gruppe (ny hop-knap og mærke)? De ligger nu i Bagning.
+- Genbrugte tegninger, som ui-revieweren også peger på:
+  - `pakke-ind` (staniol om en flute) ved «rul strimlerne om pølsen», «saml hjørnerne» og «fold dejen over».
+  - `rulle` (kugler mellem hænderne) ved «rul til en finger» og «rul dejen sammen».
+  - `pynte` (en oliven på en bolle) ved «tryk en negl fast» og «stik en grøn stilk i».
+  - Mozzarellakugler vises med ost-ikonet (en gul trekant).
+  - Skal de have deres egne tegninger?
+- Computerstemme-linjen står nederst på forsiden. Dommeren foreslog den øverst. Den er lille med vilje, så den ikke tager børnenes opmærksomhed.
+- Repoet bliver offentligt med `CLAUDE.md`, `STATUS.md`, `docs/` og lokale stier (D:\Stemmer, Drev-mapper og navne på chats). Der er ingen nøgler og ingen persondata. Det gamle pandekagenavn står i historikken. At omskrive historikken kræver dit ja, og det anbefales ikke.
+
+**Kan vente (fra reviewene):**
+- En gemt timer kan pege på et trin eller en ret, der ikke findes mere, efter en opskrift er ændret (`js/lager.js:19`).
+- En lydfil følger trinnummeret. Pushes en rettet opskrift uden ny lyd, siger stemmen den gamle tekst. `test-lyd` fanger det, men intet hook eller CI tvinger testene før et push.
+- `?hurtig=1` virker også på den udgivne app.
+- Lego-appen (`jimmyfabe.github.io/`) har en service worker med scope `/`. Den svarer på det allerførste besøg på `/Kogebog/` på en iPad, der har Lego-appen, til Kogebogens egen tager over. Online gør det ingen skade. Offline ved det allerførste besøg vises Legos fejlside. Sluttet ud fra koden, ikke testet.
+- Alle apps på `jimmyfabe.github.io` deler origin. Præfikserne `kog-`, `mat-` og `lego-` er en aftale, ikke en grænse. Hold fast i `textContent` og den stramme CSP.
+- UI (390×844): noten «Til den voksne» ligger delvist under den faste bund på 10 trin. Det gælder fx mumiepølser trin 2 og øjeboller trin 6. Den kan rulles frem, og trinteksten og billedet er altid fri. Det er samme layout som de gamle retter med lange noter.
+- UI: ingrediensnavne deles midt i ordet på pc'en (se testliste 4, og «grahamsm|el» fra 19-10). Deler iPad'en dem heller ikke, så brug bløde bindestreger som i «Havregrynskugler» og «Edderkoppeboller». `tilTale` fjerner dem fra talen.
+
 ## 19-10-2026 kl. 16:45: Røst-stemmen på grenen `stemme-roest`, reviewet, ikke flettet (venter på Jimmys lytning og iPad)
 
 **Gjort:** alle 377 replikker har Røst-lyd. Tal, brøker og tegn skrives ud som ord (`tilTale`), og 176 replikker er lavet igen. Lyden har sin egen cache, en tidsgrænse på 4 s og Range efter RFC 9110. Der er ét fælles lydelement, og iPad-stemmen tager over efter 6 s uden `playing`. Ingrediensen bliver lyseblå, mens den læses op.
