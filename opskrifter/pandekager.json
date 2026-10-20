@@ -1,8 +1,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Recipe",
-  "name": "Rasmus Klumps pandekager",
-  "description": "Tynde pandekager efter Rasmus Klumps opskrift fra Tivoli.",
+  "name": "Tynde pandekager",
+  "description": "Tynde pandekager efter en opskrift fra Tivoli.",
   "image": "grafik/ret-pandekager.svg",
   "inLanguage": "da",
   "recipeYield": "ca. 10-12 stk.",

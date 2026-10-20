@@ -27,6 +27,7 @@ const ISO_RE = /^P(?:\d+D)?(?:T(?:\d+H)?(?:\d+M)?(?:\d+S)?)?$/;
 const MAKS_TIMER_SEK = 4 * 3600;
 const BLANDER = ['roere', 'haelde', 'piske']; // verber, der blander en ingrediens i dejen eller farsen
 const HAENDER_I_DEJ = ['aelte', 'rulle', 'kagerulle']; // verber, hvor hænderne rører dejen eller farsen
+const HAENDER_PAA_OVERFLADEN = ['pynte', ...HAENDER_I_DEJ]; // verber, hvor hænderne rører det, der er penslet
 const TAGE_UD = ['tage-ud', 'tage-ud-form']; // efter ovnen: en flad plade eller en dyb form
 // Ordvagten går efter stammen: hvert ord, der begynder med stammen (eller har den inde i sig, hvor det står), fanges med
 // alle bøjninger («smelte», «skære», «æggeblommer»). En liste over tilladte former mangler altid en form, og så slipper
@@ -238,6 +239,7 @@ export function valider(rod = ROD) {
       let timerSek = 0;
       const forurenet = new Set(); // trin, der allerede er meldt for at røre andet efter det rå
       let raaDej = null; // { trin, ikoner }: det seneste trin, der blandede noget råt i dejen, indtil der æltes, steges eller bages
+      let raaPensling = null; // { trin, ikoner }: det seneste trin, der penslede med råt æg, indtil der steges eller bages
       trin.forEach((s, i) => {
         const hvor = 'trin ' + (i + 1);
         tal.trin++;
@@ -295,9 +297,17 @@ export function valider(rod = ROD) {
           raa = [...new Set([...egneRaa, ...raaDej.ikoner])];
           hvorfra = ' (dejen med ' + liste(raaDej.ikoner) + ' fra trin ' + raaDej.trin + ' er stadig rå)';
         }
+        // Æg til pensling ligger råt på overfladen, til der bages: et trin, der pynter eller former det penslede, rører det
+        // rå æg igen (code review 20-10: stilken blev stukket i calzonen efter håndvasken)
+        if (HAENDER_PAA_OVERFLADEN.includes(st.verbum) && raaPensling) {
+          raa = [...new Set([...raa, ...raaPensling.ikoner])];
+          hvorfra += ' (' + liste(raaPensling.ikoner) + ' fra penslingen i trin ' + raaPensling.trin + ' er stadig råt)';
+        }
         // Efter æltningen er det rå indarbejdet, og efter stegningen eller bagningen er dejen ikke rå. «koge» med vilje ikke:
         // det er ofte noget andet, der varmes (smør eller mælk i en lille gryde), mens dejen er rå
         if (['aelte', 'bage', 'stege'].includes(st.verbum)) raaDej = null;
+        if (['bage', 'stege'].includes(st.verbum)) raaPensling = null;
+        if (st.verbum === 'pensle' && egneRaa.length) raaPensling = { trin: i + 1, ikoner: egneRaa };
         if (BLANDER.includes(st.verbum) && egneRaa.length) raaDej = { trin: i + 1, ikoner: [...new Set([...(raaDej?.ikoner ?? []), ...egneRaa])] };
         const vask = trin.findIndex((x, k) => k > i && x && x.tumbi && x.tumbi.verbum === 'vaske-haender');
         if (raa.length && vask < 0) {

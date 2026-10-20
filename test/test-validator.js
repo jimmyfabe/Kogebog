@@ -360,6 +360,26 @@ test('fars og dej med råt æg: hænderne vaskes efter formningen, ikke før', (
   }
 });
 
+// Code review 20-10: stilken blev stukket i calzonen efter penslingen og håndvasken, altså i råt æg
+test('pynte efter en pensling med æg rører det rå æg, indtil der er bagt', () => {
+  const fil = 'opskrifter/graeskar-calzone.json';
+  forventFejl(fil, (d) => {
+    const r = d.recipeInstructions;
+    const [stilk] = r.splice(r.findIndex((s) => s.tumbi.verbum === 'pynte'), 1);
+    r.splice(r.findIndex((s) => s.tumbi.verbum === 'bage'), 0, stilk);
+  }, 'trin 11: rører råt kød eller æg (aeg) (aeg fra penslingen i trin 8 er stadig råt), men der kommer ikke et «vaske-haender»-trin bagefter');
+  // Vasker barnet hænderne igen efter pyntningen, er det i orden
+  forventGyldig(fil, (d) => {
+    const r = d.recipeInstructions;
+    const [stilk] = r.splice(r.findIndex((s) => s.tumbi.verbum === 'pynte'), 1);
+    const bag = r.findIndex((s) => s.tumbi.verbum === 'bage');
+    r.splice(bag, 0, stilk, { '@type': 'HowToStep', text: 'Vask hænderne.', tumbi: { verbum: 'vaske-haender' } });
+  });
+  // At drysse rører ikke det penslede, og efter bagningen er ægget ikke råt (øjnene lægges på de varme boller)
+  forventGyldig('opskrifter/heksefingre.json', () => {});
+  forventGyldig('opskrifter/oejeboller.json', () => {});
+});
+
 // Efter stegningen eller bagningen er dejen ikke rå længere (code review 3, 19-10): at rulle pandekagen sammen eller
 // bollerne i et viskestykke rører ikke råt æg. «koge» tæller med vilje ikke: det er ofte noget andet, der varmes
 // (smør eller mælk i en lille gryde), mens dejen er rå

@@ -739,7 +739,7 @@ async function heleVejen(browser, skaerm) {
   await side.waitForSelector('.faerdig h1');
   tjek(await h1(side) === 'Færdig!', n + ': færdig-skærmen');
   tjek((await sidsteTale(side)).startsWith('Færdig!'), n + ': færdig-skærmen siger «Færdig!»');
-  // Teksten nævner ikke retten: navnet med små bogstaver gav «Velbekomme med rasmus klumps pandekager.»
+  // Teksten nævner ikke retten: et navn med stort forbogstav blev skrevet med små bogstaver midt i sætningen («Velbekomme med …»)
   const faerdigTekst = await side.evaluate(() => document.querySelector('.faerdig-tekst').textContent);
   tjek(faerdigTekst === 'Godt gået. Velbekomme!', n + ': færdig-teksten skal være «Godt gået. Velbekomme!» (fandt «' + faerdigTekst + '»)');
   await tjekLayout(side, n + ' færdig');

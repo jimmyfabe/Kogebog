@@ -24,13 +24,13 @@
     { "@type": "HowToStep", "text": "Smør lidt tomat midt på hver firkant.", "tumbi": { "verbum": "smoere", "ikoner": ["tomatpure"], "note": "En teskefuld er nok." } },
     { "@type": "HowToStep", "text": "Drys ost og skinke på tomaten.", "tumbi": { "verbum": "drysse", "ikoner": ["ost", "skinke"] } },
     { "@type": "HowToStep", "text": "Saml hjørnerne, og vend bollen om.", "tumbi": { "verbum": "pakke-ind", "ikoner": ["pizzadej"], "note": "Klem dejen godt sammen, så samlingen kommer nedad. Læg bollerne på en bageplade med bagepapir." } },
-    { "@type": "HowToStep", "text": "Skær oliven til edderkopper.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["oliven"], "note": "Halvér 12 oliven til kroppe, og skær resten i tynde strimler til ben." } },
+    { "@type": "HowToStep", "text": "Skær oliven til edderkopper.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["oliven"], "note": "Halvér 6 oliven til 12 kroppe, og skær resten i tynde strimler til ben." } },
     { "@type": "HowToStep", "text": "Sæt en edderkop på hver bolle.", "tumbi": { "verbum": "pynte", "ikoner": ["oliven"], "note": "En halv oliven er kroppen, og 8 strimler er benene: 4 på hver side. Tryk dem godt fast." } },
     { "@type": "HowToStep", "text": "Pisk ægget, og pensl bollerne.", "tumbi": { "verbum": "pensle", "ikoner": ["aeg"], "note": "Pisk ægget med en gaffel i en kop. Pensl rundt om edderkoppen." } },
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg på fingrene." } },
     { "@type": "HowToStep", "text": "Bag bollerne i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900, "note": "Ca. 15 min, til de er gyldne." } },
     { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme" } },
-    { "@type": "HowToStep", "text": "Lad bollerne køle lidt af.", "tumbi": { "verbum": "vente", "timer_sek": 300, "note": "Pladen er meget varm, og fyldet er varmt indeni." } },
+    { "@type": "HowToStep", "text": "Lad bollerne køle lidt af.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Pladen er meget varm, og fyldet er varmt indeni." } },
     { "@type": "HowToStep", "text": "Smag en edderkop!", "tumbi": { "verbum": "smage" } }
   ],
   "tumbi": {
