@@ -572,6 +572,16 @@ async function heleVejen(browser, skaerm) {
   // Røsts licens: forsiden siger, at stemmen er en computerstemme (før stod det kun på printet, sikkerhedsreview 20-10)
   const fod = await side.evaluate(() => document.querySelector('.forside-fod')?.textContent || '');
   tjek(fod.includes('computerstemme'), n + ': forsiden skal sige, at stemmen er en computerstemme, fandt «' + fod + '»');
+  // Parentesen står på én linje (UI-review 20-10: «(Røst fra» / «Alexandra Instituttet).» på iPhone)
+  const parentesLinjer = await side.evaluate(() => {
+    const t = document.querySelector('.forside-fod')?.firstChild;
+    if (!t || !t.textContent.includes('(')) return 0;
+    const r = document.createRange();
+    r.setStart(t, t.textContent.indexOf('('));
+    r.setEnd(t, t.textContent.length);
+    return new Set([...r.getClientRects()].map((x) => Math.round(x.top))).size;
+  });
+  tjek(parentesLinjer === 1, n + ': parentesen i forsidens fod skal stå på én linje, den står på ' + parentesLinjer);
   await tjekKortMaerke(side, n + ' forside');
   await tjekHop(side, n + ' forside');
   if (n === 'desktop') {
