@@ -100,9 +100,10 @@ test('rive og bage kræver altid en voksen: rivejernet er kniv, og ovnen er varm
   forventGyldig('opskrifter/boller.json', (d) => { bage(d.recipeInstructions[12].tumbi); });
 });
 
-test('piske, pensle, mose og drysse: barnet selv, eller en voksen for varmens skyld', () => {
+// pynte og sproejte (20-10): læg en oliven på, klem ketchup ud. Øjebollernes «Læg et øje på hver varm bolle.» er varme
+test('piske, pensle, mose, drysse, pynte og sprøjte: barnet selv, eller en voksen for varmens skyld', () => {
   // Boller trin 11 (pisk ægget, og pensl) har ingen voksen: det er koldt
-  for (const v of ['piske', 'pensle', 'mose', 'drysse']) {
+  for (const v of ['piske', 'pensle', 'mose', 'drysse', 'pynte', 'sproejte']) {
     forventGyldig('opskrifter/boller.json', (d) => { const st = d.recipeInstructions[10].tumbi; st.verbum = v; delete st.voksen; delete st.voksen_hjaelp; });
     forventGyldig('opskrifter/boller.json', (d) => { Object.assign(d.recipeInstructions[10].tumbi, { verbum: v, voksen: true, voksen_hjaelp: 'varme' }); });
     forventFejl('opskrifter/boller.json', (d) => { Object.assign(d.recipeInstructions[10].tumbi, { verbum: v, voksen: true, voksen_hjaelp: 'kniv' }); },
@@ -423,6 +424,10 @@ test('æg og kød i ingredienserne skal have ikonet koed eller aeg', () => {
   }
   // Undtagelserne: kogt bouillon og fond, fiskesauce og «ægte»
   for (const linje of ['1 l kyllingebouillon', '1 l kyllingefond', '2 tsk fiskesauce', '1 l fiskefond']) forventGyldig('opskrifter/koedsovs.json', ny(linje, 'bouillon'));
+  // Færdige pølser og pålæg (20-10): ikonerne «poelse» og «skinke». «kyllingetern» kan være rå og er ikke undtaget
+  forventGyldig('opskrifter/koedsovs.json', ny('10 kyllingepølser', 'poelse'));
+  forventGyldig('opskrifter/koedsovs.json', ny('100 g kyllingepålæg', 'skinke'));
+  forventFejl('opskrifter/koedsovs.json', ny('100 g kyllingetern', 'skinke'), 'ingrediens 13: «kyllingetern» er råt kød eller æg, så ikonet skal være "koed" eller "aeg", fandt "skinke"');
   forventGyldig('opskrifter/koedsovs.json', ny('1 tsk ægte vanilje', 'sukker'));
 });
 

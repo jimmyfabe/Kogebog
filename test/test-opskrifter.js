@@ -65,6 +65,8 @@ const UNDTAGELSER = new Set([
   // Råt
   'ægte', // «ægte vanilje»
   'kyllingebouillon', 'kyllingefond', 'kødbouillon', 'fiskebouillon', 'fiskefond', 'fiskesauce', // kogt og færdig: ikonet «bouillon»
+  'kyllingepølser', // færdige (kogte) pølser, ligesom wienerpølser: ikonet «poelse». Rå pølse hedder «medister», som stammen fanger
+  'kyllingepålæg', // pålæg er færdigt, ligesom skinke: ikonet «skinke». Ikke «kyllingetern»: de kan være rå
   // Redaktionelle ord (REDAKTION)
   'kildevand', // vand, ikke en kilde
   'skønt', // «skønt det tager tid» (selvom)

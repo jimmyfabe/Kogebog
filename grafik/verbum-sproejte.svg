@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="squeeze" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="plate">
+      <ellipse cx="124" cy="204" rx="90" ry="30" fill="#3E8FB0"/>
+      <ellipse cx="124" cy="202" rx="76" ry="22" fill="#FFF4E2"/>
+    </g>
+    <g id="ketchup-dots" fill="#E2513B">
+      <ellipse cx="80" cy="204" rx="10" ry="6"/>
+      <ellipse cx="164" cy="204" rx="10" ry="6"/>
+      <ellipse cx="120" cy="200" rx="13" ry="7"/>
+    </g>
+    <g id="ketchup-stream">
+      <path d="M118 150 C114 162 122 172 118 194" fill="none" stroke-width="11"/>
+      <path d="M118 150 C114 162 122 172 118 194" fill="none" stroke="#E2513B" stroke-width="5"/>
+    </g>
+    <g id="downward-motion">
+      <path d="M74 84 C68 94 68 107 74 117 L81 112 L79 135 Q79 138 76 136 L59 122 L66 121 C58 107 59 91 65 80 Q71 75 74 84 Z" fill="#3E8FB0"/>
+    </g>
+    <g id="rosa-forearm">
+      <path d="M192 0 L246 0 C238 40 212 74 172 94 L178 50 C184 32 188 16 192 0 Z" fill="#F08A3C"/>
+    </g>
+    <g id="bottle" transform="translate(138 76) rotate(15)">
+      <path d="M-32 -58 C-32 -70 -24 -74 -12 -74 L12 -74 C24 -74 32 -70 32 -58 L32 30 C32 40 26 46 16 46 L-16 46 C-26 46 -32 40 -32 30 Z" fill="#E2513B"/>
+      <path d="M-22 -54 C-24 -40 -24 10 -22 26" fill="none" stroke="#F07A62" stroke-width="6"/>
+      <path d="M-18 46 L18 46 L11 62 L-11 62 Z" fill="#FFF4E2"/>
+      <path d="M-5 62 L5 62 L3 74 L-3 74 Z" fill="#FFF4E2"/>
+      <path d="M38 -36 C22 -40 6 -36 -6 -28 C-13 -22 -9 -14 0 -16 L-4 -8 C-12 -2 -8 6 1 3 L-3 11 C-9 18 -2 24 7 19 C18 16 32 12 40 4 Z" fill="#F08A3C"/>
+      <path d="M-2 -21 L6 -22 M-3 -2 L6 -4" fill="none"/>
+    </g>
+    <g id="squeeze-marks">
+      <path d="M96 44 Q88 54 92 66 M86 36 Q76 52 82 72" fill="none" stroke="#3E8FB0" stroke-width="4"/>
+    </g>
+  </g>
+</svg>

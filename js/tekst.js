@@ -69,8 +69,8 @@ export const KOEN = Object.freeze({
   'stort': 't', 'helt': 't', 'mildt': 't',
   'knivspids': 'n', 'dåse': 'n', 'gulerod': 'n', 'flute': 'n', 'bouillonterning': 'n', 'grøntsagsbouillonterning': 'n',
   'kugle': 'n', 'bolle': 'n', 'snegl': 'n', 'skive': 'n', 'time': 'n', 'citron': 'n', 'tomat': 'n', 'kartoffel': 'n',
-  'pakke': 'n', 'pose': 'n', 'portion': 'n', 'kage': 'n', 'chorizo': 'n',
-  'stor': 'n', 'hel': 'n', 'mild': 'n',
+  'pakke': 'n', 'pose': 'n', 'portion': 'n', 'kage': 'n', 'chorizo': 'n', 'rulle': 'n', 'mozzarella': 'n', 'peberfrugt': 'n',
+  'stor': 'n', 'hel': 'n', 'mild': 'n', 'rød': 'n', 'grøn': 'n',
   'lille': null,
 });
 

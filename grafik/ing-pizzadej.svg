@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="paper">
+    <path d="M34 148 L222 148 L244 214 L12 214 Z" fill="#FFF4E2"/>
+  </g>
+  <g id="dough-sheet">
+    <path d="M44 148 L212 148 L230 206 L26 206 Z" fill="#E8C79A"/>
+    <path d="M70 172 L74 175 M150 186 L154 189 M108 194 L112 197 M184 168 L188 171 M58 194 L62 197 M196 194 L200 197" fill="none" stroke="#CFA976" stroke-width="3"/>
+  </g>
+  <g id="dough-roll">
+    <path d="M46 98 L206 98 A15 28 0 0 1 206 154 L46 154 A15 28 0 0 1 46 98 Z" fill="#E8C79A"/>
+    <path d="M44 138 L206 138 L206 154 L46 154 A15 28 0 0 1 36 138 Z" fill="#CFA976" stroke="none"/>
+    <path d="M60 110 L190 110" fill="none" stroke="#FFF4E2" stroke-width="5"/>
+    <path d="M46 98 L206 98 A15 28 0 0 1 206 154 L46 154 A15 28 0 0 1 46 98 Z" fill="none"/>
+    <ellipse cx="206" cy="126" rx="15" ry="28" fill="#E8C79A"/>
+    <path d="M206 126 C210 126 211 120 207 118 C201 116 198 124 200 130 C202 138 213 138 216 130 C219 120 214 106 205 106 C195 106 190 120 192 132 C194 146 206 152 214 148" fill="none" stroke="#FFF4E2" stroke-width="3"/>
+    <path d="M206 126 C210 126 211 120 207 118 C201 116 198 124 200 130 C202 138 213 138 216 130 C219 120 214 106 205 106 C195 106 190 120 192 132 C194 146 206 152 214 148" fill="none" stroke-width="2"/>
+  </g>
+</g>
+</svg>

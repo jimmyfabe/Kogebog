@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="cap">
+    <path d="M120 46 L123 24 L133 24 L136 46 Z" fill="#FFF4E2"/>
+    <path d="M100 78 L108 46 L148 46 L156 78 Z" fill="#FFF4E2"/>
+  </g>
+  <g id="bottle">
+    <path d="M96 78 L160 78 C178 78 188 94 188 112 L188 206 C188 222 178 230 162 230 L94 230 C78 230 68 222 68 206 L68 112 C68 94 78 78 96 78 Z" fill="#E2513B"/>
+    <path d="M82 108 C82 96 88 90 96 88 C90 96 90 104 90 112 L90 198 C90 206 82 206 82 198 Z" fill="#F07A62" stroke="none"/>
+  </g>
+  <g id="label">
+    <rect x="94" y="128" width="72" height="64" rx="10" fill="#FFF4E2"/>
+    <circle cx="130" cy="164" r="17" fill="#E2513B"/>
+    <path d="M130 149 C126 141 118 142 115 146 C122 147 126 150 130 150 C134 150 138 147 145 146 C142 142 134 141 130 149 Z" fill="#6BA539"/>
+  </g>
+  <g id="drops" fill="#E2513B">
+    <path d="M208 122 C208 114 216 104 216 104 C216 104 224 114 224 122 C224 127 220 130 216 130 C212 130 208 127 208 122 Z"/>
+    <path d="M36 164 C36 158 42 150 42 150 C42 150 48 158 48 164 C48 168 45 170 42 170 C39 170 36 168 36 164 Z"/>
+  </g>
+</g>
+</svg>

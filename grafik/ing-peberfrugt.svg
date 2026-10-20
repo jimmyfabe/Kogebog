@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="green-pepper" transform="translate(82 116) rotate(-14)">
+    <path d="M-40 -30 C-30 -48 -10 -46 0 -40 C10 -46 30 -48 40 -30 C52 -8 48 30 34 48 C24 60 12 58 0 52 C-12 58 -24 60 -34 48 C-48 30 -52 -8 -40 -30 Z" fill="#5E9E35"/>
+    <path d="M-28 -24 C-34 -8 -34 16 -28 30" fill="none" stroke="#86C25A" stroke-width="5"/>
+    <path d="M0 -40 C-6 -10 -6 24 0 52" fill="none"/>
+    <path d="M-4 -40 C-6 -52 -2 -62 8 -66 L12 -60 C6 -56 4 -50 6 -40 Z" fill="#3F7F2E"/>
+  </g>
+  <g id="red-pepper" transform="translate(156 150) rotate(8)">
+    <path d="M-52 -38 C-40 -60 -14 -58 0 -50 C14 -58 40 -60 52 -38 C66 -10 62 38 44 62 C32 76 16 74 0 66 C-16 74 -32 76 -44 62 C-62 38 -66 -10 -52 -38 Z" fill="#E2513B"/>
+    <path d="M-38 -26 C-46 -6 -46 22 -38 38" fill="none" stroke="#F07A62" stroke-width="6"/>
+    <path d="M0 -50 C-8 -12 -8 30 0 66 M26 -48 C34 -20 32 30 22 70" fill="none"/>
+    <path d="M-14 -52 C-8 -61 8 -61 14 -52 C8 -47 -8 -47 -14 -52 Z" fill="#5E9E35"/>
+    <path d="M-4 -55 C-6 -67 -2 -77 8 -81 L13 -75 C7 -71 4 -65 5 -55 Z" fill="#5E9E35"/>
+  </g>
+</g>
+</svg>

@@ -1,0 +1,48 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Heksefingre",
+  "description": "Tynde brødfingre med negle af rød peberfrugt og ketchup-blod at dyppe i.",
+  "image": "grafik/ret-heksefingre.svg",
+  "inLanguage": "da",
+  "recipeYield": "14 fingre",
+  "prepTime": "PT20M",
+  "cookTime": "PT12M",
+  "totalTime": "PT45M",
+  "recipeIngredient": [
+    "1 rulle færdig pizzadej (fra køl)",
+    "1 rød peberfrugt (til neglene)",
+    "1 æg (til pensling)",
+    "Lidt revet parmesan (kan undværes)",
+    "Ketchup (til dip)"
+  ],
+  "tool": ["bageplade", "bagepapir", "pizzahjul eller skarp kniv", "skærebræt", "smørekniv", "kop", "gaffel", "pensel", "lille skål"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Skær dejen i 14 strimler.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["pizzadej"], "note": "Tænd ovnen på 200 °C, eller det pakken siger. Rul dejen ud med papiret under, og skær strimler på ca. 2 cm." } },
+    { "@type": "HowToStep", "text": "Skær peberfrugten i små negle.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["peberfrugt"], "note": "14 stykker på størrelse med en negl." } },
+    { "@type": "HowToStep", "text": "Rul hver strimmel til en tynd finger.", "tumbi": { "verbum": "rulle", "ikoner": ["pizzadej"], "note": "Knib lidt ind to steder, så der kommer knoer. Små streger med en smørekniv ligner rynker. Læg fingrene på en bageplade med bagepapir." } },
+    { "@type": "HowToStep", "text": "Tryk en negl fast i spidsen.", "tumbi": { "verbum": "pynte", "ikoner": ["peberfrugt"] } },
+    { "@type": "HowToStep", "text": "Pisk ægget, og pensl fingrene.", "tumbi": { "verbum": "pensle", "ikoner": ["aeg"], "note": "Pisk ægget med en gaffel i en kop." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg på fingrene." } },
+    { "@type": "HowToStep", "text": "Drys lidt parmesan på fingrene.", "tumbi": { "verbum": "drysse", "ikoner": ["ost"], "note": "Kan undværes." } },
+    { "@type": "HowToStep", "text": "Bag fingrene i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "note": "10-12 min, til de er gyldne." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Lad fingrene køle lidt af.", "tumbi": { "verbum": "vente", "timer_sek": 300, "note": "Pladen er meget varm." } },
+    { "@type": "HowToStep", "text": "Sprøjt ketchup i en lille skål.", "tumbi": { "verbum": "sproejte", "ikoner": ["ketchup"], "note": "Det er blodet." } },
+    { "@type": "HowToStep", "text": "Dyp en heksefinger i blodet, og smag!", "tumbi": { "verbum": "smage", "ikoner": ["ketchup"] } }
+  ],
+  "tumbi": {
+    "id": "heksefingre",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift",
+    "ingredienser": [
+      { "ikon": "pizzadej", "maengde": "1 rulle" },
+      { "ikon": "peberfrugt", "maengde": "1" },
+      { "ikon": "aeg", "maengde": "1" },
+      { "ikon": "ost", "maengde": "" },
+      { "ikon": "ketchup", "maengde": "" }
+    ]
+  }
+}

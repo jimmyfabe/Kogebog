@@ -1,0 +1,49 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Slimsnegle",
+  "description": "Grønne pizzasnegle med flødeost og spinat og to øjne af oliven.",
+  "image": "grafik/ret-slimsnegle.svg",
+  "inLanguage": "da",
+  "recipeYield": "12 snegle",
+  "prepTime": "PT25M",
+  "cookTime": "PT15M",
+  "totalTime": "PT50M",
+  "recipeIngredient": [
+    "1 rulle færdig pizzadej (fra køl)",
+    "150 g flødeost naturel",
+    "100 g frossen hakket spinat (tøet op)",
+    "100 g revet ost",
+    "100 g skinketern (eller kyllingepålæg i tern)",
+    "6 sorte oliven uden sten (til øjnene)"
+  ],
+  "tool": ["skål", "ske", "smørekniv", "skarp kniv", "skærebræt", "bageplade", "bagepapir"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Rør flødeost og spinat sammen til grønt slim.", "tumbi": { "verbum": "roere", "ikoner": ["flodeost", "spinat"], "note": "Tø spinaten op, og pres vandet ud først. Grøn pesto ligner også slim, men har ofte nødder i. Flødeost med spinat er nøddefri." } },
+    { "@type": "HowToStep", "text": "Smør slimet ud på dejen.", "tumbi": { "verbum": "smoere", "ikoner": ["flodeost", "spinat"], "note": "Tænd ovnen på 200 °C, eller det pakken siger. Rul dejen ud med papiret under. Lad ca. 2 cm være fri langs den ene lange kant." } },
+    { "@type": "HowToStep", "text": "Drys ost og skinke over.", "tumbi": { "verbum": "drysse", "ikoner": ["ost", "skinke"] } },
+    { "@type": "HowToStep", "text": "Rul dejen sammen til en lang pølse.", "tumbi": { "verbum": "rulle", "ikoner": ["pizzadej"], "note": "Start ved den lange kant med fyld, og rul hen mod den frie kant. Så lukker rullen sig." } },
+    { "@type": "HowToStep", "text": "Skær rullen i 12 snegle.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "note": "Med en skarp kniv. Læg sneglene på en bageplade med bagepapir." } },
+    { "@type": "HowToStep", "text": "Skær oliven i små øjne.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["oliven"], "note": "4 stykker af hver oliven." } },
+    { "@type": "HowToStep", "text": "Tryk to øjne fast på hver snegl.", "tumbi": { "verbum": "pynte", "ikoner": ["oliven"] } },
+    { "@type": "HowToStep", "text": "Bag sneglene i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 720, "note": "12-15 min, til de er gyldne." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Lad sneglene køle lidt af.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Pladen er meget varm." } },
+    { "@type": "HowToStep", "text": "Smag en slimsnegl!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "slimsnegle",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift",
+    "ingredienser": [
+      { "ikon": "pizzadej", "maengde": "1 rulle" },
+      { "ikon": "flodeost", "maengde": "150 g" },
+      { "ikon": "spinat", "maengde": "100 g" },
+      { "ikon": "ost", "maengde": "100 g" },
+      { "ikon": "skinke", "maengde": "100 g" },
+      { "ikon": "oliven", "maengde": "6" }
+    ]
+  }
+}

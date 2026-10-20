@@ -1,0 +1,43 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Mumiepølser",
+  "description": "Pølser pakket ind i strimler af pizzadej, så de ligner små mumier med ketchup-øjne.",
+  "image": "grafik/ret-mumiepoelser.svg",
+  "inLanguage": "da",
+  "recipeYield": "10 mumier",
+  "prepTime": "PT20M",
+  "cookTime": "PT15M",
+  "totalTime": "PT45M",
+  "recipeIngredient": [
+    "1 rulle færdig pizzadej (fra køl)",
+    "10 pølser (eller kyllingepølser)",
+    "1 æg (til pensling)",
+    "Ketchup eller sennep (til øjnene)"
+  ],
+  "tool": ["bageplade", "bagepapir", "pizzahjul eller skarp kniv", "kop", "gaffel", "pensel", "fad"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Skær dejen i tynde strimler.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["pizzadej"], "note": "Tænd ovnen på 200 °C, eller det pakken siger. Rul dejen ud med papiret under, og skær strimler på ca. 1 cm med et pizzahjul." } },
+    { "@type": "HowToStep", "text": "Vikl strimler på kryds om hver pølse.", "tumbi": { "verbum": "pakke-ind", "ikoner": ["poelse", "pizzadej"], "note": "2-3 strimler pr. pølse. Lad en lille sprække være fri til ansigtet. Pølserne er færdige og skal kun varmes. Læg mumierne på en bageplade med bagepapir." } },
+    { "@type": "HowToStep", "text": "Pisk ægget, og pensl mumierne.", "tumbi": { "verbum": "pensle", "ikoner": ["aeg"], "note": "Pisk ægget med en gaffel i en kop. Pensl kun dejen, ikke sprækken." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg på fingrene." } },
+    { "@type": "HowToStep", "text": "Bag mumierne i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 720, "note": "12-15 min, til dejen er gylden." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Lad mumierne køle lidt af.", "tumbi": { "verbum": "vente", "timer_sek": 300, "note": "Pladen er meget varm. Flyt mumierne over på et fad." } },
+    { "@type": "HowToStep", "text": "Sæt to prikker ketchup som øjne.", "tumbi": { "verbum": "sproejte", "ikoner": ["ketchup"], "note": "I sprækken. Sennep kan også bruges." } },
+    { "@type": "HowToStep", "text": "Smag en mumie!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "mumiepoelser",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift",
+    "ingredienser": [
+      { "ikon": "pizzadej", "maengde": "1 rulle" },
+      { "ikon": "poelse", "maengde": "10" },
+      { "ikon": "aeg", "maengde": "1" },
+      { "ikon": "ketchup", "maengde": "" }
+    ]
+  }
+}

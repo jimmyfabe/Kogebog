@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="place-on-top" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="bun">
+      <path d="M48 200 C44 150 84 120 128 120 C172 120 212 150 208 200 C204 214 172 222 128 222 C84 222 52 214 48 200 Z" fill="#CFA976"/>
+      <path d="M60 186 C60 150 92 130 128 130 C164 130 196 150 196 186 C180 200 76 200 60 186 Z" fill="#E8C79A"/>
+    </g>
+    <g id="placed-olive">
+      <ellipse cx="158" cy="160" rx="15" ry="11" fill="#2E2A2B"/>
+      <ellipse cx="153" cy="156" rx="5" ry="3" fill="#8A8287" stroke="none"/>
+    </g>
+    <g id="downward-motion">
+      <path d="M74 84 C68 94 68 107 74 117 L81 112 L79 135 Q79 138 76 136 L59 122 L66 121 C58 107 59 91 65 80 Q71 75 74 84 Z" fill="#3E8FB0"/>
+    </g>
+    <g id="held-olive">
+      <ellipse cx="120" cy="80" rx="15" ry="11" fill="#2E2A2B"/>
+      <ellipse cx="114" cy="77" rx="5" ry="3" fill="#8A8287" stroke="none"/>
+    </g>
+    <g id="rosa-forearm">
+      <path d="M205 0 L246 0 C230 30 206 48 177 65 L153 45 C171 29 186 15 205 0 Z" fill="#F08A3C"/>
+    </g>
+    <g id="rosa-pinching-paw">
+      <path d="M166 39 C154 33 139 35 127 44 L115 54 C108 59 112 66 120 64 L132 58 L125 68 C122 75 130 79 135 72 C141 77 148 74 150 67 C158 73 167 67 165 59 C174 57 174 46 166 39 Z" fill="#F08A3C"/>
+      <path d="M145 43 Q135 41 126 50 L122 56 Q132 52 140 58 Q147 64 156 58 Q160 48 145 43 Z" fill="#FFF4E2"/>
+      <path d="M140 62 L138 68 M151 59 L150 64" fill="none"/>
+    </g>
+  </g>
+</svg>

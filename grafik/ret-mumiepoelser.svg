@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="plate">
+    <ellipse cx="128" cy="140" rx="108" ry="75" fill="#3E8FB0"/>
+    <ellipse cx="128" cy="140" rx="94" ry="61" fill="#FFF4E2"/>
+  </g>
+  <g id="mummy-1" transform="translate(124 106) rotate(-8)">
+    <path d="M-50 -15 L50 -15 A15 15 0 0 1 50 15 L-50 15 A15 15 0 0 1 -50 -15 Z" fill="#E07A5A"/>
+    <g fill="#F6E6C4">
+      <rect x="-37" y="-21" width="16" height="42" rx="7" transform="rotate(-30 -29 0)"/>
+      <rect x="7" y="-21" width="16" height="42" rx="7" transform="rotate(-30 15 0)"/>
+      <rect x="-48" y="-21" width="16" height="42" rx="7" transform="rotate(30 -40 0)"/>
+      <rect x="-26" y="-21" width="16" height="42" rx="7" transform="rotate(30 -18 0)"/>
+      <rect x="-4" y="-21" width="16" height="42" rx="7" transform="rotate(30 4 0)"/>
+      <rect x="18" y="-21" width="16" height="42" rx="7" transform="rotate(30 26 0)"/>
+    </g>
+    <circle cx="51" cy="-6" r="4.5" fill="#E2513B"/>
+    <circle cx="51" cy="6" r="4.5" fill="#E2513B"/>
+  </g>
+  <g id="mummy-2" transform="translate(134 141) rotate(-8)">
+    <path d="M-50 -15 L50 -15 A15 15 0 0 1 50 15 L-50 15 A15 15 0 0 1 -50 -15 Z" fill="#E07A5A"/>
+    <g fill="#F6E6C4">
+      <rect x="-37" y="-21" width="16" height="42" rx="7" transform="rotate(-30 -29 0)"/>
+      <rect x="7" y="-21" width="16" height="42" rx="7" transform="rotate(-30 15 0)"/>
+      <rect x="-48" y="-21" width="16" height="42" rx="7" transform="rotate(30 -40 0)"/>
+      <rect x="-26" y="-21" width="16" height="42" rx="7" transform="rotate(30 -18 0)"/>
+      <rect x="-4" y="-21" width="16" height="42" rx="7" transform="rotate(30 4 0)"/>
+      <rect x="18" y="-21" width="16" height="42" rx="7" transform="rotate(30 26 0)"/>
+    </g>
+    <circle cx="51" cy="-6" r="4.5" fill="#E2513B"/>
+    <circle cx="51" cy="6" r="4.5" fill="#E2513B"/>
+  </g>
+  <g id="mummy-3" transform="translate(126 176) rotate(-8)">
+    <path d="M-50 -15 L50 -15 A15 15 0 0 1 50 15 L-50 15 A15 15 0 0 1 -50 -15 Z" fill="#E07A5A"/>
+    <g fill="#F6E6C4">
+      <rect x="-37" y="-21" width="16" height="42" rx="7" transform="rotate(-30 -29 0)"/>
+      <rect x="7" y="-21" width="16" height="42" rx="7" transform="rotate(-30 15 0)"/>
+      <rect x="-48" y="-21" width="16" height="42" rx="7" transform="rotate(30 -40 0)"/>
+      <rect x="-26" y="-21" width="16" height="42" rx="7" transform="rotate(30 -18 0)"/>
+      <rect x="-4" y="-21" width="16" height="42" rx="7" transform="rotate(30 4 0)"/>
+      <rect x="18" y="-21" width="16" height="42" rx="7" transform="rotate(30 26 0)"/>
+    </g>
+    <circle cx="51" cy="-6" r="4.5" fill="#E2513B"/>
+    <circle cx="51" cy="6" r="4.5" fill="#E2513B"/>
+  </g>
+</g>
+</svg>

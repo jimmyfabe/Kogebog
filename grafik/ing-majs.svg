@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="corn-cob" transform="translate(126 122) rotate(35)">
+    <path d="M-6 96 L-8 66 L8 66 L6 96 Z" fill="#9BC46A"/>
+    <path d="M-4 80 C-42 60 -54 -10 -42 -62 C-30 -20 -20 30 -4 80 Z" fill="#4E8A2A"/>
+    <path d="M0 -84 C22 -84 30 -40 30 0 C30 40 20 70 0 70 C-20 70 -30 40 -30 0 C-30 -40 -22 -84 0 -84 Z" fill="#F2C14E"/>
+    <path d="M-17 -62 L17 -62 M-24 -44 L24 -44 M-27 -26 L27 -26 M-28 -8 L28 -8 M-28 10 L28 10 M-26 28 L26 28 M-21 46 L21 46 M-12 -76 Q-17 -4 -11 62 M12 -76 Q17 -4 11 62 M0 -82 L0 68" fill="none" stroke="#D9A52E" stroke-width="3"/>
+    <path d="M0 -84 C22 -84 30 -40 30 0 C30 40 20 70 0 70 C-20 70 -30 40 -30 0 C-30 -40 -22 -84 0 -84 Z" fill="none"/>
+    <path d="M4 80 C42 62 52 0 46 -48 C32 -8 24 42 4 80 Z" fill="#6BA539"/>
+  </g>
+  <g id="kernels" fill="#F2C14E">
+    <rect x="188" y="196" width="14" height="12" rx="5"/>
+    <rect x="210" y="184" width="14" height="12" rx="5" transform="rotate(20 217 190)"/>
+    <rect x="204" y="214" width="14" height="12" rx="5" transform="rotate(-15 211 220)"/>
+  </g>
+</g>
+</svg>

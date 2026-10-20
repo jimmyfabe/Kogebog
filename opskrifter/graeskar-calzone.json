@@ -1,0 +1,57 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Græskar-calzone",
+  "description": "Calzone med tomat, ost, skinke og majs og et græskaransigt skåret i låget.",
+  "image": "grafik/ret-graeskar-calzone.svg",
+  "inLanguage": "da",
+  "recipeYield": "4 calzoner (8 halve)",
+  "prepTime": "PT25M",
+  "cookTime": "PT20M",
+  "totalTime": "PT1H",
+  "recipeIngredient": [
+    "1 rulle færdig pizzadej (fra køl)",
+    "ca. 1 dl pizzasauce eller tomatpuré",
+    "100 g revet ost",
+    "100 g skinketern (eller kyllingepålæg i tern)",
+    "1 dåse majs (ca. 140 g)",
+    "75 g revet cheddar",
+    "1 grøn peberfrugt (til stilkene)",
+    "1 æg (til pensling)"
+  ],
+  "tool": ["bageplade", "bagepapir", "pizzahjul eller skarp kniv", "lille spids kniv", "skærebræt", "si", "ske", "kop", "gaffel", "pensel"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Skær dejen i 4 firkanter.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["pizzadej"], "note": "Tænd ovnen på 200 °C, eller det pakken siger. Rul dejen ud med papiret under. Hæld vandet fra majsen i en si." } },
+    { "@type": "HowToStep", "text": "Smør tomat på den ene halvdel.", "tumbi": { "verbum": "smoere", "ikoner": ["tomatpure"], "note": "Lad ca. 1 cm være fri ved kanten." } },
+    { "@type": "HowToStep", "text": "Drys ost, skinke og majs på tomaten.", "tumbi": { "verbum": "drysse", "ikoner": ["ost", "skinke", "majs"] } },
+    { "@type": "HowToStep", "text": "Fold dejen over, og tryk kanten med en gaffel.", "tumbi": { "verbum": "pakke-ind", "ikoner": ["pizzadej"], "note": "Så lukker calzonen sig. Læg dem på en bageplade med bagepapir." } },
+    { "@type": "HowToStep", "text": "Skær et græskaransigt i låget.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["pizzadej"], "note": "To trekant-øjne og en zigzag-mund med en lille spids kniv, så det røde fyld kan ses." } },
+    { "@type": "HowToStep", "text": "Skær peberfrugten i små stilke.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["peberfrugt"], "note": "Fire stykker på ca. 1 × 3 cm." } },
+    { "@type": "HowToStep", "text": "Pisk ægget, og pensl calzonerne.", "tumbi": { "verbum": "pensle", "ikoner": ["aeg"], "note": "Pisk ægget med en gaffel i en kop." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg på fingrene." } },
+    { "@type": "HowToStep", "text": "Drys cheddar på låget.", "tumbi": { "verbum": "drysse", "ikoner": ["ost"], "note": "Den orange ost giver græskarfarven." } },
+    { "@type": "HowToStep", "text": "Stik en grøn stilk i toppen.", "tumbi": { "verbum": "pynte", "ikoner": ["peberfrugt"] } },
+    { "@type": "HowToStep", "text": "Bag calzonerne i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1080, "note": "18-20 min, til de er gyldne." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Lad calzonerne køle lidt af.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Fyldet er meget varmt indeni." } },
+    { "@type": "HowToStep", "text": "Skær hver calzone i to.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv" } },
+    { "@type": "HowToStep", "text": "Smag et græskar!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "graeskar-calzone",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift",
+    "ingredienser": [
+      { "ikon": "pizzadej", "maengde": "1 rulle" },
+      { "ikon": "tomatpure", "maengde": "ca. 1 dl" },
+      { "ikon": "ost", "maengde": "100 g" },
+      { "ikon": "skinke", "maengde": "100 g" },
+      { "ikon": "majs", "maengde": "1 dåse" },
+      { "ikon": "ost", "maengde": "75 g" },
+      { "ikon": "peberfrugt", "maengde": "1" },
+      { "ikon": "aeg", "maengde": "1" }
+    ]
+  }
+}

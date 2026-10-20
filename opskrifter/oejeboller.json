@@ -1,0 +1,58 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Øjeboller",
+  "description": "Pizzaboller med et øje af mozzarella og oliven og røde årer af ketchup.",
+  "image": "grafik/ret-oejeboller.svg",
+  "inLanguage": "da",
+  "recipeYield": "12 boller",
+  "prepTime": "PT30M",
+  "cookTime": "PT15M",
+  "totalTime": "PT1H",
+  "recipeIngredient": [
+    "1 rulle færdig pizzadej (fra køl)",
+    "ca. 1 dl pizzasauce eller tomatpuré",
+    "100 g revet ost",
+    "100 g skinketern (eller kyllingepålæg i tern)",
+    "1 mozzarella (ca. 125 g)",
+    "12 sorte oliven uden sten",
+    "1 æg (til pensling)",
+    "Ketchup (til årerne)"
+  ],
+  "tool": ["bageplade", "bagepapir", "pizzahjul eller skarp kniv", "skærebræt", "teske", "tallerken", "kop", "gaffel", "pensel", "tandstikker", "fad"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Skær dejen i 12 firkanter.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["pizzadej"], "note": "Tænd ovnen på 200 °C, eller det pakken siger. Rul dejen ud med papiret under." } },
+    { "@type": "HowToStep", "text": "Smør lidt tomat midt på hver firkant.", "tumbi": { "verbum": "smoere", "ikoner": ["tomatpure"], "note": "En teskefuld er nok." } },
+    { "@type": "HowToStep", "text": "Drys ost og skinke på tomaten.", "tumbi": { "verbum": "drysse", "ikoner": ["ost", "skinke"] } },
+    { "@type": "HowToStep", "text": "Saml hjørnerne, og vend bollen om.", "tumbi": { "verbum": "pakke-ind", "ikoner": ["pizzadej"], "note": "Klem dejen godt sammen, så samlingen kommer nedad. Læg bollerne på en bageplade med bagepapir." } },
+    { "@type": "HowToStep", "text": "Pisk ægget, og pensl bollerne.", "tumbi": { "verbum": "pensle", "ikoner": ["aeg"], "note": "Pisk ægget med en gaffel i en kop." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg på fingrene." } },
+    { "@type": "HowToStep", "text": "Skær mozzarella og oliven i skiver.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["ost", "oliven"], "note": "12 skiver af hver." } },
+    { "@type": "HowToStep", "text": "Læg en olivenskive på hver mozzarellaskive.", "tumbi": { "verbum": "pynte", "ikoner": ["ost", "oliven"], "note": "Det er øjnene. Læg dem på en tallerken, og læg olivenskiven i midten som pupil." } },
+    { "@type": "HowToStep", "text": "Bag bollerne i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 720, "note": "12 min. De skal i ovnen igen med øjnene." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Læg et øje på hver varm bolle.", "tumbi": { "verbum": "pynte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ost", "oliven"], "note": "Bollerne og pladen er meget varme." } },
+    { "@type": "HowToStep", "text": "Bag bollerne 3 minutter mere.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "note": "Til osten lige er smeltet." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Lad bollerne køle lidt af.", "tumbi": { "verbum": "vente", "timer_sek": 300, "note": "Pladen er meget varm. Flyt bollerne over på et fad." } },
+    { "@type": "HowToStep", "text": "Tegn røde årer med ketchup.", "tumbi": { "verbum": "sproejte", "ikoner": ["ketchup"], "note": "Fra pupillen og ud. Med en tandstik bliver stregerne tynde." } },
+    { "@type": "HowToStep", "text": "Smag et øje!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "oejeboller",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift",
+    "ingredienser": [
+      { "ikon": "pizzadej", "maengde": "1 rulle" },
+      { "ikon": "tomatpure", "maengde": "ca. 1 dl" },
+      { "ikon": "ost", "maengde": "100 g" },
+      { "ikon": "skinke", "maengde": "100 g" },
+      { "ikon": "ost", "maengde": "1" },
+      { "ikon": "oliven", "maengde": "12" },
+      { "ikon": "aeg", "maengde": "1" },
+      { "ikon": "ketchup", "maengde": "" }
+    ]
+  }
+}

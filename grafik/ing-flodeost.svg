@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="lid" transform="rotate(-14 190 92)">
+    <path d="M136 92 L136 104 C136 115 160 124 190 124 C220 124 244 115 244 104 L244 92" fill="#3E8FB0"/>
+    <ellipse cx="190" cy="92" rx="54" ry="20" fill="#3E8FB0"/>
+    <ellipse cx="190" cy="91" rx="30" ry="9" fill="#FFF4E2"/>
+  </g>
+  <g id="tub">
+    <path d="M34 140 L46 206 C50 222 86 232 118 232 C150 232 186 222 190 206 L202 140 Z" fill="#FFF4E2"/>
+    <path d="M38 164 C68 178 168 178 198 164 L194 188 C164 202 72 202 42 188 Z" fill="#3E8FB0"/>
+    <ellipse cx="118" cy="140" rx="84" ry="26" fill="#FFF4E2"/>
+    <ellipse cx="118" cy="140" rx="72" ry="19" fill="#FFFDF7"/>
+  </g>
+  <g id="swirl">
+    <path d="M78 142 C74 124 98 112 120 114 C142 116 152 128 144 138 C136 146 114 144 116 134 C118 126 132 126 132 132" fill="none" stroke="#D8CDBE"/>
+  </g>
+</g>
+</svg>

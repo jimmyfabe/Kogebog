@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="plate">
+    <ellipse cx="128" cy="140" rx="108" ry="75" fill="#3E8FB0"/>
+    <ellipse cx="128" cy="140" rx="94" ry="61" fill="#FFF4E2"/>
+  </g>
+  <g id="bun-1" transform="translate(94 110)">
+    <path d="M-32 8 C-34 -14 -18 -28 0 -28 C18 -28 34 -14 32 8 C30 22 -30 22 -32 8 Z" fill="#CFA976"/>
+    <path d="M-26 0 C-26 -16 -14 -24 0 -24 C14 -24 26 -16 26 0 C18 8 -18 8 -26 0 Z" fill="#E8C79A"/>
+    <path d="M-6 -12 L-16 -20 L-22 -12 M-7 -9 L-19 -12 L-25 -4 M-7 -6 L-19 -3 L-23 5 M-6 -3 L-15 4 L-17 12 M6 -12 L16 -20 L22 -12 M7 -9 L19 -12 L25 -4 M7 -6 L19 -3 L23 5 M6 -3 L15 4 L17 12" fill="none" stroke="#2E2A2B" stroke-width="4"/>
+    <ellipse cx="0" cy="-6" rx="9" ry="8" fill="#2E2A2B"/>
+    <circle cx="0" cy="-17" r="5.5" fill="#2E2A2B"/>
+    <circle cx="-2.2" cy="-18" r="1.6" fill="#FFF4E2" stroke="none"/>
+    <circle cx="2.2" cy="-18" r="1.6" fill="#FFF4E2" stroke="none"/>
+  </g>
+  <g id="bun-2" transform="translate(164 108)">
+    <path d="M-32 8 C-34 -14 -18 -28 0 -28 C18 -28 34 -14 32 8 C30 22 -30 22 -32 8 Z" fill="#CFA976"/>
+    <path d="M-26 0 C-26 -16 -14 -24 0 -24 C14 -24 26 -16 26 0 C18 8 -18 8 -26 0 Z" fill="#E8C79A"/>
+    <path d="M-6 -12 L-16 -20 L-22 -12 M-7 -9 L-19 -12 L-25 -4 M-7 -6 L-19 -3 L-23 5 M-6 -3 L-15 4 L-17 12 M6 -12 L16 -20 L22 -12 M7 -9 L19 -12 L25 -4 M7 -6 L19 -3 L23 5 M6 -3 L15 4 L17 12" fill="none" stroke="#2E2A2B" stroke-width="4"/>
+    <ellipse cx="0" cy="-6" rx="9" ry="8" fill="#2E2A2B"/>
+    <circle cx="0" cy="-17" r="5.5" fill="#2E2A2B"/>
+    <circle cx="-2.2" cy="-18" r="1.6" fill="#FFF4E2" stroke="none"/>
+    <circle cx="2.2" cy="-18" r="1.6" fill="#FFF4E2" stroke="none"/>
+  </g>
+  <g id="bun-3" transform="translate(72 160)">
+    <path d="M-32 8 C-34 -14 -18 -28 0 -28 C18 -28 34 -14 32 8 C30 22 -30 22 -32 8 Z" fill="#CFA976"/>
+    <path d="M-26 0 C-26 -16 -14 -24 0 -24 C14 -24 26 -16 26 0 C18 8 -18 8 -26 0 Z" fill="#E8C79A"/>
+    <path d="M-6 -12 L-16 -20 L-22 -12 M-7 -9 L-19 -12 L-25 -4 M-7 -6 L-19 -3 L-23 5 M-6 -3 L-15 4 L-17 12 M6 -12 L16 -20 L22 -12 M7 -9 L19 -12 L25 -4 M7 -6 L19 -3 L23 5 M6 -3 L15 4 L17 12" fill="none" stroke="#2E2A2B" stroke-width="4"/>
+    <ellipse cx="0" cy="-6" rx="9" ry="8" fill="#2E2A2B"/>
+    <circle cx="0" cy="-17" r="5.5" fill="#2E2A2B"/>
+    <circle cx="-2.2" cy="-18" r="1.6" fill="#FFF4E2" stroke="none"/>
+    <circle cx="2.2" cy="-18" r="1.6" fill="#FFF4E2" stroke="none"/>
+  </g>
+  <g id="bun-4" transform="translate(128 166)">
+    <path d="M-32 8 C-34 -14 -18 -28 0 -28 C18 -28 34 -14 32 8 C30 22 -30 22 -32 8 Z" fill="#CFA976"/>
+    <path d="M-26 0 C-26 -16 -14 -24 0 -24 C14 -24 26 -16 26 0 C18 8 -18 8 -26 0 Z" fill="#E8C79A"/>
+    <path d="M-6 -12 L-16 -20 L-22 -12 M-7 -9 L-19 -12 L-25 -4 M-7 -6 L-19 -3 L-23 5 M-6 -3 L-15 4 L-17 12 M6 -12 L16 -20 L22 -12 M7 -9 L19 -12 L25 -4 M7 -6 L19 -3 L23 5 M6 -3 L15 4 L17 12" fill="none" stroke="#2E2A2B" stroke-width="4"/>
+    <ellipse cx="0" cy="-6" rx="9" ry="8" fill="#2E2A2B"/>
+    <circle cx="0" cy="-17" r="5.5" fill="#2E2A2B"/>
+    <circle cx="-2.2" cy="-18" r="1.6" fill="#FFF4E2" stroke="none"/>
+    <circle cx="2.2" cy="-18" r="1.6" fill="#FFF4E2" stroke="none"/>
+  </g>
+  <g id="bun-5" transform="translate(184 160)">
+    <path d="M-32 8 C-34 -14 -18 -28 0 -28 C18 -28 34 -14 32 8 C30 22 -30 22 -32 8 Z" fill="#CFA976"/>
+    <path d="M-26 0 C-26 -16 -14 -24 0 -24 C14 -24 26 -16 26 0 C18 8 -18 8 -26 0 Z" fill="#E8C79A"/>
+    <path d="M-6 -12 L-16 -20 L-22 -12 M-7 -9 L-19 -12 L-25 -4 M-7 -6 L-19 -3 L-23 5 M-6 -3 L-15 4 L-17 12 M6 -12 L16 -20 L22 -12 M7 -9 L19 -12 L25 -4 M7 -6 L19 -3 L23 5 M6 -3 L15 4 L17 12" fill="none" stroke="#2E2A2B" stroke-width="4"/>
+    <ellipse cx="0" cy="-6" rx="9" ry="8" fill="#2E2A2B"/>
+    <circle cx="0" cy="-17" r="5.5" fill="#2E2A2B"/>
+    <circle cx="-2.2" cy="-18" r="1.6" fill="#FFF4E2" stroke="none"/>
+    <circle cx="2.2" cy="-18" r="1.6" fill="#FFF4E2" stroke="none"/>
+  </g>
+</g>
+</svg>

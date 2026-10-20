@@ -7,7 +7,7 @@
    test/test-sw.js tjekker, at FILER er komplet, og fejler, når en fil er ændret. Fejlbeskeden viser den nye værdi;
    testen ændrer ikke sw.js, så den sættes her i hånden. */
 const PRAEFIKS = 'kog-';
-const INDHOLD = '23b0aeed26364fcc'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = 'd75a045ed27b8148'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = 'f6b454a344b4e165'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
@@ -46,6 +46,12 @@ const FILER = [
   'opskrifter/havregrynskugler.json',
   'opskrifter/tunfrikadeller.json',
   'opskrifter/pizzasnegle.json',
+  'opskrifter/mumiepoelser.json',
+  'opskrifter/edderkoppeboller.json',
+  'opskrifter/oejeboller.json',
+  'opskrifter/graeskar-calzone.json',
+  'opskrifter/heksefingre.json',
+  'opskrifter/slimsnegle.json',
   'lyd/liste.json',
   'ikoner/ikon.svg',
   'ikoner/ikon-180.png',
@@ -60,10 +66,14 @@ const FILER = [
   'grafik/ing-bagepulver.svg', 'grafik/ing-broed.svg', 'grafik/ing-chokolade.svg', 'grafik/ing-hytteost.svg', 'grafik/ing-kakao.svg',
   'grafik/ing-kartoffel.svg', 'grafik/ing-kerner.svg', 'grafik/ing-kokos.svg', 'grafik/ing-rasp.svg', 'grafik/ing-skinke.svg',
   'grafik/ing-tun.svg', 'grafik/ing-yoghurt.svg',
+  'grafik/ing-pizzadej.svg', 'grafik/ing-poelse.svg', 'grafik/ing-ketchup.svg', 'grafik/ing-oliven.svg', 'grafik/ing-majs.svg',
+  'grafik/ing-peberfrugt.svg', 'grafik/ing-flodeost.svg', 'grafik/ing-spinat.svg',
   'grafik/ret-boller.svg', 'grafik/ret-chorizo-pasta.svg', 'grafik/ret-frikadeller.svg', 'grafik/ret-koedsovs.svg', 'grafik/ret-pandekager.svg',
   'grafik/ret-kartoffelmos.svg', 'grafik/ret-hvidloegsflutes.svg', 'grafik/ret-brownie.svg', 'grafik/ret-blondie.svg',
   'grafik/ret-hytteostboller.svg', 'grafik/ret-havregrynskugler.svg', 'grafik/ret-tunfrikadeller.svg',
   'grafik/ret-pizzasnegle.svg',
+  'grafik/ret-mumiepoelser.svg', 'grafik/ret-edderkoppeboller.svg', 'grafik/ret-oejeboller.svg', 'grafik/ret-graeskar-calzone.svg',
+  'grafik/ret-heksefingre.svg', 'grafik/ret-slimsnegle.svg',
   'grafik/gruppe-aftensmad.svg', 'grafik/gruppe-bagning.svg', 'grafik/gruppe-soede-sager.svg',
   'grafik/verbum-aelte.svg', 'grafik/verbum-haelde.svg', 'grafik/verbum-koge.svg', 'grafik/verbum-maale.svg', 'grafik/verbum-roere.svg',
   'grafik/verbum-rulle.svg', 'grafik/verbum-skaere.svg', 'grafik/verbum-smage.svg', 'grafik/verbum-stege.svg',
@@ -71,6 +81,7 @@ const FILER = [
   'grafik/verbum-bage.svg', 'grafik/verbum-drysse.svg', 'grafik/verbum-mose.svg', 'grafik/verbum-pensle.svg', 'grafik/verbum-piske.svg',
   'grafik/verbum-rive.svg', 'grafik/verbum-smoere.svg',
   'grafik/verbum-tage-ud.svg', 'grafik/verbum-tage-ud-form.svg', 'grafik/verbum-si.svg', 'grafik/verbum-kagerulle.svg', 'grafik/verbum-pakke-ind.svg', 'grafik/verbum-smuldre.svg',
+  'grafik/verbum-pynte.svg', 'grafik/verbum-sproejte.svg',
 ];
 
 const iScope = (url) => url.href.startsWith(self.registration.scope);

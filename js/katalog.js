@@ -1,7 +1,8 @@
 // katalog.js — de faste id'er, som opskrifterne må bruge. Én kilde for appen og for test/test-opskrifter.js.
 // Billederne ligger i grafik/ med præcis disse navne (verbum-<id>, ing-<id>, dyr-<navn>, ret-<id>).
 
-// De 12 verber fra docs/gennemgang.md og 7 nye (18-10-2026). Navnet bruges som alt-tekst.
+// De 12 verber fra docs/gennemgang.md, 7 nye (18-10-2026), 6 nye (19-10-2026) og 2 til Halloween-retterne (20-10-2026):
+// «pynte» (læg en oliven, en negl eller en stilk på) og «sproejte» (klem ketchup ud af flasken). Navnet bruges som alt-tekst.
 export const VERBER = {
   'roere': 'røre',
   'haelde': 'hælde',
@@ -28,6 +29,8 @@ export const VERBER = {
   'kagerulle': 'rulle ud',
   'pakke-ind': 'pakke ind',
   'smuldre': 'smuldre',
+  'pynte': 'pynte',
+  'sproejte': 'sprøjte',
 };
 
 // Verber, der altid kræver en voksen, og hvilken slags hjælp. Rivejernet skærer, «bage» og «tage-ud» er altid ovnen
@@ -44,10 +47,10 @@ export const VOKSEN_KRAV = {
   'si': 'varme',
 };
 
-// Verber, barnet kan selv, når der er koldt: piske dej, pensle boller, mose, drysse ost. Er der varme med
+// Verber, barnet kan selv, når der er koldt: piske dej, pensle boller, mose, drysse ost, pynte og sprøjte ketchup. Er der varme med
 // (varmt fedt, en varm gryde eller pande), skal den voksne hjælpe, og så er det for varmens skyld, aldrig kniven.
 // Validatoren kan ikke se, om der er varme; det skriver opskriften med «voksen». Den tjekker, at hjælpen er «varme».
-export const KUN_VARME_HJAELP = ['piske', 'pensle', 'mose', 'drysse'];
+export const KUN_VARME_HJAELP = ['piske', 'pensle', 'mose', 'drysse', 'pynte', 'sproejte'];
 
 export const VOKSEN_HJAELP = {
   kniv: 'Kniv',
@@ -92,10 +95,18 @@ export const INGREDIENSER = {
   'skinke': 'skinke (pålæg)',
   'bagepulver': 'bagepulver',
   'kokos': 'kokosmel',
+  'pizzadej': 'pizzadej',
+  'poelse': 'pølser',
+  'ketchup': 'ketchup',
+  'oliven': 'sorte oliven',
+  'majs': 'majs',
+  'peberfrugt': 'peberfrugt',
+  'flodeost': 'flødeost',
+  'spinat': 'spinat',
 };
 
 // Ikoner for råt kød og råt æg: efter dem skal der komme et trin med «vaske-haender».
-// Tun på dåse og skinke (pålæg) er ikke rå, så de står ikke her. Rå fisk og råt svinekød bruger «koed».
+// Tun på dåse, skinke (pålæg) og pølser (færdige) er ikke rå, så de står ikke her. Rå fisk og råt svinekød bruger «koed».
 export const RAA_IKONER = ['koed', 'aeg'];
 
 export const DYR = {
