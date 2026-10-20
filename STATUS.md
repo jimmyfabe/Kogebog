@@ -1,6 +1,6 @@
 # STATUS – Tumbi Køkken
 
-## 20-10-2026 kl. 18:24: seks Halloween-retter + Røst flettet ind i `main` (fast-forward, 33 commits), klar til udgivelse (ikke pushet)
+## 20-10-2026 kl. 18:24: seks Halloween-retter + Røst flettet ind i `main` (fast-forward fra 8feea15), klar til udgivelse (ikke pushet)
 
 **Udgiv (Jimmy kører det selv, `gh` er ikke installeret):**
 1. Opret repoet i browseren: https://github.com/new → *Repository name* `Kogebog` → **Public** → slå *Add README* fra (repoet skal være tomt) → **Create repository**.
