@@ -1,20 +1,13 @@
 # STATUS – Tumbi Køkken
 
-## 20-10-2026 kl. 18:24: seks Halloween-retter + Røst flettet ind i `main` (fast-forward fra 8feea15), klar til udgivelse (ikke pushet)
+## 21-10-2026 kl. 09:31: udgivet på https://jimmyfabe.github.io/Kogebog/
 
-**Udgiv (Jimmy kører det selv, `gh` er ikke installeret):**
-1. Opret repoet i browseren: https://github.com/new → *Repository name* `Kogebog` → **Public** → slå *Add README* fra (repoet skal være tomt) → **Create repository**.
-2. **PowerShell:** forbind den lokale kogebog til repoet (ændrer kun `.git\config`):
-   ```powershell
-   cd D:\Claude\Kogebog; git remote add origin https://github.com/jimmyfabe/Kogebog.git
-   ```
-3. **PowerShell:** send `main` derop (kun `main`, ikke de andre grene):
-   ```powershell
-   cd D:\Claude\Kogebog; git push -u origin main
-   ```
-4. Slå Pages til: https://github.com/jimmyfabe/Kogebog/settings/pages → *Build and deployment* → *Source*: **Deploy from a branch** → *Branch*: **main** og **/ (root)** → **Save**.
-5. Efter 1-2 minutter: https://jimmyfabe.github.io/Kogebog/. Skriv «kørt» i chatten, så læser Claude den live `sw.js` og tjekker, at den passer til `main`.
+- Jimmy oprettede det offentlige repo `jimmyfabe/Kogebog`, pushede `main` (ea22eb5) og slog Pages til (main, / (root)). Claude tjekkede kl. 09:30: siden svarer 200, og den live `sw.js` og `index.html` er byte for byte som `main`. Linket er sendt til Jimmys mail.
+- Kun `main` er pushet. Grenene `halloween`, `opskrifter-2` og `stemme-roest` ligger kun lokalt.
+- Næste udgivelse: commit på `main`, og Jimmy kører `cd D:\Claude\Kogebog; git push` i PowerShell (Claudes filter afviser push).
 - Stien `/Kogebog/` følger repoets navn. Omdøbes repoet, skifter adressen, og genvejen på iPad'ens hjemmeskærm virker ikke mere.
+
+## 20-10-2026 kl. 18:24: seks Halloween-retter + Røst flettet ind i `main` (fast-forward fra 8feea15)
 
 **Gjort:**
 - **Retterne:** mumiepølser, edderkoppeboller, øjeboller, græskar-calzone, heksefingre og slimsnegle ligger i Bagning med `"afproevet": false`. Teksten er skrevet om fra Sagas opskrifter: korte trin, og den voksne tager kniv og ovn. Pynten kommer før æg-penslingen. «Bos pandekager efter Rasmus Klump» hedder nu «Tynde pandekager», og kilden nævner stadig bogen.
