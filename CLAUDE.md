@@ -37,6 +37,7 @@ Kør i Git Bash i `D:/Claude/Kogebog`.
 | `lyd/` | Røst-stemmens mp3 (`lyd/<ret>/<navn>.mp3` og `lyd/faelles/`), `liste.json` (filerne, appen spiller) og `tekster.json` (teksten, hver fil er lavet af; kun til tests) |
 | `vaerktoej/lav-taleliste.js`, `vaerktoej/indsaet-lyd.js` | Listen over alt, appen siger (til Røst), og indsætning af de færdige mp3-filer i `lyd/`. Se «Stemmen» |
 | `js/hold.js` | Knap, der skal holdes inde i 2 s (voksen-trin og print) |
+| `js/voksen.js` | Voksen-trinets gule advarselstrekant (kniv eller flamme) og «Næste» bag et hold. Siger intet: at retten laves med en voksen, siges én gang, når retten åbnes (`R.voksenStart`), og et kort tryk vipper trekanten |
 | `js/lager.js` | Det eneste, appen gemmer i `localStorage`: nøglen `kog-v1` |
 | `js/dom.js` | Bygger elementer. Tekst sættes som tekst |
 | `sw.js`, `manifest.webmanifest` | Offline: service worker med `kog-`-caches |

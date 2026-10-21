@@ -619,12 +619,24 @@ async function heleVejen(browser, skaerm) {
   if (n === 'ipad') await foto(side, n + '-2-forside-valgt');
   // Kan lydfilen ikke spilles (fx uden net, før den er gemt), læser iPad-stemmen samme tekst på dansk
   await side.evaluate(() => { window.__lydFejl = true; });
+  const taleFoer = await side.evaluate(() => window.__tale.length);
   await tryk(side, '.kort[data-ret="pandekager"]');
   await side.waitForSelector('.ret h1');
   await vent(50);
-  const reserve = await side.evaluate(() => { window.__lydFejl = false; return window.__tale[window.__tale.length - 1]; });
+  const reserve = await side.evaluate((i) => { window.__lydFejl = false; return window.__tale[i] || {}; }, taleFoer);
   tjek(reserve.lang === 'da-DK' && reserve.stemme === 'da-DK' && reserve.tekst === LYD_TEKSTER[VEJ + '/navn.mp3'],
     n + ': uden lydfilen skal iPad-stemmen (da-DK, dansk stemme) sige «' + LYD_TEKSTER[VEJ + '/navn.mp3'] + '», fik ' + JSON.stringify(reserve));
+  // Bagefter siges det én gang, at retten laves med en voksen (pandekager: kun varme), og ikke på hvert trin (Jimmy 21-10-2026)
+  const VOKSEN_START = LYD_TEKSTER['faelles/voksen-start-varme.mp3'];
+  await venterPaa(side, (i) => window.__tale.length >= i + 2, taleFoer, n + ': voksen-replikken efter navnet');
+  await vent(200);
+  const aabning = await side.evaluate((i) => window.__tale.slice(i).map((x) => x.tekst), taleFoer);
+  tjek(aabning.length === 2 && aabning[1] === VOKSEN_START, n + ': når retten åbnes, siges navnet og så én gang «' + VOKSEN_START + '», fik ' + JSON.stringify(aabning));
+  const advarsel = await side.evaluate(() => {
+    const a = document.querySelector('.ret .start-advarsel');
+    return a ? { tekst: a.textContent, trekanter: a.querySelectorAll('.trekant').length } : null;
+  });
+  tjek(advarsel && advarsel.trekanter === 1 && /voksen/.test(advarsel.tekst), n + ': retten skal vise én trekant (varme) og «Sammen med en voksen» øverst, fik ' + JSON.stringify(advarsel));
   tjek(await h1(side) === VEJ_NAVN, n + ': retten skal hedde ' + VEJ_NAVN);
   tjek(await side.locator('.ingr').count() === RETTER.pandekager.recipeIngredient.length, n + ': alle ingredienser skal vises');
   // Start (og print) skal kunne ses uden at rulle på alle skærme. På iPhone står bunden fast (før skulle man rulle)
@@ -660,13 +672,13 @@ async function heleVejen(browser, skaerm) {
     await side.waitForFunction((x) => location.hash === '#/ret/pandekager/trin/' + x, nr, { timeout: 5000 }).catch(() => {});
     tjek(await h1(side) === t.text, n + ' trin ' + nr + ': teksten skal være «' + t.text + '», var «' + (await h1(side)) + '»');
     const voksen = t.tumbi.voksen === true;
-    tjek(await sidsteTale(side) === tilTale((voksen ? 'Hent en voksen. ' : '') + t.text), n + ' trin ' + nr + ': trykket læser trinnet op');
+    tjek(await sidsteTale(side) === tilTale(t.text), n + ' trin ' + nr + ': trykket læser trinnet op (også et voksen-trin: kun teksten)');
     // Også efter et voksen-hold (holdet lykkes uden et tryk) skal det være Røst-filen: ét fælles lydelement, der blev
     // låst op ved første tryk. Før afviste iPad'en play() på et nyt element, og reserven var heller ikke låst op
     const lydNu = await side.evaluate(() => ({ fil: (window.__tale[window.__tale.length - 1] || {}).fil, afvist: window.__lydAfvist, elementer: window.__lydElementer }));
     tjek(lydNu.fil === 'pandekager/' + nr + '.mp3' && lydNu.afvist === 0 && lydNu.elementer === 1,
       n + ' trin ' + nr + ': oplæsningen skal være Røst-filen pandekager/' + nr + '.mp3 fra ét lydelement, fik ' + JSON.stringify(lydNu));
-    tjek((await side.locator('.voksen-maerke').count() === 1) === voksen, n + ' trin ' + nr + ': «Hent en voksen» skal ' + (voksen ? '' : 'ikke ') + 'vises');
+    tjek((await side.locator('.voksen-trekant').count() === 1) === voksen, n + ' trin ' + nr + ': advarselstrekanten skal ' + (voksen ? '' : 'ikke ') + 'vises');
     // Tilbage og Næste skal kunne ses uden at rulle på alle skærme, også iPhone (på retten må man rulle til Start)
     await tjekLayout(side, n + ' trin ' + nr, { knapperSes: true });
     if ([1, 3, TIMER_NR + 1, trin.length].includes(nr)) await foto(side, n + '-4-trin-' + nr);
@@ -733,10 +745,13 @@ async function heleVejen(browser, skaerm) {
       // Et kort tryk må ikke komme forbi en voksen-opgave
       const skygge = () => side.locator('.naeste').first().evaluate((b) => getComputedStyle(b).boxShadow);
       const skyggeFoer = await skygge();
+      const taleFoerKort = await side.evaluate(() => window.__tale.length);
       await tryk(side, '.naeste');
       await vent(150);
       tjek(side.url().endsWith('/trin/' + nr), n + ' trin ' + nr + ': et kort tryk må ikke gå videre ved voksen-hjælp');
-      tjek((await sidsteTale(side)).startsWith('Hent en voksen'), n + ' trin ' + nr + ': et kort tryk siger «Hent en voksen»');
+      // Før sagde hvert kort tryk «Hent en voksen. Den voksne holder knappen inde.» (Jimmy 21-10-2026: irriterende)
+      tjek(await side.evaluate(() => window.__tale.length) === taleFoerKort, n + ' trin ' + nr + ': et kort tryk må ikke sige noget');
+      tjek(await side.locator('.voksen-trekant.vipper').count() === 1, n + ' trin ' + nr + ': et kort tryk skal få trekanten til at vippe');
       // … og det skal kunne ses: knappen får en ring (før var skærmen den samme før og efter trykket)
       tjek(await skygge() !== skyggeFoer, n + ' trin ' + nr + ': et kort tryk på «Næste» skal kunne ses (knappen ændrede sig ikke)');
       // Det sidste voksen-trin holdes i 3 s: klikket ved slip kommer efter appens spærre, så kun blokerTilSlip (hold.js) kan sluge det
@@ -1639,13 +1654,14 @@ async function former(browser) {
       }
       if (nr === 10) await foto(side, n + '-former-trin-10');
       if (nr === 10) {
-        // strong er et flex-element (en blok), så linjerne tælles på teksten: én kasse pr. linje
-        const linjer = await side.evaluate(() => {
-          const r = document.createRange();
-          r.selectNodeContents(document.querySelector('.voksen-maerke strong'));
-          return new Set([...r.getClientRects()].filter((k) => k.width > 0).map((k) => Math.round(k.top))).size;
+        // Advarselstrekanten (i stedet for «Hent en voksen») ses helt, uden at rulle, og er stor nok til at kunne genkendes
+        const tr = await side.evaluate(() => {
+          const b = document.querySelector('.voksen-trekant').getBoundingClientRect();
+          const bund = document.querySelector('.handlinger').getBoundingClientRect().top;
+          return { top: Math.round(b.top), bund: Math.round(b.bottom), hoejde: Math.round(b.height), venstre: Math.round(b.left), hoejre: Math.round(b.right), bundTop: Math.round(bund), W: innerWidth };
         });
-        tjek(linjer === 1, n + ' pandekager trin 10: «Hent en voksen» skal stå på én linje (' + linjer + ' linjer)');
+        tjek(tr.top >= 0 && tr.bund <= tr.bundTop && tr.venstre >= 0 && tr.hoejre <= tr.W && tr.hoejde >= 54,
+          n + ' pandekager trin 10: trekanten skal ses helt over bunden og være mindst 54 px høj ' + JSON.stringify(tr));
       }
       // Når «Start timer» får fokus (Tab, VoiceOver), skal den rulles op over den faste bund, ikke blive liggende under den
       if (nr === 10) {

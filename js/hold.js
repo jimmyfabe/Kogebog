@@ -1,5 +1,6 @@
 // hold.js — en knap, der skal holdes inde i 2 sekunder (voksen-trin og print), så et barn ikke kommer forbi alene.
-// Mus/finger: hold. Tastatur: hold mellemrum eller Enter. Et kort tryk kalder naarKort (fx «Hent en voksen»).
+// Mus/finger: hold. Tastatur: hold mellemrum eller Enter. Et kort tryk kalder naarKort (print: siger, at den voksne skal
+// holde; voksen-trin: vipper trekanten, uden tale, js/voksen.js).
 import { el } from './dom.js';
 
 let blokerTilSlip = false;
@@ -52,7 +53,7 @@ export function holdKnap({ klasse = '', indhold = [], label, ms = 2000, naarFaer
     naarFaerdig();
   }
   // Kort tryk: under 2 sekunder og ikke et hold, der lige er lykkedes.
-  // Det skal også kunne SES (talen alene er ikke nok, og den kan være slået fra): knappen får en ring og ryster i 1,5 s.
+  // Det skal kunne SES (på voksen-trin siges der ingenting, og lyden kan være slået fra): knappen får en ring og ryster i 1,5 s.
   function kort() {
     b.classList.remove('mind');
     void b.offsetWidth; // start rystet forfra ved et nyt kort tryk

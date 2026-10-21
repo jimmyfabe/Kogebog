@@ -24,6 +24,7 @@ let spiller = null; // { nr, tekst, fil, knap } mens en lydfil spiller
 let aktuel = null; // ytringen, der tales nu (holdes fast, ellers kan nogle browsere glemme onend)
 let knap = null;
 let vagt = 0; // tidsgrænsen for den lydfil, der skal til at spille (SPIL_GRAENSE_MS)
+let derefter = null; // replikken, der siges, når den nuværende er færdig (sig(…, { derefter })). stop() sletter den
 
 export function hentLydListe() {
   hentGemte();
@@ -63,22 +64,31 @@ function markerKnap(b) {
 function syntese(tekst) {
   const ss = window.speechSynthesis;
   const Ytring = window.SpeechSynthesisUtterance;
-  if (!ss || !Ytring) { markerKnap(null); return false; }
+  if (!ss || !Ytring) { markerKnap(null); derefter = null; return false; }
   try {
     const u = new Ytring(tilTale(tekst));
     u.lang = 'da-DK';
     const v = danskStemme();
     if (v) u.voice = v;
     u.rate = 0.92;
-    u.onend = () => { if (aktuel === u) { aktuel = null; markerKnap(null); } };
+    u.onend = () => { if (aktuel === u) { aktuel = null; markerKnap(null); fortsaet(); } };
     u.onerror = u.onend;
     aktuel = u;
     ss.speak(u);
     return true;
   } catch (e) {
     markerKnap(null);
+    derefter = null;
     return false;
   }
+}
+
+// Den nuværende replik er færdig (lydfilen eller iPad-stemmen): den næste siges, uden et nyt tryk. Det må den, fordi
+// lydelementet og iPad-stemmen blev låst op ved første tryk (som efter et voksen-hold)
+function fortsaet() {
+  const x = derefter;
+  derefter = null;
+  if (x) sig(x);
 }
 
 // Lydfilen kunne ikke spilles (afvist, fejl ved hentningen): iPad-stemmen siger det samme
@@ -102,11 +112,13 @@ function lydElement() {
     if (navigator.serviceWorker && navigator.serviceWorker.controller) gemte.add(spiller.fil);
     spiller = null;
     markerKnap(null);
+    fortsaet();
   });
   // Sat på pause udefra (fx et opkald eller låseskærmen): knappens markering må ikke sidde fast
   a.addEventListener('pause', () => {
     if (!spiller || !a.paused || a.ended) return;
     spiller = null;
+    derefter = null;
     markerKnap(null);
   });
   a.addEventListener('error', () => { if (spiller && a.error) reserve(spiller.nr); });
@@ -144,9 +156,11 @@ for (const type of TRYK) document.addEventListener(type, laasOp, true);
 // i stedet for at vente på fejlen bagefter
 const kanSpilles = (fil) => filer.has(fil) && (navigator.onLine !== false || gemte.has(fil));
 
-// sig(R.trin(m, t), { knap }) — replikken er { tekst, fil } fra js/replikker.js
-export function sig({ tekst, fil }, { knap: b } = {}) {
+// sig(R.trin(m, t), { knap }) — replikken er { tekst, fil } fra js/replikker.js. derefter: en replik (eller null), der
+// siges bagefter, fx når retten åbnes: navnet og så, at den laves sammen med en voksen
+export function sig({ tekst, fil }, { knap: b, derefter: d = null } = {}) {
   stop();
+  derefter = d;
   markerKnap(b);
   const a = fil && kanSpilles(fil) ? lydElement() : null;
   if (!a) { syntese(tekst); return; }
@@ -170,6 +184,7 @@ export function sig({ tekst, fil }, { knap: b } = {}) {
 
 export function stop() {
   nr++;
+  derefter = null;
   clearTimeout(vagt);
   if (spiller) {
     spiller = null;

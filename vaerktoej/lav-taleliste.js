@@ -21,9 +21,11 @@ export function alleRetter() {
 
 // Alle replikker ({ tekst, fil }), som de står på skærmen (før tilTale). Samme fil kan stå flere gange
 export function alleReplikker(retter = alleRetter()) {
-  const replikker = [R.FAERDIG, R.PRINT_HOLD, R.VOKSEN_HOLD, ...Object.keys(GRUPPER).map(R.gruppe)];
+  // Alle tre udgaver af R.voksenStart, også dem ingen ret bruger endnu (i dag har ingen ret kun kniv)
+  const replikker = [R.FAERDIG, R.PRINT_HOLD, ...Object.values(R.VOKSEN_START), ...Object.keys(GRUPPER).map(R.gruppe)];
   for (const m of retter) {
     replikker.push(R.retValgt(m), R.retAaben(m));
+    if (R.voksenStart(m)) replikker.push(R.voksenStart(m));
     m.ingredienser.forEach((_, i) => replikker.push(R.ingrediens(m, i)));
     for (const t of m.trin) replikker.push(R.trin(m, t));
   }

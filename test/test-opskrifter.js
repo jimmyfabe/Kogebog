@@ -82,7 +82,7 @@ function fund(re, tekst) {
 // Lydfilerne (js/replikker.js): <ret>/<trin>.mp3, <ret>/navn.mp3, <ret>/valgt.mp3, <ret>/ingrediens-<n>.mp3,
 // <ret>/timer-optaget-<trin>.mp3 og faelles/<navn>.mp3
 const LYD_RE = /^([a-z0-9]+(?:-[a-z0-9]+)*)\/(\d+|navn|valgt|ingrediens-\d+|timer-optaget-\d+|[a-z]+(?:-[a-z0-9]+)*)\.mp3$/;
-const LYD_FAELLES = new Set(['faerdig', 'print-hold', 'voksen-hold', ...Object.keys(GRUPPER).map((g) => 'gruppe-' + g)]);
+const LYD_FAELLES = new Set(['faerdig', 'print-hold', 'voksen-start-begge', 'voksen-start-varme', 'voksen-start-kniv', ...Object.keys(GRUPPER).map((g) => 'gruppe-' + g)]);
 
 const erTekst = (v) => typeof v === 'string' && v.trim().length > 0;
 const liste = (a) => a.join(', ');
@@ -253,7 +253,7 @@ export function valider(rod = ROD) {
         for (const k of Object.keys(st)) if (!TRIN_NOEGLER.has(k)) f(hvor + ': ukendt felt «tumbi.' + k + '»');
         if (!Object.hasOwn(VERBER, st.verbum)) f(hvor + ': ukendt verbum ' + JSON.stringify(st.verbum) + ' — brug et af: ' + liste(Object.keys(VERBER)));
         if ('voksen_hjaelp' in st && !Object.hasOwn(VOKSEN_HJAELP, st.voksen_hjaelp)) f(hvor + ': «voksen_hjaelp» skal være ' + liste(Object.keys(VOKSEN_HJAELP).map((x) => '"' + x + '"')) + ', fandt ' + JSON.stringify(st.voksen_hjaelp));
-        // «voksen: true» viser «Hent en voksen»; «voksen_hjaelp» siger hvorfor. De to følges ad.
+        // «voksen: true» viser advarselstrekanten; «voksen_hjaelp» siger hvorfor (kniven eller flammen). De to følges ad.
         if ('voksen' in st && st.voksen !== true) f(hvor + ': «voksen» skal være true (udelad feltet, når barnet kan selv), fandt ' + JSON.stringify(st.voksen));
         else if (st.voksen === true && !('voksen_hjaelp' in st)) f(hvor + ': "voksen": true kræver også «voksen_hjaelp» ("kniv" eller "varme")');
         if ('voksen_hjaelp' in st && st.voksen !== true) f(hvor + ': «voksen_hjaelp» kræver også "voksen": true');

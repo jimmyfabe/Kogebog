@@ -8,7 +8,9 @@ import * as R from './js/replikker.js';
 import * as Timer from './js/timer.js';
 import * as Lager from './js/lager.js';
 import { holdKnap } from './js/hold.js';
-import { VERBER, VOKSEN_HJAELP, INGREDIENSER, GRUPPER, grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, grafikGruppe, GRAFIK_FAERDIG } from './js/katalog.js';
+import { trekant, voksenNaeste } from './js/voksen.js';
+import { voksenFarer } from './js/model.js';
+import { VERBER, INGREDIENSER, GRUPPER, grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, grafikGruppe, GRAFIK_FAERDIG } from './js/katalog.js';
 import { formaterTid, varighed, varighedTale } from './js/tid.js';
 import { minutterTekst } from './js/tekst.js';
 
@@ -229,7 +231,8 @@ function kortTryk(id, b) {
   const m = S.retter.get(id);
   if (S.valgtKort === id) {
     S.valgtKort = null;
-    naviger(hashFor.ret(id), () => Tale.sig(R.retAaben(m)));
+    // Navnet, og har retten voksen-trin, bagefter én gang, at den laves sammen med en voksen (null: kun navnet)
+    naviger(hashFor.ret(id), () => Tale.sig(R.retAaben(m), { derefter: R.voksenStart(m) }));
     return;
   }
   S.valgtKort = id;
@@ -240,6 +243,17 @@ function kortTryk(id, b) {
 }
 
 // ---------- Retten ----------
+
+// Kræver retten en voksen, står trekanterne fra trinene (kniven, flammen) øverst, og teksten siger det til den voksne.
+// Samme besked siges én gang, når retten åbnes (R.voksenStart). I topbaren, så retten ikke bliver højere på langs
+function startAdvarsel(m) {
+  const farer = voksenFarer(m);
+  if (!farer.length) return null;
+  const hvad = farer.length > 1 ? 'Varme og skarpe ting' : farer[0] === 'kniv' ? 'Skarpe ting' : 'Varme ting';
+  return el('p', { class: 'start-advarsel' },
+    el('span', { class: 'start-trekanter' }, farer.map((f) => trekant(f))),
+    el('span', { class: 'start-advarsel-tekst' }, el('strong', { tekst: 'Sammen med en voksen' }), el('span', { tekst: hvad })));
+}
 
 function retSkaerm(m) {
   const meta = [m.portioner, m.minutter ? minutterTekst(m.minutter) : ''].filter(Boolean).join(' · ');
@@ -277,7 +291,7 @@ function retSkaerm(m) {
   hoejttaler.addEventListener('click', klik(() => Tale.sig(R.retAaben(m), { knap: hoejttaler })));
 
   return el('main', { class: 'skaerm ret' },
-    topbar(),
+    topbar(startAdvarsel(m)),
     el('div', { class: 'ret-indhold' },
       el('section', { class: 'ret-hoved' },
         el('div', { class: 'ret-billede' }, billede(grafikRet(m.id), '')),
@@ -418,11 +432,9 @@ function trinSkaerm(m, nr) {
   const laesOp = knap('Læs op', { klasse: 'laes-op', ikonNavn: 'hoejttaler' });
   laesOp.addEventListener('click', klik(() => sigTrin(m, t, laesOp)));
 
-  const maerke = t.voksen
-    ? el('div', { class: 'voksen-maerke' },
-      billede(grafikDyr('bo'), '', 'voksen-bo'),
-      el('strong', { tekst: 'Hent en voksen' }),
-      t.voksenSlags ? el('span', { class: 'voksen-slags' }, ikon(t.voksenSlags === 'kniv' ? 'kniv' : 'flamme'), el('span', { tekst: Object.hasOwn(VOKSEN_HJAELP, t.voksenSlags) ? VOKSEN_HJAELP[t.voksenSlags] : '' })) : null)
+  // Voksen-trin: en gul advarselstrekant med kniven eller flammen, uden tekst (børnene kan ikke læse)
+  const advarsel = t.voksen
+    ? trekant(t.voksenSlags, { klasse: 'voksen-trekant', label: 'En voksen hjælper: ' + (t.voksenSlags === 'kniv' ? 'kniv' : 'varme') + '.' })
     : null;
 
   const ikoner = t.ikoner.length
@@ -440,20 +452,15 @@ function trinSkaerm(m, nr) {
   };
 
   const naesteTekst = sidst ? 'Færdig' : 'Næste';
+  // Et kort tryk på et voksen-trin siger ingenting: knappen ryster, og trekanten vipper (js/voksen.js)
   const naeste = t.voksen
-    ? holdKnap({
-      klasse: 'primaer naeste voksen-hold',
-      label: naesteTekst + '. Den voksne holder knappen inde i 2 sekunder.',
-      indhold: [el('span', { class: 'hold-tekst' }, el('span', { tekst: naesteTekst }), el('small', { tekst: 'Voksen: hold' })), ikon('naeste')],
-      naarFaerdig: frem,
-      naarKort: (b) => Tale.sig(R.VOKSEN_HOLD, { knap: b }),
-    })
+    ? voksenNaeste({ tekst: naesteTekst, trekant: advarsel, naarFaerdig: frem })
     : knap(naesteTekst, { klasse: 'primaer naeste', ikonNavn: sidst ? 'tjek' : 'naeste', ikonEfter: true, onclick: frem });
 
   const skaerm = el('main', { class: 'skaerm trin', 'data-verbum': t.verbum },
     topbar(fremskridt(m, nr)),
     el('section', { class: 'scene' + (t.voksen ? ' voksen' : ''), 'aria-labelledby': 'trin-tekst' },
-      maerke,
+      advarsel,
       el('figure', { class: 'verbum-ramme anim-' + t.verbum },
         billede(grafikVerbum(t.verbum), VERBER[t.verbum] || '', 'verbum-billede')),
       el('div', { class: 'trin-tekst' },

@@ -14,7 +14,7 @@ export function lavModel(json) {
       nr: i + 1,
       tekst: s.text,
       verbum: st.verbum,
-      // «voksen: true» = Hent en voksen; voksen_hjaelp siger hvorfor (kniv eller varme). Validatoren kræver begge.
+      // «voksen: true» = en voksen hjælper (advarselstrekanten); voksen_hjaelp siger hvorfor (kniv eller varme). Validatoren kræver begge.
       voksen: st.voksen === true || Boolean(st.voksen_hjaelp),
       voksenSlags: st.voksen_hjaelp || null,
       timerSek: Number.isInteger(st.timer_sek) && st.timer_sek > 0 ? st.timer_sek : null,
@@ -35,4 +35,12 @@ export function lavModel(json) {
     ingredienser,
     trin,
   };
+}
+
+// Hvad den voksne hjælper med i retten: ['kniv'], ['varme'] eller ['kniv', 'varme'] (altid i den rækkefølge), [] når
+// barnet kan lave hele retten selv. Et voksen-trin uden kniv tæller som varme, som flammen i printet og på skærmen.
+// Bruges til trekanterne, når retten åbnes, og til replikken, der siges dér (js/replikker.js)
+export function voksenFarer(m) {
+  const trin = m.trin.filter((t) => t.voksen);
+  return ['kniv', 'varme'].filter((f) => trin.some((t) => (t.voksenSlags === 'kniv') === (f === 'kniv')));
 }

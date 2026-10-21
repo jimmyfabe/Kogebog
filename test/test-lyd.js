@@ -10,7 +10,7 @@ import path from 'node:path';
 import os from 'node:os';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { lavTaleliste, tilRoest } from '../vaerktoej/lav-taleliste.js';
+import { lavTaleliste, tilRoest, alleRetter } from '../vaerktoej/lav-taleliste.js';
 import * as R from '../js/replikker.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -66,6 +66,10 @@ test('app.js læser kun op gennem js/replikker.js', () => {
   const app = fs.readFileSync(path.join(ROD, 'app.js'), 'utf8');
   const kald = [...app.matchAll(/Tale\.sig\(\s*([^,)]*)/g)].map((m) => m[1].trim());
   assert.ok(kald.length >= 10, 'fandt kun ' + kald.length + ' kald til Tale.sig i app.js');
+  // … også replikken, der siges bagefter (Tale.sig(…, { derefter: R.… }))
+  const derefter = [...app.matchAll(/derefter:\s*([^,)}]*)/g)].map((m) => m[1].trim());
+  assert.ok(derefter.length >= 1, 'fandt ingen derefter i app.js');
+  kald.push(...derefter);
   assert.deepEqual(kald.filter((k) => !/^R\.[A-Za-z_]+(?:\(|$)/.test(k)), [], 'Tale.sig skal have en replik fra js/replikker.js (R.…)');
   // Hver replik, app.js læser op (R.NAVN), skal også stå på talelisten (vaerktoej/lav-taleliste.js). Ellers får den
   // aldrig en lydfil, og alle tjek ovenfor er grønne alligevel (bevist med en ny R.NY i code review 19-10)
@@ -78,6 +82,37 @@ test('app.js læser kun op gennem js/replikker.js', () => {
     if (f === 'tale.js') continue;
     assert.ok(!/\bsig\(|speechSynthesis/.test(fs.readFileSync(path.join(ROD, 'js', f), 'utf8')), 'js/' + f + ' læser op uden om tale.js');
   }
+});
+
+// Jimmy 21-10-2026: «Hent en voksen» på hvert voksen-trin (og ved hvert kort tryk på «Næste») var irriterende at høre på.
+// Trinnet siger nu kun sig selv, og trekanten på skærmen viser, at en voksen hjælper
+test('et voksen-trin siger kun trinnet, ikke «Hent en voksen»', () => {
+  const voksenTrin = alleRetter().flatMap((m) => m.trin.filter((t) => t.voksen).map((t) => [m, t]));
+  assert.ok(voksenTrin.length >= 100, 'fandt kun ' + voksenTrin.length + ' voksen-trin');
+  const forkert = voksenTrin.filter(([m, t]) => R.trin(m, t).tekst !== t.tekst).map(([m, t]) => R.trin(m, t).fil + ': ' + R.trin(m, t).tekst);
+  assert.deepEqual(forkert, [], 'et voksen-trin skal sige præcis sin tekst');
+  assert.deepEqual(TALE.filter((x) => /hent en voksen/i.test(x.tekst)).map((x) => x.fil), [], 'ingen replik må sige «Hent en voksen»');
+});
+
+// Når retten åbnes: én replik efter rettens voksen-trin (kun varme, kun kniv eller begge), og ingen uden voksen-trin
+test('en ret med voksen-trin får start-replikken i den rigtige udgave', () => {
+  const ret = (...slags) => ({ trin: slags.map((s, i) => ({ nr: i + 1, voksen: s !== null, voksenSlags: s })) });
+  const start = 'Den her ret laver du sammen med en voksen. ';
+  const slut = ' Når du ser trekanten, holder den voksne knappen inde.';
+  assert.deepEqual(R.voksenStart(ret(null, 'varme', 'kniv', 'varme')),
+    { tekst: start + 'Der er varme og skarpe ting.' + slut, fil: 'faelles/voksen-start-begge.mp3' });
+  assert.deepEqual(R.voksenStart(ret('varme', null)), { tekst: start + 'Der er varme ting.' + slut, fil: 'faelles/voksen-start-varme.mp3' });
+  assert.deepEqual(R.voksenStart(ret(null, 'kniv')), { tekst: start + 'Der er skarpe ting.' + slut, fil: 'faelles/voksen-start-kniv.mp3' });
+  assert.equal(R.voksenStart(ret(null, null)), null, 'barnet kan lave retten selv: ingen replik');
+  // De rigtige retter
+  const m = Object.fromEntries(alleRetter().map((x) => [x.id, x]));
+  assert.equal(R.voksenStart(m.pandekager).fil, 'faelles/voksen-start-varme.mp3', 'pandekager: kun varme');
+  assert.equal(R.voksenStart(m.koedsovs).fil, 'faelles/voksen-start-begge.mp3', 'kødsovs: kniv og varme');
+  assert.equal(R.voksenStart(m.havregrynskugler), null, 'havregrynskugler: ingen voksen-trin');
+  // Alle tre udgaver er på talelisten (også kniv, som ingen ret bruger endnu), og app.js siger den, når retten åbnes
+  for (const x of Object.values(R.VOKSEN_START)) assert.ok(TALE.some((y) => y.fil === x.fil), x.fil + ' mangler på talelisten');
+  const app = fs.readFileSync(path.join(ROD, 'app.js'), 'utf8');
+  assert.match(app, /Tale\.sig\(R\.retAaben\(m\), \{ derefter: R\.voksenStart\(m\) \}\)/, 'app.js skal sige R.voksenStart efter navnet, når retten åbnes');
 });
 
 // Røst siger «Bagning» som «bau-ning», så talelisten skriver ordet, som det lyder (UDTALE), men kun til Røst (21-10)

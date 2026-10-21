@@ -11,10 +11,13 @@
 //   6. Uden net tager reserven over med det samme
 //   7. stop() under en lydfil
 //   8. En lydfil, der hverken spiller eller fejler: iPad-stemmen efter 6 s (falske timere)
+//   9. «derefter»: den næste replik, når den første er færdig (navnet og så voksen-replikken, når retten åbnes)
+//  10. Et kort tryk på «Næste» på et voksen-trin siger ingenting (js/voksen.js med falske elementer)
 // Ikke afprøvet på iPad.
 // Kør:  node test/test-tale.js
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 
 // ---------- Den falske browser ----------
 let iTryk = false; // true, mens et tryk behandles (som WebKits brugeraktivering under hændelsen)
@@ -131,7 +134,7 @@ test('første tryk: en pointerup, der ikke tæller, slipper ikke oplåsningen, o
   tryk(null, 'touchend');
   tryk(null, 'click');
   // Senere et voksen-hold (requestAnimationFrame, uden tryk)
-  Tale.sig({ tekst: 'Hent en voksen. Steg pandekagen.', fil: 'pandekager/2.mp3' });
+  Tale.sig({ tekst: 'Steg pandekagen.', fil: 'pandekager/2.mp3' });
   await naesteOpgave();
   assert.equal(afvist, 0, 'lydelementet blev ikke låst op af touchend (lytterne var væk efter pointerup, eller load() mangler)');
   assert.deepEqual(spillet, ['lyd/pandekager/2.mp3']);
@@ -148,7 +151,7 @@ test('lydfilen spiller også lige efter et voksen-hold, uden et tryk', async () 
   assert.deepEqual(spillet, ['lyd/pandekager/1.mp3']);
   sidsteLyd().slut();
   // Holdet lykkes i requestAnimationFrame, mens fingeren er nede: ingen brugeraktivering
-  Tale.sig({ tekst: 'Hent en voksen. Steg pandekagen.', fil: 'pandekager/2.mp3' });
+  Tale.sig({ tekst: 'Steg pandekagen.', fil: 'pandekager/2.mp3' });
   await naesteOpgave();
   assert.equal(afvist, 0, 'play() blev afvist uden tryk (et nyt lydelement pr. replik)');
   assert.deepEqual(spillet, ['lyd/pandekager/1.mp3', 'lyd/pandekager/2.mp3'], 'replikken efter holdet skal være lydfilen');
@@ -286,4 +289,109 @@ test('en lydfil, der hverken spiller eller fejler, giver plads til iPad-stemmen 
   } finally {
     stum = false;
   }
+});
+
+test('derefter: den næste replik siges, når den første er færdig, og et nyt tryk eller stop() sletter den', async () => {
+  // Lydfil → lydfil (retten åbnes: navnet, så at den laves sammen med en voksen)
+  const foer = spillet.length;
+  tryk(() => Tale.sig({ tekst: 'Pandekager.', fil: 'pandekager/1.mp3' }, { derefter: { tekst: 'Sammen med en voksen.', fil: 'pandekager/2.mp3' } }));
+  await naesteOpgave();
+  assert.deepEqual(spillet.slice(foer), ['lyd/pandekager/1.mp3'], 'den næste replik må først komme, når den første er færdig');
+  sidsteLyd().slut();
+  await naesteOpgave();
+  assert.deepEqual(spillet.slice(foer), ['lyd/pandekager/1.mp3', 'lyd/pandekager/2.mp3'], 'efter den første skal den næste spille (uden et nyt tryk)');
+  assert.equal(afvist, 0);
+  sidsteLyd().slut();
+  await naesteOpgave();
+  assert.equal(spillet.length, foer + 2, 'den næste replik siges kun én gang');
+
+  // iPad-stemmen → iPad-stemmen (filerne står ikke i lyd/liste.json)
+  const t0 = talt.length;
+  const ytringer = [];
+  const tal = stemme.speak;
+  stemme.speak = (u) => { ytringer.push(u); tal(u); };
+  try {
+    Tale.sig({ tekst: 'Boller.', fil: 'faelles/findes-ikke.mp3' }, { derefter: { tekst: 'Der er varme ting.', fil: 'faelles/findes-heller-ikke.mp3' } });
+    assert.deepEqual(talt.slice(t0), ['Boller.']);
+    ytringer[ytringer.length - 1].onend();
+    assert.deepEqual(talt.slice(t0), ['Boller.', 'Der er varme ting.'], 'iPad-stemmen skal sige den næste, når den første er færdig');
+
+    // Et nyt tryk (en ny replik) eller stop() før slut: den næste siges ikke
+    Tale.sig({ tekst: 'Første.', fil: 'faelles/findes-ikke.mp3' }, { derefter: { tekst: 'Må ikke siges.', fil: 'faelles/findes-ikke.mp3' } });
+    const gammel = ytringer[ytringer.length - 1];
+    Tale.sig({ tekst: 'Ingrediensen.', fil: 'faelles/findes-ikke.mp3' });
+    gammel.onend();
+    ytringer[ytringer.length - 1].onend();
+    Tale.sig({ tekst: 'Igen.', fil: 'faelles/findes-ikke.mp3' }, { derefter: { tekst: 'Må ikke siges.', fil: 'faelles/findes-ikke.mp3' } });
+    const igen = ytringer[ytringer.length - 1];
+    Tale.stop();
+    igen.onend();
+    assert.ok(!talt.includes('Må ikke siges.'), 'en ny replik eller stop() skal slette den, der skulle komme bagefter');
+  } finally {
+    stemme.speak = tal;
+  }
+});
+
+// ---------- Falske elementer til js/voksen.js og js/hold.js (kun det, de bruger) ----------
+class FalskElement {
+  constructor(tag) {
+    const klasser = new Set();
+    Object.assign(this, { tag, born: [], attr: {}, lyttere: {}, isConnected: true, offsetWidth: 100, klasser });
+    this.style = { setProperty: (k, v) => { this.style[k] = v; } };
+    this.classList = { add: (...c) => c.forEach((x) => klasser.add(x)), remove: (...c) => c.forEach((x) => klasser.delete(x)), contains: (c) => klasser.has(c) };
+  }
+  set className(v) { this.klasser.clear(); String(v).split(/\s+/).filter(Boolean).forEach((c) => this.klasser.add(c)); }
+  get className() { return [...this.klasser].join(' '); }
+  set textContent(v) { this.tekst = String(v); }
+  setAttribute(k, v) { if (k === 'class') this.className = v; else this.attr[k] = String(v); }
+  addEventListener(type, fn) { (this.lyttere[type] ||= []).push(fn); }
+  append(...b) { this.born.push(...b); }
+  send(type, ekstra = {}) {
+    const e = { type, button: 0, pointerType: 'touch', repeat: false, preventDefault() {}, stopPropagation() {}, ...ekstra };
+    for (const fn of this.lyttere[type] || []) fn(e);
+  }
+}
+
+// Jimmy 21-10-2026: «hent en voksen, hold knappen inde, hent en voksen» ved hvert kort tryk var irriterende at høre på
+test('et kort tryk på hold-knappen på et voksen-trin kalder ikke tale, men vipper trekanten og ryster knappen', async (t) => {
+  Object.assign(doc, {
+    createElement: (tag) => new FalskElement(tag),
+    createElementNS: (ns, tag) => new FalskElement(tag),
+    createTextNode: (tekst) => ({ tekst }),
+  });
+  globalThis.requestAnimationFrame = () => 1; // holdet når aldrig 2 s her: kun korte tryk
+  globalThis.cancelAnimationFrame = () => {};
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const { trekant, voksenNaeste } = await import('../js/voksen.js');
+  const tr = trekant('kniv', { klasse: 'voksen-trekant', label: 'En voksen hjælper: kniv.' });
+  let videre = 0;
+  const b = voksenNaeste({ tekst: 'Næste', trekant: tr, naarFaerdig: () => { videre++; } });
+  const [lyd0, tale0, stemme0] = [spillet.length, talt.length, stemmeAfvist];
+
+  // Finger: ned og op med det samme (i et tryk: talte noget, ville det blive hørt)
+  tryk(() => b.send('pointerdown'), 'pointerdown');
+  tryk(() => b.send('pointerup'));
+  tryk(() => b.send('click'), 'click');
+  await naesteOpgave();
+  assert.equal(spillet.length, lyd0, 'et kort tryk må ikke spille en lydfil');
+  assert.equal(talt.length, tale0, 'et kort tryk må ikke sige noget med iPad-stemmen');
+  assert.equal(stemmeAfvist, stemme0);
+  assert.equal(videre, 0, 'et kort tryk må ikke gå videre');
+  assert.ok(b.classList.contains('mind'), 'knappen skal vise, at den skal holdes (ring og ryst)');
+  assert.ok(tr.classList.contains('vipper'), 'trekanten skal vippe');
+  t.mock.timers.tick(1600);
+  assert.ok(!tr.classList.contains('vipper') && !b.classList.contains('mind'), 'efter 1,5 s er vippet og ringen væk');
+
+  // Tastaturet: mellemrum ned og op
+  tryk(() => b.send('keydown', { key: ' ' }), 'keydown');
+  tryk(() => b.send('keyup', { key: ' ' }), 'keyup');
+  await naesteOpgave();
+  assert.equal(spillet.length + talt.length, lyd0 + tale0, 'et kort tryk med tastaturet må heller ikke tale');
+  assert.ok(tr.classList.contains('vipper'));
+
+  // app.js: kun printet siger noget ved et kort tryk (før sagde voksen-trinet «Hent en voksen. Den voksne holder knappen inde.»)
+  const app = fs.readFileSync(new URL('../app.js', import.meta.url), 'utf8');
+  assert.deepEqual([...app.matchAll(/naarKort:[^\r\n]*/g)].map((m) => m[0].trim()), ['naarKort: () => Tale.sig(R.PRINT_HOLD),'],
+    'et kort tryk på en hold-knap må kun tale på printet');
+  assert.match(app, /voksenNaeste\(\{/, 'voksen-trinets «Næste» skal bygges af js/voksen.js');
 });

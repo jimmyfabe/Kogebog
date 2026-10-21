@@ -142,6 +142,21 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 }
 @keyframes tale { 50% { transform: scale(1.15); } }
 
+/* Advarselstrekanten (js/voksen.js): gul med en tyk kakao-kant, runde hjørner og kniven eller flammen i den brede del */
+.trekant { position: relative; display: inline-block; flex: none; width: var(--trekant, 84px); aspect-ratio: 100 / 90; }
+.trekant-form { display: block; width: 100%; height: 100%; overflow: visible; }
+.trekant-form path { fill: var(--sennep); stroke: var(--kakao); stroke-width: 7; stroke-linejoin: round; }
+.trekant .trekant-ikon { position: absolute; left: 32%; top: 43%; width: 36%; height: 40%; stroke-width: 2.6; }
+/* Et kort tryk på «Næste» på et voksen-trin: trekanten vipper (knappen ryster, hold.js). Ved «mindre bevægelse» får den
+   en orange glød i stedet, i de samme 1,5 s som knappens ring */
+@media (prefers-reduced-motion: no-preference) {
+  .trekant.vipper { transform-origin: 50% 85%; animation: vippe .7s ease-in-out 2; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .trekant.vipper { filter: drop-shadow(0 0 4px var(--raev)) drop-shadow(0 0 4px var(--raev)); }
+}
+@keyframes vippe { 0%, 100% { rotate: 0deg; } 20% { rotate: -14deg; } 45% { rotate: 11deg; } 70% { rotate: -6deg; } 85% { rotate: 3deg; } }
+
 /* ---------- Skærmene ---------- */
 
 .skaerm {
@@ -329,6 +344,16 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .ret-titel h1 { font-size: clamp(30px, 3.8vw, 46px); line-height: 1.05; text-align: center; overflow-wrap: anywhere; -webkit-hyphens: auto; hyphens: auto; }
 .meta { font-size: 19px; color: var(--kakao-blid); text-align: center; }
 
+/* Kræver retten en voksen, står trinenes trekanter i topbaren med en kort tekst til den voksne (startAdvarsel i app.js).
+   I topbaren, så retten ikke bliver højere: på langs står billedet, navnet og personer og tid lige over bunden */
+.ret .topbar-midte { display: flex; justify-content: center; }
+.start-advarsel { display: flex; align-items: center; gap: 12px; padding: 4px 18px 4px 8px; border: var(--streg) solid var(--raev); border-radius: 20px; background: var(--raev-lys); }
+.start-trekanter { display: flex; gap: 4px; }
+.start-trekanter .trekant { --trekant: 54px; }
+.start-advarsel-tekst { display: flex; flex-direction: column; line-height: 1.15; }
+.start-advarsel-tekst strong { font-size: 20px; font-weight: 800; }
+.start-advarsel-tekst span { font-size: 17px; }
+
 .ret-ingredienser h2 { font-size: 26px; margin-bottom: 12px; }
 .ingr-gitter { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 12px; }
 .ingr {
@@ -395,21 +420,9 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 }
 .scene.voksen { border-color: var(--raev); background: var(--raev-lys); }
 
-.voksen-maerke {
-  grid-area: maerke;
-  justify-self: start;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 5px 20px 5px 5px;
-  border: var(--kant);
-  border-radius: 999px;
-  background: var(--raev);
-  font-size: 24px;
-}
-.voksen-bo { width: 58px; height: 58px; border: var(--kant); border-radius: 50%; background: var(--creme); padding: 2px; }
-.voksen-slags { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 20px; padding-left: 10px; border-left: 2px solid var(--kakao); }
-.voksen-slags .ikon { width: 26px; height: 26px; }
+/* Voksen-trin: en gul advarselstrekant med kniven eller flammen (js/voksen.js) står, hvor «Hent en voksen» stod, og er
+   lige så høj (76 px), så trinene ikke flytter sig. Ingen tekst: børnene kan ikke læse. Kakao på sennep 8,1:1 */
+.voksen-trekant { grid-area: maerke; justify-self: start; --trekant: 84px; }
 
 .verbum-ramme {
   grid-area: billede;
@@ -591,8 +604,15 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
     align-items: start;
     border-radius: 28px;
   }
-  .voksen-maerke { justify-self: center; font-size: 21px; }
-  .voksen-bo { width: 48px; height: 48px; }
+  .voksen-trekant { justify-self: center; --trekant: 72px; }
+  /* Retten: advarslen har en række for sig under hjem (og pillen), så teksten kan stå på én linje ned til 360 px */
+  .ret .topbar { grid-template-columns: max-content minmax(0, 1fr); row-gap: 8px; }
+  .ret .topbar > .topbar-midte { grid-column: 1 / -1; grid-row: 2; }
+  .ret .topbar > .topbar-midte:empty { display: none; }
+  .start-advarsel { gap: 10px; padding-right: 14px; }
+  .start-trekanter .trekant { --trekant: 46px; }
+  .start-advarsel-tekst strong { font-size: 18px; }
+  .start-advarsel-tekst span { font-size: 16px; }
   .verbum-ramme { width: min(72vw, 34svh); }
   .trin-tekst { gap: 14px; }
   .trin-tekst h1 { font-size: 30px; }
@@ -680,13 +700,9 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .kort-gruppe { top: 5px; left: 5px; width: 28px; }
 }
 
-/* «Hent en voksen» står på én linje med mindre skrift og en mindre Bo: under 400 px (før to linjer på iPhone)
-   og på lave skærme på langs, hvor mærket kun har tekstens kolonne */
+/* Voksen-trekanten er mindre under 400 px og på lave skærme på langs (56 px høj, som «Hent en voksen» var dér) */
 @media (max-width: 399px), (max-height: 520px) and (orientation: landscape) {
-  .voksen-maerke { gap: 8px; padding-right: 14px; font-size: 18px; }
-  .voksen-bo { width: 40px; height: 40px; }
-  .voksen-slags { gap: 4px; padding-left: 8px; font-size: 17px; }
-  .voksen-slags .ikon { width: 22px; height: 22px; }
+  .voksen-trekant { --trekant: 62px; }
 }
 
 /* Lave skærme på langs (iPhone på tværs, fra 667×375 til 932×430): mindre billeder, og bunden står fast, så «Næste» og
@@ -694,7 +710,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
    på højkant, med en bund på op til 48 % af skærmen */
 @media (max-height: 520px) and (orientation: landscape) {
   /* Billedet skal kunne ses helt mellem topbaren og bunden: mærket står over teksten i stedet for over begge kolonner.
-     Billedets kolonne er kun så bred som billedet, så teksten og «Hent en voksen» har plads ned til 667 px */
+     Billedets kolonne er kun så bred som billedet, så teksten og voksen-trekanten har plads ned til 667 px */
   .scene { grid-template-columns: min(44svh, 40%) minmax(0, 1fr); grid-template-areas: "billede maerke" "billede tekst"; column-gap: 28px; margin: 4px 24px; padding: 8px 20px; }
   /* Billedet står øverst: midt i en høj tekstkolonne (voksen-trin med timer og note) lå det under bunden */
   .verbum-ramme { width: min(100%, 44svh); align-self: start; }

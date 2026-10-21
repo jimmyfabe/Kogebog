@@ -64,7 +64,7 @@ Hver ret er én fil, `opskrifter/<id>.json`, og `opskrifter/liste.json` giver r�
 | `description`, `prepTime`, `cookTime`, `inLanguage` | retten, valgfri | standard schema.org |
 | `recipeInstructions` | retten, skal | en liste af `HowToStep`, hvor `text` er det, der vises og læses op |
 | `tumbi.verbum` | hvert trin, skal | et af de 27 verber: `roere` `haelde` `skaere` `aelte` `rulle` `vende` `stege` `koge` `maale` `vaske-haender` `vente` `smage` og (fra 18-10) `smoere` `mose` `bage` `piske` `drysse` `rive` `pensle` og (fra 19-10) `tage-ud` `tage-ud-form` `si` `kagerulle` `pakke-ind` `smuldre` og (fra 20-10) `pynte` `sproejte` |
-| `tumbi.voksen` | trin, valgfri | `true`, når en voksen skal hjælpe (kniv, varme, ovn). Giver «Hent en voksen», og kræver `voksen_hjaelp` |
+| `tumbi.voksen` | trin, valgfri | `true`, når en voksen skal hjælpe (kniv, varme, ovn). Giver en gul advarselstrekant med kniven eller flammen (og et hold på «Næste»), og kræver `voksen_hjaelp` |
 | `tumbi.voksen_hjaelp` | trin, sammen med `voksen` | `"kniv"` eller `"varme"` (komfur, ovn, kogende vand, varm pande) |
 | `tumbi.timer_sek` | trin, valgfri | heltal sekunder, som giver en stor timer |
 | `tumbi.note` | trin, valgfri | detaljer til den voksne. Noten vises småt og på printet, men læses ikke op |
