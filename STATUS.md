@@ -1,5 +1,21 @@
 # STATUS – Tumbi Køkken
 
+## 21-10-2026 kl. 20:44: gren `grafik-ai` – AI-billeder, advarselstrekant, to nye aftensretter (ikke flettet)
+
+**Gjort (alt på `grafik-ai`, 10 commits oven på `main` 5c3a90c; `main` er pushet og står lige med origin):**
+- **To aftensretter:** One pot bolognese og Cremet kødsovs (ed6b63a). Pastavandet står på en bagerste plade, og der skrues ned, før barnet hælder pastaen i (90385ff). Kilden hedder «En slankeapp» (e380597), men ed6b63a har stadig den gamle tekst i historikken.
+- **Advarselstrekant:** voksen-trin viser en gul trekant med kniv eller flamme i stedet for «Hent en voksen», og topbaren viser trekanterne + «Sammen med en voksen» (fc0234a, 7cc373b). Ny kokkekniv og hårdt mellemrum (6771e7d), kraftigere glød ved «mindre bevægelse» (cec480b).
+- **Lyd:** 108 voksen-trin læst op igen uden «Hent en voksen» + tre start-replikker (7cc373b). Skærmskift stopper nu oplæsningen (557f3e7, test der fejler mod den gamle kode).
+- **Billeder:** retterne har Codex-tegninger som 640 px WebP (`vaerktoej/ret-billede-til-webp.py`, 825666f). 17 af 21 er inde; blondie, havregrynskugler, bolognese og cremet kødsovs + en ny chorizo-pasta (panden var skåret over) laves efter Codex-grænsen kl. 21:42. **Indtil de er inde, fejler test-sw, test-validator og e2e (404), og offline virker ikke på grenen.**
+- **Review:** code-reviewer (12 fund: 7 rettet, 1 fravalgt, 3 til Jimmy) og ui-reviewer (9 fund: 4 rettet, 3 kun nævnt, chorizo + offline følger billederne).
+
+**Afventer Jimmy (21-10):**
+- Ja til at slette de 19 gamle `grafik/ret-*.svg` og `lyd/faelles/voksen-hold.mp3` (`--ryd`)? Indtil da fejler `test-lyd` på grenen (den forældreløse mp3).
+- Code review fund 5: en timer på trinnet med råt kød (som i kødsovsen)? Fund 6: «Læs op» på ret-skærmen siger kun navnet – skal den sige mere?
+- Skal «Jimmys slankeapp» ud af historikken (squash før fletning)?
+- Lyt til `lyd/tunfrikadeller/4.mp3` og `lyd/pizzasnegle/10.mp3` (markeret til lyttetest 21-10).
+- Fletning og udgivelse: når billederne er inde og e2e er grøn, i PowerShell `cd D:\Claude\Kogebog; git checkout main; git merge grafik-ai; git push`.
+
 ## 21-10-2026 kl. 11:04: «Bagning» siges «Bæining»; første AI-billede prøvet
 
 - Jimmy valgte lydprøve 4 («Bæining»). `UDTALE` i `vaerktoej/lav-taleliste.js` retter kun teksten til Røst. Kun `lyd/faelles/gruppe-bagning.mp3` er ny (byte for byte prøve 4), plus ny `LYD` i `sw.js` og en test. Commit d566b56 på `main`, alle 7 node-tests grønne. **Ikke pushet:** Jimmy kører `cd D:\Claude\Kogebog; git push` (main er 2 foran).
