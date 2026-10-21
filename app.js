@@ -73,9 +73,10 @@ function rute() {
   return { side: 'forside' };
 }
 
-// Skift skærm med det samme (inde i trykket), så oplæsningen bagefter stadig tæller som en del af trykket
+// Skift skærm med det samme (inde i trykket), så oplæsningen bagefter stadig tæller som en del af trykket.
+// En ny skærm stopper oplæsningen og det, der skulle siges bagefter (hashchange gør det ikke: vis() har sat vistHash)
 function naviger(hash, efter) {
-  if (location.hash !== hash) location.hash = hash;
+  if (location.hash !== hash) { Tale.stop(); location.hash = hash; }
   vis();
   if (efter) efter();
 }

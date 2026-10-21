@@ -58,7 +58,8 @@ function forfalskninger(lydTekster) {
   // Røst-lydfilerne (lyd/<fil>): en falsk Audio skriver filen og dens tekst i __tale og slutter efter 30 ms.
   // Som på iPad må et lydelement først spille, når det har fået et tryk (load(), play() eller en ny src under et tryk);
   // ellers afviser play() (window.__lydAfvist tæller). window.__lydElementer tæller lydelementerne.
-  // Med window.__lydFejl = true afviser play() (som når filen ikke kan hentes), og tale.js skal tage iPad-stemmen
+  // Med window.__lydFejl = true afviser play() (som når filen ikke kan hentes), og tale.js skal tage iPad-stemmen.
+  // window.__lydMs gør hver fil længere (standard 30 ms), så en test kan nå at skifte skærm midt i en replik
   window.__lydElementer = 0;
   window.__lydAfvist = 0;
   window.Audio = class {
@@ -88,7 +89,7 @@ function forfalskninger(lydTekster) {
         this.ended = true;
         this.send('pause');
         this.send('ended');
-      }, 30);
+      }, window.__lydMs || 30);
       return Promise.resolve();
     }
     pause() { if (!this.paused) { this.paused = true; setTimeout(() => this.send('pause'), 0); } }
@@ -1092,6 +1093,20 @@ async function timere(browser, skaerm) {
   }
   await side.waitForFunction(() => location.hash === '#/ret/koedsovs/trin/8');
   tjek(await side.locator('button[aria-label="Stop timeren"]').count() === 1, n + ': trin 8 skal stadig have sin timer (med «Stop»)');
+
+  // Pillen midt i navnet på en anden ret: «sammen med en voksen» må ikke siges bagefter på timerens trin (code review 21-10-2026)
+  await tryk(side, 'button[aria-label="Til forsiden"]');
+  await side.waitForSelector('.forside .kort');
+  await side.evaluate(() => { window.__lydMs = 1500; });
+  await tryk(side, '.kort[data-ret="pandekager"]');
+  await tryk(side, '.kort[data-ret="pandekager"]');
+  await side.waitForSelector('.ret h1');
+  const foerPille = await side.evaluate(() => window.__tale.length);
+  await tryk(side, '.pille');
+  await side.waitForFunction(() => location.hash === '#/ret/koedsovs/trin/8');
+  await vent(2000);
+  const efterPille = await side.evaluate((i) => { window.__lydMs = 0; return window.__tale.slice(i).map((x) => x.tekst); }, foerPille);
+  tjek(efterPille.length === 0, n + ': pillen skal stoppe oplæsningen af den anden ret, men bagefter blev der sagt ' + JSON.stringify(efterPille));
 
   // 3) Timeren løb ud, mens fanen var væk (iOS smed den ud): efter genindlæsningen skal «Tiden er gået» stå på forsiden
   await gemTimer(side, { ret: 'koedsovs', nr: 8, sek: 1200, slutOm: -60000 });
