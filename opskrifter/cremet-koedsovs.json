@@ -26,7 +26,7 @@
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
     { "@type": "HowToStep", "text": "Mål krydderierne i en lille skål.", "tumbi": { "verbum": "maale", "ikoner": ["krydderurt", "hvidloeg", "salt", "peber"], "note": "2 tsk oregano, 1 tsk hvidløgspulver, ½ tsk salt og 1 knivspids peber." } },
     { "@type": "HowToStep", "text": "Mål 300 g pasta.", "tumbi": { "verbum": "maale", "ikoner": ["spaghetti"], "note": "Brug køkkenvægten. Fuldkornspasta, fx spaghetti." } },
-    { "@type": "HowToStep", "text": "Kog vand til pastaen.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "3 l vand og 1 tsk salt i en stor gryde. Med låg på koger det hurtigere." } },
+    { "@type": "HowToStep", "text": "Kog vand til pastaen.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "3 l vand og 1 tsk salt i en stor gryde på en bagerste plade, med håndtagene ind. Med låg på koger det hurtigere." } },
     { "@type": "HowToStep", "text": "Brun kødet i gryden uden fedtstof.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "ikoner": ["koed"], "note": "En anden gryde med låg ved høj varme i 4-5 min. Del kødet i små stykker med grydeskeen." } },
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter råt kød." } },
     { "@type": "HowToStep", "text": "Drys krydderierne på kødet.", "tumbi": { "verbum": "drysse", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["krydderurt", "hvidloeg", "salt", "peber"], "note": "Gryden er varm. Barnet drysser fra skålen, og den voksne rører rundt." } },
