@@ -10,7 +10,8 @@ import path from 'node:path';
 import os from 'node:os';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { lavTaleliste } from '../vaerktoej/lav-taleliste.js';
+import { lavTaleliste, tilRoest } from '../vaerktoej/lav-taleliste.js';
+import * as R from '../js/replikker.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const laes = (sti) => JSON.parse(fs.readFileSync(path.join(ROD, sti), 'utf8'));
@@ -77,6 +78,16 @@ test('app.js læser kun op gennem js/replikker.js', () => {
     if (f === 'tale.js') continue;
     assert.ok(!/\bsig\(|speechSynthesis/.test(fs.readFileSync(path.join(ROD, 'js', f), 'utf8')), 'js/' + f + ' læser op uden om tale.js');
   }
+});
+
+// Røst siger «Bagning» som «bau-ning», så talelisten skriver ordet, som det lyder (UDTALE), men kun til Røst (21-10)
+test('UDTALE retter kun hele ord, beholder stort bogstav og når kun Røst', () => {
+  assert.equal(tilRoest('Bagning'), 'Bæining');
+  assert.equal(tilRoest('nu kommer bagning.'), 'nu kommer bæining.');
+  assert.equal(tilRoest('Bagningen og ombagning'), 'Bagningen og ombagning', 'kun hele ord');
+  assert.equal(tilRoest('toString constructor'), 'toString constructor', 'arvede egenskaber er ikke ord på listen');
+  assert.equal(TALE.find((x) => x.fil === 'faelles/gruppe-bagning.mp3').tekst, 'Bæining');
+  assert.equal(R.gruppe('bagning').tekst, 'Bagning', 'skærmen og iPad-stemmen får det rigtige ord');
 });
 
 // indsaet-lyd.js i en midlertidig kopi af appen: gamle mp3-filer nævnes, og --ryd sletter kun dem (code review 19-10)

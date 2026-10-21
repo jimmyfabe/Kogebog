@@ -9,7 +9,7 @@
 const PRAEFIKS = 'kog-';
 const INDHOLD = 'a7ddec8a92b8c47b'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
-const LYD = '91a58c0a6eed5fd7'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
+const LYD = '2294d280824c158d'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
 const HENT_MS = 4000; // så længe venter en lydfil på svar fra nettet (wifi uden internet), før iPad-stemmen tager over
 const FILER = [

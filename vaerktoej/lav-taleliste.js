@@ -1,5 +1,5 @@
-// lav-taleliste.js — listen over alt, appen læser op: [{ fil, tekst }]. «tekst» er præcis det, iPad-stemmen ellers
-// ville få (tilTale), og «fil» er stien under lyd/. Bygger på appens egne funktioner (js/replikker.js, js/model.js og
+// lav-taleliste.js — listen over alt, appen læser op: [{ fil, tekst }]. «tekst» er det, iPad-stemmen ellers ville få
+// (tilTale), med ordene i UDTALE skrevet, som Røst skal sige dem, og «fil» er stien under lyd/. Bygger på appens egne funktioner (js/replikker.js, js/model.js og
 // js/tekst.js), så der ikke er en kopi af tekstreglerne her. Bruges af D:/Stemmer/lav_kogebog.py (Røst-stemmen),
 // vaerktoej/indsaet-lyd.js og test/test-lyd.js.
 // Kør:  node vaerktoej/lav-taleliste.js [udfil.json]     (uden udfil skrives listen på skærmen)
@@ -35,10 +35,23 @@ export function alleReplikker(retter = alleRetter()) {
   return replikker;
 }
 
+// Ord, Røst udtaler forkert, skrevet som de lyder. Kun til Røst: skærmen og iPad-stemmen får det rigtige ord.
+// «Bagning» blev til «bau-ning» (agn → [ɑwn]); Jimmy valgte «Bæining» efter at have lyttet (21-10-2026)
+export const UDTALE = { bagning: 'bæining' };
+
+export function tilRoest(tekst) {
+  return tekst.replace(/\p{L}+/gu, (ord) => {
+    const lille = ord.toLowerCase();
+    if (!Object.hasOwn(UDTALE, lille)) return ord;
+    const ny = UDTALE[lille];
+    return ord[0] === lille[0] ? ny : ny[0].toUpperCase() + ny.slice(1);
+  });
+}
+
 export function lavTaleliste(retter = alleRetter()) {
   const liste = new Map();
   for (const x of alleReplikker(retter)) {
-    const tekst = tilTale(x.tekst);
+    const tekst = tilRoest(tilTale(x.tekst));
     const foer = liste.get(x.fil);
     if (foer && foer.tekst !== tekst) throw new Error(x.fil + ' bruges til to tekster: «' + foer.tekst + '» og «' + tekst + '»');
     if (!foer) liste.set(x.fil, { fil: x.fil, tekst });
