@@ -253,7 +253,7 @@ function startAdvarsel(m) {
   const hvad = farer.length > 1 ? 'Varme og skarpe ting' : farer[0] === 'kniv' ? 'Skarpe ting' : 'Varme ting';
   return el('p', { class: 'start-advarsel' },
     el('span', { class: 'start-trekanter' }, farer.map((f) => trekant(f))),
-    el('span', { class: 'start-advarsel-tekst' }, el('strong', { tekst: 'Sammen med en voksen' }), el('span', { tekst: hvad })));
+    el('span', { class: 'start-advarsel-tekst' }, el('strong', { tekst: 'Sammen med en voksen' }), el('span', { tekst: hvad })));
 }
 
 function retSkaerm(m) {

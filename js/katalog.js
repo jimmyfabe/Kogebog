@@ -126,7 +126,7 @@ export const GRUPPER = {
 // Grafikken. Pladsholderne er SVG; skiftes de til PNG i fase 2, rettes det kun her.
 export const GRAFIK_MAPPE = 'grafik/';
 export const GRAFIK_ENDELSE = '.svg';
-// Retternes billeder er tegnet af Codex (21-10-2026): 400 px WebP med gennemsigtig bund (vaerktoej/ret-billede-til-webp.py)
+// Retternes billeder er tegnet af Codex (21-10-2026): 640 px WebP med gennemsigtig bund (vaerktoej/ret-billede-til-webp.py)
 export const GRAFIK_RET_ENDELSE = '.webp';
 export const grafikVerbum = (id) => GRAFIK_MAPPE + 'verbum-' + id + GRAFIK_ENDELSE;
 export const grafikIngrediens = (id) => GRAFIK_MAPPE + 'ing-' + id + GRAFIK_ENDELSE;

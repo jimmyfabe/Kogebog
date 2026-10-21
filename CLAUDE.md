@@ -72,7 +72,7 @@ Standard schema.org/Recipe med egne felter under `tumbi`. Den fulde tabel står 
 
 1. Kopiér en af `opskrifter/<id>.json`, og skriv id'et i den rigtige gruppe i `opskrifter/index.json` (aftensmad, bagning eller søde sager).
 2. Kør `node test/test-opskrifter.js`. Den siger præcis, hvad der er galt.
-3. Læg retbilledet `grafik/ret-<id>.webp` (Codex-PNG gjort til 400 px WebP med `py -I vaerktoej/ret-billede-til-webp.py <png-mappe> grafik <id>`, se faldgruben om Codex) og nye verbum- eller ingrediens-billeder (SVG). Tilføj filerne i `FILER` i `sw.js`.
+3. Læg retbilledet `grafik/ret-<id>.webp` (Codex-PNG gjort til 640 px WebP med `py -I vaerktoej/ret-billede-til-webp.py <png-mappe> grafik <id>`, se faldgruben om Codex) og nye verbum- eller ingrediens-billeder (SVG). Tilføj filerne i `FILER` i `sw.js`.
 4. Kør `node test/test-sw.js`, og sæt den nye `INDHOLD` (se regel 3 nedenfor).
 5. Lav stemmen til den nye ret (se «Stemmen»). Indtil da læser iPad-stemmen den, og `test/test-lyd.js` fejler.
 
