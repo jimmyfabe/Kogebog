@@ -1,20 +1,21 @@
 # STATUS – Tumbi Køkken
 
-## 21-10-2026 kl. 20:44: gren `grafik-ai` – AI-billeder, advarselstrekant, to nye aftensretter (ikke flettet)
+## 21-10-2026 kl. 23:08: gren `grafik-ai` – AI-billeder, advarselstrekant, to nye aftensretter (ikke flettet)
 
-**Gjort (alt på `grafik-ai`, 10 commits oven på `main` 5c3a90c; `main` er pushet og står lige med origin):**
+**Gjort (alt på `grafik-ai`, 16 commits oven på `main` 5c3a90c; `main` er pushet og står lige med origin):**
 - **To aftensretter:** One pot bolognese og Cremet kødsovs (ed6b63a). Pastavandet står på en bagerste plade, og der skrues ned, før barnet hælder pastaen i (90385ff). Kilden hedder «En slankeapp» (e380597), men ed6b63a har stadig den gamle tekst i historikken.
 - **Advarselstrekant:** voksen-trin viser en gul trekant med kniv eller flamme i stedet for «Hent en voksen», og topbaren viser trekanterne + «Sammen med en voksen» (fc0234a, 7cc373b). Ny kokkekniv og hårdt mellemrum (6771e7d), kraftigere glød ved «mindre bevægelse» (cec480b).
 - **Lyd:** 108 voksen-trin læst op igen uden «Hent en voksen» + tre start-replikker (7cc373b). Skærmskift stopper nu oplæsningen (557f3e7, test der fejler mod den gamle kode).
-- **Billeder:** alle 21 retter har Codex-tegninger som 640 px WebP (`vaerktoej/ret-billede-til-webp.py`; 825666f, 967e4e9, e67b3a4). Chorizo-pastaen er tegnet om med spaghetti og hele panden (den gamle var penne og skar håndtaget over). Oversigt: Drev `Claude/Kogebog/retbilleder-21-10.jpg`. Cremet kødsovs viser penne, mens opskriften siger «fx spaghetti». Claude lod den stå, så den ikke ligner «Kødsovs med spaghetti» (Jimmy afgør).
-- **Review:** code-reviewer (12 fund: 7 rettet, 1 fravalgt, 3 til Jimmy) og ui-reviewer (9 fund: 4 rettet, 3 kun nævnt, chorizo + offline følger billederne).
+- **Billeder:** alle 21 retter har Codex-tegninger som 640 px WebP (`vaerktoej/ret-billede-til-webp.py`; 825666f, 967e4e9, e67b3a4, 2fd8a04). Tre er tegnet om, så de passer til opskriften: chorizo-pasta med spaghetti og hele panden (var penne, håndtaget skåret over), cremet kødsovs uden basilikum og med cremet sovs, havregrynskugler med kokosmel (lignede ris). Oversigt: Drev `Claude/Kogebog/retbilleder-21-10.jpg`. Cremet kødsovs viser penne, mens opskriften siger «fx spaghetti»; Claude lod den stå, så den ikke ligner «Kødsovs med spaghetti» (Jimmy afgør). Codex-prompterne skrives fra opskriftens ingredienser (task-observer 0078).
+- **Review:** code-reviewer (12 fund: 7 rettet, 1 fravalgt, 3 til Jimmy) og ui-reviewer (9 fund: 4 rettet, 3 kun nævnt, chorizo + offline løst med billederne). UI-review 2 af rettelserne kl. 23: alle fire OK; kun kosmetisk: kniven i topbaren er ca. 18 px på en desktop med skala 1, og ingredienser knækker midt i ordet i WebKit på Windows (se iPad-testen 20-10 punkt 4).
+- **Tests:** fuld e2e i WebKit kl. 22:55 på d4eb3ee: 17.129 tjek grønne (665 s). Bagefter er kun to billeder (samme størrelse) og INDHOLD skiftet (2fd8a04); e2e er ikke kørt igen for det. Node-tests grønne undtagen `test-lyd` (den forældreløse `voksen-hold.mp3`, se nedenfor).
 
 **Afventer Jimmy (21-10):**
 - Ja til at slette de 19 gamle `grafik/ret-*.svg` og `lyd/faelles/voksen-hold.mp3` (`--ryd`)? Indtil da fejler `test-lyd` på grenen (den forældreløse mp3).
 - Code review fund 5: en timer på trinnet med råt kød (som i kødsovsen)? Fund 6: «Læs op» på ret-skærmen siger kun navnet – skal den sige mere?
 - Skal «Jimmys slankeapp» ud af historikken (squash før fletning)?
 - Lyt til `lyd/tunfrikadeller/4.mp3` og `lyd/pizzasnegle/10.mp3` (markeret til lyttetest 21-10).
-- Fletning og udgivelse: når billederne er inde og e2e er grøn, i PowerShell `cd D:\Claude\Kogebog; git checkout main; git merge grafik-ai; git push`.
+- Fletning og udgivelse (billederne er inde, e2e grøn; afgør først sletningen ovenfor, så `test-lyd` er grøn): i PowerShell `cd D:\Claude\Kogebog; git checkout main; git merge grafik-ai; git push`.
 
 ## 21-10-2026 kl. 11:04: «Bagning» siges «Bæining»; første AI-billede prøvet
 
