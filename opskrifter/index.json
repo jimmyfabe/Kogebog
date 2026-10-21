@@ -1,7 +1,7 @@
 {
   "version": 2,
   "grupper": [
-    { "id": "aftensmad", "retter": ["frikadeller", "koedsovs", "chorizo-pasta", "tunfrikadeller", "kartoffelmos", "hvidloegsflutes"] },
+    { "id": "aftensmad", "retter": ["frikadeller", "koedsovs", "chorizo-pasta", "bolognese-one-pot", "cremet-koedsovs", "tunfrikadeller", "kartoffelmos", "hvidloegsflutes"] },
     { "id": "bagning", "retter": ["boller", "hytteostboller", "pizzasnegle", "mumiepoelser", "edderkoppeboller", "oejeboller", "graeskar-calzone", "heksefingre", "slimsnegle"] },
     { "id": "soede-sager", "retter": ["pandekager", "brownie", "blondie", "havregrynskugler"] }
   ]
