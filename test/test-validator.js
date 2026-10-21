@@ -548,11 +548,11 @@ test('manglende grafik for et verbum, en ret eller en gruppe', () => {
   const m = kopi();
   try {
     fs.rmSync(path.join(m, 'grafik/verbum-aelte.svg'));
-    fs.rmSync(path.join(m, 'grafik/ret-boller.svg'));
+    fs.rmSync(path.join(m, 'grafik/ret-boller.webp'));
     fs.rmSync(path.join(m, 'grafik/gruppe-bagning.svg'));
     const { fejl } = valider(m);
     assert.ok(fejl.includes('grafik/verbum-aelte.svg: billedet mangler (verbum «aelte»)'), fejl.join('\n'));
-    assert.ok(fejl.includes('grafik/ret-boller.svg: billedet mangler (retten «boller»)'), fejl.join('\n'));
+    assert.ok(fejl.includes('grafik/ret-boller.webp: billedet mangler (retten «boller»)'), fejl.join('\n'));
     assert.ok(fejl.includes('grafik/gruppe-bagning.svg: billedet mangler (gruppen «bagning»)'), fejl.join('\n'));
   } finally { ryd(m); }
 });

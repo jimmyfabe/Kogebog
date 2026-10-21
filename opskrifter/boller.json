@@ -3,7 +3,7 @@
   "@type": "Recipe",
   "name": "Boller",
   "description": "Bløde boller med en blank top. Gode med smør.",
-  "image": "grafik/ret-boller.svg",
+  "image": "grafik/ret-boller.webp",
   "inLanguage": "da",
   "recipeYield": "4 personer (16 boller)",
   "prepTime": "PT30M",

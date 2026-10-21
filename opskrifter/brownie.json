@@ -3,7 +3,7 @@
   "@type": "Recipe",
   "name": "Brownie",
   "description": "Blød chokoladekage, der er lidt klistret i midten.",
-  "image": "grafik/ret-brownie.svg",
+  "image": "grafik/ret-brownie.webp",
   "inLanguage": "da",
   "recipeYield": "6 stykker (en lille form)",
   "prepTime": "PT20M",

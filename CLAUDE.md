@@ -42,7 +42,7 @@ Kør i Git Bash i `D:/Claude/Kogebog`.
 | `js/dom.js` | Bygger elementer. Tekst sættes som tekst |
 | `sw.js`, `manifest.webmanifest` | Offline: service worker med `kog-`-caches |
 | `opskrifter/` | `<id>.json` pr. ret og `index.json` (forsidens afsnit og rækkefølgen) |
-| `grafik/`, `ikoner/` | SVG-billeder i fase 1 og ikoner til hjemmeskærmen |
+| `grafik/`, `ikoner/` | Retternes billeder som WebP (`ret-<id>.webp`, tegnet af Codex 21-10-2026), resten som SVG, og ikoner til hjemmeskærmen |
 | `test/`, `vaerktoej/lav-ikoner.js` | Node-tests og `test-e2e.js`. Ikon-scriptet laver PNG-ikonerne |
 | `docs/` | `gennemgang.md` (plan), `chatgpt-app-prompt.md` og `chatgpt-grafik-prompt.md` (prompter til ChatGPT) |
 
@@ -72,7 +72,7 @@ Standard schema.org/Recipe med egne felter under `tumbi`. Den fulde tabel står 
 
 1. Kopiér en af `opskrifter/<id>.json`, og skriv id'et i den rigtige gruppe i `opskrifter/index.json` (aftensmad, bagning eller søde sager).
 2. Kør `node test/test-opskrifter.js`. Den siger præcis, hvad der er galt.
-3. Læg `grafik/ret-<id>.svg` (og nye verbum- eller ingrediens-billeder). Tilføj filerne i `FILER` i `sw.js`.
+3. Læg retbilledet `grafik/ret-<id>.webp` (Codex-PNG gjort til 400 px WebP med `py -I vaerktoej/ret-billede-til-webp.py <png-mappe> grafik <id>`, se faldgruben om Codex) og nye verbum- eller ingrediens-billeder (SVG). Tilføj filerne i `FILER` i `sw.js`.
 4. Kør `node test/test-sw.js`, og sæt den nye `INDHOLD` (se regel 3 nedenfor).
 5. Lav stemmen til den nye ret (se «Stemmen»). Indtil da læser iPad-stemmen den, og `test/test-lyd.js` fejler.
 
@@ -116,7 +116,7 @@ Al oplæsning er Røst v3 500m fra Alexandra Instituttet (referencestemmen «Nic
 - **WebKit på Windows tegner med Trebuchet MS,** ikke iPhonens/iPadens `ui-rounded` (første skrift i `--skrift`, der findes på pc'en). Tekstbredder i e2e er derfor kun omtrentlige, så hold luft i knaprækker.
 - **WebKit afviser adresseskift ud over ca. 200 pr. 10 s i samme dokument** («Excessive navigation attempts blocked.», målt i Playwright WebKit). e2e åbner derfor hver ret i et nyt dokument, og et afvist skift meldes for sig. En test, der går gennem mange trin med `location.hash`, skal gøre det samme.
 - **Safari fjerner listesemantik,** når `list-style: none` er sat. Print-listen har derfor `role="list"`.
-- **Codex kan lave billeder** (målt 21-10-2026, codex-cli 0.160.0): `codex.cmd exec --skip-git-repo-check -C <mappe> -c sandbox_mode="workspace-write" "Use your image generation tool … save it as <navn>.png"` gav en PNG på 1024 px med hvid bund. Ét billede brugte ca. 83.000 Codex-tokens. Før 21-10 skrev Codex kun SVG-tekst.
+- **Codex kan lave billeder** (målt 21-10-2026, codex-cli 0.160.0): `codex.cmd exec --skip-git-repo-check -C <mappe> -c sandbox_mode="workspace-write" "Use your image generation tool … save it as <navn>.png"` gav en PNG på 1024 px med hvid bund. Ét billede brugte ca. 83.000 Codex-tokens. Før 21-10 skrev Codex kun SVG-tekst. **Send prompten på stdin** (`… exec … -`): `codex.cmd` skærer et argument af ved første linjeskift, så en liste over flere billeder blev til «send listen». Plus-kvoten kan løbe tør midt i en serie (21-10: stop kl. 16:53, ny kvote kl. 21:37).
 - **`note` vises med «Til den voksne:» foran** (`trinSkaerm` i `app.js`). Derfor gælder ordvagten kun `text`: noten må gerne nævne kniven og ovnen. Printet (`js/print.js:29`) viser noten uden den etiket. Kendt, ikke rettet.
 - **`sw.js` henter `index.json` netværk først, men koden, der læser den (`js/data.js`), cache først.** Efter en formatændring kan en iPad derfor køre den gamle `data.js` mod den nye `index.json`, indtil den nye service worker er installeret. En formatændring i `index.json` skal derfor kunne læses af både den gamle og den nye `data.js`. Der er ingen brugere endnu.
 - **Tunfrikadellernes «Hæld vandet fra tunen.» har `haelde`, ikke `si`** (en kendt skævhed). Si-billedet viser en varm gryde over dørslaget, og tunen er kold og står i en dåse. `si` bruges kun ved kogende vand (kartoffelmos og kødsovs).

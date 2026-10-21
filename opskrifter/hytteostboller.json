@@ -3,7 +3,7 @@
   "@type": "Recipe",
   "name": "Hytteostboller",
   "description": "Grove boller med hytteost, havregryn og kerner. Uden gær og uden hævetid.",
-  "image": "grafik/ret-hytteostboller.svg",
+  "image": "grafik/ret-hytteostboller.webp",
   "inLanguage": "da",
   "recipeYield": "10 boller",
   "prepTime": "PT10M",

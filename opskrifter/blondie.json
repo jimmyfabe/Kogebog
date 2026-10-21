@@ -3,7 +3,7 @@
   "@type": "Recipe",
   "name": "Blondie",
   "description": "Lys kage med brun farin, vanilje og stykker af hvid chokolade.",
-  "image": "grafik/ret-blondie.svg",
+  "image": "grafik/ret-blondie.webp",
   "inLanguage": "da",
   "recipeYield": "6 stykker (en lille form)",
   "prepTime": "PT20M",

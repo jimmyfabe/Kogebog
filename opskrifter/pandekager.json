@@ -3,7 +3,7 @@
   "@type": "Recipe",
   "name": "Tynde pandekager",
   "description": "Tynde pandekager efter en opskrift fra Tivoli.",
-  "image": "grafik/ret-pandekager.svg",
+  "image": "grafik/ret-pandekager.webp",
   "inLanguage": "da",
   "recipeYield": "ca. 10-12 stk.",
   "prepTime": "PT10M",

@@ -3,7 +3,7 @@
   "@type": "Recipe",
   "name": "Pizzasnegle",
   "description": "Gærdej med tomat, skinke og ost, rullet sammen og skåret i snegle.",
-  "image": "grafik/ret-pizzasnegle.svg",
+  "image": "grafik/ret-pizzasnegle.webp",
   "inLanguage": "da",
   "recipeYield": "10 personer (ca. 20 snegle)",
   "prepTime": "PT45M",
