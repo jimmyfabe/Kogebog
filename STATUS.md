@@ -1,5 +1,10 @@
 # STATUS – Tumbi Køkken
 
+## 21-10-2026 kl. 11:04: «Bagning» siges «Bæining»; første AI-billede prøvet
+
+- Jimmy valgte lydprøve 4 («Bæining»). `UDTALE` i `vaerktoej/lav-taleliste.js` retter kun teksten til Røst. Kun `lyd/faelles/gruppe-bagning.mp3` er ny (byte for byte prøve 4), plus ny `LYD` i `sw.js` og en test. Commit d566b56 på `main`, alle 7 node-tests grønne. **Ikke pushet:** Jimmy kører `cd D:\Claude\Kogebog; git push` (main er 2 foran).
+- Grafik: `codex exec` kan lave billeder (gpt-image, ikke kun interaktivt). Ét prøvebillede (kartoffelmos, 1024 px, hvid bund) brugte ca. 83.000 Codex-tokens. Før/efter ligger på Drev `Claude/Kogebog/grafik-proeve-21-10/`. **Afventer Jimmy:** ja/nej til frikadeller og chorizo-pasta. Plan og stopregel: `D:\Claude\Heimdal\docs\grafik-vurdering-21-10.md`, afsnit 3. Stilen er mere malet end de tegnede dyr.
+
 ## 21-10-2026 kl. 09:31: udgivet på https://jimmyfabe.github.io/Kogebog/
 
 - Jimmy oprettede det offentlige repo `jimmyfabe/Kogebog`, pushede `main` (ea22eb5) og slog Pages til (main, / (root)). Claude tjekkede kl. 09:30: siden svarer 200, og den live `sw.js` og `index.html` er byte for byte som `main`. Linket er sendt til Jimmys mail.
