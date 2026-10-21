@@ -12,6 +12,7 @@
 //   7. stop() under en lydfil
 //   8. En lydfil, der hverken spiller eller fejler: iPad-stemmen efter 6 s (falske timere)
 //   9. «derefter»: den næste replik, når den første er færdig (navnet og så voksen-replikken, når retten åbnes)
+//  9b. «derefter» efter en lydfil, der fejlede (reserven), og en pause udefra, der sletter den
 //  10. Et kort tryk på «Næste» på et voksen-trin siger ingenting (js/voksen.js med falske elementer)
 // Ikke afprøvet på iPad.
 // Kør:  node test/test-tale.js
@@ -327,6 +328,42 @@ test('derefter: den næste replik siges, når den første er færdig, og et nyt 
     Tale.stop();
     igen.onend();
     assert.ok(!talt.includes('Må ikke siges.'), 'en ny replik eller stop() skal slette den, der skulle komme bagefter');
+  } finally {
+    stemme.speak = tal;
+  }
+});
+
+test('derefter: fejler lydfilen, siger iPad-stemmen den, og den næste kommer bagefter; en pause udefra sletter den', async () => {
+  const ytringer = [];
+  const tal = stemme.speak;
+  stemme.speak = (u) => { ytringer.push(u); tal(u); };
+  try {
+    // Filen kan ikke hentes: reserven siger navnet, og når den er færdig, spiller den næste (code review 21-10)
+    const t0 = talt.length;
+    const foer = spillet.length;
+    spilFejl = new DOMException('Filen kunne ikke hentes', 'NotSupportedError');
+    Tale.sig({ tekst: 'Pandekager.', fil: 'pandekager/1.mp3' }, { derefter: { tekst: 'Sammen med en voksen.', fil: 'pandekager/2.mp3' } });
+    await naesteOpgave();
+    spilFejl = null;
+    assert.deepEqual(talt.slice(t0), ['Pandekager.'], 'reserven skal sige den replik, hvis fil fejlede');
+    assert.deepEqual(spillet.slice(foer), [], 'den næste replik må først komme, når reserven er færdig');
+    ytringer[ytringer.length - 1].onend();
+    await naesteOpgave();
+    assert.deepEqual(spillet.slice(foer), ['lyd/pandekager/2.mp3'], 'efter reserven skal den næste replik spille');
+    sidsteLyd().slut();
+    await naesteOpgave();
+
+    // Sat på pause udefra (et opkald, låseskærmen): den næste replik må ikke komme, når lyden senere slutter
+    const foer2 = spillet.length;
+    Tale.sig({ tekst: 'Pandekager.', fil: 'pandekager/1.mp3' }, { derefter: { tekst: 'Må ikke siges.', fil: 'pandekager/3.mp3' } });
+    await naesteOpgave();
+    const a = sidsteLyd();
+    a.pause();
+    await naesteOpgave();
+    a.slut();
+    await naesteOpgave();
+    assert.deepEqual(spillet.slice(foer2), ['lyd/pandekager/1.mp3'], 'en pause udefra skal slette den replik, der skulle komme bagefter');
+    assert.ok(!talt.includes('Må ikke siges.'));
   } finally {
     stemme.speak = tal;
   }
