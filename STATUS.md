@@ -6,7 +6,7 @@
 - **To aftensretter:** One pot bolognese og Cremet kødsovs (ed6b63a). Pastavandet står på en bagerste plade, og der skrues ned, før barnet hælder pastaen i (90385ff). Kilden hedder «En slankeapp» (e380597), men ed6b63a har stadig den gamle tekst i historikken.
 - **Advarselstrekant:** voksen-trin viser en gul trekant med kniv eller flamme i stedet for «Hent en voksen», og topbaren viser trekanterne + «Sammen med en voksen» (fc0234a, 7cc373b). Ny kokkekniv og hårdt mellemrum (6771e7d), kraftigere glød ved «mindre bevægelse» (cec480b).
 - **Lyd:** 108 voksen-trin læst op igen uden «Hent en voksen» + tre start-replikker (7cc373b). Skærmskift stopper nu oplæsningen (557f3e7, test der fejler mod den gamle kode).
-- **Billeder:** retterne har Codex-tegninger som 640 px WebP (`vaerktoej/ret-billede-til-webp.py`, 825666f). 17 af 21 er inde; blondie, havregrynskugler, bolognese og cremet kødsovs + en ny chorizo-pasta (panden var skåret over) laves efter Codex-grænsen kl. 21:42. **Indtil de er inde, fejler test-sw, test-validator og e2e (404), og offline virker ikke på grenen.**
+- **Billeder:** alle 21 retter har Codex-tegninger som 640 px WebP (`vaerktoej/ret-billede-til-webp.py`; 825666f, 967e4e9, e67b3a4). Chorizo-pastaen er tegnet om med spaghetti og hele panden (den gamle var penne og skar håndtaget over). Oversigt: Drev `Claude/Kogebog/retbilleder-21-10.jpg`. Cremet kødsovs viser penne, mens opskriften siger «fx spaghetti». Claude lod den stå, så den ikke ligner «Kødsovs med spaghetti» (Jimmy afgør).
 - **Review:** code-reviewer (12 fund: 7 rettet, 1 fravalgt, 3 til Jimmy) og ui-reviewer (9 fund: 4 rettet, 3 kun nævnt, chorizo + offline følger billederne).
 
 **Afventer Jimmy (21-10):**
