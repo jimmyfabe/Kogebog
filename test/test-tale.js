@@ -295,16 +295,19 @@ test('en lydfil, der hverken spiller eller fejler, giver plads til iPad-stemmen 
 test('derefter: den næste replik siges, når den første er færdig, og et nyt tryk eller stop() sletter den', async () => {
   // Lydfil → lydfil (retten åbnes: navnet, så at den laves sammen med en voksen)
   const foer = spillet.length;
-  tryk(() => Tale.sig({ tekst: 'Pandekager.', fil: 'pandekager/1.mp3' }, { derefter: { tekst: 'Sammen med en voksen.', fil: 'pandekager/2.mp3' } }));
+  const knap = lavKnap();
+  tryk(() => Tale.sig({ tekst: 'Pandekager.', fil: 'pandekager/1.mp3' }, { knap, derefter: { tekst: 'Sammen med en voksen.', fil: 'pandekager/2.mp3' } }));
   await naesteOpgave();
   assert.deepEqual(spillet.slice(foer), ['lyd/pandekager/1.mp3'], 'den næste replik må først komme, når den første er færdig');
   sidsteLyd().slut();
   await naesteOpgave();
   assert.deepEqual(spillet.slice(foer), ['lyd/pandekager/1.mp3', 'lyd/pandekager/2.mp3'], 'efter den første skal den næste spille (uden et nyt tryk)');
   assert.equal(afvist, 0);
+  assert.ok(knap.classList.contains('taler'), '«Læs op» skal stå som talende, også mens den næste replik siges');
   sidsteLyd().slut();
   await naesteOpgave();
   assert.equal(spillet.length, foer + 2, 'den næste replik siges kun én gang');
+  assert.ok(!knap.classList.contains('taler'), 'markeringen skal væk, når den sidste replik er sagt');
 
   // iPad-stemmen → iPad-stemmen (filerne står ikke i lyd/liste.json)
   const t0 = talt.length;

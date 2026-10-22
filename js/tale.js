@@ -24,7 +24,8 @@ let spiller = null; // { nr, tekst, fil, knap } mens en lydfil spiller
 let aktuel = null; // ytringen, der tales nu (holdes fast, ellers kan nogle browsere glemme onend)
 let knap = null;
 let vagt = 0; // tidsgrænsen for den lydfil, der skal til at spille (SPIL_GRAENSE_MS)
-let derefter = null; // replikken, der siges, når den nuværende er færdig (sig(…, { derefter })). stop() sletter den
+let derefter = null; // { replik, knap }: siges, når den nuværende replik er færdig (sig(…, { derefter })), og knappen
+// er markeret, til den er sagt (fund 6: «Læs op» siger også, at retten laves med en voksen). stop() sletter den
 
 export function hentLydListe() {
   hentGemte();
@@ -88,7 +89,7 @@ function syntese(tekst) {
 function fortsaet() {
   const x = derefter;
   derefter = null;
-  if (x) sig(x);
+  if (x) sig(x.replik, { knap: x.knap });
 }
 
 // Lydfilen kunne ikke spilles (afvist, fejl ved hentningen): iPad-stemmen siger det samme
@@ -160,7 +161,7 @@ const kanSpilles = (fil) => filer.has(fil) && (navigator.onLine !== false || gem
 // siges bagefter, fx når retten åbnes: navnet og så, at den laves sammen med en voksen
 export function sig({ tekst, fil }, { knap: b, derefter: d = null } = {}) {
   stop();
-  derefter = d;
+  derefter = d ? { replik: d, knap: b || null } : null;
   markerKnap(b);
   const a = fil && kanSpilles(fil) ? lydElement() : null;
   if (!a) { syntese(tekst); return; }
