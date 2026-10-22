@@ -7,9 +7,9 @@
    test/test-sw.js tjekker, at FILER er komplet, og fejler, når en fil er ændret. Fejlbeskeden viser den nye værdi;
    testen ændrer ikke sw.js, så den sættes her i hånden. */
 const PRAEFIKS = 'kog-';
-const INDHOLD = '973f243e467f7c90'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = '4c9c8ae47a3b229f'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
-const LYD = '24ce7831ce32a950'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
+const LYD = '62514f04783c4e58'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
 const HENT_MS = 4000; // så længe venter en lydfil på svar fra nettet (wifi uden internet), før iPad-stemmen tager over
 const FILER = [
@@ -78,11 +78,6 @@ const FILER = [
   'grafik/ret-mumiepoelser.webp', 'grafik/ret-edderkoppeboller.webp', 'grafik/ret-oejeboller.webp', 'grafik/ret-graeskar-calzone.webp',
   'grafik/ret-heksefingre.webp', 'grafik/ret-slimsnegle.webp',
   'grafik/ret-bolognese-one-pot.webp', 'grafik/ret-cremet-koedsovs.webp',
-  // De gamle SVG-pladsholdere til retterne bliver liggende, til Jimmy siger ja til at slette dem (test-sw kræver alt i grafik/ her)
-  'grafik/ret-blondie.svg', 'grafik/ret-boller.svg', 'grafik/ret-brownie.svg', 'grafik/ret-chorizo-pasta.svg', 'grafik/ret-edderkoppeboller.svg',
-  'grafik/ret-frikadeller.svg', 'grafik/ret-graeskar-calzone.svg', 'grafik/ret-havregrynskugler.svg', 'grafik/ret-heksefingre.svg', 'grafik/ret-hvidloegsflutes.svg',
-  'grafik/ret-hytteostboller.svg', 'grafik/ret-kartoffelmos.svg', 'grafik/ret-koedsovs.svg', 'grafik/ret-mumiepoelser.svg', 'grafik/ret-oejeboller.svg',
-  'grafik/ret-pandekager.svg', 'grafik/ret-pizzasnegle.svg', 'grafik/ret-slimsnegle.svg', 'grafik/ret-tunfrikadeller.svg',
   'grafik/gruppe-aftensmad.svg', 'grafik/gruppe-bagning.svg', 'grafik/gruppe-soede-sager.svg',
   'grafik/verbum-aelte.svg', 'grafik/verbum-haelde.svg', 'grafik/verbum-koge.svg', 'grafik/verbum-maale.svg', 'grafik/verbum-roere.svg',
   'grafik/verbum-rulle.svg', 'grafik/verbum-skaere.svg', 'grafik/verbum-smage.svg', 'grafik/verbum-stege.svg',
