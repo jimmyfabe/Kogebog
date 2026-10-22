@@ -244,7 +244,7 @@ test('hentIndex giver de rigtige retter i forsidens rækkefølge', async () => {
   const index = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter/index.json'), 'utf8'));
   const ix = await medIndex(index, hentIndex);
   assert.deepEqual(ix.ids, index.grupper.flatMap((g) => g.retter));
-  assert.deepEqual(ix.grupper.map((g) => g.id), ['aftensmad', 'bagning', 'soede-sager']);
+  assert.deepEqual(ix.grupper.map((g) => g.id), ['aftensmad', 'bagning', 'soede-sager', 'halloween']);
 });
 
 // Validatoren tillader ingen dubletter, men står en ret to gange (også i samme gruppe), vises den kun første gang,

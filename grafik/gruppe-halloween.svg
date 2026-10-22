@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="stilk">
+    <path fill="#5BAA6A" d="M116 68 C114 50 118 36 130 26 L144 34 C136 42 134 54 138 68 Z"/>
+    <path fill="none" d="M140 46 C152 36 170 38 176 52"/>
+  </g>
+  <g id="graeskar">
+    <path fill="#F08A3C" d="M128 64 C66 58 26 94 26 146 C26 200 70 232 128 228 C186 232 230 200 230 146 C230 94 190 58 128 64 Z"/>
+    <path fill="#D9702A" stroke="none" d="M196 82 C220 100 224 186 186 218 C214 200 226 174 226 146 C226 116 214 94 196 82 Z"/>
+    <path fill="none" d="M98 68 C72 94 70 198 102 226"/>
+    <path fill="none" d="M158 68 C184 94 186 198 154 226"/>
+  </g>
+  <g id="ansigt" fill="#F2C14E">
+    <path d="M74 134 L98 104 L114 136 Z"/>
+    <path d="M142 136 L158 104 L182 134 Z"/>
+    <path d="M119 160 L128 148 L137 160 Z"/>
+    <path d="M72 168 Q128 192 184 168 Q174 214 128 216 Q82 214 72 168 Z"/>
+    <path fill="#F08A3C" d="M118 181 L136 181 L136 196 L118 196 Z"/>
+  </g>
+</g>
+</svg>

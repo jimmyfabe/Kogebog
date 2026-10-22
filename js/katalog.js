@@ -116,11 +116,14 @@ export const DYR = {
 };
 
 // Forsidens afsnit (opskrifter/index.json). Navnet er overskriften; billedet er grafik/gruppe-<id>.svg
-// (en gryde, en ovn og en kage), og farven på kortenes cirkel står i app.css under [data-gruppe]
+// (en gryde, en ovn, en kage og et græskar), og farven på kortenes cirkel står i app.css under [data-gruppe].
+// Halloween er sit eget afsnit fra 22-10-2026 (sidst, så forsiden ellers er som før). Skal retterne tilbage i
+// Bagning, flyttes de i index.json, og 'halloween' kan blive stående her
 export const GRUPPER = {
   'aftensmad': 'Aftensmad',
   'bagning': 'Bagning',
   'soede-sager': 'Søde sager',
+  'halloween': 'Halloween',
 };
 
 // Grafikken. Pladsholderne er SVG; skiftes de til PNG i fase 2, rettes det kun her.

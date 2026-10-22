@@ -50,7 +50,7 @@ Kør i Git Bash i `D:/Claude/Kogebog`.
 
 Standard schema.org/Recipe med egne felter under `tumbi`. Den fulde tabel står i `docs/gennemgang.md`. Validatoren (`test/test-opskrifter.js`) tjekker:
 
-- `tumbi.id` er filnavnet, og id'et står i præcis én gruppe i `opskrifter/index.json` (version 2: `grupper` med `id` og `retter`). Grupperne er `aftensmad`, `bagning` og `soede-sager` (`GRUPPER` i `js/katalog.js`, billedet `grafik/gruppe-<id>.svg`).
+- `tumbi.id` er filnavnet, og id'et står i præcis én gruppe i `opskrifter/index.json` (version 2: `grupper` med `id` og `retter`). Grupperne er `aftensmad`, `bagning`, `soede-sager` og `halloween` (`GRUPPER` i `js/katalog.js`, billedet `grafik/gruppe-<id>.svg`, farven `[data-gruppe]` i `app.css`, og stemmen `lyd/faelles/gruppe-<id>.mp3`).
 - Hvert trin har `tumbi.verbum` fra de 27 verber i `js/katalog.js`: `roere haelde skaere aelte rulle vende stege koge maale vaske-haender vente smage smoere mose bage piske drysse rive pensle tage-ud tage-ud-form si kagerulle pakke-ind smuldre pynte sproejte`.
 - Trinteksten (`text`, den der læses op) er højst 9 ord.
 - Kniv (`skaere`, `rive`) og varme (`stege`, `koge`, `vende`, `bage`, `tage-ud`, `tage-ud-form`, `si`) kræver `"voksen": true` og `voksen_hjaelp` (`"kniv"` eller `"varme"`). De to følges ad. `kagerulle`, `pakke-ind` og `smuldre` kan barnet selv.
@@ -70,7 +70,7 @@ Standard schema.org/Recipe med egne felter under `tumbi`. Den fulde tabel står 
 
 ## Ny opskrift
 
-1. Kopiér en af `opskrifter/<id>.json`, og skriv id'et i den rigtige gruppe i `opskrifter/index.json` (aftensmad, bagning eller søde sager).
+1. Kopiér en af `opskrifter/<id>.json`, og skriv id'et i den rigtige gruppe i `opskrifter/index.json` (aftensmad, bagning, søde sager eller halloween).
 2. Kør `node test/test-opskrifter.js`. Den siger præcis, hvad der er galt.
 3. Læg retbilledet `grafik/ret-<id>.webp` (Codex-PNG gjort til 640 px WebP med `py -I vaerktoej/ret-billede-til-webp.py <png-mappe> grafik <id>`, se faldgruben om Codex) og nye verbum- eller ingrediens-billeder (SVG). Tilføj filerne i `FILER` i `sw.js`.
 4. Kør `node test/test-sw.js`, og sæt den nye `INDHOLD` (se regel 3 nedenfor).
