@@ -8,6 +8,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { saml, visMaengde, vareTekst, grupper, tekst, MAKS_M } from '../js/indkoeb.js';
 import { kod, afkod, fnv1a, kontrolsum, ukendtTekst, BESKED_NYERE, BESKED_UGYLDIG } from '../js/plankode.js';
+import * as lager from '../js/lager.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ret = (id) => JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8'));
@@ -275,4 +276,236 @@ test('afkod kræver en liste over retter og en rigtig dato', () => {
   assert.throws(() => afkod(GOD, { retter: { koedsovs: true }, idag: IDAG }), TypeError);
   assert.throws(() => afkod(GOD, { retter: UGEPLAN, idag: new Date('ikke en dato') }), TypeError);
   assert.throws(() => afkod(GOD, { retter: UGEPLAN, idag: '2026-10-22' }), TypeError);
+});
+
+// ---------- Lageret (js/lager.js) med et falsk localStorage ----------
+
+// Et falsk localStorage, der kan nægte at læse eller skrive (privat browsing, fuldt lager), og som husker skrivningerne
+class FalskLager {
+  constructor(start = {}) {
+    this.data = new Map(Object.entries(start));
+    this.skrevet = [];
+    this.fejl = null; // 'laes' eller 'skriv'
+  }
+  getItem(k) {
+    if (this.fejl === 'laes') throw new Error('SecurityError');
+    return this.data.has(k) ? this.data.get(k) : null;
+  }
+  setItem(k, v) {
+    if (this.fejl === 'skriv') throw new Error('QuotaExceededError');
+    this.skrevet.push(k);
+    this.data.set(k, String(v));
+  }
+}
+function medLager(start = {}) {
+  const l = new FalskLager(Object.fromEntries(Object.entries(start).map(([k, v]) => [k, typeof v === 'string' ? v : JSON.stringify(v)])));
+  Object.defineProperty(globalThis, 'localStorage', { value: l, configurable: true, writable: true });
+  return l;
+}
+const gemt = (l, k) => JSON.parse(l.data.get(k));
+
+// «kog-v1» må ikke ændre opførsel (afsnit 3). Testene her er skrevet og kørt mod lager.js fra før ugeplanen
+test('kog-v1 opfører sig som før: tomt, gem, rens og nulstilling ved en anden udgave', () => {
+  const TOMT = { v: 1, sidste: null, timer: null };
+  let l = medLager();
+  assert.deepEqual(lager.hent(), TOMT);
+  const sidste = { ret: 'koedsovs', nr: 3, tid: 1761120000000 };
+  assert.deepEqual(lager.gem({ sidste }), { v: 1, sidste, timer: null });
+  assert.equal(l.data.get('kog-v1'), JSON.stringify({ v: 1, sidste, timer: null }));
+  const timer = { ret: 'boller', nr: 7, start: 1000, slut: 61000, sek: 60 };
+  assert.deepEqual(lager.gem({ timer }), { v: 1, sidste, timer });
+  assert.deepEqual(lager.hent(), { v: 1, sidste, timer });
+  // Ekstra felter og forkerte værdier renses væk
+  assert.deepEqual(lager.gem({ sidste: { ret: 'Koedsovs', nr: 3, tid: 1 }, ekstra: 1 }), { v: 1, sidste: null, timer });
+  assert.deepEqual(lager.gem({ timer: { ...timer, sek: 0 } }), TOMT);
+  assert.deepEqual(l.skrevet, ['kog-v1', 'kog-v1', 'kog-v1', 'kog-v1']);
+  // En anden udgave (også en nyere) nulstilles, og gem() skriver ovenpå. Sådan er kog-v1, og sådan bliver den
+  l = medLager({ 'kog-v1': { v: 2, sidste, timer: null } });
+  assert.deepEqual(lager.hent(), TOMT);
+  assert.deepEqual(lager.gem({ sidste }), { v: 1, sidste, timer: null });
+  assert.equal(gemt(l, 'kog-v1').v, 1);
+  // Ødelagt JSON, et lager, der ikke kan læses, og et, der ikke kan skrives
+  medLager({ 'kog-v1': '{ikke json' });
+  assert.deepEqual(lager.hent(), TOMT);
+  l = medLager({ 'kog-v1': { v: 1, sidste, timer: null } });
+  l.fejl = 'laes';
+  assert.deepEqual(lager.hent(), TOMT);
+  l.fejl = 'skriv';
+  assert.deepEqual(lager.gem({ sidste }), { v: 1, sidste, timer: null });
+});
+
+// Et falsk navigator.storage.persist, der tæller kaldene og svarer, som det får besked på
+function medPersist(svar = () => Promise.resolve(true)) {
+  const t = { kald: 0 };
+  Object.defineProperty(globalThis, 'navigator', {
+    value: { storage: { persist: () => { t.kald++; return svar(); } } }, configurable: true, writable: true,
+  });
+  return t;
+}
+
+const TOM_UGE = { v: 1, uge: null, dage: [null, null, null, null, null, null, null], n: 4, prBarn: 1, rettet: null, laast: false };
+const TOM_LISTE = { v: 1, kode: null, uge: null, varer: [], koebt: [], harVi: [], hentet: null, laast: false };
+const DAGE = [{ ret: 'koedsovs', af: 'rosa', n: 4 }, null, { ret: 'tunfrikadeller', af: 'pip', n: 6 }, null, { ret: 'chorizo-pasta', af: 'bo', n: 4 }, null, null];
+const UGE_DATA = { uge: '2026-10-26', dage: DAGE, n: 4, prBarn: 2, rettet: 1761120000000 };
+const LISTE_DATA = {
+  kode: GOD, uge: '2026-10-26', varer: [{ id: 'loeg', m: 1.5 }, { id: 'hakket-oksekoed', m: 1040 }, { id: 'salt', m: 0 }],
+  koebt: ['loeg'], harVi: ['salt'], hentet: 1761120000000,
+};
+const uden = (o) => { const { laast, ...r } = o; return r; };
+
+test('ugeplanen gemmes og hentes, og iPad\'en beder om at beholde lageret', () => {
+  const l = medLager();
+  const p = medPersist();
+  assert.deepEqual(lager.hentUge(UGEPLAN), TOM_UGE);
+  const gemmet = lager.gemUge(UGE_DATA, UGEPLAN);
+  assert.deepEqual(gemmet, { v: 1, ...UGE_DATA });
+  assert.deepEqual(gemt(l, 'kog-uge-v1'), { v: 1, ...UGE_DATA });
+  assert.deepEqual(lager.hentUge(UGEPLAN), { v: 1, ...UGE_DATA, laast: false });
+  assert.equal(p.kald, 1);
+  // En ændring lægges oven på det gemte
+  assert.deepEqual(lager.gemUge({ n: 6 }, UGEPLAN), { v: 1, ...UGE_DATA, n: 6 });
+  assert.equal(p.kald, 2);
+  // persist(), der siger nej, kaster eller ikke findes, er ingen fejl
+  medPersist(() => Promise.reject(new Error('nej')));
+  assert.notEqual(lager.gemUge({ n: 5 }, UGEPLAN), null);
+  medPersist(() => { throw new Error('nej'); });
+  assert.notEqual(lager.gemUge({ n: 5 }, UGEPLAN), null);
+  Object.defineProperty(globalThis, 'navigator', { value: {}, configurable: true, writable: true });
+  assert.notEqual(lager.gemUge({ n: 5 }, UGEPLAN), null);
+  assert.throws(() => lager.hentUge(), TypeError);
+  assert.throws(() => lager.gemUge({}, { koedsovs: true }), TypeError);
+});
+
+test('ugeplanen renses: kun kendte retter, dyrene og portioner 1-12', () => {
+  const l = medLager();
+  medPersist();
+  const daarlige = [
+    { ret: 'pandekager', af: 'rosa', n: 4 }, // står i index.json, men ikke i ugeplanen
+    { ret: 'constructor', af: 'rosa', n: 4 }, { ret: 'koedsovs', af: 'constructor', n: 4 }, { ret: 'koedsovs', af: 'Rosa', n: 4 },
+    { ret: 'koedsovs', af: 'toString', n: 4 }, { ret: 'koedsovs', n: 4 }, { ret: 'koedsovs', af: 'rosa', n: 0 },
+    { ret: 'koedsovs', af: 'rosa', n: 13 }, { ret: 'koedsovs', af: 'rosa', n: '4' }, { ret: 'koedsovs', af: 'rosa', n: 2.5 }, 'koedsovs', 7,
+  ];
+  for (const d of daarlige) {
+    assert.deepEqual(lager.gemUge({ ...UGE_DATA, dage: [d, ...DAGE.slice(1)] }, UGEPLAN).dage, [null, ...DAGE.slice(1)], JSON.stringify(d));
+  }
+  // Ekstra felter forsvinder, og et barns navn kan ikke gemmes som noget andet end et af dyrene
+  assert.deepEqual(lager.gemUge({ ...UGE_DATA, dage: [{ ...DAGE[0], navn: 'x', ekstra: 1 }, ...DAGE.slice(1)], hemmelig: 1 }, UGEPLAN), { v: 1, ...UGE_DATA });
+  for (const dage of [DAGE.slice(0, 6), [...DAGE, null], 'mandag', null]) assert.deepEqual(lager.gemUge({ ...UGE_DATA, dage }, UGEPLAN).dage, TOM_UGE.dage);
+  for (const [felt, v, forventet] of [['uge', '26-10-2026', null], ['uge', 20261026, null], ['n', 0, 4], ['n', 13, 4], ['n', '6', 4],
+    ['prBarn', 3, 1], ['prBarn', 0, 1], ['rettet', 'i går', null], ['rettet', NaN, null]]) {
+    medLager();
+    assert.equal(lager.gemUge({ ...UGE_DATA, [felt]: v }, UGEPLAN)[felt], forventet, felt + ' ' + v);
+  }
+  // Data, der er rettet i lageret udefra, renses også ved læsning
+  medLager({ 'kog-uge-v1': { v: 1, ...UGE_DATA, dage: [{ ret: 'constructor', af: 'bo', n: 4 }, ...DAGE.slice(1)] } });
+  assert.deepEqual(lager.hentUge(UGEPLAN).dage, [null, ...DAGE.slice(1)]);
+  // Planen husker kun retter, der stadig findes: fjernes en ret fra index.json, bliver dagen tom
+  medLager({ 'kog-uge-v1': { v: 1, ...UGE_DATA } });
+  assert.deepEqual(lager.hentUge(UGEPLAN.filter((id) => id !== 'koedsovs')).dage, [null, ...DAGE.slice(1)]);
+  assert.equal(l.skrevet.every((k) => k === 'kog-uge-v1'), true);
+});
+
+test('indkøbslisten gemmes og renses: kendte varer, m 0-100.000, højst 200, afkrydsning kun for varer på listen', () => {
+  const l = medLager();
+  const p = medPersist();
+  assert.deepEqual(lager.hentListe(), TOM_LISTE);
+  assert.deepEqual(lager.gemListe(LISTE_DATA), { v: 1, ...LISTE_DATA });
+  assert.deepEqual(lager.hentListe(), { v: 1, ...LISTE_DATA, laast: false });
+  assert.equal(p.kald, 0); // kun iPad'en beder om at beholde lageret, når en plan gemmes
+  // Afkrydsningerne lægges oven på det gemte
+  assert.deepEqual(lager.gemListe({ koebt: ['loeg', 'hakket-oksekoed'] }).koebt, ['loeg', 'hakket-oksekoed']);
+  assert.deepEqual(uden(lager.hentListe()), { v: 1, ...LISTE_DATA, koebt: ['loeg', 'hakket-oksekoed'] });
+  // Varerne: arvede navne, ukendte varer, forkerte mængder og dobbelte linjer forsvinder
+  const varer = [
+    { id: 'constructor', m: 1 }, { id: '__proto__', m: 1 }, { id: 'toString', m: 1 }, { id: 'hvedemel', m: 1 }, { id: 7, m: 1 },
+    { id: 'loeg', m: -1 }, { id: 'loeg', m: 100001 }, { id: 'loeg', m: '2' }, { id: 'loeg', m: NaN }, { id: 'loeg', m: Infinity }, null,
+    { id: 'loeg', m: 100000 }, { id: 'loeg', m: 3 }, { id: 'salt', m: 0 },
+  ];
+  medLager();
+  assert.deepEqual(lager.gemListe({ varer }).varer, [{ id: 'loeg', m: 100000 }, { id: 'salt', m: 0 }]);
+  // Kun de første 200 linjer læses
+  medLager();
+  assert.deepEqual(lager.gemListe({ varer: [...Array(200).fill({ id: 'constructor', m: 1 }), { id: 'loeg', m: 2 }] }).varer, []);
+  medLager();
+  assert.deepEqual(lager.gemListe({ varer: [...Array(199).fill({ id: 'constructor', m: 1 }), { id: 'loeg', m: 2 }] }).varer, [{ id: 'loeg', m: 2 }]);
+  // Afkrydsninger af varer, der ikke er på listen, af arvede navne og to gange den samme forsvinder
+  medLager();
+  const r = lager.gemListe({ ...LISTE_DATA, koebt: ['loeg', 'loeg', 'constructor', 'aeg', 5], harVi: ['salt', 'toString', null] });
+  assert.deepEqual([r.koebt, r.harVi], [['loeg'], ['salt']]);
+  // Koden: højst 400 tegn og kun tegnene fra linket
+  for (const [kode, forventet] of [[GOD, GOD], ['a'.repeat(400), 'a'.repeat(400)], ['a'.repeat(401), null], ['<script>', null],
+    [GOD.toUpperCase(), null], ['%3C', null], ['', null], [123, null]]) {
+    medLager();
+    assert.equal(lager.gemListe({ ...LISTE_DATA, kode }).kode, forventet, String(kode).slice(0, 20));
+  }
+  for (const [felt, v] of [['uge', 'i morgen'], ['hentet', '2026'], ['varer', 'loeg'], ['koebt', 'loeg']]) {
+    medLager();
+    assert.deepEqual(lager.gemListe({ ...LISTE_DATA, [felt]: v })[felt], TOM_LISTE[felt], felt);
+  }
+  assert.equal(l.skrevet.every((k) => k === 'kog-liste-v1'), true);
+});
+
+test('versionsvagten: et højere v læses som tomt og overskrives aldrig', () => {
+  // v står som tekst i JSON'en, så 1e999 (uendelig) også kan prøves
+  for (const v of ['2', '1.5', '99', '1e999']) {
+    const uge = '{"v":' + v + ',"uge":"2027-01-04","dage":"ny form","mere":true}';
+    const liste = '{"v":' + v + ',"kode":"v2.noget","varer":{"ny":"form"}}';
+    const l = medLager({ 'kog-uge-v1': uge, 'kog-liste-v1': liste });
+    const p = medPersist();
+    assert.deepEqual(lager.hentUge(UGEPLAN), { ...TOM_UGE, laast: true }, 'uge v' + v);
+    assert.deepEqual(lager.hentListe(), { ...TOM_LISTE, laast: true }, 'liste v' + v);
+    assert.equal(lager.gemUge(UGE_DATA, UGEPLAN), null);
+    assert.equal(lager.gemListe(LISTE_DATA), null);
+    // Heller ikke en ændring, der selv påstår at være den nyere udgave eller ulåst
+    assert.equal(lager.gemUge({ ...UGE_DATA, v: Number(v), laast: false }, UGEPLAN), null);
+    assert.equal(lager.gemListe({ ...LISTE_DATA, v: Number(v), laast: false }), null);
+    assert.equal(l.data.get('kog-uge-v1'), uge);
+    assert.equal(l.data.get('kog-liste-v1'), liste);
+    assert.deepEqual(l.skrevet, []);
+    assert.equal(p.kald, 0);
+  }
+  // Låsen gælder kun den nøgle, der er skrevet af den nyere udgave
+  let l = medLager({ 'kog-uge-v1': { v: 2 } });
+  assert.notEqual(lager.gemListe(LISTE_DATA), null);
+  assert.equal(lager.gemUge(UGE_DATA, UGEPLAN), null);
+  assert.deepEqual(l.skrevet, ['kog-liste-v1']);
+  // Et lavere, manglende eller ugyldigt v (der er ingen ældre udgave) og ødelagt JSON læses som tomt og kan skrives
+  for (const raa of [{ v: 0, uge: '2026-10-26' }, { uge: '2026-10-26' }, { v: '2', uge: '2026-10-26' }, { v: null }, { v: NaN }, [1, 2], '{ikke json', '7']) {
+    l = medLager({ 'kog-uge-v1': raa, 'kog-liste-v1': raa });
+    assert.deepEqual(lager.hentUge(UGEPLAN), TOM_UGE, JSON.stringify(raa));
+    assert.deepEqual(lager.hentListe(), TOM_LISTE, JSON.stringify(raa));
+    assert.notEqual(lager.gemUge(UGE_DATA, UGEPLAN), null);
+    assert.notEqual(lager.gemListe(LISTE_DATA), null);
+    assert.equal(gemt(l, 'kog-uge-v1').v, 1);
+  }
+});
+
+test('et lager, der ikke kan læses eller skrives, giver tomme data og null, aldrig en fejl', () => {
+  const l = medLager({ 'kog-uge-v1': { v: 1, ...UGE_DATA }, 'kog-liste-v1': { v: 1, ...LISTE_DATA } });
+  const p = medPersist();
+  l.fejl = 'laes';
+  assert.deepEqual(lager.hentUge(UGEPLAN), TOM_UGE);
+  assert.deepEqual(lager.hentListe(), TOM_LISTE);
+  l.fejl = 'skriv';
+  assert.equal(lager.gemUge(UGE_DATA, UGEPLAN), null);
+  assert.equal(lager.gemListe(LISTE_DATA), null);
+  assert.equal(p.kald, 0);
+  Object.defineProperty(globalThis, 'localStorage', { value: undefined, configurable: true, writable: true });
+  assert.deepEqual(lager.hentUge(UGEPLAN), TOM_UGE);
+  assert.equal(lager.gemListe(LISTE_DATA), null);
+});
+
+test('de nye nøgler og kog-v1 rører ikke hinanden', () => {
+  const kog = JSON.stringify({ v: 1, sidste: { ret: 'koedsovs', nr: 2, tid: 5 }, timer: null });
+  const l = medLager({ 'kog-v1': kog });
+  medPersist();
+  lager.gemUge(UGE_DATA, UGEPLAN);
+  lager.gemListe(LISTE_DATA);
+  assert.equal(l.data.get('kog-v1'), kog);
+  assert.deepEqual(lager.hent(), JSON.parse(kog));
+  l.skrevet = [];
+  lager.gem({ timer: null });
+  assert.deepEqual(l.skrevet, ['kog-v1']);
+  assert.deepEqual(uden(lager.hentUge(UGEPLAN)), { v: 1, ...UGE_DATA });
+  assert.deepEqual(uden(lager.hentListe()), { v: 1, ...LISTE_DATA });
 });
