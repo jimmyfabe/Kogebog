@@ -1,4 +1,5 @@
-// test-indkoeb.js — ugeplanens rene logik (docs/ugeplan-plan.md, afsnit 5): indkøbslisten (js/indkoeb.js).
+// test-indkoeb.js — ugeplanens rene logik (docs/ugeplan-plan.md, afsnit 5): indkøbslisten (js/indkoeb.js) og koden i
+// linket (js/plankode.js) med en tabel over fjendtlige koder.
 // Kør:  node test/test-indkoeb.js
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -6,6 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { saml, visMaengde, vareTekst, grupper, tekst, MAKS_M } from '../js/indkoeb.js';
+import { kod, afkod, fnv1a, kontrolsum, ukendtTekst, BESKED_NYERE, BESKED_UGYLDIG } from '../js/plankode.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ret = (id) => JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8'));
@@ -136,4 +138,141 @@ test('en vare kan højst have 100.000 i sin enhed, og listen viser kun kendte va
   ]);
   assert.equal(vareTekst('toString', 5), '');
   assert.equal(tekst([]), '');
+});
+
+// ---------- Koden i linket (js/plankode.js) ----------
+
+// Retterne i ugeplanen, som appen finder dem: i index.json og med «tumbi.ugeplan»: true
+const INDEX = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', 'index.json'), 'utf8'));
+const UGEPLAN = INDEX.grupper.flatMap((g) => g.retter).filter((id) => ret(id).tumbi.ugeplan === true);
+const IDAG = new Date(2026, 9, 22); // torsdag 22-10-2026; mandagen er 26-10
+const af = (kode, retter = UGEPLAN) => afkod(kode, { retter, idag: IDAG });
+const medSum = (krop) => krop + '.' + kontrolsum(krop);
+const UGYLDIG = { ok: false, fejl: 'ugyldig', besked: BESKED_UGYLDIG };
+const NYERE = { ok: false, fejl: 'nyere', besked: BESKED_NYERE };
+const PLAN = [{ ret: 'koedsovs', n: 4 }, null, { ret: 'bolognese-one-pot', n: 6 }, null, null, { ret: 'tunfrikadeller', n: 12 }, null];
+
+test('FNV-1a giver de kendte værdier, og kontrolsummen er 4 hex', () => {
+  assert.equal(fnv1a(''), 0x811c9dc5);
+  assert.equal(fnv1a('a'), 0xe40c292c);
+  assert.equal(fnv1a('foobar'), 0xbf9cf968);
+  assert.equal(kontrolsum(''), (0x811c ^ 0x9dc5).toString(16));
+  assert.match(kontrolsum('v1.20261026.koedsovs_4~~~~~~'), /^[0-9a-f]{4}$/);
+});
+
+test('ugeplanen er de fem aftensretter, og pandekager er ikke med', () => {
+  assert.deepEqual(UGEPLAN.slice().sort(), ['bolognese-one-pot', 'chorizo-pasta', 'cremet-koedsovs', 'koedsovs', 'tunfrikadeller']);
+});
+
+test('en plan kodes og afkodes tilbage til det samme', () => {
+  const kode = kod('2026-10-26', PLAN);
+  assert.equal(kode, medSum('v1.20261026.koedsovs_4~~bolognese-one-pot_6~~~tunfrikadeller_12~'));
+  assert.deepEqual(af(kode), { ok: true, uge: '2026-10-26', dage: PLAN, ukendte: 0, kode });
+  // En uge med kun fri aftener er også en plan
+  const tom = kod('2026-10-26', Array(7).fill(null));
+  assert.equal(tom, medSum('v1.20261026.~~~~~~'));
+  assert.deepEqual(af(tom), { ok: true, uge: '2026-10-26', dage: Array(7).fill(null), ukendte: 0, kode: tom });
+  // 8 uger før og efter i dag er grænsen (52 og 53 dage er med; 59 og 60 er ikke)
+  for (const uge of ['2026-08-31', '2026-12-14']) assert.equal(af(kod(uge, PLAN)).ok, true, uge);
+  for (const uge of ['2026-08-24', '2026-12-21']) assert.deepEqual(af(kod(uge, PLAN)), UGYLDIG, uge);
+});
+
+test('kod nægter forkerte planer', () => {
+  for (const uge of ['2026-10-27', '2026-02-30', '26-10-2026', '20261026', 20261026, null]) assert.throws(() => kod(uge, PLAN), RangeError, String(uge));
+  const med = (i, d) => PLAN.map((x, j) => (j === i ? d : x));
+  for (const d of [{ ret: 'koedsovs', n: 0 }, { ret: 'koedsovs', n: 13 }, { ret: 'koedsovs', n: '4' }, { ret: 'Koedsovs', n: 4 },
+    { ret: 'a'.repeat(41), n: 4 }, { ret: 'koed_sovs', n: 4 }, undefined, {}]) {
+    assert.throws(() => kod('2026-10-26', med(1, d)), RangeError, JSON.stringify(d));
+  }
+  assert.throws(() => kod('2026-10-26', PLAN.slice(0, 6)), RangeError);
+  assert.throws(() => kod('2026-10-26', [...PLAN, null]), RangeError);
+});
+
+// Fjendtlige koder (afsnit 5). Kontrolsummen er rigtig, hvor det giver mening, så det er den regel, der står ved siden
+// af, der afviser koden, og ikke kontrolsummen
+const GOD = kod('2026-10-26', PLAN);
+const FORKERT_SUM = GOD.slice(0, -1) + (GOD.endsWith('0') ? '1' : '0');
+const FJENDTLIGE = [
+  ['<script> i et felt', medSum('v1.20261026.<script>_4~~~~~~')],
+  ['<script> efter koden', GOD + '<script>alert(1)</script>'],
+  ['%3C (URL-kodet <)', medSum('v1.20261026.koedsovs%3Cscript%3E_4~~~~~~')],
+  ['punktummerne %-kodet', GOD.replaceAll('.', '%2e')],
+  ['tilde %-kodet', GOD.replaceAll('~', '%7E')],
+  ['8 dage', medSum('v1.20261026.koedsovs_4~~~~~~~')],
+  ['6 dage', medSum('v1.20261026.koedsovs_4~~~~~')],
+  ['_0', medSum('v1.20261026.koedsovs_0~~~~~~')],
+  ['_13', medSum('v1.20261026.koedsovs_13~~~~~~')],
+  ['_04', medSum('v1.20261026.koedsovs_04~~~~~~')],
+  ['ingen portioner', medSum('v1.20261026.koedsovs~~~~~~')],
+  ['tomme portioner', medSum('v1.20261026.koedsovs_~~~~~~')],
+  ['to gange _', medSum('v1.20261026.koedsovs_4_4~~~~~~')],
+  ['__proto__', medSum('v1.20261026.__proto___4~~~~~~')],
+  ['id på 41 tegn', medSum('v1.20261026.' + 'a'.repeat(41) + '_4~~~~~~')],
+  ['bindestreg sidst i id', medSum('v1.20261026.koedsovs-_4~~~~~~')],
+  ['10.000 tegn', 'v1.20261026.' + 'a'.repeat(10000)],
+  ['10.000 tegn i en gyldig form', medSum('v1.20261026.' + Array(7).fill('a'.repeat(1400) + '_4').join('~'))],
+  ['30-02', medSum('v1.20260230.koedsovs_4~~~~~~')],
+  ['ikke en mandag', medSum('v1.20261027.koedsovs_4~~~~~~')],
+  ['år 0099', medSum('v1.00991026.koedsovs_4~~~~~~')],
+  ['mere end 8 uger frem', medSum('v1.20270104.koedsovs_4~~~~~~')],
+  ['7 cifre i datoen', medSum('v1.2026102.koedsovs_4~~~~~~')],
+  ['forkert kontrolsum', FORKERT_SUM],
+  ['kontrolsum med store bogstaver', GOD.slice(0, -4) + GOD.slice(-4).toUpperCase()],
+  ['afskåret link', GOD.slice(0, -10)],
+  ['uden kontrolsum', GOD.slice(0, -5)],
+  ['store bogstaver', medSum('V1.20261026.KOEDSOVS_4~~~~~~')],
+  ['mellemrum', medSum('v1.20261026.koedsovs_4 ~~~~~~')],
+  ['linjeskift sidst', GOD + '\n'],
+  ['v0', medSum('v0.20261026.koedsovs_4~~~~~~')],
+  ['v01', medSum('v01.20261026.koedsovs_4~~~~~~')],
+  ['v2 for lang (længden tjekkes før udgaven)', 'v2.' + 'a'.repeat(500)],
+  ['v2 med % (tegnene tjekkes før udgaven)', 'v2.20261026.%3Cscript%3E'],
+  ['tom', ''],
+  ['ikke en tekst', null],
+  ['et tal', 20261026],
+  ['et objekt', { toString: () => GOD }],
+];
+
+test('fjendtlige koder giver «Linket kan ikke læses», og intet fra adressen kommer med i svaret', () => {
+  // Kontrolsummen er kun forkert i de tilfælde, der handler om den
+  assert.notEqual(FORKERT_SUM, GOD);
+  for (const [navn, kode] of FJENDTLIGE) {
+    const r = af(kode);
+    assert.deepEqual(r, UGYLDIG, navn);
+    for (const ord of ['script', 'alert', '%', 'proto', 'aaaa']) assert.equal(JSON.stringify(r).includes(ord), false, navn + ': ' + ord);
+  }
+});
+
+test('en nyere udgave giver «Opdatér appen», men kun når koden ellers er ren', () => {
+  for (const kode of ['v2.20261026.koedsovs_4~~~~~~.abcd', 'v2.', 'v9.x', 'v10.20261026.noget-nyt', 'v123.a.b.c']) {
+    assert.deepEqual(af(kode), NYERE, kode);
+  }
+  assert.deepEqual(af(GOD.replace(/^v1/, 'v2')), NYERE);
+  assert.deepEqual(af('v2'), UGYLDIG); // uden punktum er det ikke en udgave
+});
+
+test('constructor_4 og andre ukendte retter giver en tom dag og kun et tal', () => {
+  const kode = medSum('v1.20261026.constructor_4~koedsovs_4~tostring_2~pandekager_4~' + 'b'.repeat(40) + '_4~~');
+  const r = af(kode);
+  assert.equal(r.ok, true);
+  assert.equal(r.ukendte, 4);
+  assert.deepEqual(r.dage, [null, { ret: 'koedsovs', n: 4 }, null, null, null, null, null]);
+  // Koden gemmes genskrevet fra det godkendte: de ukendte id'er er væk, og det samme link giver den samme kode
+  assert.equal(r.kode, kod('2026-10-26', r.dage));
+  for (const ord of ['constructor', 'tostring', 'pandekager', 'bbbb']) assert.equal(JSON.stringify(r).includes(ord), false, ord);
+  assert.deepEqual(af(r.kode), { ...r, ukendte: 0 });
+  assert.deepEqual(af(kode), r);
+  assert.equal(ukendtTekst(1), '1 ret kunne ikke findes');
+  assert.equal(ukendtTekst(4), '4 retter kunne ikke findes');
+  // En tom liste over retter: alle dage bliver tomme, men koden er stadig gyldig
+  assert.deepEqual(af(GOD, []).dage, Array(7).fill(null));
+  assert.equal(af(GOD, []).ukendte, 3);
+});
+
+test('afkod kræver en liste over retter og en rigtig dato', () => {
+  assert.throws(() => afkod(GOD, {}), TypeError);
+  assert.throws(() => afkod(GOD), TypeError);
+  assert.throws(() => afkod(GOD, { retter: { koedsovs: true }, idag: IDAG }), TypeError);
+  assert.throws(() => afkod(GOD, { retter: UGEPLAN, idag: new Date('ikke en dato') }), TypeError);
+  assert.throws(() => afkod(GOD, { retter: UGEPLAN, idag: '2026-10-22' }), TypeError);
 });
