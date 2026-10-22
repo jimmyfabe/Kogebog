@@ -179,7 +179,7 @@ export const VARER = {
   'loeg': { navn: 'Løg', afd: 'groent', enhed: 'stk', ikon: 'loeg' },
   'hvidloeg': { navn: 'Hvidløg', afd: 'groent', enhed: 'fed', ikon: 'hvidloeg' },
   'gulerod': { navn: 'Gulerødder', afd: 'groent', enhed: 'stk', ikon: 'gulerod' },
-  'persille': { navn: 'Persille', afd: 'groent', enhed: 'stk', ikon: 'krydderurt', pakke: [1, 'bundt', 'bundter'] },
+  'persille': { navn: 'Persille (bundt)', afd: 'groent', enhed: 'stk', ikon: 'krydderurt' },
   // Dåser og tørvarer
   'hakkede-tomater': { navn: 'Hakkede tomater', afd: 'toer', enhed: 'g', ikon: 'tomat', pakke: [400, 'dåse', 'dåser'] },
   'passata': { navn: 'Tomatpassata', afd: 'toer', enhed: 'g', ikon: 'tomat', pakke: [500, 'flaske', 'flasker'] },

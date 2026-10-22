@@ -42,18 +42,23 @@
     "id": "bolognese-one-pot",
     "version": 1,
     "afproevet": false,
-    "kilde": "En slankeapp (Bolognese pastagratin, 1 portion), ganget med 4. Krydderierne kunne ikke ses i appen, så de og vandet er et skøn. Trinene er egen tekst.",
+    "kilde": "En slankeapp (Bolognese pastagratin, 1 portion), ganget med 4. Krydderierne kunne ikke ses i appen, så de og vandet er et skøn. Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Prisen på flødeost og parmesan er eget skøn.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 89,
+    "pris_dato": "2026-10",
+    "groent_g": 620,
     "ingredienser": [
-      { "ikon": "koed", "maengde": "360 g" },
-      { "ikon": "tomat", "maengde": "620 g" },
-      { "ikon": "vand", "maengde": "6 dl" },
-      { "ikon": "spaghetti", "maengde": "300 g" },
-      { "ikon": "flodeost", "maengde": "220 g" },
-      { "ikon": "ost", "maengde": "60 g" },
-      { "ikon": "krydderurt", "maengde": "2 tsk" },
-      { "ikon": "hvidloeg", "maengde": "1 tsk" },
-      { "ikon": "salt", "maengde": "½ tsk" },
-      { "ikon": "peber", "maengde": "1 knivspids" }
+      { "ikon": "koed", "maengde": "360 g", "vare": "hakket-oksekoed", "antal": 360, "enhed": "g" },
+      { "ikon": "tomat", "maengde": "620 g", "vare": "passata", "antal": 620, "enhed": "g" },
+      { "ikon": "vand", "maengde": "6 dl", "vare": "vand" },
+      { "ikon": "spaghetti", "maengde": "300 g", "vare": "fuldkornspasta", "antal": 300, "enhed": "g" },
+      { "ikon": "flodeost", "maengde": "220 g", "vare": "flodeost", "antal": 220, "enhed": "g" },
+      { "ikon": "ost", "maengde": "60 g", "vare": "parmesan", "antal": 60, "enhed": "g" },
+      { "ikon": "krydderurt", "maengde": "2 tsk", "vare": "oregano" },
+      { "ikon": "hvidloeg", "maengde": "1 tsk", "vare": "hvidloegspulver" },
+      { "ikon": "salt", "maengde": "½ tsk", "vare": "salt" },
+      { "ikon": "peber", "maengde": "1 knivspids", "vare": "peber" }
     ]
   }
 }

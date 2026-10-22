@@ -43,20 +43,25 @@
     "id": "koedsovs",
     "version": 1,
     "afproevet": false,
-    "kilde": "Egen tekst",
+    "kilde": "Egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Prisen på hvidløg og mængden af revet ost på indkøbslisten er eget skøn.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 86,
+    "pris_dato": "2026-10",
+    "groent_g": 1070,
     "ingredienser": [
-      { "ikon": "olie", "maengde": "1 spsk" },
-      { "ikon": "koed", "maengde": "500 g" },
-      { "ikon": "loeg", "maengde": "1" },
-      { "ikon": "hvidloeg", "maengde": "2 fed" },
-      { "ikon": "gulerod", "maengde": "2" },
-      { "ikon": "tomat", "maengde": "2 dåser" },
-      { "ikon": "tomatpure", "maengde": "2 spsk" },
-      { "ikon": "krydderurt", "maengde": "1 tsk" },
-      { "ikon": "salt", "maengde": "1 tsk" },
-      { "ikon": "peber", "maengde": "1 knivspids" },
-      { "ikon": "spaghetti", "maengde": "400 g" },
-      { "ikon": "ost", "maengde": "" }
+      { "ikon": "olie", "maengde": "1 spsk", "vare": "olie" },
+      { "ikon": "koed", "maengde": "500 g", "vare": "hakket-oksekoed", "antal": 500, "enhed": "g" },
+      { "ikon": "loeg", "maengde": "1", "vare": "loeg", "antal": 1, "enhed": "stk" },
+      { "ikon": "hvidloeg", "maengde": "2 fed", "vare": "hvidloeg", "antal": 2, "enhed": "fed" },
+      { "ikon": "gulerod", "maengde": "2", "vare": "gulerod", "antal": 2, "enhed": "stk" },
+      { "ikon": "tomat", "maengde": "2 dåser", "vare": "hakkede-tomater", "antal": 800, "enhed": "g" },
+      { "ikon": "tomatpure", "maengde": "2 spsk", "vare": "tomatpure", "antal": 30, "enhed": "g" },
+      { "ikon": "krydderurt", "maengde": "1 tsk", "vare": "oregano" },
+      { "ikon": "salt", "maengde": "1 tsk", "vare": "salt" },
+      { "ikon": "peber", "maengde": "1 knivspids", "vare": "peber" },
+      { "ikon": "spaghetti", "maengde": "400 g", "vare": "spaghetti", "antal": 400, "enhed": "g" },
+      { "ikon": "ost", "maengde": "", "vare": "revet-ost", "antal": 100, "enhed": "g" }
     ]
   }
 }

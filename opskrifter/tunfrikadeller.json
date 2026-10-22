@@ -42,19 +42,24 @@
     "id": "tunfrikadeller",
     "version": 1,
     "afproevet": false,
-    "kilde": "Arla: «Tunfrikadeller» (arla.dk). Trinene er egen tekst.",
+    "kilde": "Arla: «Tunfrikadeller» (arla.dk). Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Prisen på græsk yoghurt, persille og hvidløg og antallet af portioner er eget skøn.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 46,
+    "pris_dato": "2026-10",
+    "groent_g": 140,
     "ingredienser": [
-      { "ikon": "tun", "maengde": "2 dåser" },
-      { "ikon": "aeg", "maengde": "2" },
-      { "ikon": "loeg", "maengde": "1" },
-      { "ikon": "hvidloeg", "maengde": "2 fed" },
-      { "ikon": "yoghurt", "maengde": "3 spsk" },
-      { "ikon": "havregryn", "maengde": "3 spsk" },
-      { "ikon": "krydderurt", "maengde": "2 dl" },
-      { "ikon": "salt", "maengde": "¾ tsk" },
-      { "ikon": "peber", "maengde": "" },
-      { "ikon": "olie", "maengde": "1 spsk" },
-      { "ikon": "smoer", "maengde": "10 g" }
+      { "ikon": "tun", "maengde": "2 dåser", "vare": "tun", "antal": 370, "enhed": "g" },
+      { "ikon": "aeg", "maengde": "2", "vare": "aeg", "antal": 2, "enhed": "stk" },
+      { "ikon": "loeg", "maengde": "1", "vare": "loeg", "antal": 1, "enhed": "stk" },
+      { "ikon": "hvidloeg", "maengde": "2 fed", "vare": "hvidloeg", "antal": 2, "enhed": "fed" },
+      { "ikon": "yoghurt", "maengde": "3 spsk", "vare": "graesk-yoghurt", "antal": 45, "enhed": "g" },
+      { "ikon": "havregryn", "maengde": "3 spsk", "vare": "havregryn", "antal": 15, "enhed": "g" },
+      { "ikon": "krydderurt", "maengde": "2 dl", "vare": "persille", "antal": 1, "enhed": "stk" },
+      { "ikon": "salt", "maengde": "¾ tsk", "vare": "salt" },
+      { "ikon": "peber", "maengde": "", "vare": "peber" },
+      { "ikon": "olie", "maengde": "1 spsk", "vare": "olie" },
+      { "ikon": "smoer", "maengde": "10 g", "vare": "smoer", "antal": 10, "enhed": "g" }
     ]
   }
 }

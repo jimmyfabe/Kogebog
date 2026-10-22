@@ -117,6 +117,7 @@ test('piske, pensle, mose, drysse, pynte og sprøjte: barnet selv, eller en voks
 test('tun på dåse og skinke er ikke rå: ingen håndvask bagefter', () => {
   for (const [ikon, tekst] of [['tun', '1 dåse tun'], ['skinke', '100 g skinke']]) {
     forventGyldig('opskrifter/koedsovs.json', (d) => {
+      udenUgeplan(d);
       d.recipeIngredient.push(tekst);
       d.tumbi.ingredienser.push({ ikon, maengde: tekst.split(' ').slice(0, 2).join(' ') });
       // Lige efter trinnet med tun eller skinke rører barnet tomatpuré og salt, uden at vaske hænder først
@@ -474,6 +475,7 @@ test('æg og kød i ingredienserne skal have ikonet koed eller aeg', () => {
   }, 'ingrediens 3: «æggeblommer» er råt kød eller æg, så ikonet skal være "koed" eller "aeg", fandt "maelk"');
   // En ny linje sidst i kødsovsen (ingrediens 13) med et ikon, der ikke er råt. Mængden er tallet og enheden
   const ny = (linje, ikon) => (d) => {
+    udenUgeplan(d);
     d.recipeIngredient.push(linje);
     d.tumbi.ingredienser.push({ ikon, maengde: linje.split(' ').slice(0, linje.split(' ').length > 2 ? 2 : 1).join(' ') });
   };
@@ -580,6 +582,8 @@ function iUgeplan(d) {
     Object.assign(x, antal === undefined ? { vare } : { vare, antal, enhed });
   });
 }
+// Den rigtige kødsovs er i ugeplanen. Tests af andre regler, der tilføjer en linje uden «vare» eller et tredje knivtrin, tager den ud først
+function udenUgeplan(d) { delete d.tumbi.ugeplan; }
 const KS = 'opskrifter/koedsovs.json';
 const ugeplanFejl = (ret, forventet) => forventFejl(KS, (d) => { iUgeplan(d); ret(d); }, forventet);
 const ugeplanGyldig = (ret) => forventGyldig(KS, (d) => { iUgeplan(d); ret(d); });
@@ -614,8 +618,8 @@ test('en ret i ugeplanen tager højst en time og har højst to trin med kniv ell
   // Kødsovsen har 2 (hak og riv). Et tredje er for meget i ugeplanen, men i orden uden den
   const tredje = (d) => d.recipeInstructions.splice(3, 0, { '@type': 'HowToStep', text: 'Skær løget i ringe.', tumbi: { verbum: 'skaere', voksen: true, voksen_hjaelp: 'kniv', ikoner: ['loeg'] } });
   ugeplanFejl(tredje, 'en ret i ugeplanen har højst 2 trin med kniv eller rivejern (skånsomt for hænderne), fandt 3');
-  forventGyldig(KS, tredje);
-  forventGyldig(KS, (d) => { d.totalTime = 'PT1H5M'; });
+  forventGyldig(KS, (d) => { udenUgeplan(d); tredje(d); });
+  forventGyldig(KS, (d) => { udenUgeplan(d); d.totalTime = 'PT1H5M'; });
 });
 
 test('hver ingredienslinje i ugeplanen har en kendt vare og en mængde, der kan lægges sammen', () => {
