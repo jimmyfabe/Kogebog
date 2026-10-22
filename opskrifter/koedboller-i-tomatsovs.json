@@ -1,0 +1,57 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Kødboller i tomatsovs med spaghetti",
+  "description": "Færdige kødboller simret i tomatsovs med broccoli. Spaghetti ved siden af.",
+  "image": "grafik/ret-koedboller-i-tomatsovs.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT20M",
+  "totalTime": "PT25M",
+  "recipeIngredient": [
+    "2 dåser hakkede tomater",
+    "500 g frosne kødboller",
+    "1 tsk tørret oregano",
+    "400 g frossen broccoli",
+    "320 g spaghetti",
+    "3 l vand og 1 tsk salt til spaghettien",
+    "½ tsk salt",
+    "1 knivspids peber"
+  ],
+  "tool": ["dåseåbner", "gryde med låg", "stor gryde", "grydeske", "dørslag"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Kog vand til spaghettien.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "3 l vand og 1 tsk salt i en stor gryde på en bagerste plade, med håndtagene ind. Med låg på koger det hurtigere." } },
+    { "@type": "HowToStep", "text": "Hæld tomaterne i en gryde.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["tomat"], "note": "Gryden er kold. Den voksne åbner dåserne: kanten er skarp." } },
+    { "@type": "HowToStep", "text": "Tæl kødbollerne ned i gryden.", "tumbi": { "verbum": "haelde", "ikoner": ["koed"], "note": "Direkte fra frost. Gryden er kold, så barnet kan selv. Hvor mange blev det?" } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter kødbollerne." } },
+    { "@type": "HowToStep", "text": "Drys oregano i gryden.", "tumbi": { "verbum": "drysse", "ikoner": ["krydderurt"] } },
+    { "@type": "HowToStep", "text": "Lad kødbollerne simre under låg i 10 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "note": "Middel varme. Rør forsigtigt af og til." } },
+    { "@type": "HowToStep", "text": "Hæld broccolien i sovsen.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["broccoli"], "note": "Direkte fra frost. Gryden er varm: den voksne holder øje." } },
+    { "@type": "HowToStep", "text": "Kom spaghettien i vandet.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "ikoner": ["spaghetti"], "note": "Kog som anvist på pakken, ca. 8-10 min. Rør lidt i starten. Sovsen simrer videre imens." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra spaghettien.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spaghetti"], "note": "Den voksne hælder gennem dørslaget i vasken. Pas på dampen." } },
+    { "@type": "HowToStep", "text": "Smag sovsen til med salt og peber.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt", "peber"], "note": "Pust på skeen først. Kødbollerne skal være varme hele vejen igennem." } }
+  ],
+  "tumbi": {
+    "id": "koedboller-i-tomatsovs",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra en research af billig hverdagsmad til en børnefamilie (22-10-2026). Idé fra den danske hverdagsklassiker. Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Tid og grønt er også et skøn (ikke målt), og grønt er uden bælgfrugter og kartofler.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 59,
+    "pris_dato": "2026-10",
+    "groent_g": 1200,
+    "ingredienser": [
+      { "ikon": "tomat", "maengde": "2 dåser", "vare": "hakkede-tomater", "antal": 800, "enhed": "g" },
+      { "ikon": "koed", "maengde": "500 g", "vare": "koedboller", "antal": 500, "enhed": "g" },
+      { "ikon": "krydderurt", "maengde": "1 tsk", "vare": "oregano" },
+      { "ikon": "broccoli", "maengde": "400 g", "vare": "broccoliblanding", "antal": 400, "enhed": "g" },
+      { "ikon": "spaghetti", "maengde": "320 g", "vare": "spaghetti", "antal": 320, "enhed": "g" },
+      { "ikon": "vand", "maengde": "3 l", "vare": "vand" },
+      { "ikon": "salt", "maengde": "½ tsk", "vare": "salt" },
+      { "ikon": "peber", "maengde": "1 knivspids", "vare": "peber" }
+    ]
+  }
+}

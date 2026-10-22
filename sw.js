@@ -7,7 +7,7 @@
    test/test-sw.js tjekker, at FILER er komplet, og fejler, når en fil er ændret. Fejlbeskeden viser den nye værdi;
    testen ændrer ikke sw.js, så den sættes her i hånden. */
 const PRAEFIKS = 'kog-';
-const INDHOLD = 'f736790f897b51a8'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = '9ded9651eafa425a'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '62514f04783c4e58'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
@@ -67,6 +67,11 @@ const FILER = [
   'opskrifter/fiskefars-i-fad.json',
   'opskrifter/bradepandekylling.json',
   'opskrifter/kyllingekarry.json',
+  'opskrifter/wok-med-nudler.json',
+  'opskrifter/ovnaeggekage.json',
+  'opskrifter/tomatsuppe-med-boenner.json',
+  'opskrifter/minestrone.json',
+  'opskrifter/koedboller-i-tomatsovs.json',
   'lyd/liste.json',
   'ikoner/ikon.svg',
   'ikoner/ikon-180.png',
@@ -86,6 +91,7 @@ const FILER = [
   'grafik/ing-aerter.svg', 'grafik/ing-broccoli.svg', 'grafik/ing-linser.svg', 'grafik/ing-boenner.svg', 'grafik/ing-ris.svg',
   'grafik/ing-tortilla.svg',
   'grafik/ing-agurk.svg', 'grafik/ing-blomkaal.svg',
+  'grafik/ing-soja.svg', 'grafik/ing-honning.svg',
   'grafik/ret-boller.webp', 'grafik/ret-chorizo-pasta.webp', 'grafik/ret-frikadeller.webp', 'grafik/ret-koedsovs.webp', 'grafik/ret-pandekager.webp',
   'grafik/ret-kartoffelmos.webp', 'grafik/ret-hvidloegsflutes.webp', 'grafik/ret-brownie.webp', 'grafik/ret-blondie.webp',
   'grafik/ret-hytteostboller.webp', 'grafik/ret-havregrynskugler.webp', 'grafik/ret-tunfrikadeller.webp',
@@ -97,6 +103,8 @@ const FILER = [
   'grafik/ret-chili-con-carne.webp', 'grafik/ret-taco-bradepande.webp',
   'grafik/ret-pladepizza.webp', 'grafik/ret-fiskepinde-med-baade.webp', 'grafik/ret-fiskefars-i-fad.webp',
   'grafik/ret-bradepandekylling.webp', 'grafik/ret-kyllingekarry.webp',
+  'grafik/ret-wok-med-nudler.webp', 'grafik/ret-ovnaeggekage.webp', 'grafik/ret-tomatsuppe-med-boenner.webp',
+  'grafik/ret-minestrone.webp', 'grafik/ret-koedboller-i-tomatsovs.webp',
   'grafik/gruppe-aftensmad.svg', 'grafik/gruppe-bagning.svg', 'grafik/gruppe-soede-sager.svg', 'grafik/gruppe-halloween.svg',
   'grafik/verbum-aelte.svg', 'grafik/verbum-haelde.svg', 'grafik/verbum-koge.svg', 'grafik/verbum-maale.svg', 'grafik/verbum-roere.svg',
   'grafik/verbum-rulle.svg', 'grafik/verbum-skaere.svg', 'grafik/verbum-smage.svg', 'grafik/verbum-stege.svg',

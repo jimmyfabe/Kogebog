@@ -1,0 +1,61 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Wok med nudler og hakket gris",
+  "description": "Nudler med hakket grisekød, wokgrøntsager og en sød soja-sauce. Majs på toppen.",
+  "image": "grafik/ret-wok-med-nudler.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT15M",
+  "totalTime": "PT20M",
+  "recipeIngredient": [
+    "250 g nudler",
+    "2 l vand og 1 tsk salt til nudlerne",
+    "3 spsk soja",
+    "1 spsk honning",
+    "½ dl vand",
+    "1 spsk olie",
+    "400 g hakket grisekød",
+    "800 g frossen wokblanding",
+    "½ dåse majs"
+  ],
+  "tool": ["stor gryde eller wok", "gryde med låg", "glas med låg", "dåseåbner", "si", "grydeske", "dørslag"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Kog vand til nudlerne.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "2 l vand og 1 tsk salt i en stor gryde på en bagerste plade, med håndtagene ind. Med låg på koger det hurtigere." } },
+    { "@type": "HowToStep", "text": "Ryst saucen sammen i et glas med låg.", "tumbi": { "verbum": "roere", "ikoner": ["soja", "honning", "vand"], "note": "Soja, honning og vand. Skru låget godt på." } },
+    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåserne: kanten er skarp. Resten af majsen kan gemmes i køleskabet." } },
+    { "@type": "HowToStep", "text": "Læg kødet i gryden.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["koed"], "note": "Olie i en stor gryde eller wok ved høj varme. Timeren startes efter håndvasken." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter råt kød." } },
+    { "@type": "HowToStep", "text": "Brun kødet, og del det i små stykker.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 240, "note": "Den voksne rører og deler kødet med grydeskeen." } },
+    { "@type": "HowToStep", "text": "Hæld wokgrøntsagerne i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["broccoli"], "note": "Direkte fra frost. Gryden er varm: barnet hælder fra en skål, og den voksne holder øje." } },
+    { "@type": "HowToStep", "text": "Steg grøntsagerne med i 5 minutter.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Den voksne rører." } },
+    { "@type": "HowToStep", "text": "Kom nudlerne i vandet.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "ikoner": ["spaghetti"], "note": "Kog som anvist på posen, ca. 3 min." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra nudlerne.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spaghetti"], "note": "Den voksne hælder gennem dørslaget i vasken. Pas på dampen." } },
+    { "@type": "HowToStep", "text": "Vend nudler og sauce i gryden.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spaghetti", "soja"], "note": "Den voksne vender det hele godt rundt." } },
+    { "@type": "HowToStep", "text": "Drys majs over maden.", "tumbi": { "verbum": "drysse", "ikoner": ["majs"], "note": "På tallerkenerne." } }
+  ],
+  "tumbi": {
+    "id": "wok-med-nudler",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra en research af billig hverdagsmad til en børnefamilie (22-10-2026). Idé fra Coop Opskrifter, «wokret med hakket kød og broccoli». Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Tid og grønt er også et skøn (ikke målt), og grønt er uden bælgfrugter og kartofler.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 65,
+    "pris_dato": "2026-10",
+    "groent_g": 940,
+    "ingredienser": [
+      { "ikon": "spaghetti", "maengde": "250 g", "vare": "nudler", "antal": 250, "enhed": "g" },
+      { "ikon": "vand", "maengde": "2 l", "vare": "vand" },
+      { "ikon": "soja", "maengde": "3 spsk", "vare": "soja" },
+      { "ikon": "honning", "maengde": "1 spsk", "vare": "honning" },
+      { "ikon": "vand", "maengde": "½ dl", "vare": "vand" },
+      { "ikon": "olie", "maengde": "1 spsk", "vare": "olie" },
+      { "ikon": "koed", "maengde": "400 g", "vare": "hakket-svinekoed", "antal": 400, "enhed": "g" },
+      { "ikon": "broccoli", "maengde": "800 g", "vare": "wokblanding", "antal": 800, "enhed": "g" },
+      { "ikon": "majs", "maengde": "½ dåse", "vare": "majs", "antal": 0.5, "enhed": "stk" }
+    ]
+  }
+}
