@@ -10,8 +10,8 @@ Kør i Git Bash i `D:/Claude/Kogebog`.
 
 | Hvad | Kommando |
 |---|---|
-| Alle node-tests (7 filer, ingen browser) | `node test/koer-alle.js` eller `npm.cmd test` |
-| Én testfil | `node test/test-opskrifter.js` (også grafik og index.json), `test-validator.js`, `test-tid.js`, `test-sw.js`, `test-css.js` (regler i `app.css`, som browseren ikke kan se, fx safe-area), `test-lyd.js` (lydfilerne passer til det, appen siger), `test-tale.js` (oplæsningen med en falsk iPad: lyd efter et voksen-hold, reserven, uden net) |
+| Alle node-tests (8 filer, ingen browser) | `node test/koer-alle.js` eller `npm.cmd test` |
+| Én testfil | `node test/test-opskrifter.js` (også grafik og index.json), `test-validator.js`, `test-tid.js`, `test-sw.js`, `test-css.js` (regler i `app.css`, som browseren ikke kan se, fx safe-area), `test-lyd.js` (lydfilerne passer til det, appen siger), `test-tale.js` (oplæsningen med en falsk iPad: lyd efter et voksen-hold, reserven, uden net), `test-indkoeb.js` (ugeplanen: indkøbslisten, koden i linket og lageret med et falsk `localStorage`) |
 | Lokal server | `py -m http.server 8091 --bind 127.0.0.1 --directory D:/Claude/Kogebog`, og åbn http://127.0.0.1:8091/. Aldrig `file://` |
 | E2E i WebKit (TUNG) | `NODE_PATH=C:/Users/Jimmy/AppData/Roaming/npm/node_modules/@playwright/cli/node_modules bash ~/.claude/tung-koersel.sh "kogebog: e2e" node test/test-e2e.js http://127.0.0.1:8091` |
 | Kun dele af e2e | sæt foran kommandoen: `E2E_DELE=tastatur,timer` og/eller `E2E_SKAERME=ipad,iphone,desktop`. Dele: `hele,print,tastatur,timer,fejl,beroering,former` (`former` = 360 px, 390×844, 744×1133, 768×1024 og iPhones på langs: 844×390, 667×375, 736×414, 812×375, 932×430, og tre smalle desktopvinduer: 901×800, 960×800 og 1024×800). `E2E_FORMER=se-land,land` begrænser `former` til nogle af dem (navnene står i `FORMER` i `test-e2e.js`) |
@@ -38,7 +38,9 @@ Kør i Git Bash i `D:/Claude/Kogebog`.
 | `vaerktoej/lav-taleliste.js`, `vaerktoej/indsaet-lyd.js` | Listen over alt, appen siger (til Røst), og indsætning af de færdige mp3-filer i `lyd/`. Se «Stemmen» |
 | `js/hold.js` | Knap, der skal holdes inde i 2 s (voksen-trin og print) |
 | `js/voksen.js` | Voksen-trinets gule advarselstrekant (kniv eller flamme) og «Næste» bag et hold. Siger intet: at retten laves med en voksen, siges én gang, når retten åbnes (`R.voksenStart`), og et kort tryk vipper trekanten |
-| `js/lager.js` | Det eneste, appen gemmer i `localStorage`: nøglen `kog-v1` |
+| `js/lager.js` | Den eneste fil, der rører `localStorage`: `kog-v1` (`hent`/`gem`), ugeplanen `kog-uge-v1` (`hentUge`/`gemUge`) og indkøbslisten `kog-liste-v1` (`hentListe`/`gemListe`). Se regel 5 |
+| `js/indkoeb.js` | Indkøbslisten til ugeplanen (`docs/ugeplan-plan.md`, afsnit 4): lægger ugens varer sammen i hver vares enhed (`VARER`, `AFDELINGER`, `ENHEDER` i `katalog.js`) og runder først op, når mængden vises. Ingen DOM og intet lager |
+| `js/plankode.js` | Ugeplanen som kode i linket `#/hent/<kode>` (`kod`/`afkod`, afsnit 3). Koden kommer udefra: `afkod` afviser alt, der ikke passer præcis, og kun id'er fra «retter» kommer videre. Ingen DOM og intet lager |
 | `js/dom.js` | Bygger elementer. Tekst sættes som tekst |
 | `sw.js`, `manifest.webmanifest` | Offline: service worker med `kog-`-caches |
 | `opskrifter/` | `<id>.json` pr. ret og `index.json` (forsidens afsnit og rækkefølgen) |
@@ -97,7 +99,7 @@ Al oplæsning er Røst v3 500m fra Alexandra Instituttet (referencestemmen «Nic
 2. **Kun `textContent`.** Ingen `innerHTML`. CSP i `index.html` og `print.html` tillader kun egne filer (`default-src 'self'`).
 3. **Ændres en fil i `FILER` i `sw.js`** (kode, css, json eller grafik), skal `INDHOLD` følge med. `test/test-sw.js` fejler og viser den nye værdi, men skriver den ikke selv. Sæt den i `sw.js`. Ellers henter iPads ikke den nye udgave. `INDHOLD` er sha256 over stier og indhold, med LF i tekstfiler, så CRLF fra Git på Windows ikke ændrer tallet. Lydfilerne i `lyd/` har deres eget tal, `LYD` (de står ikke i `FILER`, men gemmes, når de spilles), så nye mp3-filer kræver en ny `LYD`; testen viser også den.
 4. **Cache-præfiks `kog-`.** `sw.js` rører kun `kog-`-caches. Lystårnet (`mat-`) og LEGO (`lego-`) ligger på samme origin.
-5. **`kog-v1` i `localStorage`** er `{ v, sidste, timer }`. Ændres formatet, skal der skrives en migrering, så gemte data ikke forsvinder (Jimmys regel). Koden nulstiller i dag ved en anden version (`rens()` i `lager.js`). Det er ikke en migrering, så afklar det før første formatændring.
+5. **`kog-v1` i `localStorage`** er `{ v, sidste, timer }`. Ændres formatet, skal der skrives en migrering, så gemte data ikke forsvinder (Jimmys regel). Koden nulstiller i dag ved en anden version (`rens()` i `lager.js`). Det er ikke en migrering, så afklar det før første formatændring. **`kog-uge-v1` og `kog-liste-v1`** har en versionsvagt i stedet: et højere `v` (en nyere udgave) læses som tomt og skrives aldrig over (`laast`), og et lavere `v` løftes ét trin ad gangen af kæden i `MIGRER_UGE`/`MIGRER_LISTE`. Ny gemt data får en nøgle der, aldrig en egen nøgle i en anden fil, og `rens()` må ikke kopieres til de nye nøgler. `gemUge` renser den gemte plan kun for form og grænser; «retter» filtrerer kun det, der vises, og nye dage (code review M1, 22-10).
 6. **Ingen persondata om børn** i filer, prompter eller commit-beskeder. Skriv «børn ca. 5-9 år». Ingen fotos af børn.
 7. **Ingen push og ingen udgivelse** uden Jimmys ja. Udgivelse på GitHub Pages er offentlig, så der må ikke ligge nøgler i koden.
 8. **Ingen Google-stemme.** Chirp 3 HD er udelukket, medmindre Google bekræfter skriftligt (`docs/gennemgang.md`).

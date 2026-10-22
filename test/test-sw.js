@@ -90,6 +90,20 @@ test('FILER er komplet, uden dubletter, og hver fil findes', () => {
   assert.deepEqual(mangler, [], 'disse filer mangler i sw.js FILER (så virker de ikke offline)');
 });
 
+// Code review L3 (22-10): CLAUDE.md er det, en ny session læser først. Den skal kende hvert modul, hver nøgle i
+// localStorage og antallet af node-testfiler, ellers laver den sin egen nøgle eller kopierer rens() (afsnit 3)
+test('CLAUDE.md nævner hver fil i js/, hver nøgle i lager.js og antallet af node-testfiler', () => {
+  const md = fs.readFileSync(path.join(ROD, 'CLAUDE.md'), 'utf8');
+  const ikkeNaevnt = fs.readdirSync(path.join(ROD, 'js')).filter((n) => !md.includes('js/' + n));
+  assert.deepEqual(ikkeNaevnt, [], 'skriv disse filer i CLAUDE.md («Filer»)');
+  const noegler = [...fs.readFileSync(path.join(ROD, 'js', 'lager.js'), 'utf8').matchAll(/= '(kog-[a-z0-9-]+)';/g)].map((m) => m[1]);
+  assert.ok(noegler.length >= 3, 'fandt ikke nøglerne i lager.js');
+  assert.deepEqual(noegler.filter((k) => !md.includes('`' + k + '`')), [], 'skriv disse nøgler i CLAUDE.md (lager.js og regel 5)');
+  const tests = /const TESTS = \[([^\]]*)\]/.exec(fs.readFileSync(path.join(ROD, 'test', 'koer-alle.js'), 'utf8'))[1].match(/'test-[a-z-]+\.js'/g);
+  assert.match(md, new RegExp('Alle node-tests \\(' + tests.length + ' filer'), 'antallet af testfiler i CLAUDE.md');
+  assert.deepEqual(tests.map((t) => t.slice(1, -1)).filter((t) => !md.includes(t)), [], 'skriv disse testfiler i CLAUDE.md');
+});
+
 // sha256 (16 tegn) over stierne og indholdet i FILER-rækkefølge. Tekstfiler regnes med LF, for git på Windows
 // kan give CRLF i arbejdsmappen, og samme indhold skal give samme tal på alle maskiner.
 const TEKSTFIL = /\.(html|js|css|json|svg|webmanifest)$/;
