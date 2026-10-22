@@ -140,3 +140,70 @@ export const GRAFIK_FAERDIG = GRAFIK_MAPPE + 'faerdig' + GRAFIK_ENDELSE;
 
 // Højst så mange ord i en trin-tekst («højst ca. 8 ord»; 9 giver plads til «ca.»).
 export const MAKS_ORD = 9;
+
+// Ugeplanen og indkøbslisten (docs/ugeplan-plan.md, afsnit 4). En ret i ugeplanen («tumbi.ugeplan»: true) har på hver
+// ingredienslinje en «vare» herfra, og «antal» + «enhed» i en enhed med samme dimension som varens. js/indkoeb.js lægger
+// mængderne sammen i varens enhed og runder op til sidst.
+
+// Butikkens afdelinger i den rækkefølge, man går rundt: frosten sidst, så den er kold, når man kommer hjem. «basis» er
+// ikke en afdeling, men blokken «Tjek, at I har» (salt, peber, olie og krydderier, som ikke lægges sammen)
+export const AFDELINGER = {
+  'groent': 'Frugt og grønt',
+  'broed': 'Brød',
+  'toer': 'Dåser og tørvarer',
+  'koel': 'Køl',
+  'frost': 'Frost',
+  'basis': 'Tjek, at I har',
+};
+
+// Enhederne i en opskrifts «enhed»: dimensionen og hvor mange af grundenheden (faktor 1), én er. Kun samme dimension
+// kan lægges sammen: «spsk» er rumfang (15 ml), aldrig gram
+export const ENHEDER = {
+  'g': { dim: 'vaegt', faktor: 1 },
+  'kg': { dim: 'vaegt', faktor: 1000 },
+  'ml': { dim: 'rumfang', faktor: 1 },
+  'dl': { dim: 'rumfang', faktor: 100 },
+  'l': { dim: 'rumfang', faktor: 1000 },
+  'spsk': { dim: 'rumfang', faktor: 15 },
+  'tsk': { dim: 'rumfang', faktor: 5 },
+  'stk': { dim: 'stk', faktor: 1 },
+  'fed': { dim: 'fed', faktor: 1 },
+};
+
+// Indkøbsvarerne. «enhed» er en grundenhed (faktor 1) i den dimension, butikken sælger i: tomatpuré sælges i gram, så en
+// opskrift med «2 spsk» skriver 30 g. «ikon» er et af INGREDIENSER. «pakke»: [indhold i varens enhed, ental, flertal]
+// giver «2 dåser (800 g)». «basis»: står kun under «Tjek, at I har» uden mængde (og må undlade «antal»). «skjul»: står
+// ikke på listen (vand fra hanen). Pakkestørrelserne er almindelige størrelser i danske supermarkeder, ikke én butiks
+export const VARER = {
+  // Frugt og grønt
+  'loeg': { navn: 'Løg', afd: 'groent', enhed: 'stk', ikon: 'loeg' },
+  'hvidloeg': { navn: 'Hvidløg', afd: 'groent', enhed: 'fed', ikon: 'hvidloeg' },
+  'gulerod': { navn: 'Gulerødder', afd: 'groent', enhed: 'stk', ikon: 'gulerod' },
+  'persille': { navn: 'Persille', afd: 'groent', enhed: 'stk', ikon: 'krydderurt', pakke: [1, 'bundt', 'bundter'] },
+  // Dåser og tørvarer
+  'hakkede-tomater': { navn: 'Hakkede tomater', afd: 'toer', enhed: 'g', ikon: 'tomat', pakke: [400, 'dåse', 'dåser'] },
+  'passata': { navn: 'Tomatpassata', afd: 'toer', enhed: 'g', ikon: 'tomat', pakke: [500, 'flaske', 'flasker'] },
+  'tomatpure': { navn: 'Tomatpuré', afd: 'toer', enhed: 'g', ikon: 'tomatpure', pakke: [140, 'tube', 'tuber'] },
+  'spaghetti': { navn: 'Spaghetti', afd: 'toer', enhed: 'g', ikon: 'spaghetti', pakke: [500, 'pakke', 'pakker'] },
+  'fuldkornspasta': { navn: 'Fuldkornspasta', afd: 'toer', enhed: 'g', ikon: 'spaghetti', pakke: [500, 'pakke', 'pakker'] },
+  'bouillonterninger': { navn: 'Grøntsagsbouillon (terninger)', afd: 'toer', enhed: 'stk', ikon: 'bouillon', pakke: [8, 'pakke', 'pakker'] },
+  'tun': { navn: 'Tun i vand', afd: 'toer', enhed: 'g', ikon: 'tun', pakke: [185, 'dåse', 'dåser'] },
+  'havregryn': { navn: 'Havregryn', afd: 'toer', enhed: 'g', ikon: 'havregryn', pakke: [1000, 'pose', 'poser'] },
+  // Køl
+  'hakket-oksekoed': { navn: 'Hakket oksekød', afd: 'koel', enhed: 'g', ikon: 'koed', pakke: [500, 'bakke', 'bakker'] },
+  'chorizo': { navn: 'Chorizo', afd: 'koel', enhed: 'g', ikon: 'chorizo', pakke: [250, 'pakke', 'pakker'] },
+  'flodeost': { navn: 'Flødeost', afd: 'koel', enhed: 'g', ikon: 'flodeost', pakke: [200, 'bæger', 'bægre'] },
+  'madlavningsflode': { navn: 'Madlavningsfløde', afd: 'koel', enhed: 'ml', ikon: 'flode', pakke: [250, 'bæger', 'bægre'] },
+  'parmesan': { navn: 'Revet parmesan', afd: 'koel', enhed: 'g', ikon: 'ost', pakke: [100, 'pose', 'poser'] },
+  'revet-ost': { navn: 'Revet ost', afd: 'koel', enhed: 'g', ikon: 'ost', pakke: [175, 'pose', 'poser'] },
+  'graesk-yoghurt': { navn: 'Græsk yoghurt', afd: 'koel', enhed: 'g', ikon: 'yoghurt', pakke: [500, 'bæger', 'bægre'] },
+  'aeg': { navn: 'Æg', afd: 'koel', enhed: 'stk', ikon: 'aeg', pakke: [10, 'bakke', 'bakker'] },
+  'smoer': { navn: 'Smør', afd: 'koel', enhed: 'g', ikon: 'smoer', pakke: [250, 'pakke', 'pakker'] },
+  // Tjek, at I har
+  'salt': { navn: 'Salt', afd: 'basis', enhed: 'g', ikon: 'salt', basis: true },
+  'peber': { navn: 'Peber', afd: 'basis', enhed: 'g', ikon: 'peber', basis: true },
+  'olie': { navn: 'Olie', afd: 'basis', enhed: 'ml', ikon: 'olie', basis: true },
+  'oregano': { navn: 'Tørret oregano', afd: 'basis', enhed: 'ml', ikon: 'krydderurt', basis: true },
+  'hvidloegspulver': { navn: 'Hvidløgspulver', afd: 'basis', enhed: 'ml', ikon: 'hvidloeg', basis: true },
+  'vand': { navn: 'Vand', afd: 'basis', enhed: 'ml', ikon: 'vand', basis: true, skjul: true },
+};

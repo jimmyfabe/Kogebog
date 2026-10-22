@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
   VERBER, VOKSEN_KRAV, KUN_VARME_HJAELP, VOKSEN_HJAELP, INGREDIENSER, RAA_IKONER, DYR, GRUPPER, MAKS_ORD,
-  grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, grafikGruppe, GRAFIK_FAERDIG,
+  VARER, AFDELINGER, ENHEDER, grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, grafikGruppe, GRAFIK_FAERDIG,
 } from '../js/katalog.js';
 import { isoTilMinutter, antalOrd } from '../js/tekst.js';
 
@@ -21,7 +21,16 @@ const PAAKRAEVET = [
   'recipeIngredient', 'tool', 'recipeInstructions', 'tumbi',
 ];
 const TRIN_NOEGLER = new Set(['verbum', 'voksen', 'voksen_hjaelp', 'timer_sek', 'note', 'ikoner']);
-const RET_TUMBI = new Set(['id', 'version', 'afproevet', 'kilde', 'ingredienser']);
+const RET_TUMBI = new Set(['id', 'version', 'afproevet', 'kilde', 'ingredienser', 'ugeplan', 'portioner', 'pris_kr', 'pris_dato', 'groent_g']);
+const INGR_NOEGLER = new Set(['ikon', 'maengde', 'vare', 'antal', 'enhed']);
+// Ugeplanen (docs/ugeplan-plan.md, afsnit 4): felterne, en ret med «tumbi.ugeplan»: true skal have, og dens grænser.
+// En time fra hjemkomst til aftensmad, og højst 2 trin med kniv eller rivejern (skånsomt for hænderne)
+const UGEPLAN_FELTER = ['portioner', 'pris_kr', 'pris_dato', 'groent_g'];
+const UGEPLAN_MAKS_MIN = 60;
+const UGEPLAN_MAKS_KNIV = 2;
+const KNIV_VERBER = Object.keys(VOKSEN_KRAV).filter((v) => VOKSEN_KRAV[v] === 'kniv'); // skaere og rive
+const PRIS_DATO_RE = /^20\d\d-(?:0[1-9]|1[0-2])$/; // ÅÅÅÅ-MM
+const VARE_NOEGLER = new Set(['navn', 'afd', 'enhed', 'ikon', 'pakke', 'basis', 'skjul']);
 const ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const ISO_RE = /^P(?:\d+D)?(?:T(?:\d+H)?(?:\d+M)?(?:\d+S)?)?$/;
 const MAKS_TIMER_SEK = 4 * 3600;
@@ -89,6 +98,36 @@ const LYD_FAELLES = new Set(['faerdig', 'print-hold', 'voksen-start-begge', 'vok
 
 const erTekst = (v) => typeof v === 'string' && v.trim().length > 0;
 const liste = (a) => a.join(', ');
+const erHeltal = (v, fra, til) => Number.isInteger(v) && v >= fra && v <= til;
+
+// Indkøbsvarerne i js/katalog.js: afdeling, grundenhed, ikon og pakke skal passe sammen. Tager katalogets tabeller som
+// argument, så test-validator.js kan prøve en ødelagt kopi. Giver en liste med fejl (tom, når alt er i orden)
+export function validerVarer({ VARER: varer, AFDELINGER: afdelinger, ENHEDER: enheder, INGREDIENSER: ikoner }) {
+  const fejl = [];
+  for (const [id, v] of Object.entries(varer)) {
+    const f = (besked) => fejl.push('js/katalog.js: VARER «' + id + '»: ' + besked);
+    if (!ID_RE.test(id)) f('id\'et skal være små bogstaver, tal og bindestreg');
+    if (!v || typeof v !== 'object') { f('skal være et objekt'); continue; }
+    for (const k of Object.keys(v)) if (!VARE_NOEGLER.has(k)) f('ukendt felt «' + k + '»');
+    if (!erTekst(v.navn)) f('«navn» skal være en tekst');
+    if (!Object.hasOwn(afdelinger, v.afd)) f('ukendt afdeling ' + JSON.stringify(v.afd) + ' (lovlige: ' + liste(Object.keys(afdelinger)) + ')');
+    if (!Object.hasOwn(enheder, v.enhed)) f('ukendt enhed ' + JSON.stringify(v.enhed));
+    else if (enheder[v.enhed].faktor !== 1) f('«enhed» skal være en grundenhed (faktor 1), fandt «' + v.enhed + '»');
+    if (!Object.hasOwn(ikoner, v.ikon)) f('ukendt ikon ' + JSON.stringify(v.ikon) + ' (ikonerne står i INGREDIENSER)');
+    if ('basis' in v && v.basis !== true) f('«basis» skal være true (udelad feltet ellers)');
+    if ('skjul' in v && v.skjul !== true) f('«skjul» skal være true (udelad feltet ellers)');
+    if ((v.basis === true) !== (v.afd === 'basis')) f('«basis»: true og afdelingen «basis» følges ad');
+    if (v.skjul === true && v.basis !== true) f('«skjul» gælder kun basisvarer (de lægges ikke sammen)');
+    if ('pakke' in v) {
+      const p = v.pakke;
+      if (!Array.isArray(p) || p.length !== 3 || !Number.isInteger(p[0]) || p[0] <= 0 || !erTekst(p[1]) || !erTekst(p[2])) {
+        f('«pakke» skal være [indhold i varens enhed (heltal over 0), ental, flertal], fandt ' + JSON.stringify(p));
+      }
+      if (v.basis === true) f('en basisvare har ingen «pakke» (den står uden mængde)');
+    }
+  }
+  return fejl;
+}
 
 export function valider(rod = ROD) {
   const fejl = [];
@@ -111,6 +150,8 @@ export function valider(rod = ROD) {
       return null;
     }
   }
+
+  for (const x of validerVarer({ VARER, AFDELINGER, ENHEDER, INGREDIENSER })) fejl.push(x);
 
   // Grafikken: ét billede pr. verbum, pr. ingrediens-ikon, pr. dyr og fejringen
   for (const v of Object.keys(VERBER)) if (!findes(grafikVerbum(v))) fejlI(grafikVerbum(v), 'billedet mangler (verbum «' + v + '»)');
@@ -202,7 +243,15 @@ export function valider(rod = ROD) {
       if (!erTekst(t.kilde)) f('«tumbi.kilde» skal være en tekst, fx "Egen tekst"');
       // Punktum + mellemrum + stort bogstav er en ny sætning («ca. 3 dl» er det ikke)
       else if (/\.\s+\p{Lu}/u.test(t.kilde) && !/[.!?]$/.test(t.kilde.trim())) f('«tumbi.kilde» har flere sætninger og skal slutte med punktum');
+      // Ugeplanen. Felterne tjekkes, når de står der, og kræves, når retten er med i ugeplanen
+      if ('ugeplan' in t && t.ugeplan !== true) f('«tumbi.ugeplan» skal være true (udelad feltet, når retten ikke er med i ugeplanen), fandt ' + JSON.stringify(t.ugeplan));
+      if (t.ugeplan === true) for (const k of UGEPLAN_FELTER) if (!(k in t)) f('«tumbi.ugeplan» kræver «tumbi.' + k + '»');
+      if ('portioner' in t && !erHeltal(t.portioner, 1, 12)) f('«tumbi.portioner» skal være et heltal fra 1 til 12 (antal personer, opskriften er til), fandt ' + JSON.stringify(t.portioner));
+      if ('pris_kr' in t && !erHeltal(t.pris_kr, 1, Infinity)) f('«tumbi.pris_kr» skal være et heltal over 0 (kr. for hele retten), fandt ' + JSON.stringify(t.pris_kr));
+      if ('pris_dato' in t && !(typeof t.pris_dato === 'string' && PRIS_DATO_RE.test(t.pris_dato))) f('«tumbi.pris_dato» skal være ÅÅÅÅ-MM (måneden, prisen er fra), fandt ' + JSON.stringify(t.pris_dato));
+      if ('groent_g' in t && !erHeltal(t.groent_g, 0, Infinity)) f('«tumbi.groent_g» skal være et heltal fra 0 (gram grønt i hele retten), fandt ' + JSON.stringify(t.groent_g));
     } else if ('tumbi' in r) f('«tumbi» skal være et objekt');
+    const ugeplan = Boolean(t && typeof t === 'object' && t.ugeplan === true);
 
     if ('image' in r && r.image !== grafikRet(filId)) f('«image» skal være "' + grafikRet(filId) + '", fandt ' + JSON.stringify(r.image));
     if (!findes(grafikRet(filId))) fejlI(grafikRet(filId), 'billedet mangler (retten «' + filId + '»)');
@@ -229,6 +278,19 @@ export function valider(rod = ROD) {
           if (raaOrd && !RAA_IKONER.includes(x.ikon)) f(hvor + ': «' + raaOrd[0] + '» er råt kød eller æg, så ikonet skal være ' + RAA_IKONER.map((r) => '"' + r + '"').join(' eller ') + ', fandt ' + JSON.stringify(x.ikon));
           if (typeof x.maengde !== 'string') f(hvor + ': «maengde» skal være en tekst (tom, hvis der ingen mængde er)');
           else if (x.maengde && typeof ingr[i] === 'string' && !ingr[i].startsWith(x.maengde + ' ')) f(hvor + ': mængden «' + x.maengde + '» passer ikke til «' + ingr[i] + '»');
+          for (const k of Object.keys(x)) if (!INGR_NOEGLER.has(k)) f(hvor + ': ukendt felt «' + k + '»');
+          // Indkøbslisten: varen og mængden i en enhed, der kan lægges sammen med varens (kræves i ugeplanen)
+          if (!('vare' in x)) { if (ugeplan) f(hvor + ': mangler «vare» (retten er i ugeplanen; varerne står i VARER i js/katalog.js)'); return; }
+          if (typeof x.vare !== 'string' || !Object.hasOwn(VARER, x.vare)) { f(hvor + ': ukendt vare ' + JSON.stringify(x.vare) + ' (står ikke i VARER i js/katalog.js)'); return; }
+          const v = VARER[x.vare];
+          if (('antal' in x) !== ('enhed' in x)) f(hvor + ': «antal» og «enhed» følges ad');
+          else if (!('antal' in x)) { if (v.basis !== true) f(hvor + ': mangler «antal» og «enhed» (kun basisvarer som salt og peber må undlade dem)'); }
+          else {
+            if (typeof x.antal !== 'number' || !Number.isFinite(x.antal) || x.antal <= 0) f(hvor + ': «antal» skal være et tal over 0, fandt ' + JSON.stringify(x.antal));
+            const samme = Object.keys(ENHEDER).filter((e) => ENHEDER[e].dim === ENHEDER[v.enhed].dim);
+            if (typeof x.enhed !== 'string' || !Object.hasOwn(ENHEDER, x.enhed)) f(hvor + ': ukendt enhed ' + JSON.stringify(x.enhed) + ' (lovlige: ' + liste(Object.keys(ENHEDER)) + ')');
+            else if (!samme.includes(x.enhed)) f(hvor + ': enheden «' + x.enhed + '» kan ikke lægges sammen med varen «' + x.vare + '» (i «' + v.enhed + '»): skriv mængden om til ' + liste(samme));
+          }
         });
       }
     }
@@ -367,6 +429,11 @@ export function valider(rod = ROD) {
       if (trin[0] && trin[0].tumbi && trin[0].tumbi.verbum !== 'vaske-haender') f('trin 1 skal være «Vask hænderne.» (verbum "vaske-haender")');
       const total = isoTilMinutter(r.totalTime);
       if (total != null && timerSek / 60 > total) f('«totalTime» (' + total + ' min) er kortere end timerne tilsammen (' + Math.ceil(timerSek / 60) + ' min)');
+      if (ugeplan) {
+        if (total != null && total > UGEPLAN_MAKS_MIN) f('«totalTime» er ' + total + ' min, men en ret i ugeplanen tager højst ' + UGEPLAN_MAKS_MIN + ' min');
+        const kniv = trin.filter((s) => s && s.tumbi && KNIV_VERBER.includes(s.tumbi.verbum)).length;
+        if (kniv > UGEPLAN_MAKS_KNIV) f('en ret i ugeplanen har højst ' + UGEPLAN_MAKS_KNIV + ' trin med kniv eller rivejern (skånsomt for hænderne), fandt ' + kniv + ': brug frosne hakkede grøntsager, dåser eller revet ost');
+      }
     }
   }
 

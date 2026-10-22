@@ -8,7 +8,8 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { valider } from './test-opskrifter.js';
+import { valider, validerVarer } from './test-opskrifter.js';
+import { VARER, AFDELINGER, ENHEDER, INGREDIENSER } from '../js/katalog.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -562,6 +563,99 @@ test('navne, som alle objekter arver (constructor, toString), er ikke gyldige id
   forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[2].tumbi.verbum = 'valueOf'; }, 'trin 3: ukendt verbum "valueOf"');
   forventFejl('opskrifter/pandekager.json', (d) => { Object.assign(d.recipeInstructions[2].tumbi, { voksen: true, voksen_hjaelp: 'toString' }); },
     'trin 3: «voksen_hjaelp» skal være "kniv", "varme", fandt "toString"');
+});
+
+// Ugeplanen (docs/ugeplan-plan.md, afsnit 4). iUgeplan giver kødsovsen alle felterne (de samme, uanset om den rigtige
+// opskrift har dem), så hver test kan ødelægge én ting. Linjerne følger recipeIngredient; basisvarerne har ingen mængde
+const KOEDSOVS_VARER = [
+  ['olie'], ['hakket-oksekoed', 500, 'g'], ['loeg', 1, 'stk'], ['hvidloeg', 2, 'fed'], ['gulerod', 2, 'stk'], ['hakkede-tomater', 800, 'g'],
+  ['tomatpure', 30, 'g'], ['oregano'], ['salt'], ['peber'], ['spaghetti', 400, 'g'], ['revet-ost', 100, 'g'],
+];
+function iUgeplan(d) {
+  Object.assign(d.tumbi, { ugeplan: true, portioner: 4, pris_kr: 90, pris_dato: '2026-10', groent_g: 1100 });
+  d.tumbi.ingredienser.forEach((x, i) => {
+    const [vare, antal, enhed] = KOEDSOVS_VARER[i];
+    delete x.antal;
+    delete x.enhed;
+    Object.assign(x, antal === undefined ? { vare } : { vare, antal, enhed });
+  });
+}
+const KS = 'opskrifter/koedsovs.json';
+const ugeplanFejl = (ret, forventet) => forventFejl(KS, (d) => { iUgeplan(d); ret(d); }, forventet);
+const ugeplanGyldig = (ret) => forventGyldig(KS, (d) => { iUgeplan(d); ret(d); });
+
+test('en ret i ugeplanen med alle felterne er gyldig', () => {
+  ugeplanGyldig(() => {});
+  // Grænserne selv er gyldige: 1 og 12 portioner, intet grønt, præcis en time, og en basisvare med en mængde
+  ugeplanGyldig((d) => { Object.assign(d.tumbi, { portioner: 1, groent_g: 0 }); d.totalTime = 'PT1H'; });
+  ugeplanGyldig((d) => { d.tumbi.portioner = 12; Object.assign(d.tumbi.ingredienser[0], { antal: 1, enhed: 'spsk' }); });
+  // Enhederne med samme dimension som varen: kg for gram, dl, l, spsk og tsk for ml
+  ugeplanGyldig((d) => { Object.assign(d.tumbi.ingredienser[1], { antal: 0.5, enhed: 'kg' }); });
+});
+
+test('tumbi.ugeplan kræver portioner, pris, prisens måned og grønt', () => {
+  for (const k of ['portioner', 'pris_kr', 'pris_dato', 'groent_g']) ugeplanFejl((d) => { delete d.tumbi[k]; }, '«tumbi.ugeplan» kræver «tumbi.' + k + '»');
+  for (const v of ['ja', false, 1]) ugeplanFejl((d) => { d.tumbi.ugeplan = v; }, '«tumbi.ugeplan» skal være true (udelad feltet');
+  // Uden ugeplanen kræves felterne ikke (de rigtige retter uden felterne er gyldige: «de rigtige opskrifter er gyldige»)
+  forventGyldig(KS, (d) => { iUgeplan(d); delete d.tumbi.ugeplan; delete d.tumbi.portioner; });
+});
+
+test('portioner, pris, prisens måned og grønt har faste grænser', () => {
+  for (const v of [0, 13, 4.5, '4', null]) ugeplanFejl((d) => { d.tumbi.portioner = v; }, '«tumbi.portioner» skal være et heltal fra 1 til 12');
+  for (const v of [0, -5, 12.5, '90']) ugeplanFejl((d) => { d.tumbi.pris_kr = v; }, '«tumbi.pris_kr» skal være et heltal over 0');
+  for (const v of ['2026-13', '2026-00', '10-2026', '2026-10-01', '2026-1', 202610]) ugeplanFejl((d) => { d.tumbi.pris_dato = v; }, '«tumbi.pris_dato» skal være ÅÅÅÅ-MM');
+  for (const v of [-1, 1.5, '100']) ugeplanFejl((d) => { d.tumbi.groent_g = v; }, '«tumbi.groent_g» skal være et heltal fra 0');
+  // Også uden ugeplanen: står feltet der, skal det være gyldigt
+  forventFejl(KS, (d) => { d.tumbi.portioner = 0; }, '«tumbi.portioner» skal være et heltal fra 1 til 12');
+});
+
+test('en ret i ugeplanen tager højst en time og har højst to trin med kniv eller rivejern', () => {
+  ugeplanFejl((d) => { d.totalTime = 'PT1H5M'; }, '«totalTime» er 65 min, men en ret i ugeplanen tager højst 60 min');
+  // Kødsovsen har 2 (hak og riv). Et tredje er for meget i ugeplanen, men i orden uden den
+  const tredje = (d) => d.recipeInstructions.splice(3, 0, { '@type': 'HowToStep', text: 'Skær løget i ringe.', tumbi: { verbum: 'skaere', voksen: true, voksen_hjaelp: 'kniv', ikoner: ['loeg'] } });
+  ugeplanFejl(tredje, 'en ret i ugeplanen har højst 2 trin med kniv eller rivejern (skånsomt for hænderne), fandt 3');
+  forventGyldig(KS, tredje);
+  forventGyldig(KS, (d) => { d.totalTime = 'PT1H5M'; });
+});
+
+test('hver ingredienslinje i ugeplanen har en kendt vare og en mængde, der kan lægges sammen', () => {
+  ugeplanFejl((d) => { delete d.tumbi.ingredienser[1].vare; }, 'ingrediens 2: mangler «vare» (retten er i ugeplanen');
+  // Object.hasOwn: arvede navne er ikke varer eller enheder
+  for (const v of ['constructor', 'toString', 'hakket kød', 7]) ugeplanFejl((d) => { d.tumbi.ingredienser[1].vare = v; }, 'ingrediens 2: ukendt vare ' + JSON.stringify(v));
+  for (const e of ['dåse', 'constructor', 'G']) ugeplanFejl((d) => { d.tumbi.ingredienser[5].enhed = e; }, 'ingrediens 6: ukendt enhed ' + JSON.stringify(e));
+  // Rumfang og vægt kan ikke lægges sammen: «2 spsk tomatpuré» skrives som 30 g
+  ugeplanFejl((d) => { Object.assign(d.tumbi.ingredienser[6], { antal: 2, enhed: 'spsk' }); },
+    'ingrediens 7: enheden «spsk» kan ikke lægges sammen med varen «tomatpure» (i «g»): skriv mængden om til g, kg');
+  ugeplanFejl((d) => { d.tumbi.ingredienser[3].enhed = 'stk'; }, 'ingrediens 4: enheden «stk» kan ikke lægges sammen med varen «hvidloeg» (i «fed»)');
+  for (const v of [0, -1, '800', null]) ugeplanFejl((d) => { d.tumbi.ingredienser[5].antal = v; }, 'ingrediens 6: «antal» skal være et tal over 0');
+  ugeplanFejl((d) => { delete d.tumbi.ingredienser[5].enhed; }, 'ingrediens 6: «antal» og «enhed» følges ad');
+  ugeplanFejl((d) => { delete d.tumbi.ingredienser[5].antal; }, 'ingrediens 6: «antal» og «enhed» følges ad');
+  ugeplanFejl((d) => { delete d.tumbi.ingredienser[1].antal; delete d.tumbi.ingredienser[1].enhed; }, 'ingrediens 2: mangler «antal» og «enhed» (kun basisvarer');
+  // Også uden ugeplanen: en vare, der står der, skal være kendt, og ukendte felter fanges (en stavefejl som «enheder»)
+  forventFejl('opskrifter/pandekager.json', (d) => { d.tumbi.ingredienser[0].vare = 'hvedemel'; }, 'ingrediens 1: ukendt vare "hvedemel"');
+  forventFejl('opskrifter/pandekager.json', (d) => { d.tumbi.ingredienser[0].enheder = 'g'; }, 'ingrediens 1: ukendt felt «enheder»');
+});
+
+// Indkøbsvarerne i js/katalog.js. validerVarer får en ødelagt kopi af VARER; de rigtige tjekkes også af valider()
+test('indkøbsvarerne har en kendt afdeling, en grundenhed, et ikon og en gyldig pakke', () => {
+  const varer = (aendr) => { const v = structuredClone(VARER); aendr(v); return validerVarer({ VARER: v, AFDELINGER, ENHEDER, INGREDIENSER }); };
+  const forvent = (aendr, tekst) => { const f = varer(aendr); assert.ok(f.some((x) => x.includes(tekst)), 'forventede «' + tekst + '», fik:\n  ' + f.join('\n  ')); };
+  assert.deepEqual(varer(() => {}), []);
+  for (const a of ['slik', 'constructor']) forvent((v) => { v['hakkede-tomater'].afd = a; }, 'VARER «hakkede-tomater»: ukendt afdeling "' + a + '"');
+  forvent((v) => { v['hakkede-tomater'].enhed = 'kg'; }, '«enhed» skal være en grundenhed (faktor 1), fandt «kg»');
+  forvent((v) => { v['hakkede-tomater'].enhed = 'dåse'; }, 'ukendt enhed "dåse"');
+  forvent((v) => { v['hakkede-tomater'].ikon = 'banan'; }, 'ukendt ikon "banan"');
+  for (const p of [[0, 'dåse', 'dåser'], [400, 'dåse'], [12.5, 'dåse', 'dåser'], ['400', 'dåse', 'dåser'], [400, '', 'dåser'], 400]) {
+    forvent((v) => { v['hakkede-tomater'].pakke = p; }, '«pakke» skal være [indhold i varens enhed (heltal over 0), ental, flertal]');
+  }
+  forvent((v) => { v.salt.afd = 'toer'; }, 'VARER «salt»: «basis»: true og afdelingen «basis» følges ad');
+  forvent((v) => { v.loeg.afd = 'basis'; }, 'VARER «loeg»: «basis»: true og afdelingen «basis» følges ad');
+  forvent((v) => { v.salt.basis = 'ja'; }, '«basis» skal være true');
+  forvent((v) => { v.loeg.skjul = true; }, '«skjul» gælder kun basisvarer');
+  forvent((v) => { v.salt.pakke = [1000, 'pose', 'poser']; }, 'en basisvare har ingen «pakke»');
+  forvent((v) => { v.loeg.pris = 5; }, 'VARER «loeg»: ukendt felt «pris»');
+  forvent((v) => { delete v.loeg.navn; }, 'VARER «loeg»: «navn» skal være en tekst');
+  forvent((v) => { v['Hakket Kød'] = { ...v['hakket-oksekoed'] }; }, 'VARER «Hakket Kød»: id\'et skal være små bogstaver');
 });
 
 test('manglende grafik for et verbum, en ret eller en gruppe', () => {
