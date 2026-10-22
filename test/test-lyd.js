@@ -113,6 +113,8 @@ test('en ret med voksen-trin får start-replikken i den rigtige udgave', () => {
   for (const x of Object.values(R.VOKSEN_START)) assert.ok(TALE.some((y) => y.fil === x.fil), x.fil + ' mangler på talelisten');
   const app = fs.readFileSync(path.join(ROD, 'app.js'), 'utf8');
   assert.match(app, /Tale\.sig\(R\.retAaben\(m\), \{ derefter: R\.voksenStart\(m\) \}\)/, 'app.js skal sige R.voksenStart efter navnet, når retten åbnes');
+  // «Læs op» på retten læser skærmen, også «Sammen med en voksen» (code review 21-10 fund 6)
+  assert.match(app, /Tale\.sig\(R\.retAaben\(m\), \{ knap: hoejttaler, derefter: R\.voksenStart\(m\) \}\)/, '«Læs op» på retten skal sige R.voksenStart efter navnet');
 });
 
 // Røst siger «Bagning» som «bau-ning», så talelisten skriver ordet, som det lyder (UDTALE), men kun til Røst (21-10)

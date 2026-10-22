@@ -662,6 +662,13 @@ async function heleVejen(browser, skaerm) {
   await foto(side, n + '-3-ret');
   await tryk(side, '.ingr');
   tjek(await sidsteTale(side) === tilTale(RETTER.pandekager.recipeIngredient[0]), n + ': tryk på en ingrediens læser den op');
+  // «Læs op» læser skærmen: navnet og så «Sammen med en voksen» (code review 21-10 fund 6: før kun navnet)
+  const foerLaesOp = await side.evaluate(() => window.__tale.length);
+  await tryk(side, '.ret-titel .stor-rund');
+  await venterPaa(side, (i) => window.__tale.length >= i + 2, foerLaesOp, n + ': «Læs op» på retten skal sige to replikker');
+  const laesOp = await side.evaluate((i) => window.__tale.slice(i).map((x) => x.fil), foerLaesOp);
+  tjek(JSON.stringify(laesOp) === JSON.stringify([VEJ + '/navn.mp3', 'faelles/voksen-start-varme.mp3']),
+    n + ': «Læs op» på retten skal sige navnet og så voksen-replikken, fik ' + JSON.stringify(laesOp));
 
   // Trinene
   await tryk(side, '.start');

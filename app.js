@@ -288,8 +288,10 @@ function retSkaerm(m) {
     naarKort: () => Tale.sig(R.PRINT_HOLD),
   });
 
+  // «Læs op» læser skærmen: navnet og, har retten voksen-trin, «Sammen med en voksen» (code review 21-10 fund 6: et tryk på
+  // en ingrediens midt i navnet slettede ellers voksen-replikken fra åbningen, og så hørte den voksne den aldrig)
   const hoejttaler = knap('', { klasse: 'rund stor-rund', ikonNavn: 'hoejttaler', label: 'Læs op' });
-  hoejttaler.addEventListener('click', klik(() => Tale.sig(R.retAaben(m), { knap: hoejttaler })));
+  hoejttaler.addEventListener('click', klik(() => Tale.sig(R.retAaben(m), { knap: hoejttaler, derefter: R.voksenStart(m) })));
 
   return el('main', { class: 'skaerm ret' },
     topbar(startAdvarsel(m)),
