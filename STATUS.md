@@ -1,9 +1,9 @@
 # STATUS – Tumbi Køkken
 
-## 22-10-2026 kl. 07:40: `grafik-ai` er flettet og live; gamle filer slettet (venter på push)
+## 22-10-2026 kl. 07:37: `grafik-ai` er flettet og live; gamle filer slettet (venter på push)
 
 - **Jimmy flettede og pushede selv kl. 07:22** (`main` = `origin/main` = 2a1da5d): AI-billederne, advarselstrekanten, de to aftensretter og timer-rettelsen er live.
-- **Jimmys ja kl. 07:20 («ja slet»):** de 19 gamle `grafik/ret-*.svg` og `lyd/faelles/voksen-hold.mp3` er slettet, og `sw.js` gemmer dem ikke længere offline. Ny `INDHOLD` og `LYD`, så iPads henter lyden igen, når den spilles (f736956, kun lokalt).
+- **Jimmys ja 22-10 («ja slet»):** de 19 gamle `grafik/ret-*.svg` og `lyd/faelles/voksen-hold.mp3` er slettet, og `sw.js` gemmer dem ikke længere offline. Ny `INDHOLD` og `LYD`, så iPads henter lyden igen, når den spilles (f736956, kun lokalt).
 - **Tests på f736956:** alle 7 node-tests grønne (også `test-lyd`), fuld e2e i WebKit 17.129 tjek grønne (662 s).
 - **Afventer Jimmy:**
   - (22-10) Push f736956: i PowerShell `cd D:\Claude\Kogebog; git push`.
@@ -11,7 +11,7 @@
   - (21-10) Lyt til `lyd/tunfrikadeller/4.mp3` og `lyd/pizzasnegle/10.mp3`.
 - **Lukket:** (21-10) «squash før fletning» — overhalet: «Jimmys slankeapp» (ed6b63a) ligger nu i den offentlige historik på GitHub. Skal den ud, kræver det en omskrivning og `git push --force` (spørg først).
 
-## 22-10-2026 kl. 07:20: timer-pillen mistede klikket i WebKit (rettet på `grafik-ai`, ikke flettet)
+## 22-10-2026 kl. 07:16: timer-pillen mistede klikket i WebKit (rettet på `grafik-ai`, ikke flettet)
 
 - **Fejlen:** fuld e2e på `grafik-ai` (2fd8a04 + 08a001d) fejlede 1 gang i «timere»: pillen på forsiden førte ikke til trin 8. Rodårsag (test-runner, gentaget af Saga): pillens tal skrives hvert kvarte sekund (ny tekstnode), og WebKit sender intet `click`, når noden under musen skiftes ud før slip. Målt: tryk på 600 ms på tallet gav 0/6 klik med den gamle CSS og 6/6 med den nye; tryk på 5 ms gav 6/6 med begge.
 - **Rettet (8843060):** `.pille > * { pointer-events: none; }`, nyt e2e-tjek med langt tryk (rødt 3/3 mod den gamle CSS), en vagt, hvis pillen er skjult (code review), faldgruben i `CLAUDE.md`, ny `INDHOLD`. Code review: ingen kritiske fund, fund 1 og 3 rettet.
