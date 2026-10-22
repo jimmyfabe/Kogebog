@@ -7,6 +7,7 @@ import * as Tale from './js/tale.js';
 import * as R from './js/replikker.js';
 import * as Timer from './js/timer.js';
 import * as Lager from './js/lager.js';
+import * as Ugeplan from './js/ugeplan.js';
 import { holdKnap } from './js/hold.js';
 import { trekant, voksenNaeste } from './js/voksen.js';
 import { voksenFarer } from './js/model.js';
@@ -32,6 +33,7 @@ const S = {
   spaerTil: 0,
   vistHash: null,
   oprydning: [],
+  listeBesked: null,  // indkøbslisten: en besked efter hentningen (fx at en ret ikke kunne findes)
 };
 
 // ---------- Hjælpere ----------
@@ -64,6 +66,8 @@ const hashFor = {
 };
 
 function rute() {
+  const u = Ugeplan.rute(location.hash);
+  if (u) return u;
   const d = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
   if (d[0] === 'ret' && d[1]) {
     if (d[2] === 'trin') return { side: 'trin', id: d[1], nr: Number.parseInt(d[3], 10) };
@@ -525,6 +529,8 @@ function vis() {
   let skaerm;
   if (r.side === 'forside') {
     skaerm = forside();
+  } else if (r.uge) {
+    skaerm = Ugeplan.skaerm(r);
   } else {
     const m = S.retter.get(r.id);
     if (!m && (!S.ids || S.ids.includes(r.id)) && !S.indexFejl) skaerm = henterSkaerm();
@@ -581,6 +587,7 @@ async function indlaes() {
   vis();
 }
 
+Ugeplan.init({ S, knap, billede, topbar, statusSkaerm, naviger, annoncer, indlaes, vis });
 Timer.gendan();
 Tale.hentLydListe();
 indlaes();

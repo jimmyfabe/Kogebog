@@ -18,6 +18,7 @@ import { hentPlaywright } from '../vaerktoej/lav-ikoner.js';
 import { tilTale } from '../js/tekst.js';
 import { formaterTid, HURTIG_SEK } from '../js/tid.js';
 import { GRUPPER } from '../js/katalog.js';
+import { ugeplan } from './e2e-ugeplan.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const BASE = (process.argv[2] || 'http://127.0.0.1:8091').replace(/\/$/, '');
@@ -1825,9 +1826,9 @@ async function former(browser) {
   }
 }
 
-// E2E_DELE=hele,print,tastatur,timer,fejl,beroering,former (standard: alle) og E2E_SKAERME=ipad,iphone,desktop (standard: alle)
+// E2E_DELE=hele,print,tastatur,timer,fejl,beroering,former,ugeplan (standard: alle) og E2E_SKAERME=ipad,iphone,desktop (standard: alle)
 // «former» kører på sine egne skærme (FORMER) og ser bort fra E2E_SKAERME
-const DELE = (process.env.E2E_DELE || 'hele,print,tastatur,timer,fejl,beroering,former').split(',').map((x) => x.trim()).filter(Boolean);
+const DELE = (process.env.E2E_DELE || 'hele,print,tastatur,timer,fejl,beroering,former,ugeplan').split(',').map((x) => x.trim()).filter(Boolean);
 const VALGTE = SKAERME.filter((s) => !process.env.E2E_SKAERME || process.env.E2E_SKAERME.split(',').includes(s.navn));
 const KOERSEL = [];
 for (const s of VALGTE) if (DELE.includes('hele')) KOERSEL.push(['hele vejen ' + s.navn, (b) => heleVejen(b, s)]);
@@ -1840,6 +1841,10 @@ if (DELE.includes('timer')) KOERSEL.push(['«Start timer», mens en anden timer 
 if (DELE.includes('fejl')) KOERSEL.push(['fejltilstande', (b) => fejltilstande(b, SKAERME[0])]);
 if (DELE.includes('beroering')) KOERSEL.push(['berøring', (b) => beroering(b, SKAERME[0])]);
 if (DELE.includes('former')) KOERSEL.push(['skærmformer', (b) => former(b)]);
+// Ugeplanen står i sin egen fil (test/e2e-ugeplan.js) og får hjælperne herfra
+if (DELE.includes('ugeplan')) {
+  KOERSEL.push(['ugeplan', (b) => ugeplan(b, { BASE, UD, ROD, RETTER, SKAERME, nySide, tjek, tjekLayout, foto, tryk, hold, vent, venterPaa, h1, maal })]);
+}
 
 const browser = await webkit.launch();
 const start = Date.now();

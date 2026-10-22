@@ -33,6 +33,14 @@ const IKONER = {
   stop: ['M7.5 7.5h9v9h-9z'],
   tjek: ['M5 12.5l4.5 4.5L19 7.5'],
   igen: ['M4.5 12a7.5 7.5 0 1 0 2.2-5.3', 'M4.5 4.5v4h4'],
+  // Ugeplanen og indkøbslisten (js/ugeplan.js)
+  kurv: ['M3.5 10h17l-2.2 9.5H5.7z', 'M8 10l3.2-5.5', 'M16 10l-3.2-5.5', 'M9.5 13.5v3', 'M14.5 13.5v3'],
+  kalender: ['M4.5 6h15v14h-15z', 'M4.5 10.5h15', 'M8.5 3.5v4', 'M15.5 3.5v4'],
+  telefon: ['M8.5 3h7A1.5 1.5 0 0 1 17 4.5v15a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 7 19.5v-15A1.5 1.5 0 0 1 8.5 3z', 'M11 17.5h2'],
+  liste: ['M9.5 6.5h10', 'M9.5 12h10', 'M9.5 17.5h10', 'M4.5 6.5h1.5', 'M4.5 12h1.5', 'M4.5 17.5h1.5'],
+  plus: ['M12 5v14', 'M5 12h14'],
+  minus: ['M5 12h14'],
+  kryds: ['M6.5 6.5l11 11', 'M17.5 6.5l-11 11'],
 };
 
 export function ikon(navn, klasse = 'ikon') {

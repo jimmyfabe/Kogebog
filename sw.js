@@ -7,7 +7,7 @@
    test/test-sw.js tjekker, at FILER er komplet, og fejler, når en fil er ændret. Fejlbeskeden viser den nye værdi;
    testen ændrer ikke sw.js, så den sættes her i hånden. */
 const PRAEFIKS = 'kog-';
-const INDHOLD = '38b32f4a7a1a9e64'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = '96291bfe4c0862bc'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '62514f04783c4e58'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
@@ -35,6 +35,7 @@ const FILER = [
   'js/print.js',
   'js/indkoeb.js',
   'js/plankode.js',
+  'js/ugeplan.js',
   'opskrifter/index.json',
   'opskrifter/pandekager.json',
   'opskrifter/frikadeller.json',

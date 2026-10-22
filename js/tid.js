@@ -56,3 +56,31 @@ export function varighedTale(sek) {
   if (!dele.length) return '0 sekunder';
   return dele.length === 1 ? dele[0] : dele.slice(0, -1).join(', ') + ' og ' + dele[dele.length - 1];
 }
+
+// ---------- Ugeplanens uger (docs/ugeplan-plan.md) ----------
+// Datoerne er ÅÅÅÅ-MM-DD og regnes i UTC, så sommertid aldrig flytter en dag
+const DAG_MS = 86400000;
+const tilDato = (ms) => new Date(ms).toISOString().slice(0, 10);
+const fraDato = (s) => Date.UTC(Number(s.slice(0, 4)), Number(s.slice(5, 7)) - 1, Number(s.slice(8, 10)));
+const ugedag = (ms) => (new Date(ms).getUTCDay() + 6) % 7; // mandag 0, søndag 6
+
+// Den mandag, en ny ugeplan gælder fra: i dag, hvis det er mandag, ellers den næste. idag er en lokal Date
+export function planMandag(idag = new Date()) {
+  const ms = Date.UTC(idag.getFullYear(), idag.getMonth(), idag.getDate());
+  const d = ugedag(ms);
+  return tilDato(ms + (d ? 7 - d : 0) * DAG_MS);
+}
+
+// ISO-ugenummeret (uge 1 har årets første torsdag): '2026-10-26' → 44, '2026-12-28' → 53, '2027-01-04' → 1
+export function ugeNr(dato) {
+  const ms = fraDato(dato);
+  const torsdag = ms + (3 - ugedag(ms)) * DAG_MS;
+  const jan1 = Date.UTC(new Date(torsdag).getUTCFullYear(), 0, 1);
+  return 1 + Math.floor((torsdag - jan1) / DAG_MS / 7);
+}
+
+// Dag i (0 = mandag) i ugen, der starter mandag: «26/10»
+export function dagDato(mandag, i) {
+  const d = new Date(fraDato(mandag) + i * DAG_MS);
+  return d.getUTCDate() + '/' + (d.getUTCMonth() + 1);
+}

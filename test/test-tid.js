@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { nyTimer, timerStatus, formaterTid, varighed, varighedKort, varighedTale, HURTIG_SEK } from '../js/tid.js';
+import { nyTimer, timerStatus, formaterTid, varighed, varighedKort, varighedTale, HURTIG_SEK, planMandag, ugeNr, dagDato } from '../js/tid.js';
 import { isoTilMinutter, minutterTekst, tilTale, talOrd, ukendtKoen, KOEN, antalOrd, delIngrediens } from '../js/tekst.js';
 import { lavModel } from '../js/model.js';
 import { hentIndex } from '../js/data.js';
@@ -231,6 +231,28 @@ test('modellen af pandekagerne', () => {
   assert.equal(m.trin[0].voksen, false);
   assert.equal(m.trin[0].voksenSlags, null);
   assert.equal(m.afproevet, false);
+});
+
+// Ugeplanen: kun retter med «tumbi.ugeplan» får uge-delen, med de felter, saml() i js/indkoeb.js læser
+test('modellen har ugeplanens felter, når retten er i ugeplanen', () => {
+  const laes = (id) => lavModel(JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8')));
+  assert.equal(laes('pandekager').uge, null);
+  const k = laes('koedsovs').uge;
+  assert.deepEqual([k.portioner, k.prisKr, k.groentG, k.tumbi.ugeplan, k.tumbi.ingredienser.length], [4, 86, 1070, true, 12]);
+});
+
+// Ugerne regnes i UTC: sommertid (25-10-2026) flytter ikke en dag, og mandag er dagen selv
+test('ugeplanens mandag, ugenummer og datoer', () => {
+  assert.equal(planMandag(new Date(2026, 9, 22, 23, 30)), '2026-10-26', 'torsdag: næste mandag');
+  assert.equal(planMandag(new Date(2026, 9, 26, 0, 5)), '2026-10-26', 'mandag: samme dag');
+  assert.equal(planMandag(new Date(2026, 9, 25, 12)), '2026-10-26', 'søndag (sommertiden slutter)');
+  assert.equal(planMandag(new Date(2026, 11, 30)), '2027-01-04', 'over nytår');
+  for (const [dato, nr] of [['2026-10-26', 44], ['2026-12-28', 53], ['2027-01-04', 1], ['2025-12-29', 1], ['2026-01-05', 2], ['2027-12-27', 52]]) {
+    assert.equal(ugeNr(dato), nr, dato);
+  }
+  assert.equal(dagDato('2026-10-26', 0), '26/10');
+  assert.equal(dagDato('2026-10-26', 6), '1/11');
+  assert.equal(dagDato('2026-12-28', 4), '1/1');
 });
 
 // hentIndex (js/data.js) med en falsk fetch, der svarer med index.json

@@ -34,6 +34,9 @@ export function lavModel(json) {
     redskaber: json.tool || [],
     ingredienser,
     trin,
+    // Ugeplanen (docs/ugeplan-plan.md): kun når «tumbi.ugeplan» er true, ellers null. «tumbi» er opskriftens egne felter,
+    // som saml() i js/indkoeb.js læser dem ({ ret: { tumbi }, n }). Validatoren kræver felterne, når ugeplan er true
+    uge: t.ugeplan === true ? { tumbi: t, portioner: t.portioner, prisKr: t.pris_kr, groentG: t.groent_g } : null,
   };
 }
 

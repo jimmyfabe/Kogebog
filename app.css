@@ -560,6 +560,74 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .timer-ring .rest { transition: none; }
 }
 
+/* ---------- Indkøbslisten (js/ugeplan.js, telefonen i butikken) ---------- */
+
+/* Et ark pr. afdeling med en tynd linje mellem varerne, ikke et kort pr. vare: listen skal kunne læses i ét blik.
+   Hele rækken er trykfladen (krydser af), og «Har vi» står yderst til højre ved tommelfingeren */
+.liste { width: 100%; max-width: 680px; margin: 0 auto; padding: 4px 16px 40px; display: flex; flex-direction: column; gap: 12px; }
+.liste-hoved { display: flex; align-items: baseline; justify-content: space-between; gap: 4px 16px; flex-wrap: wrap; }
+.liste-hoved h1 { font-size: 34px; line-height: 1.1; }
+.liste-uge { font-size: 20px; font-weight: 750; color: var(--kakao-blid); }
+/* Tallet og måleren står fast øverst, mens man ruller gennem butikken */
+.liste-status { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; gap: 14px; padding: 10px 0; background: var(--creme); }
+.liste-tal { font-size: 20px; font-weight: 800; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.liste-maaler { flex: 1; height: 16px; border: 2px solid var(--kakao); border-radius: 8px; background: var(--hvid); overflow: hidden; }
+.liste-maaler-fyld { display: block; height: 100%; background: var(--urt); transform: scaleX(var(--andel, 0)); transform-origin: left center; }
+@media (prefers-reduced-motion: no-preference) {
+  .liste-maaler-fyld { transition: transform .25s ease-out; }
+}
+.liste-besked, .liste-advarsel { padding: 10px 14px; border: var(--streg) solid var(--raev); border-radius: 16px; background: var(--raev-lys); font-size: 18px; }
+.liste-krop { display: flex; flex-direction: column; gap: 22px; }
+.afd h2 { font-size: 24px; margin-bottom: 8px; }
+.varer { border: var(--kant); border-radius: 20px; background: var(--hvid); overflow: hidden; }
+.varer > li { display: flex; align-items: center; gap: 8px; padding-right: 10px; }
+.varer > li + li { border-top: 2px solid var(--creme-moerk); }
+.vare { flex: 1; min-width: 0; min-height: var(--tryk); display: flex; align-items: center; gap: 12px; padding: 8px 6px 8px 12px; border: 0; background: none; text-align: left; cursor: pointer; }
+/* Trykket rammer altid knappen selv (WebKit taber et klik, når noden under fingeren skiftes ud) */
+.vare > * { pointer-events: none; }
+.vare-stille { cursor: default; }
+.vare-tjek { flex: none; width: 36px; height: 36px; display: grid; place-items: center; border: var(--kant); border-radius: 50%; background: var(--hvid); }
+.vare-tjek .ikon { width: 24px; height: 24px; stroke-width: 3; opacity: 0; }
+.vare-ikon { flex: none; width: 44px; height: 44px; }
+.vare-tekst { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
+.vare-navn { font-size: 20px; font-weight: 750; overflow-wrap: anywhere; }
+.vare-maengde { font-size: 17px; color: var(--kakao-blid); }
+.varer > li.koebt { background: var(--creme); }
+.koebt .vare-tjek { background: var(--urt); }
+.koebt .vare-tjek .ikon { opacity: 1; }
+.koebt .vare-navn { text-decoration: line-through; text-decoration-thickness: 2px; color: var(--kakao-blid); }
+.koebt .vare-ikon { opacity: .55; }
+.knap.har-vi { flex: none; min-height: 48px; padding: 0 14px; font-size: 17px; background: var(--blaa-lys); box-shadow: 0 3px 0 var(--kakao); }
+.knap.har-vi:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--kakao); }
+.har-vi-afd .varer { background: var(--blaa-lys); }
+
+/* Salt, peber og krydderier: lukket som standard, så de ikke fylder listen */
+.tjek-basis { border: var(--kant); border-radius: 20px; background: var(--dej-lys); }
+.tjek-basis summary { min-height: var(--tryk); display: flex; align-items: center; gap: 10px; padding: 0 16px; font-size: 20px; font-weight: 800; cursor: pointer; list-style: none; border-radius: 17px; }
+.tjek-basis summary::-webkit-details-marker { display: none; }
+.tjek-basis .pil { width: 26px; height: 26px; }
+.tjek-basis[open] .pil { rotate: 90deg; }
+.basis-varer { display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 0 16px 16px; }
+.basis-varer li { display: flex; align-items: center; gap: 8px; font-size: 18px; }
+.basis-varer .vare-ikon { width: 32px; height: 32px; }
+
+.ret-link { flex: 1; min-width: 0; min-height: var(--tryk); display: flex; align-items: center; gap: 12px; padding: 8px 12px; color: inherit; text-decoration: none; }
+.ret-link .vare-navn { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+.ret-link-billede { flex: none; width: 56px; height: 56px; object-fit: contain; }
+
+/* «Sæt linket ind»: nødudgangen, når hjemmeskærm-appen ikke har Safaris lager */
+.status-handling { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 18px; margin-top: 4px; }
+.link-form { width: 100%; display: flex; flex-direction: column; gap: 8px; padding: 16px; border: var(--kant); border-radius: 20px; background: var(--hvid); text-align: left; }
+.felt-navn { font-size: 22px; font-weight: 800; }
+.felt-hjaelp { font-size: 17px; color: var(--kakao-blid); }
+.link-raekke { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; }
+/* 18 px: under 16 px zoomer iPhonen ind på feltet */
+.link-felt { flex: 1 1 220px; min-width: 0; min-height: var(--tryk); padding: 0 16px; border: var(--kant); border-radius: 16px; background: var(--creme); color: var(--kakao); font: inherit; font-size: 18px; }
+.link-felt[aria-invalid="true"] { border-color: var(--tomat); }
+.knap.primaer.link-knap { flex: 1 1 auto; min-height: var(--tryk); font-size: 22px; padding: 0 24px; }
+.felt-fejl { padding-left: 12px; border-left: 6px solid var(--tomat); font-size: 18px; font-weight: 750; }
+.felt-fejl:empty { display: none; }
+
 /* ---------- Smalle skærme (iPhone på højkant) ---------- */
 
 /* Ikke lave skærme på langs: en iPhone på langs (667×375, 736×414) får reglen for lave skærme nederst.
