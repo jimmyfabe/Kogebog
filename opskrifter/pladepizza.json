@@ -1,0 +1,56 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Pladepizza med spinat og broccoli",
+  "description": "To plader pizza med tomat, spinat, broccoli og ost. Agurkestave ved siden af.",
+  "image": "grafik/ret-pladepizza.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT10M",
+  "cookTime": "PT20M",
+  "totalTime": "PT30M",
+  "recipeIngredient": [
+    "2 ruller færdig pizzadej",
+    "300 g tomatpassata",
+    "300 g frossen hakket spinat",
+    "300 g frossen broccoli",
+    "1 tsk tørret oregano",
+    "200 g revet ost",
+    "1 agurk"
+  ],
+  "tool": ["2 bageplader", "gryde med låg", "si", "spiseske", "kniv", "skærebræt"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Varm spinat og broccoli i en gryde.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "ikoner": ["spinat", "broccoli"], "note": "Tænd ovnen på 225 °C varmluft først. Middel varme, med låg. Rør et par gange, til det er tøet." } },
+    { "@type": "HowToStep", "text": "Hæld grøntsagerne i en si.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spinat", "broccoli"], "note": "Den voksne hælder. Tryk vandet ud med en ske, så pizzaen ikke bliver våd. Lad det køle lidt." } },
+    { "@type": "HowToStep", "text": "Rul pizzadejen ud på pladerne.", "tumbi": { "verbum": "kagerulle", "ikoner": ["pizzadej"], "note": "Dejen ligger på sit eget bagepapir. Læg den på pladen med papiret under." } },
+    { "@type": "HowToStep", "text": "Smør passataen ud på dejen.", "tumbi": { "verbum": "smoere", "ikoner": ["tomat"], "note": "Med bagsiden af en ske. Lad en lille kant være fri." } },
+    { "@type": "HowToStep", "text": "Drys oregano over.", "tumbi": { "verbum": "drysse", "ikoner": ["krydderurt"] } },
+    { "@type": "HowToStep", "text": "Fordel spinat og broccoli på pizzaerne.", "tumbi": { "verbum": "drysse", "ikoner": ["spinat", "broccoli"], "note": "Små klatter, så der kommer grønt over det hele." } },
+    { "@type": "HowToStep", "text": "Drys osten over.", "tumbi": { "verbum": "drysse", "ikoner": ["ost"] } },
+    { "@type": "HowToStep", "text": "Bag pizzaerne i ovnen i 15 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900, "note": "225 °C varmluft. Begge plader kan bage på én gang. Bunden skal være gylden og osten smeltet." } },
+    { "@type": "HowToStep", "text": "Tag pladerne ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme", "note": "Pladerne er meget varme." } },
+    { "@type": "HowToStep", "text": "Skær agurken i stave.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["agurk"], "note": "Mens pizzaen køler lidt af." } },
+    { "@type": "HowToStep", "text": "Skær pizzaen i firkanter.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "note": "Med et pizzahjul eller en stor kniv." } }
+  ],
+  "tumbi": {
+    "id": "pladepizza",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra en research af billig hverdagsmad til en børnefamilie (22-10-2026). Idé fra Coop Opskrifter, «Klimaglad pizza – tøm køleskabet». Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Tid og grønt er også et skøn (ikke målt), og grønt er uden bælgfrugter og kartofler.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 68,
+    "pris_dato": "2026-10",
+    "groent_g": 1250,
+    "ingredienser": [
+      { "ikon": "pizzadej", "maengde": "2 ruller", "vare": "pizzadej", "antal": 2, "enhed": "stk" },
+      { "ikon": "tomat", "maengde": "300 g", "vare": "passata", "antal": 300, "enhed": "g" },
+      { "ikon": "spinat", "maengde": "300 g", "vare": "hakket-spinat", "antal": 300, "enhed": "g" },
+      { "ikon": "broccoli", "maengde": "300 g", "vare": "broccoliblanding", "antal": 300, "enhed": "g" },
+      { "ikon": "krydderurt", "maengde": "1 tsk", "vare": "oregano" },
+      { "ikon": "ost", "maengde": "200 g", "vare": "revet-ost", "antal": 200, "enhed": "g" },
+      { "ikon": "agurk", "maengde": "1", "vare": "agurk", "antal": 1, "enhed": "stk" }
+    ]
+  }
+}

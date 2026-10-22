@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="cucumber" transform="translate(112 118) rotate(-35)">
+    <path d="M-96 0 C-96 -24 -76 -32 -40 -32 L52 -32 C84 -32 98 -20 98 0 C98 20 84 32 52 32 L-40 32 C-76 32 -96 24 -96 0 Z" fill="#4E9A3A"/>
+    <path d="M-70 -18 C-40 -22 20 -22 60 -18" fill="none" stroke="#8CC86A" stroke-width="5"/>
+    <g fill="#2F6E25" stroke="none">
+      <circle cx="-56" cy="8" r="3.5"/><circle cx="-24" cy="16" r="3.5"/><circle cx="8" cy="6" r="3.5"/>
+      <circle cx="40" cy="16" r="3.5"/><circle cx="68" cy="4" r="3.5"/>
+    </g>
+    <path d="M-96 0 C-102 -4 -106 -2 -108 2" fill="none"/>
+  </g>
+  <g id="slice" transform="translate(186 190)">
+    <circle r="44" fill="#4E9A3A"/>
+    <circle r="36" fill="#D9EFB8"/>
+    <g fill="#F3FAE4" stroke="#9CC77A" stroke-width="2.5">
+      <ellipse cx="0" cy="-14" rx="5" ry="8"/><ellipse cx="13" cy="7" rx="5" ry="8" transform="rotate(120 13 7)"/>
+      <ellipse cx="-13" cy="7" rx="5" ry="8" transform="rotate(-120 -13 7)"/>
+    </g>
+  </g>
+</g>
+</svg>

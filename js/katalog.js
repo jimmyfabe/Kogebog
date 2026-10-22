@@ -110,6 +110,8 @@ export const INGREDIENSER = {
   'boenner': 'bønner',
   'ris': 'ris',
   'tortilla': 'tortillas',
+  'agurk': 'agurk',
+  'blomkaal': 'blomkål',
 };
 
 // Ikoner for råt kød og råt æg: efter dem skal der komme et trin med «vaske-haender».
@@ -187,6 +189,9 @@ export const VARER = {
   'hvidloeg': { navn: 'Hvidløg', afd: 'groent', enhed: 'fed', ikon: 'hvidloeg' },
   'gulerod': { navn: 'Gulerødder', afd: 'groent', enhed: 'stk', ikon: 'gulerod' },
   'persille': { navn: 'Persille', afd: 'groent', enhed: 'stk', ikon: 'krydderurt', pakke: [1, 'bundt', 'bundter'] },
+  'agurk': { navn: 'Agurk', afd: 'groent', enhed: 'stk', ikon: 'agurk' },
+  'smaa-kartofler': { navn: 'Små kartofler', afd: 'groent', enhed: 'g', ikon: 'kartoffel' },
+  'revet-gulerod': { navn: 'Revne gulerødder', afd: 'groent', enhed: 'g', ikon: 'gulerod' },
   // Brød
   'tortillas': { navn: 'Tortillas', afd: 'broed', enhed: 'stk', ikon: 'tortilla' },
   // Dåser og tørvarer
@@ -205,6 +210,7 @@ export const VARER = {
   'sorte-boenner': { navn: 'Sorte bønner', afd: 'toer', enhed: 'stk', ikon: 'boenner', pakke: [1, 'dåse', 'dåser'] },
   'majs': { navn: 'Majs', afd: 'toer', enhed: 'stk', ikon: 'majs', pakke: [1, 'dåse', 'dåser'] },
   'tacokrydderi': { navn: 'Tacokrydderi (mildt)', afd: 'toer', enhed: 'stk', ikon: 'krydderurt', pakke: [1, 'pose', 'poser'] },
+  'kokosmaelk': { navn: 'Kokosmælk', afd: 'toer', enhed: 'stk', ikon: 'kokos', pakke: [1, 'dåse', 'dåser'] },
   // Køl
   'hakket-oksekoed': { navn: 'Hakket oksekød', afd: 'koel', enhed: 'g', ikon: 'koed', pakke: [500, 'bakke', 'bakker'] },
   'chorizo': { navn: 'Chorizo', afd: 'koel', enhed: 'g', ikon: 'chorizo', pakke: [250, 'pakke', 'pakker'] },
@@ -216,11 +222,22 @@ export const VARER = {
   'aeg': { navn: 'Æg', afd: 'koel', enhed: 'stk', ikon: 'aeg', pakke: [10, 'bakke', 'bakker'] },
   'smoer': { navn: 'Smør', afd: 'koel', enhed: 'g', ikon: 'smoer', pakke: [250, 'pakke', 'pakker'] },
   'yoghurt': { navn: 'Yoghurt naturel', afd: 'koel', enhed: 'g', ikon: 'yoghurt', pakke: [1000, 'bæger', 'bægre'] },
+  'pizzadej': { navn: 'Pizzadej (rulle)', afd: 'koel', enhed: 'stk', ikon: 'pizzadej', pakke: [1, 'rulle', 'ruller'] },
+  'creme-fraiche': { navn: 'Creme fraiche', afd: 'koel', enhed: 'g', ikon: 'yoghurt' },
+  'fiskefars': { navn: 'Fiskefars', afd: 'koel', enhed: 'g', ikon: 'koed' },
+  'kyllingebryst': { navn: 'Kyllingebryst', afd: 'koel', enhed: 'g', ikon: 'koed' },
+  'kyllingelaar': { navn: 'Kyllingelår', afd: 'koel', enhed: 'g', ikon: 'koed' },
   // Frost. Uden pakke: posernes størrelse skifter mellem butikkerne, så listen viser gram
   'aerter': { navn: 'Ærter', afd: 'frost', enhed: 'g', ikon: 'aerter' },
   'broccoliblanding': { navn: 'Broccoli', afd: 'frost', enhed: 'g', ikon: 'broccoli' },
   'suppeurter': { navn: 'Suppeurter', afd: 'frost', enhed: 'g', ikon: 'gulerod' },
   'groentsagsblanding': { navn: 'Grøntsagsblanding', afd: 'frost', enhed: 'g', ikon: 'aerter' },
+  'hakket-spinat': { navn: 'Hakket spinat', afd: 'frost', enhed: 'g', ikon: 'spinat' },
+  'aerter-gulerod': { navn: 'Ærter og gulerødder', afd: 'frost', enhed: 'g', ikon: 'aerter' },
+  'blomkaalsblanding': { navn: 'Blomkål', afd: 'frost', enhed: 'g', ikon: 'blomkaal' },
+  'rodfrugter': { navn: 'Rodfrugter', afd: 'frost', enhed: 'g', ikon: 'gulerod' },
+  'kartoffelbaade': { navn: 'Kartoffelbåde', afd: 'frost', enhed: 'g', ikon: 'kartoffel' },
+  'fiskepinde': { navn: 'Fiskepinde', afd: 'frost', enhed: 'g', ikon: 'koed' },
   // Tjek, at I har
   'salt': { navn: 'Salt', afd: 'basis', enhed: 'g', ikon: 'salt', basis: true },
   'peber': { navn: 'Peber', afd: 'basis', enhed: 'g', ikon: 'peber', basis: true },
@@ -229,5 +246,6 @@ export const VARER = {
   'hvidloegspulver': { navn: 'Hvidløgspulver', afd: 'basis', enhed: 'ml', ikon: 'hvidloeg', basis: true },
   'paprika': { navn: 'Paprika', afd: 'basis', enhed: 'ml', ikon: 'krydderurt', basis: true },
   'spidskommen': { navn: 'Stødt spidskommen', afd: 'basis', enhed: 'ml', ikon: 'krydderurt', basis: true },
+  'karry': { navn: 'Karry (mild)', afd: 'basis', enhed: 'ml', ikon: 'krydderurt', basis: true },
   'vand': { navn: 'Vand', afd: 'basis', enhed: 'ml', ikon: 'vand', basis: true, skjul: true },
 };

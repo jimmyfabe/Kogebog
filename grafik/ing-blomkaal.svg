@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="leaves">
+    <path d="M128 228 C88 228 40 206 30 160 C56 170 80 168 98 158 Z" fill="#5FA14A"/>
+    <path d="M128 228 C168 228 216 206 226 160 C200 170 176 168 158 158 Z" fill="#5FA14A"/>
+    <path d="M60 178 C76 182 90 180 104 174 M196 178 C180 182 166 180 152 174" fill="none" stroke="#3E7A30" stroke-width="3"/>
+  </g>
+  <g id="florets" fill="#FBF3DC">
+    <circle cx="82" cy="128" r="34"/>
+    <circle cx="174" cy="128" r="34"/>
+    <circle cx="104" cy="88" r="36"/>
+    <circle cx="152" cy="86" r="36"/>
+    <circle cx="128" cy="134" r="40"/>
+    <circle cx="128" cy="62" r="30"/>
+  </g>
+  <g fill="#E7D9AE" stroke="none">
+    <circle cx="94" cy="96" r="6"/><circle cx="120" cy="70" r="5"/><circle cx="160" cy="96" r="6"/>
+    <circle cx="140" cy="140" r="7"/><circle cx="108" cy="146" r="5"/><circle cx="72" cy="132" r="5"/>
+    <circle cx="182" cy="134" r="5"/><circle cx="136" cy="54" r="4"/>
+  </g>
+  <path d="M84 104 C90 94 98 88 108 86" fill="none" stroke="#FFFFFF" stroke-width="4"/>
+</g>
+</svg>

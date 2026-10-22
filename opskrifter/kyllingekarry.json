@@ -1,0 +1,63 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Mild kyllingekarry med ris",
+  "description": "Kylling i mild karry med kokosmælk, tomat, blomkål og ærter. Ris ved siden af.",
+  "image": "grafik/ret-kyllingekarry.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT25M",
+  "totalTime": "PT30M",
+  "recipeIngredient": [
+    "1 spsk olie",
+    "2 tsk mild karry",
+    "1 dåse kokosmælk",
+    "1 dåse hakkede tomater",
+    "350 g kyllingebryst",
+    "500 g frossen blomkål",
+    "200 g frosne ærter",
+    "½ tsk salt",
+    "250 g ris",
+    "2 l vand og 1 tsk salt til risene"
+  ],
+  "tool": ["dåseåbner", "gryde med låg", "gryde til ris", "grydeske", "dørslag", "tallerken", "2 gafler"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Kog vand til risene.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "2 l vand og 1 tsk salt i en stor gryde på en bagerste plade, med håndtagene ind. Med låg på koger det hurtigere." } },
+    { "@type": "HowToStep", "text": "Rør karryen ud i olien.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 60, "ikoner": ["olie", "krydderurt"], "note": "Olien i en gryde med låg ved middel varme. Rør i 1 min, til det dufter." } },
+    { "@type": "HowToStep", "text": "Hæld kokosmælk og tomater i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["kokos", "tomat"], "note": "Gryden er varm. Den voksne åbner dåserne: kanten er skarp." } },
+    { "@type": "HowToStep", "text": "Læg kyllingen i sovsen.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["koed"], "note": "Hele fileter. Låg på. Timeren startes efter håndvasken." } },
+    { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: rå kylling kan give maveonde." } },
+    { "@type": "HowToStep", "text": "Lad kyllingen simre under låg i 5 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Svag varme. Den simrer videre, mens risene koger." } },
+    { "@type": "HowToStep", "text": "Kom risene i vandet.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 720, "ikoner": ["ris"], "note": "Kog som anvist på posen, ca. 12 min. Rør lidt i starten." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra risene.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Den voksne hælder gennem dørslaget i vasken. Pas på dampen." } },
+    { "@type": "HowToStep", "text": "Kog blomkål og ærter i sovsen i 6 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 360, "ikoner": ["blomkaal", "aerter"], "note": "Den voksne tager kyllingen op på en tallerken først: den skal være hvid hele vejen igennem. Grøntsagerne kommer direkte fra frost. Låg på." } },
+    { "@type": "HowToStep", "text": "Træk kyllingen fra hinanden med to gafler.", "tumbi": { "verbum": "smuldre", "voksen": true, "voksen_hjaelp": "varme", "note": "Kyllingen er varm. Barnet holder med den ene gaffel og trækker med den anden." } },
+    { "@type": "HowToStep", "text": "Rør kyllingen tilbage i gryden.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Smag karryen til med salt.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt"], "note": "Pust på skeen først." } }
+  ],
+  "tumbi": {
+    "id": "kyllingekarry",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra en research af billig hverdagsmad til en børnefamilie (22-10-2026). Idé fra Coop Opskrifter, «Blomkålscurry med kikærter og ris». Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Tid og grønt er også et skøn (ikke målt), og grønt er uden bælgfrugter og kartofler.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 67,
+    "pris_dato": "2026-10",
+    "groent_g": 1100,
+    "ingredienser": [
+      { "ikon": "olie", "maengde": "1 spsk", "vare": "olie" },
+      { "ikon": "krydderurt", "maengde": "2 tsk", "vare": "karry" },
+      { "ikon": "kokos", "maengde": "1 dåse", "vare": "kokosmaelk", "antal": 1, "enhed": "stk" },
+      { "ikon": "tomat", "maengde": "1 dåse", "vare": "hakkede-tomater", "antal": 400, "enhed": "g" },
+      { "ikon": "koed", "maengde": "350 g", "vare": "kyllingebryst", "antal": 350, "enhed": "g" },
+      { "ikon": "blomkaal", "maengde": "500 g", "vare": "blomkaalsblanding", "antal": 500, "enhed": "g" },
+      { "ikon": "aerter", "maengde": "200 g", "vare": "aerter", "antal": 200, "enhed": "g" },
+      { "ikon": "salt", "maengde": "½ tsk", "vare": "salt" },
+      { "ikon": "ris", "maengde": "250 g", "vare": "ris", "antal": 250, "enhed": "g" },
+      { "ikon": "vand", "maengde": "2 l", "vare": "vand" }
+    ]
+  }
+}

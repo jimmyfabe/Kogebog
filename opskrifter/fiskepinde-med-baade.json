@@ -1,0 +1,53 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Fiskepinde med kartoffelbåde",
+  "description": "Fiskepinde og kartoffelbåde fra ovnen, ærter og gulerødder og en kold gulerodssalat.",
+  "image": "grafik/ret-fiskepinde-med-baade.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT25M",
+  "totalTime": "PT30M",
+  "recipeIngredient": [
+    "600 g frosne kartoffelbåde",
+    "450 g frosne fiskepinde",
+    "600 g frosne ærter og gulerødder",
+    "150 g revne gulerødder",
+    "100 g yoghurt naturel",
+    "1 l vand og ½ tsk salt til grøntsagerne"
+  ],
+  "tool": ["2 bageplader", "bagepapir", "gryde med låg", "dørslag", "lille skål", "ske"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Hæld kartoffelbådene ud på en plade.", "tumbi": { "verbum": "haelde", "ikoner": ["kartoffel"], "note": "Tænd ovnen på 220 °C varmluft først. Bagepapir på pladen, og bådene i ét lag." } },
+    { "@type": "HowToStep", "text": "Hæld ærter og gulerødder i en gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["aerter"], "note": "Direkte fra frost. Gryden er kold, så barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Rør revne gulerødder og yoghurt sammen.", "tumbi": { "verbum": "roere", "ikoner": ["gulerod", "yoghurt"], "note": "I en lille skål. Det er en kold salat til fisken." } },
+    { "@type": "HowToStep", "text": "Læg fiskepindene på en anden plade.", "tumbi": { "verbum": "pynte", "ikoner": ["koed"], "note": "Bagepapir på pladen. Læg dem side om side." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter fiskepindene: de er ikke færdige endnu." } },
+    { "@type": "HowToStep", "text": "Bag bådene i ovnen i 10 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "note": "220 °C varmluft." } },
+    { "@type": "HowToStep", "text": "Bag fiskepindene med i 15 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900, "note": "Sæt pladen med fiskepindene ind under bådene. Når der er 10 min tilbage: vand på grøntsagerne, så de lige er dækket, og kog dem med låg." } },
+    { "@type": "HowToStep", "text": "Tag pladerne ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme", "note": "Pladerne er meget varme. Fiskepindene skal være gyldne og varme hele vejen igennem." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra grøntsagerne.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["aerter"], "note": "Den voksne hælder gennem dørslaget i vasken. Pas på dampen." } },
+    { "@type": "HowToStep", "text": "Smag på en kartoffelbåd.", "tumbi": { "verbum": "smage", "ikoner": ["kartoffel"], "note": "Lad den køle lidt først." } }
+  ],
+  "tumbi": {
+    "id": "fiskepinde-med-baade",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra en research af billig hverdagsmad til en børnefamilie (22-10-2026). Idé fra Fødevarestyrelsens kostråd om fisk to gange om ugen og den danske børnefavorit. Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Tid og grønt er også et skøn (ikke målt), og grønt er uden bælgfrugter og kartofler.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 70,
+    "pris_dato": "2026-10",
+    "groent_g": 750,
+    "ingredienser": [
+      { "ikon": "kartoffel", "maengde": "600 g", "vare": "kartoffelbaade", "antal": 600, "enhed": "g" },
+      { "ikon": "koed", "maengde": "450 g", "vare": "fiskepinde", "antal": 450, "enhed": "g" },
+      { "ikon": "aerter", "maengde": "600 g", "vare": "aerter-gulerod", "antal": 600, "enhed": "g" },
+      { "ikon": "gulerod", "maengde": "150 g", "vare": "revet-gulerod", "antal": 150, "enhed": "g" },
+      { "ikon": "yoghurt", "maengde": "100 g", "vare": "yoghurt", "antal": 100, "enhed": "g" },
+      { "ikon": "vand", "maengde": "1 l", "vare": "vand" }
+    ]
+  }
+}
