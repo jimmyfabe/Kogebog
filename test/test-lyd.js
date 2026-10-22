@@ -1,7 +1,7 @@
 // test-lyd.js — lydfilerne (Røst-stemmen i lyd/) passer til det, appen læser op.
 // Fejler, hvis en replik mangler sin fil i lyd/liste.json, hvis listen peger på en fil, der ikke findes, hvis en
-// lydfil er lavet til en anden tekst end den, appen siger nu (lyd/tekster.json), eller hvis app.js læser noget op
-// uden om js/replikker.js (så ville den nye tekst aldrig komme på talelisten).
+// lydfil er lavet til en anden tekst end den, appen siger nu (lyd/tekster.json), eller hvis app.js eller js/ugeplan.js
+// læser noget op uden om js/replikker.js (så ville den nye tekst aldrig komme på talelisten).
 // Kør:  node test/test-lyd.js
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -62,24 +62,29 @@ test('hver mp3 i lyd/ står i listen og er en mp3-fil', () => {
   }
 });
 
-test('app.js læser kun op gennem js/replikker.js', () => {
-  const app = fs.readFileSync(path.join(ROD, 'app.js'), 'utf8');
-  const kald = [...app.matchAll(/Tale\.sig\(\s*([^,)]*)/g)].map((m) => m[1].trim());
-  assert.ok(kald.length >= 10, 'fandt kun ' + kald.length + ' kald til Tale.sig i app.js');
-  // … også replikken, der siges bagefter (Tale.sig(…, { derefter: R.… }))
-  const derefter = [...app.matchAll(/derefter:\s*([^,)}]*)/g)].map((m) => m[1].trim());
-  assert.ok(derefter.length >= 1, 'fandt ingen derefter i app.js');
-  kald.push(...derefter);
-  assert.deepEqual(kald.filter((k) => !/^R\.[A-Za-z_]+(?:\(|$)/.test(k)), [], 'Tale.sig skal have en replik fra js/replikker.js (R.…)');
-  // Hver replik, app.js læser op (R.NAVN), skal også stå på talelisten (vaerktoej/lav-taleliste.js). Ellers får den
-  // aldrig en lydfil, og alle tjek ovenfor er grønne alligevel (bevist med en ny R.NY i code review 19-10)
+// app.js (retterne) og js/ugeplan.js (børnenes valg af ugens mad) er de eneste, der læser op, og kun med R.…
+const LAESER_OP = [['app.js', 10, 1], ['js/ugeplan.js', 6, 0]]; // fil, mindst så mange Tale.sig og derefter
+
+test('app.js og js/ugeplan.js læser kun op gennem js/replikker.js', () => {
   const taleliste = fs.readFileSync(path.join(ROD, 'vaerktoej/lav-taleliste.js'), 'utf8');
   const paaListen = new Set([...taleliste.matchAll(/\bR\.([A-Za-z_]+)/g)].map((m) => m[1]));
-  const brugt = [...new Set(kald.map((k) => /^R\.([A-Za-z_]+)/.exec(k)).filter(Boolean).map((m) => m[1]))];
-  assert.deepEqual(brugt.filter((n) => !paaListen.has(n)), [], 'app.js læser disse replikker op, men de mangler i vaerktoej/lav-taleliste.js (så får de ingen lydfil)');
+  for (const [fil, mindstKald, mindstDerefter] of LAESER_OP) {
+    const kode = fs.readFileSync(path.join(ROD, fil), 'utf8');
+    const kald = [...kode.matchAll(/Tale\.sig\(\s*([^,)]*)/g)].map((m) => m[1].trim());
+    assert.ok(kald.length >= mindstKald, 'fandt kun ' + kald.length + ' kald til Tale.sig i ' + fil);
+    // … også replikken, der siges bagefter (Tale.sig(…, { derefter: R.… }))
+    const derefter = [...kode.matchAll(/derefter:\s*([^,)}]*)/g)].map((m) => m[1].trim());
+    assert.ok(derefter.length >= mindstDerefter, 'fandt kun ' + derefter.length + ' derefter i ' + fil);
+    kald.push(...derefter);
+    assert.deepEqual(kald.filter((k) => !/^R\.[A-Za-z_]+(?:\(|$)/.test(k)), [], fil + ': Tale.sig skal have en replik fra js/replikker.js (R.…)');
+    // Hver replik, filen læser op (R.NAVN), skal også stå på talelisten (vaerktoej/lav-taleliste.js). Ellers får den
+    // aldrig en lydfil, og alle tjek ovenfor er grønne alligevel (bevist med en ny R.NY i code review 19-10)
+    const brugt = [...new Set(kald.map((k) => /^R\.([A-Za-z_]+)/.exec(k)).filter(Boolean).map((m) => m[1]))];
+    assert.deepEqual(brugt.filter((n) => !paaListen.has(n)), [], fil + ' læser disse replikker op, men de mangler i vaerktoej/lav-taleliste.js (så får de ingen lydfil)');
+  }
   // Ingen andre filer læser op
   for (const f of fs.readdirSync(path.join(ROD, 'js'))) {
-    if (f === 'tale.js') continue;
+    if (f === 'tale.js' || LAESER_OP.some(([fil]) => fil === 'js/' + f)) continue;
     assert.ok(!/\bsig\(|speechSynthesis/.test(fs.readFileSync(path.join(ROD, 'js', f), 'utf8')), 'js/' + f + ' læser op uden om tale.js');
   }
 });

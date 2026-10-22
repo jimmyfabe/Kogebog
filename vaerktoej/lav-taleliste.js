@@ -8,7 +8,7 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { lavModel } from '../js/model.js';
 import { tilTale } from '../js/tekst.js';
-import { GRUPPER } from '../js/katalog.js';
+import { GRUPPER, DYR } from '../js/katalog.js';
 import * as R from '../js/replikker.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -34,6 +34,11 @@ export function alleReplikker(retter = alleRetter()) {
   for (const m of retter) {
     for (const t of m.trin) if (t.timerSek) replikker.push(R.timerOptaget(m, t.nr, false), R.timerOptaget(m, t.nr, true));
   }
+  // Børnenes valg af ugens mad (js/ugeplan.js): alle tre dyr kan vælge, men kun Rosa og Pip bliver færdige (Bo er den
+  // voksne), alle syv dage, og navnet på hver ret i ugeplanen (tumbi.ugeplan)
+  replikker.push(R.UGE_HVEM, R.HVILKEN_DAG, R.DAG_OPTAGET, R.UGE_TAK, R.ALLE_VALGT, R.UGE_FULD,
+    ...Object.keys(DYR).map(R.dyrVaelger), ...['rosa', 'pip'].map(R.dyrFaerdig), ...[0, 1, 2, 3, 4, 5, 6].map(R.dag));
+  for (const m of retter) if (m.uge) replikker.push(R.ugeRet(m));
   return replikker;
 }
 

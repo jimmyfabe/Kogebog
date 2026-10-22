@@ -3,6 +3,7 @@
 //   #/indkoeb      telefonen: listen, der krydses af i butikken. Er den tom, kan linket sættes ind i et felt
 //   #/uge          iPad og desktop: den voksnes oversigt over ugen, Send til telefon, Del som tekst, Print og Ny uge
 //   #/uge/dag/<n>  den voksne vælger en ret til dag n (1 = mandag) med filtrene højst 40 min, billigst og mindst kniv
+//   #/uge/vaelg    iPad: børnene vælger med dyrene, billederne og stemmen (hvem → ret → dag)
 // Koden i linket kommer udefra. Den går kun gennem afkod() i js/plankode.js, og intet fra adressen kommer i DOM'en: fejlene
 // er faste tekster, og listen gemmes med den genskrevne kode. Lageret røres kun gennem js/lager.js, og al tekst sættes
 // som tekst (js/dom.js). app.js ejer ruterne og tilstanden (S) og giver sine hjælpere med init().
@@ -11,13 +12,13 @@ import * as Lager from './lager.js';
 import { afkod, kod, ukendtTekst, BESKED_UGYLDIG, BESKED_NYERE } from './plankode.js';
 import { saml, grupper, tekst as listeTekst } from './indkoeb.js';
 import { DYR, grafikIngrediens, grafikRet, grafikDyr } from './katalog.js';
-import { ugeNr, dagDato, planMandag } from './tid.js';
+import { ugeNr, dagDato, planMandag, DAGE } from './tid.js';
 import { minutterTekst } from './tekst.js';
 import { holdKnap } from './hold.js';
+import * as Tale from './tale.js';
+import * as R from './replikker.js';
 
-export const DAGE = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag', 'Søndag'];
-
-// app.js: { S, knap, billede, topbar, statusSkaerm, naviger, annoncer, indlaes, vis }
+// app.js: { S, knap, klik, billede, topbar, statusSkaerm, naviger, annoncer, indlaes, vis }
 let K = null;
 export function init(k) {
   K = k;
@@ -32,6 +33,9 @@ export function rute(hash) {
   if (raa === 'uge') return { uge: true, side: 'oversigt' };
   const dag = /^uge\/dag\/([1-7])$/.exec(raa);
   if (dag) return { uge: true, side: 'dag', i: Number(dag[1]) - 1 };
+  // Dyret og retten tjekkes først i vaelgSkaerm (DYR og index.json): her kun, at de ligner et id
+  const v = /^uge\/vaelg(?:\/([a-z]+)(?:\/([a-z0-9-]+))?)?$/.exec(raa);
+  if (v) return { uge: true, side: 'vaelg', dyr: v[1] || null, ret: v[2] || null };
   if (raa.startsWith('uge/')) return { uge: true, side: 'oversigt' };
   return null;
 }
@@ -39,12 +43,14 @@ export function rute(hash) {
 let sidsteSide = null;
 export function skaerm(r) {
   if (r.side !== 'indkoeb') K.S.listeBesked = null;
+  if (r.side !== 'vaelg') barnFejl = false;
   // Beskederne under oversigtens knapper («Linket er kopieret») hører til den skærm, de kom på
   if (r.side !== sidsteSide) oversigtBesked = null;
   sidsteSide = r.side;
   if (r.side === 'hent') return hentSkaerm(r.kode);
   if (r.side === 'oversigt') return oversigtSkaerm();
   if (r.side === 'dag') return dagSkaerm(r.i);
+  if (r.side === 'vaelg') return vaelgSkaerm(r);
   return indkoebSkaerm();
 }
 
@@ -581,7 +587,8 @@ function oversigtSkaerm() {
         } }), 'pr-barn-' + x);
         b.setAttribute('aria-pressed', String(p.prBarn === x));
         return b;
-      }))));
+      }))),
+    medFokus(boernKnap(), 'boern'));
 
   const ny = medFokus(holdKnap({
     klasse: 'lille voksen-hold ny-uge',
@@ -618,6 +625,16 @@ function oversigtSkaerm() {
         harRetter ? null : el('p', { class: 'uge-tom', tekst: 'Vælg mindst én ret, så kan listen sendes til telefonen.' }),
         el('div', { class: 'uge-knapper' }, knapper, harRetter || p.uge ? ny : null),
         oversigtBeskedEl())));
+}
+
+// Giver iPad'en til børnene: de vælger med dyrene (#/uge/vaelg), og stemmen spørger, hvem der skal vælge
+function boernKnap() {
+  const b = K.knap('Børnene vælger', { klasse: 'boern-vaelger', onclick: () => {
+    nulstilBarn();
+    K.naviger('#/uge/vaelg', () => Tale.sig(R.UGE_HVEM));
+  } });
+  b.prepend(K.billede(grafikDyr('rosa'), '', 'knap-dyr'));
+  return b;
 }
 
 // ---------- #/uge/dag/<n>: den voksne vælger en ret til en dag ----------
@@ -690,4 +707,268 @@ function dagSkaerm(i) {
         K.knap('Tilbage til ugeplanen', { klasse: 'lille', ikonNavn: 'tilbage', onclick: () => K.naviger('#/uge') }),
         chips),
       indhold));
+}
+
+// ---------- #/uge/vaelg: børnene vælger ugens mad (iPad på langs) ----------
+// Tre trin, hvert med sin adresse, så browserens «tilbage» går et trin tilbage:
+//   #/uge/vaelg               «Hvem skal vælge?»: Bo, Rosa og Pip (dyrene, aldrig børnenes navne)
+//   #/uge/vaelg/<dyr>         fire retter pr. side med pile til flere. Første tryk siger navnet, fluebenet vælger
+//   #/uge/vaelg/<dyr>/<ret>   «Hvilken dag?»: syv dagbrikker. En optaget dag viser retten og dyret og siger, at den er optaget
+// Rosa og Pip vælger hver højst p.prBarn retter (den voksne sætter 1 eller 2 i oversigten). Bo er den voksne og har ingen
+// grænse. Børnene kan næsten ikke læse: hvert trin har «Læs op», og hvert tryk siger, hvad man trykkede på (R.… fra
+// js/replikker.js, test/test-lyd.js). Planen gemmes kun gennem gemPlan, som læser hele planen lige før
+const PR_SIDE = 4;
+const BOERN = ['rosa', 'pip'];
+const barn = { dyr: null, side: 0, ret: null, dag: null }; // valget undervejs (kun i hukommelsen, til det er bekræftet)
+let barnFejl = false; // valget kunne ikke gemmes: den voksne får en fejlskærm
+
+const valgtAf = (p, dyr) => p.dage.filter((d) => d && d.af === dyr).length;
+const harValgt = (p, dyr) => BOERN.includes(dyr) && valgtAf(p, dyr) >= p.prBarn;
+const ugenErFuld = (p) => p.dage.every(Boolean);
+const nulstilBarn = () => Object.assign(barn, { dyr: null, side: 0, ret: null, dag: null });
+
+function vaelgSkaerm(r) {
+  if (K.S.indexFejl) return hentFejl();
+  if (!klar()) return henter('Henter retterne …');
+  const p = hentPlan();
+  if (p.laast) return oversigtSkaerm();
+  if (barnFejl) return barnGemFejl();
+  const dyr = r.dyr && Object.hasOwn(DYR, r.dyr) ? r.dyr : null;
+  if (!dyr || ugenErFuld(p) || harValgt(p, dyr)) return hvemSkaerm(p);
+  if (barn.dyr !== dyr) Object.assign(barn, { dyr, side: 0, ret: null, dag: null });
+  const m = r.ret && K.S.ids.includes(r.ret) ? model(r.ret) : null;
+  if (m && m.uge) return dagValgSkaerm(p, dyr, m);
+  return retValgSkaerm(p, dyr);
+}
+
+// Overskriften med «Læs op» ved siden af (børnene kan ikke læse den), og dyret eller retten foran
+function valgHoved(titel, laesOp, billede) {
+  return el('header', { class: 'valg-hoved' }, billede || null, el('h1', { tabindex: '-1', tekst: titel }), laesOp);
+}
+
+function valgSide(klasse, hoved, indhold, ...bund) {
+  return el('main', { class: 'skaerm boern-valg ' + klasse },
+    K.topbar(),
+    el('div', { class: 'valg-indhold' }, hoved, indhold),
+    el('footer', { class: 'handlinger valg-bund' }, bund));
+}
+
+// Den voksnes vej tilbage til oversigten: bag et hold, så et barn ikke kommer derud ved et tilfælde
+const tilUgeplanen = () => holdKnap({
+  klasse: 'lille voksen-hold til-ugeplan',
+  label: 'Ugeplan til den voksne. Hold knappen inde i 2 sekunder.',
+  indhold: [ikon('kalender'), el('span', { tekst: 'Ugeplan: hold' })],
+  naarFaerdig: () => K.naviger('#/uge'),
+});
+
+// Dagens navn, tallerkenen (rettens billede, eller tom) og dyret, der har valgt. ny: retten, der vises på en fri dag,
+// når barnet har trykket på den (så man kan se, hvor maden kommer til at stå)
+function brikIndhold(d, i, ny) {
+  const m = d ? model(d.ret) : ny;
+  return [
+    el('span', { class: 'brik-navn', tekst: DAGE[i] }),
+    el('span', { class: 'brik-tallerken' }, m ? K.billede(grafikRet(m.id), '') : null),
+    d && Object.hasOwn(DYR, d.af) ? K.billede(grafikDyr(d.af), '', 'brik-dyr') : null,
+  ];
+}
+const brikNavn = (d, i) => {
+  if (!d) return DAGE[i];
+  const m = model(d.ret);
+  return DAGE[i] + ': ' + (m ? m.navn : 'optaget') + (Object.hasOwn(DYR, d.af) ? ', valgt af ' + dyrNavn(d.af) : '');
+};
+
+// Trin 1: hvem vælger? Under hvert dyr en plads pr. ret: Rosa og Pip har så mange, som de må vælge (fyldt med rettens
+// billede, når de har valgt), Bo kun dem, han har valgt
+function hvemSkaerm(p) {
+  if (ugenErFuld(p)) return fuldSkaerm(p);
+  const kort = Object.keys(DYR).map((dyr) => {
+    const faerdig = harValgt(p, dyr);
+    const retter = p.dage.filter((d) => d && d.af === dyr).map((d) => model(d.ret));
+    const antal = BOERN.includes(dyr) ? Math.max(p.prBarn, retter.length) : retter.length;
+    const pladser = Array.from({ length: antal }, (_, k) => el('span', { class: 'dyr-plads' + (k < retter.length ? ' fyldt' : '') },
+      retter[k] ? K.billede(grafikRet(retter[k].id), '') : null));
+    return el('li', { class: 'kort-plads' }, el('button', {
+      type: 'button',
+      class: 'kort dyr-kort' + (faerdig ? ' faerdig' : ''),
+      'data-dyr': dyr,
+      'data-fokus': 'dyr-' + dyr,
+      'aria-label': DYR[dyr] + (faerdig ? '. Har valgt.' : ''),
+      onclick: K.klik(() => {
+        if (harValgt(hentPlan(), dyr)) { Tale.sig(R.dyrFaerdig(dyr)); return; }
+        Object.assign(barn, { dyr, side: 0, ret: null, dag: null });
+        K.naviger('#/uge/vaelg/' + dyr, () => Tale.sig(R.dyrVaelger(dyr)));
+      }),
+    },
+    el('span', { class: 'kort-billede' }, K.billede(grafikDyr(dyr), '')),
+    el('span', { class: 'kort-navn', tekst: dyrNavn(dyr) }),
+    pladser.length ? el('span', { class: 'dyr-pladser' + (antal > 3 ? ' mange' : ''), 'aria-hidden': 'true' }, pladser) : null,
+    faerdig ? el('span', { class: 'dyr-tjek', 'aria-hidden': 'true' }, ikon('tjek')) : null));
+  });
+  return valgSide('hvem',
+    valgHoved('Hvem skal vælge?', K.knap('Læs op', { klasse: 'laes-op', ikonNavn: 'hoejttaler', onclick: (e) => Tale.sig(R.UGE_HVEM, { knap: e.currentTarget }) })),
+    el('ul', { class: 'dyr-gitter', 'aria-label': 'Dyrene' }, kort),
+    tilUgeplanen());
+}
+
+// Alle syv dage har en ret: ugen vises som dagbrikkerne, og den voksne tager over
+function fuldSkaerm(p) {
+  return valgSide('fuld',
+    valgHoved('Ugen er fuld', K.knap('Læs op', { klasse: 'laes-op', ikonNavn: 'hoejttaler', onclick: (e) => Tale.sig(R.UGE_FULD, { knap: e.currentTarget }) })),
+    el('ol', { class: 'dag-brikker', role: 'list', 'aria-label': 'Ugens mad' },
+      p.dage.map((d, i) => el('li', { class: 'dag-brik optaget', 'data-dag': String(i), 'aria-label': brikNavn(d, i) }, brikIndhold(d, i)))),
+    tilUgeplanen());
+}
+
+// Trin 2: fire retter pr. side. Første tryk siger navnet og markerer retten, fluebenet («Vælg») går videre til dagene
+function retValgSkaerm(p, dyr) {
+  const alle = iPlanen();
+  const sider = Math.max(1, Math.ceil(alle.length / PR_SIDE));
+  barn.side = Math.min(Math.max(barn.side, 0), sider - 1);
+  const vist = alle.slice(barn.side * PR_SIDE, (barn.side + 1) * PR_SIDE);
+  if (!vist.some((m) => m.id === barn.ret)) barn.ret = null;
+  const af = new Map();
+  for (const d of p.dage) if (d && !af.has(d.ret) && Object.hasOwn(DYR, d.af)) af.set(d.ret, d.af);
+
+  const kort = vist.map((m) => {
+    const valgt = barn.ret === m.id;
+    return el('li', { class: 'kort-plads' }, el('button', {
+      type: 'button',
+      class: 'kort ret-kort' + (valgt ? ' valgt' : ''),
+      'data-ret': m.id,
+      'data-fokus': 'ret-' + m.id,
+      'aria-pressed': String(valgt),
+      onclick: K.klik(() => {
+        barn.ret = m.id;
+        tegnIgen('ret-' + m.id);
+        Tale.sig(R.ugeRet(m));
+      }),
+    },
+    el('span', { class: 'kort-billede' }, K.billede(grafikRet(m.id), '')),
+    el('span', { class: 'kort-navn', tekst: m.navn }),
+    // Retten står allerede på planen: dyret, der valgte den, i hjørnet (den kan godt vælges igen)
+    af.has(m.id) ? el('span', { class: 'kort-dyr' }, K.billede(grafikDyr(af.get(m.id)), 'valgt af ' + dyrNavn(af.get(m.id)))) : null));
+  });
+
+  // Pilene står i siderne som i en billedbog. Den, der ikke kan bruges, er usynlig (og ude af Tab), så kortene står stille
+  const pil = (retning) => {
+    const til = barn.side + retning;
+    const kan = til >= 0 && til < sider;
+    const b = medFokus(K.knap('', {
+      klasse: 'rund stor-rund side-knap ' + (retning > 0 ? 'side-naeste' : 'side-forrige') + (kan ? '' : ' usynlig'),
+      ikonNavn: retning > 0 ? 'naeste' : 'tilbage',
+      label: retning > 0 ? 'Flere retter' : 'Forrige retter',
+      onclick: () => {
+        Object.assign(barn, { side: til, ret: null });
+        // Fokus bliver på pilen, eller går til den anden, når der ikke er flere sider den vej
+        const igen = retning > 0 ? til + 1 < sider : til > 0;
+        tegnIgen(igen === (retning > 0) ? 'side-naeste' : 'side-forrige');
+      },
+    }), retning > 0 ? 'side-naeste' : 'side-forrige');
+    b.disabled = !kan;
+    return b;
+  };
+  const prikker = sider > 1
+    ? el('div', { class: 'side-prikker', role: 'img', 'aria-label': 'Side ' + (barn.side + 1) + ' af ' + sider },
+      Array.from({ length: sider }, (_, k) => el('span', { class: k === barn.side ? 'nu' : null })))
+    : null;
+
+  const valgt = barn.ret && model(barn.ret);
+  const vaelg = valgt ? K.knap('Vælg', {
+    klasse: 'primaer naeste',
+    ikonNavn: 'tjek',
+    ikonEfter: true,
+    label: 'Vælg ' + valgt.navn,
+    onclick: () => K.naviger('#/uge/vaelg/' + dyr + '/' + valgt.id, () => Tale.sig(R.HVILKEN_DAG)),
+  }) : null;
+
+  return valgSide('retter',
+    valgHoved(dyrNavn(dyr) + ' vælger mad',
+      K.knap('Læs op', { klasse: 'laes-op', ikonNavn: 'hoejttaler', onclick: (e) => Tale.sig(R.dyrVaelger(dyr), { knap: e.currentTarget }) }),
+      K.billede(grafikDyr(dyr), '', 'valg-dyr')),
+    alle.length
+      ? el('div', { class: 'ret-blad' }, pil(-1), el('ul', { class: 'ret-gitter', 'aria-label': 'Retter' }, kort), pil(1), prikker)
+      : el('p', { class: 'uge-tom', tekst: 'Der er ingen retter i ugeplanen endnu.' }),
+    K.knap('Tilbage', { klasse: 'tilbage', ikonNavn: 'tilbage', onclick: () => K.naviger('#/uge/vaelg', () => Tale.sig(R.UGE_HVEM)) }),
+    el('span', { class: 'skub' }),
+    vaelg);
+}
+
+// Trin 3: hvilken dag? En fri dag markeres og siges ved første tryk, fluebenet gemmer. En optaget dag siger det bare
+function dagValgSkaerm(p, dyr, m) {
+  if (barn.ret !== m.id) Object.assign(barn, { ret: m.id, dag: null });
+  if (barn.dag !== null && p.dage[barn.dag]) barn.dag = null;
+
+  const brikker = p.dage.map((d, i) => {
+    const valgt = barn.dag === i;
+    return el('li', {}, el('button', {
+      type: 'button',
+      class: 'dag-brik' + (d ? ' optaget' : '') + (valgt ? ' valgt' : ''),
+      'data-dag': String(i),
+      'data-fokus': 'dag-' + i,
+      'aria-label': brikNavn(d, i),
+      'aria-pressed': d ? null : String(valgt),
+      'aria-disabled': d ? 'true' : null,
+      onclick: K.klik(() => {
+        if (d) { Tale.sig(R.DAG_OPTAGET); return; }
+        barn.dag = i;
+        tegnIgen('dag-' + i);
+        Tale.sig(R.dag(i));
+      }),
+    }, brikIndhold(d, i, valgt ? m : null)));
+  });
+
+  const bekraeft = () => {
+    const i = barn.dag;
+    const q = hentPlan();
+    if (q.dage[i]) {
+      barn.dag = null;
+      tegnIgen('dag-' + i);
+      Tale.sig(R.DAG_OPTAGET);
+      return;
+    }
+    if (harValgt(q, dyr)) { K.naviger('#/uge/vaelg', () => Tale.sig(R.dyrFaerdig(dyr))); return; }
+    const ny = gemPlan((x) => {
+      x.dage[i] = { ret: m.id, af: dyr, n: x.n };
+      return { dage: x.dage };
+    });
+    if (!ny) {
+      barnFejl = true;
+      K.vis();
+      return;
+    }
+    nulstilBarn();
+    K.annoncer(m.navn + ' står nu på ' + DAGE[i].toLowerCase() + '.');
+    K.naviger('#/uge/vaelg', () => {
+      if (ugenErFuld(ny)) Tale.sig(R.UGE_FULD);
+      else if (BOERN.includes(dyr) && BOERN.every((b) => harValgt(ny, b))) Tale.sig(R.ALLE_VALGT);
+      else Tale.sig(R.UGE_TAK);
+    });
+  };
+
+  const vaelg = barn.dag !== null ? K.knap('Vælg', {
+    klasse: 'primaer naeste',
+    ikonNavn: 'tjek',
+    ikonEfter: true,
+    label: 'Vælg ' + DAGE[barn.dag].toLowerCase(),
+    onclick: bekraeft,
+  }) : null;
+
+  return valgSide('dage',
+    valgHoved('Hvilken dag?',
+      K.knap('Læs op', { klasse: 'laes-op', ikonNavn: 'hoejttaler', onclick: (e) => Tale.sig(R.HVILKEN_DAG, { knap: e.currentTarget }) }),
+      el('span', { class: 'valg-ret' }, K.billede(grafikRet(m.id), m.navn))),
+    el('ol', { class: 'dag-brikker', role: 'list', 'aria-label': 'Ugens dage' }, brikker),
+    K.knap('Tilbage', { klasse: 'tilbage', ikonNavn: 'tilbage', onclick: () => K.naviger('#/uge/vaelg/' + dyr) }),
+    el('span', { class: 'skub' }),
+    vaelg);
+}
+
+function barnGemFejl() {
+  return K.statusSkaerm({
+    titel: 'Valget kunne ikke gemmes',
+    tekst: 'Denne enhed kunne ikke gemme ugeplanen. Måske er privat browsing slået til, eller lageret er fuldt. Den voksne kan prøve igen.',
+    handling: el('div', { class: 'status-knapper' },
+      K.knap('Prøv igen', { klasse: 'primaer', ikonNavn: 'igen', onclick: () => { barnFejl = false; K.vis(); } }),
+      K.knap('Til ugeplanen', { ikonNavn: 'kalender', onclick: () => K.naviger('#/uge') })),
+  });
 }

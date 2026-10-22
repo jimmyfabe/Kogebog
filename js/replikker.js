@@ -1,8 +1,9 @@
 // replikker.js — alt, appen siger højt: teksten og lydfilen (lyd/<fil>) for hver replik. Ingen DOM.
 // Én kilde for app.js og vaerktoej/lav-taleliste.js, så en lydfil altid siger præcis det, appen ellers ville sige
 // med iPad-stemmen. Ny tekst, der skal læses op, skrives her (test/test-lyd.js fejler, hvis app.js går udenom).
-import { GRUPPER } from './katalog.js';
+import { GRUPPER, DYR } from './katalog.js';
 import { voksenFarer } from './model.js';
+import { DAGE } from './tid.js';
 
 const r = (tekst, fil) => ({ tekst, fil });
 
@@ -42,3 +43,20 @@ export const timerHvor = (timerRet, nr, samme) => (samme || !timerRet ? 'trin ' 
 export const timerOptaget = (timerRet, nr, samme) => r(
   'Der kører allerede en timer på ' + timerHvor(timerRet, nr, samme) + '. Stop den først.',
   samme || !timerRet ? 'faelles/timer-optaget-' + nr + '.mp3' : timerRet.id + '/timer-optaget-' + nr + '.mp3');
+
+// ---------- Børnene vælger ugens mad (#/uge/vaelg i js/ugeplan.js) ----------
+// Børnene kan næsten ikke læse: hvert trin siger, hvad man skal, og hvert tryk siger, hvad man trykkede på.
+// Dyrene hedder kun deres fornavn her (Bo, Rosa, Pip)
+const dyrNavn = (id) => DYR[id].split(',')[0];
+export const UGE_HVEM = r('Hvem skal vælge mad?', 'faelles/uge-hvem.mp3');
+export const dyrVaelger = (id) => r(dyrNavn(id) + ' vælger. Tryk på den mad, du har lyst til.', 'faelles/uge-vaelger-' + id + '.mp3');
+// Rosa og Pip har valgt så mange retter, som den voksne har sagt (1 eller 2). Bo (den voksne) har ingen grænse
+export const dyrFaerdig = (id) => r(dyrNavn(id) + ' har valgt. Nu er det en andens tur.', 'faelles/uge-faerdig-' + id + '.mp3');
+export const ugeRet = (m) => r(m.navn + '. Tryk på fluebenet for at vælge.', m.id + '/uge.mp3');
+export const HVILKEN_DAG = r('Hvilken dag skal I spise det?', 'faelles/uge-hvilken-dag.mp3');
+// i tæller fra 0 (mandag), filen fra 1
+export const dag = (i) => r(DAGE[i] + '. Tryk på fluebenet for at vælge.', 'faelles/uge-dag-' + (i + 1) + '.mp3');
+export const DAG_OPTAGET = r('Der er allerede mad på den dag. Tryk på en anden dag.', 'faelles/uge-dag-optaget.mp3');
+export const UGE_TAK = r('Tak! Nu står det på ugeplanen. Hvem skal vælge nu?', 'faelles/uge-tak.mp3');
+export const ALLE_VALGT = r('Tak! Nu har I begge valgt. Vis ugeplanen til en voksen.', 'faelles/uge-alle-valgt.mp3');
+export const UGE_FULD = r('Nu er hele ugen fuld. Godt gået! Vis ugeplanen til en voksen.', 'faelles/uge-fuld.mp3');

@@ -719,6 +719,95 @@ textarea.kopi-felt { resize: vertical; }
   .ret-valg-raekke .knap { grid-column: 1 / -1; justify-self: start; margin-bottom: 4px; }
 }
 
+/* ---------- Børnene vælger ugens mad: #/uge/vaelg (js/ugeplan.js, iPad på langs) ---------- */
+
+/* Samme kort som forsiden (hvidt kort, rund farvet tallerken, navnet under), så børnene kender dem. Hvert trin har én
+   overskrift med «Læs op» ved siden af og to knapper i bunden: «Tilbage» og fluebenet, når der er valgt */
+.valg-indhold { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; width: 100%; max-width: 1180px; margin: 0 auto; padding: 4px 24px 8px; }
+.valg-hoved { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 12px 20px; }
+.valg-hoved h1 { font-size: 42px; line-height: 1.1; text-align: center; }
+.valg-dyr { width: 84px; height: 84px; }
+.valg-ret { display: grid; place-items: center; width: 92px; height: 92px; border: var(--kant); border-radius: 50%; background: var(--sennep-lys); }
+.valg-ret img { width: 92%; }
+.valg-bund { width: 100%; max-width: 1180px; margin: 0 auto; }
+
+/* Trin 1: dyrene. Under hvert dyr en plads pr. ret: stiplet og tom, til den er valgt */
+.dyr-gitter { display: grid; grid-template-columns: repeat(3, minmax(0, 280px)); justify-content: center; gap: 28px; width: 100%; }
+[data-dyr="bo"] { --dyr-farve: var(--dej-lys); }
+[data-dyr="rosa"] { --dyr-farve: var(--raev-lys); }
+[data-dyr="pip"] { --dyr-farve: var(--urt-lys); }
+.kort.dyr-kort { gap: 10px; padding: 18px 14px 18px; }
+.dyr-kort .kort-billede { background: var(--dyr-farve); }
+.dyr-kort .kort-billede img { width: 84%; }
+.dyr-pladser { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.dyr-plads { display: grid; place-items: center; width: 56px; height: 56px; border: var(--streg) dashed var(--kakao-blid); border-radius: 50%; background: var(--creme); }
+.dyr-plads.fyldt { border-style: solid; border-color: var(--kakao); background: var(--hvid); }
+.dyr-plads img { width: 90%; }
+.dyr-pladser.mange .dyr-plads { width: 40px; height: 40px; }
+/* Færdig: kortet bliver creme med et grønt flueben i hjørnet. Det kan stadig trykkes på (stemmen siger, at det er en andens tur) */
+.kort.dyr-kort.faerdig { background: var(--creme-moerk); }
+.dyr-tjek { position: absolute; top: 10px; right: 10px; display: grid; place-items: center; width: 52px; height: 52px; border: var(--kant); border-radius: 50%; background: var(--urt); }
+.dyr-tjek .ikon { width: 32px; height: 32px; stroke-width: 3; }
+
+/* Trin 2: fire retter pr. side, med pilene i siderne som i en billedbog og prikker for siderne */
+.ret-blad { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "forrige gitter naeste" ". prikker ."; align-items: center; gap: 18px 20px; width: 100%; }
+.side-forrige { grid-area: forrige; }
+.side-naeste { grid-area: naeste; }
+.side-knap.usynlig { visibility: hidden; }
+.ret-gitter { grid-area: gitter; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+.ret-kort .kort-navn { font-size: 24px; }
+.kort-dyr { position: absolute; top: 10px; right: 10px; display: grid; place-items: center; width: 48px; aspect-ratio: 1; border: var(--kant); border-radius: 50%; background: var(--hvid); }
+.kort-dyr img { width: 86%; }
+.side-prikker { grid-area: prikker; display: flex; justify-content: center; gap: 10px; }
+.side-prikker span { width: 16px; height: 16px; border: 2px solid var(--kakao); border-radius: 50%; background: var(--hvid); }
+.side-prikker .nu { background: var(--kakao); }
+
+/* Trin 3: syv dagbrikker i dagenes faste farver (de samme som i oversigten). En fri dag har en tom, stiplet tallerken;
+   den, barnet har trykket på, viser retten på tallerkenen og en gul ring, og en optaget dag viser retten og dyret */
+.dag-brikker { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 14px; width: 100%; margin: 0; padding: 0; list-style: none; }
+.dag-brikker > li { display: flex; min-width: 0; }
+.dag-brik { position: relative; width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 16px 8px 18px; border: var(--kant); border-radius: 26px; background: var(--dag); box-shadow: 0 6px 0 var(--kakao); }
+button.dag-brik { cursor: pointer; transition: transform .08s ease-out, box-shadow .08s ease-out; }
+button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--kakao); }
+.dag-brik.valgt { box-shadow: 0 6px 0 var(--kakao), 0 0 0 6px var(--sennep); }
+.brik-navn { font-size: 20px; font-weight: 800; line-height: 1.1; }
+.brik-tallerken { display: grid; place-items: center; width: 100%; max-width: 112px; aspect-ratio: 1; border: var(--streg) dashed var(--kakao); border-radius: 50%; background: var(--hvid); }
+.dag-brik.optaget .brik-tallerken, .dag-brik.valgt .brik-tallerken { border-style: solid; }
+.brik-tallerken img { width: 92%; }
+.brik-dyr { position: absolute; right: 6px; bottom: 6px; width: 46px; height: 46px; padding: 3px; border: var(--kant); border-radius: 50%; background: var(--hvid); }
+
+/* Oversigtens knap til børnene, med Rosa i knappen */
+.knap.boern-vaelger { margin-left: auto; padding-left: 18px; }
+.knap-dyr { width: 40px; height: 40px; }
+
+@media (max-width: 1000px) {
+  .ret-gitter { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dag-brikker { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* Telefonen (ikke målet, men det skal virke): dyrene står stadig side om side, pilene kommer under retterne */
+@media (max-width: 700px) {
+  .valg-indhold { gap: 18px; padding: 4px 12px 8px; }
+  .valg-hoved h1 { font-size: 32px; }
+  .valg-dyr { width: 64px; height: 64px; }
+  .valg-ret { width: 72px; height: 72px; }
+  .dyr-gitter { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .kort.dyr-kort { padding: 12px 6px 14px; }
+  .dyr-kort .kort-navn { font-size: 22px; }
+  .dyr-plads { width: 44px; height: 44px; }
+  .dyr-pladser.mange .dyr-plads { width: 32px; height: 32px; }
+  .dyr-tjek { top: 6px; right: 6px; width: 40px; height: 40px; }
+  .dyr-tjek .ikon { width: 26px; height: 26px; }
+  .ret-blad { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "gitter gitter gitter" "forrige prikker naeste"; gap: 14px 12px; }
+  .ret-gitter { gap: 12px; }
+  .ret-kort .kort-navn { font-size: 20px; }
+  .kort-dyr { top: 6px; right: 6px; width: 36px; }
+  .dag-brikker { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  .brik-navn { font-size: 18px; }
+  .brik-dyr { width: 38px; height: 38px; }
+  .knap.boern-vaelger { margin-left: 0; }
+}
+
 /* ---------- Smalle skærme (iPhone på højkant) ---------- */
 
 /* Ikke lave skærme på langs: en iPhone på langs (667×375, 736×414) får reglen for lave skærme nederst.

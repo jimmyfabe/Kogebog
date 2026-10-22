@@ -7,9 +7,13 @@
 // iPad (1180×820) og desktop (1280×800): den voksnes oversigt, valget af en ret med filtrene, portionerne, «Send til
 // telefon» (falsk delark, og linket åbnes på en telefon), «Del som tekst», kopiering og feltet uden delark, «Ny uge» og
 // reglen om, at en dag, hvis opskrift ikke kunne hentes, ikke forsvinder, når en anden dag gemmes.
+// Børnene (iPad): dyrene, fire retter pr. side med pilene, dagbrikkerne, optagne dage, én eller to retter pr. barn,
+// stemmen ved hvert tryk (den falske stemme), fejlskærmen, når lageret er fuldt, og skærmene på højkant og telefonen.
 import { kod } from '../js/plankode.js';
 import { saml, grupper, tekst as listeTekst } from '../js/indkoeb.js';
 import { planMandag, ugeNr } from '../js/tid.js';
+import { tilTale } from '../js/tekst.js';
+import * as R from '../js/replikker.js';
 
 const LISTE = 'kog-liste-v1';
 const DAG_MS = 86400000;
@@ -18,6 +22,7 @@ const plusDage = (dato, n) => new Date(Date.parse(dato + 'T00:00:00Z') + n * DAG
 export async function ugeplan(browser, H) {
   await telefon(browser, H);
   await oversigtIpad(browser, H);
+  await boernValg(browser, H);
   await oversigtDesktop(browser, H);
 }
 
@@ -510,4 +515,241 @@ async function oversigtDesktop(browser, H) {
   tjek((await ugeLager(side)).dage.every((d) => d === null), n + ': mellemrum holdt på «Ny uge» tømmer planen');
   tjek(!side.fejl.length, n + ' oversigten: ' + side.fejl.join(' | '));
   await ctx.close();
+}
+
+// ---------- Børnene vælger (#/uge/vaelg) på iPad'en ----------
+
+// Det, stemmen sagde sidst (den falske stemme i test-e2e.js), og det, den skal sige: replikkens tekst i talform
+const sagt = (side) => side.evaluate(() => (window.__tale[window.__tale.length - 1] || {}).tekst || '');
+const siger = (replik) => tilTale(replik.tekst);
+const VAELG = 'button.knap.primaer.naeste';
+const valgHash = (side, h) => side.evaluate((x) => { location.hash = x; }, h);
+
+const dyrNu = (side) => side.evaluate(() => [...document.querySelectorAll('.dyr-kort')].map((b) => ({
+  dyr: b.dataset.dyr,
+  navn: b.querySelector('.kort-navn').textContent,
+  faerdig: b.classList.contains('faerdig') && Boolean(b.querySelector('.dyr-tjek')),
+  pladser: b.querySelectorAll('.dyr-plads').length,
+  fyldte: b.querySelectorAll('.dyr-plads.fyldt img').length,
+})));
+const kortNu = (side) => side.evaluate(() => [...document.querySelectorAll('.ret-kort')].map((b) => ({
+  id: b.dataset.ret,
+  valgt: b.classList.contains('valgt') && b.getAttribute('aria-pressed') === 'true',
+  top: Math.round(b.getBoundingClientRect().top),
+})));
+const brikkerNu = (side) => side.evaluate(() => [...document.querySelectorAll('.dag-brik')].map((b) => ({
+  navn: b.querySelector('.brik-navn').textContent,
+  optaget: b.classList.contains('optaget'),
+  valgt: b.classList.contains('valgt'),
+  ret: (b.querySelector('.brik-tallerken img')?.getAttribute('src') || '').replace(/^grafik\/ret-|\.webp$/g, ''),
+  dyr: (b.querySelector('.brik-dyr')?.getAttribute('src') || '').replace(/^grafik\/dyr-|\.svg$/g, ''),
+  top: Math.round(b.getBoundingClientRect().top),
+  farve: getComputedStyle(b).backgroundColor,
+})));
+
+async function boernValg(browser, H) {
+  const { BASE, SKAERME, RETTER, nySide, tjek, tjekLayout, foto, tryk, hold, vent, venterPaa, h1, maal } = H;
+  const skaerm = SKAERME[0];
+  const n = skaerm.navn;
+  console.log('[' + n + '] ugeplan: børnene vælger med dyrene, billederne og stemmen');
+  const IPLAN = Object.keys(RETTER).filter((id) => RETTER[id].tumbi.ugeplan === true);
+  const sider = Math.ceil(IPLAN.length / 4);
+  const ret = (id) => ({ id, navn: RETTER[id].name });
+  const uge = planMandag(new Date());
+  const hvem = (hvor) => venterPaa(side, () => location.hash === '#/uge/vaelg' && document.querySelector('.dyr-gitter, ol.dag-brikker'), null, n + ': ' + hvor);
+  const { ctx, side } = await nySide(browser, skaerm, { serviceWorkers: 'block' });
+
+  // 1. Fra oversigten: «Børnene vælger» åbner dyrene, og stemmen spørger, hvem der skal vælge
+  await side.goto(BASE + '/index.html#/uge');
+  await side.waitForSelector('.boern-vaelger');
+  await tryk(side, '.boern-vaelger');
+  await hvem('«Børnene vælger» skal åbne #/uge/vaelg');
+  tjek(await h1(side) === 'Hvem skal vælge?', n + ': første trins overskrift (' + await h1(side) + ')');
+  tjek(await sagt(side) === siger(R.UGE_HVEM), n + ': stemmen spørger, hvem der skal vælge (' + await sagt(side) + ')');
+  let d = await dyrNu(side);
+  tjek(JSON.stringify(d.map((x) => [x.dyr, x.navn])) === JSON.stringify([['bo', 'Bo'], ['rosa', 'Rosa'], ['pip', 'Pip']]), n + ': dyrene Bo, Rosa og Pip (' + JSON.stringify(d) + ')');
+  tjek(d[0].pladser === 0 && d[1].pladser === 1 && d[2].pladser === 1 && !d.some((x) => x.faerdig), n + ': én ret pr. barn: Rosa og Pip har hver én tom plads, Bo ingen (' + JSON.stringify(d) + ')');
+  await tjekLayout(side, n + ' børnene: hvem');
+  await foto(side, n + '-boern-hvem');
+
+  // 2. Rosa: fire retter pr. side, pilene og første tryk, der siger navnet
+  await tryk(side, '.dyr-kort[data-dyr="rosa"]');
+  await venterPaa(side, () => location.hash === '#/uge/vaelg/rosa' && document.querySelector('.ret-gitter'), null, n + ': Rosa skal åbne retterne');
+  tjek(await h1(side) === 'Rosa vælger mad', n + ': andet trins overskrift (' + await h1(side) + ')');
+  tjek(await sagt(side) === siger(R.dyrVaelger('rosa')), n + ': stemmen siger, at Rosa vælger (' + await sagt(side) + ')');
+  let k = await kortNu(side);
+  tjek(k.length === Math.min(4, IPLAN.length), n + ': fire retter pr. side (' + k.length + ')');
+  tjek(new Set(k.map((x) => x.top)).size === 1, n + ': retterne står på én række på iPad på langs');
+  tjek(await side.locator(VAELG).count() === 0, n + ': fluebenet vises først, når en ret er trykket på');
+  tjek(await side.locator('.side-forrige').evaluate((b) => b.disabled && getComputedStyle(b).visibility === 'hidden'), n + ': på første side er pilen tilbage væk');
+  await tjekLayout(side, n + ' børnene: retter');
+  await foto(side, n + '-boern-retter');
+  const [a, b] = k.map((x) => x.id);
+  await tryk(side, '.ret-kort[data-ret="' + a + '"]');
+  k = await kortNu(side);
+  tjek(k.filter((x) => x.valgt).map((x) => x.id).join() === a, n + ': første tryk markerer retten (' + JSON.stringify(k) + ')');
+  tjek(await sagt(side) === siger(R.ugeRet(ret(a))), n + ': stemmen siger rettens navn (' + await sagt(side) + ')');
+  tjek(await side.locator(VAELG).count() === 1, n + ': fluebenet vises, når en ret er trykket på');
+  tjek(await side.evaluate(() => document.activeElement?.dataset.ret) === a, n + ': fokus bliver på retten');
+  await tryk(side, '.ret-kort[data-ret="' + b + '"]');
+  tjek((await kortNu(side)).filter((x) => x.valgt).map((x) => x.id).join() === b, n + ': kun den sidst trykkede ret er markeret');
+  if (sider > 1) {
+    await tryk(side, '.side-naeste');
+    k = await kortNu(side);
+    tjek(k.length === Math.min(4, IPLAN.length - 4) && !k.some((x) => x.id === a || x.id === b), n + ': pilen viser de næste retter (' + k.map((x) => x.id).join(', ') + ')');
+    tjek(!k.some((x) => x.valgt) && await side.locator(VAELG).count() === 0, n + ': en ny side har ingen markeret ret');
+    tjek(await side.evaluate(() => Boolean(document.querySelectorAll('.side-prikker span')[1]?.classList.contains('nu'))), n + ': prikken for side 2 er fyldt');
+    if (sider === 2) tjek(await side.evaluate(() => Boolean(document.activeElement?.classList.contains('side-forrige'))), n + ': på sidste side går fokus til pilen tilbage');
+    await foto(side, n + '-boern-retter-side-2');
+    await tryk(side, '.side-forrige');
+    tjek((await kortNu(side))[0].id === a, n + ': pilen tilbage viser første side igen');
+  }
+
+  // 3. Hvilken dag? Rosas ret på mandag
+  await tryk(side, '.ret-kort[data-ret="' + a + '"]');
+  await tryk(side, VAELG);
+  await venterPaa(side, (h) => location.hash === h && document.querySelector('.dag-brikker'), '#/uge/vaelg/rosa/' + a, n + ': fluebenet skal åbne dagene');
+  tjek(await h1(side) === 'Hvilken dag?', n + ': tredje trins overskrift (' + await h1(side) + ')');
+  tjek(await sagt(side) === siger(R.HVILKEN_DAG), n + ': stemmen spørger om dagen (' + await sagt(side) + ')');
+  let br = await brikkerNu(side);
+  tjek(br.map((x) => x.navn).join() === 'Mandag,Tirsdag,Onsdag,Torsdag,Fredag,Lørdag,Søndag' && !br.some((x) => x.optaget || x.valgt || x.ret), n + ': syv frie dage (' + JSON.stringify(br.map((x) => x.navn)) + ')');
+  tjek(new Set(br.map((x) => x.top)).size === 1, n + ': de syv dage står på én række på iPad på langs');
+  tjek(new Set(br.map((x) => x.farve)).size === 7, n + ': hver dag har sin egen farve');
+  await tjekLayout(side, n + ' børnene: dage');
+  await foto(side, n + '-boern-dage');
+  await tryk(side, '.dag-brik[data-dag="0"]');
+  br = await brikkerNu(side);
+  tjek(br[0].valgt && br[0].ret === a && br.filter((x) => x.valgt).length === 1, n + ': mandag er markeret og viser retten på tallerkenen');
+  tjek(await sagt(side) === siger(R.dag(0)), n + ': stemmen siger dagen (' + await sagt(side) + ')');
+  await foto(side, n + '-boern-dag-valgt');
+  await tryk(side, VAELG);
+  await hvem('fluebenet på dagen skal gå tilbage til dyrene');
+  let gemt = await ugeLager(side);
+  tjek(gemt && gemt.uge === uge && JSON.stringify(gemt.dage[0]) === JSON.stringify({ ret: a, af: 'rosa', n: 4 }), n + ': mandag gemmes som Rosas valg (' + JSON.stringify(gemt && gemt.dage) + ')');
+  tjek(await sagt(side) === siger(R.UGE_TAK), n + ': stemmen siger tak (' + await sagt(side) + ')');
+  d = await dyrNu(side);
+  tjek(d[1].faerdig && d[1].fyldte === 1 && !d[2].faerdig && d[2].fyldte === 0, n + ': Rosa har valgt (flueben og rettens billede), Pip ikke (' + JSON.stringify(d) + ')');
+
+  // 4. Rosa har valgt: et tryk siger, at det er en andens tur, og adressen til Rosas retter viser dyrene
+  await tryk(side, '.dyr-kort[data-dyr="rosa"]');
+  tjek(await hash(side) === '#/uge/vaelg' && await sagt(side) === siger(R.dyrFaerdig('rosa')), n + ': Rosa har valgt og bliver på dyrene (' + await sagt(side) + ')');
+  await valgHash(side, '#/uge/vaelg/rosa');
+  await vent(200);
+  tjek(await h1(side) === 'Hvem skal vælge?', n + ': Rosa kan ikke vælge flere gennem adressen (' + await h1(side) + ')');
+
+  // 5. Pip: mandag er optaget (Rosas ret og Rosa) og siger det, tirsdag vælges. Så har begge børn valgt
+  await tryk(side, '.dyr-kort[data-dyr="pip"]');
+  await side.waitForSelector('.ret-gitter');
+  await tryk(side, '.ret-kort[data-ret="' + b + '"]');
+  await tryk(side, VAELG);
+  await side.waitForSelector('.dag-brikker');
+  br = await brikkerNu(side);
+  tjek(br[0].optaget && br[0].ret === a && br[0].dyr === 'rosa' && br.filter((x) => x.optaget).length === 1, n + ': mandag er optaget med Rosas ret (' + JSON.stringify(br[0]) + ')');
+  tjek(await side.locator('.dag-brik[data-dag="0"]').getAttribute('aria-label') === 'Mandag: ' + RETTER[a].name + ', valgt af Rosa', n + ': den optagne dag har retten og dyret i sit navn');
+  await tryk(side, '.dag-brik[data-dag="0"]');
+  tjek(await sagt(side) === siger(R.DAG_OPTAGET) && !(await brikkerNu(side))[0].valgt && await side.locator(VAELG).count() === 0, n + ': en optaget dag siger det og kan ikke vælges (' + await sagt(side) + ')');
+  await tryk(side, '.dag-brik[data-dag="1"]');
+  await tryk(side, VAELG);
+  await hvem('Pips valg skal gå tilbage til dyrene');
+  gemt = await ugeLager(side);
+  tjek(JSON.stringify(gemt.dage.slice(0, 2)) === JSON.stringify([{ ret: a, af: 'rosa', n: 4 }, { ret: b, af: 'pip', n: 4 }]), n + ': tirsdag gemmes som Pips valg, mandag er uændret (' + JSON.stringify(gemt.dage) + ')');
+  tjek(await sagt(side) === siger(R.ALLE_VALGT), n + ': når begge børn har valgt, siger stemmen det (' + await sagt(side) + ')');
+
+  // 6. Adresser, der ikke findes: et ukendt dyr viser dyrene, en ukendt ret viser retterne, og intet fra adressen kommer i DOM'en
+  for (const [h, forventet] of [['#/uge/vaelg/constructor', 'Hvem skal vælge?'], ['#/uge/vaelg/xyzfjendtlig', 'Hvem skal vælge?'],
+    ['#/uge/vaelg/bo/xyzfjendtlig', 'Bo vælger mad'], ['#/uge/vaelg/bo/constructor', 'Bo vælger mad']]) {
+    await valgHash(side, h);
+    await vent(200);
+    const dom = await side.evaluate(() => document.getElementById('app').innerHTML + document.title);
+    tjek(await h1(side) === forventet && !dom.includes('xyzfjendtlig') && !dom.includes('constructor'), n + ': ' + h + ' viser «' + await h1(side) + '»');
+  }
+
+  // 7. Kan valget ikke gemmes (lageret er fuldt): en fejlskærm til den voksne, og «Prøv igen» gemmer, når lageret virker
+  await side.evaluate(() => {
+    const gl = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (noegle, v) {
+      if (window.__lagerFejl && noegle === 'kog-uge-v1') throw new DOMException('Fuldt', 'QuotaExceededError');
+      return gl.call(this, noegle, v);
+    };
+    window.__lagerFejl = true;
+  });
+  await valgHash(side, '#/uge/vaelg/bo/' + a);
+  await side.waitForSelector('.dag-brikker');
+  await tryk(side, '.dag-brik[data-dag="2"]');
+  await tryk(side, VAELG);
+  await venterPaa(side, () => document.querySelector('h1')?.textContent === 'Valget kunne ikke gemmes', null, n + ': et fuldt lager skal give fejlskærmen');
+  tjek((await ugeLager(side)).dage[2] === null, n + ': intet er gemt, når lageret fejler');
+  await tjekLayout(side, n + ' børnene: kunne ikke gemme');
+  await side.evaluate(() => { window.__lagerFejl = false; });
+  await tryk(side, 'button:has-text("Prøv igen")');
+  await side.waitForSelector('.dag-brik.valgt[data-dag="2"]');
+  await tryk(side, VAELG);
+  await hvem('«Prøv igen» og fluebenet skal gemme');
+  tjek(JSON.stringify((await ugeLager(side)).dage[2]) === JSON.stringify({ ret: a, af: 'bo', n: 4 }), n + ': «Prøv igen» gemmer Bos valg');
+  tjek(await sagt(side) === siger(R.UGE_TAK), n + ': Bo får «Tak», ikke «I har begge valgt» (' + await sagt(side) + ')');
+
+  // 8. Bo vælger den sidste frie dag: ugen er fuld, og den voksne tager over
+  gemt = await ugeLager(side);
+  await side.evaluate((p) => localStorage.setItem('kog-uge-v1', JSON.stringify(p)),
+    { ...gemt, dage: gemt.dage.map((x, i) => x || (i === 6 ? null : { ret: a, af: 'bo', n: 4 })) });
+  await valgHash(side, '#/uge/vaelg/bo');
+  await side.waitForSelector('.ret-gitter');
+  await tryk(side, '.ret-kort[data-ret="' + b + '"]');
+  await tryk(side, VAELG);
+  await side.waitForSelector('.dag-brikker');
+  tjek((await brikkerNu(side)).filter((x) => x.optaget).length === 6, n + ': seks dage er optaget');
+  await tryk(side, '.dag-brik[data-dag="6"]');
+  await tryk(side, VAELG);
+  await hvem('den sidste dag skal gå til «Ugen er fuld»');
+  tjek(await h1(side) === 'Ugen er fuld' && await sagt(side) === siger(R.UGE_FULD), n + ': ugen er fuld (' + await h1(side) + ', ' + await sagt(side) + ')');
+  br = await brikkerNu(side);
+  tjek(br.length === 7 && br.every((x) => x.optaget && x.ret) && br[6].ret === b && br[6].dyr === 'bo', n + ': den fulde uge viser syv retter med dyrene');
+  await tjekLayout(side, n + ' børnene: ugen er fuld');
+  await foto(side, n + '-boern-fuld');
+
+  // 9. Den voksne: et kort tryk på «Ugeplan: hold» bliver hos børnene, et hold går til oversigten
+  await tryk(side, '.til-ugeplan');
+  tjek(await hash(side) === '#/uge/vaelg', n + ': et kort tryk på «Ugeplan: hold» bliver hos børnene');
+  await hold(side, '.til-ugeplan');
+  await venterPaa(side, () => location.hash === '#/uge' && document.querySelector('.uge-dage'), null, n + ': holdet skal gå til oversigten');
+
+  // 10. To retter pr. barn: Rosa har to pladser, én fyldt, og er ikke færdig
+  await side.evaluate((p) => localStorage.setItem('kog-uge-v1', JSON.stringify(p)),
+    { ...gemt, prBarn: 2, dage: [{ ret: a, af: 'rosa', n: 4 }, null, null, null, null, null, null] });
+  await tryk(side, '.boern-vaelger');
+  await hvem('«Børnene vælger» med to retter pr. barn');
+  d = await dyrNu(side);
+  tjek(d[1].pladser === 2 && d[1].fyldte === 1 && !d[1].faerdig && d[2].pladser === 2 && d[2].fyldte === 0, n + ': to retter pr. barn: Rosa har én af to (' + JSON.stringify(d) + ')');
+
+  // 11. Tastaturet: Enter på et dyr åbner retterne, Enter på en ret markerer den, og fokus bliver på den
+  await side.locator('.dyr-kort[data-dyr="rosa"]').focus();
+  await vent(400);
+  await side.keyboard.press('Enter');
+  await side.waitForSelector('.ret-gitter');
+  await vent(400);
+  await side.locator('.ret-kort').first().focus();
+  await side.keyboard.press('Enter');
+  await vent(100);
+  tjek(await side.evaluate(() => Boolean(document.activeElement?.classList.contains('valgt'))), n + ': Enter markerer retten, og fokus bliver på den');
+
+  // 12. iPad på højkant og telefonen: retterne to og to, dagene på flere rækker, dyrene side om side
+  for (const [bredde, hoejde] of [[820, 1180], [390, 844], [360, 740]]) {
+    await side.setViewportSize({ width: bredde, height: hoejde });
+    for (const [h, navn] of [['#/uge/vaelg', 'hvem'], ['#/uge/vaelg/pip', 'retter'], ['#/uge/vaelg/pip/' + a, 'dage']]) {
+      await valgHash(side, h);
+      await vent(200);
+      await tjekLayout(side, n + ' børnene ' + navn + ' ' + bredde + '×' + hoejde);
+      if (bredde !== 360) await foto(side, n + '-boern-' + navn + '-' + bredde + 'x' + hoejde, { fullPage: true });
+    }
+    if (bredde === 820) {
+      await valgHash(side, '#/uge/vaelg/pip');
+      await vent(200);
+      tjek(new Set((await kortNu(side)).map((x) => x.top)).size === 2, n + ': på højkant står retterne to og to');
+    }
+  }
+
+  tjek(await side.evaluate(() => window.__taleAfvist) === 0, n + ': stemmen blev aldrig afvist (al oplæsning kom i et tryk)');
+  tjek(!side.fejl.length, n + ' børnene: ' + side.fejl.join(' | '));
+  await ctx.close();
+  maal.push(n + ' børnene: ' + IPLAN.length + ' retter på ' + sider + (sider === 1 ? ' side' : ' sider'));
 }

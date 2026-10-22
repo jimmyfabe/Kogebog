@@ -594,7 +594,7 @@ async function indlaes() {
   vis();
 }
 
-Ugeplan.init({ S, knap, billede, topbar, statusSkaerm, naviger, annoncer, indlaes, vis });
+Ugeplan.init({ S, knap, klik, billede, topbar, statusSkaerm, naviger, annoncer, indlaes, vis });
 Timer.gendan();
 Tale.hentLydListe();
 indlaes();
