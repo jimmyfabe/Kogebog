@@ -656,7 +656,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 /* Valgt: sennep og en dobbelt så tyk kant, så tilstanden ikke kun er en farve */
 .knap.valg[aria-pressed="true"], .knap.filter[aria-pressed="true"] { background: var(--sennep); box-shadow: inset 0 0 0 3px var(--kakao), 0 5px 0 var(--kakao); }
 
-.uge-dage { border: var(--kant); border-radius: 22px; background: var(--hvid); overflow: hidden; }
+/* margin og padding: 0, ellers rykker <ol> dagene 40 px ind (kun <ul> er nulstillet øverst) */
+.uge-dage { margin: 0; padding: 0; list-style: none; border: var(--kant); border-radius: 22px; background: var(--hvid); overflow: hidden; }
 .dag { display: grid; grid-template-columns: 128px 84px minmax(0, 1fr) auto; align-items: center; gap: 0 16px; min-height: 104px; padding-right: 16px; }
 .dag.fri { grid-template-columns: 128px minmax(0, 1fr) auto; min-height: 76px; }
 .dag + .dag { border-top: 2px solid var(--creme-moerk); }

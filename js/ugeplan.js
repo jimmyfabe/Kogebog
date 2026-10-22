@@ -612,7 +612,7 @@ function oversigtSkaerm() {
         ? el('p', { class: 'uge-advarsel', role: 'status', tekst: 'Uge ' + ugeNr(p.uge) + ' er gået. Hold «Ny uge» for at lave en plan til uge ' + ugeNr(planMandag()) + '.' })
         : null,
       indstillinger,
-      el('ol', { class: 'uge-dage', 'aria-label': 'Ugens dage' }, p.dage.map((d, i) => dagRaekke(p, d, i))),
+      el('ol', { class: 'uge-dage', role: 'list', 'aria-label': 'Ugens dage' }, p.dage.map((d, i) => dagRaekke(p, d, i))),
       el('div', { class: 'uge-bund' },
         el('p', { class: 'uge-sum', tekst: sum }),
         harRetter ? null : el('p', { class: 'uge-tom', tekst: 'Vælg mindst én ret, så kan listen sendes til telefonen.' }),

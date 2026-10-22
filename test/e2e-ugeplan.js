@@ -126,6 +126,8 @@ async function telefon(browser, H) {
   tjek(l.koebtSidst, n + ': de købte varer skal stå nederst i deres afdeling');
   const fokus = await side.evaluate(() => document.activeElement?.closest('li.koebt')?.querySelector('.vare-navn')?.textContent || '');
   tjek(fokus === krydset[2], n + ': fokus skal følge den sidst afkrydsede vare (' + fokus + ')');
+  // Varerne glider på plads (240 ms): billedet tages, når de står stille
+  await side.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished)));
   await foto(side, n + '-ugeplan-tre-koebt');
   await side.reload();
   await side.waitForSelector('.liste-tal');
