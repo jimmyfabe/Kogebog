@@ -47,6 +47,8 @@ export function gem(aendring) {
 //   kog-liste-v1 (telefonen): { v: 1, kode, uge, varer: [{ id, m }], koebt: [id], harVi: [id], hentet }
 // Alt renses ved læsning: ret skal stå i «retter» (index.json), varerne i VARER (Object.hasOwn), af er et af DYR
 // (bo, rosa, pip: aldrig børnenes navne), n er 1-12, m er 0-100.000, og der er højst 200 varer.
+// «retter» filtrerer kun det, der vises, og nye dage: gemUge renser den gemte plan for form og grænser, ikke for «retter»,
+// så en kort liste (en hentning, der mangler) aldrig sletter gemte dage. Et felt sat til undefined er ingen ændring.
 // Versionsvagten: et højere v er skrevet af en nyere udgave af appen. Det læses som tomt og skrivebeskyttes («laast»), så
 // gammel kode fra service workerens cache aldrig skriver ovenpå. Et lavere v løftes ét trin ad gangen af MIGRER_*
 // (v1 er den første udgave, så kæderne er tomme). rens() for kog-v1 nulstiller i stedet og må ikke kopieres hertil.
@@ -59,10 +61,13 @@ const MIGRER_LISTE = {};
 const MAKS_VARER = 200;
 const MAKS_M = 100000;
 const MAKS_KODE = 400;
+const MAKS_ID = 40; // samme grænse som et ret-id i linket (plankode.js)
 const KODE_RE = /^[a-z0-9._~-]+$/;
 const DATO_RE = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
 const erPortioner = (n) => Number.isInteger(n) && n >= 1 && n <= 12;
 const erDato = (s) => typeof s === 'string' && DATO_RE.test(s);
+const erRetId = (s) => typeof s === 'string' && s.length <= MAKS_ID && ID_RE.test(s);
+const udenUndefined = (o) => Object.fromEntries(Object.entries(o ?? {}).filter(([, v]) => v !== undefined));
 
 // Læser en nøgle gennem versionsvagten: { j, laast }, hvor j er data i den nuværende udgave eller null
 function laesMedVagt(noegle, version, migrer) {
@@ -99,12 +104,13 @@ function bevar() {
 
 const tomUge = () => ({ v: UGE_V, uge: null, dage: [null, null, null, null, null, null, null], n: 4, prBarn: 1, rettet: null });
 
-function rensUge(j, retter) {
+// erKendt(id): må retten stå her. Formen på id'et tjekkes altid
+function rensUge(j, erKendt) {
   const ud = tomUge();
   if (!j) return ud;
   if (erDato(j.uge)) ud.uge = j.uge;
   if (Array.isArray(j.dage) && j.dage.length === 7) {
-    ud.dage = j.dage.map((d) => (d && typeof d.ret === 'string' && retter.includes(d.ret) && typeof d.af === 'string' &&
+    ud.dage = j.dage.map((d) => (d && erRetId(d.ret) && erKendt(d.ret) && typeof d.af === 'string' &&
       Object.hasOwn(DYR, d.af) && erPortioner(d.n) ? { ret: d.ret, af: d.af, n: d.n } : null));
   }
   if (erPortioner(j.n)) ud.n = j.n;
@@ -121,18 +127,21 @@ function tjekRetter(retter) {
 export function hentUge(retter) {
   tjekRetter(retter);
   const { j, laast } = laesMedVagt(UGE, UGE_V, MIGRER_UGE);
-  return { ...rensUge(j, retter), laast };
+  return { ...rensUge(j, (id) => retter.includes(id)), laast };
 }
 
-// Gemmer ændringen oven på den gemte plan og returnerer det gemte, eller null, når planen er låst, eller lageret fejler
+// Gemmer ændringen oven på den gemte plan og returnerer planen, som hentUge(retter) viser den (uden «laast»), eller
+// null, når planen er låst, eller lageret fejler. En ny dag skal stå i «retter» eller allerede stå i den gemte plan
 export function gemUge(aendring, retter) {
   tjekRetter(retter);
   const { j, laast } = laesMedVagt(UGE, UGE_V, MIGRER_UGE);
   if (laast) return null;
-  const ny = rensUge({ ...rensUge(j, retter), ...aendring, v: UGE_V }, retter);
+  const gl = rensUge(j, () => true);
+  const tilladt = [...retter, ...gl.dage.filter(Boolean).map((d) => d.ret)];
+  const ny = rensUge({ ...gl, ...udenUndefined(aendring), v: UGE_V }, (id) => tilladt.includes(id));
   if (!skriv(UGE, ny)) return null;
   bevar();
-  return ny;
+  return rensUge(ny, (id) => retter.includes(id));
 }
 
 const tomListe = () => ({ v: LISTE_V, kode: null, uge: null, varer: [], koebt: [], harVi: [], hentet: null });

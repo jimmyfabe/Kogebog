@@ -399,10 +399,37 @@ test('ugeplanen renses: kun kendte retter, dyrene og portioner 1-12', () => {
   // Data, der er rettet i lageret udefra, renses også ved læsning
   medLager({ 'kog-uge-v1': { v: 1, ...UGE_DATA, dage: [{ ret: 'constructor', af: 'bo', n: 4 }, ...DAGE.slice(1)] } });
   assert.deepEqual(lager.hentUge(UGEPLAN).dage, [null, ...DAGE.slice(1)]);
-  // Planen husker kun retter, der stadig findes: fjernes en ret fra index.json, bliver dagen tom
+  // Planen viser kun retter, der stadig findes: fjernes en ret fra index.json, vises dagen tom
   medLager({ 'kog-uge-v1': { v: 1, ...UGE_DATA } });
   assert.deepEqual(lager.hentUge(UGEPLAN.filter((id) => id !== 'koedsovs')).dage, [null, ...DAGE.slice(1)]);
   assert.equal(l.skrevet.every((k) => k === 'kog-uge-v1'), true);
+});
+
+// Code review M1 (22-10): «retter» er de retter, der kan vises nu. Mangler en hentning (nyt id uden net), må en
+// skrivning ikke slette de andre dage i lageret, og et felt sat til undefined er ingen ændring
+test('en kort retter-liste eller et felt sat til undefined sletter ikke gemte dage', () => {
+  const l = medLager();
+  medPersist();
+  lager.gemUge(UGE_DATA, UGEPLAN);
+  // Kun kødsovsen er hentet: svaret viser kun den, men lageret beholder alle tre dage
+  assert.deepEqual(lager.gemUge({ n: 6 }, ['koedsovs']), { v: 1, ...UGE_DATA, n: 6, dage: [DAGE[0], null, null, null, null, null, null] });
+  assert.deepEqual(gemt(l, 'kog-uge-v1'), { v: 1, ...UGE_DATA, n: 6 });
+  assert.deepEqual(uden(lager.hentUge(UGEPLAN)), { v: 1, ...UGE_DATA, n: 6 });
+  // Ingen retter hentet endnu
+  assert.notEqual(lager.gemUge({ n: 5 }, []), null);
+  assert.deepEqual(uden(lager.hentUge(UGEPLAN)), { v: 1, ...UGE_DATA, n: 5 });
+  // Et felt sat til undefined lader det gemte stå
+  for (const felt of ['uge', 'dage', 'n', 'prBarn', 'rettet']) {
+    assert.deepEqual(lager.gemUge({ [felt]: undefined }, UGEPLAN), { v: 1, ...UGE_DATA, n: 5 }, felt);
+  }
+  // Nye dage skal stadig stå i «retter»; en ret, der allerede står i planen, må gemmes igen, selvom den ikke er hentet
+  const dage = [DAGE[0], { ret: 'pandekager', af: 'pip', n: 4 }, ...DAGE.slice(2)];
+  assert.notEqual(lager.gemUge({ dage }, ['koedsovs']), null);
+  assert.deepEqual(gemt(l, 'kog-uge-v1').dage, DAGE);
+  // Den gemte del renses stadig for form: et id, der ikke ligner et id fra index.json, eller over 40 tegn forsvinder
+  const l2 = medLager({ 'kog-uge-v1': { v: 1, ...UGE_DATA, dage: [{ ret: '<b>', af: 'bo', n: 4 }, { ret: 'a'.repeat(41), af: 'bo', n: 4 }, ...DAGE.slice(2)] } });
+  assert.notEqual(lager.gemUge({ n: 6 }, ['koedsovs']), null);
+  assert.deepEqual(gemt(l2, 'kog-uge-v1').dage, [null, null, ...DAGE.slice(2)]);
 });
 
 test('indkøbslisten gemmes og renses: kendte varer, m 0-100.000, højst 200, afkrydsning kun for varer på listen', () => {
