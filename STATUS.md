@@ -1,6 +1,6 @@
 # STATUS – Tumbi Køkken
 
-## 22-10-2026 kl. 07:37: `grafik-ai` er flettet og live; gamle filer slettet (venter på push)
+## 22-10-2026 kl. 07:36: `grafik-ai` er flettet og live; gamle filer slettet (venter på push)
 
 - **Jimmy flettede og pushede selv kl. 07:22** (`main` = `origin/main` = 2a1da5d): AI-billederne, advarselstrekanten, de to aftensretter og timer-rettelsen er live.
 - **Jimmys ja 22-10 («ja slet»):** de 19 gamle `grafik/ret-*.svg` og `lyd/faelles/voksen-hold.mp3` er slettet, og `sw.js` gemmer dem ikke længere offline. Ny `INDHOLD` og `LYD`, så iPads henter lyden igen, når den spilles (f736956, kun lokalt).
