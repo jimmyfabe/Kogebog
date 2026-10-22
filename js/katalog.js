@@ -172,14 +172,14 @@ export const ENHEDER = {
 
 // Indkøbsvarerne. «enhed» er en grundenhed (faktor 1) i den dimension, butikken sælger i: tomatpuré sælges i gram, så en
 // opskrift med «2 spsk» skriver 30 g. «ikon» er et af INGREDIENSER. «pakke»: [indhold i varens enhed, ental, flertal]
-// giver «2 dåser (800 g)». «basis»: står kun under «Tjek, at I har» uden mængde (og må undlade «antal»). «skjul»: står
+// giver «2 dåser (800 g)», og en pakke med indholdet 1 giver kun «1 bundt». «basis»: står kun under «Tjek, at I har» uden mængde (og må undlade «antal»). «skjul»: står
 // ikke på listen (vand fra hanen). Pakkestørrelserne er almindelige størrelser i danske supermarkeder, ikke én butiks
 export const VARER = {
   // Frugt og grønt
   'loeg': { navn: 'Løg', afd: 'groent', enhed: 'stk', ikon: 'loeg' },
   'hvidloeg': { navn: 'Hvidløg', afd: 'groent', enhed: 'fed', ikon: 'hvidloeg' },
   'gulerod': { navn: 'Gulerødder', afd: 'groent', enhed: 'stk', ikon: 'gulerod' },
-  'persille': { navn: 'Persille (bundt)', afd: 'groent', enhed: 'stk', ikon: 'krydderurt' },
+  'persille': { navn: 'Persille', afd: 'groent', enhed: 'stk', ikon: 'krydderurt', pakke: [1, 'bundt', 'bundter'] },
   // Dåser og tørvarer
   'hakkede-tomater': { navn: 'Hakkede tomater', afd: 'toer', enhed: 'g', ikon: 'tomat', pakke: [400, 'dåse', 'dåser'] },
   'passata': { navn: 'Tomatpassata', afd: 'toer', enhed: 'g', ikon: 'tomat', pakke: [500, 'flaske', 'flasker'] },
