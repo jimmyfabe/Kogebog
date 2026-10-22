@@ -176,6 +176,10 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .topbar-midte { min-width: 0; }
 
 .pille { min-height: 56px; padding: 0 18px; font-size: 22px; font-variant-numeric: tabular-nums; background: var(--blaa-lys); }
+/* Tallet skrives hvert kvarte sekund (ny tekstnode), og WebKit sender intet «click», når noden under musen er væk før
+   slippet: et tryk over et tik førte ikke til trinnet. Så rammer trykket altid selve knappen (e2e 22-10-2026; med en
+   finger på iPad ikke afprøvet) */
+.pille > * { pointer-events: none; }
 .pille.faerdig { background: var(--sennep); }
 .pille-slut, .pille.faerdig .pille-tal { display: none; }
 .pille.faerdig .pille-slut { display: inline; }

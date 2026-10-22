@@ -1094,6 +1094,21 @@ async function timere(browser, skaerm) {
   await side.waitForFunction(() => location.hash === '#/ret/koedsovs/trin/8');
   tjek(await side.locator('button[aria-label="Stop timeren"]').count() === 1, n + ': trin 8 skal stadig have sin timer (med «Stop»)');
 
+  // Et tryk på pillens tal, der varer over et tik: tallet skrives hvert kvarte sekund, og WebKit sendte intet «click»,
+  // når tekstnoden under musen var skiftet ud før mouseup (e2e 22-10-2026: Playwright var 64 ms om trykket under belastning)
+  await tryk(side, 'button[aria-label="Til forsiden"]');
+  await side.waitForSelector('.forside .kort');
+  if (await side.locator('.pille:not([hidden])').count() === 1) {
+    await hold(side, '.pille .pille-tal', 600);
+    if (!await venterPaa(side, () => location.hash === '#/ret/koedsovs/trin/8', null, n + ': et tryk på 600 ms på tallet i pillen skal føre til trin 8')) {
+      await side.evaluate(() => { location.hash = '#/ret/koedsovs/trin/8'; });
+    }
+  } else {
+    tjek(false, n + ': forsiden skal vise timeren før det lange tryk');
+    await side.evaluate(() => { location.hash = '#/ret/koedsovs/trin/8'; });
+  }
+  await side.waitForFunction(() => location.hash === '#/ret/koedsovs/trin/8');
+
   // Pillen midt i navnet på en anden ret: «sammen med en voksen» må ikke siges bagefter på timerens trin (code review 21-10-2026)
   await tryk(side, 'button[aria-label="Til forsiden"]');
   await side.waitForSelector('.forside .kort');
