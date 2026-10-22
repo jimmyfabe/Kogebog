@@ -59,7 +59,8 @@ function forfalskninger(lydTekster) {
   // Som på iPad må et lydelement først spille, når det har fået et tryk (load(), play() eller en ny src under et tryk);
   // ellers afviser play() (window.__lydAfvist tæller). window.__lydElementer tæller lydelementerne.
   // Med window.__lydFejl = true afviser play() (som når filen ikke kan hentes), og tale.js skal tage iPad-stemmen.
-  // window.__lydMs gør hver fil længere (standard 30 ms), så en test kan nå at skifte skærm midt i en replik
+  // window.__lydMs gør hver fil længere (standard 30 ms), så en test kan nå at skifte skærm midt i en replik.
+  // Hver replik får sit starttidspunkt (t, performance.now()), så en test kan se, om den startede før eller efter et tryk
   window.__lydElementer = 0;
   window.__lydAfvist = 0;
   window.Audio = class {
@@ -80,7 +81,7 @@ function forfalskninger(lydTekster) {
       if (aktiveret()) this.laast = false;
       if (this.laast) { window.__lydAfvist++; return Promise.reject(new DOMException('Kræver et tryk', 'NotAllowedError')); }
       if (window.__lydFejl) return Promise.reject(new DOMException('Filen kunne ikke hentes', 'NotSupportedError'));
-      tale.push({ fil: this.fil, tekst: lydTekster[this.fil] });
+      tale.push({ fil: this.fil, tekst: lydTekster[this.fil], t: performance.now() });
       this.paused = false;
       const mit = this.spil;
       setTimeout(() => {
@@ -109,7 +110,7 @@ function forfalskninger(lydTekster) {
         stemmeAaben = true;
       }
       if (!String(u.text).trim()) { window.__taleLaas++; return; }
-      tale.push({ tekst: u.text, lang: u.lang, stemme: u.voice ? u.voice.lang : null });
+      tale.push({ tekst: u.text, lang: u.lang, stemme: u.voice ? u.voice.lang : null, t: performance.now() });
       setTimeout(() => { if (u.onend) u.onend(); }, 30);
     },
     cancel() {},
@@ -1116,19 +1117,35 @@ async function timere(browser, skaerm) {
   }
   await side.waitForFunction(() => location.hash === '#/ret/koedsovs/trin/8');
 
-  // Pillen midt i navnet på en anden ret: «sammen med en voksen» må ikke siges bagefter på timerens trin (code review 21-10-2026)
+  // Pillen midt i navnet på en anden ret: «sammen med en voksen» må ikke siges bagefter på timerens trin (code review 21-10-2026).
+  // Kun det, der starter efter trykket på pillen, tæller (tidsstemplet i siden). Før talte alt efter ret-skærmen, og
+  // navnet varede kun 1,5 s: under last nåede navnet at slutte før trykket, og voksen-replikken startede med rette før
+  // trykket (fejlede 4 af 20 ved 16 travle processer). Navnet varer nu 4 s, så trykket stadig lander midt i det
+  const NAVN_MS = 4000;
   await tryk(side, 'button[aria-label="Til forsiden"]');
   await side.waitForSelector('.forside .kort');
-  await side.evaluate(() => { window.__lydMs = 1500; });
+  await side.evaluate((ms) => {
+    window.__lydMs = ms;
+    window.__pilleKlik = null;
+    window.addEventListener('click', (e) => { if (e.target.closest('.pille')) window.__pilleKlik = performance.now(); }, true);
+  }, NAVN_MS);
   await tryk(side, '.kort[data-ret="pandekager"]');
   await tryk(side, '.kort[data-ret="pandekager"]');
   await side.waitForSelector('.ret h1');
   const foerPille = await side.evaluate(() => window.__tale.length);
   await tryk(side, '.pille');
   await side.waitForFunction(() => location.hash === '#/ret/koedsovs/trin/8');
-  await vent(2000);
-  const efterPille = await side.evaluate((i) => { window.__lydMs = 0; return window.__tale.slice(i).map((x) => x.tekst); }, foerPille);
-  tjek(efterPille.length === 0, n + ': pillen skal stoppe oplæsningen af den anden ret, men bagefter blev der sagt ' + JSON.stringify(efterPille));
+  // Vent, til navnet er slut, og det, der skulle siges bagefter, ville være startet
+  await vent(NAVN_MS + 1000);
+  const pille = await side.evaluate(({ i, ms }) => {
+    window.__lydMs = 0;
+    const k = window.__pilleKlik;
+    const navn = window.__tale.filter((x) => x.fil === 'pandekager/navn.mp3').pop();
+    return { klik: k, iNavnet: !!navn && k !== null && k - navn.t < ms, efter: window.__tale.slice(i).filter((x) => !(x.t < k)).map((x) => x.tekst) };
+  }, { i: foerPille, ms: NAVN_MS });
+  tjek(pille.klik !== null, n + ': trykket på pillen skal nå frem');
+  tjek(pille.efter.length === 0, n + ': pillen skal stoppe oplæsningen af den anden ret, men efter trykket blev der sagt ' + JSON.stringify(pille.efter));
+  if (!pille.iNavnet) maal.push(n + ': trykket på pillen kom først efter navnet (over ' + NAVN_MS + ' ms); tjekket så kun, at intet startede efter trykket');
 
   // 3) Timeren løb ud, mens fanen var væk (iOS smed den ud): efter genindlæsningen skal «Tiden er gået» stå på forsiden
   await gemTimer(side, { ret: 'koedsovs', nr: 8, sek: 1200, slutOm: -60000 });
