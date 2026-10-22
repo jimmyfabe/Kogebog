@@ -628,6 +628,96 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .felt-fejl { padding-left: 12px; border-left: 6px solid var(--tomat); font-size: 18px; font-weight: 750; }
 .felt-fejl:empty { display: none; }
 
+/* ---------- Ugeplanen: den voksnes oversigt (js/ugeplan.js, iPad og desktop) ---------- */
+
+/* Ugen er ét ark med syv rækker som indkøbslisten. Hver dag har sin faste farve (de samme som barnets dagbrikker),
+   så den voksne og barnet kan tale om «den grønne mandag». Navnet står altid ved farven, så farven aldrig er alene */
+[data-dag="0"] { --dag: var(--urt-lys); }
+[data-dag="1"] { --dag: var(--sennep-lys); }
+[data-dag="2"] { --dag: var(--tomat-lys); }
+[data-dag="3"] { --dag: var(--blaa-lys); }
+[data-dag="4"] { --dag: var(--lilla-lys); }
+[data-dag="5"] { --dag: var(--raev-lys); }
+[data-dag="6"] { --dag: var(--dej-lys); }
+
+.uge { width: 100%; max-width: 1080px; margin: 0 auto; padding: 4px 24px 40px; display: flex; flex-direction: column; gap: 16px; }
+.uge-hoved { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 4px 16px; }
+.uge-hoved h1 { font-size: 38px; line-height: 1.1; }
+.uge-nr { font-size: 20px; font-weight: 750; color: var(--kakao-blid); }
+.uge-indstillinger { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 36px; }
+.indstilling { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.indstilling-navn { font-size: 18px; font-weight: 750; }
+.stepper { display: inline-flex; align-items: center; gap: 6px; }
+.knap.trin-knap { width: 52px; min-width: 52px; min-height: 52px; box-shadow: 0 3px 0 var(--kakao); }
+.knap.trin-knap .ikon { width: 24px; height: 24px; }
+.stepper-tal { min-width: 4.4em; text-align: center; font-size: 19px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.valg-par, .filtre { display: flex; flex-wrap: wrap; gap: 10px; }
+.knap.valg { min-width: 56px; padding: 0 20px; }
+/* Valgt: sennep og en dobbelt så tyk kant, så tilstanden ikke kun er en farve */
+.knap.valg[aria-pressed="true"], .knap.filter[aria-pressed="true"] { background: var(--sennep); box-shadow: inset 0 0 0 3px var(--kakao), 0 5px 0 var(--kakao); }
+
+.uge-dage { border: var(--kant); border-radius: 22px; background: var(--hvid); overflow: hidden; }
+.dag { display: grid; grid-template-columns: 128px 84px minmax(0, 1fr) auto; align-items: center; gap: 0 16px; min-height: 104px; padding-right: 16px; }
+.dag.fri { grid-template-columns: 128px minmax(0, 1fr) auto; min-height: 76px; }
+.dag + .dag { border-top: 2px solid var(--creme-moerk); }
+.dag-hoved { align-self: stretch; display: flex; flex-direction: column; justify-content: center; padding: 10px 16px; background: var(--dag, var(--creme)); border-right: 2px solid var(--creme-moerk); }
+.dag-navn { font-size: 21px; font-weight: 800; }
+.dag-dato { font-size: 16px; color: var(--kakao-blid); }
+.dag-billede { width: 84px; height: 84px; object-fit: contain; }
+.dag-ret { min-width: 0; display: flex; flex-direction: column; gap: 2px; padding: 10px 0; }
+.dag-ret-navn { font-size: 21px; font-weight: 800; line-height: 1.2; overflow-wrap: anywhere; }
+.dag.fri .dag-ret-navn { font-weight: 700; color: var(--kakao-blid); }
+.dag-meta { font-size: 16px; color: var(--kakao-blid); }
+.dag-af { display: flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 700; }
+.dag-dyr { width: 28px; height: 28px; }
+.dag-knapper { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 10px; padding: 10px 0; }
+
+.uge-bund { display: flex; flex-direction: column; gap: 14px; padding-top: 4px; }
+.uge-sum { font-size: 24px; font-weight: 800; }
+.uge-tom { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; font-size: 18px; color: var(--kakao-blid); }
+.uge-knapper { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.uge-knapper .ny-uge { margin-left: auto; }
+a.knap { color: inherit; text-decoration: none; }
+.uge-besked { display: flex; flex-direction: column; gap: 10px; padding: 12px 16px; border: var(--streg) solid var(--urt); border-radius: 16px; background: var(--urt-lys); font-size: 18px; }
+.uge-besked.fejl { border-color: var(--tomat); background: var(--tomat-lys); }
+.uge-advarsel { padding: 12px 16px; border: var(--streg) solid var(--raev); border-radius: 16px; background: var(--raev-lys); font-size: 18px; }
+.kopi-felt { width: 100%; min-height: 48px; padding: 10px 12px; border: var(--kant); border-radius: 12px; background: var(--hvid); color: var(--kakao); font: inherit; font-size: 16px; }
+textarea.kopi-felt { resize: vertical; }
+
+/* Valget af en ret til en dag */
+.dag-vaerktoej { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.ret-valg { border: var(--kant); border-radius: 22px; background: var(--hvid); overflow: hidden; }
+.ret-valg-raekke { display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; align-items: center; gap: 0 16px; padding: 8px 16px; }
+.ret-valg-raekke + .ret-valg-raekke { border-top: 2px solid var(--creme-moerk); }
+.ret-valg-raekke.valgt { background: var(--sennep-lys); }
+
+/* Forsidens indgang til den voksne */
+.forside-voksen { display: flex; justify-content: center; padding: 0 24px 18px; }
+
+@media (max-width: 900px) {
+  .dag { grid-template-columns: 112px 72px minmax(0, 1fr); }
+  .dag-hoved { grid-row: span 2; }
+  .dag-billede { width: 72px; height: 72px; }
+  .dag:not(.fri) .dag-knapper { grid-column: 2 / -1; justify-content: flex-start; padding-top: 0; }
+  .dag.fri { grid-template-columns: 112px minmax(0, 1fr) auto; }
+  .dag.fri .dag-hoved { grid-row: auto; }
+}
+
+/* Telefonen: dagen står som en farvet stribe øverst i rækken, og knapperne får deres egen linje */
+@media (max-width: 700px) {
+  .uge { padding: 4px 12px 32px; gap: 14px; }
+  .uge-hoved h1 { font-size: 32px; }
+  .dag { grid-template-columns: 64px minmax(0, 1fr); gap: 0 12px; padding: 0 12px; }
+  .dag.fri { grid-template-columns: minmax(0, 1fr) auto; }
+  .dag-hoved, .dag.fri .dag-hoved { grid-column: 1 / -1; grid-row: auto; flex-direction: row; align-items: baseline; gap: 10px; margin: 0 -12px; padding: 8px 12px; border-right: 0; border-bottom: 2px solid var(--creme-moerk); }
+  .dag-billede { width: 64px; height: 64px; }
+  .dag:not(.fri) .dag-knapper { grid-column: 1 / -1; padding: 0 0 12px; }
+  .uge-knapper .ny-uge { margin-left: 0; }
+  .ret-valg-raekke { grid-template-columns: 64px minmax(0, 1fr); padding: 10px 12px; }
+  .ret-valg-raekke .dag-billede { width: 64px; height: 64px; }
+  .ret-valg-raekke .knap { grid-column: 1 / -1; justify-self: start; margin-bottom: 4px; }
+}
+
 /* ---------- Smalle skærme (iPhone på højkant) ---------- */
 
 /* Ikke lave skærme på langs: en iPhone på langs (667×375, 736×414) får reglen for lave skærme nederst.

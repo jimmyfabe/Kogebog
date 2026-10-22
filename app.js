@@ -211,9 +211,16 @@ function forside() {
       el('p', { tekst: 'Hvad skal vi lave i\u00a0dag?' })),
     hop,
     billede(grafikDyr('bo'), '', 'forside-dyr'));
+  // Ugeplanen er den voksnes (js/ugeplan.js): bag et hold på 2 s som print, så et barn ikke kommer derind ved et tilfælde
+  const uge = S.ids && S.ids.length ? el('div', { class: 'forside-voksen' }, holdKnap({
+    klasse: 'lille voksen-hold uge-knap',
+    label: 'Ugeplan til den voksne. Hold knappen inde i 2 sekunder.',
+    indhold: [ikon('kalender'), el('span', { tekst: 'Ugeplan: hold' })],
+    naarFaerdig: () => naviger('#/uge'),
+  })) : null;
   // Røsts licens kræver, at man får at vide, at stemmen er en computerstemme, før den taler (sikkerhedsreview 20-10).
   // Før stod det kun på printet
-  return el('main', { class: 'skaerm forside' }, top, el('div', { class: 'forside-timer' }, timerPille()), indhold,
+  return el('main', { class: 'skaerm forside' }, top, el('div', { class: 'forside-timer' }, timerPille()), indhold, uge,
     el('p', { class: 'forside-fod', tekst: 'Stemmen er en computerstemme (Røst\u00a0fra\u00a0Alexandra\u00a0Instituttet).' }));
 }
 
