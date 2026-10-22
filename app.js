@@ -166,7 +166,7 @@ function forside() {
       knap('Hent opskrifterne igen', { klasse: 'primaer', ikonNavn: 'igen', onclick: () => { S.ids = null; indlaes(); } }));
   } else {
     const fejlede = [];
-    // Afsnittets billede (gryden, ovnen, kagen) står også i kortets hjørne: den grønne og den røde cirkel kan ikke skelnes
+    // Afsnittets billede (gryden, ovnen, kagen, græskarret) står også i kortets hjørne: den grønne og den røde cirkel kan ikke skelnes
     // ved farveblindhed (UI-review 5). Pynt for skærmlæseren: kortets navn er rettens navn
     const kortTil = (id, gruppe) => {
       const m = S.retter.get(id);
@@ -180,7 +180,7 @@ function forside() {
       b.addEventListener('click', klik(() => kortTryk(id, b)));
       return el('li', { class: 'kort-plads' }, b);
     };
-    // Et afsnit pr. gruppe: gryden, ovnen og kagen står i overskriften og har samme farve som kortenes cirkel.
+    // Et afsnit pr. gruppe: gryden, ovnen, kagen og græskarret står i overskriften og har samme farve som kortenes cirkel.
     // Et afsnit uden kort (alle dets opskrifter fejlede) vises ikke
     const hopKnapper = [];
     const afsnit = S.grupper.map((g) => {
@@ -377,15 +377,18 @@ function timerBlok(m, t) {
   let vistUden = ''; // 'start' eller 'optaget': tegn kun om, når det skifter (ellers mister knappen fokus hvert kvarte sekund)
   // Mens «Start timer» trykkes, tegnes blokken ikke om. Løber en anden timer ud midt i trykket, forsvinder forklaringen,
   // og knappen hopper ca. 200 px mod midten: slippet lander ved siden af knappen, og der kommer intet click (målt i
-  // WebKit 22-10-2026: 0/6 tryk på 600 ms startede timeren). Blokken tegnes om lidt efter slippet, når click er kommet
+  // WebKit 22-10-2026: 0/6 tryk på 600 ms startede timeren). Blokken tegnes om, når click er kommet, eller 600 ms efter
+  // slippet (trykket gik ved siden af). Loftet på 10 s er kun til et pointerup, der aldrig kom
   let trykkes = false;
   let slipVagt = 0;
   const slipEfter = (ms) => {
     clearTimeout(slipVagt);
     slipVagt = setTimeout(() => { trykkes = false; tegn(); }, ms);
   };
-  startKnap.addEventListener('pointerdown', () => { trykkes = true; slipEfter(3000); });
+  startKnap.addEventListener('pointerdown', () => { trykkes = true; slipEfter(10000); });
   for (const type of ['pointerup', 'pointercancel', 'pointerleave']) startKnap.addEventListener(type, () => { if (trykkes) slipEfter(600); });
+  startKnap.addEventListener('click', () => { if (trykkes) slipEfter(0); });
+  S.oprydning.push(() => clearTimeout(slipVagt));
 
   // Nyt indhold i blokken. Stod fokus i blokken (Tab, VoiceOver), flyttes det til knappen, der afløser den gamle:
   // ellers faldt fokus til body, når «Start timer», «Stop» eller «Ok» forsvandt (UI-review 5)

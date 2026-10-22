@@ -1180,8 +1180,9 @@ async function timere(browser, skaerm) {
 
 // «Start timer» skal tage et langt tryk, også når en anden timer løber ud midt i trykket (22-10-2026). Før forsvandt
 // «Der kører allerede en timer» i det tik, og knappen hoppede ca. 200 px mod midten: slippet landede ved siden af
-// knappen, og der kom intet click (0/6 i WebKit). Kødsovs trin 8 (2 s med ?hurtig=1) løber ud ca. 250-500 ms inde i et
-// tryk på 600 ms på «Start timer» på trin 10. Ny side pr. forsøg
+// knappen, og der kom intet click (0/6 i WebKit). Kødsovs trin 8 (2 s med ?hurtig=1) løber ud ca. 400-650 ms inde i et
+// tryk på 900 ms på «Start timer» på trin 10. Kun forsøg, hvor det faktisk skete midt i trykket, tæller (under last kan
+// tikket komme før mousedown eller efter mouseup), og mindst ét af tre skal ramme. Ny side pr. forsøg
 async function startUnderSkift(browser, skaerm) {
   const n = skaerm.navn;
   console.log('[' + n + '] «Start timer» midt i, at en anden timer løber ud');
@@ -1209,19 +1210,26 @@ async function startUnderSkift(browser, skaerm) {
       window.addEventListener('mousedown', () => { window.__ned = performance.now(); }, true);
       window.addEventListener('mouseup', () => { window.__op = performance.now(); }, true);
     });
-    // Tryk ned ca. 250 ms før timeren på trin 8 slutter: tikket (hvert 250 ms) ser det 250-500 ms inde i trykket
+    // Tryk ned ca. 400 ms før timeren på trin 8 slutter: tikket (hvert 250 ms) ser det 400-650 ms inde i trykket
     const t8 = await gemt(side);
     const rest = t8.slut - await side.evaluate(() => Date.now());
-    tjek(rest > 250, hvor + ': testen nåede ikke frem, før timeren på trin 8 sluttede (' + rest + ' ms tilbage)');
-    await vent(Math.max(0, rest - 250));
+    tjek(rest > 400, hvor + ': testen nåede ikke frem, før timeren på trin 8 sluttede (' + rest + ' ms tilbage)');
+    await vent(Math.max(0, rest - 400));
     await side.mouse.down();
-    await vent(600);
+    await vent(900);
     await side.mouse.up();
-    await venterPaa(side, () => { const x = JSON.parse(localStorage.getItem('kog-v1') || '{}').timer; return !!x && x.nr === 10; }, null,
-      hvor + ': et tryk på 600 ms på «Start timer» på trin 10 skal starte timeren, mens timeren på trin 8 løber ud', 2000);
+    await vent(100);
     const tid = await side.evaluate(() => ({ ned: window.__ned, skift: window.__skift, op: window.__op }));
-    if (tid.ned !== null && tid.skift !== null && tid.op !== null && tid.ned < tid.skift && tid.skift < tid.op) midtI++;
-    else maal.push(hvor + ': timeren på trin 8 løb ikke ud midt i trykket (ned ' + Math.round(tid.ned) + ', skift ' + Math.round(tid.skift) + ', op ' + Math.round(tid.op) + ' ms)');
+    if (tid.ned !== null && tid.skift !== null && tid.op !== null && tid.ned < tid.skift && tid.skift < tid.op) {
+      midtI++;
+      await venterPaa(side, () => { const x = JSON.parse(localStorage.getItem('kog-v1') || '{}').timer; return !!x && x.nr === 10; }, null,
+        hvor + ': et tryk på 900 ms på «Start timer» på trin 10 skal starte timeren, mens timeren på trin 8 løber ud', 2000);
+      // Efter frysningen står blokken som en timer, der kører, uden forklaringen
+      await venterPaa(side, () => !!document.querySelector('.timer.koerer') && !document.querySelector('.timer-optaget'), null,
+        hvor + ': efter trykket skal trin 10 vise timeren, der kører, uden «Der kører allerede en timer»', 2000);
+    } else {
+      maal.push(hvor + ': timeren på trin 8 løb ikke ud midt i trykket (ned ' + Math.round(tid.ned) + ', skift ' + Math.round(tid.skift) + ', op ' + Math.round(tid.op) + ' ms)');
+    }
     tjek(side.fejl.length === 0, hvor + ': ' + side.fejl.join(' | '));
     await ctx.close();
   }
