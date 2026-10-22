@@ -161,8 +161,12 @@ test('FNV-1a giver de kendte værdier, og kontrolsummen er 4 hex', () => {
   assert.match(kontrolsum('v1.20261026.koedsovs_4~~~~~~'), /^[0-9a-f]{4}$/);
 });
 
-test('ugeplanen er de fem aftensretter, og pandekager er ikke med', () => {
-  assert.deepEqual(UGEPLAN.slice().sort(), ['bolognese-one-pot', 'chorizo-pasta', 'cremet-koedsovs', 'koedsovs', 'tunfrikadeller']);
+test('ugeplanen er aftensretterne med ugeplan-felter (de fem første og de billige fra 22-10), og pandekager er ikke med', () => {
+  assert.deepEqual(UGEPLAN.slice().sort(), [
+    'bolognese-one-pot', 'chili-con-carne', 'chorizo-pasta', 'cremet-koedsovs', 'halv-halv-koedsovs', 'koedsovs',
+    'linsebolognese', 'one-pot-tomatpasta', 'taco-bradepande', 'tunfrikadeller',
+  ]);
+  assert.ok(!UGEPLAN.includes('pandekager'));
 });
 
 test('en plan kodes og afkodes tilbage til det samme', () => {

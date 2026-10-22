@@ -7,7 +7,7 @@
    test/test-sw.js tjekker, at FILER er komplet, og fejler, når en fil er ændret. Fejlbeskeden viser den nye værdi;
    testen ændrer ikke sw.js, så den sættes her i hånden. */
 const PRAEFIKS = 'kog-';
-const INDHOLD = 'c37b691330a6e39e'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = '7c16d9a54fbe740f'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '62514f04783c4e58'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
@@ -57,6 +57,11 @@ const FILER = [
   'opskrifter/slimsnegle.json',
   'opskrifter/bolognese-one-pot.json',
   'opskrifter/cremet-koedsovs.json',
+  'opskrifter/one-pot-tomatpasta.json',
+  'opskrifter/linsebolognese.json',
+  'opskrifter/halv-halv-koedsovs.json',
+  'opskrifter/chili-con-carne.json',
+  'opskrifter/taco-bradepande.json',
   'lyd/liste.json',
   'ikoner/ikon.svg',
   'ikoner/ikon-180.png',
@@ -73,6 +78,8 @@ const FILER = [
   'grafik/ing-tun.svg', 'grafik/ing-yoghurt.svg',
   'grafik/ing-pizzadej.svg', 'grafik/ing-poelse.svg', 'grafik/ing-ketchup.svg', 'grafik/ing-oliven.svg', 'grafik/ing-majs.svg',
   'grafik/ing-peberfrugt.svg', 'grafik/ing-flodeost.svg', 'grafik/ing-spinat.svg',
+  'grafik/ing-aerter.svg', 'grafik/ing-broccoli.svg', 'grafik/ing-linser.svg', 'grafik/ing-boenner.svg', 'grafik/ing-ris.svg',
+  'grafik/ing-tortilla.svg',
   'grafik/ret-boller.webp', 'grafik/ret-chorizo-pasta.webp', 'grafik/ret-frikadeller.webp', 'grafik/ret-koedsovs.webp', 'grafik/ret-pandekager.webp',
   'grafik/ret-kartoffelmos.webp', 'grafik/ret-hvidloegsflutes.webp', 'grafik/ret-brownie.webp', 'grafik/ret-blondie.webp',
   'grafik/ret-hytteostboller.webp', 'grafik/ret-havregrynskugler.webp', 'grafik/ret-tunfrikadeller.webp',
@@ -80,6 +87,8 @@ const FILER = [
   'grafik/ret-mumiepoelser.webp', 'grafik/ret-edderkoppeboller.webp', 'grafik/ret-oejeboller.webp', 'grafik/ret-graeskar-calzone.webp',
   'grafik/ret-heksefingre.webp', 'grafik/ret-slimsnegle.webp',
   'grafik/ret-bolognese-one-pot.webp', 'grafik/ret-cremet-koedsovs.webp',
+  'grafik/ret-one-pot-tomatpasta.webp', 'grafik/ret-linsebolognese.webp', 'grafik/ret-halv-halv-koedsovs.webp',
+  'grafik/ret-chili-con-carne.webp', 'grafik/ret-taco-bradepande.webp',
   'grafik/gruppe-aftensmad.svg', 'grafik/gruppe-bagning.svg', 'grafik/gruppe-soede-sager.svg', 'grafik/gruppe-halloween.svg',
   'grafik/verbum-aelte.svg', 'grafik/verbum-haelde.svg', 'grafik/verbum-koge.svg', 'grafik/verbum-maale.svg', 'grafik/verbum-roere.svg',
   'grafik/verbum-rulle.svg', 'grafik/verbum-skaere.svg', 'grafik/verbum-smage.svg', 'grafik/verbum-stege.svg',

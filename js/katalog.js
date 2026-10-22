@@ -103,6 +103,13 @@ export const INGREDIENSER = {
   'peberfrugt': 'peberfrugt',
   'flodeost': 'flødeost',
   'spinat': 'spinat',
+  // De billige aftensretter (22-10-2026)
+  'aerter': 'ærter',
+  'broccoli': 'broccoli',
+  'linser': 'røde linser',
+  'boenner': 'bønner',
+  'ris': 'ris',
+  'tortilla': 'tortillas',
 };
 
 // Ikoner for råt kød og råt æg: efter dem skal der komme et trin med «vaske-haender».
@@ -180,6 +187,8 @@ export const VARER = {
   'hvidloeg': { navn: 'Hvidløg', afd: 'groent', enhed: 'fed', ikon: 'hvidloeg' },
   'gulerod': { navn: 'Gulerødder', afd: 'groent', enhed: 'stk', ikon: 'gulerod' },
   'persille': { navn: 'Persille', afd: 'groent', enhed: 'stk', ikon: 'krydderurt', pakke: [1, 'bundt', 'bundter'] },
+  // Brød
+  'tortillas': { navn: 'Tortillas', afd: 'broed', enhed: 'stk', ikon: 'tortilla' },
   // Dåser og tørvarer
   'hakkede-tomater': { navn: 'Hakkede tomater', afd: 'toer', enhed: 'g', ikon: 'tomat', pakke: [400, 'dåse', 'dåser'] },
   'passata': { navn: 'Tomatpassata', afd: 'toer', enhed: 'g', ikon: 'tomat', pakke: [500, 'flaske', 'flasker'] },
@@ -189,6 +198,13 @@ export const VARER = {
   'bouillonterninger': { navn: 'Grøntsagsbouillon (terninger)', afd: 'toer', enhed: 'stk', ikon: 'bouillon', pakke: [8, 'pakke', 'pakker'] },
   'tun': { navn: 'Tun i vand', afd: 'toer', enhed: 'g', ikon: 'tun', pakke: [185, 'dåse', 'dåser'] },
   'havregryn': { navn: 'Havregryn', afd: 'toer', enhed: 'g', ikon: 'havregryn', pakke: [1000, 'pose', 'poser'] },
+  'penne': { navn: 'Penne', afd: 'toer', enhed: 'g', ikon: 'spaghetti', pakke: [500, 'pakke', 'pakker'] },
+  'roede-linser': { navn: 'Røde linser', afd: 'toer', enhed: 'g', ikon: 'linser' },
+  'ris': { navn: 'Ris', afd: 'toer', enhed: 'g', ikon: 'ris' },
+  'kidneyboenner': { navn: 'Kidneybønner', afd: 'toer', enhed: 'stk', ikon: 'boenner', pakke: [1, 'dåse', 'dåser'] },
+  'sorte-boenner': { navn: 'Sorte bønner', afd: 'toer', enhed: 'stk', ikon: 'boenner', pakke: [1, 'dåse', 'dåser'] },
+  'majs': { navn: 'Majs', afd: 'toer', enhed: 'stk', ikon: 'majs', pakke: [1, 'dåse', 'dåser'] },
+  'tacokrydderi': { navn: 'Tacokrydderi (mildt)', afd: 'toer', enhed: 'stk', ikon: 'krydderurt', pakke: [1, 'pose', 'poser'] },
   // Køl
   'hakket-oksekoed': { navn: 'Hakket oksekød', afd: 'koel', enhed: 'g', ikon: 'koed', pakke: [500, 'bakke', 'bakker'] },
   'chorizo': { navn: 'Chorizo', afd: 'koel', enhed: 'g', ikon: 'chorizo', pakke: [250, 'pakke', 'pakker'] },
@@ -199,11 +215,19 @@ export const VARER = {
   'graesk-yoghurt': { navn: 'Græsk yoghurt', afd: 'koel', enhed: 'g', ikon: 'yoghurt', pakke: [500, 'bæger', 'bægre'] },
   'aeg': { navn: 'Æg', afd: 'koel', enhed: 'stk', ikon: 'aeg', pakke: [10, 'bakke', 'bakker'] },
   'smoer': { navn: 'Smør', afd: 'koel', enhed: 'g', ikon: 'smoer', pakke: [250, 'pakke', 'pakker'] },
+  'yoghurt': { navn: 'Yoghurt naturel', afd: 'koel', enhed: 'g', ikon: 'yoghurt', pakke: [1000, 'bæger', 'bægre'] },
+  // Frost. Uden pakke: posernes størrelse skifter mellem butikkerne, så listen viser gram
+  'aerter': { navn: 'Ærter', afd: 'frost', enhed: 'g', ikon: 'aerter' },
+  'broccoliblanding': { navn: 'Broccoli', afd: 'frost', enhed: 'g', ikon: 'broccoli' },
+  'suppeurter': { navn: 'Suppeurter', afd: 'frost', enhed: 'g', ikon: 'gulerod' },
+  'groentsagsblanding': { navn: 'Grøntsagsblanding', afd: 'frost', enhed: 'g', ikon: 'aerter' },
   // Tjek, at I har
   'salt': { navn: 'Salt', afd: 'basis', enhed: 'g', ikon: 'salt', basis: true },
   'peber': { navn: 'Peber', afd: 'basis', enhed: 'g', ikon: 'peber', basis: true },
   'olie': { navn: 'Olie', afd: 'basis', enhed: 'ml', ikon: 'olie', basis: true },
   'oregano': { navn: 'Tørret oregano', afd: 'basis', enhed: 'ml', ikon: 'krydderurt', basis: true },
   'hvidloegspulver': { navn: 'Hvidløgspulver', afd: 'basis', enhed: 'ml', ikon: 'hvidloeg', basis: true },
+  'paprika': { navn: 'Paprika', afd: 'basis', enhed: 'ml', ikon: 'krydderurt', basis: true },
+  'spidskommen': { navn: 'Stødt spidskommen', afd: 'basis', enhed: 'ml', ikon: 'krydderurt', basis: true },
   'vand': { navn: 'Vand', afd: 'basis', enhed: 'ml', ikon: 'vand', basis: true, skjul: true },
 };
