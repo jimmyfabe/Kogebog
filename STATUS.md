@@ -1,5 +1,13 @@
 # STATUS – Tumbi Køkken
 
+## 22-10-2026 kl. 07:20: timer-pillen mistede klikket i WebKit (rettet på `grafik-ai`, ikke flettet)
+
+- **Fejlen:** fuld e2e på `grafik-ai` (2fd8a04 + 08a001d) fejlede 1 gang i «timere»: pillen på forsiden førte ikke til trin 8. Rodårsag (test-runner, gentaget af Saga): pillens tal skrives hvert kvarte sekund (ny tekstnode), og WebKit sender intet `click`, når noden under musen skiftes ud før slip. Målt: tryk på 600 ms på tallet gav 0/6 klik med den gamle CSS og 6/6 med den nye; tryk på 5 ms gav 6/6 med begge.
+- **Rettet (8843060):** `.pille > * { pointer-events: none; }`, nyt e2e-tjek med langt tryk (rødt 3/3 mod den gamle CSS), en vagt, hvis pillen er skjult (code review), faldgruben i `CLAUDE.md`, ny `INDHOLD`. Code review: ingen kritiske fund, fund 1 og 3 rettet.
+- **Tests:** timer-afsnittet 3 gange grønt (90 tjek); test-runnerens fulde e2e med rettelsen: 17.129 tjek grønne (671 s, før vagten og kommentaren kom til). Node-tests 6/7 (`test-lyd` rød på `voksen-hold.mp3` som før). Fingertryk på en rigtig iPad er ikke afprøvet.
+- **Ikke rettet (lavt, ikke målt):** «Start timer» (`app.js:396-401`) bliver flyttet ud og ind med `replaceChildren` i det tik, hvor en anden timer løber ud. Et tryk lige dér kan måske tabes (forslag i code review). E2e-tjekket «pillen skal stoppe oplæsningen» fejlede 4 af 20 gange ved 16 travle processer: den falske lyd varer kun 1,5 s, så tjekket bør kun se på det, der startede efter klikket. Det er testens antagelse, ikke en fejl i appen.
+- **Afventer Jimmy (21-10, stadig åbne):** sletning af de 19 gamle `grafik/ret-*.svg` og `voksen-hold.mp3` (`--ryd`); code review fund 5 og 6; «Jimmys slankeapp» ud af historikken?; lyt til de to markerede mp3; flet og push (se afsnittet nedenfor).
+
 ## 21-10-2026 kl. 23:08: gren `grafik-ai` – AI-billeder, advarselstrekant, to nye aftensretter (ikke flettet)
 
 **Gjort (alt på `grafik-ai`, 16 commits oven på `main` 5c3a90c; `main` er pushet og står lige med origin):**
