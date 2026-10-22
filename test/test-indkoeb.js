@@ -472,6 +472,18 @@ test('indkøbslisten gemmes og renses: kendte varer, m 0-100.000, højst 200, af
   assert.equal(l.skrevet.every((k) => k === 'kog-liste-v1'), true);
 });
 
+// Code review af trin 1-5 (22-10): samme fejl som M1 i gemUge (f314805). { varer: undefined } tømte listen, og
+// afkrydsningerne forsvandt med den, fordi de kun gælder varer på listen
+test('et felt sat til undefined lader den gemte liste stå', () => {
+  const l = medLager();
+  lager.gemListe(LISTE_DATA);
+  for (const felt of ['kode', 'uge', 'varer', 'koebt', 'harVi', 'hentet']) {
+    assert.deepEqual(lager.gemListe({ [felt]: undefined }), { v: 1, ...LISTE_DATA }, felt);
+  }
+  assert.deepEqual(lager.gemListe({ varer: undefined, koebt: ['loeg', 'hakket-oksekoed'] }).koebt, ['loeg', 'hakket-oksekoed']);
+  assert.deepEqual(gemt(l, 'kog-liste-v1').varer, LISTE_DATA.varer);
+});
+
 test('versionsvagten: et højere v læses som tomt og overskrives aldrig', () => {
   // v står som tekst i JSON'en, så 1e999 (uendelig) også kan prøves
   for (const v of ['2', '1.5', '99', '1e999']) {

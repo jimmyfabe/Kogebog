@@ -174,10 +174,11 @@ export function hentListe() {
   return { ...rensListe(j), laast };
 }
 
-// Gemmer ændringen oven på den gemte liste og returnerer det gemte, eller null, når listen er låst, eller lageret fejler
+// Gemmer ændringen oven på den gemte liste og returnerer det gemte, eller null, når listen er låst, eller lageret fejler.
+// Et felt sat til undefined er ingen ændring (som i gemUge): { varer: undefined } tømte før listen
 export function gemListe(aendring) {
   const { j, laast } = laesMedVagt(LISTE, LISTE_V, MIGRER_LISTE);
   if (laast) return null;
-  const ny = rensListe({ ...rensListe(j), ...aendring, v: LISTE_V });
+  const ny = rensListe({ ...rensListe(j), ...udenUndefined(aendring), v: LISTE_V });
   return skriv(LISTE, ny) ? ny : null;
 }
