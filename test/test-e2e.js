@@ -1161,6 +1161,56 @@ async function timere(browser, skaerm) {
   await ctx.close();
 }
 
+// «Start timer» skal tage et langt tryk, også når en anden timer løber ud midt i trykket (22-10-2026). Før forsvandt
+// «Der kører allerede en timer» i det tik, og knappen hoppede ca. 200 px mod midten: slippet landede ved siden af
+// knappen, og der kom intet click (0/6 i WebKit). Kødsovs trin 8 (2 s med ?hurtig=1) løber ud ca. 250-500 ms inde i et
+// tryk på 600 ms på «Start timer» på trin 10. Ny side pr. forsøg
+async function startUnderSkift(browser, skaerm) {
+  const n = skaerm.navn;
+  console.log('[' + n + '] «Start timer» midt i, at en anden timer løber ud');
+  const gemt = (side) => side.evaluate(() => JSON.parse(localStorage.getItem('kog-v1') || '{}').timer || null);
+  let midtI = 0; // forsøg, hvor timeren på trin 8 faktisk løb ud mellem mousedown og mouseup (ellers prøver testen intet)
+  for (let forsoeg = 1; forsoeg <= 3; forsoeg++) {
+    const hvor = n + ' «Start timer» forsøg ' + forsoeg;
+    const { ctx, side } = await nySide(browser, skaerm);
+    await side.goto(BASE + '/index.html?hurtig=1#/ret/koedsovs/trin/8');
+    await side.waitForSelector('.timer-start');
+    await tryk(side, '.timer-start');
+    await side.waitForSelector('.timer.koerer');
+    await side.evaluate(() => { location.hash = '#/ret/koedsovs/trin/10'; });
+    await side.waitForFunction(() => location.hash.endsWith('/trin/10') && !!document.querySelector('.timer.optaget .timer-start'));
+    await vent(SPAERRE);
+    const b = await side.locator('.timer-start').boundingBox();
+    await side.mouse.move(b.x + b.width / 2, b.y + b.height / 2);
+    // Tidspunkterne i siden: trykket ned og op, og når appen ser, at timeren på trin 8 er slut (pillen i toppen bliver
+    // «færdig» i samme tik; selve blokken venter med vilje, til trykket er slut)
+    await side.evaluate(() => {
+      const pille = document.querySelector('.pille');
+      window.__ned = null; window.__op = null; window.__skift = null;
+      new MutationObserver(() => { if (window.__skift === null && pille.classList.contains('faerdig')) window.__skift = performance.now(); })
+        .observe(pille, { attributes: true, attributeFilter: ['class'] });
+      window.addEventListener('mousedown', () => { window.__ned = performance.now(); }, true);
+      window.addEventListener('mouseup', () => { window.__op = performance.now(); }, true);
+    });
+    // Tryk ned ca. 250 ms før timeren på trin 8 slutter: tikket (hvert 250 ms) ser det 250-500 ms inde i trykket
+    const t8 = await gemt(side);
+    const rest = t8.slut - await side.evaluate(() => Date.now());
+    tjek(rest > 250, hvor + ': testen nåede ikke frem, før timeren på trin 8 sluttede (' + rest + ' ms tilbage)');
+    await vent(Math.max(0, rest - 250));
+    await side.mouse.down();
+    await vent(600);
+    await side.mouse.up();
+    await venterPaa(side, () => { const x = JSON.parse(localStorage.getItem('kog-v1') || '{}').timer; return !!x && x.nr === 10; }, null,
+      hvor + ': et tryk på 600 ms på «Start timer» på trin 10 skal starte timeren, mens timeren på trin 8 løber ud', 2000);
+    const tid = await side.evaluate(() => ({ ned: window.__ned, skift: window.__skift, op: window.__op }));
+    if (tid.ned !== null && tid.skift !== null && tid.op !== null && tid.ned < tid.skift && tid.skift < tid.op) midtI++;
+    else maal.push(hvor + ': timeren på trin 8 løb ikke ud midt i trykket (ned ' + Math.round(tid.ned) + ', skift ' + Math.round(tid.skift) + ', op ' + Math.round(tid.op) + ' ms)');
+    tjek(side.fejl.length === 0, hvor + ': ' + side.fejl.join(' | '));
+    await ctx.close();
+  }
+  tjek(midtI > 0, n + ' «Start timer»: i intet forsøg løb timeren på trin 8 ud midt i trykket, så testen prøvede ikke det, den skal');
+}
+
 // ---------- Fejltilstande og mindre bevægelse ----------
 async function fejltilstande(browser, skaerm) {
   console.log('[' + skaerm.navn + '] fejltilstande');
@@ -1761,6 +1811,7 @@ if (DELE.includes('tastatur')) KOERSEL.push(['tastatur', (b) => tastatur(b, SKAE
 if (DELE.includes('timer')) KOERSEL.push(['timere', (b) => timere(b, SKAERME[0])]);
 if (DELE.includes('timer')) KOERSEL.push(['timeren rulles frem', (b) => timerFrem(b)]);
 if (DELE.includes('timer')) KOERSEL.push(['timeren er færdig', (b) => timerFaerdig(b)]);
+if (DELE.includes('timer')) KOERSEL.push(['«Start timer», mens en anden timer løber ud', (b) => startUnderSkift(b, SKAERME[0])]);
 if (DELE.includes('fejl')) KOERSEL.push(['fejltilstande', (b) => fejltilstande(b, SKAERME[0])]);
 if (DELE.includes('beroering')) KOERSEL.push(['berøring', (b) => beroering(b, SKAERME[0])]);
 if (DELE.includes('former')) KOERSEL.push(['skærmformer', (b) => former(b)]);

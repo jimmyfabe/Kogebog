@@ -375,6 +375,17 @@ function timerBlok(m, t) {
   const okKnap = knap('Ok', { klasse: 'primaer lille-primaer', ikonNavn: 'tjek', label: 'Ok, tiden er gået. Slå timeren fra.', onclick: () => Timer.stop() });
   let varFaerdig = false;
   let vistUden = ''; // 'start' eller 'optaget': tegn kun om, når det skifter (ellers mister knappen fokus hvert kvarte sekund)
+  // Mens «Start timer» trykkes, tegnes blokken ikke om. Løber en anden timer ud midt i trykket, forsvinder forklaringen,
+  // og knappen hopper ca. 200 px mod midten: slippet lander ved siden af knappen, og der kommer intet click (målt i
+  // WebKit 22-10-2026: 0/6 tryk på 600 ms startede timeren). Blokken tegnes om lidt efter slippet, når click er kommet
+  let trykkes = false;
+  let slipVagt = 0;
+  const slipEfter = (ms) => {
+    clearTimeout(slipVagt);
+    slipVagt = setTimeout(() => { trykkes = false; tegn(); }, ms);
+  };
+  startKnap.addEventListener('pointerdown', () => { trykkes = true; slipEfter(3000); });
+  for (const type of ['pointerup', 'pointercancel', 'pointerleave']) startKnap.addEventListener(type, () => { if (trykkes) slipEfter(600); });
 
   // Nyt indhold i blokken. Stod fokus i blokken (Tab, VoiceOver), flyttes det til knappen, der afløser den gamle:
   // ellers faldt fokus til body, når «Start timer», «Stop» eller «Ok» forsvandt (UI-review 5)
@@ -395,7 +406,7 @@ function timerBlok(m, t) {
         if (optagetTekst.textContent !== tekst) optagetTekst.textContent = tekst;
       }
       const ny = anden ? 'optaget' : 'start';
-      if (vistUden !== ny) {
+      if (vistUden !== ny && !trykkes) {
         vistUden = ny;
         blok.className = 'timer' + (anden ? ' optaget' : '');
         startKnap.setAttribute('aria-disabled', anden ? 'true' : 'false');
