@@ -1443,8 +1443,9 @@ async function timerFrem(browser) {
 // Når tiden er gået, afløser «Tiden er gået!» og «Ok» knappen «Stop», og blokken bliver højere. «Ok» og teksten skal ses
 // over den faste bund (UI-review 5: på 667×375 og 390×844 lå «Ok» under bunden, og på 390×844 også teksten). Fokus må
 // ikke falde til body, når en knap forsvinder: fra «Stop» til «Ok», når tiden er gået, og fra «Ok» og «Stop» til
-// «Start timer». Kødsovs trin 4 og pizzasnegle trin 20 er dem, reviewet målte. Ny side pr. ret (WebKits grænse for adresseskift)
-const FAERDIG_TRIN = [['koedsovs', 4], ['pizzasnegle', 20]];
+// «Start timer». Kødsovs trin 6 (reviewet målte trin 4, men timeren flyttede til trin 6 22-10, code review fund 5) og
+// pizzasnegle trin 20. Ny side pr. ret (WebKits grænse for adresseskift)
+const FAERDIG_TRIN = [['koedsovs', 6], ['pizzasnegle', 20]];
 async function timerFaerdig(browser) {
   for (const sk of FORMER.filter((f) => TIMER_PAA.includes(f.navn))) {
     const n = sk.navn;

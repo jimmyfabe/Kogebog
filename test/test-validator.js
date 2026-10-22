@@ -500,6 +500,22 @@ test('ingen pause med råt kød eller æg på hænderne', () => {
   }, 'trin 8: en pause med råt kød eller æg på hænderne fra trin 7');
 });
 
+// En timer med råt kød eller æg på hænderne er også en pause (code review 21-10 fund 5): kødsovsen brunede kødet i
+// 8 minutter med timer på trinnet, hvor barnet lagde det rå kød i gryden, og håndvasken kom først bagefter
+test('ingen timer med råt kød eller æg på hænderne', () => {
+  // Kødsovsen som før 22-10: timeren på trinnet med kødet
+  forventFejl('opskrifter/koedsovs.json', (d) => { d.recipeInstructions[3].tumbi.timer_sek = 480; },
+    'trin 4: en timer med råt kød eller æg på hænderne');
+  // Pandekager: et trin med timer mellem æggene (trin 7) og vasken, uden ingredienser, så kun timer-reglen kan fange det
+  forventFejl('opskrifter/pandekager.json', (d) => {
+    d.recipeInstructions.splice(7, 0, { '@type': 'HowToStep', text: 'Pisk dejen i 2 minutter.', tumbi: { verbum: 'piske', timer_sek: 120 } });
+  }, 'trin 8: en timer med råt kød eller æg på hænderne fra trin 7');
+  // Æltningen med timer er barnets eget arbejde i dejen, ikke en pause (pizzasneglene, trin 7), men kun æltningen
+  forventGyldig('opskrifter/pizzasnegle.json', (d) => { assert.equal(d.recipeInstructions[6].tumbi.verbum, 'aelte'); });
+  forventFejl('opskrifter/pizzasnegle.json', (d) => { d.recipeInstructions[6].tumbi.verbum = 'roere'; },
+    'trin 7: en timer med råt kød eller æg på hænderne fra trin 6');
+});
+
 // Dej med råt æg (eller kød) er først indarbejdet efter æltningen: en vask mellem ægget og æltningen er ikke nok.
 // Boller får et æg i dejen før æltningen (trin 7), og efter æltningen rører barnet salt
 test('dej med råt æg: hænderne vaskes efter æltningen, ikke før', () => {

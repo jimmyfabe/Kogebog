@@ -28,6 +28,9 @@ const MAKS_TIMER_SEK = 4 * 3600;
 const BLANDER = ['roere', 'haelde', 'piske']; // verber, der blander en ingrediens i dejen eller farsen
 const HAENDER_I_DEJ = ['aelte', 'rulle', 'kagerulle']; // verber, hvor hænderne rører dejen eller farsen
 const HAENDER_PAA_OVERFLADEN = ['pynte', 'pakke-ind', 'smuldre', ...HAENDER_I_DEJ]; // verber, hvor hænderne rører det, der er penslet
+// Verber, hvor timeren måler barnets eget arbejde i det rå («Ælt dejen i 8 minutter»): hænderne er i dejen hele tiden og
+// vaskes lige bagefter, så det er ikke en pause (code review 21-10 fund 5 gælder kødet, der bruner, mens barnet venter)
+const TIMER_MAALER_HAENDERNE = ['aelte'];
 const TAGE_UD = ['tage-ud', 'tage-ud-form']; // efter ovnen: en flad plade eller en dyb form
 // Ordvagten går efter stammen: hvert ord, der begynder med stammen (eller har den inde i sig, hvor det står), fanges med
 // alle bøjninger («smelte», «skære», «æggeblommer»). En liste over tilladte former mangler altid en form, og så slipper
@@ -311,6 +314,12 @@ export function valider(rod = ROD) {
         if (st.verbum === 'pensle' && egneRaa.length) raaPensling = { trin: i + 1, ikoner: egneRaa };
         if (BLANDER.includes(st.verbum) && egneRaa.length) raaDej = { trin: i + 1, ikoner: [...new Set([...(raaDej?.ikoner ?? []), ...egneRaa])] };
         const vask = trin.findIndex((x, k) => k > i && x && x.tumbi && x.tumbi.verbum === 'vaske-haender');
+        // En timer på trinnet med det rå er også en pause: barnet venter ved timeren med råt på hænderne og trykker på
+        // iPad'en (code review 21-10 fund 5: kødet blev brunet 5-8 min med timer før håndvasken). Timeren hører til trinnet
+        // efter vasken
+        if (raa.length && st.timer_sek !== undefined && !TIMER_MAALER_HAENDERNE.includes(st.verbum)) {
+          f(hvor + ': en timer med råt kød eller æg på hænderne (' + liste(raa) + ')' + hvorfra + '. Læg det rå i uden timer, vask hænderne, og start timeren på trinnet efter');
+        }
         if (raa.length && vask < 0) {
           f(hvor + ': rører råt kød eller æg (' + liste(raa) + ')' + hvorfra + ', men der kommer ikke et «vaske-haender»-trin bagefter');
         } else if (raa.length) {
@@ -320,6 +329,11 @@ export function valider(rod = ROD) {
             if (trin[k] && trin[k].tumbi && trin[k].tumbi.verbum === 'vente' && !forurenet.has(k)) {
               forurenet.add(k);
               f('trin ' + (k + 1) + ': en pause med råt kød eller æg på hænderne fra trin ' + (i + 1) + hvorfra + '. Vask hænderne før pausen');
+              continue;
+            }
+            if (trin[k] && trin[k].tumbi && trin[k].tumbi.timer_sek !== undefined && !TIMER_MAALER_HAENDERNE.includes(trin[k].tumbi.verbum) && !forurenet.has(k)) {
+              forurenet.add(k);
+              f('trin ' + (k + 1) + ': en timer med råt kød eller æg på hænderne fra trin ' + (i + 1) + hvorfra + '. Vask hænderne før timeren');
               continue;
             }
             const ik = trin[k] && trin[k].tumbi && Array.isArray(trin[k].tumbi.ikoner) ? trin[k].tumbi.ikoner : [];
