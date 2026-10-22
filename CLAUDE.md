@@ -14,7 +14,7 @@ Kør i Git Bash i `D:/Claude/Kogebog`.
 | Én testfil | `node test/test-opskrifter.js` (også grafik og index.json), `test-validator.js`, `test-tid.js`, `test-sw.js`, `test-css.js` (regler i `app.css`, som browseren ikke kan se, fx safe-area), `test-lyd.js` (lydfilerne passer til det, appen siger), `test-tale.js` (oplæsningen med en falsk iPad: lyd efter et voksen-hold, reserven, uden net), `test-indkoeb.js` (ugeplanen: indkøbslisten, koden i linket og lageret med et falsk `localStorage`) |
 | Lokal server | `py -m http.server 8091 --bind 127.0.0.1 --directory D:/Claude/Kogebog`, og åbn http://127.0.0.1:8091/. Aldrig `file://` |
 | E2E i WebKit (TUNG) | `NODE_PATH=C:/Users/Jimmy/AppData/Roaming/npm/node_modules/@playwright/cli/node_modules bash ~/.claude/tung-koersel.sh "kogebog: e2e" node test/test-e2e.js http://127.0.0.1:8091` |
-| Kun dele af e2e | sæt foran kommandoen: `E2E_DELE=tastatur,timer` og/eller `E2E_SKAERME=ipad,iphone,desktop`. Dele: `hele,print,tastatur,timer,fejl,beroering,former,ugeplan` (`ugeplan` står i `test/e2e-ugeplan.js`: linket og indkøbslisten på iPhone, oversigten og børnenes valg på iPad, oversigten på desktop; `former` = 360 px, 390×844, 744×1133, 768×1024 og iPhones på langs: 844×390, 667×375, 736×414, 812×375, 932×430, og tre smalle desktopvinduer: 901×800, 960×800 og 1024×800). `E2E_FORMER=se-land,land` begrænser `former` til nogle af dem (navnene står i `FORMER` i `test-e2e.js`) |
+| Kun dele af e2e | sæt foran kommandoen: `E2E_DELE=tastatur,timer` og/eller `E2E_SKAERME=ipad,iphone,desktop`. Dele: `hele,print,tastatur,timer,fejl,beroering,former,ugeplan` (`ugeplan` står i `test/e2e-ugeplan.js`: linket og indkøbslisten på iPhone, oversigten og børnenes valg på iPad, oversigten og printet (`print.html?uge`) på desktop; `former` = 360 px, 390×844, 744×1133, 768×1024 og iPhones på langs: 844×390, 667×375, 736×414, 812×375, 932×430, og tre smalle desktopvinduer: 901×800, 960×800 og 1024×800). `E2E_FORMER=se-land,land` begrænser `former` til nogle af dem (navnene står i `FORMER` i `test-e2e.js`) |
 | Hjemmeskærm-ikoner (PNG) | `NODE_PATH=C:/Users/Jimmy/AppData/Roaming/npm/node_modules/@playwright/cli/node_modules bash ~/.claude/tung-koersel.sh "kogebog: ikoner" node vaerktoej/lav-ikoner.js` |
 
 - E2E er tung og kører kun gennem `tung-koersel.sh`. Exit 75 = låst af en anden kørsel (Lystårnets e2e kan tage 30-90 min; 18-10 holdt den låsen i 85 min). Exit 76 = under 4 GB fri RAM. Prøv igen senere med pauser, og skriv «ikke kørt: låst», hvis det ikke lykkes.
@@ -27,6 +27,7 @@ Kør i Git Bash i `D:/Claude/Kogebog`.
 |---|---|
 | `index.html`, `app.js`, `app.css` | Skærmene. Ruter i adressen: `#/ret/<id>`, `#/ret/<id>/trin/<nr>`, `#/ret/<id>/faerdig`. Ugeplanens ruter står i `js/ugeplan.js` |
 | `print.html`, `print.css`, `js/print.js` | A4 til den voksne: `print.html?ret=<id>` |
+| `js/print-uge.js` | Ugeplanen på papir: `print.html?uge`. Side 1 er ugen (læst af `kog-uge-v1` gennem `lager.js`), side 2 indkøbslisten med □ efter afdeling (regnet af `indkoeb.js`) |
 | `js/model.js` | Gør en opskrift til det skærmene og printet bruger. Ingen DOM |
 | `js/data.js` | Henter `opskrifter/index.json` og `opskrifter/<id>.json` |
 | `js/katalog.js` | Faste navne: verber, voksen-krav, ingredienser, `MAKS_ORD = 9`, grafik-stier. Nyt verbum eller ingrediens kræver også et billede i `grafik/` |

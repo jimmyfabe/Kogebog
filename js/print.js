@@ -1,14 +1,17 @@
 // print.js — A4-printet til den voksne: print.html?ret=<id>. Samme JSON som skærmene.
+// print.html?uge er ugeplanen og indkøbslisten (js/print-uge.js).
 import { el, ikon } from './dom.js';
 import { hentRet, ID_RE } from './data.js';
 import { VERBER, grafikVerbum } from './katalog.js';
 import { varighedKort } from './tid.js';
 import { minutterTekst } from './tekst.js';
+import { printUge } from './print-uge.js';
 
 const ark = document.getElementById('ark');
 const printKnap = document.getElementById('print');
 const tilbage = document.getElementById('tilbage');
-const id = new URLSearchParams(location.search).get('ret') || '';
+const params = new URLSearchParams(location.search);
+const id = params.get('ret') || '';
 
 function besked(titel, tekst) {
   ark.replaceChildren(el('h1', { tekst: titel }), el('p', { class: 'besked', tekst }));
@@ -79,4 +82,9 @@ async function start() {
   }
 }
 
-start();
+if (params.has('uge')) {
+  printUge({ ark, printKnap, tilbage, besked })
+    .catch(() => besked('Ugeplanen kunne ikke vises', 'Genindlæs siden. Sker det igen, så åbn printet fra ugeplanen.'));
+} else {
+  start();
+}

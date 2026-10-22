@@ -94,3 +94,45 @@ ol.trin li::before { content: counter(trin) "."; font-weight: 800; text-align: r
   .note { font-size: 9pt; }
   .fod { font-size: 9pt; }
 }
+
+/* Ugeplanen: print.html?uge (js/print-uge.js). Side 1 er ugen (syv rækker, der passer på ét A4), side 2 er
+   indkøbslisten i to spalter med samme □ som ingredienserne. På skærmen skiller en stiplet streg de to sider */
+.uge-hoved { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 2px 16px; padding-bottom: 8px; border-bottom: 2.5px solid #111; }
+.uge-hoved h1, .uge-hoved h2 { font-size: 30px; line-height: 1.1; margin: 0; padding: 0; border: 0; }
+ol.uge-dage { list-style: none; margin: 6px 0 0; padding: 0; }
+.uge-dag { display: grid; grid-template-columns: 7em 26mm minmax(0, 1fr) auto; align-items: center; column-gap: 14px; min-height: 30mm; padding: 4px 0; border-bottom: 1px dotted #999; break-inside: avoid; }
+.uge-dag-navn { display: flex; flex-direction: column; font-size: 19px; font-weight: 800; line-height: 1.2; }
+.uge-dato { font-size: 15px; font-weight: 400; color: #444; }
+.uge-billede { width: 26mm; height: 26mm; object-fit: contain; }
+.uge-billede.tom { display: block; width: 20mm; height: 20mm; margin: 0 auto; border: 1.5px dashed #999; border-radius: 50%; }
+.uge-ret { min-width: 0; }
+.uge-ret-navn { font-size: 19px; font-weight: 750; overflow-wrap: anywhere; }
+.uge-dag.fri .uge-ret-navn { font-weight: 400; color: #444; }
+.uge-af { display: flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 700; white-space: nowrap; }
+.uge-af img { width: 10mm; height: 10mm; }
+
+.liste-side { break-before: page; margin-top: 30px; padding-top: 24px; border-top: 2px dashed #bbb; }
+.liste-note { margin-top: 8px; font-size: 16px; }
+.afdelinger { columns: 2; column-gap: 10mm; margin-top: 12px; }
+.afd { break-inside: avoid; margin-bottom: 14px; }
+.afd h3 { margin: 0 0 4px; padding-bottom: 2px; border-bottom: 1.5px solid #111; font-size: 17px; }
+.afd .maengde { margin-left: 8px; color: #444; }
+
+@media (max-width: 640px) {
+  .uge-dag { grid-template-columns: 5.6em 18mm minmax(0, 1fr); column-gap: 10px; min-height: 0; padding: 8px 0; }
+  .uge-billede { width: 18mm; height: 18mm; }
+  .uge-billede.tom { width: 14mm; height: 14mm; }
+  .uge-af { grid-column: 3; }
+  .uge-hoved h1, .uge-hoved h2 { font-size: 26px; }
+  .afdelinger { columns: 1; }
+}
+
+@media print {
+  .uge-hoved h1, .uge-hoved h2 { font-size: 22pt; }
+  .uge-dag { grid-template-columns: 6.5em 26mm minmax(0, 1fr) auto; min-height: 31mm; }
+  .uge-dag-navn, .uge-ret-navn { font-size: 13pt; }
+  .uge-dato, .uge-af, .meta { font-size: 10pt; }
+  .liste-side { margin-top: 0; padding-top: 0; border-top: 0; }
+  .afd h3 { font-size: 12pt; }
+  .liste-note { font-size: 10pt; }
+}

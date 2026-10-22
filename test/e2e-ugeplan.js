@@ -9,6 +9,8 @@
 // reglen om, at en dag, hvis opskrift ikke kunne hentes, ikke forsvinder, når en anden dag gemmes.
 // Børnene (iPad): dyrene, fire retter pr. side med pilene, dagbrikkerne, optagne dage, én eller to retter pr. barn,
 // stemmen ved hvert tryk (den falske stemme), fejlskærmen, når lageret er fuldt, og skærmene på højkant og telefonen.
+// Printet (desktop): print.html?uge fra oversigtens «Print», ugen på side 1 og listen på side 2 (også i printvisning på
+// A4-bredde), en tom plan og en ret, der ikke kan hentes.
 import { kod } from '../js/plankode.js';
 import { saml, grupper, tekst as listeTekst } from '../js/indkoeb.js';
 import { planMandag, ugeNr } from '../js/tid.js';
@@ -24,6 +26,7 @@ export async function ugeplan(browser, H) {
   await oversigtIpad(browser, H);
   await boernValg(browser, H);
   await oversigtDesktop(browser, H);
+  await ugePrint(browser, H);
 }
 
 // Det, listen skal vise for en plan: afdelingerne (uden basis) med varernes navne og basisvarerne for sig
@@ -752,4 +755,97 @@ async function boernValg(browser, H) {
   tjek(!side.fejl.length, n + ' børnene: ' + side.fejl.join(' | '));
   await ctx.close();
   maal.push(n + ' børnene: ' + IPLAN.length + ' retter på ' + sider + (sider === 1 ? ' side' : ' sider'));
+}
+
+// ---------- Printet: print.html?uge på desktop ----------
+
+const printDage = (side) => side.evaluate(() => [...document.querySelectorAll('.uge-dag')].map((li) => ({
+  dag: li.querySelector('.uge-dag-navn span').textContent,
+  ret: li.querySelector('.uge-ret-navn').textContent,
+  af: li.querySelector('.uge-af span')?.textContent || '',
+  billede: (li.querySelector('img.uge-billede')?.getAttribute('src') || '').replace(/^grafik\/ret-|\.webp$/g, ''),
+})));
+const printListe = (side) => side.evaluate(() => [...document.querySelectorAll('.afd')].map((s) => ({
+  navn: s.querySelector('h3').textContent,
+  varer: [...s.querySelectorAll('li')].map((li) => li.querySelector('.vare-navn').textContent + '|' + (li.querySelector('.maengde')?.textContent || '')),
+})));
+const listeFor = (H, dage) => grupper(forventet(H, dage).varer).map((g) => ({ navn: g.navn, varer: g.varer.map((v) => v.navn + '|' + v.maengde) }));
+
+async function ugePrint(browser, H) {
+  const { BASE, SKAERME, RETTER, nySide, tjek, tjekLayout, foto, tryk, venterPaa, maal } = H;
+  const skaerm = SKAERME[2];
+  const n = skaerm.navn;
+  console.log('[' + n + '] ugeplan: printet af ugen og indkøbslisten');
+  const uge = planMandag(new Date());
+  const { ctx, side } = await nySide(browser, skaerm, { serviceWorkers: 'block' });
+  const ark = (fn, hvor) => venterPaa(side, fn, null, n + ': ' + hvor);
+
+  // 1. En tom plan: en besked, og «Print» kan ikke trykkes
+  await side.goto(BASE + '/print.html?uge');
+  await ark(() => document.querySelector('#ark h1')?.textContent === 'Ugeplanen er tom', 'en tom plan skal sige «Ugeplanen er tom»');
+  tjek(await side.locator('#print').isDisabled(), n + ': «Print» kan ikke trykkes, når planen er tom');
+  tjek(await side.locator('#tilbage').getAttribute('href') === 'index.html#/uge' && await side.locator('#tilbage').textContent() === 'Tilbage til ugeplanen',
+    n + ': printets tilbage-knap går til ugeplanen');
+
+  // 2. Tre retter, valgt af Rosa, Pip og Bo, og «Print» på oversigten: side 1 er ugen, side 2 listen, som
+  //    js/indkoeb.js regner den
+  const dage = [{ ret: 'koedsovs', af: 'rosa', n: 4 }, null, { ret: 'tunfrikadeller', af: 'pip', n: 2 }, null, { ret: 'chorizo-pasta', af: 'bo', n: 6 }, null, null];
+  await side.evaluate((p) => localStorage.setItem('kog-uge-v1', JSON.stringify(p)), { v: 1, uge, dage, n: 4, prBarn: 1, rettet: Date.now() });
+  await side.goto(BASE + '/index.html#/uge');
+  await side.waitForSelector('a.print-link');
+  await tryk(side, 'a.print-link');
+  await ark(() => location.pathname.endsWith('/print.html') && location.search === '?uge' && document.querySelectorAll('.uge-dag').length === 7
+    && !document.querySelector('#print').disabled, 'oversigtens «Print» skal åbne printet med syv dage');
+  tjek(await side.locator('#ark h1').textContent() === 'Ugeplan · uge ' + ugeNr(uge), n + ': printets overskrift (' + await side.locator('#ark h1').textContent() + ')');
+  tjek(await side.title() === 'Ugeplan uge ' + ugeNr(uge) + ' · Tumbi Køkken', n + ': sidens titel (' + await side.title() + ')');
+  const p = await printDage(side);
+  const ventet = dage.map((d, i) => ({
+    dag: ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag', 'Søndag'][i],
+    ret: d ? RETTER[d.ret].name : 'Fri aften',
+    af: d ? 'Valgt af ' + { rosa: 'Rosa', pip: 'Pip', bo: 'Bo' }[d.af] : '',
+    billede: d ? d.ret : '',
+  }));
+  tjek(JSON.stringify(p) === JSON.stringify(ventet), n + ': ugens syv dage på printet (' + JSON.stringify(p) + ')');
+  const liste = await printListe(side);
+  tjek(JSON.stringify(liste) === JSON.stringify(listeFor(H, dage)), n + ': indkøbslisten på printet (' + JSON.stringify(liste).slice(0, 300) + ')');
+  tjek(await side.evaluate(() => [...document.querySelectorAll('.afd li')].every((li) => parseFloat(getComputedStyle(li, '::before').borderTopWidth) > 0)),
+    n + ': hver vare har et □');
+  await tjekLayout(side, n + ' print af ugen');
+  await foto(side, n + '-ugeplan-print', { fullPage: true });
+
+  // 3. Som print på A4 (182 × 267 mm inden for margenerne, 96 dpi): værktøjslinjen er væk, listen starter på side 2,
+  //    og ugen fylder højst én side
+  await side.emulateMedia({ media: 'print' });
+  await side.setViewportSize({ width: 688, height: 1009 });
+  const pr = await side.evaluate(() => {
+    const cs = getComputedStyle(document.querySelector('.liste-side'));
+    return {
+      vaerktoej: getComputedStyle(document.querySelector('.vaerktoej')).display,
+      skift: cs.breakBefore || cs.pageBreakBefore,
+      uge: Math.round(document.querySelector('.uge-side').getBoundingClientRect().height),
+    };
+  });
+  tjek(pr.vaerktoej === 'none', n + ': værktøjslinjen skal ikke printes');
+  tjek(pr.skift === 'page' || pr.skift === 'always', n + ': indkøbslisten skal starte på en ny side (' + pr.skift + ')');
+  tjek(pr.uge <= 1009, n + ': ugen skal kunne være på én A4-side (' + pr.uge + ' px > 1009)');
+  await foto(side, n + '-ugeplan-print-a4', { fullPage: true });
+  maal.push(n + ' print af ugen: side 1 er ' + pr.uge + ' af 1009 px (A4 inden for margenerne)');
+  await side.emulateMedia({ media: 'screen' });
+
+  // 4. En ret, der ikke kan hentes: dagen siger det, og listen siger, at den mangler
+  await side.route('**/opskrifter/tunfrikadeller.json', (r) => r.abort());
+  await side.setViewportSize({ width: 390, height: 844 });
+  await side.reload();
+  await ark(() => document.querySelectorAll('.uge-dag').length === 7, 'printet med en ret, der ikke kan hentes');
+  const p2 = await printDage(side);
+  tjek(p2[2].ret === 'Opskriften kunne ikke hentes' && p2[0].ret === RETTER.koedsovs.name, n + ': en ret, der ikke kan hentes, står som en fejl på sin dag');
+  tjek((await side.locator('.liste-note').textContent()).startsWith('Én dag mangler på listen'), n + ': listen siger, at en dag mangler');
+  tjek(JSON.stringify(await printListe(side)) === JSON.stringify(listeFor(H, dage.map((d) => (d && d.ret === 'tunfrikadeller' ? null : d)))),
+    n + ': listen har kun de retter, der kunne hentes');
+  await tjekLayout(side, n + ' print af ugen 390×844');
+  await foto(side, n + '-ugeplan-print-390x844', { fullPage: true });
+  await side.unroute('**/opskrifter/tunfrikadeller.json');
+
+  tjek(!side.fejl.filter((x) => !/tunfrikadeller\.json/.test(x)).length, n + ' print af ugen: ' + side.fejl.join(' | '));
+  await ctx.close();
 }
