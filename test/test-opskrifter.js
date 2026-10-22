@@ -324,14 +324,16 @@ export function valider(rod = ROD) {
           f(hvor + ': rører råt kød eller æg (' + liste(raa) + ')' + hvorfra + ', men der kommer ikke et «vaske-haender»-trin bagefter');
         } else if (raa.length) {
           // Indtil hænderne er vasket, må barnet kun røre det rå (ellers kommer kødet over på mælkekartonen og saltet),
-          // og der må ikke være en pause: så går barnet fra køkkenet med råt på hænderne
+          // og der må ikke være en pause: så går barnet fra køkkenet med råt på hænderne. Æltningen med timer er kun
+          // undtaget, når det rå er rørt i dejen (ægget i pizzadejen), ikke når det er kødet i gryden
+          const iDejen = BLANDER.includes(st.verbum) || HAENDER_I_DEJ.includes(st.verbum);
           for (let k = i + 1; k < vask; k++) {
             if (trin[k] && trin[k].tumbi && trin[k].tumbi.verbum === 'vente' && !forurenet.has(k)) {
               forurenet.add(k);
               f('trin ' + (k + 1) + ': en pause med råt kød eller æg på hænderne fra trin ' + (i + 1) + hvorfra + '. Vask hænderne før pausen');
               continue;
             }
-            if (trin[k] && trin[k].tumbi && trin[k].tumbi.timer_sek !== undefined && !TIMER_MAALER_HAENDERNE.includes(trin[k].tumbi.verbum) && !forurenet.has(k)) {
+            if (trin[k] && trin[k].tumbi && trin[k].tumbi.timer_sek !== undefined && !(iDejen && TIMER_MAALER_HAENDERNE.includes(trin[k].tumbi.verbum)) && !forurenet.has(k)) {
               forurenet.add(k);
               f('trin ' + (k + 1) + ': en timer med råt kød eller æg på hænderne fra trin ' + (i + 1) + hvorfra + '. Vask hænderne før timeren');
               continue;

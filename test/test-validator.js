@@ -514,6 +514,10 @@ test('ingen timer med råt kød eller æg på hænderne', () => {
   forventGyldig('opskrifter/pizzasnegle.json', (d) => { assert.equal(d.recipeInstructions[6].tumbi.verbum, 'aelte'); });
   forventFejl('opskrifter/pizzasnegle.json', (d) => { d.recipeInstructions[6].tumbi.verbum = 'roere'; },
     'trin 7: en timer med råt kød eller æg på hænderne fra trin 6');
+  // Æltningen er kun undtaget, når det rå er i dejen: efter kødet i gryden står barnet ved timeren med råt på hænderne
+  forventFejl('opskrifter/koedsovs.json', (d) => {
+    d.recipeInstructions.splice(4, 0, { '@type': 'HowToStep', text: 'Ælt dejen i 5 minutter.', tumbi: { verbum: 'aelte', timer_sek: 300 } });
+  }, 'trin 5: en timer med råt kød eller æg på hænderne fra trin 4');
 });
 
 // Dej med råt æg (eller kød) er først indarbejdet efter æltningen: en vask mellem ægget og æltningen er ikke nok.
