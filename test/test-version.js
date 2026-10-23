@@ -69,6 +69,22 @@ try {
   if (mU) mainNr = +mU[1];
 } catch { /* ingen git eller ingen main */ }
 
+// Alle FILER fra main i ét git-kald (én «git show» pr. fil tog ca. 20 s): fil → Buffer, eller null, når main ikke har filen
+function filerFraMain() {
+  const ud = execFileSync('git', ['-C', ROD, 'cat-file', '--batch'],
+    { input: FILER.map((f) => 'main:./' + f).join('\n') + '\n', maxBuffer: 1 << 28, stdio: ['pipe', 'pipe', 'ignore'] });
+  const filer = new Map();
+  let i = 0;
+  for (const f of FILER) {
+    const slut = ud.indexOf(10, i);
+    const m = /^[0-9a-f]+ (\w+) (\d+)$/.exec(ud.toString('utf8', i, slut)); // «<sha> blob <størrelse>» eller «<navn> missing»
+    i = slut + 1;
+    filer.set(f, m && m[1] === 'blob' ? ud.subarray(i, i + +m[2]) : null);
+    if (m) i += +m[2] + 1;
+  }
+  return filer;
+}
+
 test('UDGAVE står én gang og har formen v<nr> · DD-MM-ÅÅÅÅ med en rigtig dato, der ikke er i fremtiden', () => {
   assert.equal(uFund.length, 1, 'UDGAVE skal stå én gang i ' + VERSIONSFIL);
   assert.ok(uM, "UDGAVE har ikke formen v<nr> · DD-MM-ÅÅÅÅ: '" + UDGAVE + "'");
@@ -104,8 +120,8 @@ test('filerne er ikke ændret uden et nyt versionsnummer', () => {
 test('nummeret er hævet siden main', (t) => {
   if (!mU) { t.skip('main har intet versionsnummer endnu'); return; }
   assert.ok(uM, 'kan ikke regnes, se fejlene ovenfor');
-  let hMain = null;
-  try { hMain = fingeraftryk(vis); } catch { /* en fil i FILER findes ikke på main: filerne er ændret */ }
+  const fra = filerFraMain();
+  const hMain = FILER.every((f) => fra.get(f)) ? fingeraftryk((f) => fra.get(f)) : null; // null: en fil mangler på main
   if (hMain === fingeraftryk()) return; // samme filer som main
   const mNr = +mU[1];
   assert.ok(+uM[1] > mNr && dato(uM) >= dato(mU), 'filerne er ændret siden main (v' + mNr + ' · ' + mU[2] + '-' + mU[3] + '-' + mU[4] +
