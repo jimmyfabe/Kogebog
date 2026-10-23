@@ -760,7 +760,8 @@ async function boernValg(browser, H) {
   br = await brikkerNu(side);
   tjek(br[0].optaget && br[0].ret === a && br[0].dyr === 'rosa' && br.filter((x) => x.optaget).length === 1, n + ': mandag er optaget med Rosas ret (' + JSON.stringify(br[0]) + ')');
   tjek(await side.locator('.dag-brik[data-dag="0"]').getAttribute('aria-label') === 'Mandag: ' + RETTER[a].name + ', valgt af Rosa', n + ': den optagne dag har retten og dyret i sit navn');
-  await tryk(side, '.dag-brik[data-dag="0"]');
+  // force: Playwright (1.64) venter på, at en knap med aria-disabled="true" bliver «enabled», men browseren sender trykket
+  await tryk(side, '.dag-brik[data-dag="0"]', { force: true });
   tjek(await sagt(side) === siger(R.DAG_OPTAGET) && !(await brikkerNu(side))[0].valgt && await side.locator(VAELG).count() === 0, n + ': en optaget dag siger det og kan ikke vælges (' + await sagt(side) + ')');
   await tryk(side, '.dag-brik[data-dag="1"]');
   await tryk(side, VAELG);
