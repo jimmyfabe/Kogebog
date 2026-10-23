@@ -293,6 +293,16 @@ async function telefon(browser, H) {
     });
     tjek(!v2.udenDeling, n + ' indkøbsliste ' + b + '×' + h + ': ' + v2.udenDeling + ' varenavne deles uden bindestreg');
     tjek(v2.ialt > 0 && !v2.delt.length, n + ' indkøbsliste ' + b + '×' + h + ': tal og enhed delt over to linjer: ' + v2.delt.join(', ') + ' (' + v2.ialt + ' mængder)');
+    // Varenavnet har plads til et ord på 12 bogstaver: på 360 px havde det 98 px, og «Gulerødder» og «Kidneybønner» blev
+    // delt midt i ordet (UI-review 2, 23-10). Pladsen er fra navnets venstre kant til knappens indre højre kant
+    if (b === 360) {
+      const plads = await side.evaluate(() => [...document.querySelectorAll('li[data-vare] .vare')].filter((v) => !v.closest('.har-vi-afd')).map((v) => {
+        const r = v.getBoundingClientRect();
+        return Math.round(r.right - parseFloat(getComputedStyle(v).paddingRight) - v.querySelector('.vare-tekst').getBoundingClientRect().left);
+      }));
+      tjek(plads.length > 0 && Math.min(...plads) >= 130, n + ' indkøbsliste 360×740: varenavnet har mindst 130 px (mindst ' + Math.min(...plads) + ' px i ' + plads.length + ' varer)');
+      maal.push(n + ' indkøbsliste 360×740: varenavnet har mindst ' + Math.min(...plads) + ' px');
+    }
   }
   await side.setViewportSize(skaerm.viewport);
   tjek(!side.fejl.length, n + ' ugeplan: ' + side.fejl.join(' | '));

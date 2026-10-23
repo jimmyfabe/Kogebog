@@ -613,6 +613,14 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .basis-varer { display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 0 16px 16px; }
 .basis-varer li { display: flex; align-items: center; gap: 8px; font-size: 18px; }
 .basis-varer .vare-ikon { width: 32px; height: 32px; }
+/* Op til 400 px: på 360 px havde varenavnet kun 98 px, og «Gulerødder», «Kidneybønner» og «Bacon i tern» blev delt midt
+   i ordet. Ikonet, mellemrummene og «Har vi» bliver mindre, så navnet får ca. 139 px (UI-review 2, 23-10) */
+@media (max-width: 400px) {
+  .varer > li { gap: 6px; padding-right: 8px; }
+  .vare { gap: 8px; padding: 8px 4px 8px 8px; }
+  .vare-ikon { width: 32px; height: 32px; }
+  .knap.har-vi { padding: 0 10px; font-size: 16px; }
+}
 
 .ret-link { flex: 1; min-width: 0; min-height: var(--tryk); display: flex; align-items: center; gap: 12px; padding: 8px 12px; color: inherit; text-decoration: none; }
 .ret-link .vare-navn { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
