@@ -59,6 +59,16 @@ const uM = /^v(\d+) · (\d{2})-(\d{2})-(\d{4})$/.exec(UDGAVE);
 const iM = /^v(\d+):([0-9a-f]{16})$/.exec(iFund.length ? iFund[0][1] : '');
 const dato = (m) => m[4] + m[3] + m[2]; // ÅÅÅÅMMDD, så datoer kan sammenlignes som tekst
 
+// Mains nummer (det udgivne): 0, når main findes uden js/version.js, og null uden git eller main
+const vis = (f) => execFileSync('git', ['-C', ROD, 'show', 'main:./' + f], { stdio: ['ignore', 'pipe', 'ignore'] });
+let mU = null, mainNr = null;
+try {
+  execFileSync('git', ['-C', ROD, 'rev-parse', '--verify', '--quiet', 'main^{commit}'], { stdio: 'ignore' });
+  mainNr = 0;
+  try { mU = /^export const UDGAVE = 'v(\d+) · (\d{2})-(\d{2})-(\d{4})';/m.exec(lf(vis(VERSIONSFIL).toString('utf8'))); } catch { /* main har ingen js/version.js */ }
+  if (mU) mainNr = +mU[1];
+} catch { /* ingen git eller ingen main */ }
+
 test('UDGAVE står én gang og har formen v<nr> · DD-MM-ÅÅÅÅ med en rigtig dato, der ikke er i fremtiden', () => {
   assert.equal(uFund.length, 1, 'UDGAVE skal stå én gang i ' + VERSIONSFIL);
   assert.ok(uM, "UDGAVE har ikke formen v<nr> · DD-MM-ÅÅÅÅ: '" + UDGAVE + "'");
@@ -77,6 +87,10 @@ test('filerne er ikke ændret uden et nyt versionsnummer', () => {
   assert.ok(iNr <= vNr, 'nummeret må ikke gå ned: UDGAVE er v' + vNr + ', men UDGAVE_INDHOLD er sat for v' + iNr);
   if (iM[2] === h) {
     assert.equal(iNr, vNr, "nummeret er hævet uden ændrede filer. Sæt UDGAVE_INDHOLD i js/version.js til 'v" + vNr + ':' + h + "'");
+  } else if (iNr === vNr && mainNr !== null && vNr > mainNr) {
+    // Nummeret hæves én gang pr. udgivelse: v<vNr> er ikke på main endnu, så kun fingeraftrykket skal skrives om
+    assert.fail('filerne er ændret, men v' + vNr + ' er ikke udgivet endnu (main har ' + (mainNr ? 'v' + mainNr : 'intet nummer') +
+      "). Sæt UDGAVE_INDHOLD i js/version.js til 'v" + vNr + ':' + h + "'");
   } else if (iNr === vNr) {
     assert.fail('filerne er ændret siden v' + iNr + ', men nummeret er det samme. ' + nyeLinjer(vNr + 1, h));
   } else {
@@ -88,10 +102,6 @@ test('filerne er ikke ændret uden et nyt versionsnummer', () => {
 // ovenfor. Er filerne ændret siden main (det udgivne), skal nummeret derfor være højere end mains, og datoen må ikke være
 // ældre. Springes over uden git, eller når main endnu ikke har et nummer.
 test('nummeret er hævet siden main', (t) => {
-  const vis = (f) => execFileSync('git', ['-C', ROD, 'show', 'main:./' + f], { stdio: ['ignore', 'pipe', 'ignore'] });
-  let mainV = null;
-  try { mainV = lf(vis(VERSIONSFIL).toString('utf8')); } catch { /* ingen git, eller main har ingen js/version.js */ }
-  const mU = mainV && /^export const UDGAVE = 'v(\d+) · (\d{2})-(\d{2})-(\d{4})';/m.exec(mainV);
   if (!mU) { t.skip('main har intet versionsnummer endnu'); return; }
   assert.ok(uM, 'kan ikke regnes, se fejlene ovenfor');
   let hMain = null;
