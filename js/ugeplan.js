@@ -949,7 +949,7 @@ function dagValgSkaerm(p, dyr, m) {
 }
 
 // Fluebenet på dagene, og «Prøv igen» på fejlskærmen: gemmer barnets valg (dyr, ret og dag), hvis dagen stadig er fri.
-// Kan lageret ikke gemme, kommer fejlskærmen (igen), og stemmen beder barnet hente en voksen
+// Kan lageret ikke gemme, kommer fejlskærmen (igen), og stemmen beder barnet vise skærmen til en voksen
 function gemBarnetsValg(dyr, m, i) {
   barnFejl = false;
   const q = hentPlan();
@@ -980,7 +980,7 @@ function gemBarnetsValg(dyr, m, i) {
   });
 }
 
-// Valget kunne ikke gemmes. Barnet hører, at det skal hente en voksen; «Prøv igen» gemmer det samme valg igen, og vejen
+// Valget kunne ikke gemmes. Barnet hører, at det skal vise skærmen til en voksen; «Prøv igen» gemmer det samme valg igen, og vejen
 // til oversigten ligger bag et hold som på de andre børneskærme (code review U7, 23-10)
 function barnGemFejl() {
   const m = barn.ret && model(barn.ret);

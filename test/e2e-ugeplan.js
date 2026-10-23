@@ -762,8 +762,8 @@ async function boernValg(browser, H) {
   tjek((await ugeLager(side)).dage[2] === null, n + ': intet er gemt, når lageret fejler');
   await tjekLayout(side, n + ' børnene: kunne ikke gemme');
   await foto(side, n + '-boern-gem-fejl');
-  // Fejlskærmen siger, at barnet skal hente en voksen, og vejen til oversigten ligger bag et hold (code review U7, 23-10)
-  tjek(await sagt(side) === siger(R.GEM_FEJL), n + ': fejlskærmen siger, at barnet skal hente en voksen (' + await sagt(side) + ')');
+  // Fejlskærmen siger, at barnet skal vise skærmen til en voksen, og vejen til oversigten ligger bag et hold (code review U7, 23-10)
+  tjek(await sagt(side) === siger(R.GEM_FEJL), n + ': fejlskærmen siger, at barnet skal vise skærmen til en voksen (' + await sagt(side) + ')');
   tjek(await side.locator('.til-ugeplan').count() === 1 && await side.locator('button:has-text("Til ugeplanen")').count() === 0,
     n + ': fejlskærmens vej til oversigten ligger bag et hold');
   // «Prøv igen» gemmer det samme valg igen. Fejler lageret stadig, bliver fejlskærmen, og stemmen siger det igen
