@@ -868,6 +868,20 @@ async function boernValg(browser, H) {
   tjek(await sagt(side) === siger(R.GEM_FEJL), n + ': fejlskærmen siger, at barnet skal vise skærmen til en voksen (' + await sagt(side) + ')');
   tjek(await side.locator('.til-ugeplan').count() === 1 && await side.locator('button:has-text("Til ugeplanen")').count() === 0,
     n + ': fejlskærmens vej til oversigten ligger bag et hold');
+  // Uden lyd kan barnet se, at valget ikke blev gemt: dagen med retten og et orange kryds i stedet for den glade Bo, og
+  // huset står øverst til venstre som på de andre børneskærme (UI-review V3, 23-10)
+  const fejlBillede = await side.evaluate((ret) => {
+    const brik = document.querySelector('.dag-brik.ikke-gemt');
+    return {
+      hus: document.querySelectorAll('.topbar button[aria-label="Til forsiden"]').length,
+      dag: brik?.dataset.dag ?? null,
+      ret: Boolean(brik?.querySelector('img[src*="' + ret + '"]')),
+      kryds: Boolean(brik?.querySelector('.ikke-gemt-maerke svg')),
+      gladBo: document.querySelectorAll('.status-dyr').length,
+    };
+  }, a);
+  tjek(fejlBillede.hus === 1 && fejlBillede.dag === '2' && fejlBillede.ret && fejlBillede.kryds && !fejlBillede.gladBo,
+    n + ': fejlskærmen viser dagen og retten med et kryds og har huset (' + JSON.stringify(fejlBillede) + ')');
   // «Prøv igen» gemmer det samme valg igen. Fejler lageret stadig, bliver fejlskærmen, og stemmen siger det igen
   const foerIgen = await side.evaluate(() => window.__tale.length);
   await tryk(side, 'button:has-text("Prøv igen")');

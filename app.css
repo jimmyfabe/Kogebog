@@ -778,6 +778,15 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
 .brik-tallerken img { width: 92%; }
 .brik-dyr { position: absolute; right: 6px; bottom: 6px; width: 46px; height: 46px; padding: 3px; border: var(--kant); border-radius: 50%; background: var(--hvid); }
 
+/* Valget kunne ikke gemmes: barnets dag og ret med et orange kryds (voksen-hjælpens farve) og en orange ring, så man kan
+   se det uden lyd. Teksten under er til den voksne (UI-review V3, 23-10) */
+.gem-fejl { display: flex; flex-direction: column; align-items: center; gap: 22px; width: 100%; max-width: 620px; text-align: center; }
+.dag-brik.ikke-gemt { width: min(100%, 180px); box-shadow: 0 6px 0 var(--kakao), 0 0 0 6px var(--raev); }
+.ikke-gemt .brik-tallerken { border-style: solid; }
+.ikke-gemt-maerke { position: absolute; top: -16px; right: -16px; display: grid; place-items: center; width: 60px; height: 60px; border: var(--kant); border-radius: 50%; background: var(--raev); }
+.ikke-gemt-maerke .ikon { width: 36px; height: 36px; stroke-width: 3.5; }
+.gem-fejl-tekst { font-size: 20px; line-height: 1.35; }
+
 /* Oversigtens knap til børnene, med Rosa i knappen */
 .knap.boern-vaelger { margin-left: auto; padding-left: 18px; }
 .knap-dyr { width: 40px; height: 40px; }

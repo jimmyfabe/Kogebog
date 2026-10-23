@@ -1016,12 +1016,18 @@ function barnGemFejl() {
     if (barn.dyr && m && barn.dag !== null) gemBarnetsValg(barn.dyr, m, barn.dag);
     else { barnFejl = false; K.vis(); }
   };
-  return K.statusSkaerm({
-    titel: 'Valget kunne ikke gemmes',
-    tekst: 'Denne enhed kunne ikke gemme ugeplanen. Måske er privat browsing slået til, eller lageret er fuldt. Den voksne kan prøve igen.',
-    handling: el('div', { class: 'status-knapper' },
-      K.knap('Læs op', { klasse: 'laes-op', ikonNavn: 'hoejttaler', onclick: (e) => Tale.sig(R.GEM_FEJL, { knap: e.currentTarget }) }),
-      K.knap('Prøv igen', { klasse: 'primaer', ikonNavn: 'igen', onclick: igen }),
-      tilUgeplanen()),
-  });
+  // Barnets valg står på skærmen: dagen med retten og et orange kryds (voksen-hjælpens farve), så man kan se, at det ikke
+  // blev gemt, også uden lyd. Før stod den glade Bo fra statusskærmene der, og huset manglede (UI-review V3, 23-10)
+  const i = barn.dag;
+  const brik = m && i !== null ? el('div', { class: 'dag-brik ikke-gemt', 'data-dag': String(i), role: 'img', 'aria-label': DAGE[i] + ': ' + m.navn + ', ikke gemt' },
+    brikIndhold(null, i, m),
+    el('span', { class: 'ikke-gemt-maerke', 'aria-hidden': 'true' }, ikon('kryds'))) : null;
+  return valgSide('gem-fejl',
+    valgHoved('Valget kunne ikke gemmes',
+      K.knap('Læs op', { klasse: 'laes-op', ikonNavn: 'hoejttaler', onclick: (e) => Tale.sig(R.GEM_FEJL, { knap: e.currentTarget }) })),
+    el('div', { class: 'gem-fejl' }, brik,
+      el('p', { class: 'gem-fejl-tekst', tekst: 'Denne enhed kunne ikke gemme ugeplanen. Måske er privat browsing slået til, eller lageret er fuldt. Den voksne kan prøve igen.' })),
+    tilUgeplanen(),
+    el('span', { class: 'skub' }),
+    K.knap('Prøv igen', { klasse: 'primaer', ikonNavn: 'igen', onclick: igen }));
 }
