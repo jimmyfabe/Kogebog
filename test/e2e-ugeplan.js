@@ -11,6 +11,15 @@
 // stemmen ved hvert tryk (den falske stemme), fejlskærmen, når lageret er fuldt, og skærmene på højkant og telefonen.
 // Printet (desktop): print.html?uge fra oversigtens «Print», ugen på side 1 og listen på side 2 (også i printvisning på
 // A4-bredde), en tom plan og en ret, der ikke kan hentes.
+// Uden net (alle tre skærme): service workeren i en rigtig WebKit-profil, testens egen server stoppes, og så skal
+// børnenes valg, linket og listen og printet stadig virke.
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import net from 'node:net';
+import http from 'node:http';
+import { spawn, execFileSync } from 'node:child_process';
+import { hentPlaywright } from '../vaerktoej/lav-ikoner.js';
 import { kod } from '../js/plankode.js';
 import { saml, grupper, tekst as listeTekst } from '../js/indkoeb.js';
 import { planMandag, ugeNr } from '../js/tid.js';
@@ -27,6 +36,7 @@ export async function ugeplan(browser, H) {
   await boernValg(browser, H);
   await oversigtDesktop(browser, H);
   await ugePrint(browser, H);
+  await udenNet(H);
 }
 
 // Det, listen skal vise for en plan: afdelingerne (uden basis) med varernes navne og basisvarerne for sig
@@ -848,4 +858,188 @@ async function ugePrint(browser, H) {
 
   tjek(!side.fejl.filter((x) => !/tunfrikadeller\.json/.test(x)).length, n + ' print af ugen: ' + side.fejl.join(' | '));
   await ctx.close();
+}
+
+// ---------- Uden net: service workeren (sw.js) i en rigtig profil ----------
+// De andre dele blokerer service workeren. Her får WebKit en rigtig profil, appen åbnes én gang med nettet, og så stoppes
+// testens egen server (setOffline stopper også service workerens svar, så det tester ikke det, køkkenet oplever).
+// Bagefter skal ugeplanen virke på alle tre skærme: børnenes valg på iPad'en, linket og listen på telefonen og printet på
+// computeren. WebKit gemmer store svar 197 tegn under profilen, og over Windows' MAX_PATH mangler de i stilhed (målt i
+// LEGO 22-10), så profilen ligger i en kort sti under %TEMP%\swm\ (højst 62 tegn). De tre skærme deler én profil (én
+// installation), og alle har berøring (en profil har ét valg for berøring).
+
+const ledigPort = () => new Promise((ok, fejl) => {
+  const s = net.createServer().listen(0, '127.0.0.1', () => { const p = s.address().port; s.close(() => ok(p)); });
+  s.on('error', fejl);
+});
+const svarer = (url) => new Promise((ok) => http.get(url, (r) => { r.resume(); ok(true); }).on('error', () => ok(false)));
+const pause = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// Python startes direkte (ikke gennem py), så kill() stopper selve serveren og ikke kun py's starter
+async function startServer(rod, port) {
+  const python = execFileSync('py', ['-c', 'import sys; print(sys.executable)']).toString().trim();
+  const server = spawn(python, ['-m', 'http.server', String(port), '--bind', '127.0.0.1', '--directory', rod], { stdio: 'ignore' });
+  for (let i = 0; i < 50; i++) {
+    if (await svarer('http://127.0.0.1:' + port + '/sw.js')) return server;
+    await pause(200);
+  }
+  server.kill();
+  throw new Error('testens egen server startede ikke på port ' + port);
+}
+async function stopServer(server, port) {
+  server.kill();
+  for (let i = 0; i < 50 && await svarer('http://127.0.0.1:' + port + '/sw.js'); i++) await pause(100);
+  return !(await svarer('http://127.0.0.1:' + port + '/sw.js'));
+}
+
+// FILER og INDHOLD, som de står i sw.js
+function swFiler(rod) {
+  const kilde = fs.readFileSync(path.join(rod, 'sw.js'), 'utf8');
+  const blok = /const FILER = \[([\s\S]*?)\];/.exec(kilde)[1];
+  return { filer: [...blok.matchAll(/'([^']+)'/g)].map((m) => m[1]), indhold: /const INDHOLD = '([0-9a-f]+)'/.exec(kilde)[1] };
+}
+
+// En fane i profilen med samme vagter som nySide: konsolfejl, sidefejl, svar over 400 og forespørgsler, der fejler
+async function nyFane(ctx, skaerm) {
+  const side = await ctx.newPage();
+  await side.setViewportSize(skaerm.viewport);
+  side.fejl = [];
+  side.on('pageerror', (e) => side.fejl.push('pageerror: ' + e.message));
+  side.on('console', (m) => {
+    if (m.type() !== 'error') return;
+    if (side.iFoto && /^Refused to apply a stylesheet/.test(m.text())) return; // testens eget <style>, se foto()
+    side.fejl.push('console: ' + m.text());
+  });
+  side.on('response', (r) => { if (r.status() >= 400) side.fejl.push('HTTP ' + r.status() + ': ' + r.url()); });
+  side.on('requestfailed', (r) => side.fejl.push('requestfailed: ' + r.url() + ' (' + (r.failure() || {}).errorText + ')'));
+  return side;
+}
+
+async function udenNet(H) {
+  const { ROD, RETTER, SKAERME, tjek, tjekLayout, foto, tryk, venterPaa, h1, maal, forfalskninger, LYD_TEKSTER } = H;
+  const [ipad, iphone, desktop] = SKAERME;
+  console.log('[alle] ugeplan: uden net (service workeren i en rigtig profil)');
+  const mappe = path.join(os.tmpdir(), 'swm', 'k' + Date.now().toString(36));
+  const profil = path.join(mappe, 'p');
+  if (profil.length > 62) {
+    tjek(false, 'uden net: profilstien er for lang til WebKits cache (' + profil.length + ' tegn, højst 62): ' + profil);
+    return;
+  }
+  const { filer, indhold } = swFiler(ROD);
+  const port = await ledigPort();
+  const base = 'http://127.0.0.1:' + port;
+  const uge = planMandag(new Date());
+  let server = await startServer(ROD, port);
+  const ctx = await hentPlaywright().webkit.launchPersistentContext(profil, { viewport: ipad.viewport, hasTouch: true, deviceScaleFactor: 1, locale: 'da-DK' });
+  try {
+    await ctx.addInitScript(forfalskninger, LYD_TEKSTER);
+
+    // 1. Med nettet: oversigten åbnes, Bo har mandag, og service workeren gemmer alle FILER i «kog-<INDHOLD>».
+    //    Profilens egen første fane lukkes, når testens fane er åben (så profilen aldrig står uden en fane)
+    const foerste = ctx.pages();
+    let side = await nyFane(ctx, ipad);
+    for (const s of foerste) await s.close();
+    await side.goto(base + '/index.html#/uge');
+    await side.waitForSelector('.uge-dage');
+    await side.evaluate((p) => localStorage.setItem('kog-uge-v1', JSON.stringify(p)),
+      { v: 1, uge, dage: [{ ret: 'koedsovs', af: 'bo', n: 4 }, null, null, null, null, null, null], n: 4, prBarn: 1, rettet: Date.now() });
+    const sw = await side.evaluate(async (antal) => {
+      if (!('serviceWorker' in navigator) || !window.caches) return { mangler: true };
+      await Promise.race([navigator.serviceWorker.ready, new Promise((r) => setTimeout(r, 10000))]);
+      let ud = {};
+      for (let i = 0; i < 80; i++) {
+        const navne = (await caches.keys()).filter((k) => k.startsWith('kog-') && !k.startsWith('kog-lyd-'));
+        const gemt = navne.length === 1 ? (await (await caches.open(navne[0])).keys()).length : 0;
+        ud = { navne, gemt, styret: Boolean(navigator.serviceWorker.controller) };
+        if (ud.styret && gemt >= antal) break;
+        await new Promise((r) => setTimeout(r, 250));
+      }
+      return ud;
+    }, filer.length);
+    if (sw.mangler) {
+      tjek(false, 'uden net: WebKit har ingen service worker eller Cache API i en rigtig profil');
+      return;
+    }
+    tjek(sw.styret, 'uden net: siden skal være styret af service workeren, før nettet forsvinder');
+    tjek(sw.navne.join() === 'kog-' + indhold && sw.gemt === filer.length,
+      'uden net: cachen «kog-' + indhold + '» skal have alle ' + filer.length + ' FILER (fik ' + sw.gemt + ' i ' + sw.navne.join(', ') + ')');
+    tjek(side.fejl.length === 0, 'uden net, før serveren stoppes: ' + side.fejl.join(' | '));
+    await side.close();
+
+    // 2. Nettet forsvinder: testens server stoppes
+    tjek(await stopServer(server, port), 'uden net: testens egen server skal være stoppet');
+    server = null;
+
+    // 3. iPad: Rosa vælger tirsdag uden net, og oversigten viser begge dage
+    side = await nyFane(ctx, ipad);
+    await side.goto(base + '/index.html#/uge/vaelg');
+    await venterPaa(side, () => document.querySelector('.dyr-gitter'), null, 'ipad uden net: dyrene skal vises');
+    tjek(await side.evaluate(() => Boolean(navigator.serviceWorker.controller)), 'ipad uden net: siden skal komme fra service workeren');
+    tjek(await h1(side) === 'Hvem skal vælge?', 'ipad uden net: «Hvem skal vælge?» (' + await h1(side) + ')');
+    await tjekLayout(side, 'ipad uden net: hvem');
+    await tryk(side, '.dyr-kort[data-dyr="rosa"]');
+    await venterPaa(side, () => document.querySelector('.ret-kort'), null, 'ipad uden net: Rosa skal åbne retterne');
+    await tjekLayout(side, 'ipad uden net: retter');
+    await foto(side, 'ipad-uden-net-retter');
+    const valgt = await side.locator('.ret-kort').first().getAttribute('data-ret');
+    await tryk(side, '.ret-kort[data-ret="' + valgt + '"]');
+    await tryk(side, VAELG);
+    await venterPaa(side, () => document.querySelector('.dag-brikker'), null, 'ipad uden net: fluebenet skal åbne dagene');
+    await tryk(side, '.dag-brik[data-dag="1"]');
+    await tryk(side, VAELG);
+    await venterPaa(side, () => location.hash === '#/uge/vaelg' && document.querySelector('.dyr-gitter'), null, 'ipad uden net: valget skal gemmes');
+    const plan = JSON.parse(await side.evaluate(() => localStorage.getItem('kog-uge-v1')) || '{}');
+    tjek(plan.dage && plan.dage[1] && plan.dage[1].ret === valgt && plan.dage[1].af === 'rosa',
+      'ipad uden net: Rosas ret skal stå på tirsdag (' + JSON.stringify(plan.dage) + ')');
+    tjek(await sagt(side) === siger(R.UGE_TAK), 'ipad uden net: stemmen takker (' + await sagt(side) + ')');
+    await valgHash(side, '#/uge');
+    await venterPaa(side, () => document.querySelectorAll('.uge-dage > .dag').length === 7, null, 'ipad uden net: oversigten');
+    const r = await raekker(side);
+    tjek(r[0]?.navn === RETTER.koedsovs.name && r[1]?.navn === RETTER[valgt].name, 'ipad uden net: oversigten viser mandag og tirsdag (' + JSON.stringify(r.slice(0, 2)) + ')');
+    await tjekLayout(side, 'ipad uden net: oversigten');
+    await foto(side, 'ipad-uden-net-oversigt');
+    tjek(side.fejl.length === 0, 'ipad uden net: ' + side.fejl.join(' | '));
+    await side.close();
+
+    // 4. Telefonen: linket fra «Send til telefon» åbner listen uden net, en afkrydsning overlever en genindlæsning
+    const dage = [{ ret: 'koedsovs', n: 4 }, { ret: valgt, n: 4 }, null, null, null, null, null];
+    side = await nyFane(ctx, iphone);
+    await side.goto(base + '/index.html#/hent/' + kod(uge, dage));
+    await venterPaa(side, () => location.hash === '#/indkoeb' && document.querySelector('.liste-tal'), null, 'iphone uden net: linket skal åbne listen');
+    let l = await listeNu(side);
+    tjek(JSON.stringify(l.afd) === JSON.stringify(forventet(H, dage).afd), 'iphone uden net: listen er grupper() af de to retter (' + JSON.stringify(l.afd).slice(0, 200) + ')');
+    const vare = await side.locator('li[data-vare]:not(.koebt) .vare .vare-navn').first().textContent();
+    await tryk(side, 'li[data-vare]:not(.koebt) .vare');
+    await side.reload();
+    await side.waitForSelector('.liste-tal');
+    l = await listeNu(side);
+    tjek(l.koebt.join() === vare, 'iphone uden net: afkrydsningen skal overleve en genindlæsning (' + l.koebt.join(', ') + ')');
+    await side.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished)));
+    await tjekLayout(side, 'iphone uden net: listen');
+    await foto(side, 'iphone-uden-net-liste');
+    tjek(side.fejl.length === 0, 'iphone uden net: ' + side.fejl.join(' | '));
+    await side.close();
+
+    // 5. Computeren: printet af ugen og listen
+    side = await nyFane(ctx, desktop);
+    await side.goto(base + '/print.html?uge');
+    await venterPaa(side, () => document.querySelectorAll('.uge-dag').length === 7 && !document.querySelector('#print').disabled, null, 'desktop uden net: printet');
+    const p = await printDage(side);
+    tjek(p[0].ret === RETTER.koedsovs.name && p[1].ret === RETTER[valgt].name && p[1].af === 'Valgt af Rosa',
+      'desktop uden net: printet viser mandag og tirsdag (' + JSON.stringify(p.slice(0, 2)) + ')');
+    tjek(JSON.stringify(await printListe(side)) === JSON.stringify(listeFor(H, dage)), 'desktop uden net: printets indkøbsliste');
+    await tjekLayout(side, 'desktop uden net: printet');
+    await foto(side, 'desktop-uden-net-print', { fullPage: true });
+    tjek(side.fejl.length === 0, 'desktop uden net: ' + side.fejl.join(' | '));
+    await side.close();
+    maal.push('uden net: ' + filer.length + ' FILER i kog-' + indhold + '; børnenes valg, listen og printet virkede med serveren stoppet');
+  } finally {
+    await ctx.close();
+    if (server) await stopServer(server, port);
+    try {
+      fs.rmSync(mappe, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+    } catch (e) {
+      maal.push('uden net: profilen ' + mappe + ' kunne ikke slettes (' + e.code + ')');
+    }
+  }
 }

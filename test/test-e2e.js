@@ -1843,7 +1843,7 @@ if (DELE.includes('beroering')) KOERSEL.push(['berøring', (b) => beroering(b, S
 if (DELE.includes('former')) KOERSEL.push(['skærmformer', (b) => former(b)]);
 // Ugeplanen står i sin egen fil (test/e2e-ugeplan.js) og får hjælperne herfra
 if (DELE.includes('ugeplan')) {
-  KOERSEL.push(['ugeplan', (b) => ugeplan(b, { BASE, UD, ROD, RETTER, SKAERME, nySide, tjek, tjekLayout, foto, tryk, hold, vent, venterPaa, h1, maal })]);
+  KOERSEL.push(['ugeplan', (b) => ugeplan(b, { BASE, UD, ROD, RETTER, SKAERME, nySide, tjek, tjekLayout, foto, tryk, hold, vent, venterPaa, h1, maal, forfalskninger, LYD_TEKSTER })]);
 }
 
 const browser = await webkit.launch();
