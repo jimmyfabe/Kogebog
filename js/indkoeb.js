@@ -101,6 +101,17 @@ export function grupper(varer) {
   return ud.sort((a, b) => AFD_ORDEN.indexOf(a.afd) - AFD_ORDEN.indexOf(b.afd));
 }
 
+// Dagene, der ikke kommer på listen, og hvorfor (til «Del som tekst» og printet): ikkeHentet er dage, hvis opskrift
+// ikke kunne hentes, ikkeIPlanen dage med en ret, der ikke længere er i ugeplanen. Svar: en eller to sætninger, eller ''
+// (code review U5 og U6, 23-10: dagene forsvandt i stilhed, og begge slags hed «kunne ikke hentes»)
+export function manglerTekst(ikkeHentet, ikkeIPlanen) {
+  const dage = (n) => (n === 1 ? 'Én dag mangler' : n + ' dage mangler');
+  return [
+    ikkeHentet > 0 ? dage(ikkeHentet) + ' på listen, fordi ' + (ikkeHentet === 1 ? 'opskriften' : 'opskrifterne') + ' ikke kunne hentes.' : '',
+    ikkeIPlanen > 0 ? dage(ikkeIPlanen) + ' på listen, fordi ' + (ikkeIPlanen === 1 ? 'retten' : 'retterne') + ' ikke længere er i ugeplanen.' : '',
+  ].filter(Boolean).join(' ');
+}
+
 // Tekstudgaven til «Del som tekst» (vej b): afdelingens navn som overskrift og én vare pr. linje, så Noter kan gøre
 // linjerne til en tjekliste. «Tjek, at I har» står sidst
 export function tekst(varer) {

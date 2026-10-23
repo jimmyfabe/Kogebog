@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { saml, visMaengde, vareTekst, grupper, tekst, MAKS_M } from '../js/indkoeb.js';
+import { saml, visMaengde, vareTekst, grupper, tekst, manglerTekst, MAKS_M } from '../js/indkoeb.js';
 import { kod, afkod, fnv1a, kontrolsum, ukendtTekst, kodeFraTekst, BESKED_NYERE, BESKED_UGYLDIG, BESKED_GAMMEL } from '../js/plankode.js';
 import * as lager from '../js/lager.js';
 
@@ -159,6 +159,16 @@ test('en vare kan højst have 100.000 i sin enhed, og listen viser kun kendte va
   ]);
   assert.equal(vareTekst('toString', 5), '');
   assert.equal(tekst([]), '');
+});
+
+// «Del som tekst» og printet siger, hvor mange dage der mangler på listen, og hvorfor (code review U5 og U6, 23-10)
+test('dagene, der mangler på listen: én sætning pr. grund, i ental og flertal', () => {
+  assert.equal(manglerTekst(0, 0), '');
+  assert.equal(manglerTekst(1, 0), 'Én dag mangler på listen, fordi opskriften ikke kunne hentes.');
+  assert.equal(manglerTekst(2, 0), '2 dage mangler på listen, fordi opskrifterne ikke kunne hentes.');
+  assert.equal(manglerTekst(0, 1), 'Én dag mangler på listen, fordi retten ikke længere er i ugeplanen.');
+  assert.equal(manglerTekst(1, 3), 'Én dag mangler på listen, fordi opskriften ikke kunne hentes. '
+    + '3 dage mangler på listen, fordi retterne ikke længere er i ugeplanen.');
 });
 
 // ---------- Koden i linket (js/plankode.js) ----------

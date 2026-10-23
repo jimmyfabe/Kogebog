@@ -431,6 +431,14 @@ async function oversigtIpad(browser, H) {
   gemt = await ugeLager(side);
   tjek(JSON.stringify(gemt.dage[2]) === JSON.stringify({ ret: 'tunfrikadeller', af: 'bo', n: 5 }) && gemt.dage[0].n === 5,
     n + ': onsdag må ikke forsvinde, når mandag ændres, mens onsdagens opskrift ikke kan hentes (' + JSON.stringify(gemt.dage) + ')');
+  // «Del som tekst» siger, at onsdag mangler på listen, i teksten og i beskeden (code review U5, 23-10). Delearkets
+  // liste (window.__delt) starter forfra ved genindlæsningen herunder
+  const MANGLER = 'Én dag mangler på listen, fordi opskriften ikke kunne hentes.';
+  await tryk(side, 'button:has-text("Del som tekst")');
+  await venterPaa(side, () => window.__delt.length === 1, null, n + ': «Del som tekst» skal åbne delearket, også når en opskrift mangler');
+  const manglerDelt = (await side.evaluate(() => (window.__delt[0] || {}).text)) || '';
+  tjek(manglerDelt.startsWith('Indkøbsliste uge ' + ugeNr(uge) + '\n\n' + MANGLER + '\n\n'), n + ': teksten siger under overskriften, at en dag mangler (' + manglerDelt.slice(0, 90) + ')');
+  tjek((await side.locator('.uge-besked').textContent()).endsWith(MANGLER), n + ': beskeden siger, at en dag mangler på listen');
   await side.unroute('**/opskrifter/tunfrikadeller.json');
   await tryk(side, '[data-fokus="dag-0-minus"]'); // mandag tilbage til 4
   await side.reload();

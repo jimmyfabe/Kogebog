@@ -10,7 +10,7 @@
 import { el, ikon } from './dom.js';
 import * as Lager from './lager.js';
 import { afkod, kod, kodeFraTekst, ukendtTekst, BESKED_UGYLDIG, BESKED_NYERE, BESKED_GAMMEL } from './plankode.js';
-import { saml, grupper, tekst as listeTekst } from './indkoeb.js';
+import { saml, grupper, tekst as listeTekst, manglerTekst } from './indkoeb.js';
 import { DYR, grafikIngrediens, grafikRet, grafikDyr } from './katalog.js';
 import { ugeNr, dagDato, planMandag, DAGE } from './tid.js';
 import { minutterTekst } from './tekst.js';
@@ -444,13 +444,17 @@ function tegnIgen(fokus) {
 // Ugen er gået, når dens søndag er forbi (planMandag er i dag, eller den næste mandag)
 const ugenErGaaet = (uge) => Boolean(uge) && Date.parse(uge + 'T00:00:00Z') + 7 * DAG_MS <= Date.parse(planMandag() + 'T00:00:00Z');
 
-// Linket til telefonen og varerne til «Del som tekst»: kun dage, hvis ret er hentet og står i ugeplanen, kommer på listen
+// Linket til telefonen og varerne til «Del som tekst»: kun dage, hvis ret er hentet og står i ugeplanen, kommer på listen.
+// «mangler» siger, hvor mange dage der ikke kom med, og hvorfor (som dagens række i oversigten: en fejl ved hentningen,
+// ellers er retten ikke længere i ugeplanen)
 function ugensData(p) {
   const uge = p.uge || planMandag();
   const dage = p.dage.map((d) => (d ? { ret: d.ret, n: d.n } : null));
   const valg = p.dage.filter(Boolean).map((d) => ({ m: model(d.ret), n: d.n })).filter((x) => x.m && x.m.uge)
     .map((x) => ({ ret: { tumbi: x.m.uge.tumbi }, n: x.n }));
-  return { uge, kode: kod(uge, dage), varer: saml(valg), antal: valg.length };
+  const udenfor = p.dage.filter((d) => d && !(model(d.ret) && model(d.ret).uge));
+  const ikkeHentet = udenfor.filter((d) => K.S.retter.get(d.ret) instanceof Error).length;
+  return { uge, kode: kod(uge, dage), varer: saml(valg), antal: valg.length, mangler: manglerTekst(ikkeHentet, udenfor.length - ikkeHentet) };
 }
 
 // ---------- #/uge: den voksnes oversigt ----------
@@ -533,13 +537,15 @@ async function sendLink(data) {
   if (b) { oversigtBesked = b; tegnIgen('send'); }
 }
 
+// Mangler en dag på listen, står det under overskriften i teksten og sidst i beskeden (code review U5, 23-10)
 async function delTekst(data) {
   const titel = 'Indkøbsliste uge ' + ugeNr(data.uge);
-  const tekst = titel + '\n\n' + listeTekst(data.varer);
+  const tekst = titel + '\n\n' + (data.mangler ? data.mangler + '\n\n' : '') + listeTekst(data.varer);
+  const efter = data.mangler ? ' ' + data.mangler : '';
   const b = await del({ title: titel, text: tekst }, tekst, {
-    delt: 'Listen er delt som tekst. I Noter: markér linjerne, og tryk på tjeklisten.',
-    kopieret: 'Listen er kopieret. Sæt den ind i Noter, markér linjerne, og tryk på tjeklisten.',
-    felt: 'Kopiér listen herunder, og sæt den ind i Noter.',
+    delt: 'Listen er delt som tekst. I Noter: markér linjerne, og tryk på tjeklisten.' + efter,
+    kopieret: 'Listen er kopieret. Sæt den ind i Noter, markér linjerne, og tryk på tjeklisten.' + efter,
+    felt: 'Kopiér listen herunder, og sæt den ind i Noter.' + efter,
   });
   if (b) { oversigtBesked = b; tegnIgen('del'); }
 }
