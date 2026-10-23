@@ -9,6 +9,7 @@ import {
   VARER, AFDELINGER, ENHEDER, grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, grafikGruppe, GRAFIK_FAERDIG,
 } from '../js/katalog.js';
 import { isoTilMinutter, antalOrd } from '../js/tekst.js';
+import * as R from '../js/replikker.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -92,9 +93,13 @@ function fund(re, tekst) {
   return null;
 }
 // Lydfilerne (js/replikker.js): <ret>/<trin>.mp3, <ret>/navn.mp3, <ret>/valgt.mp3, <ret>/ingrediens-<n>.mp3,
-// <ret>/timer-optaget-<trin>.mp3 og faelles/<navn>.mp3
+// <ret>/timer-optaget-<trin>.mp3, <ret>/uge.mp3 (kun retter i ugeplanen) og faelles/<navn>.mp3
 const LYD_RE = /^([a-z0-9]+(?:-[a-z0-9]+)*)\/(\d+|navn|valgt|ingrediens-\d+|timer-optaget-\d+|[a-z]+(?:-[a-z0-9]+)*)\.mp3$/;
-const LYD_FAELLES = new Set(['faerdig', 'print-hold', 'voksen-start-begge', 'voksen-start-varme', 'voksen-start-kniv', ...Object.keys(GRUPPER).map((g) => 'gruppe-' + g)]);
+// Børnenes valg af ugens mad (js/ugeplan.js): de samme fælles replikker som i vaerktoej/lav-taleliste.js
+const UGE_FAELLES = [R.UGE_HVEM, R.HVILKEN_DAG, R.DAG_OPTAGET, R.UGE_TAK, R.ALLE_VALGT, R.UGE_FULD, R.GEM_FEJL, R.SIDE_FLERE,
+  R.SIDE_FORRIGE, ...Object.keys(DYR).map(R.dyrVaelger), ...['rosa', 'pip'].map(R.dyrFaerdig), ...[0, 1, 2, 3, 4, 5, 6].map(R.dag)];
+const LYD_FAELLES = new Set(['faerdig', 'print-hold', 'voksen-start-begge', 'voksen-start-varme', 'voksen-start-kniv', ...Object.keys(GRUPPER).map((g) => 'gruppe-' + g),
+  ...UGE_FAELLES.map((x) => /^faelles\/(.+)\.mp3$/.exec(x.fil)[1])]);
 
 const erTekst = (v) => typeof v === 'string' && v.trim().length > 0;
 const liste = (a) => a.join(', ');
@@ -202,6 +207,7 @@ export function valider(rod = ROD) {
 
   const trinAntal = new Map(); // id → antal trin (til lydlisten)
   const ingrAntal = new Map(); // id → antal ingredienser (til lydlisten)
+  const iUgeplan = new Set(); // id'er på retter i ugeplanen (til lydlisten: <ret>/uge.mp3)
   let flestTrin = 0;
   const sete = new Set();
   for (const fil of filer) {
@@ -266,6 +272,7 @@ export function valider(rod = ROD) {
       if ('groent_g' in t && !erHeltal(t.groent_g, 0, Infinity)) f('«tumbi.groent_g» skal være et heltal fra 0 (gram grønt i hele retten), fandt ' + JSON.stringify(t.groent_g));
     } else if ('tumbi' in r) f('«tumbi» skal være et objekt');
     const ugeplan = Boolean(t && typeof t === 'object' && t.ugeplan === true);
+    if (ugeplan) iUgeplan.add(filId);
 
     if ('image' in r && r.image !== grafikRet(filId)) f('«image» skal være "' + grafikRet(filId) + '", fandt ' + JSON.stringify(r.image));
     if (!findes(grafikRet(filId))) fejlI(grafikRet(filId), 'billedet mangler (retten «' + filId + '»)');
@@ -471,6 +478,8 @@ export function valider(rod = ROD) {
           if (!Number.isInteger(nr) || nr < 1 || nr > (ingrAntal.get(m[1]) || 0)) fejlI('lyd/liste.json', '«' + fil + '»: retten har kun ' + ingrAntal.get(m[1]) + ' ingredienser');
         } else if (/^(\d+|timer-optaget-\d+)$/.test(m[2])) {
           if (!Number.isInteger(nr) || nr < 1 || nr > trinAntal.get(m[1])) fejlI('lyd/liste.json', '«' + fil + '»: retten har kun ' + trinAntal.get(m[1]) + ' trin');
+        } else if (m[2] === 'uge') {
+          if (!iUgeplan.has(m[1])) fejlI('lyd/liste.json', '«' + fil + '»: retten er ikke med i ugeplanen');
         } else if (m[2] !== 'navn' && m[2] !== 'valgt') fejlI('lyd/liste.json', '«' + fil + '»: ukendt replik for en ret');
         if (!findes('lyd/' + fil)) fejlI('lyd/liste.json', '«' + fil + '» står på listen, men filen lyd/' + fil + ' findes ikke');
       }
