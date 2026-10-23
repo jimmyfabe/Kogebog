@@ -5,7 +5,7 @@
 import { el } from './dom.js';
 import { hentIndex, hentRet } from './data.js';
 import * as Lager from './lager.js';
-import { saml, grupper } from './indkoeb.js';
+import { saml, grupper, manglerTekst } from './indkoeb.js';
 import { DYR, grafikRet, grafikDyr } from './katalog.js';
 import { DAGE, ugeNr, dagDato, planMandag } from './tid.js';
 import { minutterTekst } from './tekst.js';
@@ -65,7 +65,11 @@ function tegn(ark, p, hentet) {
   // Listen: kun dage, hvis ret er hentet og står i ugeplanen (som «Send til telefon» i js/ugeplan.js)
   const valg = p.dage.filter(Boolean).map((d) => ({ m: hentet.get(d.ret), n: d.n })).filter((x) => x.m && x.m.uge)
     .map((x) => ({ ret: { tumbi: x.m.uge.tumbi }, n: x.n }));
-  const mangler = p.dage.filter((d) => d && !(hentet.get(d.ret) || {}).uge).length;
+  // Dagene, der ikke kom på listen, med grunden: opskriften kunne ikke hentes (null), eller retten er ikke længere i
+  // ugeplanen. Kun det første kan genindlæsning hjælpe på (code review U6, 23-10)
+  const ikkeHentet = p.dage.filter((d) => d && !hentet.get(d.ret)).length;
+  const ikkeIPlanen = p.dage.filter((d) => d && hentet.get(d.ret) && !hentet.get(d.ret).uge).length;
+  const mangler = manglerTekst(ikkeHentet, ikkeIPlanen) + (ikkeHentet ? ' Genindlæs siden for at prøve igen.' : '');
   const afdelinger = grupper(saml(valg)).map((g) => el('section', { class: 'afd' + (g.afd === 'basis' ? ' basis' : '') },
     el('h3', { tekst: g.navn }),
     el('ul', { class: 'tjek' }, g.varer.map((v) => el('li', {},
@@ -82,9 +86,7 @@ function tegn(ark, p, hentet) {
       el('header', { class: 'uge-hoved' },
         el('h2', { id: 'p-liste', tekst: 'Indkøbsliste · uge ' + nr }),
         el('p', { class: 'meta', tekst: periode })),
-      mangler
-        ? el('p', { class: 'liste-note', tekst: (mangler === 1 ? 'Én dag' : mangler + ' dage') + ' mangler på listen, fordi opskriften ikke kunne hentes. Genindlæs siden for at prøve igen.' })
-        : null,
+      mangler ? el('p', { class: 'liste-note', tekst: mangler }) : null,
       afdelinger.length ? el('div', { class: 'afdelinger' }, afdelinger) : el('p', { class: 'liste-note', tekst: 'Der er ingen varer på listen.' }),
       el('footer', { class: 'fod' },
         el('p', { tekst: 'Tjek selv pakkerne for allergener.' }),

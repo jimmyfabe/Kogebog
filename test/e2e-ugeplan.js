@@ -968,6 +968,16 @@ async function ugePrint(browser, H) {
   await foto(side, n + '-ugeplan-print-390x844', { fullPage: true });
   await side.unroute('**/opskrifter/tunfrikadeller.json');
 
+  // 5. En ret, der ikke længere er i ugeplanen (pandekager), kunne godt hentes: listen siger den rigtige grund
+  //    (code review U6, 23-10)
+  await side.evaluate((p) => localStorage.setItem('kog-uge-v1', JSON.stringify(p)),
+    { v: 1, uge, dage: dage.map((d, i) => (i === 6 ? { ret: 'pandekager', af: 'bo', n: 4 } : d)), n: 4, prBarn: 1, rettet: Date.now() });
+  await side.reload();
+  await ark(() => document.querySelectorAll('.uge-dag').length === 7 && !document.querySelector('#print').disabled, 'printet med en ret, der ikke er i ugeplanen');
+  const note = (await side.locator('.liste-note').allTextContents()).join(' | ');
+  tjek(note === 'Én dag mangler på listen, fordi retten ikke længere er i ugeplanen.', n + ': listen siger, at retten ikke er i ugeplanen (' + note + ')');
+  tjek(JSON.stringify(await printListe(side)) === JSON.stringify(listeFor(H, dage)), n + ': listen har kun ugeplanens retter');
+
   tjek(!side.fejl.filter((x) => !/tunfrikadeller\.json/.test(x)).length, n + ' print af ugen: ' + side.fejl.join(' | '));
   await ctx.close();
 }
