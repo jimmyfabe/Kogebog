@@ -179,6 +179,12 @@ async function telefon(browser, H) {
   await venterPaa(side, () => location.hash === '#/indkoeb' && document.querySelector('.liste-tal'), null, n + ': samme link igen skal vise listen');
   l = await listeNu(side);
   tjek(l.tal === '3 af ' + ialt + ' købt', n + ': samme link igen må ikke nulstille afkrydsningerne (' + l.tal + ')');
+  // Samme link, hvor en app har kodet ~ som %7E (link-indpakning i mail eller beskeder): det er det samme link
+  // (code review F6, 23-10)
+  await aabn(side, BASE, '#/hent/' + kode.replaceAll('~', '%7E'));
+  await venterPaa(side, () => location.hash === '#/indkoeb' && document.querySelector('.liste-tal'), null, n + ': linket med %7E skal vise listen');
+  const tal7e = await side.evaluate(() => document.querySelector('.liste-tal')?.textContent || document.querySelector('h1')?.textContent);
+  tjek(tal7e === '3 af ' + ialt + ' købt', n + ': linket med %7E er samme liste med afkrydsningerne (' + tal7e + ')');
 
   // 8. Et nyt link til næste uge: «Erstat listen for uge NN?» — først «Behold», så «Erstat»
   const uge2 = plusDage(uge, 7);

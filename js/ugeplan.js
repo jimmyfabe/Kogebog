@@ -158,7 +158,9 @@ const gemFejl = () => K.statusSkaerm({
 function hentSkaerm(kode) {
   if (K.S.indexFejl) return hentFejl();
   if (!klar()) return henter('Henter indkøbslisten …');
-  const r = afkod(kode, { retter: K.S.ids, idag: new Date() });
+  // En app, der pakker linket ind (mail, beskeder), kan kode ~ som %7E. Det er det samme link (~ er et ureserveret tegn,
+  // RFC 3986), så det laves om som i feltet (kodeFraTekst). afkod tjekker stadig resten (code review F6, 23-10)
+  const r = afkod(kode.replace(/%7e/gi, '~'), { retter: K.S.ids, idag: new Date() });
   if (!r.ok) return linkFejl(r.fejl);
   if (gemFejlet === r.kode) { gemFejlet = null; return gemFejl(); }
   // Varerne regnes ud nu og gemmes (et øjebliksbillede, afsnit 3). Kunne en af ugens retter ikke hentes, gemmes intet:
