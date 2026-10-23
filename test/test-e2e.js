@@ -553,6 +553,10 @@ async function heleVejen(browser, skaerm) {
   const { ctx, side } = await nySide(browser, skaerm);
   await side.goto(BASE + '/index.html?hurtig=1');
   await side.waitForSelector('.kort[data-ret]');
+  // Første besøg: service workeren henter alle filer samtidig med siden, så billederne kan være på vej, når kortene står der
+  // («ipad forside: billeder ikke indlæst» med alle forsidens billeder, 23-10-2026 kl. 15:17). Vent, til alle er færdige
+  // (også de fejlede, så tjekLayout melder et billede, der mangler)
+  await side.waitForFunction(() => [...document.images].every((i) => i.complete), null, { timeout: 5000 }).catch(() => {});
   tjek(await side.locator('.kort[data-ret]').count() === index.length, n + ': forsiden skal have ' + index.length + ' kort');
   await tjekLayout(side, n + ' forside');
   // Kortene i samme række er lige høje (før var «Kødsovs med spaghetti» højere end naboerne)
