@@ -11,7 +11,8 @@
   "totalTime": "PT20M",
   "recipeIngredient": [
     "250 g nudler",
-    "2 l vand og 1 tsk salt til nudlerne",
+    "2 l vand til nudlerne",
+    "1 tsk salt til nudlerne",
     "3 spsk soja",
     "1 spsk honning",
     "½ dl vand",
@@ -49,6 +50,7 @@
     "ingredienser": [
       { "ikon": "spaghetti", "maengde": "250 g", "vare": "nudler", "antal": 250, "enhed": "g" },
       { "ikon": "vand", "maengde": "2 l", "vare": "vand" },
+      { "ikon": "salt", "maengde": "1 tsk", "vare": "salt" },
       { "ikon": "soja", "maengde": "3 spsk", "vare": "soja" },
       { "ikon": "honning", "maengde": "1 spsk", "vare": "honning" },
       { "ikon": "vand", "maengde": "½ dl", "vare": "vand" },

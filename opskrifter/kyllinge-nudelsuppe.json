@@ -22,7 +22,7 @@
   "tool": ["dåseåbner", "si", "skål", "stor gryde med låg", "grydeske", "tallerken", "2 gafler"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
-    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad vandet løbe fra. Brug halvdelen." } },
+    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad vandet løbe fra. Brug halvdelen. Resten kan gemmes i køleskabet." } },
     { "@type": "HowToStep", "text": "Hæld vand i en stor gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["vand"], "note": "15 dl vand. Gryden er kold, så barnet kan selv." } },
     { "@type": "HowToStep", "text": "Smuldr bouillonterningerne ned i gryden.", "tumbi": { "verbum": "smuldre", "ikoner": ["bouillon"] } },
     { "@type": "HowToStep", "text": "Knæk nudlerne i en skål.", "tumbi": { "verbum": "smuldre", "ikoner": ["spaghetti"], "note": "I små stykker. Nudlerne venter i skålen, til de skal i suppen." } },

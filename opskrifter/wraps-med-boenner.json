@@ -30,7 +30,7 @@
     { "@type": "HowToStep", "text": "Rør kål, gulerod og yoghurt sammen.", "tumbi": { "verbum": "roere", "ikoner": ["kaal", "gulerod", "yoghurt", "salt"], "note": "I en skål med en knivspids salt. Det er kålsalaten." } },
     { "@type": "HowToStep", "text": "Lad fyldet simre under låg i 10 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "note": "Middel varme. Rør af og til. Bønnerne må gerne være hele." } },
     { "@type": "HowToStep", "text": "Smag fyldet til med salt.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt"], "note": "Pust på skeen først." } },
-    { "@type": "HowToStep", "text": "Fyld og rul din egen wrap.", "tumbi": { "verbum": "rulle", "ikoner": ["tortilla", "boenner", "kaal"], "note": "Varm gerne tortillaerne kort først. Fyld på midten, kålsalat ovenpå, fold bunden op og rul. Fyldet er varmt: lad det køle lidt." } }
+    { "@type": "HowToStep", "text": "Fyld og rul din egen wrap.", "tumbi": { "verbum": "rulle", "ikoner": ["tortilla", "boenner", "kaal"], "note": "Fyld på midten, kålsalat ovenpå, fold bunden op og rul. Fyldet er varmt: lad det køle lidt." } }
   ],
   "tumbi": {
     "id": "wraps-med-boenner",

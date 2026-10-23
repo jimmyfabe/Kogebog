@@ -7,8 +7,8 @@
   "inLanguage": "da",
   "recipeYield": "4 personer",
   "prepTime": "PT10M",
-  "cookTime": "PT20M",
-  "totalTime": "PT30M",
+  "cookTime": "PT25M",
+  "totalTime": "PT35M",
   "recipeIngredient": [
     "1 løg",
     "250 g røde linser",
@@ -34,7 +34,7 @@
     { "@type": "HowToStep", "text": "Lad dhalen småkoge under låg i 12 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 720, "note": "Lav varme. Rør af og til, så linserne ikke sætter sig i bunden." } },
     { "@type": "HowToStep", "text": "Kom spinatklumperne i, og tæl dem.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spinat"], "note": "Direkte fra frost. Gryden er varm: barnet kommer dem i med en ske fra kanten." } },
     { "@type": "HowToStep", "text": "Lad dhalen småkoge i 5 minutter mere.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Rør spinaten ud, når den er tøet. Lun naanbrødene imens som anvist på posen." } },
-    { "@type": "HowToStep", "text": "Smag dhalen til med salt.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt"], "note": "Pust på skeen først." } },
+    { "@type": "HowToStep", "text": "Smag dhalen til med salt.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt"], "note": "Pust på skeen først. Linserne skal være helt bløde. Ellers 5 min mere." } },
     { "@type": "HowToStep", "text": "Kom en klat yoghurt på.", "tumbi": { "verbum": "pynte", "ikoner": ["yoghurt"], "note": "På tallerkenerne. Naanbrødet er til at dyppe med." } }
   ],
   "tumbi": {

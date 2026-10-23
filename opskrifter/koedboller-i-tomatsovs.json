@@ -11,7 +11,7 @@
   "totalTime": "PT25M",
   "recipeIngredient": [
     "2 dåser hakkede tomater",
-    "500 g frosne kødboller",
+    "500 g frosne færdigstegte kødboller",
     "1 tsk tørret oregano",
     "400 g frossen broccoli",
     "320 g spaghetti",
@@ -27,7 +27,7 @@
     { "@type": "HowToStep", "text": "Tæl kødbollerne ned i gryden.", "tumbi": { "verbum": "haelde", "ikoner": ["koed"], "note": "Direkte fra frost. Gryden er kold, så barnet kan selv. Hvor mange blev det?" } },
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter kødbollerne." } },
     { "@type": "HowToStep", "text": "Drys oregano i gryden.", "tumbi": { "verbum": "drysse", "ikoner": ["krydderurt"] } },
-    { "@type": "HowToStep", "text": "Lad kødbollerne simre under låg i 10 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "note": "Middel varme. Rør forsigtigt af og til." } },
+    { "@type": "HowToStep", "text": "Lad kødbollerne simre under låg i 10 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "note": "Middel varme. Timeren startes, når sovsen simrer. Rør forsigtigt af og til." } },
     { "@type": "HowToStep", "text": "Hæld broccolien i sovsen.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["broccoli"], "note": "Direkte fra frost. Gryden er varm: den voksne holder øje." } },
     { "@type": "HowToStep", "text": "Kom spaghettien i vandet.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "ikoner": ["spaghetti"], "note": "Kog som anvist på pakken, ca. 8-10 min. Rør lidt i starten. Sovsen simrer videre imens." } },
     { "@type": "HowToStep", "text": "Hæld vandet fra spaghettien.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spaghetti"], "note": "Den voksne hælder gennem dørslaget i vasken. Pas på dampen." } },

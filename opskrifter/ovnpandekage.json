@@ -22,7 +22,7 @@
   "tool": ["kande med låg", "kop", "bradepande", "bagepapir", "grydelapper", "kniv", "skærebræt"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
-    { "@type": "HowToStep", "text": "Mål 5 dl mælk.", "tumbi": { "verbum": "maale", "ikoner": ["maelk"], "note": "Tænd ovnen på 200 °C varmluft først." } },
+    { "@type": "HowToStep", "text": "Mål 5 dl mælk.", "tumbi": { "verbum": "maale", "ikoner": ["maelk"], "note": "Tænd ovnen på 200 °C varmluft først. Tø spinaten op i forvejen (natten over i køleskabet eller i mikroovnen)." } },
     { "@type": "HowToStep", "text": "Hæld mælk, mel og salt i en kande.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk", "mel", "salt"], "note": "200 g mel er ca. 3½ dl. Brug en kande med låg." } },
     { "@type": "HowToStep", "text": "Kom æggene i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["aeg"], "note": "Slå æggene ud i en kop først, så er det let at fiske skaller op." } },
     { "@type": "HowToStep", "text": "Ryst kanden godt med låg på.", "tumbi": { "verbum": "piske", "note": "Hold en hånd på låget. Ryst, til der ikke er klumper." } },

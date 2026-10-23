@@ -7,8 +7,8 @@
   "inLanguage": "da",
   "recipeYield": "4 personer",
   "prepTime": "PT10M",
-  "cookTime": "PT25M",
-  "totalTime": "PT35M",
+  "cookTime": "PT30M",
+  "totalTime": "PT40M",
   "recipeIngredient": [
     "250 g hakket oksekød",
     "400 g frosne suppeurter",
@@ -40,7 +40,7 @@
     { "@type": "HowToStep", "text": "Lad sovsen småkoge under låg i 10 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "note": "Lav varme. Rør af og til. Sovsen koger videre, mens spaghettien koger." } },
     { "@type": "HowToStep", "text": "Kom spaghettien i vandet.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "ikoner": ["spaghetti"], "note": "Kog som anvist på pakken, ca. 10-12 min. Rør lidt i starten, så den ikke klistrer." } },
     { "@type": "HowToStep", "text": "Hæld vandet fra spaghettien.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spaghetti"], "note": "Den voksne hælder gennem dørslaget i vasken. Pas på dampen." } },
-    { "@type": "HowToStep", "text": "Smag sovsen til med salt og peber.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt", "peber"], "note": "Pust på skeen først. Linserne skal være helt bløde." } }
+    { "@type": "HowToStep", "text": "Smag sovsen til med salt og peber.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt", "peber"], "note": "Pust på skeen først. Linserne skal være helt bløde. Ellers 5 min mere." } }
   ],
   "tumbi": {
     "id": "halv-halv-koedsovs",

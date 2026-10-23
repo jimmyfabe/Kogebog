@@ -32,7 +32,7 @@
     { "@type": "HowToStep", "text": "Kom kyllingen og ægget i.", "tumbi": { "verbum": "haelde", "ikoner": ["koed", "aeg"], "note": "Kødet og ægget kommer i til sidst, så barnet ikke rører andet med råt kød på fingrene." } },
     { "@type": "HowToStep", "text": "Rør farsen godt sammen.", "tumbi": { "verbum": "roere", "ikoner": ["koed"], "note": "Med en grydeske i 1-2 min." } },
     { "@type": "HowToStep", "text": "Sæt klatter på pladen med en is-ske.", "tumbi": { "verbum": "rulle", "ikoner": ["koed", "aeg"], "note": "Bagepapir på pladen. Ca. 16 små klatter, der ikke rører hinanden." } },
-    { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: rå kylling kan give maveonde." } },
+    { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: rå kylling kan give maveonde. Den voksne stiller skål, grydeske og is-ske i vasken og vasker også hænderne." } },
     { "@type": "HowToStep", "text": "Kog kartofler og gulerødder under låg.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "note": "Høj varme, til det koger. Så middel varme. De koger videre, mens frikadellerne bager." } },
     { "@type": "HowToStep", "text": "Bag frikadellerne i ovnen i 20 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1200, "note": "200 °C varmluft." } },
     { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme", "note": "Del den største over: den skal være hvid hele vejen igennem, og saften klar." } },
