@@ -1,0 +1,55 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Pølse-bønnegryde med ris",
+  "description": "Partypølser i bønner og tomat med grønne bønner. Ris ved siden af.",
+  "image": "grafik/ret-poelse-boennegryde.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT20M",
+  "totalTime": "PT25M",
+  "recipeIngredient": [
+    "2 dåser hvide bønner i tomat",
+    "1 dåse hakkede tomater",
+    "400 g frosne grønne bønner",
+    "300 g partypølser",
+    "250 g ris",
+    "2 l vand og 1 tsk salt til risene",
+    "½ tsk salt",
+    "1 knivspids peber"
+  ],
+  "tool": ["dåseåbner", "gryde med låg", "gryde til ris", "grydeske", "dørslag"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Kog vand til risene.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "2 l vand og 1 tsk salt i en stor gryde på en bagerste plade, med håndtagene ind. Med låg på koger det hurtigere." } },
+    { "@type": "HowToStep", "text": "Hæld bønner og tomater i en gryde.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["boenner", "tomat"], "note": "Gryden er kold. Den voksne åbner dåserne: kanten er skarp." } },
+    { "@type": "HowToStep", "text": "Hæld de grønne bønner i gryden.", "tumbi": { "verbum": "haelde", "ikoner": ["boenner"], "note": "Direkte fra frost. Gryden er kold, så barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Tæl pølserne ned i gryden.", "tumbi": { "verbum": "haelde", "ikoner": ["poelse"], "note": "Hele pølser. Hvor mange blev det?" } },
+    { "@type": "HowToStep", "text": "Varm gryden op under låg.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "note": "Middel varme. Når den simrer, skrues ned. Den simrer videre, mens risene koger." } },
+    { "@type": "HowToStep", "text": "Kom risene i vandet.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 720, "ikoner": ["ris"], "note": "Kog som anvist på posen, ca. 12 min. Rør lidt i starten, og rør også i pølsegryden." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra risene.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Den voksne hælder gennem dørslaget i vasken. Pas på dampen." } },
+    { "@type": "HowToStep", "text": "Smag gryden til med salt og peber.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt", "peber"], "note": "Pust på skeen først. Pølserne skal være varme hele vejen igennem." } }
+  ],
+  "tumbi": {
+    "id": "poelse-boennegryde",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra en research af billig hverdagsmad til en børnefamilie (22-10-2026). Idé fra «pølser og bønner»-klassikeren og Fødevarestyrelsens råd om bælgfrugter. Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Tid og grønt er også et skøn (ikke målt), og grønt er uden bælgfrugter og kartofler.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 54,
+    "pris_dato": "2026-10",
+    "groent_g": 800,
+    "ingredienser": [
+      { "ikon": "boenner", "maengde": "2 dåser", "vare": "hvide-boenner-tomat", "antal": 2, "enhed": "stk" },
+      { "ikon": "tomat", "maengde": "1 dåse", "vare": "hakkede-tomater", "antal": 400, "enhed": "g" },
+      { "ikon": "boenner", "maengde": "400 g", "vare": "groenne-boenner", "antal": 400, "enhed": "g" },
+      { "ikon": "poelse", "maengde": "300 g", "vare": "partypoelser", "antal": 300, "enhed": "g" },
+      { "ikon": "ris", "maengde": "250 g", "vare": "ris", "antal": 250, "enhed": "g" },
+      { "ikon": "vand", "maengde": "2 l", "vare": "vand" },
+      { "ikon": "salt", "maengde": "½ tsk", "vare": "salt" },
+      { "ikon": "peber", "maengde": "1 knivspids", "vare": "peber" }
+    ]
+  }
+}

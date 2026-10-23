@@ -1,0 +1,54 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Medister i ovn med rosenkål og kartofler",
+  "description": "Hel medister, små kartofler, gulerødder og rosenkål bagt på én bradepande.",
+  "image": "grafik/ret-medister-i-ovn.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT40M",
+  "totalTime": "PT45M",
+  "recipeIngredient": [
+    "800 g små kartofler",
+    "4 gulerødder",
+    "400 g frosne rosenkål",
+    "2 spsk olie",
+    "1 tsk salt",
+    "500 g medister"
+  ],
+  "tool": ["bradepande", "frysepose", "tang", "grydeske", "køkkensaks"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Ryst grøntsagerne med olie og salt i en pose.", "tumbi": { "verbum": "roere", "ikoner": ["kartoffel", "gulerod", "kaal", "olie", "salt"], "note": "Tænd ovnen på 200 °C varmluft først. Skyl kartofler og gulerødder: de skal ikke skrælles. Rosenkålene kommer direkte fra frost. Tæl dem!" } },
+    { "@type": "HowToStep", "text": "Hæld grøntsagerne ud i bradepanden.", "tumbi": { "verbum": "haelde", "ikoner": ["kartoffel", "gulerod", "kaal"] } },
+    { "@type": "HowToStep", "text": "Læg medisteren oven på grøntsagerne.", "tumbi": { "verbum": "pynte", "ikoner": ["koed"], "note": "Hel, i en snegl eller en lang bue." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter råt kød." } },
+    { "@type": "HowToStep", "text": "Bag det hele i ovnen i 20 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1200, "note": "200 °C varmluft." } },
+    { "@type": "HowToStep", "text": "Tag bradepanden ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Den er meget varm, og fedtet kan sprøjte." } },
+    { "@type": "HowToStep", "text": "Vend medisteren og grøntsagerne.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "note": "Med en tang og en grydeske." } },
+    { "@type": "HowToStep", "text": "Bag det hele i ovnen i 20 minutter mere.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1200, "note": "200 °C varmluft." } },
+    { "@type": "HowToStep", "text": "Tag bradepanden ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Medisteren skal være stegt hele vejen igennem: kødsaften er klar, og den er ikke lyserød indeni." } },
+    { "@type": "HowToStep", "text": "Klip medisteren i stykker.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "note": "Med en køkkensaks. Den er varm, så den voksne klipper." } },
+    { "@type": "HowToStep", "text": "Smag på en rosenkål.", "tumbi": { "verbum": "smage", "ikoner": ["kaal"], "note": "Pust først. Den er varm indeni." } }
+  ],
+  "tumbi": {
+    "id": "medister-i-ovn",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra en research af billig hverdagsmad til en børnefamilie (22-10-2026). Idé fra den danske klassiker, og rosenkål er i sæson. Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Tid og grønt er også et skøn (ikke målt), og grønt er uden bælgfrugter og kartofler.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 61,
+    "pris_dato": "2026-10",
+    "groent_g": 700,
+    "ingredienser": [
+      { "ikon": "kartoffel", "maengde": "800 g", "vare": "smaa-kartofler", "antal": 800, "enhed": "g" },
+      { "ikon": "gulerod", "maengde": "4", "vare": "gulerod", "antal": 4, "enhed": "stk" },
+      { "ikon": "kaal", "maengde": "400 g", "vare": "rosenkaal", "antal": 400, "enhed": "g" },
+      { "ikon": "olie", "maengde": "2 spsk", "vare": "olie" },
+      { "ikon": "salt", "maengde": "1 tsk", "vare": "salt" },
+      { "ikon": "koed", "maengde": "500 g", "vare": "medister", "antal": 500, "enhed": "g" }
+    ]
+  }
+}

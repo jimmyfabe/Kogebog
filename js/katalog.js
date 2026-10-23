@@ -114,6 +114,7 @@ export const INGREDIENSER = {
   'blomkaal': 'blomkål',
   'soja': 'soja',
   'honning': 'honning',
+  'kaal': 'kål',
 };
 
 // Ikoner for råt kød og råt æg: efter dem skal der komme et trin med «vaske-haender».
@@ -194,6 +195,7 @@ export const VARER = {
   'agurk': { navn: 'Agurk', afd: 'groent', enhed: 'stk', ikon: 'agurk' },
   'smaa-kartofler': { navn: 'Små kartofler', afd: 'groent', enhed: 'g', ikon: 'kartoffel' },
   'revet-gulerod': { navn: 'Revne gulerødder', afd: 'groent', enhed: 'g', ikon: 'gulerod' },
+  'snittet-kaal': { navn: 'Snittet kål', afd: 'groent', enhed: 'g', ikon: 'kaal' },
   // Brød
   'tortillas': { navn: 'Tortillas', afd: 'broed', enhed: 'stk', ikon: 'tortilla' },
   'rugbroed': { navn: 'Rugbrød', afd: 'broed', enhed: 'g', ikon: 'broed' },
@@ -237,6 +239,9 @@ export const VARER = {
   'hakket-svinekoed': { navn: 'Hakket svinekød', afd: 'koel', enhed: 'g', ikon: 'koed' },
   'bacon-tern': { navn: 'Bacon i tern', afd: 'koel', enhed: 'g', ikon: 'koed' },
   'maelk': { navn: 'Mælk', afd: 'koel', enhed: 'ml', ikon: 'maelk', pakke: [1000, 'karton', 'kartoner'] },
+  'hakket-kylling': { navn: 'Hakket kylling', afd: 'koel', enhed: 'g', ikon: 'koed' },
+  'medister': { navn: 'Medister', afd: 'koel', enhed: 'g', ikon: 'koed' },
+  'partypoelser': { navn: 'Partypølser', afd: 'koel', enhed: 'g', ikon: 'poelse' },
   // Frost. Uden pakke: posernes størrelse skifter mellem butikkerne, så listen viser gram
   'aerter': { navn: 'Ærter', afd: 'frost', enhed: 'g', ikon: 'aerter' },
   'broccoliblanding': { navn: 'Broccoli', afd: 'frost', enhed: 'g', ikon: 'broccoli' },
@@ -251,6 +256,7 @@ export const VARER = {
   'wokblanding': { navn: 'Wokblanding', afd: 'frost', enhed: 'g', ikon: 'broccoli' },
   'groenne-boenner': { navn: 'Grønne bønner', afd: 'frost', enhed: 'g', ikon: 'boenner' },
   'koedboller': { navn: 'Kødboller (færdige)', afd: 'frost', enhed: 'g', ikon: 'koed' },
+  'rosenkaal': { navn: 'Rosenkål', afd: 'frost', enhed: 'g', ikon: 'kaal' },
   // Tjek, at I har
   'salt': { navn: 'Salt', afd: 'basis', enhed: 'g', ikon: 'salt', basis: true },
   'peber': { navn: 'Peber', afd: 'basis', enhed: 'g', ikon: 'peber', basis: true },

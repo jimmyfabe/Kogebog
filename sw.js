@@ -7,7 +7,7 @@
    test/test-sw.js tjekker, at FILER er komplet, og fejler, når en fil er ændret. Fejlbeskeden viser den nye værdi;
    testen ændrer ikke sw.js, så den sættes her i hånden. */
 const PRAEFIKS = 'kog-';
-const INDHOLD = '9ded9651eafa425a'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = '4519ead4a57d0619'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '62514f04783c4e58'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
@@ -72,6 +72,11 @@ const FILER = [
   'opskrifter/tomatsuppe-med-boenner.json',
   'opskrifter/minestrone.json',
   'opskrifter/koedboller-i-tomatsovs.json',
+  'opskrifter/medister-i-ovn.json',
+  'opskrifter/poelse-boennegryde.json',
+  'opskrifter/kyllingefrikadeller.json',
+  'opskrifter/wraps-med-boenner.json',
+  'opskrifter/gryderis-med-kylling.json',
   'lyd/liste.json',
   'ikoner/ikon.svg',
   'ikoner/ikon-180.png',
@@ -92,6 +97,7 @@ const FILER = [
   'grafik/ing-tortilla.svg',
   'grafik/ing-agurk.svg', 'grafik/ing-blomkaal.svg',
   'grafik/ing-soja.svg', 'grafik/ing-honning.svg',
+  'grafik/ing-kaal.svg',
   'grafik/ret-boller.webp', 'grafik/ret-chorizo-pasta.webp', 'grafik/ret-frikadeller.webp', 'grafik/ret-koedsovs.webp', 'grafik/ret-pandekager.webp',
   'grafik/ret-kartoffelmos.webp', 'grafik/ret-hvidloegsflutes.webp', 'grafik/ret-brownie.webp', 'grafik/ret-blondie.webp',
   'grafik/ret-hytteostboller.webp', 'grafik/ret-havregrynskugler.webp', 'grafik/ret-tunfrikadeller.webp',
@@ -105,6 +111,8 @@ const FILER = [
   'grafik/ret-bradepandekylling.webp', 'grafik/ret-kyllingekarry.webp',
   'grafik/ret-wok-med-nudler.webp', 'grafik/ret-ovnaeggekage.webp', 'grafik/ret-tomatsuppe-med-boenner.webp',
   'grafik/ret-minestrone.webp', 'grafik/ret-koedboller-i-tomatsovs.webp',
+  'grafik/ret-medister-i-ovn.webp', 'grafik/ret-poelse-boennegryde.webp', 'grafik/ret-kyllingefrikadeller.webp',
+  'grafik/ret-wraps-med-boenner.webp', 'grafik/ret-gryderis-med-kylling.webp',
   'grafik/gruppe-aftensmad.svg', 'grafik/gruppe-bagning.svg', 'grafik/gruppe-soede-sager.svg', 'grafik/gruppe-halloween.svg',
   'grafik/verbum-aelte.svg', 'grafik/verbum-haelde.svg', 'grafik/verbum-koge.svg', 'grafik/verbum-maale.svg', 'grafik/verbum-roere.svg',
   'grafik/verbum-rulle.svg', 'grafik/verbum-skaere.svg', 'grafik/verbum-smage.svg', 'grafik/verbum-stege.svg',

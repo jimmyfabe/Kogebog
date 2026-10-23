@@ -1,0 +1,62 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Gryderis med kylling, ærter og majs",
+  "description": "Ris kogt med bouillon og hel kylling i én gryde. Ærter, majs og grøntsager til sidst.",
+  "image": "grafik/ret-gryderis-med-kylling.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT25M",
+  "totalTime": "PT30M",
+  "recipeIngredient": [
+    "1 dåse majs",
+    "250 g ris",
+    "6 dl vand",
+    "1 grøntsagsbouillonterning",
+    "1 tsk paprika",
+    "300 g kyllingebryst",
+    "300 g frosne ærter",
+    "250 g frossen grøntsagsblanding",
+    "½ tsk salt"
+  ],
+  "tool": ["dåseåbner", "si", "kop", "gryde med låg", "tallerken", "2 gafler", "grydeske"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåserne: kanten er skarp. Lad vandet løbe fra." } },
+    { "@type": "HowToStep", "text": "Mål risene med en kop.", "tumbi": { "verbum": "maale", "ikoner": ["ris"], "note": "250 g ris er ca. 3 dl. Brug den samme kop til vandet." } },
+    { "@type": "HowToStep", "text": "Hæld ris og vand i en gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["ris", "vand"], "note": "Dobbelt så meget vand som ris: 6 dl. Gryden er kold, så barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Smuldr bouillonterningen ned i gryden.", "tumbi": { "verbum": "smuldre", "ikoner": ["bouillon"] } },
+    { "@type": "HowToStep", "text": "Drys paprika i gryden.", "tumbi": { "verbum": "drysse", "ikoner": ["krydderurt"] } },
+    { "@type": "HowToStep", "text": "Læg kyllingen oven på risene.", "tumbi": { "verbum": "pynte", "ikoner": ["koed"], "note": "Hele fileter. Gryden er kold. Timeren startes efter håndvasken." } },
+    { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: rå kylling kan give maveonde." } },
+    { "@type": "HowToStep", "text": "Kog risene under låg i 20 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1200, "note": "Høj varme, til det koger. Så helt lav varme. Løft ikke låget." } },
+    { "@type": "HowToStep", "text": "Træk kyllingen fra hinanden med to gafler.", "tumbi": { "verbum": "smuldre", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne tager kyllingen op på en tallerken: den skal være hvid hele vejen igennem. Barnet holder med den ene gaffel og trækker med den anden." } },
+    { "@type": "HowToStep", "text": "Hæld ærter, majs og grøntsager i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["aerter", "majs"], "note": "Ærter og grøntsager direkte fra frost. Gryden er varm: den voksne holder øje." } },
+    { "@type": "HowToStep", "text": "Rør kyllingen tilbage i gryden.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Lad gryden simre under låg i 5 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Lav varme. Så bliver grøntsagerne varme." } },
+    { "@type": "HowToStep", "text": "Smag gryderisen til med salt.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt"], "note": "Pust på skeen først." } }
+  ],
+  "tumbi": {
+    "id": "gryderis-med-kylling",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra en research af billig hverdagsmad til en børnefamilie (22-10-2026). Idé fra Coop Opskrifters one pot-tema. Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Tid og grønt er også et skøn (ikke målt), og grønt er uden bælgfrugter og kartofler.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 53,
+    "pris_dato": "2026-10",
+    "groent_g": 835,
+    "ingredienser": [
+      { "ikon": "majs", "maengde": "1 dåse", "vare": "majs", "antal": 1, "enhed": "stk" },
+      { "ikon": "ris", "maengde": "250 g", "vare": "ris", "antal": 250, "enhed": "g" },
+      { "ikon": "vand", "maengde": "6 dl", "vare": "vand" },
+      { "ikon": "bouillon", "maengde": "1", "vare": "bouillonterninger", "antal": 1, "enhed": "stk" },
+      { "ikon": "krydderurt", "maengde": "1 tsk", "vare": "paprika" },
+      { "ikon": "koed", "maengde": "300 g", "vare": "kyllingebryst", "antal": 300, "enhed": "g" },
+      { "ikon": "aerter", "maengde": "300 g", "vare": "aerter", "antal": 300, "enhed": "g" },
+      { "ikon": "aerter", "maengde": "250 g", "vare": "groentsagsblanding", "antal": 250, "enhed": "g" },
+      { "ikon": "salt", "maengde": "½ tsk", "vare": "salt" }
+    ]
+  }
+}
