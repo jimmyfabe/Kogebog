@@ -60,3 +60,5 @@ export const DAG_OPTAGET = r('Der er allerede mad på den dag. Tryk på en anden
 export const UGE_TAK = r('Tak! Nu står det på ugeplanen. Hvem skal vælge nu?', 'faelles/uge-tak.mp3');
 export const ALLE_VALGT = r('Tak! Nu har I begge valgt. Vis ugeplanen til en voksen.', 'faelles/uge-alle-valgt.mp3');
 export const UGE_FULD = r('Nu er hele ugen fuld. Godt gået! Vis ugeplanen til en voksen.', 'faelles/uge-fuld.mp3');
+// Valget kunne ikke gemmes (lageret er fuldt eller slået fra): barnet henter en voksen (code review U7, 23-10)
+export const GEM_FEJL = r('Det virkede ikke. Hent en voksen.', 'faelles/uge-gem-fejl.mp3');

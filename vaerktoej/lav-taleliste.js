@@ -36,7 +36,7 @@ export function alleReplikker(retter = alleRetter()) {
   }
   // Børnenes valg af ugens mad (js/ugeplan.js): alle tre dyr kan vælge, men kun Rosa og Pip bliver færdige (Bo er den
   // voksne), alle syv dage, og navnet på hver ret i ugeplanen (tumbi.ugeplan)
-  replikker.push(R.UGE_HVEM, R.HVILKEN_DAG, R.DAG_OPTAGET, R.UGE_TAK, R.ALLE_VALGT, R.UGE_FULD,
+  replikker.push(R.UGE_HVEM, R.HVILKEN_DAG, R.DAG_OPTAGET, R.UGE_TAK, R.ALLE_VALGT, R.UGE_FULD, R.GEM_FEJL,
     ...Object.keys(DYR).map(R.dyrVaelger), ...['rosa', 'pip'].map(R.dyrFaerdig), ...[0, 1, 2, 3, 4, 5, 6].map(R.dag));
   for (const m of retter) if (m.uge) replikker.push(R.ugeRet(m));
   return replikker;

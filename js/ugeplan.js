@@ -930,40 +930,12 @@ function dagValgSkaerm(p, dyr, m) {
     }, brikIndhold(d, i, valgt ? m : null)));
   });
 
-  const bekraeft = () => {
-    const i = barn.dag;
-    const q = hentPlan();
-    if (q.dage[i]) {
-      barn.dag = null;
-      tegnIgen('dag-' + i);
-      Tale.sig(R.DAG_OPTAGET);
-      return;
-    }
-    if (harValgt(q, dyr)) { K.naviger('#/uge/vaelg', () => Tale.sig(R.dyrFaerdig(dyr))); return; }
-    const ny = gemPlan((x) => {
-      x.dage[i] = { ret: m.id, af: dyr, n: x.n };
-      return { dage: x.dage };
-    });
-    if (!ny) {
-      barnFejl = true;
-      K.vis();
-      return;
-    }
-    nulstilBarn();
-    K.annoncer(m.navn + ' står nu på ' + DAGE[i].toLowerCase() + '.');
-    K.naviger('#/uge/vaelg', () => {
-      if (ugenErFuld(ny)) Tale.sig(R.UGE_FULD);
-      else if (BOERN.includes(dyr) && BOERN.every((b) => harValgt(ny, b))) Tale.sig(R.ALLE_VALGT);
-      else Tale.sig(R.UGE_TAK);
-    });
-  };
-
   const vaelg = barn.dag !== null ? K.knap('Vælg', {
     klasse: 'primaer naeste',
     ikonNavn: 'tjek',
     ikonEfter: true,
     label: 'Vælg ' + DAGE[barn.dag].toLowerCase(),
-    onclick: bekraeft,
+    onclick: () => gemBarnetsValg(dyr, m, barn.dag),
   }) : null;
 
   return valgSide('dage',
@@ -976,12 +948,52 @@ function dagValgSkaerm(p, dyr, m) {
     vaelg);
 }
 
+// Fluebenet på dagene, og «Prøv igen» på fejlskærmen: gemmer barnets valg (dyr, ret og dag), hvis dagen stadig er fri.
+// Kan lageret ikke gemme, kommer fejlskærmen (igen), og stemmen beder barnet hente en voksen
+function gemBarnetsValg(dyr, m, i) {
+  barnFejl = false;
+  const q = hentPlan();
+  if (q.dage[i]) {
+    barn.dag = null;
+    tegnIgen('dag-' + i);
+    Tale.sig(R.DAG_OPTAGET);
+    return;
+  }
+  if (harValgt(q, dyr)) { K.naviger('#/uge/vaelg', () => Tale.sig(R.dyrFaerdig(dyr))); return; }
+  const ny = gemPlan((x) => {
+    x.dage[i] = { ret: m.id, af: dyr, n: x.n };
+    return { dage: x.dage };
+  });
+  if (!ny) {
+    barnFejl = true;
+    K.vis();
+    document.querySelector('main h1')?.focus({ preventScroll: true });
+    Tale.sig(R.GEM_FEJL);
+    return;
+  }
+  nulstilBarn();
+  K.annoncer(m.navn + ' står nu på ' + DAGE[i].toLowerCase() + '.');
+  K.naviger('#/uge/vaelg', () => {
+    if (ugenErFuld(ny)) Tale.sig(R.UGE_FULD);
+    else if (BOERN.includes(dyr) && BOERN.every((b) => harValgt(ny, b))) Tale.sig(R.ALLE_VALGT);
+    else Tale.sig(R.UGE_TAK);
+  });
+}
+
+// Valget kunne ikke gemmes. Barnet hører, at det skal hente en voksen; «Prøv igen» gemmer det samme valg igen, og vejen
+// til oversigten ligger bag et hold som på de andre børneskærme (code review U7, 23-10)
 function barnGemFejl() {
+  const m = barn.ret && model(barn.ret);
+  const igen = () => {
+    if (barn.dyr && m && barn.dag !== null) gemBarnetsValg(barn.dyr, m, barn.dag);
+    else { barnFejl = false; K.vis(); }
+  };
   return K.statusSkaerm({
     titel: 'Valget kunne ikke gemmes',
     tekst: 'Denne enhed kunne ikke gemme ugeplanen. Måske er privat browsing slået til, eller lageret er fuldt. Den voksne kan prøve igen.',
     handling: el('div', { class: 'status-knapper' },
-      K.knap('Prøv igen', { klasse: 'primaer', ikonNavn: 'igen', onclick: () => { barnFejl = false; K.vis(); } }),
-      K.knap('Til ugeplanen', { ikonNavn: 'kalender', onclick: () => K.naviger('#/uge') })),
+      K.knap('Læs op', { klasse: 'laes-op', ikonNavn: 'hoejttaler', onclick: (e) => Tale.sig(R.GEM_FEJL, { knap: e.currentTarget }) }),
+      K.knap('Prøv igen', { klasse: 'primaer', ikonNavn: 'igen', onclick: igen }),
+      tilUgeplanen()),
   });
 }

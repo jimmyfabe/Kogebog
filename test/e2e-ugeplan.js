@@ -601,7 +601,8 @@ async function oversigtDesktop(browser, H) {
 
 // Det, stemmen sagde sidst (den falske stemme i test-e2e.js), og det, den skal sige: replikkens tekst i talform
 const sagt = (side) => side.evaluate(() => (window.__tale[window.__tale.length - 1] || {}).tekst || '');
-const siger = (replik) => tilTale(replik.tekst);
+// (En replik, der ikke findes i den udgave, der testes, giver en tekst, stemmen aldrig siger, i stedet for en fejl)
+const siger = (replik) => (replik ? tilTale(replik.tekst) : '«replikken findes ikke»');
 const VAELG = 'button.knap.primaer.naeste';
 const valgHash = (side, h) => side.evaluate((x) => { location.hash = x; }, h);
 
@@ -760,11 +761,22 @@ async function boernValg(browser, H) {
   await venterPaa(side, () => document.querySelector('h1')?.textContent === 'Valget kunne ikke gemmes', null, n + ': et fuldt lager skal give fejlskærmen');
   tjek((await ugeLager(side)).dage[2] === null, n + ': intet er gemt, når lageret fejler');
   await tjekLayout(side, n + ' børnene: kunne ikke gemme');
-  await side.evaluate(() => { window.__lagerFejl = false; });
+  await foto(side, n + '-boern-gem-fejl');
+  // Fejlskærmen siger, at barnet skal hente en voksen, og vejen til oversigten ligger bag et hold (code review U7, 23-10)
+  tjek(await sagt(side) === siger(R.GEM_FEJL), n + ': fejlskærmen siger, at barnet skal hente en voksen (' + await sagt(side) + ')');
+  tjek(await side.locator('.til-ugeplan').count() === 1 && await side.locator('button:has-text("Til ugeplanen")').count() === 0,
+    n + ': fejlskærmens vej til oversigten ligger bag et hold');
+  // «Prøv igen» gemmer det samme valg igen. Fejler lageret stadig, bliver fejlskærmen, og stemmen siger det igen
+  const foerIgen = await side.evaluate(() => window.__tale.length);
   await tryk(side, 'button:has-text("Prøv igen")');
-  await side.waitForSelector('.dag-brik.valgt[data-dag="2"]');
-  await tryk(side, VAELG);
-  await hvem('«Prøv igen» og fluebenet skal gemme');
+  await venterPaa(side, (i) => window.__tale.length > i, foerIgen, n + ': «Prøv igen» med et fuldt lager skal sige noget');
+  tjek(await h1(side) === 'Valget kunne ikke gemmes' && await sagt(side) === siger(R.GEM_FEJL),
+    n + ': «Prøv igen» med et fuldt lager bliver på fejlskærmen (' + await h1(side) + ', ' + await sagt(side) + ')');
+  await side.evaluate(() => { window.__lagerFejl = false; });
+  // (Uden rettelsen er «Prøv igen» væk her, og dagen er valgt: fluebenet gemmer, så resten af testen kan køre videre)
+  if (await side.locator('button:has-text("Prøv igen")').count()) await tryk(side, 'button:has-text("Prøv igen")');
+  else if (await side.locator(VAELG).count()) await tryk(side, VAELG);
+  await hvem('«Prøv igen» skal gemme valget, når lageret virker');
   tjek(JSON.stringify((await ugeLager(side)).dage[2]) === JSON.stringify({ ret: a, af: 'bo', n: 4 }), n + ': «Prøv igen» gemmer Bos valg');
   tjek(await sagt(side) === siger(R.UGE_TAK), n + ': Bo får «Tak», ikke «I har begge valgt» (' + await sagt(side) + ')');
 
