@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { saml, visMaengde, vareTekst, grupper, tekst, manglerTekst, MAKS_M } from '../js/indkoeb.js';
+import { saml, visMaengde, vareTekst, grupper, tekst, manglerTekst, holdSammen, MAKS_M } from '../js/indkoeb.js';
 import { kod, afkod, fnv1a, kontrolsum, ukendtTekst, kodeFraTekst, BESKED_NYERE, BESKED_UGYLDIG, BESKED_GAMMEL } from '../js/plankode.js';
 import * as lager from '../js/lager.js';
 
@@ -148,6 +148,19 @@ test('linjer, der ikke kan lægges sammen, og retter uden for ugeplanen springes
   assert.deepEqual(saml([{ ret: lille([['madlavningsflode', 1, 'dl'], ['madlavningsflode', 2, 'spsk']]), n: 4 }]), [{ id: 'madlavningsflode', m: 130 }]);
   assert.throws(() => saml('koedsovs'), TypeError);
   assert.throws(() => saml(null), TypeError);
+});
+
+// På skærmen og i printet: tal og enhed brydes ikke over to linjer («1 pakke (500 | g)» på 360 px, UI-review V2, 23-10).
+// Mængden selv og teksten, der deles, har almindelige mellemrum
+test('mængden, som den vises, holder tal og enhed sammen med et hårdt mellemrum', () => {
+  const H = '\u00a0';
+  assert.equal(holdSammen('1 pakke (500 g)'), '1' + H + 'pakke (500' + H + 'g)');
+  assert.equal(holdSammen('2 flasker (1 kg)'), '2' + H + 'flasker (1' + H + 'kg)');
+  assert.equal(holdSammen('1 bæger (2,5 dl)'), '1' + H + 'bæger (2,5' + H + 'dl)');
+  assert.equal(holdSammen('½ dl'), '½' + H + 'dl');
+  assert.equal(holdSammen('4 fed'), '4' + H + 'fed');
+  assert.equal(holdSammen(''), '');
+  assert.equal(vareTekst('spaghetti', 500), '1 pakke (500 g)');
 });
 
 test('en vare kan højst have 100.000 i sin enhed, og listen viser kun kendte varer', () => {

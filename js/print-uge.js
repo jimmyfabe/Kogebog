@@ -5,7 +5,7 @@
 import { el } from './dom.js';
 import { hentIndex, hentRet } from './data.js';
 import * as Lager from './lager.js';
-import { saml, grupper, manglerTekst } from './indkoeb.js';
+import { saml, grupper, manglerTekst, holdSammen } from './indkoeb.js';
 import { DYR, grafikRet, grafikDyr } from './katalog.js';
 import { DAGE, ugeNr, dagDato, planMandag } from './tid.js';
 import { minutterTekst } from './tekst.js';
@@ -76,7 +76,7 @@ function tegn(ark, p, hentet) {
     el('h3', { tekst: g.navn }),
     el('ul', { class: 'tjek' }, g.varer.map((v) => el('li', {},
       el('span', { class: 'vare-navn', tekst: v.navn }),
-      v.maengde ? el('span', { class: 'maengde', tekst: v.maengde }) : null)))));
+      v.maengde ? el('span', { class: 'maengde', tekst: holdSammen(v.maengde) }) : null)))));
 
   ark.replaceChildren(
     el('section', { class: 'uge-side', 'aria-labelledby': 'p-uge' },

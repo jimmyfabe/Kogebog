@@ -261,6 +261,28 @@ async function telefon(browser, H) {
     await vent(150);
     await tjekLayout(side, n + ' indkøbsliste ' + b + '×' + h);
     await foto(side, n + '-ugeplan-liste-' + b + 'x' + h);
+    // Lange varenavne deles med bindestreg (som på forsidens kort), og tal og enhed står på samme linje: før stod der
+    // «Madlavningsfl|øde» og «1 pakke (500 | g)» på 360 px (UI-review V2, 23-10)
+    const v2 = await side.evaluate(() => {
+      const udenDeling = [...document.querySelectorAll('.vare-navn')].filter((e) => {
+        const cs = getComputedStyle(e);
+        return (cs.hyphens || cs.webkitHyphens) !== 'auto';
+      }).length;
+      const delt = [];
+      for (const e of document.querySelectorAll('li[data-vare] .vare-maengde')) {
+        const t = e.firstChild;
+        if (!t || t.nodeType !== 3) continue;
+        for (const m of t.data.matchAll(/[\d½][\d,]*[ \u00a0]+[^ \u00a0()]+/g)) {
+          const r = document.createRange();
+          r.setStart(t, m.index);
+          r.setEnd(t, m.index + m[0].length);
+          if (new Set([...r.getClientRects()].map((x) => Math.round(x.top))).size > 1) delt.push(m[0]);
+        }
+      }
+      return { udenDeling, delt, ialt: document.querySelectorAll('li[data-vare] .vare-maengde').length };
+    });
+    tjek(!v2.udenDeling, n + ' indkøbsliste ' + b + '×' + h + ': ' + v2.udenDeling + ' varenavne deles uden bindestreg');
+    tjek(v2.ialt > 0 && !v2.delt.length, n + ' indkøbsliste ' + b + '×' + h + ': tal og enhed delt over to linjer: ' + v2.delt.join(', ') + ' (' + v2.ialt + ' mængder)');
   }
   await side.setViewportSize(skaerm.viewport);
   tjek(!side.fejl.length, n + ' ugeplan: ' + side.fejl.join(' | '));
@@ -938,7 +960,9 @@ const printListe = (side) => side.evaluate(() => [...document.querySelectorAll('
   navn: s.querySelector('h3').textContent,
   varer: [...s.querySelectorAll('li')].map((li) => li.querySelector('.vare-navn').textContent + '|' + (li.querySelector('.maengde')?.textContent || '')),
 })));
-const listeFor = (H, dage) => grupper(forventet(H, dage).varer).map((g) => ({ navn: g.navn, varer: g.varer.map((v) => v.navn + '|' + v.maengde) }));
+// Printet viser mængden med hårde mellemrum mellem tal og enhed (holdSammen i js/indkoeb.js; UI-review V2, 23-10)
+const holdSammen = (t) => t.replace(/([\d½]) (?=\S)/g, '$1\u00a0');
+const listeFor = (H, dage) => grupper(forventet(H, dage).varer).map((g) => ({ navn: g.navn, varer: g.varer.map((v) => v.navn + '|' + holdSammen(v.maengde)) }));
 
 async function ugePrint(browser, H) {
   const { BASE, SKAERME, RETTER, nySide, tjek, tjekLayout, foto, tryk, venterPaa, maal } = H;

@@ -56,6 +56,10 @@ function eksakt(m, enhed) {
   return tal(m) + ' ' + enhed;
 }
 
+// Mængden, som skærmen og printet viser den: tal og enhed holdes sammen med et hårdt mellemrum, så «500 g» og «1 pakke»
+// ikke deles over to linjer (UI-review V2, 23-10). Mængden selv og teksten, der deles (tekst()), har almindelige mellemrum
+export const holdSammen = (maengde) => String(maengde || '').replace(/([\d½]) (?=\S)/g, '$1\u00a0');
+
 // Mængden på listen, rundet op. Med en pakke: «3 dåser (1,2 kg)», hvor parentesen er pakkernes indhold. Uden: stk og fed
 // til hele, gram til 10 g (fra 1 kg til 100 g: «1,2 kg») og ml til ½ dl (fra 1 l til 1 dl: «1,5 l»). Tom tekst for 0
 export function visMaengde(m, enhed, pakke = null) {

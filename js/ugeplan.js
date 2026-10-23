@@ -10,7 +10,7 @@
 import { el, ikon } from './dom.js';
 import * as Lager from './lager.js';
 import { afkod, kod, kodeFraTekst, ukendtTekst, BESKED_UGYLDIG, BESKED_NYERE, BESKED_GAMMEL } from './plankode.js';
-import { saml, grupper, tekst as listeTekst, manglerTekst } from './indkoeb.js';
+import { saml, grupper, tekst as listeTekst, manglerTekst, holdSammen } from './indkoeb.js';
 import { DYR, grafikIngrediens, grafikRet, grafikDyr } from './katalog.js';
 import { ugeNr, dagDato, planMandag, DAGE } from './tid.js';
 import { minutterTekst } from './tekst.js';
@@ -296,7 +296,7 @@ function listeSkaerm(liste) {
       K.billede(grafikIngrediens(v.ikon), '', 'vare-ikon'),
       el('span', { class: 'vare-tekst' },
         el('span', { class: 'vare-navn', tekst: v.navn }),
-        v.maengde ? el('span', { class: 'vare-maengde', tekst: v.maengde }) : null));
+        v.maengde ? el('span', { class: 'vare-maengde', tekst: holdSammen(v.maengde) }) : null));
     // Trykket gør det, knappen viser (koebt fra tegningen), ikke det modsatte af lageret: en fane, der ikke er tegnet om
     // efter en afkrydsning i en anden fane, må ikke fjerne den (code review F1, 23-10)
     b.addEventListener('click', spaer(() => {
@@ -337,7 +337,7 @@ function listeSkaerm(liste) {
         el('span', { class: 'vare vare-stille' },
           K.billede(grafikIngrediens(v.ikon), '', 'vare-ikon'),
           el('span', { class: 'vare-tekst' }, el('span', { class: 'vare-navn', tekst: v.navn }),
-            v.maengde ? el('span', { class: 'vare-maengde', tekst: v.maengde }) : null)),
+            v.maengde ? el('span', { class: 'vare-maengde', tekst: holdSammen(v.maengde) }) : null)),
         flytKnap(v, true)))));
   }
 

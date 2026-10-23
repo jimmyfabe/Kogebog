@@ -590,7 +590,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .vare-tjek .ikon { width: 24px; height: 24px; stroke-width: 3; opacity: 0; }
 .vare-ikon { flex: none; width: 44px; height: 44px; }
 .vare-tekst { display: flex; flex-direction: column; min-width: 0; line-height: 1.2; }
-.vare-navn { font-size: 20px; font-weight: 750; overflow-wrap: anywhere; }
+/* Lange sammensatte ord deles med bindestreg som på forsidens kort (før «Madlavningsfl|øde» på 390 px, UI-review V2) */
+.vare-navn { font-size: 20px; font-weight: 750; overflow-wrap: anywhere; -webkit-hyphens: auto; hyphens: auto; }
 .vare-maengde { font-size: 17px; color: var(--kakao-blid); }
 .varer > li.koebt { background: var(--creme); }
 .koebt .vare-tjek { background: var(--urt); }
