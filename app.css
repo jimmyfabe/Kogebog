@@ -782,7 +782,8 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
 
 /* Valget kunne ikke gemmes: barnets dag og ret med et orange kryds (voksen-hjælpens farve) og en orange ring, så man kan
    se det uden lyd. Teksten under er til den voksne (UI-review V3, 23-10) */
-.gem-fejl { display: flex; flex-direction: column; align-items: center; gap: 22px; width: 100%; max-width: 620px; text-align: center; }
+/* Ikke .gem-fejl: det er klassen på hele skærmen (valgSide), og så blev skærmen 620 px bred */
+.gem-fejl-indhold { display: flex; flex-direction: column; align-items: center; gap: 22px; width: 100%; max-width: 620px; text-align: center; }
 .dag-brik.ikke-gemt { width: min(100%, 180px); box-shadow: 0 6px 0 var(--kakao), 0 0 0 6px var(--raev); }
 .ikke-gemt .brik-tallerken { border-style: solid; }
 .ikke-gemt-maerke { position: absolute; top: -16px; right: -16px; display: grid; place-items: center; width: 60px; height: 60px; border: var(--kant); border-radius: 50%; background: var(--raev); }

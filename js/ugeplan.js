@@ -1031,7 +1031,7 @@ function barnGemFejl() {
   return valgSide('gem-fejl',
     valgHoved('Valget kunne ikke gemmes',
       K.knap('Læs op', { klasse: 'laes-op', ikonNavn: 'hoejttaler', onclick: (e) => Tale.sig(R.GEM_FEJL, { knap: e.currentTarget }) })),
-    el('div', { class: 'gem-fejl' }, brik,
+    el('div', { class: 'gem-fejl-indhold' }, brik,
       el('p', { class: 'gem-fejl-tekst', tekst: 'Denne enhed kunne ikke gemme ugeplanen. Måske er privat browsing slået til, eller lageret er fuldt. Den voksne kan prøve igen.' })),
     tilUgeplanen(),
     el('span', { class: 'skub' }),

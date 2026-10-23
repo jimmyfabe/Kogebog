@@ -914,6 +914,15 @@ async function boernValg(browser, H) {
   }, a);
   tjek(fejlBillede.hus === 1 && fejlBillede.dag === '2' && fejlBillede.ret && fejlBillede.kryds && !fejlBillede.gladBo,
     n + ': fejlskærmen viser dagen og retten med et kryds og har huset (' + JSON.stringify(fejlBillede) + ')');
+  // Skærmen fylder hele bredden som de andre børneskærme, og bunden går ud til kanten (efter V3 ramte .gem-fejl også
+  // <main class="… gem-fejl">, så hele skærmen blev 620 px bred og stod til venstre)
+  const fejlBredde = await side.evaluate(() => ({
+    main: Math.round(document.querySelector('main.boern-valg')?.getBoundingClientRect().width ?? 0),
+    bund: Math.round(document.querySelector('.valg-bund')?.getBoundingClientRect().right ?? 0),
+    vindue: innerWidth,
+  }));
+  tjek(fejlBredde.main === fejlBredde.vindue && fejlBredde.bund >= fejlBredde.vindue - 40,
+    n + ': fejlskærmen fylder hele bredden som de andre børneskærme (' + JSON.stringify(fejlBredde) + ')');
   // «Prøv igen» gemmer det samme valg igen. Fejler lageret stadig, bliver fejlskærmen, og stemmen siger det igen
   const foerIgen = await side.evaluate(() => window.__tale.length);
   await tryk(side, 'button:has-text("Prøv igen")');
