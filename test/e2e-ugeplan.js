@@ -1013,7 +1013,8 @@ const svarer = (url) => new Promise((ok) => http.get(url, (r) => { r.resume(); o
 const pause = (ms) => new Promise((r) => setTimeout(r, ms));
 // Uden net venter trin 3-5 op til 20 s. Målt 23-10: siden kommer fra service workeren med det samme, men WebKits fetch
 // til den stoppede server svarer ikke, så opskrifterne kommer først fra cachen efter sw.js' 4 s (index.json og så
-// retterne: 6-8 s). Mod 1a3b580 (uden de 4 s) kom de ikke inden for 20 s. Tiderne står i målingerne
+// retterne: 6-8 s; efter code review F2 tager retterne cachen med det samme, når index.json ikke fik svar). Mod 1a3b580
+// (uden de 4 s) kom de ikke inden for 20 s. Tiderne står i målingerne
 const UDEN_NET_MS = 20000;
 const tider = async (side, t0) => {
   const nav = await side.evaluate(() => { const e = performance.getEntriesByType('navigation')[0]; return e ? e.responseEnd : -1; }).catch(() => -1);

@@ -49,8 +49,8 @@ function falskeCaches(start = {}) {
   };
 }
 
-// ur: falsk setTimeout/clearTimeout (standard: de rigtige), så testen selv kan lade tiden gå
-function lavSw({ caches, fetch, ur = { setTimeout, clearTimeout } }) {
+// ur: falsk setTimeout/clearTimeout (standard: de rigtige), så testen selv kan lade tiden gå. naa: falsk Date.now()
+function lavSw({ caches, fetch, ur = { setTimeout, clearTimeout }, naa }) {
   const haendelser = {};
   const self = {
     addEventListener: (type, fn) => { haendelser[type] = fn; },
@@ -59,7 +59,8 @@ function lavSw({ caches, fetch, ur = { setTimeout, clearTimeout } }) {
     clients: { claim: async () => {} },
     skipWaiting: async () => {},
   };
-  const ctx = vm.createContext({ self, caches, fetch, Request: SwRequest, Response, URL, AbortController, console, setTimeout: ur.setTimeout, clearTimeout: ur.clearTimeout });
+  const ctx = vm.createContext({ self, caches, fetch, Request: SwRequest, Response, URL, AbortController, console, setTimeout: ur.setTimeout, clearTimeout: ur.clearTimeout,
+    ...(naa ? { Date: class extends Date { static now() { return naa(); } } } : {}) });
   vm.runInContext(KILDE + '\n;globalThis.__FILER = FILER; globalThis.__VERSION = VERSION; globalThis.__INDHOLD = typeof INDHOLD === \'undefined\' ? undefined : INDHOLD;'
     + ' globalThis.__LYD = typeof LYD === \'undefined\' ? undefined : LYD; globalThis.__LYD_CACHE = typeof LYD_CACHE === \'undefined\' ? undefined : LYD_CACHE;', ctx);
   return { haendelser, FILER: ctx.__FILER, VERSION: ctx.__VERSION, INDHOLD: ctx.__INDHOLD, LYD: ctx.__LYD, LYD_CACHE: ctx.__LYD_CACHE };
@@ -357,4 +358,59 @@ test('en opskrift, nettet ikke svarer på, kommer fra cachen efter 4 sekunder', 
   sw3.haendelser.fetch(h3);
   assert.equal(await (await h3.svar).text(), 'hurtig');
   assert.equal(u3.ure[0].stoppet, true, 'uret skal stoppes, når svaret er kommet');
+});
+
+// Nettet svarer aldrig: index.json venter HENT_MS og kommer så fra cachen. Det huskes i 30 s, så retterne, der hentes
+// lige bagefter, kommer fra cachen med det samme, og hele hentningen venter ca. 4 s og ikke 8 (code review F2, 23-10).
+// Nettet spørges stadig, og et svar, der kommer senere, gemmes. Efter de 30 s er det netværk først igen
+test('når nettet ikke svarede, kommer de næste opskrifter fra cachen med det samme i 30 sekunder', async () => {
+  const ure = [];
+  const ur = { setTimeout: (fn, ms) => { ure.push({ fn, ms, stoppet: false }); return ure.length; }, clearTimeout: (id) => { if (ure[id - 1]) ure[id - 1].stoppet = true; } };
+  const naeste = () => new Promise((r) => setImmediate(r));
+  let tid = 1e12;
+  let hurtig = false;
+  const svar = [];
+  const caches = falskeCaches();
+  const sw = lavSw({ caches, ur, naa: () => tid,
+    fetch: (req) => (hurtig ? Promise.resolve(ok('ny ' + absolut(req).split('/').pop())) : new Promise((ja) => { svar.push(ja); })) });
+  const cache = await caches.open(sw.VERSION);
+  await cache.put(SCOPE + 'opskrifter/index.json', ok('gammel index'));
+  await cache.put(SCOPE + 'opskrifter/pandekager.json', ok('gammel pandekager'));
+  const hent = async (fil) => {
+    const h = haendelse(new SwRequest('opskrifter/' + fil));
+    sw.haendelser.fetch(h);
+    h.afgjort = false;
+    h.svar.then(() => { h.afgjort = true; }, () => { h.afgjort = true; });
+    await naeste();
+    await naeste();
+    return h;
+  };
+
+  // index.json: efter 4 s fra cachen
+  const h1 = await hent('index.json');
+  assert.equal(h1.afgjort, false, 'index.json venter på nettet til uret');
+  ure[0].fn();
+  assert.equal(await (await h1.svar).text(), 'gammel index');
+
+  // Retten et sekund senere: fra cachen uden at vente på et nyt ur, men nettet spørges stadig
+  tid += 1000;
+  const h2 = await hent('pandekager.json');
+  assert.equal(h2.afgjort, true, 'retten skal komme fra cachen uden at vente 4 s igen');
+  assert.equal(await (await h2.svar).text(), 'gammel pandekager');
+  assert.equal(svar.length, 2, 'nettet skal stadig spørges om retten');
+  svar[1](ok('ny pandekager'));
+  await Promise.all(h2.ventet);
+  assert.equal(await (await cache.match(SCOPE + 'opskrifter/pandekager.json')).text(), 'ny pandekager', 'et sent svar gemmes');
+
+  // En ret, der ikke er gemt: der ventes på nettet, også inden for de 30 s
+  const h3 = await hent('tunfrikadeller.json');
+  assert.equal(h3.afgjort, false, 'uden noget i cachen ventes der på nettet');
+  svar[2](ok('tun fra nettet'));
+  assert.equal(await (await h3.svar).text(), 'tun fra nettet');
+
+  // Efter 30 s er det netværk først igen
+  tid += 30000;
+  hurtig = true;
+  const h4 = await hent('pandekager.json');
+  assert.equal(await (await h4.svar).text(), 'ny pandekager.json', 'efter 30 s skal opskriften komme fra nettet');
 });

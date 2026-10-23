@@ -12,6 +12,7 @@ const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '62514f04783c4e58'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
 const HENT_MS = 4000; // så længe venter en lydfil (før iPad-stemmen tager over) eller en opskrift (før cachen) på nettet
+const LANGSOM_MS = 30000; // så længe tager opskrifterne cachen med det samme, efter at nettet ikke svarede inden for HENT_MS
 const FILER = [
   './',
   'index.html',
@@ -167,16 +168,29 @@ self.addEventListener('activate', (e) => {
 
 // Svarer nettet ikke inden for HENT_MS (svag 4G, wifi uden internet), kommer opskriften fra cachen, og nettets svar
 // gemmes, hvis det kommer senere. Er intet gemt, ventes der på nettet (code review U3, 23-10: før ventede #/hent, til
-// Safari selv gav op)
+// Safari selv gav op). Det huskes i LANGSOM_MS, så retterne, der hentes efter index.json, tager cachen med det samme:
+// ellers ventede de HENT_MS mere, i alt ca. 8 s (code review F2, 23-10). Nettet spørges stadig, og svaret gemmes
+let langsomTil = 0;
 async function netvaerkFoerst(e, req) {
   const cache = await caches.open(VERSION);
   const fraNet = fetch(req, { cache: 'no-cache' });
   e.waitUntil(fraNet.then((svar) => (svar.ok ? cache.put(req, svar.clone()) : null)).catch(() => {}));
+  if (Date.now() < langsomTil) {
+    const gemt = await cache.match(req, { ignoreSearch: true });
+    if (gemt) return gemt;
+  }
   let ur;
   const forSent = new Promise((ok) => { ur = setTimeout(() => ok(null), HENT_MS); });
   try {
     let svar = await Promise.race([fraNet, forSent]);
-    if (svar === null) svar = (await cache.match(req, { ignoreSearch: true })) || await fraNet;
+    if (svar === null) {
+      const gemt = await cache.match(req, { ignoreSearch: true });
+      if (gemt) {
+        langsomTil = Date.now() + LANGSOM_MS;
+        return gemt;
+      }
+      svar = await fraNet;
+    }
     if (svar.status >= 500) return (await cache.match(req, { ignoreSearch: true })) || svar;
     return svar;
   } catch (err) {
