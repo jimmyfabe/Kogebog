@@ -1,0 +1,61 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Kyllinge-nudelsuppe",
+  "description": "Hurtig suppe med kylling, suppeurter, ærter, gulerødder, nudler og majs.",
+  "image": "grafik/ret-kyllinge-nudelsuppe.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT20M",
+  "totalTime": "PT25M",
+  "recipeIngredient": [
+    "½ dåse majs",
+    "15 dl vand",
+    "2 grøntsagsbouillonterninger",
+    "250 g kyllingebryst",
+    "300 g frosne suppeurter",
+    "400 g frosne ærter og gulerødder",
+    "200 g nudler",
+    "½ tsk salt"
+  ],
+  "tool": ["dåseåbner", "si", "stor gryde med låg", "grydeske", "tallerken", "2 gafler"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad vandet løbe fra. Brug halvdelen." } },
+    { "@type": "HowToStep", "text": "Hæld vand i en stor gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["vand"], "note": "15 dl vand. Gryden er kold, så barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Smuldr bouillonterningerne ned i gryden.", "tumbi": { "verbum": "smuldre", "ikoner": ["bouillon"] } },
+    { "@type": "HowToStep", "text": "Kog suppen op.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "note": "Låg på og høj varme. Gryden på en bagerste plade, med håndtagene ind." } },
+    { "@type": "HowToStep", "text": "Læg kyllingen i suppen.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["koed"], "note": "Hel filet. Den voksne lægger den forsigtigt i med en grydeske. Timeren startes efter håndvasken." } },
+    { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: rå kylling kan give maveonde." } },
+    { "@type": "HowToStep", "text": "Lad kyllingen simre i 12 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 720, "note": "Svag varme, låg på." } },
+    { "@type": "HowToStep", "text": "Kom suppeurter, ærter og gulerødder i.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["gulerod", "aerter"], "note": "Den voksne tager kyllingen op på en tallerken først: den skal være hvid hele vejen igennem. Grøntsagerne kommer direkte fra frost." } },
+    { "@type": "HowToStep", "text": "Kog suppen i 5 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300 } },
+    { "@type": "HowToStep", "text": "Træk kyllingen fra hinanden med to gafler.", "tumbi": { "verbum": "smuldre", "voksen": true, "voksen_hjaelp": "varme", "note": "Kyllingen er varm. Barnet holder med den ene gaffel og trækker med den anden." } },
+    { "@type": "HowToStep", "text": "Knæk nudlerne ned i gryden.", "tumbi": { "verbum": "smuldre", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spaghetti"], "note": "Gryden er varm: den voksne holder øje, og barnet knækker fra kanten." } },
+    { "@type": "HowToStep", "text": "Kog nudlerne i 3 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "note": "Rør lidt, så de ikke klistrer." } },
+    { "@type": "HowToStep", "text": "Kom kylling og majs i suppen.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["majs"], "note": "Gryden er varm: den voksne holder øje." } },
+    { "@type": "HowToStep", "text": "Smag suppen til med salt.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt"], "note": "Pust på skeen først." } }
+  ],
+  "tumbi": {
+    "id": "kyllinge-nudelsuppe",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra en research af billig hverdagsmad til en børnefamilie (22-10-2026). Idé fra den danske hønsesuppe, gjort hurtig, og Coop Opskrifters suppetema. Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Tid og grønt er også et skøn (ikke målt), og grønt er uden bælgfrugter og kartofler.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 52,
+    "pris_dato": "2026-10",
+    "groent_g": 840,
+    "ingredienser": [
+      { "ikon": "majs", "maengde": "½ dåse", "vare": "majs", "antal": 0.5, "enhed": "stk" },
+      { "ikon": "vand", "maengde": "15 dl", "vare": "vand" },
+      { "ikon": "bouillon", "maengde": "2", "vare": "bouillonterninger", "antal": 2, "enhed": "stk" },
+      { "ikon": "koed", "maengde": "250 g", "vare": "kyllingebryst", "antal": 250, "enhed": "g" },
+      { "ikon": "gulerod", "maengde": "300 g", "vare": "suppeurter", "antal": 300, "enhed": "g" },
+      { "ikon": "aerter", "maengde": "400 g", "vare": "aerter-gulerod", "antal": 400, "enhed": "g" },
+      { "ikon": "spaghetti", "maengde": "200 g", "vare": "nudler", "antal": 200, "enhed": "g" },
+      { "ikon": "salt", "maengde": "½ tsk", "vare": "salt" }
+    ]
+  }
+}

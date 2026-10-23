@@ -115,6 +115,9 @@ export const INGREDIENSER = {
   'soja': 'soja',
   'honning': 'honning',
   'kaal': 'kål',
+  'makrel': 'makrel i tomat',
+  'kikaerter': 'kikærter',
+  'bulgur': 'bulgur',
 };
 
 // Ikoner for råt kød og råt æg: efter dem skal der komme et trin med «vaske-haender».
@@ -196,6 +199,7 @@ export const VARER = {
   'smaa-kartofler': { navn: 'Små kartofler', afd: 'groent', enhed: 'g', ikon: 'kartoffel' },
   'revet-gulerod': { navn: 'Revne gulerødder', afd: 'groent', enhed: 'g', ikon: 'gulerod' },
   'snittet-kaal': { navn: 'Snittet kål', afd: 'groent', enhed: 'g', ikon: 'kaal' },
+  'peberfrugt': { navn: 'Peberfrugt', afd: 'groent', enhed: 'stk', ikon: 'peberfrugt' },
   // Brød
   'tortillas': { navn: 'Tortillas', afd: 'broed', enhed: 'stk', ikon: 'tortilla' },
   'rugbroed': { navn: 'Rugbrød', afd: 'broed', enhed: 'g', ikon: 'broed' },
@@ -222,6 +226,11 @@ export const VARER = {
   'suppehorn': { navn: 'Suppehorn', afd: 'toer', enhed: 'g', ikon: 'spaghetti' },
   'makaroni': { navn: 'Makaroni', afd: 'toer', enhed: 'g', ikon: 'spaghetti' },
   'hvide-boenner-tomat': { navn: 'Hvide bønner i tomat', afd: 'toer', enhed: 'stk', ikon: 'boenner', pakke: [1, 'dåse', 'dåser'] },
+  'mel': { navn: 'Hvedemel', afd: 'toer', enhed: 'g', ikon: 'mel' },
+  'makrel-tomat': { navn: 'Makrel i tomat', afd: 'toer', enhed: 'stk', ikon: 'makrel', pakke: [1, 'dåse', 'dåser'] },
+  'kikaerter': { navn: 'Kikærter', afd: 'toer', enhed: 'stk', ikon: 'kikaerter', pakke: [1, 'dåse', 'dåser'] },
+  'bulgur': { navn: 'Bulgur', afd: 'toer', enhed: 'g', ikon: 'bulgur' },
+  'fajitakrydderi': { navn: 'Fajitakrydderi (mildt)', afd: 'toer', enhed: 'stk', ikon: 'krydderurt', pakke: [1, 'pose', 'poser'] },
   // Køl
   'hakket-oksekoed': { navn: 'Hakket oksekød', afd: 'koel', enhed: 'g', ikon: 'koed', pakke: [500, 'bakke', 'bakker'] },
   'chorizo': { navn: 'Chorizo', afd: 'koel', enhed: 'g', ikon: 'chorizo', pakke: [250, 'pakke', 'pakker'] },
@@ -245,6 +254,7 @@ export const VARER = {
   'hakket-oksekoed-groent': { navn: 'Hakket oksekød med grønt', afd: 'koel', enhed: 'g', ikon: 'koed' },
   'medister': { navn: 'Medister', afd: 'koel', enhed: 'g', ikon: 'koed' },
   'partypoelser': { navn: 'Partypølser', afd: 'koel', enhed: 'g', ikon: 'poelse' },
+  'hytteost': { navn: 'Hytteost', afd: 'koel', enhed: 'g', ikon: 'hytteost' },
   // Frost. Uden pakke: posernes størrelse skifter mellem butikkerne, så listen viser gram
   'aerter': { navn: 'Ærter', afd: 'frost', enhed: 'g', ikon: 'aerter' },
   'broccoliblanding': { navn: 'Broccoli', afd: 'frost', enhed: 'g', ikon: 'broccoli' },

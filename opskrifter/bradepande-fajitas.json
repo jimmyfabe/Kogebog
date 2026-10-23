@@ -1,0 +1,59 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Bradepande-fajitas med kylling",
+  "description": "Kylling og grøntsager med mildt fajitakrydderi på én bradepande. Alle ruller deres egen fajita.",
+  "image": "grafik/ret-bradepande-fajitas.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT25M",
+  "totalTime": "PT30M",
+  "recipeIngredient": [
+    "1 dåse majs",
+    "700 g frossen grøntsagsblanding",
+    "2 spsk olie",
+    "350 g kyllingebryst",
+    "1 pose mildt fajitakrydderi",
+    "8 tortillas",
+    "200 g yoghurt naturel",
+    "80 g revet ost"
+  ],
+  "tool": ["dåseåbner", "si", "bradepande", "grydelapper", "2 gafler", "bagepapir", "skåle"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad vandet løbe fra." } },
+    { "@type": "HowToStep", "text": "Hæld grøntsagerne i en bradepande.", "tumbi": { "verbum": "haelde", "ikoner": ["aerter", "olie"], "note": "Tænd ovnen på 220 °C varmluft først. Direkte fra frost. Dryp 2 spsk olie over." } },
+    { "@type": "HowToStep", "text": "Læg kyllingen oven på grøntsagerne.", "tumbi": { "verbum": "pynte", "ikoner": ["koed"], "note": "Hele fileter." } },
+    { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: rå kylling kan give maveonde." } },
+    { "@type": "HowToStep", "text": "Drys krydderiet over det hele.", "tumbi": { "verbum": "drysse", "ikoner": ["krydderurt"], "note": "Fra en lille skål, uden at røre kyllingen." } },
+    { "@type": "HowToStep", "text": "Bag det hele i ovnen i 22 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1320, "note": "220 °C varmluft." } },
+    { "@type": "HowToStep", "text": "Tag bradepanden ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Den er meget varm. Den voksne tjekker, at kyllingen er hvid hele vejen igennem." } },
+    { "@type": "HowToStep", "text": "Pak tortillaerne ind i bagepapir.", "tumbi": { "verbum": "pakke-ind", "ikoner": ["tortilla"] } },
+    { "@type": "HowToStep", "text": "Lun tortillaerne i ovnen i 3 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "note": "Ovnen er stadig varm." } },
+    { "@type": "HowToStep", "text": "Tag tortillaerne ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme", "note": "Pakken er varm." } },
+    { "@type": "HowToStep", "text": "Træk kyllingen fra hinanden med to gafler.", "tumbi": { "verbum": "smuldre", "voksen": true, "voksen_hjaelp": "varme", "note": "Kyllingen er varm. Barnet holder med den ene gaffel og trækker med den anden." } },
+    { "@type": "HowToStep", "text": "Byg din egen fajita.", "tumbi": { "verbum": "rulle", "ikoner": ["tortilla", "majs", "yoghurt", "ost"], "note": "Kylling og grønt, majs, en klat yoghurt og ost. Rul tortillaen sammen." } }
+  ],
+  "tumbi": {
+    "id": "bradepande-fajitas",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra en research af billig hverdagsmad til en børnefamilie (22-10-2026). Idé fra Coops wraptema og Netto, «gyros med pandebrød» (samle-selv). Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Tid og grønt er også et skøn (ikke målt), og grønt er uden bælgfrugter og kartofler.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 80,
+    "pris_dato": "2026-10",
+    "groent_g": 985,
+    "ingredienser": [
+      { "ikon": "majs", "maengde": "1 dåse", "vare": "majs", "antal": 1, "enhed": "stk" },
+      { "ikon": "aerter", "maengde": "700 g", "vare": "groentsagsblanding", "antal": 700, "enhed": "g" },
+      { "ikon": "olie", "maengde": "2 spsk", "vare": "olie" },
+      { "ikon": "koed", "maengde": "350 g", "vare": "kyllingebryst", "antal": 350, "enhed": "g" },
+      { "ikon": "krydderurt", "maengde": "1 pose", "vare": "fajitakrydderi", "antal": 1, "enhed": "stk" },
+      { "ikon": "tortilla", "maengde": "8", "vare": "tortillas", "antal": 8, "enhed": "stk" },
+      { "ikon": "yoghurt", "maengde": "200 g", "vare": "yoghurt", "antal": 200, "enhed": "g" },
+      { "ikon": "ost", "maengde": "80 g", "vare": "revet-ost", "antal": 80, "enhed": "g" }
+    ]
+  }
+}
