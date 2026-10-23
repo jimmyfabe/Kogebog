@@ -271,6 +271,40 @@ async function telefon(browser, H) {
   await p.side.waitForSelector('text=Listen kunne ikke gemmes på telefonen').catch(() => tjek(false, n + ': et lager, der ikke kan skrives, skal give «Listen kunne ikke gemmes på telefonen»'));
   tjek(!p.side.fejl.length, n + ' uden lager: ' + p.side.fejl.join(' | '));
   await p.ctx.close();
+
+  // 13. To faner med samme liste (linket trykket to gange): et tryk i hver fane gemmer begge afkrydsninger, og når den
+  //     ene fane erstatter listen, skriver den anden aldrig den gamle uges afkrydsninger ind i den nye (code review U1, 23-10)
+  const t = await nySide(browser, skaerm, { serviceWorkers: 'block' });
+  const fane2 = await t.ctx.newPage();
+  fane2.fejl = [];
+  fane2.on('pageerror', (e) => fane2.fejl.push('pageerror: ' + e.message));
+  await t.side.goto(BASE + '/index.html#/hent/' + kode);
+  await venterPaa(t.side, () => location.hash === '#/indkoeb' && document.querySelector('.liste-tal'), null, n + ' to faner: linket i fane 1 skal vise listen');
+  await fane2.goto(BASE + '/index.html#/indkoeb');
+  await fane2.waitForSelector('.liste-tal');
+  const vid = await t.side.evaluate(() => [...document.querySelectorAll('li[data-vare]')].map((li) => li.dataset.vare));
+  await tryk(t.side, 'li[data-vare="' + vid[0] + '"] .vare');
+  await tryk(fane2, 'li[data-vare="' + vid[1] + '"] .vare');
+  let to = JSON.parse(await lager(t.side) || '{}');
+  tjek(JSON.stringify([...(to.koebt || [])].sort()) === JSON.stringify([vid[0], vid[1]].sort()),
+    n + ' to faner: et tryk i hver fane skal gemme begge afkrydsninger (' + JSON.stringify(to.koebt) + ', ventede ' + vid[0] + ' og ' + vid[1] + ')');
+  await venterPaa(t.side, (x) => document.querySelector('.liste-tal')?.textContent === x, '2 af ' + ialt + ' købt', n + ' to faner: fane 1 skal vise afkrydsningen fra fane 2');
+  tjek(await fane2.locator('.liste-tal').textContent() === '2 af ' + ialt + ' købt', n + ' to faner: fane 2 viser begge afkrydsninger (' + await fane2.locator('.liste-tal').textContent() + ')');
+  await tryk(t.side, 'li[data-vare="' + vid[2] + '"] .har-vi');
+  to = JSON.parse(await lager(t.side) || '{}');
+  tjek((to.harVi || []).join() === vid[2] && (to.koebt || []).length === 2, n + ' to faner: «Har vi» i fane 1 beholder fane 2s afkrydsning (' + JSON.stringify({ koebt: to.koebt, harVi: to.harVi }) + ')');
+  // Fane 2 erstatter listen med næste uges. Fane 1 skal vise den nye liste, og et tryk dér gemmer kun det ene tryk
+  await aabn(fane2, BASE, '#/hent/' + kode2);
+  await fane2.waitForSelector('button:has-text("Erstat listen")');
+  await tryk(fane2, 'button:has-text("Erstat listen")');
+  await venterPaa(fane2, () => location.hash === '#/indkoeb' && document.querySelector('.liste-tal'), null, n + ' to faner: «Erstat listen» i fane 2');
+  await venterPaa(t.side, (x) => document.querySelector('.liste-uge')?.textContent === x, 'Uge ' + ugeNr(uge2), n + ' to faner: fane 1 skal vise den nye uge, når fane 2 har erstattet listen');
+  await tryk(t.side, 'li[data-vare]:not(.koebt) .vare');
+  to = JSON.parse(await lager(t.side) || '{}');
+  tjek(to.kode === kode2 && (to.koebt || []).length === 1 && !(to.harVi || []).length,
+    n + ' to faner: efter erstatningen gemmer et tryk i fane 1 kun det ene tryk i den nye liste (' + JSON.stringify({ kode: to.kode === kode2 ? 'kode2' : to.kode, koebt: to.koebt, harVi: to.harVi }) + ')');
+  tjek(!t.side.fejl.length && !fane2.fejl.length, n + ' to faner: ' + [...t.side.fejl, ...fane2.fejl].join(' | '));
+  await t.ctx.close();
   maal.push(n + ' ugeplan: listen har ' + ialt + ' varer i ' + F.afd.length + ' afdelinger og ' + F.basis.length + ' basisvarer; ' + KODER.length + ' fjendtlige koder');
 }
 

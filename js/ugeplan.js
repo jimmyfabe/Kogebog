@@ -22,6 +22,10 @@ import * as R from './replikker.js';
 let K = null;
 export function init(k) {
   K = k;
+  // En anden fane har ændret indkøbslisten: listen, der står fremme her, tegnes igen ud fra lageret (code review U1, 23-10)
+  Lager.vedListeAendring(() => {
+    if (rute(location.hash)?.side === 'indkoeb') K.vis();
+  });
 }
 
 // Ruterne. «kode» er resten af adressen efter «#/hent/», som den står: den afkodes ikke (afkod afviser «%» og alt andet,
@@ -269,8 +273,22 @@ function listeSkaerm(liste) {
     fn();
   };
 
-  function gem(felt) {
-    advarsel.hidden = Boolean(Lager.gemListe({ [felt]: [...st[felt]] }));
+  // Hvert tryk retter ét id i det, der er gemt nu, og gemmer begge felter i ét kald: en anden fane med samme liste kan
+  // have krydset af imens. Er listen erstattet (eller låst) dér, tegnes den nye i stedet (code review U1, 23-10).
+  // Kunne lageret ikke skrive sidst, er hukommelsen nyere end lageret og bruges i stedet. Svar: false, når skærmen er tegnet om
+  let ikkeGemt = false;
+  function aendr(fn) {
+    const nu = Lager.hentListe();
+    if (nu.laast || nu.kode !== liste.kode) {
+      K.vis();
+      document.querySelector('main h1')?.focus({ preventScroll: true });
+      return false;
+    }
+    if (!ikkeGemt) Object.assign(st, { koebt: new Set(nu.koebt), harVi: new Set(nu.harVi) });
+    fn();
+    ikkeGemt = !Lager.gemListe({ koebt: [...st.koebt], harVi: [...st.harVi] });
+    advarsel.hidden = !ikkeGemt;
+    return true;
   }
 
   function vareKnap(v) {
@@ -282,9 +300,7 @@ function listeSkaerm(liste) {
         el('span', { class: 'vare-navn', tekst: v.navn }),
         v.maengde ? el('span', { class: 'vare-maengde', tekst: v.maengde }) : null));
     b.addEventListener('click', spaer(() => {
-      if (st.koebt.has(v.id)) st.koebt.delete(v.id);
-      else st.koebt.add(v.id);
-      gem('koebt');
+      if (!aendr(() => { if (st.koebt.has(v.id)) st.koebt.delete(v.id); else st.koebt.add(v.id); })) return;
       tegn(v.id, '.vare');
       const t = optaelling(alle, st.koebt, st.harVi);
       K.annoncer((st.koebt.has(v.id) ? 'Købt: ' : 'Ikke købt: ') + v.navn + '. ' + t.koebt + ' af ' + t.ialt + ' købt.');
@@ -295,9 +311,7 @@ function listeSkaerm(liste) {
   function flytKnap(v, harVi) {
     const tekst = harVi ? 'Skal købes' : 'Har vi';
     return K.knap(tekst, { klasse: 'har-vi', label: tekst + ': ' + v.navn, onclick: spaer(() => {
-      if (harVi) st.harVi.delete(v.id);
-      else { st.harVi.add(v.id); st.koebt.delete(v.id); gem('koebt'); }
-      gem('harVi');
+      if (!aendr(() => { if (harVi) st.harVi.delete(v.id); else { st.harVi.add(v.id); st.koebt.delete(v.id); } })) return;
       tegn(v.id, '.har-vi');
       K.annoncer(harVi ? v.navn + ' skal købes.' : v.navn + ' står under «Har vi allerede».');
     }) });

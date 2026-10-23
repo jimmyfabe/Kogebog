@@ -182,3 +182,11 @@ export function gemListe(aendring) {
   const ny = rensListe({ ...rensListe(j), ...udenUndefined(aendring), v: LISTE_V });
   return skriv(LISTE, ny) ? ny : null;
 }
+
+// fn kaldes, når en anden fane har ændret indkøbslisten (linket trykket to gange). Browseren sender kun hændelsen til
+// de andre faner, aldrig til den, der skrev
+export function vedListeAendring(fn) {
+  globalThis.addEventListener?.('storage', (e) => {
+    if (e.key === LISTE || e.key === null) fn();
+  });
+}
