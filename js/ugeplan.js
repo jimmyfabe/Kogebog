@@ -605,9 +605,10 @@ function oversigtSkaerm() {
   // «Send til telefon» væk, og advarslen siger, hvad den voksne gør; «Del som tekst» og «Print» virker stadig (U4, 23-10)
   const kanSendes = !harRetter || afkod(data.kode, { retter: K.S.ids, idag: new Date() }).ok;
   let advarsel = null;
-  if (!kanSendes && ugenErGaaet(p.uge)) advarsel = 'Uge ' + ugeNr(uge) + ' er mere end 8 uger siden, så listen kan ikke sendes til telefonen. Hold «Ny uge» for at lave en plan til uge ' + ugeNr(planMandag()) + '.';
-  else if (!kanSendes) advarsel = 'Uge ' + ugeNr(uge) + ' ligger mere end 8 uger fremme, så listen kan ikke sendes til telefonen. Tjek datoen på iPad\'en, eller hold «Ny uge».';
-  else if (ugenErGaaet(p.uge)) advarsel = 'Uge ' + ugeNr(p.uge) + ' er gået. Hold «Ny uge» for at lave en plan til uge ' + ugeNr(planMandag()) + '.';
+  // Advarslen siger, hvor «Ny uge» står (sidst i .uge-knapper nederst på siden), og at den tømmer planen (UI-review V7, 23-10)
+  if (!kanSendes && ugenErGaaet(p.uge)) advarsel = 'Uge ' + ugeNr(uge) + ' er mere end 8 uger siden, så listen kan ikke sendes til telefonen. Hold «Ny uge» nederst for at tømme planen og lave en plan til uge ' + ugeNr(planMandag()) + '.';
+  else if (!kanSendes) advarsel = 'Uge ' + ugeNr(uge) + ' ligger mere end 8 uger fremme, så listen kan ikke sendes til telefonen. Tjek datoen på iPad\'en, eller hold «Ny uge» nederst for at tømme planen.';
+  else if (ugenErGaaet(p.uge)) advarsel = 'Uge ' + ugeNr(p.uge) + ' er gået. Hold «Ny uge» nederst for at tømme planen og lave en plan til uge ' + ugeNr(planMandag()) + '.';
 
   const indstillinger = el('div', { class: 'uge-indstillinger' },
     el('div', { class: 'indstilling' }, el('span', { class: 'indstilling-navn', tekst: 'Portioner til nye retter' }),

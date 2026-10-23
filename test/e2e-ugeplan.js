@@ -709,6 +709,8 @@ async function oversigtDesktop(browser, H) {
   tjek(!gammel.knapper.some((t) => /Indkøbsliste|Send til telefon/.test(t)) && gammel.knapper.some((t) => t.includes('Del som tekst')),
     n + ': en plan fra for 10 uger siden kan ikke sendes, men kan deles som tekst (' + gammel.knapper.join(', ') + ')');
   tjek(gammel.advarsel.includes('mere end 8 uger') && gammel.advarsel.includes('Ny uge'), n + ': advarslen siger, at planen er for gammel (' + gammel.advarsel + ')');
+  // Advarslen siger, hvor «Ny uge» står, og at den tømmer planen (UI-review V7, 23-10)
+  tjek(gammel.advarsel.includes('«Ny uge» nederst') && gammel.advarsel.includes('tømme planen'), n + ': advarslen siger, at «Ny uge» står nederst og tømmer planen (' + gammel.advarsel + ')');
   await tjekLayout(side, n + ' ugeplan for gammel');
   await foto(side, n + '-ugeplan-gammel', { fullPage: true });
   tjek(!side.fejl.length, n + ' oversigten: ' + side.fejl.join(' | '));
