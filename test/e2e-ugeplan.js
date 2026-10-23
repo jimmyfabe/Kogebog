@@ -195,6 +195,9 @@ async function telefon(browser, H) {
   await aabn(side, BASE, '#/hent/' + kode2);
   await side.waitForSelector('text=Erstat listen for uge ' + ugeNr(uge) + '?').catch(() => tjek(false, n + ': et nyt link skal spørge «Erstat listen for uge ' + ugeNr(uge) + '?»'));
   tjek(await lager(side) === foer, n + ': listen må ikke erstattes, før man har valgt');
+  // «Erstat listen» har pilen rundt, ikke kurven fra «Hent listen» og «Indkøbsliste» (UI-review V9, 23-10)
+  const erstatIkon = await side.evaluate(() => [...document.querySelectorAll('button')].find((b) => b.textContent.includes('Erstat listen'))?.querySelector('svg path')?.getAttribute('d') || '');
+  tjek(erstatIkon.startsWith('M4.5 12a7.5'), n + ': «Erstat listen» har ikonet «igen» (pil rundt), ikke kurven (' + erstatIkon + ')');
   await tjekLayout(side, n + ' erstat listen');
   await foto(side, n + '-ugeplan-erstat');
   await tryk(side, 'button:has-text("Behold listen for uge ' + ugeNr(uge) + '")');

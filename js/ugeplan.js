@@ -200,7 +200,9 @@ function erstatSkaerm(gl, ny) {
     titel: 'Erstat listen for ' + glUge + '?',
     tekst: 'Det nye link er til uge ' + ugeNr(ny.uge) + '. På listen, der er på telefonen nu, er ' + tal.koebt + ' af ' + tal.ialt + ' købt.',
     handling: el('div', { class: 'status-knapper' },
-      K.knap('Erstat listen', { klasse: 'primaer', ikonNavn: 'kurv', onclick: () => {
+      // Pilen rundt, ikke kurven: kurven betyder «hent», og Erstat sletter fluebenene på den gamle liste. Erstat er stadig
+      // den gule knap, fordi et nyt link næsten altid sendes for at få den nye uges liste (UI-review V9, 23-10)
+      K.knap('Erstat listen', { klasse: 'primaer', ikonNavn: 'igen', onclick: () => {
         const v = vent;
         if (!v) return;
         if (!Lager.gemListe(v.ny)) {
