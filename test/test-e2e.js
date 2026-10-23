@@ -18,6 +18,7 @@ import { hentPlaywright } from '../vaerktoej/lav-ikoner.js';
 import { tilTale } from '../js/tekst.js';
 import { formaterTid, HURTIG_SEK } from '../js/tid.js';
 import { GRUPPER } from '../js/katalog.js';
+import { UDGAVE } from '../js/version.js';
 import { ugeplan } from './e2e-ugeplan.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -585,6 +586,13 @@ async function heleVejen(browser, skaerm) {
     return new Set([...r.getClientRects()].map((x) => Math.round(x.top))).size;
   });
   tjek(parentesLinjer === 1, n + ': parentesen i forsidens fod skal stå på én linje, den står på ' + parentesLinjer);
+  // Versionsnummeret (js/version.js) står under linjen om stemmen, så den voksne kan se, om iPad'en har den nye udgave
+  const udgave = await side.evaluate(() => {
+    const p = document.querySelector('.forside-version');
+    const fod = document.querySelector('.forside-fod');
+    return p && { tekst: p.textContent, hoejde: Math.round(p.getBoundingClientRect().height), under: p.getBoundingClientRect().top >= fod.getBoundingClientRect().bottom - 1 };
+  });
+  tjek(udgave && udgave.tekst === 'Version ' + UDGAVE && udgave.hoejde > 0 && udgave.under, n + ': forsiden skal vise «Version ' + UDGAVE + '» under linjen om stemmen, fandt ' + JSON.stringify(udgave));
   await tjekKortMaerke(side, n + ' forside');
   await tjekHop(side, n + ' forside');
   if (n === 'desktop') {
@@ -945,6 +953,7 @@ async function print(browser, skaerm) {
     tjek(await side.locator('ol.trin > li.voksen').count() === voksen, n + ' print ' + id + ': voksen-trinene er mærket');
     tjek((await side.locator('.fod').textContent()).includes('Tjek selv pakkerne for allergener'), n + ' print ' + id + ': allergen-linjen');
     tjek((await side.locator('.fod').textContent()).includes('Stemmen er en computerstemme (Røst fra Alexandra Instituttet).'), n + ' print ' + id + ': oplysningen om stemmen');
+    tjek((await side.locator('.fod').textContent()).includes('Version ' + UDGAVE), n + ' print ' + id + ': versionsnummeret i foden');
     tjek((await side.locator('.ikke-afproevet').count() === 1) === !r.tumbi.afproevet, n + ' print ' + id + ': «Ikke afprøvet»');
     await tjekLayout(side, n + ' print ' + id);
     const smaat = await skrift(side, '.note, .maerke, .fod');

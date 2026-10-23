@@ -25,6 +25,7 @@ import { saml, grupper, tekst as listeTekst } from '../js/indkoeb.js';
 import { planMandag, ugeNr } from '../js/tid.js';
 import { tilTale } from '../js/tekst.js';
 import * as R from '../js/replikker.js';
+import { UDGAVE } from '../js/version.js';
 
 const LISTE = 'kog-liste-v1';
 const DAG_MS = 86400000;
@@ -1072,6 +1073,8 @@ async function ugePrint(browser, H) {
   tjek(JSON.stringify(p) === JSON.stringify(ventet), n + ': ugens syv dage på printet (' + JSON.stringify(p) + ')');
   const liste = await printListe(side);
   tjek(JSON.stringify(liste) === JSON.stringify(listeFor(H, dage)), n + ': indkøbslisten på printet (' + JSON.stringify(liste).slice(0, 300) + ')');
+  // Versionsnummeret (js/version.js) står i listens fod, så papiret viser, hvilken udgave det er lavet med
+  tjek((await side.locator('.fod').textContent()).includes('Version ' + UDGAVE), n + ': versionsnummeret i printets fod');
   tjek(await side.evaluate(() => [...document.querySelectorAll('.afd li')].every((li) => parseFloat(getComputedStyle(li, '::before').borderTopWidth) > 0)),
     n + ': hver vare har et □');
   await tjekLayout(side, n + ' print af ugen');

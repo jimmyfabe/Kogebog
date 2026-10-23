@@ -9,6 +9,7 @@ import { saml, grupper, manglerTekst, holdSammen } from './indkoeb.js';
 import { DYR, grafikRet, grafikDyr } from './katalog.js';
 import { DAGE, ugeNr, dagDato, planMandag } from './tid.js';
 import { minutterTekst } from './tekst.js';
+import { UDGAVE } from './version.js';
 
 const dyrNavn = (af) => DYR[af].split(',')[0];
 
@@ -92,5 +93,6 @@ function tegn(ark, p, hentet) {
       afdelinger.length ? el('div', { class: 'afdelinger' }, afdelinger) : el('p', { class: 'liste-note', tekst: 'Der er ingen varer på listen.' }),
       el('footer', { class: 'fod' },
         el('p', { tekst: 'Tjek selv pakkerne for allergener.' }),
-        el('p', { tekst: 'Mængderne er lagt sammen for hele ugen og rundet op.' }))));
+        el('p', { tekst: 'Mængderne er lagt sammen for hele ugen og rundet op.' }),
+        el('p', { tekst: 'Version ' + UDGAVE }))));
 }

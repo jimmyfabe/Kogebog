@@ -14,6 +14,7 @@ import { voksenFarer } from './js/model.js';
 import { VERBER, INGREDIENSER, GRUPPER, grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, grafikGruppe, GRAFIK_FAERDIG } from './js/katalog.js';
 import { formaterTid, varighed, varighedTale } from './js/tid.js';
 import { minutterTekst } from './js/tekst.js';
+import { UDGAVE } from './js/version.js';
 
 // ?hurtig=1 (kun til test): alle timere varer 2 sekunder
 const HURTIG = new URLSearchParams(location.search).get('hurtig') === '1';
@@ -219,9 +220,10 @@ function forside() {
     naarFaerdig: () => naviger('#/uge'),
   })) : null;
   // Røsts licens kræver, at man får at vide, at stemmen er en computerstemme, før den taler (sikkerhedsreview 20-10).
-  // Før stod det kun på printet
+  // Før stod det kun på printet. Versionsnummeret står under, så den voksne kan se, om iPad'en har den nye udgave (js/version.js)
   return el('main', { class: 'skaerm forside' }, top, el('div', { class: 'forside-timer' }, timerPille()), indhold, uge,
-    el('p', { class: 'forside-fod', tekst: 'Stemmen er en computerstemme (Røst\u00a0fra\u00a0Alexandra\u00a0Instituttet).' }));
+    el('p', { class: 'forside-fod', tekst: 'Stemmen er en computerstemme (Røst\u00a0fra\u00a0Alexandra\u00a0Instituttet).' }),
+    el('p', { class: 'forside-fod forside-version', tekst: 'Version ' + UDGAVE }));
 }
 
 // En rund knap med afsnittets billede og farve (som overskriften). Tryk: rul til afsnittet, sig navnet, og flyt fokus

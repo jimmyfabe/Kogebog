@@ -6,6 +6,7 @@ import { VERBER, grafikVerbum } from './katalog.js';
 import { varighedKort } from './tid.js';
 import { minutterTekst } from './tekst.js';
 import { printUge } from './print-uge.js';
+import { UDGAVE } from './version.js';
 
 const ark = document.getElementById('ark');
 const printKnap = document.getElementById('print');
@@ -62,7 +63,8 @@ function tegn(m) {
           el('footer', { class: 'fod' },
             el('p', { tekst: 'Tjek selv pakkerne for allergener.' }),
             el('p', { tekst: 'Tumbi Køkken · ' + (m.kilde || 'Egen tekst') }),
-            el('p', { tekst: 'Stemmen er en computerstemme (Røst fra Alexandra Instituttet).' }))))));
+            el('p', { tekst: 'Stemmen er en computerstemme (Røst fra Alexandra Instituttet).' }),
+            el('p', { tekst: 'Version ' + UDGAVE }))))));
   printKnap.disabled = false;
 }
 
