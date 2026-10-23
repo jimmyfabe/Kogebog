@@ -48,7 +48,7 @@ Kør i Git Bash i `D:/Claude/Kogebog`.
 | `opskrifter/` | `<id>.json` pr. ret og `index.json` (forsidens afsnit og rækkefølgen) |
 | `grafik/`, `ikoner/` | Retternes billeder som WebP (`ret-<id>.webp`, tegnet af Codex 21-10-2026), resten som SVG, og ikoner til hjemmeskærmen |
 | `test/`, `vaerktoej/lav-ikoner.js` | Node-tests og `test-e2e.js` (ugeplanens del i `e2e-ugeplan.js`). Ikon-scriptet laver PNG-ikonerne |
-| `docs/` | `gennemgang.md` (plan), `chatgpt-app-prompt.md` og `chatgpt-grafik-prompt.md` (prompter til ChatGPT) |
+| `docs/` | `gennemgang.md` (plan), `chatgpt-app-prompt.md` og `chatgpt-grafik-prompt.md` (prompter til ChatGPT), `research/` (kilder til mængder og priser i retterne) |
 
 ## Opskriftsformatet
 

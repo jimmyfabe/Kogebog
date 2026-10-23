@@ -18,7 +18,8 @@
     "100 g creme fraiche",
     "1 knivspids peber",
     "400 g fiskefars",
-    "1 l vand og ½ tsk salt til grøntsagerne"
+    "1 l vand til grøntsagerne",
+    "½ tsk salt til grøntsagerne"
   ],
   "tool": ["gryde med låg", "bageplade", "bagepapir", "frysepose", "ovnfast fad", "grydeske", "spiseske", "dørslag"],
   "recipeInstructions": [
@@ -31,7 +32,7 @@
     { "@type": "HowToStep", "text": "Hæld spinaten i et ovnfast fad.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spinat"], "note": "Den voksne hælder fra den varme gryde. Bred den ud i bunden." } },
     { "@type": "HowToStep", "text": "Smør fiskefarsen ud over spinaten.", "tumbi": { "verbum": "smoere", "ikoner": ["koed"], "note": "Med en ske. Klatter først, og så glat ud." } },
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter rå fisk. Den voksne stiller skeen i vasken og vasker også hænderne." } },
-    { "@type": "HowToStep", "text": "Bag fad og kartofler i ovnen i 30 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1800, "note": "200 °C varmluft. Når der er 10 min tilbage: vand på grøntsagerne, så de lige er dækket, og kog dem med låg." } },
+    { "@type": "HowToStep", "text": "Bag fad og kartofler i ovnen i 30 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1800, "note": "200 °C varmluft. Når der er 10 min tilbage: vand og ½ tsk salt på grøntsagerne, så de lige er dækket, og kog dem med låg." } },
     { "@type": "HowToStep", "text": "Tag fad og plade ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Begge dele er meget varme. Farsen skal være fast og lys hele vejen igennem." } },
     { "@type": "HowToStep", "text": "Hæld vandet fra grøntsagerne.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["aerter"], "note": "Den voksne hælder gennem dørslaget i vasken. Pas på dampen." } },
     { "@type": "HowToStep", "text": "Smag på en kartoffel.", "tumbi": { "verbum": "smage", "ikoner": ["kartoffel"], "note": "Pust først. Den er varm indeni." } }
@@ -55,7 +56,8 @@
       { "ikon": "yoghurt", "maengde": "100 g", "vare": "creme-fraiche", "antal": 100, "enhed": "g" },
       { "ikon": "peber", "maengde": "1 knivspids", "vare": "peber" },
       { "ikon": "koed", "maengde": "400 g", "vare": "fiskefars", "antal": 400, "enhed": "g" },
-      { "ikon": "vand", "maengde": "1 l", "vare": "vand" }
+      { "ikon": "vand", "maengde": "1 l", "vare": "vand" },
+      { "ikon": "salt", "maengde": "½ tsk", "vare": "salt" }
     ]
   }
 }
