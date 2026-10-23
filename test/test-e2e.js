@@ -1727,12 +1727,22 @@ async function former(browser) {
     // De øvrige retter på de laveste iPhones på langs, iPad mini på højkant og de smalle desktopvinduer: billedet, navnet
     // og personer og tid står også over den faste bund, med og uden «Fortsæt». På 667×375 brydes «personer og tid» på to
     // linjer for pizzasnegle, brownie og blondie, og med et billede på 22svh lå den anden linje 18 px under bunden.
-    // Kun målingen her: resten af retten er tjekket ovenfor
+    // Kun målingen her: resten af retten er tjekket ovenfor.
+    // Adressen skiftes uden genindlæsning: retten læser «Fortsæt» i kog-v1, hver gang den tegnes. Med medGemt hentede
+    // service workeren alle 52 opskrifter fra nettet ved hver genindlæsning, ca. 6.000 forespørgsler pr. skærmform, hver
+    // med sin egen TCP-forbindelse (py -m http.server svarer med HTTP/1.0). Efter se-land og plus-land stod op til 16.368
+    // forbindelser i TIME_WAIT (Windows har 16.384 dynamiske porte), Windows måtte genbruge porte (Tcpip-hændelse 4227),
+    // og x-land fik ingen forbindelse og stod i 30 s (23-10). To runder (uden og med «Fortsæt»), så adressen altid skifter
     if (RET_ALLE_PAA.includes(n)) {
-      for (const ret of index.filter((r) => !RET_FORMER.includes(r))) {
-        for (const fortsaet of [false, true]) {
-          await medGemt(side, { sidste: fortsaet ? { ret, nr: RETTER[ret].recipeInstructions.length - 1 } : null }, '#/ret/' + ret);
-          await side.waitForSelector(fortsaet ? '.ret .fortsaet' : '.ret .start');
+      const andre = index.filter((r) => !RET_FORMER.includes(r));
+      for (const fortsaet of [false, true]) {
+        for (const ret of andre) {
+          await side.evaluate(({ ret, nr }) => {
+            localStorage.setItem('kog-v1', JSON.stringify({ v: 1, sidste: nr ? { ret, nr, tid: Date.now() } : null, timer: null }));
+            document.querySelector('#app > .skaerm').dataset.gammel = '1';
+            location.hash = '#/ret/' + ret;
+          }, { ret, nr: fortsaet ? RETTER[ret].recipeInstructions.length - 1 : 0 });
+          await side.waitForSelector('#app > .ret:not([data-gammel]) ' + (fortsaet ? '.fortsaet' : '.start'));
           await side.waitForFunction(() => [...document.images].every((i) => i.complete && i.naturalWidth)); // billedet giver højden
           const hvor = n + ' ret ' + ret + (fortsaet ? ' med Fortsæt' : '');
           await retHoved(side, hvor);
