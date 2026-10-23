@@ -5,7 +5,9 @@
    Derfor er VERSION bygget af INDHOLD: et tal for alle FILER. Lydfilerne ligger i deres egen cache (LYD_CACHE, bygget af
    LYD: et tal for lydfilerne), så en ændring i appen ikke sletter den lyd, iPad'en allerede har gemt.
    test/test-sw.js tjekker, at FILER er komplet, og fejler, når en fil er ændret. Fejlbeskeden viser den nye værdi;
-   testen ændrer ikke sw.js, så den sættes her i hånden. */
+   testen ændrer ikke sw.js, så den sættes her i hånden.
+   Svarer nettet ikke inden for HENT_MS (4 s), kommer en opskrift (også index.json) fra cachen, og nettets svar gemmes
+   til næste gang. De næste LANGSOM_MS (30 s) tager opskrifterne cachen med det samme (code review U3 og F2, 23-10). */
 const PRAEFIKS = 'kog-';
 const INDHOLD = 'b26e490d9d9bb4cd'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
