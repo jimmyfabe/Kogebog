@@ -312,11 +312,18 @@ test('en kildenote med flere sætninger slutter med punktum', () => {
 test('pris og grønt står i tumbi.ugeplan_kilde, ikke i kilden på printet', () => {
   const fil = 'opskrifter/chili-con-carne.json';
   forventFejl(fil, (d) => { d.tumbi.kilde += ' Prisen er et skøn.'; }, '«tumbi.kilde» nævner «Pris», men printet viser ikke pris og grønt');
-  forventFejl(fil, (d) => { d.tumbi.kilde += ' Hyldepriser fra 365discount.'; }, '«tumbi.kilde» nævner «365discount»');
+  forventFejl(fil, (d) => { d.tumbi.kilde += ' Fra 365discount.'; }, '«tumbi.kilde» nævner «365discount»');
   forventFejl(fil, (d) => { d.tumbi.kilde += ' Grønt er et skøn.'; }, '«tumbi.kilde» nævner «Grønt»');
   forventFejl(fil, (d) => { d.tumbi.kilde += ' Det er uden grønt.'; }, '«tumbi.kilde» nævner «grønt»');
+  // Andre bøjninger og sammensætninger, store bogstaver og mellemrum (code review, 23-10)
+  forventFejl(fil, (d) => { d.tumbi.kilde += ' Grøntet er uden bælgfrugter.'; }, '«tumbi.kilde» nævner «Grønt»');
+  forventFejl(fil, (d) => { d.tumbi.kilde += ' Kilopris fra Netto.'; }, '«tumbi.kilde» nævner «Kilopris»');
+  forventFejl(fil, (d) => { d.tumbi.kilde += ' Hyldepriserne fra Rema.'; }, '«tumbi.kilde» nævner «Hyldepris»');
+  forventFejl(fil, (d) => { d.tumbi.kilde += ' PRISEN ER ET SKØN.'; }, '«tumbi.kilde» nævner «PRIS»');
+  forventFejl(fil, (d) => { d.tumbi.kilde += ' Fra 365 Discount.'; }, '«tumbi.kilde» nævner «365 Discount»');
   // Ord, der kun begynder sådan, er i orden: «grøntsager» er en vare, ikke ugeplanens tal
   forventGyldig(fil, (d) => { d.tumbi.kilde += ' Brug frosne grøntsager.'; });
+  forventGyldig(fil, (d) => { d.tumbi.kilde += ' Grøntsagerne kan være frosne.'; });
   for (const v of ['', 'Prisen er et skøn', 42, null]) forventFejl(fil, (d) => { d.tumbi.ugeplan_kilde = v; }, '«tumbi.ugeplan_kilde» skal være en tekst, der slutter med punktum');
   forventGyldig(fil, (d) => { delete d.tumbi.ugeplan_kilde; });
 });

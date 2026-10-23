@@ -972,7 +972,7 @@ async function print(browser, skaerm) {
     tjek((await side.locator('.fod').textContent()).includes('Version ' + UDGAVE), n + ' print ' + id + ': versionsnummeret i foden');
     // Printet viser ikke pris og grønt, så foden nævner dem ikke (noten står i «tumbi.ugeplan_kilde»; UI-review 2, 23-10)
     const fod = await fodDatoer(side);
-    const prisOrd = fod.tekst.match(/(?<!\p{L})(?:[Pp]ris|365discount|[Gg]rønt(?!\p{L}))/u);
+    const prisOrd = fod.tekst.match(/(?<!\p{L})(?:\p{L}*pris|365\s?discount|grønt(?!sag))/iu); // samme regel som test-opskrifter.js
     tjek(!prisOrd, n + ' print ' + id + ': foden nævner ikke pris og grønt (fandt «' + (prisOrd && prisOrd[0]) + '»)');
     tjek(!fod.delt.length, n + ' print ' + id + ': datoen i foden står på én linje (delt: ' + fod.delt.join(', ') + ')');
     tjek((await side.locator('.ikke-afproevet').count() === 1) === !r.tumbi.afproevet, n + ' print ' + id + ': «Ikke afprøvet»');

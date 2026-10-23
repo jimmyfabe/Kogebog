@@ -250,7 +250,8 @@ export function valider(rod = ROD) {
         if (sti) f('«tumbi.kilde» viser stien «' + sti[0] + '» på printet: skriv kilden uden sti, fx «Mængderne er fra vores research om billige retter (22-10-2026).»');
         // Printet viser ikke pris og grønt, så noten om dem står i «tumbi.ugeplan_kilde», som ingen side viser. Før stod
         // en lang sætning om 365discount og grønt i foden under hver ret i ugeplanen (UI-review 2, 23-10)
-        const pris = t.kilde.match(/(?<!\p{L})(?:[Pp]ris|365discount|[Gg]rønt(?!\p{L}))/u);
+        // Ord med «pris» (kilopris, hyldepriser), «365 Discount» og «grønt» i alle bøjninger; kun «grøntsag…» er en vare
+        const pris = t.kilde.match(/(?<!\p{L})(?:\p{L}*pris|365\s?discount|grønt(?!sag))/iu);
         if (pris) f('«tumbi.kilde» nævner «' + pris[0] + '», men printet viser ikke pris og grønt: skriv det i «tumbi.ugeplan_kilde»');
       }
       if ('ugeplan_kilde' in t && !(erTekst(t.ugeplan_kilde) && /[.!?]$/.test(t.ugeplan_kilde.trim()))) {
