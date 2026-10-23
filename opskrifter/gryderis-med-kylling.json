@@ -7,8 +7,8 @@
   "inLanguage": "da",
   "recipeYield": "4 personer",
   "prepTime": "PT5M",
-  "cookTime": "PT25M",
-  "totalTime": "PT30M",
+  "cookTime": "PT30M",
+  "totalTime": "PT35M",
   "recipeIngredient": [
     "1 dåse majs",
     "250 g ris",
@@ -30,11 +30,11 @@
     { "@type": "HowToStep", "text": "Drys paprika i gryden.", "tumbi": { "verbum": "drysse", "ikoner": ["krydderurt"] } },
     { "@type": "HowToStep", "text": "Læg kyllingen oven på risene.", "tumbi": { "verbum": "pynte", "ikoner": ["koed"], "note": "Hele fileter. Gryden er kold. Timeren startes efter håndvasken." } },
     { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: rå kylling kan give maveonde." } },
-    { "@type": "HowToStep", "text": "Kog risene under låg i 20 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1200, "note": "Høj varme, til det koger. Så helt lav varme. Løft ikke låget." } },
-    { "@type": "HowToStep", "text": "Træk kyllingen fra hinanden med to gafler.", "tumbi": { "verbum": "smuldre", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne tager kyllingen op på en tallerken: den skal være hvid hele vejen igennem. Barnet holder med den ene gaffel og trækker med den anden." } },
+    { "@type": "HowToStep", "text": "Kog risene under låg i 20 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1200, "note": "Høj varme, til det koger. Start så timeren, og skru ned på helt lav varme. Løft ikke låget." } },
+    { "@type": "HowToStep", "text": "Træk kyllingen fra hinanden med to gafler.", "tumbi": { "verbum": "smuldre", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne tager kyllingen op på en tallerken: den skal være hvid hele vejen igennem. Er noget lyserødt indeni, så 5 min mere i gryden med låg på. Barnet holder med den ene gaffel og trækker med den anden." } },
     { "@type": "HowToStep", "text": "Hæld ærter, majs og grøntsager i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["aerter", "majs"], "note": "Ærter og grøntsager direkte fra frost. Gryden er varm: den voksne holder øje." } },
     { "@type": "HowToStep", "text": "Rør kyllingen tilbage i gryden.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme" } },
-    { "@type": "HowToStep", "text": "Lad gryden simre under låg i 5 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Lav varme. Så bliver grøntsagerne varme." } },
+    { "@type": "HowToStep", "text": "Lad gryden simre under låg i 8 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 480, "note": "Middel varme, til det damper og bobler. Rør én gang undervejs, så grøntsagerne bliver varme hele vejen igennem. Er det tørt, så en sjat vand." } },
     { "@type": "HowToStep", "text": "Smag gryderisen til med salt.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt"], "note": "Pust på skeen først." } }
   ],
   "tumbi": {

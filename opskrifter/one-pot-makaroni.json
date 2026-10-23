@@ -24,9 +24,9 @@
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
     { "@type": "HowToStep", "text": "Mål 6 dl mælk.", "tumbi": { "verbum": "maale", "ikoner": ["maelk"] } },
     { "@type": "HowToStep", "text": "Hæld mælk, vand og makaroni i en gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk", "vand", "spaghetti", "salt"], "note": "En tykbundet gryde og ½ tsk salt. Gryden er kold, så barnet kan selv." } },
-    { "@type": "HowToStep", "text": "Kog makaronien ved middel varme i 5 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Rør hele tiden, så mælken ikke brænder på." } },
+    { "@type": "HowToStep", "text": "Kog makaronien ved middel varme i 5 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Timeren startes, når mælken koger. Rør hele tiden, så mælken ikke brænder på." } },
     { "@type": "HowToStep", "text": "Hæld blomkål og broccoli i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["blomkaal", "broccoli"], "note": "Direkte fra frost. Gryden er varm: barnet hælder fra en skål, og den voksne holder øje." } },
-    { "@type": "HowToStep", "text": "Kog det hele i 6 minutter mere.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 360, "note": "Rør hele tiden. Er det for tykt, så lidt vand i." } },
+    { "@type": "HowToStep", "text": "Kog det hele i 8 minutter mere.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 480, "note": "Timeren startes, når det koger igen. Rør hele tiden. Makaronien skal være mør, og grøntsagerne varme hele vejen igennem. Er det for tykt, så lidt vand i." } },
     { "@type": "HowToStep", "text": "Rør osten i.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ost"], "note": "Tag gryden af varmen først. Rør, til osten er smeltet." } },
     { "@type": "HowToStep", "text": "Smag til med salt og peber.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt", "peber"], "note": "Pust på skeen først." } }
   ],
