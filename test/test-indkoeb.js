@@ -63,6 +63,26 @@ test('ugens retter lægges sammen og skaleres til de valgte portioner, før der 
   assert.equal(vareTekst('hakkede-tomater', 400), '1 dåse (400 g)');
 });
 
+test('de billige retter fra 22-10 lægges sammen: to halve dåser majs, mælk i dl og kyllingelår i kg', () => {
+  // Wok og nudelsuppe har hver ½ dåse majs, æggekagen 2 dl og makaronien 6 dl mælk, bradepandekyllingen 1 kg lår til 4
+  const varer = saml([
+    { ret: ret('wok-med-nudler'), n: 4 }, { ret: ret('kyllinge-nudelsuppe'), n: 4 },
+    { ret: ret('ovnaeggekage'), n: 4 }, { ret: ret('one-pot-makaroni'), n: 4 },
+    { ret: ret('bradepandekylling'), n: 6 },
+  ]);
+  const m = Object.fromEntries(varer.map((v) => [v.id, v.m]));
+  assert.equal(m['majs'], 1);
+  assert.equal(m['nudler'], 250 + 200);
+  assert.equal(m['maelk'], 200 + 600); // i ml
+  assert.equal(m['kyllingelaar'], 1500); // 1 kg × 6/4 i g
+  assert.equal(m['salt'], 0);
+  const t = som(varer);
+  assert.equal(t['majs'], '1 dåse');
+  assert.equal(t['nudler'], '450 g');
+  assert.equal(t['maelk'], '1 karton (1 l)');
+  assert.equal(t['kyllingelaar'], '1,5 kg');
+});
+
 test('tunfrikadellerne: persille i bundter, æg i bakker, og Æ står sidst i Køl', () => {
   const varer = saml([{ ret: TUN, n: 8 }]);
   const koel = grupper(varer).find((g) => g.afd === 'koel');
