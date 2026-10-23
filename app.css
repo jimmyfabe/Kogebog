@@ -273,7 +273,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 /* Til den voksne: lille og blid nederst på forsiden */
 .forside-fod { text-align: center; color: var(--kakao-blid); font-size: 15px; padding: 0 24px 14px; }
 /* Versionsnummeret (js/version.js) under linjen om stemmen: til den voksne, mindre end resten af foden */
-.forside-version { font-size: 13px; margin-top: -8px; }
+.forside-version { font-size: 13px; }
 /* Fire afsnit (opskrifter/index.json): aftensmad, bagning, søde sager og halloween. Overskriften er et billede på
    afsnittets farve og et ord, og kortenes cirkel har samme farve, så børnene kan kende gryden, ovnen, kagen og
    græskarret igen uden at læse.
