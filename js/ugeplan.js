@@ -875,6 +875,8 @@ function retValgSkaerm(p, dyr) {
         // Fokus bliver på pilen, eller går til den anden, når der ikke er flere sider den vej
         const igen = retning > 0 ? til + 1 < sider : til > 0;
         tegnIgen(igen === (retning > 0) ? 'side-naeste' : 'side-forrige');
+        if (retning > 0) Tale.sig(R.SIDE_FLERE);
+        else Tale.sig(R.SIDE_FORRIGE);
       },
     }), retning > 0 ? 'side-naeste' : 'side-forrige');
     b.disabled = !kan;
@@ -943,7 +945,7 @@ function dagValgSkaerm(p, dyr, m) {
       K.knap('Læs op', { klasse: 'laes-op', ikonNavn: 'hoejttaler', onclick: (e) => Tale.sig(R.HVILKEN_DAG, { knap: e.currentTarget }) }),
       el('span', { class: 'valg-ret' }, K.billede(grafikRet(m.id), m.navn))),
     el('ol', { class: 'dag-brikker', role: 'list', 'aria-label': 'Ugens dage' }, brikker),
-    K.knap('Tilbage', { klasse: 'tilbage', ikonNavn: 'tilbage', onclick: () => K.naviger('#/uge/vaelg/' + dyr) }),
+    K.knap('Tilbage', { klasse: 'tilbage', ikonNavn: 'tilbage', onclick: () => K.naviger('#/uge/vaelg/' + dyr, () => Tale.sig(R.dyrVaelger(dyr))) }),
     el('span', { class: 'skub' }),
     vaelg);
 }

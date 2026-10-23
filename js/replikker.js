@@ -63,3 +63,6 @@ export const UGE_FULD = r('Nu er hele ugen fuld. Godt gået! Vis ugeplanen til e
 // Valget kunne ikke gemmes (lageret er fuldt eller slået fra): barnet viser skærmen til en voksen (code review U7,
 // 23-10). Ikke «Hent en voksen»: den sætning er taget ud af alle replikker (Jimmy 21-10, test-lyd.js)
 export const GEM_FEJL = r('Det virkede ikke. Vis skærmen til en voksen.', 'faelles/uge-gem-fejl.mp3');
+// Pilene mellem siderne med retter siger, hvad der skete (code review U8, 23-10)
+export const SIDE_FLERE = r('Her er mere mad.', 'faelles/uge-side-flere.mp3');
+export const SIDE_FORRIGE = r('Her er maden fra før.', 'faelles/uge-side-forrige.mp3');

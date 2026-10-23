@@ -677,6 +677,8 @@ async function boernValg(browser, H) {
   if (sider > 1) {
     await tryk(side, '.side-naeste');
     k = await kortNu(side);
+    // Pilene taler som alle andre tryk på børneskærmene (code review U8, 23-10)
+    tjek(await sagt(side) === siger(R.SIDE_FLERE), n + ': pilen frem siger, at der er mere mad (' + await sagt(side) + ')');
     tjek(k.length === Math.min(4, IPLAN.length - 4) && !k.some((x) => x.id === a || x.id === b), n + ': pilen viser de næste retter (' + k.map((x) => x.id).join(', ') + ')');
     tjek(!k.some((x) => x.valgt) && await side.locator(VAELG).count() === 0, n + ': en ny side har ingen markeret ret');
     tjek(await side.evaluate(() => Boolean(document.querySelectorAll('.side-prikker span')[1]?.classList.contains('nu'))), n + ': prikken for side 2 er fyldt');
@@ -684,6 +686,7 @@ async function boernValg(browser, H) {
     await foto(side, n + '-boern-retter-side-2');
     await tryk(side, '.side-forrige');
     tjek((await kortNu(side))[0].id === a, n + ': pilen tilbage viser første side igen');
+    tjek(await sagt(side) === siger(R.SIDE_FORRIGE), n + ': pilen tilbage siger, at maden fra før er der igen (' + await sagt(side) + ')');
   }
 
   // 3. Hvilken dag? Rosas ret på mandag
@@ -692,6 +695,13 @@ async function boernValg(browser, H) {
   await venterPaa(side, (h) => location.hash === h && document.querySelector('.dag-brikker'), '#/uge/vaelg/rosa/' + a, n + ': fluebenet skal åbne dagene');
   tjek(await h1(side) === 'Hvilken dag?', n + ': tredje trins overskrift (' + await h1(side) + ')');
   tjek(await sagt(side) === siger(R.HVILKEN_DAG), n + ': stemmen spørger om dagen (' + await sagt(side) + ')');
+  // «Tilbage» fra dagene siger, hvem der vælger, som da barnet kom til retterne (code review U8, 23-10). Så frem igen
+  await tryk(side, '.valg-bund button.tilbage');
+  await venterPaa(side, () => location.hash === '#/uge/vaelg/rosa' && document.querySelector('.ret-gitter'), null, n + ': «Tilbage» fra dagene skal vise retterne');
+  tjek(await sagt(side) === siger(R.dyrVaelger('rosa')), n + ': «Tilbage» fra dagene siger, at Rosa vælger (' + await sagt(side) + ')');
+  await tryk(side, '.ret-kort[data-ret="' + a + '"]');
+  await tryk(side, VAELG);
+  await venterPaa(side, (h) => location.hash === h && document.querySelector('.dag-brikker'), '#/uge/vaelg/rosa/' + a, n + ': fluebenet skal åbne dagene igen');
   let br = await brikkerNu(side);
   tjek(br.map((x) => x.navn).join() === 'Mandag,Tirsdag,Onsdag,Torsdag,Fredag,Lørdag,Søndag' && !br.some((x) => x.optaget || x.valgt || x.ret), n + ': syv frie dage (' + JSON.stringify(br.map((x) => x.navn)) + ')');
   tjek(new Set(br.map((x) => x.top)).size === 1, n + ': de syv dage står på én række på iPad på langs');
