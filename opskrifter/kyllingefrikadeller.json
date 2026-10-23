@@ -1,7 +1,7 @@
 {
   "@context": "https://schema.org",
   "@type": "Recipe",
-  "name": "Kyllingefrikadeller i ovn",
+  "name": "Frikadeller af kylling",
   "description": "Små kyllingefrikadeller fra ovnen med kogte kartofler, gulerødder og ærter.",
   "image": "grafik/ret-kyllingefrikadeller.webp",
   "inLanguage": "da",

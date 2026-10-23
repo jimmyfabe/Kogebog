@@ -1,7 +1,7 @@
 {
   "@context": "https://schema.org",
   "@type": "Recipe",
-  "name": "Tomatsuppe med hvide bønner og croutoner",
+  "name": "Tomatsuppe med bønner",
   "description": "Jævn tomatsuppe med suppeurter og hvide bønner. Sprøde croutoner fra ovnen på toppen.",
   "image": "grafik/ret-tomatsuppe-med-boenner.webp",
   "inLanguage": "da",
