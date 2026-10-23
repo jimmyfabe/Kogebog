@@ -7,7 +7,7 @@
    test/test-sw.js tjekker, at FILER er komplet, og fejler, når en fil er ændret. Fejlbeskeden viser den nye værdi;
    testen ændrer ikke sw.js, så den sættes her i hånden. */
 const PRAEFIKS = 'kog-';
-const INDHOLD = '4519ead4a57d0619'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = 'a330077f7ce8b782'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '62514f04783c4e58'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
@@ -77,6 +77,11 @@ const FILER = [
   'opskrifter/kyllingefrikadeller.json',
   'opskrifter/wraps-med-boenner.json',
   'opskrifter/gryderis-med-kylling.json',
+  'opskrifter/linse-dhal.json',
+  'opskrifter/hyrdetaerte.json',
+  'opskrifter/pastagratin.json',
+  'opskrifter/one-pot-makaroni.json',
+  'opskrifter/lun-tunpasta.json',
   'lyd/liste.json',
   'ikoner/ikon.svg',
   'ikoner/ikon-180.png',
@@ -113,6 +118,8 @@ const FILER = [
   'grafik/ret-minestrone.webp', 'grafik/ret-koedboller-i-tomatsovs.webp',
   'grafik/ret-medister-i-ovn.webp', 'grafik/ret-poelse-boennegryde.webp', 'grafik/ret-kyllingefrikadeller.webp',
   'grafik/ret-wraps-med-boenner.webp', 'grafik/ret-gryderis-med-kylling.webp',
+  'grafik/ret-linse-dhal.webp', 'grafik/ret-hyrdetaerte.webp', 'grafik/ret-pastagratin.webp',
+  'grafik/ret-one-pot-makaroni.webp', 'grafik/ret-lun-tunpasta.webp',
   'grafik/gruppe-aftensmad.svg', 'grafik/gruppe-bagning.svg', 'grafik/gruppe-soede-sager.svg', 'grafik/gruppe-halloween.svg',
   'grafik/verbum-aelte.svg', 'grafik/verbum-haelde.svg', 'grafik/verbum-koge.svg', 'grafik/verbum-maale.svg', 'grafik/verbum-roere.svg',
   'grafik/verbum-rulle.svg', 'grafik/verbum-skaere.svg', 'grafik/verbum-smage.svg', 'grafik/verbum-stege.svg',

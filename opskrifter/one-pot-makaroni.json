@@ -1,0 +1,54 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "One pot makaroni med ost",
+  "description": "Makaroni kogt i mælk i én gryde med blomkål og broccoli. Ost rørt i til sidst.",
+  "image": "grafik/ret-one-pot-makaroni.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT20M",
+  "totalTime": "PT25M",
+  "recipeIngredient": [
+    "6 dl mælk",
+    "3 dl vand",
+    "300 g makaroni",
+    "½ tsk salt",
+    "400 g frossen blomkål",
+    "300 g frossen broccoli",
+    "150 g revet ost",
+    "1 knivspids peber"
+  ],
+  "tool": ["tykbundet gryde", "målebæger", "grydeske"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Mål 6 dl mælk.", "tumbi": { "verbum": "maale", "ikoner": ["maelk"] } },
+    { "@type": "HowToStep", "text": "Hæld mælk, vand og makaroni i en gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk", "vand", "spaghetti", "salt"], "note": "En tykbundet gryde og ½ tsk salt. Gryden er kold, så barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Kog makaronien ved middel varme i 5 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Rør hele tiden, så mælken ikke brænder på." } },
+    { "@type": "HowToStep", "text": "Hæld blomkål og broccoli i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["blomkaal", "broccoli"], "note": "Direkte fra frost. Gryden er varm: barnet hælder fra en skål, og den voksne holder øje." } },
+    { "@type": "HowToStep", "text": "Kog det hele i 6 minutter mere.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 360, "note": "Rør hele tiden. Er det for tykt, så lidt vand i." } },
+    { "@type": "HowToStep", "text": "Rør osten i.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ost"], "note": "Tag gryden af varmen først. Rør, til osten er smeltet." } },
+    { "@type": "HowToStep", "text": "Smag til med salt og peber.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt", "peber"], "note": "Pust på skeen først." } }
+  ],
+  "tumbi": {
+    "id": "one-pot-makaroni",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra en research af billig hverdagsmad til en børnefamilie (22-10-2026). Idé fra Coop Opskrifter, «bagt mac and cheese», forkortet til én gryde. Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Tid og grønt er også et skøn (ikke målt), og grønt er uden bælgfrugter og kartofler.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 42,
+    "pris_dato": "2026-10",
+    "groent_g": 700,
+    "ingredienser": [
+      { "ikon": "maelk", "maengde": "6 dl", "vare": "maelk", "antal": 6, "enhed": "dl" },
+      { "ikon": "vand", "maengde": "3 dl", "vare": "vand" },
+      { "ikon": "spaghetti", "maengde": "300 g", "vare": "makaroni", "antal": 300, "enhed": "g" },
+      { "ikon": "salt", "maengde": "½ tsk", "vare": "salt" },
+      { "ikon": "blomkaal", "maengde": "400 g", "vare": "blomkaalsblanding", "antal": 400, "enhed": "g" },
+      { "ikon": "broccoli", "maengde": "300 g", "vare": "broccoliblanding", "antal": 300, "enhed": "g" },
+      { "ikon": "ost", "maengde": "150 g", "vare": "revet-ost", "antal": 150, "enhed": "g" },
+      { "ikon": "peber", "maengde": "1 knivspids", "vare": "peber" }
+    ]
+  }
+}

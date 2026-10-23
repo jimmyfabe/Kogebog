@@ -1,0 +1,58 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Hyrdetærte med kartoffelskiver",
+  "description": "Kødsovs med ærter og gulerødder i et fad, kartoffelskiver som tagsten og ost på toppen.",
+  "image": "grafik/ret-hyrdetaerte.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT10M",
+  "cookTime": "PT35M",
+  "totalTime": "PT45M",
+  "recipeIngredient": [
+    "1 spsk olie",
+    "400 g hakket oksekød med grønt",
+    "400 g frosne ærter og gulerødder",
+    "1 dåse hakkede tomater",
+    "½ tsk salt",
+    "1 knivspids peber",
+    "600 g frosne kartoffelskiver",
+    "80 g revet ost"
+  ],
+  "tool": ["gryde", "grydeske", "dåseåbner", "ovnfast fad", "grydelapper"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Læg kødet i gryden.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["koed"], "note": "Tænd ovnen på 210 °C varmluft først. Olie i en gryde ved høj varme. Timeren startes efter håndvasken." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter råt kød." } },
+    { "@type": "HowToStep", "text": "Brun kødet, og del det i små stykker.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Den voksne rører og deler kødet med grydeskeen." } },
+    { "@type": "HowToStep", "text": "Hæld ærter, gulerødder og tomater i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["aerter", "tomat"], "note": "Gryden er varm. Den voksne åbner dåserne: kanten er skarp." } },
+    { "@type": "HowToStep", "text": "Lad kødsovsen småkoge i 5 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "ikoner": ["salt", "peber"], "note": "Rør salt og peber i. Rør af og til." } },
+    { "@type": "HowToStep", "text": "Hæld kødsovsen i et fad.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne hælder fra den varme gryde. Brug et fad, der kan tåle ovnen." } },
+    { "@type": "HowToStep", "text": "Læg kartoffelskiverne ovenpå som tagsten.", "tumbi": { "verbum": "pynte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["kartoffel"], "note": "Direkte fra frost. Fadet er varmt: barnet lægger skiverne fra midten, og den voksne holder øje." } },
+    { "@type": "HowToStep", "text": "Drys osten over.", "tumbi": { "verbum": "drysse", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ost"], "note": "Fadet er varmt." } },
+    { "@type": "HowToStep", "text": "Bag tærten i ovnen i 25 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1500, "note": "210 °C varmluft. Kartoffelskiverne skal være gyldne." } },
+    { "@type": "HowToStep", "text": "Tag fadet ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Fadet er meget varmt. Lad tærten stå 5 min, før den deles." } },
+    { "@type": "HowToStep", "text": "Smag på en kartoffelskive.", "tumbi": { "verbum": "smage", "ikoner": ["kartoffel"], "note": "Pust først." } }
+  ],
+  "tumbi": {
+    "id": "hyrdetaerte",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra en research af billig hverdagsmad til en børnefamilie (22-10-2026). Idé fra den engelske «shepherd's pie» og Coop Opskrifter, «klimaglad tærte». Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Tid og grønt er også et skøn (ikke målt), og grønt er uden bælgfrugter og kartofler.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 77,
+    "pris_dato": "2026-10",
+    "groent_g": 800,
+    "ingredienser": [
+      { "ikon": "olie", "maengde": "1 spsk", "vare": "olie" },
+      { "ikon": "koed", "maengde": "400 g", "vare": "hakket-oksekoed-groent", "antal": 400, "enhed": "g" },
+      { "ikon": "aerter", "maengde": "400 g", "vare": "aerter-gulerod", "antal": 400, "enhed": "g" },
+      { "ikon": "tomat", "maengde": "1 dåse", "vare": "hakkede-tomater", "antal": 400, "enhed": "g" },
+      { "ikon": "salt", "maengde": "½ tsk", "vare": "salt" },
+      { "ikon": "peber", "maengde": "1 knivspids", "vare": "peber" },
+      { "ikon": "kartoffel", "maengde": "600 g", "vare": "kartoffelskiver", "antal": 600, "enhed": "g" },
+      { "ikon": "ost", "maengde": "80 g", "vare": "revet-ost", "antal": 80, "enhed": "g" }
+    ]
+  }
+}

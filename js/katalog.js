@@ -200,6 +200,7 @@ export const VARER = {
   'tortillas': { navn: 'Tortillas', afd: 'broed', enhed: 'stk', ikon: 'tortilla' },
   'rugbroed': { navn: 'Rugbrød', afd: 'broed', enhed: 'g', ikon: 'broed' },
   'toastbroed': { navn: 'Toastbrød', afd: 'broed', enhed: 'g', ikon: 'broed' },
+  'naan': { navn: 'Naanbrød', afd: 'broed', enhed: 'g', ikon: 'broed' },
   // Dåser og tørvarer
   'hakkede-tomater': { navn: 'Hakkede tomater', afd: 'toer', enhed: 'g', ikon: 'tomat', pakke: [400, 'dåse', 'dåser'] },
   'passata': { navn: 'Tomatpassata', afd: 'toer', enhed: 'g', ikon: 'tomat', pakke: [500, 'flaske', 'flasker'] },
@@ -219,6 +220,7 @@ export const VARER = {
   'kokosmaelk': { navn: 'Kokosmælk', afd: 'toer', enhed: 'stk', ikon: 'kokos', pakke: [1, 'dåse', 'dåser'] },
   'nudler': { navn: 'Nudler', afd: 'toer', enhed: 'g', ikon: 'spaghetti' },
   'suppehorn': { navn: 'Suppehorn', afd: 'toer', enhed: 'g', ikon: 'spaghetti' },
+  'makaroni': { navn: 'Makaroni', afd: 'toer', enhed: 'g', ikon: 'spaghetti' },
   'hvide-boenner-tomat': { navn: 'Hvide bønner i tomat', afd: 'toer', enhed: 'stk', ikon: 'boenner', pakke: [1, 'dåse', 'dåser'] },
   // Køl
   'hakket-oksekoed': { navn: 'Hakket oksekød', afd: 'koel', enhed: 'g', ikon: 'koed', pakke: [500, 'bakke', 'bakker'] },
@@ -240,6 +242,7 @@ export const VARER = {
   'bacon-tern': { navn: 'Bacon i tern', afd: 'koel', enhed: 'g', ikon: 'koed' },
   'maelk': { navn: 'Mælk', afd: 'koel', enhed: 'ml', ikon: 'maelk', pakke: [1000, 'karton', 'kartoner'] },
   'hakket-kylling': { navn: 'Hakket kylling', afd: 'koel', enhed: 'g', ikon: 'koed' },
+  'hakket-oksekoed-groent': { navn: 'Hakket oksekød med grønt', afd: 'koel', enhed: 'g', ikon: 'koed' },
   'medister': { navn: 'Medister', afd: 'koel', enhed: 'g', ikon: 'koed' },
   'partypoelser': { navn: 'Partypølser', afd: 'koel', enhed: 'g', ikon: 'poelse' },
   // Frost. Uden pakke: posernes størrelse skifter mellem butikkerne, så listen viser gram
@@ -257,6 +260,7 @@ export const VARER = {
   'groenne-boenner': { navn: 'Grønne bønner', afd: 'frost', enhed: 'g', ikon: 'boenner' },
   'koedboller': { navn: 'Kødboller (færdige)', afd: 'frost', enhed: 'g', ikon: 'koed' },
   'rosenkaal': { navn: 'Rosenkål', afd: 'frost', enhed: 'g', ikon: 'kaal' },
+  'kartoffelskiver': { navn: 'Kartoffelskiver', afd: 'frost', enhed: 'g', ikon: 'kartoffel' },
   // Tjek, at I har
   'salt': { navn: 'Salt', afd: 'basis', enhed: 'g', ikon: 'salt', basis: true },
   'peber': { navn: 'Peber', afd: 'basis', enhed: 'g', ikon: 'peber', basis: true },
