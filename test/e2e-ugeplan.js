@@ -1045,6 +1045,14 @@ async function boernValg(browser, H) {
     // bunden af 844, og Safaris adresselinje tager mere (UI-review V4, 23-10). På 360×740 lå «Vælg» næsten helt under
     // kanten: nu står bunden fast, og pilene kan rulles frem over den på hver side (UI-review 2, 23-10)
     if (bredde <= 390) {
+      // Siden huskes på tværs af adresseskift (barn.side), så efter løkken på 390 stod 360 på sidste side: start på første
+      await valgHash(side, '#/uge/vaelg/pip');
+      await vent(200);
+      for (let s = 0; s < 20 && await side.evaluate(() => !document.querySelector('.side-forrige').classList.contains('usynlig')); s++) {
+        await tryk(side, '.side-forrige');
+      }
+      const forst = await side.evaluate(() => document.querySelector('.side-prikker')?.getAttribute('aria-label') ?? 'Side 1 af 1');
+      tjek(/^Side 1 af /.test(forst), n + ' børnene ' + bredde + '×' + hoejde + ': tjekkene starter på første side (' + forst + ')');
       for (const [h, sel, navn] of [['#/uge/vaelg/pip', '.ret-kort', 'retter'], ['#/uge/vaelg/pip/' + a, '.dag-brik:not(.optaget)', 'dage']]) {
         await valgHash(side, h);
         await vent(200);
