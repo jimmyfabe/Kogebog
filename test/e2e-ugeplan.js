@@ -997,6 +997,14 @@ const ledigPort = () => new Promise((ok, fejl) => {
 });
 const svarer = (url) => new Promise((ok) => http.get(url, (r) => { r.resume(); ok(true); }).on('error', () => ok(false)));
 const pause = (ms) => new Promise((r) => setTimeout(r, ms));
+// Uden net venter trin 3-5 op til 20 s: mod både 1a3b580 og HEAD stod iPad'en på «Henter retterne …» efter 6 s
+// (23-10, 225 FILER på 4,8 MB i cachen mod 151 før de 30 nye retter). Tiderne står i målingerne: hvornår siden kom fra
+// service workeren (navigationens responseEnd), og hvornår indholdet stod der
+const UDEN_NET_MS = 20000;
+const tider = async (side, t0) => {
+  const nav = await side.evaluate(() => { const e = performance.getEntriesByType('navigation')[0]; return e ? e.responseEnd : -1; }).catch(() => -1);
+  return 'siden efter ' + (nav / 1000).toFixed(1) + ' s, indholdet efter ' + ((Date.now() - t0) / 1000).toFixed(1) + ' s';
+};
 
 // Python startes direkte (ikke gennem py), så kill() stopper selve serveren og ikke kun py's starter
 async function startServer(rod, port) {
@@ -1113,8 +1121,10 @@ async function udenNet(H) {
 
     // 3. iPad: Rosa vælger tirsdag uden net, og oversigten viser begge dage
     side = await nyFane(ctx, ipad);
+    let t0 = Date.now();
     await side.goto(base + '/index.html#/uge/vaelg');
-    await venterPaa(side, () => document.querySelector('.dyr-gitter'), null, 'ipad uden net: dyrene skal vises');
+    await venterPaa(side, () => document.querySelector('.dyr-gitter'), null, 'ipad uden net: dyrene skal vises', UDEN_NET_MS);
+    maal.push('ipad uden net: ' + await tider(side, t0));
     tjek(await side.evaluate(() => Boolean(navigator.serviceWorker.controller)), 'ipad uden net: siden skal komme fra service workeren');
     tjek(await h1(side) === 'Hvem skal vælge?', 'ipad uden net: «Hvem skal vælge?» (' + await h1(side) + ')');
     await tjekLayout(side, 'ipad uden net: hvem');
@@ -1146,8 +1156,10 @@ async function udenNet(H) {
     //    og en afkrydsning overlever en genindlæsning
     const dage = [{ ret: 'koedsovs', n: 4 }, { ret: valgt, n: 4 }, null, null, null, null, null];
     side = await nyFane(ctx, iphone);
+    t0 = Date.now();
     await side.goto(base + '/index.html#/hent/' + kod(uge, dage));
-    await venterPaa(side, () => location.hash === '#/indkoeb' && document.querySelector('.liste-tal'), null, 'iphone uden net: linket skal åbne listen');
+    await venterPaa(side, () => location.hash === '#/indkoeb' && document.querySelector('.liste-tal'), null, 'iphone uden net: linket skal åbne listen', UDEN_NET_MS);
+    maal.push('iphone uden net: ' + await tider(side, t0));
     tjek(await side.evaluate(() => Boolean(navigator.serviceWorker.controller)), 'iphone uden net: listen skal komme fra service workeren');
     let l = await listeNu(side);
     tjek(JSON.stringify(l.afd) === JSON.stringify(forventet(H, dage).afd), 'iphone uden net: listen er grupper() af de to retter (' + JSON.stringify(l.afd).slice(0, 200) + ')');
@@ -1165,11 +1177,13 @@ async function udenNet(H) {
 
     // 5. Computeren: printet af ugen og listen
     side = await nyFane(ctx, desktop);
+    t0 = Date.now();
     await side.goto(base + '/print.html?uge');
-    await venterPaa(side, () => document.querySelectorAll('.uge-dag').length === 7 && !document.querySelector('#print').disabled, null, 'desktop uden net: printet');
+    await venterPaa(side, () => document.querySelectorAll('.uge-dag').length === 7 && !document.querySelector('#print').disabled, null, 'desktop uden net: printet', UDEN_NET_MS);
+    maal.push('desktop uden net: ' + await tider(side, t0));
     tjek(await side.evaluate(() => Boolean(navigator.serviceWorker.controller)), 'desktop uden net: printet skal komme fra service workeren');
     const p = await printDage(side);
-    tjek(p[0].ret === RETTER.koedsovs.name && p[1].ret === RETTER[valgt].name && p[1].af === 'Valgt af Rosa',
+    tjek(p[0]?.ret === RETTER.koedsovs.name && p[1]?.ret === RETTER[valgt]?.name && p[1]?.af === 'Valgt af Rosa',
       'desktop uden net: printet viser mandag og tirsdag (' + JSON.stringify(p.slice(0, 2)) + ')');
     tjek(JSON.stringify(await printListe(side)) === JSON.stringify(listeFor(H, dage)), 'desktop uden net: printets indkøbsliste');
     await tjekLayout(side, 'desktop uden net: printet');
