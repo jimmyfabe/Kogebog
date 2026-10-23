@@ -25,6 +25,7 @@ import { saml, grupper, tekst as listeTekst } from '../js/indkoeb.js';
 import { planMandag, ugeNr } from '../js/tid.js';
 import { tilTale } from '../js/tekst.js';
 import * as R from '../js/replikker.js';
+import { UDGAVE } from '../js/version.js';
 
 const LISTE = 'kog-liste-v1';
 const DAG_MS = 86400000;
@@ -195,6 +196,12 @@ async function telefon(browser, H) {
   await aabn(side, BASE, '#/hent/' + kode2);
   await side.waitForSelector('text=Erstat listen for uge ' + ugeNr(uge) + '?').catch(() => tjek(false, n + ': et nyt link skal spørge «Erstat listen for uge ' + ugeNr(uge) + '?»'));
   tjek(await lager(side) === foer, n + ': listen må ikke erstattes, før man har valgt');
+  // «uge 44» står samlet, også på 360 px, hvor «Behold listen for uge 44» brydes (UI-review 2, 23-10)
+  const vindue = side.viewportSize();
+  await side.setViewportSize({ width: 360, height: 740 });
+  const erstatBrud = await brudt(side, 'main', /[uU]ge\s\d+/);
+  await side.setViewportSize(vindue);
+  tjek(!erstatBrud.length, n + ' 360×740: «uge NN» står samlet på «Erstat listen?» (' + erstatBrud.join(', ') + ')');
   // «Erstat listen» har pilen rundt, ikke kurven fra «Hent listen» og «Indkøbsliste» (UI-review V9, 23-10)
   const erstatIkon = await side.evaluate(() => [...document.querySelectorAll('button')].find((b) => b.textContent.includes('Erstat listen'))?.querySelector('svg path')?.getAttribute('d') || '');
   tjek(erstatIkon.startsWith('M4.5 12a7.5'), n + ': «Erstat listen» har ikonet «igen» (pil rundt), ikke kurven (' + erstatIkon + ')');
@@ -286,6 +293,16 @@ async function telefon(browser, H) {
     });
     tjek(!v2.udenDeling, n + ' indkøbsliste ' + b + '×' + h + ': ' + v2.udenDeling + ' varenavne deles uden bindestreg');
     tjek(v2.ialt > 0 && !v2.delt.length, n + ' indkøbsliste ' + b + '×' + h + ': tal og enhed delt over to linjer: ' + v2.delt.join(', ') + ' (' + v2.ialt + ' mængder)');
+    // Varenavnet har plads til et ord på 12 bogstaver: på 360 px havde det 98 px, og «Gulerødder» og «Kidneybønner» blev
+    // delt midt i ordet (UI-review 2, 23-10). Pladsen er fra navnets venstre kant til knappens indre højre kant
+    if (b === 360) {
+      const plads = await side.evaluate(() => [...document.querySelectorAll('li[data-vare] .vare')].filter((v) => !v.closest('.har-vi-afd')).map((v) => {
+        const r = v.getBoundingClientRect();
+        return Math.round(r.right - parseFloat(getComputedStyle(v).paddingRight) - v.querySelector('.vare-tekst').getBoundingClientRect().left);
+      }));
+      tjek(plads.length > 0 && Math.min(...plads) >= 130, n + ' indkøbsliste 360×740: varenavnet har mindst 130 px (mindst ' + Math.min(...plads) + ' px i ' + plads.length + ' varer)');
+      maal.push(n + ' indkøbsliste 360×740: varenavnet har mindst ' + Math.min(...plads) + ' px');
+    }
   }
   await side.setViewportSize(skaerm.viewport);
   tjek(!side.fejl.length, n + ' ugeplan: ' + side.fejl.join(' | '));
@@ -578,6 +595,8 @@ async function oversigtIpad(browser, H) {
   tjek((await ugeLager(side)).dage.filter(Boolean).length === 2, n + ': et kort tryk på «Ny uge» må ikke tømme planen');
   await hold(side, '.ny-uge');
   await side.waitForSelector('text=Planen er tømt');
+  const tomtBrud = await brudt(side, '.uge-besked', /[uU]ge\s\d+/);
+  tjek(!tomtBrud.length, n + ': «uge NN» står samlet i «Planen er tømt» (' + tomtBrud.join(', ') + ')');
   gemt = await ugeLager(side);
   tjek(gemt.dage.every((d) => d === null) && gemt.uge === planMandag(new Date()), n + ': «Ny uge» tømmer planen (' + JSON.stringify(gemt.dage) + ')');
   tjek(JSON.stringify(await raekker(side)) === JSON.stringify([null, null, null, null, null, null, null]), n + ': oversigten er tom efter «Ny uge»');
@@ -595,6 +614,8 @@ async function oversigtIpad(browser, H) {
     tjek(!led.length, n + ' ugeplan ' + b + '×' + h + ': metalinjen brydes kun mellem leddene (brudt: ' + led.join(' | ') + ')');
     const sumLed = await brudteLed(side, '.uge-sum');
     tjek(!sumLed.length, n + ' ugeplan ' + b + '×' + h + ': summen brydes kun mellem leddene (brudt: ' + sumLed.join(' | ') + ')');
+    const nyBrud = await brudt(side, '.ny-uge', /Ny\suge/);
+    tjek(!nyBrud.length, n + ' ugeplan ' + b + '×' + h + ': «Ny uge» står samlet på knappen (' + nyBrud.join(', ') + ')');
   }
 
   // 11. Kan valget på dagskærmen ikke gemmes (lageret er fuldt), står beskeden ved retten, og man bliver på dagskærmen.
@@ -707,13 +728,15 @@ async function oversigtDesktop(browser, H) {
   await side.waitForSelector('.uge-dage');
   const gammel = await side.evaluate(() => ({
     knapper: [...document.querySelectorAll('.uge-knapper .knap')].map((b) => b.textContent.trim()),
-    advarsel: document.querySelector('.uge-advarsel')?.textContent || '',
+    advarsel: (document.querySelector('.uge-advarsel')?.textContent || '').replace(/\s/g, ' '), // hårde mellemrum som almindelige
   }));
   tjek(!gammel.knapper.some((t) => /Indkøbsliste|Send til telefon/.test(t)) && gammel.knapper.some((t) => t.includes('Del som tekst')),
     n + ': en plan fra for 10 uger siden kan ikke sendes, men kan deles som tekst (' + gammel.knapper.join(', ') + ')');
   tjek(gammel.advarsel.includes('mere end 8 uger') && gammel.advarsel.includes('Ny uge'), n + ': advarslen siger, at planen er for gammel (' + gammel.advarsel + ')');
   // Advarslen siger, hvor «Ny uge» står, og at den tømmer planen (UI-review V7, 23-10)
   tjek(gammel.advarsel.includes('«Ny uge» nederst') && gammel.advarsel.includes('tømme planen'), n + ': advarslen siger, at «Ny uge» står nederst og tømmer planen (' + gammel.advarsel + ')');
+  const advBrud = await brudt(side, '.uge-advarsel', /Ny\suge|[uU]ge\s\d+/);
+  tjek(!advBrud.length, n + ': «Ny uge» og «uge NN» står samlet i advarslen (' + advBrud.join(', ') + ')');
   await tjekLayout(side, n + ' ugeplan for gammel');
   await foto(side, n + '-ugeplan-gammel', { fullPage: true });
   tjek(!side.fejl.length, n + ' oversigten: ' + side.fejl.join(' | '));
@@ -728,6 +751,25 @@ const sagt = (side) => side.evaluate(() => (window.__tale[window.__tale.length -
 const siger = (replik) => (replik ? tilTale(replik.tekst) : '«replikken findes ikke»');
 const VAELG = 'button.knap.primaer.naeste';
 const valgHash = (side, h) => side.evaluate((x) => { location.hash = x; }, h);
+
+// Ord, der skal stå sammen («uge 44», «Ny uge»): mellemrummet er hårdt, og ordene står på samme linje. Før brød de på
+// 360 og 390 px som «uge | 44» og «Ny | uge» (UI-review 2, 23-10). Giver de steder i sel, hvor det ikke holder
+const brudt = (side, sel, re) => side.evaluate(({ sel, kilde }) => {
+  const fejl = [];
+  for (const e of document.querySelectorAll(sel)) {
+    const w = document.createTreeWalker(e, NodeFilter.SHOW_TEXT);
+    for (let t; (t = w.nextNode());) {
+      for (const m of t.data.matchAll(new RegExp(kilde, 'g'))) {
+        const r = document.createRange();
+        r.setStart(t, m.index);
+        r.setEnd(t, m.index + m[0].length);
+        const linjer = new Set([...r.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top))).size;
+        if (m[0].includes(' ') || linjer > 1) fejl.push('«' + m[0] + '» (' + (m[0].includes(' ') ? 'blødt mellemrum, ' : '') + linjer + ' linjer)');
+      }
+    }
+  }
+  return fejl;
+}, { sel, kilde: re.source });
 
 const dyrNu = (side) => side.evaluate(() => [...document.querySelectorAll('.dyr-kort')].map((b) => ({
   dyr: b.dataset.dyr,
@@ -786,6 +828,10 @@ async function boernValg(browser, H) {
   tjek(new Set(k.map((x) => x.top)).size === 1, n + ': retterne står på én række på iPad på langs');
   tjek(await side.locator(VAELG).count() === 0, n + ': fluebenet vises først, når en ret er trykket på');
   tjek(await side.locator('.side-forrige').evaluate((b) => b.disabled && getComputedStyle(b).visibility === 'hidden'), n + ': på første side er pilen tilbage væk');
+  // Sidepilene har deres eget ikon: på telefonen står pilen tilbage lige over «Tilbage» (UI-review 2, 23-10)
+  const pilIkon = await side.evaluate(() => ['.side-forrige', '.side-naeste', '.valg-bund .tilbage']
+    .map((s) => [...document.querySelectorAll(s + ' svg path')].map((p) => p.getAttribute('d')).join(' ')));
+  tjek(pilIkon.every(Boolean) && new Set(pilIkon).size === 3, n + ': sidepilene har et andet ikon end «Tilbage» (' + JSON.stringify(pilIkon) + ')');
   await tjekLayout(side, n + ' børnene: retter');
   await foto(side, n + '-boern-retter');
   const [a, b] = k.map((x) => x.id);
@@ -996,8 +1042,17 @@ async function boernValg(browser, H) {
       tjek(new Set((await kortNu(side)).map((x) => x.top)).size === 2, n + ': på højkant står retterne to og to');
     }
     // På telefonen står «Vælg» og «Tilbage» inden for skærmen, når en ret eller en dag er valgt: før lå de 4-10 px under
-    // bunden af 844, og Safaris adresselinje tager mere (UI-review V4, 23-10)
-    if (bredde === 390) {
+    // bunden af 844, og Safaris adresselinje tager mere (UI-review V4, 23-10). På 360×740 lå «Vælg» næsten helt under
+    // kanten: nu står bunden fast, og pilene kan rulles frem over den på hver side (UI-review 2, 23-10)
+    if (bredde <= 390) {
+      // Siden huskes på tværs af adresseskift (barn.side), så efter løkken på 390 stod 360 på sidste side: start på første
+      await valgHash(side, '#/uge/vaelg/pip');
+      await vent(200);
+      for (let s = 0; s < 20 && await side.evaluate(() => !document.querySelector('.side-forrige').classList.contains('usynlig')); s++) {
+        await tryk(side, '.side-forrige');
+      }
+      const forst = await side.evaluate(() => document.querySelector('.side-prikker')?.getAttribute('aria-label') ?? 'Side 1 af 1');
+      tjek(/^Side 1 af /.test(forst), n + ' børnene ' + bredde + '×' + hoejde + ': tjekkene starter på første side (' + forst + ')');
       for (const [h, sel, navn] of [['#/uge/vaelg/pip', '.ret-kort', 'retter'], ['#/uge/vaelg/pip/' + a, '.dag-brik:not(.optaget)', 'dage']]) {
         await valgHash(side, h);
         await vent(200);
@@ -1008,7 +1063,21 @@ async function boernValg(browser, H) {
           return { vaelg: bund('button.knap.primaer.naeste'), tilbage: bund('.knap.tilbage'), hoejde: innerHeight };
         });
         tjek(b.vaelg > 0 && b.vaelg <= b.hoejde && b.tilbage > 0 && b.tilbage <= b.hoejde,
-          n + ' børnene ' + navn + ' 390×844: «Vælg» og «Tilbage» står inden for skærmen (' + JSON.stringify(b) + ')');
+          n + ' børnene ' + navn + ' ' + bredde + '×' + hoejde + ': «Vælg» og «Tilbage» står inden for skærmen (' + JSON.stringify(b) + ')');
+      }
+      await valgHash(side, '#/uge/vaelg/pip');
+      await vent(200);
+      for (let s = 1; s <= 20; s++) {
+        const p = await side.evaluate(() => {
+          scrollTo(0, document.documentElement.scrollHeight);
+          const r = (s) => document.querySelector(s).getBoundingClientRect();
+          return { naeste: Math.round(r('.side-naeste').bottom), forrige: Math.round(r('.side-forrige').bottom),
+            bund: Math.round(r('.valg-bund').top), hoejde: innerHeight, sidst: document.querySelector('.side-naeste').classList.contains('usynlig') };
+        });
+        tjek(p.naeste <= p.bund + 1 && p.forrige <= p.bund + 1 && p.bund < p.hoejde,
+          n + ' børnene retter side ' + s + ' ' + bredde + '×' + hoejde + ': pilene kan rulles frem over bunden (' + JSON.stringify(p) + ')');
+        if (p.sidst) break;
+        await tryk(side, '.side-naeste');
       }
     }
   }
@@ -1072,6 +1141,8 @@ async function ugePrint(browser, H) {
   tjek(JSON.stringify(p) === JSON.stringify(ventet), n + ': ugens syv dage på printet (' + JSON.stringify(p) + ')');
   const liste = await printListe(side);
   tjek(JSON.stringify(liste) === JSON.stringify(listeFor(H, dage)), n + ': indkøbslisten på printet (' + JSON.stringify(liste).slice(0, 300) + ')');
+  // Versionsnummeret (js/version.js) står i listens fod, så papiret viser, hvilken udgave det er lavet med
+  tjek((await side.locator('.fod').textContent()).includes('Version ' + UDGAVE), n + ': versionsnummeret i printets fod');
   tjek(await side.evaluate(() => [...document.querySelectorAll('.afd li')].every((li) => parseFloat(getComputedStyle(li, '::before').borderTopWidth) > 0)),
     n + ': hver vare har et □');
   await tjekLayout(side, n + ' print af ugen');

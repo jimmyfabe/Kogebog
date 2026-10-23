@@ -192,13 +192,14 @@ function hentSkaerm(kode) {
   return indkoebSkaerm();
 }
 
-// Telefonen har allerede en liste: den erstattes kun, når man siger det (man kan stå midt i butikken)
+// Telefonen har allerede en liste: den erstattes kun, når man siger det (man kan stå midt i butikken).
+// «uge 44» har et hårdt mellemrum: på 360 px stod «44» alene på knappens anden linje (UI-review 2, 23-10)
 function erstatSkaerm(gl, ny) {
-  const glUge = gl.uge ? 'uge ' + ugeNr(gl.uge) : 'den gamle uge';
+  const glUge = gl.uge ? 'uge\u00a0' + ugeNr(gl.uge) : 'den gamle uge';
   const tal = optaelling(grupper(gl.varer), new Set(gl.koebt), new Set(gl.harVi));
   return K.statusSkaerm({
     titel: 'Erstat listen for ' + glUge + '?',
-    tekst: 'Det nye link er til uge ' + ugeNr(ny.uge) + '. På listen, der er på telefonen nu, er ' + tal.koebt + ' af ' + tal.ialt + ' købt.',
+    tekst: 'Det nye link er til uge\u00a0' + ugeNr(ny.uge) + '. På listen, der er på telefonen nu, er ' + tal.koebt + ' af ' + tal.ialt + ' købt.',
     handling: el('div', { class: 'status-knapper' },
       // Pilen rundt, ikke kurven: kurven betyder «hent», og Erstat sletter fluebenene på den gamle liste. Erstat er stadig
       // den gule knap, fordi et nyt link næsten altid sendes for at få den nye uges liste (UI-review V9, 23-10)
@@ -607,10 +608,11 @@ function oversigtSkaerm() {
   // «Send til telefon» væk, og advarslen siger, hvad den voksne gør; «Del som tekst» og «Print» virker stadig (U4, 23-10)
   const kanSendes = !harRetter || afkod(data.kode, { retter: K.S.ids, idag: new Date() }).ok;
   let advarsel = null;
-  // Advarslen siger, hvor «Ny uge» står (sidst i .uge-knapper nederst på siden), og at den tømmer planen (UI-review V7, 23-10)
-  if (!kanSendes && ugenErGaaet(p.uge)) advarsel = 'Uge ' + ugeNr(uge) + ' er mere end 8 uger siden, så listen kan ikke sendes til telefonen. Hold «Ny uge» nederst for at tømme planen og lave en plan til uge ' + ugeNr(planMandag()) + '.';
-  else if (!kanSendes) advarsel = 'Uge ' + ugeNr(uge) + ' ligger mere end 8 uger fremme, så listen kan ikke sendes til telefonen. Tjek datoen på iPad\'en, eller hold «Ny uge» nederst for at tømme planen.';
-  else if (ugenErGaaet(p.uge)) advarsel = 'Uge ' + ugeNr(p.uge) + ' er gået. Hold «Ny uge» nederst for at tømme planen og lave en plan til uge ' + ugeNr(planMandag()) + '.';
+  // Advarslen siger, hvor «Ny uge» står (sidst i .uge-knapper nederst på siden), og at den tømmer planen (UI-review V7, 23-10).
+  // «Ny uge» og «uge 44» har hårde mellemrum: på 390 px brød de som «Ny | uge» (UI-review 2, 23-10)
+  if (!kanSendes && ugenErGaaet(p.uge)) advarsel = 'Uge\u00a0' + ugeNr(uge) + ' er mere end 8 uger siden, så listen kan ikke sendes til telefonen. Hold «Ny\u00a0uge» nederst for at tømme planen og lave en plan til uge\u00a0' + ugeNr(planMandag()) + '.';
+  else if (!kanSendes) advarsel = 'Uge\u00a0' + ugeNr(uge) + ' ligger mere end 8 uger fremme, så listen kan ikke sendes til telefonen. Tjek datoen på iPad\'en, eller hold «Ny\u00a0uge» nederst for at tømme planen.';
+  else if (ugenErGaaet(p.uge)) advarsel = 'Uge\u00a0' + ugeNr(p.uge) + ' er gået. Hold «Ny\u00a0uge» nederst for at tømme planen og lave en plan til uge\u00a0' + ugeNr(planMandag()) + '.';
 
   const indstillinger = el('div', { class: 'uge-indstillinger' },
     el('div', { class: 'indstilling' }, el('span', { class: 'indstilling-navn', tekst: 'Portioner til nye retter' }),
@@ -633,10 +635,10 @@ function oversigtSkaerm() {
   const ny = medFokus(holdKnap({
     klasse: 'lille voksen-hold ny-uge',
     label: 'Ny uge: tømmer planen. Hold knappen inde i 2 sekunder.',
-    indhold: [ikon('igen'), el('span', { tekst: 'Ny uge: hold' })],
+    indhold: [ikon('igen'), el('span', { tekst: 'Ny\u00a0uge: hold' })],
     naarFaerdig: () => {
       if (gemPlan(() => ({ dage: [null, null, null, null, null, null, null], uge: planMandag() }))) {
-        oversigtBesked = { tekst: 'Planen er tømt. Den nye plan er til uge ' + ugeNr(planMandag()) + '.' };
+        oversigtBesked = { tekst: 'Planen er tømt. Den nye plan er til uge\u00a0' + ugeNr(planMandag()) + '.' };
       }
       tegnIgen('ny-uge');
     },
@@ -900,7 +902,7 @@ function retValgSkaerm(p, dyr) {
     const kan = til >= 0 && til < sider;
     const b = medFokus(K.knap('', {
       klasse: 'rund stor-rund side-knap ' + (retning > 0 ? 'side-naeste' : 'side-forrige') + (kan ? '' : ' usynlig'),
-      ikonNavn: retning > 0 ? 'naeste' : 'tilbage',
+      ikonNavn: retning > 0 ? 'frem' : 'forrige',
       label: retning > 0 ? 'Flere retter' : 'Forrige retter',
       onclick: () => {
         Object.assign(barn, { side: til, ret: null });

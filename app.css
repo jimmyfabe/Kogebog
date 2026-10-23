@@ -200,7 +200,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 /* Hvor bunden står fast, sætter --bund dens højde plus lidt luft. En knap i indholdet, der får fokus (Tab, VoiceOver),
    rulles så op over bunden i stedet for ind under den. Margen på knapperne og ikke scroll-padding på html: med den
    rullede siden også, når fokus gik mellem knapperne i selve bunden, så indholdet hoppede (390 px: 0 → 176 → 348 px) */
-.ret-indhold button, .scene button { scroll-margin-bottom: var(--bund, 0px); }
+.ret-indhold button, .scene button, .valg-indhold button { scroll-margin-bottom: var(--bund, 0px); }
 
 /* ---------- Status: henter, tom, fejl ---------- */
 
@@ -272,6 +272,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .forside-indhold { flex: 1; display: flex; flex-direction: column; justify-content: center; padding-bottom: 28px; }
 /* Til den voksne: lille og blid nederst på forsiden */
 .forside-fod { text-align: center; color: var(--kakao-blid); font-size: 15px; padding: 0 24px 14px; }
+/* Versionsnummeret (js/version.js) under linjen om stemmen: til den voksne, mindre end resten af foden */
+.forside-version { font-size: 13px; }
 /* Fire afsnit (opskrifter/index.json): aftensmad, bagning, søde sager og halloween. Overskriften er et billede på
    afsnittets farve og et ord, og kortenes cirkel har samme farve, så børnene kan kende gryden, ovnen, kagen og
    græskarret igen uden at læse.
@@ -611,6 +613,14 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .basis-varer { display: flex; flex-wrap: wrap; gap: 8px 20px; padding: 0 16px 16px; }
 .basis-varer li { display: flex; align-items: center; gap: 8px; font-size: 18px; }
 .basis-varer .vare-ikon { width: 32px; height: 32px; }
+/* Op til 400 px: på 360 px havde varenavnet kun 98 px, og «Gulerødder», «Kidneybønner» og «Bacon i tern» blev delt midt
+   i ordet. Ikonet, mellemrummene og «Har vi» bliver mindre, så navnet får ca. 139 px (UI-review 2, 23-10) */
+@media (max-width: 400px) {
+  .varer > li { gap: 6px; padding-right: 8px; }
+  .vare { gap: 8px; padding: 8px 4px 8px 8px; }
+  .vare-ikon { width: 32px; height: 32px; }
+  .knap.har-vi { padding: 0 10px; font-size: 16px; }
+}
 
 .ret-link { flex: 1; min-width: 0; min-height: var(--tryk); display: flex; align-items: center; gap: 12px; padding: 8px 12px; color: inherit; text-decoration: none; }
 .ret-link .vare-navn { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 3px; }
@@ -894,8 +904,9 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .trin-tekst h1 { font-size: 30px; }
   .trin-ikoner img { width: 56px; height: 56px; }
   /* «Næste» og rettens «Start» skal kunne nås uden at rulle: bunden står fast, og et langt trin
-     eller en lang ingrediensliste ruller ind under den */
-  .trin .handlinger, .ret .handlinger {
+     eller en lang ingrediensliste ruller ind under den. Også børnenes valg: på 360×740 lå «Vælg» næsten helt under
+     kanten, når retternes navne er lange. Pilene rulles frem over bunden (UI-review 2, 23-10) */
+  .trin .handlinger, .ret .handlinger, .boern-valg .valg-bund {
     position: sticky;
     bottom: 0;
     z-index: 2;
@@ -905,7 +916,7 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   }
   /* Bunden er 103 px høj, på retten med «Fortsæt» 179 px (to rækker). Samme safe-area som bundens padding:
      på en iPhone (34 px på højkant) er bunden højere end i Playwright, hvor env() er 0 (test/test-css.js) */
-  .trin, .ret { --bund: calc(100px + max(16px, env(safe-area-inset-bottom))); }
+  .trin, .ret, .boern-valg { --bund: calc(100px + max(16px, env(safe-area-inset-bottom))); }
   .ret:has(.fortsaet) { --bund: calc(176px + max(16px, env(safe-area-inset-bottom))); }
   .naeste { min-width: 0; flex: 1 1 60%; }
   /* Tilbage er kun pilen, som husknappen (navnet står i aria-label): ellers gik teksten ud til kanten,

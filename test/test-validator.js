@@ -307,6 +307,29 @@ test('en kildenote med flere sætninger slutter med punktum', () => {
   forventGyldig(fil, (d) => { d.tumbi.kilde = 'Egen tekst med ca. 3 dl mælk'; });
 });
 
+// Kilden står i printets fod, og printet viser ikke pris og grønt: butik og metode for dem står i «tumbi.ugeplan_kilde»,
+// som ingen side viser (UI-review 2, 23-10)
+test('pris og grønt står i tumbi.ugeplan_kilde, ikke i kilden på printet', () => {
+  const fil = 'opskrifter/chili-con-carne.json';
+  forventFejl(fil, (d) => { d.tumbi.kilde += ' Prisen er et skøn.'; }, '«tumbi.kilde» nævner «Pris», men printet viser ikke pris og grønt');
+  forventFejl(fil, (d) => { d.tumbi.kilde += ' Fra 365discount.'; }, '«tumbi.kilde» nævner «365discount»');
+  forventFejl(fil, (d) => { d.tumbi.kilde += ' Grønt er et skøn.'; }, '«tumbi.kilde» nævner «Grønt»');
+  forventFejl(fil, (d) => { d.tumbi.kilde += ' Det er uden grønt.'; }, '«tumbi.kilde» nævner «grønt»');
+  // Andre bøjninger og sammensætninger, store bogstaver og mellemrum (code review, 23-10)
+  forventFejl(fil, (d) => { d.tumbi.kilde += ' Grøntet er uden bælgfrugter.'; }, '«tumbi.kilde» nævner «Grønt»');
+  forventFejl(fil, (d) => { d.tumbi.kilde += ' Kilopris fra Netto.'; }, '«tumbi.kilde» nævner «Kilopris»');
+  forventFejl(fil, (d) => { d.tumbi.kilde += ' Hyldepriserne fra Rema.'; }, '«tumbi.kilde» nævner «Hyldepris»');
+  forventFejl(fil, (d) => { d.tumbi.kilde += ' PRISEN ER ET SKØN.'; }, '«tumbi.kilde» nævner «PRIS»');
+  forventFejl(fil, (d) => { d.tumbi.kilde += ' Fra 365 Discount.'; }, '«tumbi.kilde» nævner «365 Discount»');
+  // Ord, der kun begynder sådan, er i orden: «grøntsager» er en vare, ikke ugeplanens tal
+  forventGyldig(fil, (d) => { d.tumbi.kilde += ' Brug frosne grøntsager.'; });
+  forventGyldig(fil, (d) => { d.tumbi.kilde += ' Grøntsagerne kan være frosne.'; });
+  for (const v of ['', 'Prisen er et skøn', 42, null]) forventFejl(fil, (d) => { d.tumbi.ugeplan_kilde = v; }, '«tumbi.ugeplan_kilde» skal være en tekst, der slutter med punktum');
+  // Noten kræves kun i ugeplanen (code review, 23-10)
+  forventFejl(fil, (d) => { delete d.tumbi.ugeplan_kilde; }, '«tumbi.ugeplan» kræver «tumbi.ugeplan_kilde»');
+  forventGyldig(fil, (d) => { delete d.tumbi.ugeplan; delete d.tumbi.ugeplan_kilde; });
+});
+
 test('voksen og voksen_hjaelp følges ad', () => {
   forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[9].tumbi.voksen = 'ja'; }, 'trin 10: «voksen» skal være true');
   forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[2].tumbi.voksen = false; }, 'trin 3: «voksen» skal være true (udelad feltet');
@@ -597,8 +620,8 @@ test('en ret i ugeplanen med alle felterne er gyldig', () => {
   ugeplanGyldig((d) => { Object.assign(d.tumbi.ingredienser[1], { antal: 0.5, enhed: 'kg' }); });
 });
 
-test('tumbi.ugeplan kræver portioner, pris, prisens måned og grønt', () => {
-  for (const k of ['portioner', 'pris_kr', 'pris_dato', 'groent_g']) ugeplanFejl((d) => { delete d.tumbi[k]; }, '«tumbi.ugeplan» kræver «tumbi.' + k + '»');
+test('tumbi.ugeplan kræver portioner, pris, prisens måned, grønt og noten om pris og grønt', () => {
+  for (const k of ['portioner', 'pris_kr', 'pris_dato', 'groent_g', 'ugeplan_kilde']) ugeplanFejl((d) => { delete d.tumbi[k]; }, '«tumbi.ugeplan» kræver «tumbi.' + k + '»');
   for (const v of ['ja', false, 1]) ugeplanFejl((d) => { d.tumbi.ugeplan = v; }, '«tumbi.ugeplan» skal være true (udelad feltet');
   // Uden ugeplanen kræves felterne ikke (de rigtige retter uden felterne er gyldige: «de rigtige opskrifter er gyldige»)
   forventGyldig(KS, (d) => { iUgeplan(d); delete d.tumbi.ugeplan; delete d.tumbi.portioner; });

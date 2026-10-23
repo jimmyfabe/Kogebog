@@ -21,11 +21,11 @@ const PAAKRAEVET = [
   'recipeIngredient', 'tool', 'recipeInstructions', 'tumbi',
 ];
 const TRIN_NOEGLER = new Set(['verbum', 'voksen', 'voksen_hjaelp', 'timer_sek', 'note', 'ikoner']);
-const RET_TUMBI = new Set(['id', 'version', 'afproevet', 'kilde', 'ingredienser', 'ugeplan', 'portioner', 'pris_kr', 'pris_dato', 'groent_g']);
+const RET_TUMBI = new Set(['id', 'version', 'afproevet', 'kilde', 'ingredienser', 'ugeplan', 'portioner', 'pris_kr', 'pris_dato', 'groent_g', 'ugeplan_kilde']);
 const INGR_NOEGLER = new Set(['ikon', 'maengde', 'vare', 'antal', 'enhed']);
 // Ugeplanen (docs/ugeplan-plan.md, afsnit 4): felterne, en ret med «tumbi.ugeplan»: true skal have, og dens grænser.
 // En time fra hjemkomst til aftensmad, og højst 2 trin med kniv eller rivejern (skånsomt for hænderne)
-const UGEPLAN_FELTER = ['portioner', 'pris_kr', 'pris_dato', 'groent_g'];
+const UGEPLAN_FELTER = ['portioner', 'pris_kr', 'pris_dato', 'groent_g', 'ugeplan_kilde'];
 const UGEPLAN_MAKS_MIN = 60;
 const UGEPLAN_MAKS_KNIV = 2;
 const KNIV_VERBER = Object.keys(VOKSEN_KRAV).filter((v) => VOKSEN_KRAV[v] === 'kniv'); // skaere og rive
@@ -248,6 +248,14 @@ export function valider(rod = ROD) {
       if (erTekst(t.kilde)) {
         const sti = t.kilde.match(/\bdocs\/\S*|\b[\w-]+\.(?:md|json|js|html)\b/);
         if (sti) f('«tumbi.kilde» viser stien «' + sti[0] + '» på printet: skriv kilden uden sti, fx «Mængderne er fra vores research om billige retter (22-10-2026).»');
+        // Printet viser ikke pris og grønt, så noten om dem står i «tumbi.ugeplan_kilde», som ingen side viser. Før stod
+        // en lang sætning om 365discount og grønt i foden under hver ret i ugeplanen (UI-review 2, 23-10)
+        // Ord med «pris» (kilopris, hyldepriser), «365 Discount» og «grønt» i alle bøjninger; kun «grøntsag…» er en vare
+        const pris = t.kilde.match(/(?<!\p{L})(?:\p{L}*pris|365\s?discount|grønt(?!sag))/iu);
+        if (pris) f('«tumbi.kilde» nævner «' + pris[0] + '», men printet viser ikke pris og grønt: skriv det i «tumbi.ugeplan_kilde»');
+      }
+      if ('ugeplan_kilde' in t && !(erTekst(t.ugeplan_kilde) && /[.!?]$/.test(t.ugeplan_kilde.trim()))) {
+        f('«tumbi.ugeplan_kilde» skal være en tekst, der slutter med punktum (butik og metode for pris og grønt), fandt ' + JSON.stringify(t.ugeplan_kilde));
       }
       // Ugeplanen. Felterne tjekkes, når de står der, og kræves, når retten er med i ugeplanen
       if ('ugeplan' in t && t.ugeplan !== true) f('«tumbi.ugeplan» skal være true (udelad feltet, når retten ikke er med i ugeplanen), fandt ' + JSON.stringify(t.ugeplan));
