@@ -307,3 +307,54 @@ test('en lydfil, nettet ikke svarer på, afbrydes efter 4 sekunder', async () =>
   assert.equal((await h2.svar).status, 200);
   assert.equal(ure2[0].stoppet, true, 'uret skal stoppes, når svaret er kommet');
 });
+
+// Svag 4G eller wifi uden internet: nettet tager imod, men svarer aldrig. Opskrifterne er netværk først, men efter
+// HENT_MS kommer de fra cachen, og svarer nettet senere, gemmes det nye svar alligevel. Er intet gemt, ventes der på
+// nettet (code review U3, 23-10: #/hent stod på «Henter indkøbslisten …», til Safari selv gav op)
+test('en opskrift, nettet ikke svarer på, kommer fra cachen efter 4 sekunder', async () => {
+  const lavUr = () => {
+    const ure = [];
+    return { ure, ur: { setTimeout: (fn, ms) => { ure.push({ fn, ms, stoppet: false }); return ure.length; }, clearTimeout: (id) => { if (ure[id - 1]) ure[id - 1].stoppet = true; } } };
+  };
+  const naeste = () => new Promise((r) => setImmediate(r));
+  const { ure, ur } = lavUr();
+  let svar = null;
+  const caches = falskeCaches();
+  const sw = lavSw({ caches, ur, fetch: () => new Promise((ok) => { svar = ok; }) });
+  await (await caches.open(sw.VERSION)).put(SCOPE + 'opskrifter/pandekager.json', ok('gammel'));
+  const h = haendelse(new SwRequest('opskrifter/pandekager.json'));
+  sw.haendelser.fetch(h);
+  await naeste();
+  assert.equal(ure.length, 1, 'der skal være et ur på opskriften');
+  assert.equal(ure[0].ms, 4000);
+  ure[0].fn();
+  assert.equal(await (await h.svar).text(), 'gammel', 'efter 4 s kommer opskriften fra cachen');
+  // Nettet svarer til sidst: det nye svar gemmes til næste gang
+  svar(ok('ny'));
+  await Promise.all(h.ventet);
+  assert.equal(await (await (await caches.open(sw.VERSION)).match(SCOPE + 'opskrifter/pandekager.json')).text(), 'ny');
+
+  // Intet gemt: der ventes på nettet, også efter de 4 s
+  const u2 = lavUr();
+  let svar2 = null;
+  const sw2 = lavSw({ caches: falskeCaches(), ur: u2.ur, fetch: () => new Promise((ok) => { svar2 = ok; }) });
+  const h2 = haendelse(new SwRequest('opskrifter/pandekager.json'));
+  sw2.haendelser.fetch(h2);
+  let afgjort = false;
+  h2.svar.then(() => { afgjort = true; }, () => { afgjort = true; });
+  await naeste();
+  u2.ure[0].fn();
+  await naeste();
+  await naeste();
+  assert.equal(afgjort, false, 'uden noget i cachen ventes der på nettet');
+  svar2(ok('fra nettet'));
+  assert.equal(await (await h2.svar).text(), 'fra nettet');
+
+  // Et svar i tide stopper uret
+  const u3 = lavUr();
+  const sw3 = lavSw({ caches: falskeCaches(), ur: u3.ur, fetch: async () => ok('hurtig') });
+  const h3 = haendelse(new SwRequest('opskrifter/pandekager.json'));
+  sw3.haendelser.fetch(h3);
+  assert.equal(await (await h3.svar).text(), 'hurtig');
+  assert.equal(u3.ure[0].stoppet, true, 'uret skal stoppes, når svaret er kommet');
+});

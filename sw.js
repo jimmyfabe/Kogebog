@@ -11,7 +11,7 @@ const INDHOLD = 'ba2a89f905456fca'; // sha256 (16 tegn) af FILER — sæt den v�
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '62514f04783c4e58'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
-const HENT_MS = 4000; // så længe venter en lydfil på svar fra nettet (wifi uden internet), før iPad-stemmen tager over
+const HENT_MS = 4000; // så længe venter en lydfil (før iPad-stemmen tager over) eller en opskrift (før cachen) på nettet
 const FILER = [
   './',
   'index.html',
@@ -165,20 +165,26 @@ self.addEventListener('activate', (e) => {
   })());
 });
 
+// Svarer nettet ikke inden for HENT_MS (svag 4G, wifi uden internet), kommer opskriften fra cachen, og nettets svar
+// gemmes, hvis det kommer senere. Er intet gemt, ventes der på nettet (code review U3, 23-10: før ventede #/hent, til
+// Safari selv gav op)
 async function netvaerkFoerst(e, req) {
   const cache = await caches.open(VERSION);
+  const fraNet = fetch(req, { cache: 'no-cache' });
+  e.waitUntil(fraNet.then((svar) => (svar.ok ? cache.put(req, svar.clone()) : null)).catch(() => {}));
+  let ur;
+  const forSent = new Promise((ok) => { ur = setTimeout(() => ok(null), HENT_MS); });
   try {
-    const svar = await fetch(req, { cache: 'no-cache' });
-    if (svar.ok) {
-      e.waitUntil(cache.put(req, svar.clone()).catch(() => {}));
-      return svar;
-    }
+    let svar = await Promise.race([fraNet, forSent]);
+    if (svar === null) svar = (await cache.match(req, { ignoreSearch: true })) || await fraNet;
     if (svar.status >= 500) return (await cache.match(req, { ignoreSearch: true })) || svar;
     return svar;
   } catch (err) {
     const gemt = await cache.match(req, { ignoreSearch: true });
     if (gemt) return gemt;
     throw err;
+  } finally {
+    clearTimeout(ur);
   }
 }
 

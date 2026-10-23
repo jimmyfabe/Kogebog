@@ -953,6 +953,23 @@ async function startServer(rod, port) {
   server.kill();
   throw new Error('testens egen server startede ikke på port ' + port);
 }
+// En server på porten, der tager imod forbindelserne, men aldrig svarer (svag 4G, wifi uden internet). Porten er lige
+// sluppet af Python, så der prøves et par gange
+async function haengendeServer(port) {
+  for (let i = 0; i < 20; i++) {
+    const forbindelser = new Set();
+    const s = net.createServer((sok) => {
+      forbindelser.add(sok);
+      sok.on('error', () => {});
+      sok.on('close', () => forbindelser.delete(sok));
+    });
+    const ok = await new Promise((r) => { s.once('error', () => r(false)); s.listen(port, '127.0.0.1', () => r(true)); });
+    if (ok) return { stop: () => new Promise((r) => { for (const x of forbindelser) x.destroy(); s.close(() => r()); }) };
+    await pause(250);
+  }
+  return null;
+}
+
 async function stopServer(server, port) {
   server.kill();
   for (let i = 0; i < 50 && await svarer('http://127.0.0.1:' + port + '/sw.js'); i++) await pause(100);
@@ -997,6 +1014,7 @@ async function udenNet(H) {
   const base = 'http://127.0.0.1:' + port;
   const uge = planMandag(new Date());
   let server = await startServer(ROD, port);
+  let haenger = null; // trin 6: serveren, der aldrig svarer
   const ctx = await hentPlaywright().webkit.launchPersistentContext(profil, { viewport: ipad.viewport, hasTouch: true, deviceScaleFactor: 1, locale: 'da-DK' });
   try {
     await ctx.addInitScript(forfalskninger, LYD_TEKSTER);
@@ -1100,8 +1118,28 @@ async function udenNet(H) {
     tjek(side.fejl.length === 0, 'desktop uden net: ' + side.fejl.join(' | '));
     await side.close();
     maal.push('uden net: ' + filer.length + ' FILER i kog-' + indhold + '; børnenes valg, listen og printet virkede med serveren stoppet');
+
+    // 6. Nettet tager imod, men svarer aldrig (svag 4G, wifi uden internet): en server på samme port, der aldrig svarer.
+    //    Opskrifterne er netværk først, men kommer fra cachen efter 4 s, så linket åbner listen (code review U3, 23-10)
+    haenger = await haengendeServer(port);
+    tjek(Boolean(haenger), 'nettet svarer aldrig: den hængende server kunne ikke starte på port ' + port);
+    if (haenger) {
+      side = await nyFane(ctx, iphone);
+      const t0 = Date.now();
+      await side.goto(base + '/index.html#/hent/' + kod(uge, dage), { waitUntil: 'commit', timeout: 15000 }).catch(() => {});
+      const kom = await venterPaa(side, () => location.hash === '#/indkoeb' && document.querySelector('.liste-tal'), null,
+        'iphone, nettet svarer aldrig: linket skal åbne listen inden for 15 s', 15000);
+      const sek = Math.round((Date.now() - t0) / 100) / 10;
+      if (kom) {
+        tjek(await side.evaluate(() => Boolean(navigator.serviceWorker.controller)), 'iphone, nettet svarer aldrig: siden skal komme fra service workeren');
+        tjek(JSON.stringify((await listeNu(side)).afd) === JSON.stringify(forventet(H, dage).afd), 'iphone, nettet svarer aldrig: listen er de to retter');
+      }
+      maal.push('nettet svarer aldrig: listen ' + (kom ? 'kom efter ' + sek + ' s' : 'kom ikke inden for 15 s'));
+      await side.close();
+    }
   } finally {
     await ctx.close();
+    if (haenger) await haenger.stop();
     if (server) await stopServer(server, port);
     try {
       fs.rmSync(mappe, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
