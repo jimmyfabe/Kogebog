@@ -599,7 +599,8 @@ function oversigtSkaerm() {
     kr += prisFor(m, d.n);
     if (m.uge.groentG > 0) groent++;
   }
-  const sum = harRetter ? 'Ca. ' + Math.round(kr / 10) * 10 + ' kr. · grønt ' + groent + ' af 7 dage' : 'Ingen retter endnu';
+  // Hårde mellemrum i begge led: på 360 px stod «dage» alene på næste linje (UI-review V6, 23-10)
+  const sum = harRetter ? 'Ca.\u00a0' + Math.round(kr / 10) * 10 + '\u00a0kr.\u00a0· grønt\u00a0' + groent + '\u00a0af\u00a07\u00a0dage' : 'Ingen retter endnu';
   // Et link til en uge mere end 8 uger fra i dag afviser afkod (på telefonen og på #/hent/ her). Så er «Indkøbsliste» og
   // «Send til telefon» væk, og advarslen siger, hvad den voksne gør; «Del som tekst» og «Print» virker stadig (U4, 23-10)
   const kanSendes = !harRetter || afkod(data.kode, { retter: K.S.ids, idag: new Date() }).ok;

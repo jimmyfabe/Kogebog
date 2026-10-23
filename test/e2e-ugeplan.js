@@ -378,7 +378,8 @@ function sumTekst(H, dage) {
     kr += (t.pris_kr * d.n) / t.portioner;
     if (t.groent_g > 0) g++;
   }
-  return 'Ca. ' + Math.round(kr / 10) * 10 + ' kr. · grønt ' + g + ' af 7 dage';
+  // Hårde mellemrum i begge led, så «dage» ikke står alene på næste linje (UI-review V6, 23-10)
+  return 'Ca.\u00a0' + Math.round(kr / 10) * 10 + '\u00a0kr.\u00a0· grønt\u00a0' + g + '\u00a0af\u00a07\u00a0dage';
 }
 
 // Planen i lageret og på skærmen: rettens navn pr. dag (null for en fri aften)
@@ -589,6 +590,8 @@ async function oversigtIpad(browser, H) {
     await foto(side, n + '-ugeplan-' + b + 'x' + h, { fullPage: true });
     const led = await brudteLed(side, '.dag-meta');
     tjek(!led.length, n + ' ugeplan ' + b + '×' + h + ': metalinjen brydes kun mellem leddene (brudt: ' + led.join(' | ') + ')');
+    const sumLed = await brudteLed(side, '.uge-sum');
+    tjek(!sumLed.length, n + ' ugeplan ' + b + '×' + h + ': summen brydes kun mellem leddene (brudt: ' + sumLed.join(' | ') + ')');
   }
 
   // 11. Kan valget på dagskærmen ikke gemmes (lageret er fuldt), står beskeden ved retten, og man bliver på dagskærmen.
