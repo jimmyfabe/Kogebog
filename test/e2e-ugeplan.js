@@ -1141,11 +1141,13 @@ async function udenNet(H) {
     tjek(side.fejl.length === 0, 'ipad uden net: ' + side.fejl.join(' | '));
     await side.close();
 
-    // 4. Telefonen: linket fra «Send til telefon» åbner listen uden net, en afkrydsning overlever en genindlæsning
+    // 4. Telefonen: linket til ugens plan (lavet her med kod(), som «Send til telefon» laver det) åbner listen uden net,
+    //    og en afkrydsning overlever en genindlæsning
     const dage = [{ ret: 'koedsovs', n: 4 }, { ret: valgt, n: 4 }, null, null, null, null, null];
     side = await nyFane(ctx, iphone);
     await side.goto(base + '/index.html#/hent/' + kod(uge, dage));
     await venterPaa(side, () => location.hash === '#/indkoeb' && document.querySelector('.liste-tal'), null, 'iphone uden net: linket skal åbne listen');
+    tjek(await side.evaluate(() => Boolean(navigator.serviceWorker.controller)), 'iphone uden net: listen skal komme fra service workeren');
     let l = await listeNu(side);
     tjek(JSON.stringify(l.afd) === JSON.stringify(forventet(H, dage).afd), 'iphone uden net: listen er grupper() af de to retter (' + JSON.stringify(l.afd).slice(0, 200) + ')');
     const vare = await side.locator('li[data-vare]:not(.koebt) .vare .vare-navn').first().textContent();
@@ -1164,6 +1166,7 @@ async function udenNet(H) {
     side = await nyFane(ctx, desktop);
     await side.goto(base + '/print.html?uge');
     await venterPaa(side, () => document.querySelectorAll('.uge-dag').length === 7 && !document.querySelector('#print').disabled, null, 'desktop uden net: printet');
+    tjek(await side.evaluate(() => Boolean(navigator.serviceWorker.controller)), 'desktop uden net: printet skal komme fra service workeren');
     const p = await printDage(side);
     tjek(p[0].ret === RETTER.koedsovs.name && p[1].ret === RETTER[valgt].name && p[1].af === 'Valgt af Rosa',
       'desktop uden net: printet viser mandag og tirsdag (' + JSON.stringify(p.slice(0, 2)) + ')');
