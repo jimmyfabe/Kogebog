@@ -1001,6 +1001,16 @@ async function ugePrint(browser, H) {
   tjek(note === 'Én dag mangler på listen, fordi retten ikke længere er i ugeplanen.', n + ': listen siger, at retten ikke er i ugeplanen (' + note + ')');
   tjek(JSON.stringify(await printListe(side)) === JSON.stringify(listeFor(H, dage)), n + ': listen har kun ugeplanens retter');
 
+  // 6. Begge grunde på én gang: «Genindlæs siden» står efter sætningen om opskriften, der ikke kunne hentes, ikke efter
+  //    retten uden for ugeplanen, som en genindlæsning ikke hjælper på (code review F5, 23-10)
+  await side.route('**/opskrifter/tunfrikadeller.json', (r) => r.abort());
+  await side.reload();
+  await ark(() => document.querySelectorAll('.uge-dag').length === 7 && !document.querySelector('#print').disabled, 'printet med begge grunde');
+  const note2 = (await side.locator('.liste-note').allTextContents()).join(' | ');
+  tjek(note2 === 'Én dag mangler på listen, fordi opskriften ikke kunne hentes. Genindlæs siden for at prøve igen. '
+    + 'Én dag mangler på listen, fordi retten ikke længere er i ugeplanen.', n + ': «Genindlæs siden» hører til opskriften, der ikke kunne hentes (' + note2 + ')');
+  await side.unroute('**/opskrifter/tunfrikadeller.json');
+
   tjek(!side.fejl.filter((x) => !/tunfrikadeller\.json/.test(x)).length, n + ' print af ugen: ' + side.fejl.join(' | '));
   await ctx.close();
 }

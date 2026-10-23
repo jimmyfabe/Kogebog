@@ -69,7 +69,9 @@ function tegn(ark, p, hentet) {
   // ugeplanen. Kun det første kan genindlæsning hjælpe på (code review U6, 23-10)
   const ikkeHentet = p.dage.filter((d) => d && !hentet.get(d.ret)).length;
   const ikkeIPlanen = p.dage.filter((d) => d && hentet.get(d.ret) && !hentet.get(d.ret).uge).length;
-  const mangler = manglerTekst(ikkeHentet, ikkeIPlanen) + (ikkeHentet ? ' Genindlæs siden for at prøve igen.' : '');
+  // «Genindlæs siden» står lige efter sætningen om opskrifterne, der ikke kunne hentes (code review F5, 23-10)
+  const mangler = [manglerTekst(ikkeHentet, 0) + (ikkeHentet ? ' Genindlæs siden for at prøve igen.' : ''), manglerTekst(0, ikkeIPlanen)]
+    .filter(Boolean).join(' ');
   const afdelinger = grupper(saml(valg)).map((g) => el('section', { class: 'afd' + (g.afd === 'basis' ? ' basis' : '') },
     el('h3', { tekst: g.navn }),
     el('ul', { class: 'tjek' }, g.varer.map((v) => el('li', {},
