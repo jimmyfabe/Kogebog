@@ -445,6 +445,13 @@ function tegnIgen(fokus) {
   if (fokus) document.querySelector('[data-fokus="' + fokus + '"]')?.focus({ preventScroll: true });
 }
 
+// Efter «Send til telefon» og «Del som tekst»: beskeden under knapperne rulles frem, så vejledningen (og feltet) kan ses.
+// Fokus bliver på knappen. På iPad'en lå beskeden under bunden (UI-review V1, 23-10). Uden animation ved «mindre bevægelse»
+function visBesked(fokus) {
+  tegnIgen(fokus);
+  document.querySelector('.uge-besked')?.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+}
+
 // Ugen er gået, når dens søndag er forbi (planMandag er i dag, eller den næste mandag)
 const ugenErGaaet = (uge) => Boolean(uge) && Date.parse(uge + 'T00:00:00Z') + 7 * DAG_MS <= Date.parse(planMandag() + 'T00:00:00Z');
 
@@ -538,7 +545,7 @@ async function sendLink(data) {
     kopieret: 'Linket er kopieret. Sæt det ind i en besked til telefonen.',
     felt: 'Kopiér linket herunder, og send det til telefonen.',
   });
-  if (b) { oversigtBesked = b; tegnIgen('send'); }
+  if (b) { oversigtBesked = b; visBesked('send'); }
 }
 
 // Mangler en dag på listen, står det under overskriften i teksten og sidst i beskeden (code review U5, 23-10)
@@ -551,7 +558,7 @@ async function delTekst(data) {
     kopieret: 'Listen er kopieret. Sæt den ind i Noter, markér linjerne, og tryk på tjeklisten.' + efter,
     felt: 'Kopiér listen herunder, og sæt den ind i Noter.' + efter,
   });
-  if (b) { oversigtBesked = b; tegnIgen('del'); }
+  if (b) { oversigtBesked = b; visBesked('del'); }
 }
 
 function oversigtBeskedEl() {

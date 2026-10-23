@@ -375,6 +375,16 @@ const fakeDeling = () => {
   });
 };
 
+// Står elementet helt inden for skærmen, som den står nu (uden at rulle)? Venter op til 3 s, så en blød rulning kan nå
+// at blive færdig (UI-review V1, 23-10)
+const sesHelt = (side, sel) => side.waitForFunction((s) => {
+  const r = document.querySelector(s)?.getBoundingClientRect();
+  return Boolean(r) && r.top >= 0 && r.bottom <= innerHeight;
+}, sel, { timeout: 3000 }).then(() => true, () => false).then(async (ok) => {
+  const r = await side.evaluate((s) => { const b = document.querySelector(s)?.getBoundingClientRect(); return b ? Math.round(b.top) + '-' + Math.round(b.bottom) + ' af ' + innerHeight : 'findes ikke'; }, sel);
+  return { ok, r };
+});
+
 async function oversigtIpad(browser, H) {
   const { BASE, SKAERME, RETTER, nySide, tjek, tjekLayout, foto, tryk, hold, vent, venterPaa, h1, maal } = H;
   const skaerm = SKAERME[0];
@@ -488,6 +498,8 @@ async function oversigtIpad(browser, H) {
     n + ': delearket skal have linket til ugens kode (' + JSON.stringify(delt[0]) + ')');
   tjek((await side.locator('.uge-besked').textContent()).includes('Åbn linket på telefonen'), n + ': efter delingen står, hvad man gør på telefonen');
   tjek(await side.evaluate(() => document.activeElement?.dataset.fokus) === 'send', n + ': fokus bliver på «Send til telefon»');
+  let syn = await sesHelt(side, '.uge-besked');
+  tjek(syn.ok, n + ': beskeden efter «Send til telefon» står inden for skærmen (' + syn.r + ')');
   const tlf = await nySide(browser, SKAERME[1], { serviceWorkers: 'block' });
   await tlf.side.goto(delt[0].url);
   await venterPaa(tlf.side, () => location.hash === '#/indkoeb' && document.querySelector('.liste-tal'), null, n + ': linket fra delearket skal åbne listen på telefonen');
@@ -508,6 +520,8 @@ async function oversigtIpad(browser, H) {
   await venterPaa(side, () => window.__delt.length === 3, null, n + ': «Del som tekst» skal åbne delearket');
   const tekst = (await side.evaluate(() => window.__delt[2])).text;
   tjek(tekst === 'Indkøbsliste uge ' + ugeNr(uge) + '\n\n' + listeTekst(F.varer), n + ': teksten skal være tekst() af ugens varer');
+  syn = await sesHelt(side, '.uge-besked');
+  tjek(syn.ok, n + ': beskeden efter «Del som tekst» står inden for skærmen (' + syn.r + ')');
   tjek(await side.locator('a.knap[href="print.html?uge"]').count() === 1, n + ': «Print» skal pege på print.html?uge');
   await foto(side, n + '-ugeplan-sendt');
 
@@ -616,11 +630,15 @@ async function oversigtDesktop(browser, H) {
   await side.locator('button:has-text("Send til telefon")').click();
   await side.waitForSelector('input.kopi-felt');
   tjek(await side.locator('input.kopi-felt').inputValue() === url, n + ': feltet skal have linket');
+  let syn = await sesHelt(side, '.uge-besked');
+  tjek(syn.ok, n + ': feltet med linket står inden for skærmen (' + syn.r + ')');
   await vent(420);
   await side.locator('button:has-text("Del som tekst")').click();
   await side.waitForSelector('textarea.kopi-felt');
   const F = forventet(H, dage);
   tjek(await side.locator('textarea.kopi-felt').inputValue() === 'Indkøbsliste uge ' + ugeNr(uge) + '\n\n' + listeTekst(F.varer), n + ': feltet skal have listen som tekst');
+  syn = await sesHelt(side, '.uge-besked');
+  tjek(syn.ok, n + ': feltet med listen står inden for skærmen (' + syn.r + ')');
   await tjekLayout(side, n + ' ugeplan med felt');
   await foto(side, n + '-ugeplan-felt', { fullPage: true });
   // «Ny uge» med tastaturet: mellemrum holdes i 2 s
