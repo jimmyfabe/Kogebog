@@ -1,5 +1,50 @@
 # STATUS – Tumbi Køkken
 
+## 23-10-2026 kl. 16:31: ugeplanen, UI-rettelser, versionsnummer v1 og Røst-lyd (gren `claude/ugeplan-22-10`, ikke flettet, ikke pushet)
+
+**Gjort** (83 commits oven på `main`s 55ac5b2, heraf 2 fletninger; `main` er ikke rørt):
+- **Ugeplanen, trin 1-10** (5327a9c..94212cd): katalog og regler, indkøbslisten (`js/indkoeb.js`), koden i linket (`js/plankode.js`), lageret `kog-uge-v1`/`kog-liste-v1`, telefonens `#/hent/<kode>` og `#/indkoeb`, den voksnes oversigt `#/uge`, børnenes valg `#/uge/vaelg`, `print.html?uge` (ugen på side 1, listen på side 2) og e2e uden net. Plan: `docs/ugeplan-plan.md`.
+- **35 billige aftensretter i ugeplanen** (hold 1-6 og 1a3b580) med mængder, prisskøn og grønt. Researchen ligger i `docs/research`.
+- **Review:** U1-U10, F1-F6 og UI V1-V10 er rettet, undtagen V8, som venter (se nedenfor). UI-review 2 gav 6 rettelser. Bevis: den gamle app gav 169 fejl, de nye 4.706 tjek er grønne. Code review af versionen og UI-rettelserne gav 0 kritiske fund. Fund 1-6 er rettet, fund 7 er fravalgt (se nedenfor).
+- **Versionsnummer v1 · 23-10-2026** står på forsiden og i begge print (`js/version.js`). `test/test-version.js` fejler, hvis en fil ændres uden et nyt nummer, og skriver den linje, der skal sættes ind. Fletningen c809681 tog grenen `claude/version-23-10` ind.
+- **x-land stod i 30 s i e2e** (babe880). Rodårsag:
+  - Testen genindlæste siden 96 gange pr. skærmform, og service workeren hentede hver gang de 52 opskrifter.
+  - `py -m http.server` taler HTTP/1.0, så hver forespørgsel fik sin egen forbindelse.
+  - Windows har 16.384 porte og holder en lukket forbindelse i ca. 120 s. Målt top: 16.368 i TIME_WAIT. Tcpip-hændelse 4227 kom kl. 05:57, 08:04 og 10:21, samtidig med stoppene.
+  - Nu skifter testen adresse i stedet for at genindlæse: 3.341 tjek grønne på 139 s, og ingen ny 4227.
+- **Validatoren kendte ikke ugeplanens lydnavne** (3b23661): `faelles/uge-*` og `<ret>/uge.mp3`. `test-opskrifter` har været rød siden Røst-commit 27747c8. Mod den gamle validator fejler 3 af 45 tests, nu er alle grønne.
+- **Stemmen:** 675 af 1.422 replikker har Røst-lyd. Røst kører videre i bidder gennem låsen og holder 90 s pause mellem kaldene, så andre kan nå låsen. Faldgruben står i `CLAUDE.md` «Stemmen»: en ny taleliste kan vælge andre udgaver af uændrede replikker, og de sættes tilbage før commit.
+- **Forsidens billeder i e2e** (b4ce381): den fulde e2e på 3b23661 gav 2 fejl ved det allerførste iPad-besøg, nemlig «billeder ikke indlæst» og «Halloween» uden ikon.
+  - Årsagen er testens timing, ikke appen. `goto` venter på sidens `load`, men kommer opskrifterne efter `load`, tegnes kortene bagefter, og billederne er stadig på vej.
+  - Nu venter testen på billederne, som formernes forside allerede gjorde.
+  - Bevis med langsomme opskrifter og billeder: før 51 af 112 billeder ikke indlæst, nu 0.
+- **Tests:**
+  - Node-tests på b4ce381: 8 af 9 grønne. `test-lyd` er rød, fordi 747 replikker mangler lyd, og på grund af de 3 forældreløse mp3.
+  - Fuld e2e i WebKit på 3b23661: 36.462 tjek på 1.246 s, 2 fejl (forsidens billeder, se ovenfor).
+  - Delen «hele» med rettelsen: 28.270 tjek grønne på 174 s.
+
+**Afventer Jimmy:**
+- (22-10) V8: på iPad'en på langs står «Indkøbsliste» og «Send til telefon» under skærmkanten (820 px). Skal bunden være fast, eller skal dag-rækkerne være lavere?
+- (23-10) Fletning til `main` og push sker kun med Jimmys ja. `main` har 5153d01 (11 Røst-replikker) og to STATUS-commits, som grenen ikke har. Ved fletningen skal `lyd/liste.json`, `lyd/tekster.json`, `sw.js` (LYD/INDHOLD), `js/version.js` (UDGAVE_INDHOLD) og `STATUS.md` løses.
+- (23-10, fra `main`) Ja til at slette de 3 forældreløse `timer-optaget` mp3? Indtil da er `test-lyd` rød på dem.
+- Stadig åbne fra `main`s STATUS (23-10 kl. 03:04): Halloween-tegningerne, udtalen af «Halloween», de 27 ældre replikker med en anden udgave, og lyttetesten af `timer-optaget`.
+
+**Testliste til Jimmy (iPad og iPhone):**
+1. Forsiden og begge print viser «Version v1 · 23-10-2026».
+2. På iPad'en: åbn ugeplanen fra forsiden (holdknappen) og lad børnene vælge. Vælg dyr, ret og dag; stemmen læser hvert tryk. På telefonen skal bunden med «Vælg» stå fast.
+3. På iPad'en: «Send til telefon». Åbn linket på iPhone. Indkøbslisten vises; kryds af, og prøv «Erstat listen».
+4. Print ugen: ugen står på side 1 og listen på side 2. Foden nævner ikke pris eller grønt.
+5. Slå flytilstand til efter første besøg. Appen og opskrifterne virker stadig.
+6. Lyt til nogle af de nye ugeplan-replikker (dagene og «Hvem skal vælge mad?»).
+
+**Ikke lavet / usikkert:**
+- Efter b4ce381 er kun delen «hele» kørt igen. De andre dele var grønne på 3b23661, og rettelsen rører kun «hele vejen».
+- ui-reviewer er ikke kørt igen efter fletningen: ugekvoten var på 86 %. Hver rettelse har sit eget e2e-tjek.
+- Code review fund 7: versionslinjens dato står ikke i `span.dato`, så den kan knække på en meget smal skærm. Det er ufarligt, og en rettelse kræver `medDatoer` i `dom.js` og nye fingeraftryk.
+- `kuge/e2e-inde.sh:12` skriver HEAD i loggens etiket i stedet for den testede revision. Det påvirker kun loggen.
+- Forslag, ikke afprøvet: `py -m http.server -p HTTP/1.1` i e2e, så forbindelserne genbruges.
+- Ingen har lyttet til den nye Røst-lyd. Kontrollen er den, «Stemmen» beskriver: de mistænkelige laves igen med seed 43 og 44. Der er ikke kørt talegenkender (ASR).
+
 ## 22-10-2026 kl. 07:36: `grafik-ai` er flettet og live; gamle filer slettet (venter på push)
 
 - **Jimmy flettede og pushede selv kl. 07:22** (`main` = `origin/main` = 2a1da5d): AI-billederne, advarselstrekanten, de to aftensretter og timer-rettelsen er live.
