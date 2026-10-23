@@ -243,6 +243,12 @@ export function valider(rod = ROD) {
       if (!erTekst(t.kilde)) f('«tumbi.kilde» skal være en tekst, fx "Egen tekst"');
       // Punktum + mellemrum + stort bogstav er en ny sætning («ca. 3 dl» er det ikke)
       else if (/\.\s+\p{Lu}/u.test(t.kilde) && !/[.!?]$/.test(t.kilde.trim())) f('«tumbi.kilde» har flere sætninger og skal slutte med punktum');
+      // Kilden står på printet (js/print.js), så den må ikke vise en sti i projektet: den voksne kan ikke bruge den.
+      // Sporbarheden står i CLAUDE.md (docs/research/) (UI-review V10, 23-10)
+      if (erTekst(t.kilde)) {
+        const sti = t.kilde.match(/\bdocs\/\S*|\b[\w-]+\.(?:md|json|js|html)\b/);
+        if (sti) f('«tumbi.kilde» viser stien «' + sti[0] + '» på printet: skriv kilden uden sti, fx «Mængderne er fra vores research om billige retter (22-10-2026).»');
+      }
       // Ugeplanen. Felterne tjekkes, når de står der, og kræves, når retten er med i ugeplanen
       if ('ugeplan' in t && t.ugeplan !== true) f('«tumbi.ugeplan» skal være true (udelad feltet, når retten ikke er med i ugeplanen), fandt ' + JSON.stringify(t.ugeplan));
       if (t.ugeplan === true) for (const k of UGEPLAN_FELTER) if (!(k in t)) f('«tumbi.ugeplan» kræver «tumbi.' + k + '»');
