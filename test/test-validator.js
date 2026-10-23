@@ -325,7 +325,9 @@ test('pris og grønt står i tumbi.ugeplan_kilde, ikke i kilden på printet', ()
   forventGyldig(fil, (d) => { d.tumbi.kilde += ' Brug frosne grøntsager.'; });
   forventGyldig(fil, (d) => { d.tumbi.kilde += ' Grøntsagerne kan være frosne.'; });
   for (const v of ['', 'Prisen er et skøn', 42, null]) forventFejl(fil, (d) => { d.tumbi.ugeplan_kilde = v; }, '«tumbi.ugeplan_kilde» skal være en tekst, der slutter med punktum');
-  forventGyldig(fil, (d) => { delete d.tumbi.ugeplan_kilde; });
+  // Noten kræves kun i ugeplanen (code review, 23-10)
+  forventFejl(fil, (d) => { delete d.tumbi.ugeplan_kilde; }, '«tumbi.ugeplan» kræver «tumbi.ugeplan_kilde»');
+  forventGyldig(fil, (d) => { delete d.tumbi.ugeplan; delete d.tumbi.ugeplan_kilde; });
 });
 
 test('voksen og voksen_hjaelp følges ad', () => {
@@ -618,8 +620,8 @@ test('en ret i ugeplanen med alle felterne er gyldig', () => {
   ugeplanGyldig((d) => { Object.assign(d.tumbi.ingredienser[1], { antal: 0.5, enhed: 'kg' }); });
 });
 
-test('tumbi.ugeplan kræver portioner, pris, prisens måned og grønt', () => {
-  for (const k of ['portioner', 'pris_kr', 'pris_dato', 'groent_g']) ugeplanFejl((d) => { delete d.tumbi[k]; }, '«tumbi.ugeplan» kræver «tumbi.' + k + '»');
+test('tumbi.ugeplan kræver portioner, pris, prisens måned, grønt og noten om pris og grønt', () => {
+  for (const k of ['portioner', 'pris_kr', 'pris_dato', 'groent_g', 'ugeplan_kilde']) ugeplanFejl((d) => { delete d.tumbi[k]; }, '«tumbi.ugeplan» kræver «tumbi.' + k + '»');
   for (const v of ['ja', false, 1]) ugeplanFejl((d) => { d.tumbi.ugeplan = v; }, '«tumbi.ugeplan» skal være true (udelad feltet');
   // Uden ugeplanen kræves felterne ikke (de rigtige retter uden felterne er gyldige: «de rigtige opskrifter er gyldige»)
   forventGyldig(KS, (d) => { iUgeplan(d); delete d.tumbi.ugeplan; delete d.tumbi.portioner; });

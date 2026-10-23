@@ -25,7 +25,7 @@ const RET_TUMBI = new Set(['id', 'version', 'afproevet', 'kilde', 'ingredienser'
 const INGR_NOEGLER = new Set(['ikon', 'maengde', 'vare', 'antal', 'enhed']);
 // Ugeplanen (docs/ugeplan-plan.md, afsnit 4): felterne, en ret med «tumbi.ugeplan»: true skal have, og dens grænser.
 // En time fra hjemkomst til aftensmad, og højst 2 trin med kniv eller rivejern (skånsomt for hænderne)
-const UGEPLAN_FELTER = ['portioner', 'pris_kr', 'pris_dato', 'groent_g'];
+const UGEPLAN_FELTER = ['portioner', 'pris_kr', 'pris_dato', 'groent_g', 'ugeplan_kilde'];
 const UGEPLAN_MAKS_MIN = 60;
 const UGEPLAN_MAKS_KNIV = 2;
 const KNIV_VERBER = Object.keys(VOKSEN_KRAV).filter((v) => VOKSEN_KRAV[v] === 'kniv'); // skaere og rive
