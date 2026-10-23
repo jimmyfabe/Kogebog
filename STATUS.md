@@ -2,7 +2,7 @@
 
 ## 23-10-2026 kl. 03:04: Halloween-afsnit, fund 5 og 6, «Start timer», pilletesten og stemmen (gren `claude/kogebog-22-10`, ikke flettet)
 
-**Gjort** (10 commits oven på `main` 5942b76; `main` er ikke rørt og er stadig 4 commits foran `origin/main`):
+**Gjort** (12 commits oven på `main` 5942b76, den sidste er denne STATUS; `main` er ikke rørt og er stadig 4 commits foran `origin/main`):
 - **Halloween** (92bd110): de seks retter står i et eget afsnit sidst på forsiden, med en græskar-tegning og en lys lilla cirkel. Fortrydes ét sted: `opskrifter/index.json`.
 - **Fund 6** (6436425, 7523ac5): «Læs op» på ret-skærmen siger navnet og derefter «Sammen med en voksen». Knappen står som talende, til begge replikker er sagt.
 - **Fund 5** (24753e9, 578baa6, 55ac5b2): i kødsovs, bolognese og cremet kødsovs lægges kødet i uden timer. Så vaskes hænderne, og timeren startes på trinnet efter. Validatoren afviser en timer med råt på hænderne. Æltningen undtages kun, når det rå er i dejen. Hver regel har en test, der fejler mod den gamle validator.
