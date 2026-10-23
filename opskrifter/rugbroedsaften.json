@@ -1,0 +1,56 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Rugbrødsaften med æg, makrel og grøntstave",
+  "description": "Kogte æg, makrel i tomat og grøntstave på bordet. Alle smører selv på rugbrød.",
+  "image": "grafik/ret-rugbroedsaften.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT15M",
+  "totalTime": "PT20M",
+  "recipeIngredient": [
+    "1 agurk",
+    "1 peberfrugt",
+    "8 æg",
+    "1 knivspids salt",
+    "1 dåse makrel i tomat",
+    "200 g revne gulerødder",
+    "400 g rugbrød"
+  ],
+  "tool": ["kniv", "skærebræt", "gryde", "ske", "dåseåbner", "skåle", "gaffel"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Skær agurken i stave.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["agurk"] } },
+    { "@type": "HowToStep", "text": "Skær peberfrugten i strimler.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["peberfrugt"], "note": "Den voksne fjerner stilk og kerner først. Få snit." } },
+    { "@type": "HowToStep", "text": "Læg æggene forsigtigt i en gryde.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["aeg"], "note": "Med en ske. Hæld koldt vand på, så det lige dækker æggene. Timeren startes efter håndvasken." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter råt æg." } },
+    { "@type": "HowToStep", "text": "Kog æggene i 8 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 480, "note": "Fra vandet koger, ved middel varme." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra æggene.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne hælder vandet fra i vasken og fylder koldt vand på. Pas på dampen." } },
+    { "@type": "HowToStep", "text": "Hæld makrellen i en skål.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["makrel"], "note": "Den voksne åbner dåsen: kanten er skarp." } },
+    { "@type": "HowToStep", "text": "Pil skallen af æggene.", "tumbi": { "verbum": "smuldre", "note": "Når de er kølet af i det kolde vand. Bank dem let mod bordet først." } },
+    { "@type": "HowToStep", "text": "Mos æggene med lidt salt.", "tumbi": { "verbum": "mose", "ikoner": ["salt"], "note": "Med en gaffel i en skål." } },
+    { "@type": "HowToStep", "text": "Sæt det hele på bordet.", "tumbi": { "verbum": "pynte", "ikoner": ["broed", "gulerod", "agurk", "peberfrugt"], "note": "Rugbrød, æg, makrel og grønt i hver sin skål." } },
+    { "@type": "HowToStep", "text": "Smør din egen mad.", "tumbi": { "verbum": "smoere", "ikoner": ["broed"], "note": "Rugbrød med æg eller makrel, og grøntstave ved siden af." } }
+  ],
+  "tumbi": {
+    "id": "rugbroedsaften",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra researchen i docs/research/billige-retter-22-10.md (22-10-2026). Idé fra Fødevarestyrelsens kostråd (fed fisk og fuldkorn) og den danske rugbrødsaften. Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Tid og grønt er også et skøn (ikke målt), og grønt er uden bælgfrugter og kartofler.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 83,
+    "pris_dato": "2026-10",
+    "groent_g": 730,
+    "ingredienser": [
+      { "ikon": "agurk", "maengde": "1", "vare": "agurk", "antal": 1, "enhed": "stk" },
+      { "ikon": "peberfrugt", "maengde": "1", "vare": "peberfrugt", "antal": 1, "enhed": "stk" },
+      { "ikon": "aeg", "maengde": "8", "vare": "aeg", "antal": 8, "enhed": "stk" },
+      { "ikon": "salt", "maengde": "1 knivspids", "vare": "salt" },
+      { "ikon": "makrel", "maengde": "1 dåse", "vare": "makrel-tomat", "antal": 1, "enhed": "stk" },
+      { "ikon": "gulerod", "maengde": "200 g", "vare": "revet-gulerod", "antal": 200, "enhed": "g" },
+      { "ikon": "broed", "maengde": "400 g", "vare": "rugbroed", "antal": 400, "enhed": "g" }
+    ]
+  }
+}

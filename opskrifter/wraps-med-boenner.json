@@ -1,0 +1,58 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Wraps med bønnefyld og kålsalat",
+  "description": "Varmt fyld af bønner, majs og tomat og en kold kålsalat. Hver ruller sin egen wrap.",
+  "image": "grafik/ret-wraps-med-boenner.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT10M",
+  "cookTime": "PT15M",
+  "totalTime": "PT25M",
+  "recipeIngredient": [
+    "2 dåser kidneybønner",
+    "1 dåse majs",
+    "1 dåse hakkede tomater",
+    "1 tsk paprika",
+    "1 tsk stødt spidskommen",
+    "200 g snittet kål",
+    "200 g revne gulerødder",
+    "200 g yoghurt naturel",
+    "½ tsk salt",
+    "8 tortillas"
+  ],
+  "tool": ["dåseåbner", "si", "gryde med låg", "grydeske", "skål", "ske"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Hæld bønner og majs i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["boenner", "majs"], "note": "Den voksne åbner dåserne: kanten er skarp. Skyl dem med koldt vand." } },
+    { "@type": "HowToStep", "text": "Hæld bønner, majs og tomater i en gryde.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["boenner", "majs", "tomat"], "note": "Gryden er kold. Den voksne åbner dåserne: kanten er skarp." } },
+    { "@type": "HowToStep", "text": "Drys paprika og spidskommen i gryden.", "tumbi": { "verbum": "drysse", "ikoner": ["krydderurt"], "note": "Gryden er kold, så barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Rør kål, gulerod og yoghurt sammen.", "tumbi": { "verbum": "roere", "ikoner": ["kaal", "gulerod", "yoghurt", "salt"], "note": "I en skål med en knivspids salt. Det er kålsalaten." } },
+    { "@type": "HowToStep", "text": "Lad fyldet simre under låg i 10 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "note": "Middel varme. Rør af og til. Bønnerne må gerne være hele." } },
+    { "@type": "HowToStep", "text": "Smag fyldet til med salt.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt"], "note": "Pust på skeen først." } },
+    { "@type": "HowToStep", "text": "Fyld og rul din egen wrap.", "tumbi": { "verbum": "rulle", "ikoner": ["tortilla", "boenner", "kaal"], "note": "Fyld på midten, kålsalat ovenpå, fold bunden op og rul. Fyldet er varmt: lad det køle lidt." } }
+  ],
+  "tumbi": {
+    "id": "wraps-med-boenner",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra researchen i docs/research/billige-retter-22-10.md (22-10-2026). Idé fra Coop Opskrifter, «wraps med falafler», og wraptemaet. Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Tid og grønt er også et skøn (ikke målt), og grønt er uden bælgfrugter og kartofler.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 67,
+    "pris_dato": "2026-10",
+    "groent_g": 1085,
+    "ingredienser": [
+      { "ikon": "boenner", "maengde": "2 dåser", "vare": "kidneyboenner", "antal": 2, "enhed": "stk" },
+      { "ikon": "majs", "maengde": "1 dåse", "vare": "majs", "antal": 1, "enhed": "stk" },
+      { "ikon": "tomat", "maengde": "1 dåse", "vare": "hakkede-tomater", "antal": 400, "enhed": "g" },
+      { "ikon": "krydderurt", "maengde": "1 tsk", "vare": "paprika" },
+      { "ikon": "krydderurt", "maengde": "1 tsk", "vare": "spidskommen" },
+      { "ikon": "kaal", "maengde": "200 g", "vare": "snittet-kaal", "antal": 200, "enhed": "g" },
+      { "ikon": "gulerod", "maengde": "200 g", "vare": "revet-gulerod", "antal": 200, "enhed": "g" },
+      { "ikon": "yoghurt", "maengde": "200 g", "vare": "yoghurt", "antal": 200, "enhed": "g" },
+      { "ikon": "salt", "maengde": "½ tsk", "vare": "salt" },
+      { "ikon": "tortilla", "maengde": "8", "vare": "tortillas", "antal": 8, "enhed": "stk" }
+    ]
+  }
+}

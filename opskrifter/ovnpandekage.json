@@ -1,0 +1,58 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Ovnpandekage med spinat og hytteost",
+  "description": "Én stor pandekage med spinat og ærter, bagt på en bradepande. Hytteost og revne gulerødder på toppen.",
+  "image": "grafik/ret-ovnpandekage.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT10M",
+  "cookTime": "PT25M",
+  "totalTime": "PT35M",
+  "recipeIngredient": [
+    "5 dl mælk",
+    "200 g hvedemel",
+    "½ tsk salt",
+    "6 æg",
+    "300 g frossen hakket spinat, tøet op",
+    "200 g frosne ærter",
+    "250 g hytteost",
+    "200 g revne gulerødder"
+  ],
+  "tool": ["kande med låg", "kop", "bradepande", "bagepapir", "grydelapper", "kniv", "skærebræt"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Mål 5 dl mælk.", "tumbi": { "verbum": "maale", "ikoner": ["maelk"], "note": "Tænd ovnen på 200 °C varmluft først. Tø spinaten op i forvejen (natten over i køleskabet eller i mikroovnen)." } },
+    { "@type": "HowToStep", "text": "Hæld mælk, mel og salt i en kande.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk", "mel", "salt"], "note": "200 g mel er ca. 3½ dl. Brug en kande med låg." } },
+    { "@type": "HowToStep", "text": "Kom æggene i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["aeg"], "note": "Slå æggene ud i en kop først, så er det let at fiske skaller op." } },
+    { "@type": "HowToStep", "text": "Ryst kanden godt med låg på.", "tumbi": { "verbum": "piske", "note": "Hold en hånd på låget. Ryst, til der ikke er klumper." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter råt æg." } },
+    { "@type": "HowToStep", "text": "Rør spinat og ærter i dejen.", "tumbi": { "verbum": "roere", "ikoner": ["spinat", "aerter"], "note": "Pres vandet ud af spinaten først. Ærterne kommer direkte fra frost." } },
+    { "@type": "HowToStep", "text": "Hæld dejen i en bradepande med bagepapir.", "tumbi": { "verbum": "haelde", "note": "Bagepapiret skal gå op ad kanterne. Fordel ærterne med en ske." } },
+    { "@type": "HowToStep", "text": "Bag pandekagen i ovnen i 22 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1320, "note": "200 °C varmluft. Den er færdig, når midten er fast og kanten gylden." } },
+    { "@type": "HowToStep", "text": "Tag bradepanden ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Den er meget varm. Lad pandekagen køle lidt af." } },
+    { "@type": "HowToStep", "text": "Skær pandekagen i stykker.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne skærer den i 8 stykker." } },
+    { "@type": "HowToStep", "text": "Kom hytteost og gulerod på.", "tumbi": { "verbum": "pynte", "ikoner": ["hytteost", "gulerod"], "note": "Hver bygger selv på sit stykke. Pandekagen kan også rulles om fyldet." } }
+  ],
+  "tumbi": {
+    "id": "ovnpandekage",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra researchen i docs/research/billige-retter-22-10.md (22-10-2026). Idé fra den klassiske ovnpandekage, ingen bestemt opskrift. Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Tid og grønt er også et skøn (ikke målt), og grønt er uden bælgfrugter og kartofler.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 56,
+    "pris_dato": "2026-10",
+    "groent_g": 700,
+    "ingredienser": [
+      { "ikon": "maelk", "maengde": "5 dl", "vare": "maelk", "antal": 5, "enhed": "dl" },
+      { "ikon": "mel", "maengde": "200 g", "vare": "mel", "antal": 200, "enhed": "g" },
+      { "ikon": "salt", "maengde": "½ tsk", "vare": "salt" },
+      { "ikon": "aeg", "maengde": "6", "vare": "aeg", "antal": 6, "enhed": "stk" },
+      { "ikon": "spinat", "maengde": "300 g", "vare": "hakket-spinat", "antal": 300, "enhed": "g" },
+      { "ikon": "aerter", "maengde": "200 g", "vare": "aerter", "antal": 200, "enhed": "g" },
+      { "ikon": "hytteost", "maengde": "250 g", "vare": "hytteost", "antal": 250, "enhed": "g" },
+      { "ikon": "gulerod", "maengde": "200 g", "vare": "revet-gulerod", "antal": 200, "enhed": "g" }
+    ]
+  }
+}

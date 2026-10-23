@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="bean-back" transform="translate(92 92) rotate(-20)">
+    <path d="M-44 -8 C-44 -34 -12 -42 4 -28 C14 -20 26 -30 40 -20 C58 -6 50 30 14 32 C-20 34 -44 18 -44 -8 Z" fill="#E8D2A6"/>
+    <path d="M-28 -14 C-22 -24 -10 -26 -2 -22" fill="none" stroke="#FFF4E2" stroke-width="3"/>
+  </g>
+  <g id="bean-right" transform="translate(168 100) rotate(25)">
+    <path d="M-44 -8 C-44 -34 -12 -42 4 -28 C14 -20 26 -30 40 -20 C58 -6 50 30 14 32 C-20 34 -44 18 -44 -8 Z" fill="#7A1F1A"/>
+    <path d="M-28 -14 C-22 -24 -10 -26 -2 -22" fill="none" stroke="#B5473F" stroke-width="3"/>
+  </g>
+  <g id="bean-front" transform="translate(120 162) rotate(6)">
+    <path d="M-52 -10 C-52 -40 -14 -50 4 -34 C16 -24 30 -36 46 -24 C68 -8 58 36 16 38 C-24 40 -52 20 -52 -10 Z" fill="#9E2B25"/>
+    <path d="M-34 -18 C-26 -30 -12 -32 -2 -27" fill="none" stroke="#D0645A" stroke-width="3"/>
+    <path d="M-10 24 C6 26 24 22 36 12" fill="none" stroke="#7A1F1A" stroke-width="3"/>
+  </g>
+  <g id="bean-small" transform="translate(196 186) rotate(-30)">
+    <path d="M-26 -5 C-26 -20 -7 -25 2 -17 C8 -12 15 -18 23 -12 C34 -4 30 18 8 19 C-12 20 -26 11 -26 -5 Z" fill="#E8D2A6"/>
+  </g>
+  <g id="bean-tiny" transform="translate(56 196) rotate(40)">
+    <path d="M-26 -5 C-26 -20 -7 -25 2 -17 C8 -12 15 -18 23 -12 C34 -4 30 18 8 19 C-12 20 -26 11 -26 -5 Z" fill="#9E2B25"/>
+  </g>
+</g>
+</svg>

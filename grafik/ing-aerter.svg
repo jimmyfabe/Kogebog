@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="pod" transform="translate(124 118) rotate(-24)">
+    <path d="M100 2 C110 -4 116 -14 118 -26" fill="none"/>
+    <path d="M-100 4 C-64 -40 64 -40 100 4 C64 44 -64 44 -100 4 Z" fill="#4E8A2A"/>
+    <path d="M-86 4 C-52 -22 52 -22 86 4 C52 26 -52 26 -86 4 Z" fill="#9BD06C"/>
+    <g id="peas" fill="#6BB23E">
+      <circle cx="-56" cy="4" r="15"/>
+      <circle cx="-28" cy="2" r="16"/>
+      <circle cx="0" cy="1" r="16"/>
+      <circle cx="28" cy="2" r="16"/>
+      <circle cx="56" cy="4" r="15"/>
+    </g>
+    <path d="M-62 -2 A7 7 0 0 1 -54 -6 M-34 -4 A7 7 0 0 1 -26 -8 M-6 -5 A7 7 0 0 1 2 -9 M22 -4 A7 7 0 0 1 30 -8 M50 -2 A7 7 0 0 1 58 -6" fill="none" stroke="#C8EBA0" stroke-width="3"/>
+    <path d="M-100 4 C-64 26 64 26 100 4" fill="none" stroke="#3F7F2E" stroke-width="3"/>
+  </g>
+  <g id="loose-peas" fill="#6BB23E">
+    <circle cx="66" cy="196" r="15"/>
+    <circle cx="100" cy="212" r="14"/>
+    <circle cx="190" cy="200" r="15"/>
+  </g>
+  <path d="M60 190 A7 7 0 0 1 68 186 M94 206 A7 7 0 0 1 102 202 M184 194 A7 7 0 0 1 192 190" fill="none" stroke="#C8EBA0" stroke-width="3"/>
+</g>
+</svg>

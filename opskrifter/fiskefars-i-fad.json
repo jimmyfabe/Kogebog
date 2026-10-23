@@ -1,0 +1,61 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Fiskefars i fad med spinat",
+  "description": "Fiskefars bagt på cremet spinat, kartofler fra ovnen og ærter og gulerødder.",
+  "image": "grafik/ret-fiskefars-i-fad.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT10M",
+  "cookTime": "PT35M",
+  "totalTime": "PT45M",
+  "recipeIngredient": [
+    "400 g frossen hakket spinat",
+    "800 g små kartofler",
+    "1 spsk olie",
+    "½ tsk salt",
+    "300 g frosne ærter og gulerødder",
+    "100 g creme fraiche",
+    "1 knivspids peber",
+    "400 g fiskefars",
+    "1 l vand og ½ tsk salt til grøntsagerne"
+  ],
+  "tool": ["gryde med låg", "bageplade", "bagepapir", "frysepose", "ovnfast fad", "grydeske", "spiseske", "dørslag"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Varm spinaten i en gryde, til den er tøet.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "ikoner": ["spinat"], "note": "Tænd ovnen på 200 °C varmluft først. Middel varme, med låg. Rør af og til." } },
+    { "@type": "HowToStep", "text": "Ryst kartoflerne med olie og salt i en pose.", "tumbi": { "verbum": "roere", "ikoner": ["kartoffel", "olie", "salt"], "note": "Skyl kartoflerne først. De skal ikke skrælles. Hold godt om posen." } },
+    { "@type": "HowToStep", "text": "Hæld kartoflerne ud på en plade.", "tumbi": { "verbum": "haelde", "ikoner": ["kartoffel"], "note": "Bagepapir på pladen." } },
+    { "@type": "HowToStep", "text": "Hæld ærter og gulerødder i en gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["aerter"], "note": "Direkte fra frost. Gryden er kold, så barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Rør creme fraiche og peber i spinaten.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["yoghurt", "peber", "spinat"], "note": "Tag gryden af varmen først." } },
+    { "@type": "HowToStep", "text": "Hæld spinaten i et ovnfast fad.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spinat"], "note": "Den voksne hælder fra den varme gryde. Bred den ud i bunden." } },
+    { "@type": "HowToStep", "text": "Smør fiskefarsen ud over spinaten.", "tumbi": { "verbum": "smoere", "ikoner": ["koed"], "note": "Med en ske. Klatter først, og så glat ud." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter rå fisk. Den voksne stiller skeen i vasken og vasker også hænderne." } },
+    { "@type": "HowToStep", "text": "Bag fad og kartofler i ovnen i 30 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1800, "note": "200 °C varmluft. Når der er 10 min tilbage: vand på grøntsagerne, så de lige er dækket, og kog dem med låg." } },
+    { "@type": "HowToStep", "text": "Tag fad og plade ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Begge dele er meget varme. Farsen skal være fast og lys hele vejen igennem." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra grøntsagerne.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["aerter"], "note": "Den voksne hælder gennem dørslaget i vasken. Pas på dampen." } },
+    { "@type": "HowToStep", "text": "Smag på en kartoffel.", "tumbi": { "verbum": "smage", "ikoner": ["kartoffel"], "note": "Pust først. Den er varm indeni." } }
+  ],
+  "tumbi": {
+    "id": "fiskefars-i-fad",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra researchen i docs/research/billige-retter-22-10.md (22-10-2026). Idé fra Fødevarestyrelsens kostråd om fisk og den danske fiskefrikadelle, lavet i et fad. Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Tid og grønt er også et skøn (ikke målt), og grønt er uden bælgfrugter og kartofler.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 72,
+    "pris_dato": "2026-10",
+    "groent_g": 700,
+    "ingredienser": [
+      { "ikon": "spinat", "maengde": "400 g", "vare": "hakket-spinat", "antal": 400, "enhed": "g" },
+      { "ikon": "kartoffel", "maengde": "800 g", "vare": "smaa-kartofler", "antal": 800, "enhed": "g" },
+      { "ikon": "olie", "maengde": "1 spsk", "vare": "olie" },
+      { "ikon": "salt", "maengde": "½ tsk", "vare": "salt" },
+      { "ikon": "aerter", "maengde": "300 g", "vare": "aerter-gulerod", "antal": 300, "enhed": "g" },
+      { "ikon": "yoghurt", "maengde": "100 g", "vare": "creme-fraiche", "antal": 100, "enhed": "g" },
+      { "ikon": "peber", "maengde": "1 knivspids", "vare": "peber" },
+      { "ikon": "koed", "maengde": "400 g", "vare": "fiskefars", "antal": 400, "enhed": "g" },
+      { "ikon": "vand", "maengde": "1 l", "vare": "vand" }
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="jar">
+    <path d="M74 98 C66 108 62 124 62 150 C62 196 84 226 128 226 C172 226 194 196 194 150 C194 124 190 108 182 98 Z" fill="#F2B233"/>
+    <path d="M80 140 C80 120 86 110 94 104" fill="none" stroke="#FFD97A" stroke-width="6"/>
+    <rect x="70" y="72" width="116" height="30" rx="8" fill="#B5763A"/>
+    <path d="M70 96 C84 112 96 98 108 112 C120 124 132 100 146 114 C158 124 170 100 186 96" fill="#F2B233"/>
+    <rect x="96" y="148" width="64" height="40" rx="8" fill="#FFF4E2"/>
+    <path d="M118 162 L128 156 L138 162 L138 174 L128 180 L118 174 Z" fill="#F2B233" stroke-width="3"/>
+  </g>
+  <g id="dipper" transform="rotate(30 196 70)">
+    <rect x="190" y="14" width="12" height="76" rx="6" fill="#C98A4B"/>
+    <g fill="#E3A44E">
+      <rect x="180" y="84" width="32" height="12" rx="6"/>
+      <rect x="182" y="96" width="28" height="12" rx="6"/>
+      <rect x="180" y="108" width="32" height="12" rx="6"/>
+    </g>
+  </g>
+</g>
+</svg>

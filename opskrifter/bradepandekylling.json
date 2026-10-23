@@ -1,0 +1,58 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Bradepandekylling med rodfrugter",
+  "description": "Kyllingelår, kartofler og rodfrugter på én bradepande. Yoghurtdip ved siden af.",
+  "image": "grafik/ret-bradepandekylling.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT40M",
+  "totalTime": "PT45M",
+  "recipeIngredient": [
+    "600 g små kartofler",
+    "4 gulerødder",
+    "450 g frosne rodfrugter",
+    "2 spsk olie",
+    "1 kg kyllingelår",
+    "2 tsk paprika",
+    "1 tsk salt",
+    "150 g yoghurt naturel",
+    "½ tsk hvidløgspulver"
+  ],
+  "tool": ["bradepande", "frysepose", "lille skål", "ske"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Ryst kartofler og grønt med olie i en pose.", "tumbi": { "verbum": "roere", "ikoner": ["kartoffel", "gulerod", "olie"], "note": "Tænd ovnen på 210 °C varmluft først. Skyl kartofler og gulerødder: de skal ikke skrælles eller skæres. Rodfrugterne kommer direkte fra frost." } },
+    { "@type": "HowToStep", "text": "Hæld det hele ud i bradepanden.", "tumbi": { "verbum": "haelde", "ikoner": ["kartoffel", "gulerod"] } },
+    { "@type": "HowToStep", "text": "Rør yoghurt og hvidløgspulver sammen.", "tumbi": { "verbum": "roere", "ikoner": ["yoghurt", "hvidloeg"], "note": "I en lille skål. Det er dip til maden. Stil den i køleskabet." } },
+    { "@type": "HowToStep", "text": "Læg kyllingelårene oven på grøntsagerne.", "tumbi": { "verbum": "pynte", "ikoner": ["koed"], "note": "Med skindet opad." } },
+    { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: rå kylling kan give maveonde." } },
+    { "@type": "HowToStep", "text": "Drys paprika og salt over det hele.", "tumbi": { "verbum": "drysse", "ikoner": ["krydderurt", "salt"], "note": "Fra en lille skål, uden at røre kyllingen." } },
+    { "@type": "HowToStep", "text": "Bag det hele i ovnen i 40 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 2400, "note": "210 °C varmluft. Kyllingen er færdig, når kødsaften er klar, og kødet slipper benet." } },
+    { "@type": "HowToStep", "text": "Tag bradepanden ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Den er meget varm, og fedtet kan sprøjte." } },
+    { "@type": "HowToStep", "text": "Smag på en kartoffel.", "tumbi": { "verbum": "smage", "ikoner": ["kartoffel"], "note": "Pust først. Den er varm indeni." } }
+  ],
+  "tumbi": {
+    "id": "bradepandekylling",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra researchen i docs/research/billige-retter-22-10.md (22-10-2026). Idé fra den danske bradepanderet, ingen bestemt opskrift. Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Tid og grønt er også et skøn (ikke målt), og grønt er uden bælgfrugter og kartofler.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 78,
+    "pris_dato": "2026-10",
+    "groent_g": 750,
+    "ingredienser": [
+      { "ikon": "kartoffel", "maengde": "600 g", "vare": "smaa-kartofler", "antal": 600, "enhed": "g" },
+      { "ikon": "gulerod", "maengde": "4", "vare": "gulerod", "antal": 4, "enhed": "stk" },
+      { "ikon": "gulerod", "maengde": "450 g", "vare": "rodfrugter", "antal": 450, "enhed": "g" },
+      { "ikon": "olie", "maengde": "2 spsk", "vare": "olie" },
+      { "ikon": "koed", "maengde": "1 kg", "vare": "kyllingelaar", "antal": 1, "enhed": "kg" },
+      { "ikon": "krydderurt", "maengde": "2 tsk", "vare": "paprika" },
+      { "ikon": "salt", "maengde": "1 tsk", "vare": "salt" },
+      { "ikon": "yoghurt", "maengde": "150 g", "vare": "yoghurt", "antal": 150, "enhed": "g" },
+      { "ikon": "hvidloeg", "maengde": "½ tsk", "vare": "hvidloegspulver" }
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <ellipse id="bowl-inside" cx="128" cy="128" rx="92" ry="24" fill="#FFF4E2"/>
+  <path id="heap" fill="#E07B39" d="M44 132 C52 98 90 76 128 74 C166 76 204 98 212 132 Z"/>
+  <g id="lentils" stroke-width="2.5">
+    <ellipse cx="110" cy="84" rx="9" ry="6" fill="#F29A55" transform="rotate(-15 110 84)"/>
+    <ellipse cx="136" cy="82" rx="9" ry="6" fill="#E8833A" transform="rotate(20 136 82)"/>
+    <ellipse cx="160" cy="90" rx="9" ry="6" fill="#F29A55" transform="rotate(-30 160 90)"/>
+    <ellipse cx="90" cy="98" rx="9" ry="6" fill="#E8833A" transform="rotate(10 90 98)"/>
+    <ellipse cx="122" cy="100" rx="9" ry="6" fill="#F29A55" transform="rotate(35 122 100)"/>
+    <ellipse cx="148" cy="106" rx="9" ry="6" fill="#E8833A" transform="rotate(-10 148 106)"/>
+    <ellipse cx="180" cy="108" rx="9" ry="6" fill="#F29A55" transform="rotate(25 180 108)"/>
+    <ellipse cx="72" cy="114" rx="9" ry="6" fill="#F29A55" transform="rotate(-25 72 114)"/>
+    <ellipse cx="102" cy="116" rx="9" ry="6" fill="#E8833A" transform="rotate(15 102 116)"/>
+    <ellipse cx="132" cy="120" rx="9" ry="6" fill="#F29A55" transform="rotate(-5 132 120)"/>
+    <ellipse cx="164" cy="124" rx="9" ry="6" fill="#E8833A" transform="rotate(30 164 124)"/>
+    <ellipse cx="196" cy="124" rx="9" ry="6" fill="#F29A55" transform="rotate(-20 196 124)"/>
+    <ellipse cx="60" cy="128" rx="9" ry="6" fill="#E8833A" transform="rotate(5 60 128)"/>
+    <ellipse cx="88" cy="132" rx="9" ry="6" fill="#F29A55" transform="rotate(-35 88 132)"/>
+  </g>
+  <path id="bowl" fill="#3E8FB0" d="M36 128 C70 150 186 150 220 128 C216 180 176 210 128 210 C80 210 40 180 36 128 Z"/>
+  <path fill="#2E6A83" stroke="none" d="M220 128 C216 180 176 210 128 210 C166 200 196 172 202 136 C208 134 214 131 220 128 Z"/>
+  <path fill="none" d="M36 128 C70 150 186 150 220 128 C216 180 176 210 128 210 C80 210 40 180 36 128 Z"/>
+  <g id="spilled" stroke-width="2.5">
+    <ellipse cx="60" cy="218" rx="9" ry="6" fill="#F29A55" transform="rotate(-20 60 218)"/>
+    <ellipse cx="86" cy="226" rx="9" ry="6" fill="#E8833A" transform="rotate(15 86 226)"/>
+    <ellipse cx="198" cy="220" rx="9" ry="6" fill="#F29A55" transform="rotate(25 198 220)"/>
+  </g>
+</g>
+</svg>

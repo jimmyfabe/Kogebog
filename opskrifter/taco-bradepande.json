@@ -1,0 +1,61 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Taco-bradepande",
+  "description": "Bønner, majs, tomat og grønt i et fad med tortilla og ost på toppen. Yoghurt ved siden af.",
+  "image": "grafik/ret-taco-bradepande.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT10M",
+  "cookTime": "PT25M",
+  "totalTime": "PT35M",
+  "recipeIngredient": [
+    "1 dåse kidneybønner",
+    "1 dåse sorte bønner",
+    "1 dåse majs",
+    "1 dåse hakkede tomater",
+    "250 g frossen grøntsagsblanding",
+    "1 pose mildt tacokrydderi",
+    "6 tortillas",
+    "150 g revet ost",
+    "200 g yoghurt naturel"
+  ],
+  "tool": ["dåseåbner", "si", "bradepande eller stort ovnfast fad", "grydeske", "lille skål"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Hæld bønner og majs i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["boenner", "majs"], "note": "Tænd ovnen på 200 °C varmluft først. Den voksne åbner dåserne: kanten er skarp. Skyl dem med koldt vand." } },
+    { "@type": "HowToStep", "text": "Hæld bønner og majs i fadet.", "tumbi": { "verbum": "haelde", "ikoner": ["boenner", "majs"] } },
+    { "@type": "HowToStep", "text": "Hæld tomaterne i fadet.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["tomat"], "note": "Den voksne åbner dåserne: kanten er skarp." } },
+    { "@type": "HowToStep", "text": "Hæld det frosne grønt i fadet.", "tumbi": { "verbum": "haelde", "ikoner": ["aerter"], "note": "Direkte fra frost." } },
+    { "@type": "HowToStep", "text": "Drys tacokrydderiet over.", "tumbi": { "verbum": "drysse", "ikoner": ["krydderurt"] } },
+    { "@type": "HowToStep", "text": "Rør det hele godt sammen.", "tumbi": { "verbum": "roere" } },
+    { "@type": "HowToStep", "text": "Del tortillaerne i små stykker.", "tumbi": { "verbum": "smuldre", "ikoner": ["tortilla"], "note": "Med hænderne. Stykker på størrelse med en tændstikæske." } },
+    { "@type": "HowToStep", "text": "Stik stykkerne ned i fadet.", "tumbi": { "verbum": "pynte", "ikoner": ["tortilla"], "note": "Lidt ned i blandingen, så kanterne stikker op og bliver sprøde." } },
+    { "@type": "HowToStep", "text": "Drys osten over.", "tumbi": { "verbum": "drysse", "ikoner": ["ost"] } },
+    { "@type": "HowToStep", "text": "Bag fadet i ovnen i 20 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1200, "note": "200 °C varmluft, midt i ovnen. Osten skal være smeltet og gylden." } },
+    { "@type": "HowToStep", "text": "Tag fadet ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Fadet er meget varmt. Stil det på en bordskåner." } },
+    { "@type": "HowToStep", "text": "Kom yoghurten i en lille skål.", "tumbi": { "verbum": "haelde", "ikoner": ["yoghurt"], "note": "Hver tager selv en klat på maden. Lad maden køle lidt først." } }
+  ],
+  "tumbi": {
+    "id": "taco-bradepande",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra researchen i docs/research/billige-retter-22-10.md (22-10-2026). Idé fra Coop Opskrifters tema om wraps og tacos, lavet som en ovnret. Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Tid og grønt er også et skøn (ikke målt), og grønt er uden bælgfrugter og kartofler.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 63,
+    "pris_dato": "2026-10",
+    "groent_g": 935,
+    "ingredienser": [
+      { "ikon": "boenner", "maengde": "1 dåse", "vare": "kidneyboenner", "antal": 1, "enhed": "stk" },
+      { "ikon": "boenner", "maengde": "1 dåse", "vare": "sorte-boenner", "antal": 1, "enhed": "stk" },
+      { "ikon": "majs", "maengde": "1 dåse", "vare": "majs", "antal": 1, "enhed": "stk" },
+      { "ikon": "tomat", "maengde": "1 dåse", "vare": "hakkede-tomater", "antal": 400, "enhed": "g" },
+      { "ikon": "aerter", "maengde": "250 g", "vare": "groentsagsblanding", "antal": 250, "enhed": "g" },
+      { "ikon": "krydderurt", "maengde": "1 pose", "vare": "tacokrydderi", "antal": 1, "enhed": "stk" },
+      { "ikon": "tortilla", "maengde": "6", "vare": "tortillas", "antal": 6, "enhed": "stk" },
+      { "ikon": "ost", "maengde": "150 g", "vare": "revet-ost", "antal": 150, "enhed": "g" },
+      { "ikon": "yoghurt", "maengde": "200 g", "vare": "yoghurt", "antal": 200, "enhed": "g" }
+    ]
+  }
+}

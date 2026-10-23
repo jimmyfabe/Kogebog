@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <ellipse id="bowl-inside" cx="128" cy="128" rx="92" ry="24" fill="#FFF4E2"/>
+  <path id="heap" fill="#F4EEDD" d="M44 132 C52 92 90 66 128 64 C166 66 204 92 212 132 Z"/>
+  <g id="grains" fill="#FFFFFF" stroke-width="2.5">
+    <ellipse cx="114" cy="76" rx="10" ry="4.5" transform="rotate(-25 114 76)"/>
+    <ellipse cx="140" cy="74" rx="10" ry="4.5" transform="rotate(30 140 74)"/>
+    <ellipse cx="96" cy="92" rx="10" ry="4.5" transform="rotate(15 96 92)"/>
+    <ellipse cx="126" cy="94" rx="10" ry="4.5" transform="rotate(-40 126 94)"/>
+    <ellipse cx="156" cy="92" rx="10" ry="4.5" transform="rotate(10 156 92)"/>
+    <ellipse cx="180" cy="104" rx="10" ry="4.5" transform="rotate(-20 180 104)"/>
+    <ellipse cx="76" cy="108" rx="10" ry="4.5" transform="rotate(-10 76 108)"/>
+    <ellipse cx="108" cy="112" rx="10" ry="4.5" transform="rotate(35 108 112)"/>
+    <ellipse cx="140" cy="114" rx="10" ry="4.5" transform="rotate(-15 140 114)"/>
+    <ellipse cx="168" cy="122" rx="10" ry="4.5" transform="rotate(25 168 122)"/>
+    <ellipse cx="198" cy="124" rx="10" ry="4.5" transform="rotate(-30 198 124)"/>
+    <ellipse cx="60" cy="126" rx="10" ry="4.5" transform="rotate(20 60 126)"/>
+    <ellipse cx="90" cy="130" rx="10" ry="4.5" transform="rotate(-5 90 130)"/>
+    <ellipse cx="122" cy="130" rx="10" ry="4.5" transform="rotate(10 122 130)"/>
+  </g>
+  <path id="bowl" fill="#3E8FB0" d="M36 128 C70 150 186 150 220 128 C216 180 176 210 128 210 C80 210 40 180 36 128 Z"/>
+  <path fill="#2E6A83" stroke="none" d="M220 128 C216 180 176 210 128 210 C166 200 196 172 202 136 C208 134 214 131 220 128 Z"/>
+  <path fill="none" d="M36 128 C70 150 186 150 220 128 C216 180 176 210 128 210 C80 210 40 180 36 128 Z"/>
+  <g id="spilled" fill="#FFFFFF" stroke-width="2.5">
+    <ellipse cx="62" cy="218" rx="10" ry="4.5" transform="rotate(-20 62 218)"/>
+    <ellipse cx="88" cy="226" rx="10" ry="4.5" transform="rotate(25 88 226)"/>
+    <ellipse cx="196" cy="220" rx="10" ry="4.5" transform="rotate(-35 196 220)"/>
+  </g>
+</g>
+</svg>

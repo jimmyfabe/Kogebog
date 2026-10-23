@@ -1,0 +1,59 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Lun tunpasta med ærter og majs",
+  "description": "Fuldkornsspaghetti med tun, ærter, majs, tomat og creme fraiche.",
+  "image": "grafik/ret-lun-tunpasta.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT15M",
+  "totalTime": "PT20M",
+  "recipeIngredient": [
+    "300 g fuldkornsspaghetti",
+    "3 l vand og 1 tsk salt til spaghettien",
+    "300 g frosne ærter",
+    "2 dåser tun i vand",
+    "1 dåse majs",
+    "1 dåse hakkede tomater",
+    "150 g creme fraiche",
+    "½ tsk salt",
+    "1 knivspids peber"
+  ],
+  "tool": ["stor gryde", "dåseåbner", "si", "dørslag", "grydeske"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Kog vand til spaghettien.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "3 l vand og 1 tsk salt i en stor gryde på en bagerste plade, med håndtagene ind. Med låg på koger det hurtigere." } },
+    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåserne: kanten er skarp. Lad vandet løbe fra." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra tunen.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["tun"], "note": "Den voksne åbner dåserne: kanten er skarp. Tryk låget ned, og hæld vandet ud." } },
+    { "@type": "HowToStep", "text": "Kom spaghettien i vandet.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 420, "ikoner": ["spaghetti"], "note": "Kog som anvist på pakken. Ærterne kommer i de sidste 3 min. Rør lidt i starten." } },
+    { "@type": "HowToStep", "text": "Hæld ærterne i vandet.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["aerter"], "note": "Direkte fra frost. Den voksne hælder: vandet koger og kan sprøjte." } },
+    { "@type": "HowToStep", "text": "Kog spaghetti og ærter i 3 minutter mere.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180 } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra spaghettien.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spaghetti", "aerter"], "note": "Den voksne hælder gennem dørslaget i vasken. Pas på dampen." } },
+    { "@type": "HowToStep", "text": "Hæld spaghetti og ærter tilbage i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spaghetti", "aerter"], "note": "Den voksne hælder. Gryden er varm." } },
+    { "@type": "HowToStep", "text": "Vend tun, majs, tomater og creme fraiche i.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["tun", "majs", "tomat", "yoghurt"], "note": "Lav varme. Den voksne åbner dåserne: kanten er skarp. Den voksne vender, til det hele er lunt." } },
+    { "@type": "HowToStep", "text": "Smag til med salt og peber.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt", "peber"], "note": "Pust på skeen først." } }
+  ],
+  "tumbi": {
+    "id": "lun-tunpasta",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra researchen i docs/research/billige-retter-22-10.md (22-10-2026). Idé fra Coop Opskrifter, «pitabrød med tun» og «pasta med spinat og laks». Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Tid og grønt er også et skøn (ikke målt), og grønt er uden bælgfrugter og kartofler.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 58,
+    "pris_dato": "2026-10",
+    "groent_g": 985,
+    "ingredienser": [
+      { "ikon": "spaghetti", "maengde": "300 g", "vare": "fuldkornspasta", "antal": 300, "enhed": "g" },
+      { "ikon": "vand", "maengde": "3 l", "vare": "vand" },
+      { "ikon": "aerter", "maengde": "300 g", "vare": "aerter", "antal": 300, "enhed": "g" },
+      { "ikon": "tun", "maengde": "2 dåser", "vare": "tun", "antal": 370, "enhed": "g" },
+      { "ikon": "majs", "maengde": "1 dåse", "vare": "majs", "antal": 1, "enhed": "stk" },
+      { "ikon": "tomat", "maengde": "1 dåse", "vare": "hakkede-tomater", "antal": 400, "enhed": "g" },
+      { "ikon": "yoghurt", "maengde": "150 g", "vare": "creme-fraiche", "antal": 150, "enhed": "g" },
+      { "ikon": "salt", "maengde": "½ tsk", "vare": "salt" },
+      { "ikon": "peber", "maengde": "1 knivspids", "vare": "peber" }
+    ]
+  }
+}

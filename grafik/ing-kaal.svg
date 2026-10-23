@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="cabbage">
+    <path d="M128 222 C70 222 34 188 34 140 C34 98 64 66 104 58 C112 40 144 40 152 58 C192 66 222 98 222 140 C222 188 186 222 128 222 Z" fill="#7DBB5A"/>
+    <path d="M128 206 C88 206 62 180 62 146 C62 110 90 86 128 86 C166 86 194 110 194 146 C194 180 168 206 128 206 Z" fill="#B7DB8C"/>
+    <path d="M128 186 C102 186 86 168 86 146 C86 122 104 106 128 106 C152 106 170 122 170 146 C170 168 154 186 128 186 Z" fill="#D7EDB4"/>
+    <path d="M128 106 L128 186 M128 140 C112 132 102 122 96 112 M128 160 C146 150 156 140 162 128" fill="none" stroke="#8CC064" stroke-width="3"/>
+    <path d="M52 132 C58 108 76 90 98 82" fill="none" stroke="#A9D47F" stroke-width="5"/>
+  </g>
+  <g id="sprout" transform="translate(206 200)">
+    <circle r="26" fill="#6FAE4C"/>
+    <path d="M-12 -18 C-4 -6 -4 8 -12 18 M12 -18 C4 -6 4 8 12 18" fill="none" stroke="#3E7A30" stroke-width="3"/>
+    <path d="M-14 -6 C-12 -14 -6 -20 2 -22" fill="none" stroke="#B7DB8C" stroke-width="4"/>
+  </g>
+</g>
+</svg>

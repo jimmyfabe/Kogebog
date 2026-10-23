@@ -63,6 +63,26 @@ test('ugens retter lægges sammen og skaleres til de valgte portioner, før der 
   assert.equal(vareTekst('hakkede-tomater', 400), '1 dåse (400 g)');
 });
 
+test('de billige retter fra 22-10 lægges sammen: to halve dåser majs, mælk i dl og kyllingelår i kg', () => {
+  // Wok og nudelsuppe har hver ½ dåse majs, æggekagen 2 dl og makaronien 6 dl mælk, bradepandekyllingen 1 kg lår til 4
+  const varer = saml([
+    { ret: ret('wok-med-nudler'), n: 4 }, { ret: ret('kyllinge-nudelsuppe'), n: 4 },
+    { ret: ret('ovnaeggekage'), n: 4 }, { ret: ret('one-pot-makaroni'), n: 4 },
+    { ret: ret('bradepandekylling'), n: 6 },
+  ]);
+  const m = Object.fromEntries(varer.map((v) => [v.id, v.m]));
+  assert.equal(m['majs'], 1);
+  assert.equal(m['nudler'], 250 + 200);
+  assert.equal(m['maelk'], 200 + 600); // i ml
+  assert.equal(m['kyllingelaar'], 1500); // 1 kg × 6/4 i g
+  assert.equal(m['salt'], 0);
+  const t = som(varer);
+  assert.equal(t['majs'], '1 dåse');
+  assert.equal(t['nudler'], '450 g');
+  assert.equal(t['maelk'], '1 karton (1 l)');
+  assert.equal(t['kyllingelaar'], '1,5 kg');
+});
+
 test('tunfrikadellerne: persille i bundter, æg i bakker, og Æ står sidst i Køl', () => {
   const varer = saml([{ ret: TUN, n: 8 }]);
   const koel = grupper(varer).find((g) => g.afd === 'koel');
@@ -161,8 +181,17 @@ test('FNV-1a giver de kendte værdier, og kontrolsummen er 4 hex', () => {
   assert.match(kontrolsum('v1.20261026.koedsovs_4~~~~~~'), /^[0-9a-f]{4}$/);
 });
 
-test('ugeplanen er de fem aftensretter, og pandekager er ikke med', () => {
-  assert.deepEqual(UGEPLAN.slice().sort(), ['bolognese-one-pot', 'chorizo-pasta', 'cremet-koedsovs', 'koedsovs', 'tunfrikadeller']);
+test('ugeplanen er aftensretterne med ugeplan-felter (de fem første og de billige fra 22-10), og pandekager er ikke med', () => {
+  assert.deepEqual(UGEPLAN.slice().sort(), [
+    'bolognese-one-pot', 'bradepande-fajitas', 'bradepandekylling', 'chili-con-carne', 'chorizo-pasta',
+    'cremet-koedsovs', 'fiskefars-i-fad', 'fiskepinde-med-baade', 'gryderis-med-kylling', 'halv-halv-koedsovs',
+    'hyrdetaerte', 'koedboller-i-tomatsovs', 'koedsovs', 'kyllinge-nudelsuppe', 'kyllingefrikadeller',
+    'kyllingekarry', 'linse-dhal', 'linsebolognese', 'lun-tunpasta', 'medister-i-ovn', 'minestrone',
+    'one-pot-makaroni', 'one-pot-tomatpasta', 'ovnaeggekage', 'ovnbagt-blomkaal', 'ovnpandekage', 'pastagratin',
+    'pladepizza', 'poelse-boennegryde', 'rugbroedsaften', 'taco-bradepande', 'tomatsuppe-med-boenner',
+    'tunfrikadeller', 'wok-med-nudler', 'wraps-med-boenner',
+  ]);
+  assert.ok(!UGEPLAN.includes('pandekager'));
 });
 
 test('en plan kodes og afkodes tilbage til det samme', () => {

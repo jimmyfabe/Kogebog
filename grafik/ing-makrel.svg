@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="lid" transform="rotate(-4 128 58)">
+    <ellipse cx="128" cy="58" rx="80" ry="26" fill="#8E9AA6"/>
+    <path fill="#6D7B8A" stroke="none" d="M208 58 A80 26 0 0 1 128 84 C160 78 196 70 204 52 Z"/>
+    <ellipse cx="128" cy="58" rx="62" ry="17" fill="none" stroke="#6D7B8A"/>
+    <ellipse cx="128" cy="58" rx="80" ry="26" fill="none"/>
+    <ellipse cx="96" cy="44" rx="16" ry="9" fill="#8E9AA6"/>
+    <ellipse cx="96" cy="44" rx="7" ry="3.5" fill="#6D7B8A"/>
+  </g>
+  <g id="can">
+    <path fill="#8E9AA6" stroke="none" d="M38 108 L38 188 A90 24 0 0 0 218 188 L218 108 Z"/>
+    <path fill="#6D7B8A" stroke="none" d="M194 108 L194 204.3 A90 24 0 0 0 218 188 L218 108 Z"/>
+    <path fill="#D9573B" stroke="none" d="M38 126 A90 24 0 0 0 218 126 L218 164 A90 24 0 0 1 38 164 Z"/>
+    <path fill="#A83A2A" stroke="none" d="M194 142.3 A90 24 0 0 0 218 126 L218 164 A90 24 0 0 1 194 180.3 Z"/>
+    <path fill="none" d="M38 126 A90 24 0 0 0 218 126 M218 164 A90 24 0 0 1 38 164"/>
+    <path fill="none" d="M38 116 A90 24 0 0 0 218 116 M38 175 A90 24 0 0 0 218 175"/>
+    <g id="fish">
+      <path fill="#DCE6EE" d="M150 168 L164 158 L162 168 L164 178 Z"/>
+      <path fill="#DCE6EE" d="M96 168 C106 156 134 155 150 168 C134 181 106 180 96 168 Z"/>
+      <path fill="none" stroke="#3E6A8A" stroke-width="2.5" d="M112 162 L118 168 M122 160 L128 166 M132 160 L138 166"/>
+      <circle cx="104" cy="166" r="1.8" fill="#3B2A20" stroke="none"/>
+    </g>
+    <path fill="none" d="M38 108 L38 188 A90 24 0 0 0 218 188 L218 108"/>
+  </g>
+  <g id="top">
+    <ellipse cx="128" cy="108" rx="90" ry="24" fill="#8E9AA6"/>
+    <ellipse cx="128" cy="108" rx="81" ry="18" fill="#D9573B"/>
+    <path fill="#B8452E" stroke="none" d="M207 106 A81 18 0 0 1 168 123.7 C186 120 202 114 207 106 Z"/>
+    <path fill="#E9D3BC" stroke-width="2.5" d="M70 104 C80 96 108 96 118 104 C108 112 80 112 70 104 Z"/>
+    <path fill="#E9D3BC" stroke-width="2.5" d="M128 112 C138 104 166 104 176 112 C166 120 138 120 128 112 Z"/>
+    <path fill="none" stroke="#7C5B78" stroke-width="2.5" d="M84 101 L88 105 M96 100 L100 104 M142 109 L146 113 M154 108 L158 112"/>
+    <ellipse cx="128" cy="108" rx="81" ry="18" fill="none"/>
+  </g>
+</g>
+</svg>

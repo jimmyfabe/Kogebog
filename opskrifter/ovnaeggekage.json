@@ -1,0 +1,61 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Ovnæggekage med ærter, spinat og bacon",
+  "description": "Æggekage bagt i et fad med bacon, ærter og spinat. Rugbrød og agurkestave til.",
+  "image": "grafik/ret-ovnaeggekage.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT35M",
+  "totalTime": "PT40M",
+  "recipeIngredient": [
+    "2 dl mælk",
+    "½ tsk salt",
+    "1 knivspids peber",
+    "8 æg",
+    "100 g bacon i tern",
+    "300 g frosne ærter",
+    "200 g frossen hakket spinat",
+    "1 agurk",
+    "8 skiver rugbrød"
+  ],
+  "tool": ["kande", "gaffel eller piskeris", "kop", "stort ovnfast fad", "grydelapper", "kniv", "skærebræt"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Pisk mælk, salt og peber i en kande.", "tumbi": { "verbum": "piske", "ikoner": ["maelk", "salt", "peber"], "note": "Tænd ovnen på 190 °C varmluft først." } },
+    { "@type": "HowToStep", "text": "Pisk æggene i.", "tumbi": { "verbum": "piske", "ikoner": ["aeg"], "note": "Slå æggene ud i en kop først, så er det let at fiske skaller op." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter råt æg." } },
+    { "@type": "HowToStep", "text": "Fordel baconen i et stort fad.", "tumbi": { "verbum": "drysse", "ikoner": ["koed"], "note": "Brug et fad, der kan tåle ovnen." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter råt kød." } },
+    { "@type": "HowToStep", "text": "Drys ærter og spinat over baconen.", "tumbi": { "verbum": "drysse", "ikoner": ["aerter", "spinat"], "note": "Direkte fra frost, fra en skål." } },
+    { "@type": "HowToStep", "text": "Hæld æggemassen over.", "tumbi": { "verbum": "haelde", "ikoner": ["aeg"], "note": "Fadet er koldt, så barnet kan selv. Rør let rundt med en gaffel." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter råt æg." } },
+    { "@type": "HowToStep", "text": "Bag æggekagen i ovnen i 35 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 2100, "note": "190 °C varmluft. Fadet kommer koldt ind. Den er færdig, når midten er fast. Er midten blød, så 5 min mere." } },
+    { "@type": "HowToStep", "text": "Tag fadet ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Fadet er meget varmt." } },
+    { "@type": "HowToStep", "text": "Skær agurken i stave.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["agurk"] } },
+    { "@type": "HowToStep", "text": "Læg rugbrød og agurk på tallerkenerne.", "tumbi": { "verbum": "pynte", "ikoner": ["broed", "agurk"] } }
+  ],
+  "tumbi": {
+    "id": "ovnaeggekage",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra researchen i docs/research/billige-retter-22-10.md (22-10-2026). Idé fra den danske æggekage, lavet i ovnen. Trinene er egen tekst. Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Tid og grønt er også et skøn (ikke målt), og grønt er uden bælgfrugter og kartofler.",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 62,
+    "pris_dato": "2026-10",
+    "groent_g": 850,
+    "ingredienser": [
+      { "ikon": "maelk", "maengde": "2 dl", "vare": "maelk", "antal": 2, "enhed": "dl" },
+      { "ikon": "salt", "maengde": "½ tsk", "vare": "salt" },
+      { "ikon": "peber", "maengde": "1 knivspids", "vare": "peber" },
+      { "ikon": "aeg", "maengde": "8", "vare": "aeg", "antal": 8, "enhed": "stk" },
+      { "ikon": "koed", "maengde": "100 g", "vare": "bacon-tern", "antal": 100, "enhed": "g" },
+      { "ikon": "aerter", "maengde": "300 g", "vare": "aerter", "antal": 300, "enhed": "g" },
+      { "ikon": "spinat", "maengde": "200 g", "vare": "hakket-spinat", "antal": 200, "enhed": "g" },
+      { "ikon": "agurk", "maengde": "1", "vare": "agurk", "antal": 1, "enhed": "stk" },
+      { "ikon": "broed", "maengde": "8 skiver", "vare": "rugbroed", "antal": 360, "enhed": "g" }
+    ]
+  }
+}
