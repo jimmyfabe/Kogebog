@@ -192,13 +192,14 @@ function hentSkaerm(kode) {
   return indkoebSkaerm();
 }
 
-// Telefonen har allerede en liste: den erstattes kun, når man siger det (man kan stå midt i butikken)
+// Telefonen har allerede en liste: den erstattes kun, når man siger det (man kan stå midt i butikken).
+// «uge 44» har et hårdt mellemrum: på 360 px stod «44» alene på knappens anden linje (UI-review 2, 23-10)
 function erstatSkaerm(gl, ny) {
-  const glUge = gl.uge ? 'uge ' + ugeNr(gl.uge) : 'den gamle uge';
+  const glUge = gl.uge ? 'uge\u00a0' + ugeNr(gl.uge) : 'den gamle uge';
   const tal = optaelling(grupper(gl.varer), new Set(gl.koebt), new Set(gl.harVi));
   return K.statusSkaerm({
     titel: 'Erstat listen for ' + glUge + '?',
-    tekst: 'Det nye link er til uge ' + ugeNr(ny.uge) + '. På listen, der er på telefonen nu, er ' + tal.koebt + ' af ' + tal.ialt + ' købt.',
+    tekst: 'Det nye link er til uge\u00a0' + ugeNr(ny.uge) + '. På listen, der er på telefonen nu, er ' + tal.koebt + ' af ' + tal.ialt + ' købt.',
     handling: el('div', { class: 'status-knapper' },
       // Pilen rundt, ikke kurven: kurven betyder «hent», og Erstat sletter fluebenene på den gamle liste. Erstat er stadig
       // den gule knap, fordi et nyt link næsten altid sendes for at få den nye uges liste (UI-review V9, 23-10)

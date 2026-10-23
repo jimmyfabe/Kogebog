@@ -196,6 +196,12 @@ async function telefon(browser, H) {
   await aabn(side, BASE, '#/hent/' + kode2);
   await side.waitForSelector('text=Erstat listen for uge ' + ugeNr(uge) + '?').catch(() => tjek(false, n + ': et nyt link skal spørge «Erstat listen for uge ' + ugeNr(uge) + '?»'));
   tjek(await lager(side) === foer, n + ': listen må ikke erstattes, før man har valgt');
+  // «uge 44» står samlet, også på 360 px, hvor «Behold listen for uge 44» brydes (UI-review 2, 23-10)
+  const vindue = side.viewportSize();
+  await side.setViewportSize({ width: 360, height: 740 });
+  const erstatBrud = await brudt(side, 'main', /[uU]ge\s\d+/);
+  await side.setViewportSize(vindue);
+  tjek(!erstatBrud.length, n + ' 360×740: «uge NN» står samlet på «Erstat listen?» (' + erstatBrud.join(', ') + ')');
   // «Erstat listen» har pilen rundt, ikke kurven fra «Hent listen» og «Indkøbsliste» (UI-review V9, 23-10)
   const erstatIkon = await side.evaluate(() => [...document.querySelectorAll('button')].find((b) => b.textContent.includes('Erstat listen'))?.querySelector('svg path')?.getAttribute('d') || '');
   tjek(erstatIkon.startsWith('M4.5 12a7.5'), n + ': «Erstat listen» har ikonet «igen» (pil rundt), ikke kurven (' + erstatIkon + ')');
@@ -729,6 +735,25 @@ const sagt = (side) => side.evaluate(() => (window.__tale[window.__tale.length -
 const siger = (replik) => (replik ? tilTale(replik.tekst) : '«replikken findes ikke»');
 const VAELG = 'button.knap.primaer.naeste';
 const valgHash = (side, h) => side.evaluate((x) => { location.hash = x; }, h);
+
+// Ord, der skal stå sammen («uge 44», «Ny uge»): mellemrummet er hårdt, og ordene står på samme linje. Før brød de på
+// 360 og 390 px som «uge | 44» og «Ny | uge» (UI-review 2, 23-10). Giver de steder i sel, hvor det ikke holder
+const brudt = (side, sel, re) => side.evaluate(({ sel, kilde }) => {
+  const fejl = [];
+  for (const e of document.querySelectorAll(sel)) {
+    const w = document.createTreeWalker(e, NodeFilter.SHOW_TEXT);
+    for (let t; (t = w.nextNode());) {
+      for (const m of t.data.matchAll(new RegExp(kilde, 'g'))) {
+        const r = document.createRange();
+        r.setStart(t, m.index);
+        r.setEnd(t, m.index + m[0].length);
+        const linjer = new Set([...r.getClientRects()].map((x) => Math.round(x.top))).size;
+        if (m[0].includes(' ') || linjer > 1) fejl.push('«' + m[0] + '» (' + (m[0].includes(' ') ? 'blødt mellemrum, ' : '') + linjer + ' linjer)');
+      }
+    }
+  }
+  return fejl;
+}, { sel, kilde: re.source });
 
 const dyrNu = (side) => side.evaluate(() => [...document.querySelectorAll('.dyr-kort')].map((b) => ({
   dyr: b.dataset.dyr,
