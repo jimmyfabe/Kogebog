@@ -9,9 +9,9 @@
    Svarer nettet ikke inden for HENT_MS (4 s), kommer en opskrift (også index.json) fra cachen, og nettets svar gemmes
    til næste gang. De næste LANGSOM_MS (30 s) tager opskrifterne cachen med det samme (code review U3 og F2, 23-10). */
 const PRAEFIKS = 'kog-';
-const INDHOLD = 'f86da13531f012e6'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = 'd28fa4e3192ab3f4'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
-const LYD = '4370cdd6c9ee1a21'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
+const LYD = '10af8d90c74946e1'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
 const HENT_MS = 4000; // så længe venter en lydfil (før iPad-stemmen tager over) eller en opskrift (før cachen) på nettet
 const LANGSOM_MS = 30000; // så længe tager opskrifterne cachen med det samme, efter at nettet ikke svarede inden for HENT_MS
