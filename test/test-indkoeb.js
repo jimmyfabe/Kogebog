@@ -434,6 +434,25 @@ test('ugeplanen renses: kun kendte retter, dyrene og portioner 1-12', () => {
   assert.equal(l.skrevet.every((k) => k === 'kog-uge-v1'), true);
 });
 
+// Sikkerhed S1 (23-10): en gemt uge, der ligner en dato, men ikke er en rigtig mandag, fik kod() til at kaste, og så
+// kunne #/uge (med «Ny uge») ikke åbnes. kog-uge-v1 deler origin med Lystårnet og LEGO. Lageret godtager kun en mandag
+test('ugen i planen er altid en rigtig mandag, så planen kan kodes', () => {
+  medPersist();
+  const tilKode = (p) => p.dage.map((d) => (d ? { ret: d.ret, n: d.n } : null));
+  for (const uge of ['2026-10-27', '2026-02-30', '2026-13-02', '0099-01-05', '2026-11-01']) {
+    medLager({ 'kog-uge-v1': { v: 1, ...UGE_DATA, uge } });
+    const p = lager.hentUge(UGEPLAN);
+    assert.equal(p.uge, null, 'hentUge: ' + uge);
+    assert.deepEqual(p.dage, DAGE, 'dagene bliver: ' + uge);
+    medLager();
+    assert.equal(lager.gemUge({ ...UGE_DATA, uge }, UGEPLAN).uge, null, 'gemUge: ' + uge);
+  }
+  medLager({ 'kog-uge-v1': { v: 1, ...UGE_DATA } });
+  const p = lager.hentUge(UGEPLAN);
+  assert.equal(p.uge, '2026-10-26');
+  assert.doesNotThrow(() => kod(p.uge, tilKode(p)));
+});
+
 // Code review M1 (22-10): «retter» er de retter, der kan vises nu. Mangler en hentning (nyt id uden net), må en
 // skrivning ikke slette de andre dage i lageret, og et felt sat til undefined er ingen ændring
 test('en kort retter-liste eller et felt sat til undefined sletter ikke gemte dage', () => {

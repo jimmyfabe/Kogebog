@@ -46,6 +46,13 @@ function mandag(aar, md, dag) {
   return rigtig && d.getUTCDay() === 1 ? ms : null;
 }
 
+// En rigtig mandag som ÅÅÅÅ-MM-DD, som kod() godtager den. lager.js gemmer kun sådan en uge, så en gemt plan altid kan
+// kodes (sikkerhed S1, 23-10: en tirsdag i kog-uge-v1 fik kod() til at kaste, og #/uge kunne ikke åbnes)
+export function erMandag(uge) {
+  const m = /^([0-9]{4})-([0-9]{2})-([0-9]{2})$/.exec(typeof uge === 'string' ? uge : '');
+  return Boolean(m) && mandag(Number(m[1]), Number(m[2]), Number(m[3])) !== null;
+}
+
 // uge: mandagen som ÅÅÅÅ-MM-DD; dage: syv dage, hver null (fri aften) eller { ret, n }. Kaster ved forkerte data
 export function kod(uge, dage) {
   const m = /^([0-9]{4})-([0-9]{2})-([0-9]{2})$/.exec(typeof uge === 'string' ? uge : '');

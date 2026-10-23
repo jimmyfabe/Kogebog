@@ -4,6 +4,7 @@
 // Der er ingen fremskridt eller børnedata her; mister vi det, mister man kun «Fortsæt» og en kørende timer.
 // Ugeplanen og indkøbslisten har deres egne nøgler længere nede (hentUge/gemUge/hentListe/gemListe).
 import { VARER, DYR } from './katalog.js';
+import { erMandag } from './plankode.js';
 
 const NOEGLE = 'kog-v1';
 const VERSION = 1;
@@ -43,7 +44,7 @@ export function gem(aendring) {
 }
 
 // ---------- Ugeplanen og indkøbslisten (docs/ugeplan-plan.md, afsnit 3) ----------
-//   kog-uge-v1 (iPad'en):    { v: 1, uge: 'ÅÅÅÅ-MM-DD', dage: [{ ret, af, n } | null] × 7, n, prBarn, rettet }
+//   kog-uge-v1 (iPad'en):    { v: 1, uge: 'ÅÅÅÅ-MM-DD' (en mandag), dage: [{ ret, af, n } | null] × 7, n, prBarn, rettet }
 //   kog-liste-v1 (telefonen): { v: 1, kode, uge, varer: [{ id, m }], koebt: [id], harVi: [id], hentet }
 // Alt renses ved læsning: ret skal stå i «retter» (index.json), varerne i VARER (Object.hasOwn), af er et af DYR
 // (bo, rosa, pip: aldrig børnenes navne), n er 1-12, m er 0-100.000, og der er højst 200 varer.
@@ -108,7 +109,7 @@ const tomUge = () => ({ v: UGE_V, uge: null, dage: [null, null, null, null, null
 function rensUge(j, erKendt) {
   const ud = tomUge();
   if (!j) return ud;
-  if (erDato(j.uge)) ud.uge = j.uge;
+  if (erMandag(j.uge)) ud.uge = j.uge; // kun en rigtig mandag: ellers kan planen ikke kodes til linket (S1)
   if (Array.isArray(j.dage) && j.dage.length === 7) {
     ud.dage = j.dage.map((d) => (d && erRetId(d.ret) && erKendt(d.ret) && typeof d.af === 'string' &&
       Object.hasOwn(DYR, d.af) && erPortioner(d.n) ? { ret: d.ret, af: d.af, n: d.n } : null));
