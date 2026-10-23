@@ -77,10 +77,11 @@ Nyt i `js/katalog.js` (én kilde for appen og validatoren):
 | knivtrin | højst 2 `skaere`/`rive` (regnes ud) | Skånsomt for hænderne: frosne hakkede grøntsager, dåser, revet ost |
 | `tumbi.pris_kr`, `tumbi.pris_dato` | heltal for hele retten, `ÅÅÅÅ-MM`. Butik og metode står i `tumbi.ugeplan_kilde` (ikke i `kilde`, som printet viser; 23-10) | «Ca. kr.» pr. uge og pr. person |
 | `tumbi.groent_g` | heltal, gram grønt i hele retten | «Grønt pr. person» |
+| `tumbi.ugeplan_kilde` | tekst, der slutter med punktum: butik og metode for pris og grønt, og at de er et skøn | Ingen side viser den; printets fod viser kun `kilde`, som ikke må nævne pris og grønt (23-10) |
 | `ingredienser[i].vare/antal/enhed` | `vare` ∈ `VARER`; `enhed` ∈ `ENHEDER` med samme dimension som varen; `antal` > 0. Basisvarer må undlade `antal` | Sammenlægningen. En ny vare kræver en linje i `VARER` (ikon fra `INGREDIENSER`) |
 | `grafik/ret-<id>.webp` + Røst-navnet | findes | Barnet vælger ud fra billedet og stemmen |
 
-Alle de nuværende regler gælder stadig: verber, ordvagten, håndvask, `afproevet:false` og `kilde` («skøn» må kun stå i `kilde`). Felterne lægges også på 4-5 af de nuværende aftensretter (koedsovs, bolognese-one-pot, cremet-koedsovs, chorizo-pasta, tunfrikadeller). Frikadeller tager 2 timer og kommer derfor ikke med.
+Alle de nuværende regler gælder stadig: verber, ordvagten, håndvask, `afproevet:false` og `kilde` («skøn» må kun stå i `kilde` og `ugeplan_kilde`). Felterne lægges også på 4-5 af de nuværende aftensretter (koedsovs, bolognese-one-pot, cremet-koedsovs, chorizo-pasta, tunfrikadeller). Frikadeller tager 2 timer og kommer derfor ikke med.
 
 ## 5. Offline, print og tests
 
