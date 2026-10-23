@@ -307,6 +307,20 @@ test('en kildenote med flere sætninger slutter med punktum', () => {
   forventGyldig(fil, (d) => { d.tumbi.kilde = 'Egen tekst med ca. 3 dl mælk'; });
 });
 
+// Kilden står i printets fod, og printet viser ikke pris og grønt: butik og metode for dem står i «tumbi.ugeplan_kilde»,
+// som ingen side viser (UI-review 2, 23-10)
+test('pris og grønt står i tumbi.ugeplan_kilde, ikke i kilden på printet', () => {
+  const fil = 'opskrifter/chili-con-carne.json';
+  forventFejl(fil, (d) => { d.tumbi.kilde += ' Prisen er et skøn.'; }, '«tumbi.kilde» nævner «Pris», men printet viser ikke pris og grønt');
+  forventFejl(fil, (d) => { d.tumbi.kilde += ' Hyldepriser fra 365discount.'; }, '«tumbi.kilde» nævner «365discount»');
+  forventFejl(fil, (d) => { d.tumbi.kilde += ' Grønt er et skøn.'; }, '«tumbi.kilde» nævner «Grønt»');
+  forventFejl(fil, (d) => { d.tumbi.kilde += ' Det er uden grønt.'; }, '«tumbi.kilde» nævner «grønt»');
+  // Ord, der kun begynder sådan, er i orden: «grøntsager» er en vare, ikke ugeplanens tal
+  forventGyldig(fil, (d) => { d.tumbi.kilde += ' Brug frosne grøntsager.'; });
+  for (const v of ['', 'Prisen er et skøn', 42, null]) forventFejl(fil, (d) => { d.tumbi.ugeplan_kilde = v; }, '«tumbi.ugeplan_kilde» skal være en tekst, der slutter med punktum');
+  forventGyldig(fil, (d) => { delete d.tumbi.ugeplan_kilde; });
+});
+
 test('voksen og voksen_hjaelp følges ad', () => {
   forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[9].tumbi.voksen = 'ja'; }, 'trin 10: «voksen» skal være true');
   forventFejl('opskrifter/pandekager.json', (d) => { d.recipeInstructions[2].tumbi.voksen = false; }, 'trin 3: «voksen» skal være true (udelad feltet');

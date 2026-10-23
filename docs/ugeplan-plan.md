@@ -75,7 +75,7 @@ Nyt i `js/katalog.js` (én kilde for appen og validatoren):
 | `tumbi.portioner` | heltal 1–12 | `recipeYield` er fritekst («10-12 frikadeller») |
 | `totalTime` | højst PT60M (helst 45) | En time fra hjemkomst til aftensmad |
 | knivtrin | højst 2 `skaere`/`rive` (regnes ud) | Skånsomt for hænderne: frosne hakkede grøntsager, dåser, revet ost |
-| `tumbi.pris_kr`, `tumbi.pris_dato` | heltal for hele retten, `ÅÅÅÅ-MM`. Butik og metode står i `kilde` | «Ca. kr.» pr. uge og pr. person |
+| `tumbi.pris_kr`, `tumbi.pris_dato` | heltal for hele retten, `ÅÅÅÅ-MM`. Butik og metode står i `tumbi.ugeplan_kilde` (ikke i `kilde`, som printet viser; 23-10) | «Ca. kr.» pr. uge og pr. person |
 | `tumbi.groent_g` | heltal, gram grønt i hele retten | «Grønt pr. person» |
 | `ingredienser[i].vare/antal/enhed` | `vare` ∈ `VARER`; `enhed` ∈ `ENHEDER` med samme dimension som varen; `antal` > 0. Basisvarer må undlade `antal` | Sammenlægningen. En ny vare kræver en linje i `VARER` (ikon fra `INGREDIENSER`) |
 | `grafik/ret-<id>.webp` + Røst-navnet | findes | Barnet vælger ud fra billedet og stemmen |

@@ -73,6 +73,7 @@ ol.trin li::before { content: counter(trin) "."; font-weight: 800; text-align: r
 
 .fod { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px 16px; margin-top: 16px; padding-top: 8px; border-top: 1.5px solid #111; font-size: 16px; }
 .fod p:first-child { font-weight: 700; }
+.fod .dato { white-space: nowrap; }
 
 @media (max-width: 640px) {
   .ark { padding: 18px 16px; border-left: 0; border-right: 0; }

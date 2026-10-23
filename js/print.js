@@ -18,6 +18,9 @@ function besked(titel, tekst) {
   ark.replaceChildren(el('h1', { tekst: titel }), el('p', { class: 'besked', tekst }));
 }
 
+// En dato i kilden brydes ikke: «(22-10-2026)» stod som «(22-10-» og «2026)» på to linjer (UI-review 2, 23-10)
+const medDatoer = (tekst) => tekst.split(/(\d{1,2}-\d{1,2}-\d{4})/).map((s, i) => (i % 2 ? el('span', { class: 'dato', tekst: s }) : s));
+
 function tegn(m) {
   document.title = m.navn + ' · Tumbi Køkken';
   const meta = [m.portioner, m.minutter ? minutterTekst(m.minutter) + ' i alt' : '', m.aktivMinutter ? minutterTekst(m.aktivMinutter) + ' forberedelse' : '']
@@ -62,7 +65,7 @@ function tegn(m) {
           slutListe,
           el('footer', { class: 'fod' },
             el('p', { tekst: 'Tjek selv pakkerne for allergener.' }),
-            el('p', { tekst: 'Tumbi Køkken · ' + (m.kilde || 'Egen tekst') }),
+            el('p', {}, 'Tumbi Køkken · ', medDatoer(m.kilde || 'Egen tekst')),
             el('p', { tekst: 'Stemmen er en computerstemme (Røst fra Alexandra Instituttet).' }),
             el('p', { tekst: 'Version ' + UDGAVE }))))));
   printKnap.disabled = false;

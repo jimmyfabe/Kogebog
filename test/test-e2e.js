@@ -917,6 +917,22 @@ async function trinKolonne(side) {
 }
 
 // ---------- Print ----------
+// Fodens tekst og de datoer i den, der står på mere end én linje. Før brød «(22-10-2026)» efter bindestregen (UI-review 2, 23-10)
+const fodDatoer = (side) => side.evaluate(() => {
+  const f = document.querySelector('.fod');
+  const delt = [];
+  const w = document.createTreeWalker(f, NodeFilter.SHOW_TEXT);
+  for (let t; (t = w.nextNode());) {
+    for (const m of t.data.matchAll(/\d{1,2}-\d{1,2}-\d{4}/g)) {
+      const r = document.createRange();
+      r.setStart(t, m.index);
+      r.setEnd(t, m.index + m[0].length);
+      if (new Set([...r.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top))).size > 1) delt.push(m[0]);
+    }
+  }
+  return { tekst: f.textContent, delt };
+});
+
 async function print(browser, skaerm) {
   const n = skaerm.navn;
   console.log('[' + n + '] print af alle ' + index.length + ' retter');
@@ -954,6 +970,11 @@ async function print(browser, skaerm) {
     tjek((await side.locator('.fod').textContent()).includes('Tjek selv pakkerne for allergener'), n + ' print ' + id + ': allergen-linjen');
     tjek((await side.locator('.fod').textContent()).includes('Stemmen er en computerstemme (Røst fra Alexandra Instituttet).'), n + ' print ' + id + ': oplysningen om stemmen');
     tjek((await side.locator('.fod').textContent()).includes('Version ' + UDGAVE), n + ' print ' + id + ': versionsnummeret i foden');
+    // Printet viser ikke pris og grønt, så foden nævner dem ikke (noten står i «tumbi.ugeplan_kilde»; UI-review 2, 23-10)
+    const fod = await fodDatoer(side);
+    const prisOrd = fod.tekst.match(/(?<!\p{L})(?:[Pp]ris|365discount|[Gg]rønt(?!\p{L}))/u);
+    tjek(!prisOrd, n + ' print ' + id + ': foden nævner ikke pris og grønt (fandt «' + (prisOrd && prisOrd[0]) + '»)');
+    tjek(!fod.delt.length, n + ' print ' + id + ': datoen i foden står på én linje (delt: ' + fod.delt.join(', ') + ')');
     tjek((await side.locator('.ikke-afproevet').count() === 1) === !r.tumbi.afproevet, n + ' print ' + id + ': «Ikke afprøvet»');
     await tjekLayout(side, n + ' print ' + id);
     const smaat = await skrift(side, '.note, .maerke, .fod');
@@ -968,6 +989,8 @@ async function print(browser, skaerm) {
       const kp = await trinKolonne(side);
       tjek(kp.spredning <= 1, 'printvisning ' + id + ': trin-ikonerne skal stå i én lige kolonne (de rykker ' + kp.spredning + ' px)');
       tjek(kp.foran >= 14, 'printvisning ' + id + ': trinnummeret skal have plads foran ikonet (' + kp.foran + ' px)');
+      const fp = await fodDatoer(side);
+      tjek(!fp.delt.length, 'printvisning ' + id + ': datoen i foden står på én linje (delt: ' + fp.delt.join(', ') + ')');
       await foto(side, 'print-' + id, { fullPage: true });
       const a4 = await side.evaluate(() => document.documentElement.scrollHeight);
       console.log('  print ' + id + ': ' + a4 + ' px høj i printvisning (688 px bred)');
