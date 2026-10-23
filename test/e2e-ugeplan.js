@@ -407,6 +407,28 @@ const sesHelt = (side, sel) => side.waitForFunction((s) => {
   return { ok, r };
 });
 
+// Linjer med led delt af « · » (metalinjen under retten, summen): leddene, der er brudt over to linjer, og led, hvor
+// prikken er røget ned forrest på næste linje (UI-review V5 og V6, 23-10). sel: elementerne, der måles
+const brudteLed = (side, sel) => side.evaluate((s) => {
+  const delt = [];
+  for (const e of document.querySelectorAll(s)) {
+    const t = e.firstChild;
+    if (!t || t.nodeType !== 3 || !t.data.includes('·')) continue;
+    for (let start = 0; start < t.data.length;) {
+      const prik = t.data.indexOf('·', start);
+      const slut = prik === -1 ? t.data.length : prik + 1;
+      let a = start;
+      while (a < slut && /\s/.test(t.data[a])) a++;
+      const r = document.createRange();
+      r.setStart(t, a);
+      r.setEnd(t, slut);
+      if (new Set([...r.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top))).size > 1) delt.push(t.data.slice(a, slut));
+      start = slut;
+    }
+  }
+  return delt;
+}, sel);
+
 async function oversigtIpad(browser, H) {
   const { BASE, SKAERME, RETTER, nySide, tjek, tjekLayout, foto, tryk, hold, vent, venterPaa, h1, maal } = H;
   const skaerm = SKAERME[0];
@@ -556,15 +578,17 @@ async function oversigtIpad(browser, H) {
   tjek(gemt.dage.every((d) => d === null) && gemt.uge === planMandag(new Date()), n + ': «Ny uge» tømmer planen (' + JSON.stringify(gemt.dage) + ')');
   tjek(JSON.stringify(await raekker(side)) === JSON.stringify([null, null, null, null, null, null, null]), n + ': oversigten er tom efter «Ny uge»');
 
-  // 10. Oversigten på en telefon (360 px) og iPad'en på højkant
+  // 10. Oversigten på en telefon (360 px), iPad'en på højkant og (for metalinjen) på langs
   await side.evaluate((p) => { localStorage.setItem('kog-uge-v1', JSON.stringify(p)); }, { ...gemt, dage: [{ ret: 'koedsovs', af: 'rosa', n: 4 }, null, { ret: 'tunfrikadeller', af: 'pip', n: 12 }, null, null, { ret: 'bolognese-one-pot', af: 'bo', n: 6 }, null] });
   await side.reload();
   await side.waitForSelector('.uge-dage');
-  for (const [b, h] of [[360, 740], [390, 844], [820, 1180]]) {
+  for (const [b, h] of [[360, 740], [390, 844], [820, 1180], [1180, 820]]) {
     await side.setViewportSize({ width: b, height: h });
     await vent(150);
     await tjekLayout(side, n + ' ugeplan ' + b + '×' + h);
     await foto(side, n + '-ugeplan-' + b + 'x' + h, { fullPage: true });
+    const led = await brudteLed(side, '.dag-meta');
+    tjek(!led.length, n + ' ugeplan ' + b + '×' + h + ': metalinjen brydes kun mellem leddene (brudt: ' + led.join(' | ') + ')');
   }
 
   // 11. Kan valget på dagskærmen ikke gemmes (lageret er fuldt), står beskeden ved retten, og man bliver på dagskærmen.

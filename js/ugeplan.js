@@ -410,7 +410,9 @@ const iPlanen = () => K.S.ids.map(model).filter((m) => m && m.uge);
 // Prisen for de valgte portioner (opskriftens pris er for hele retten)
 const prisFor = (m, n) => (m.uge.prisKr * n) / m.uge.portioner;
 
-// Tid, pris, grønt og kniv i én linje, som oversigten og valget viser dem
+// Tid, pris, grønt og kniv i én linje, som oversigten og valget viser dem. Hvert led holdes sammen med hårde mellemrum, og
+// prikken står sidst på linjen, så linjen kun brydes mellem leddene: før stod der «268 g grønt pr. | person» og
+// «· 2 knivtrin» alene (UI-review V5, 23-10)
 function metaTekst(m, n) {
   const kniv = knivtrin(m);
   return [
@@ -418,7 +420,7 @@ function metaTekst(m, n) {
     'ca. ' + Math.round(prisFor(m, n)) + ' kr.',
     Math.round(m.uge.groentG / m.uge.portioner) + ' g grønt pr. person',
     kniv ? kniv + ' knivtrin' : 'ingen kniv',
-  ].filter(Boolean).join(' · ');
+  ].filter(Boolean).map((led) => led.replace(/ /g, '\u00a0')).join('\u00a0· ');
 }
 
 // Planen, som skærmen viser den. Den læses med alle id'erne fra index.json, så en dag, hvis opskrift ikke kunne hentes,
