@@ -585,6 +585,8 @@ async function oversigtIpad(browser, H) {
   tjek((await ugeLager(side)).dage.filter(Boolean).length === 2, n + ': et kort tryk på «Ny uge» må ikke tømme planen');
   await hold(side, '.ny-uge');
   await side.waitForSelector('text=Planen er tømt');
+  const tomtBrud = await brudt(side, '.uge-besked', /[uU]ge\s\d+/);
+  tjek(!tomtBrud.length, n + ': «uge NN» står samlet i «Planen er tømt» (' + tomtBrud.join(', ') + ')');
   gemt = await ugeLager(side);
   tjek(gemt.dage.every((d) => d === null) && gemt.uge === planMandag(new Date()), n + ': «Ny uge» tømmer planen (' + JSON.stringify(gemt.dage) + ')');
   tjek(JSON.stringify(await raekker(side)) === JSON.stringify([null, null, null, null, null, null, null]), n + ': oversigten er tom efter «Ny uge»');
@@ -602,6 +604,8 @@ async function oversigtIpad(browser, H) {
     tjek(!led.length, n + ' ugeplan ' + b + '×' + h + ': metalinjen brydes kun mellem leddene (brudt: ' + led.join(' | ') + ')');
     const sumLed = await brudteLed(side, '.uge-sum');
     tjek(!sumLed.length, n + ' ugeplan ' + b + '×' + h + ': summen brydes kun mellem leddene (brudt: ' + sumLed.join(' | ') + ')');
+    const nyBrud = await brudt(side, '.ny-uge', /Ny\suge/);
+    tjek(!nyBrud.length, n + ' ugeplan ' + b + '×' + h + ': «Ny uge» står samlet på knappen (' + nyBrud.join(', ') + ')');
   }
 
   // 11. Kan valget på dagskærmen ikke gemmes (lageret er fuldt), står beskeden ved retten, og man bliver på dagskærmen.
@@ -714,13 +718,15 @@ async function oversigtDesktop(browser, H) {
   await side.waitForSelector('.uge-dage');
   const gammel = await side.evaluate(() => ({
     knapper: [...document.querySelectorAll('.uge-knapper .knap')].map((b) => b.textContent.trim()),
-    advarsel: document.querySelector('.uge-advarsel')?.textContent || '',
+    advarsel: (document.querySelector('.uge-advarsel')?.textContent || '').replace(/\s/g, ' '), // hårde mellemrum som almindelige
   }));
   tjek(!gammel.knapper.some((t) => /Indkøbsliste|Send til telefon/.test(t)) && gammel.knapper.some((t) => t.includes('Del som tekst')),
     n + ': en plan fra for 10 uger siden kan ikke sendes, men kan deles som tekst (' + gammel.knapper.join(', ') + ')');
   tjek(gammel.advarsel.includes('mere end 8 uger') && gammel.advarsel.includes('Ny uge'), n + ': advarslen siger, at planen er for gammel (' + gammel.advarsel + ')');
   // Advarslen siger, hvor «Ny uge» står, og at den tømmer planen (UI-review V7, 23-10)
   tjek(gammel.advarsel.includes('«Ny uge» nederst') && gammel.advarsel.includes('tømme planen'), n + ': advarslen siger, at «Ny uge» står nederst og tømmer planen (' + gammel.advarsel + ')');
+  const advBrud = await brudt(side, '.uge-advarsel', /Ny\suge|[uU]ge\s\d+/);
+  tjek(!advBrud.length, n + ': «Ny uge» og «uge NN» står samlet i advarslen (' + advBrud.join(', ') + ')');
   await tjekLayout(side, n + ' ugeplan for gammel');
   await foto(side, n + '-ugeplan-gammel', { fullPage: true });
   tjek(!side.fejl.length, n + ' oversigten: ' + side.fejl.join(' | '));
@@ -747,7 +753,7 @@ const brudt = (side, sel, re) => side.evaluate(({ sel, kilde }) => {
         const r = document.createRange();
         r.setStart(t, m.index);
         r.setEnd(t, m.index + m[0].length);
-        const linjer = new Set([...r.getClientRects()].map((x) => Math.round(x.top))).size;
+        const linjer = new Set([...r.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top))).size;
         if (m[0].includes(' ') || linjer > 1) fejl.push('«' + m[0] + '» (' + (m[0].includes(' ') ? 'blødt mellemrum, ' : '') + linjer + ' linjer)');
       }
     }
