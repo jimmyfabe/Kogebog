@@ -954,6 +954,22 @@ async function boernValg(browser, H) {
       await vent(200);
       tjek(new Set((await kortNu(side)).map((x) => x.top)).size === 2, n + ': på højkant står retterne to og to');
     }
+    // På telefonen står «Vælg» og «Tilbage» inden for skærmen, når en ret eller en dag er valgt: før lå de 4-10 px under
+    // bunden af 844, og Safaris adresselinje tager mere (UI-review V4, 23-10)
+    if (bredde === 390) {
+      for (const [h, sel, navn] of [['#/uge/vaelg/pip', '.ret-kort', 'retter'], ['#/uge/vaelg/pip/' + a, '.dag-brik:not(.optaget)', 'dage']]) {
+        await valgHash(side, h);
+        await vent(200);
+        await tryk(side, sel);
+        const b = await side.evaluate(() => {
+          scrollTo(0, 0);
+          const bund = (s) => Math.round(document.querySelector(s)?.getBoundingClientRect().bottom ?? -1);
+          return { vaelg: bund('button.knap.primaer.naeste'), tilbage: bund('.knap.tilbage'), hoejde: innerHeight };
+        });
+        tjek(b.vaelg > 0 && b.vaelg <= b.hoejde && b.tilbage > 0 && b.tilbage <= b.hoejde,
+          n + ' børnene ' + navn + ' 390×844: «Vælg» og «Tilbage» står inden for skærmen (' + JSON.stringify(b) + ')');
+      }
+    }
   }
 
   tjek(await side.evaluate(() => window.__taleAfvist) === 0, n + ': stemmen blev aldrig afvist (al oplæsning kom i et tryk)');

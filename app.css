@@ -800,6 +800,13 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
 @media (max-width: 700px) {
   .valg-indhold { gap: 18px; padding: 4px 12px 8px; }
   .valg-hoved h1 { font-size: 32px; }
+  /* «Læs op» står som rund højttaler ved siden af overskriften, som på trinnet: på sin egen række skubbede den «Vælg» og
+     «Tilbage» under bunden (390×844, UI-review V4). Overskriften må brydes i stedet. Teksten «Læs op» er skjult, men er
+     stadig knappens navn */
+  .valg-hoved { flex-wrap: nowrap; gap: 12px; }
+  .valg-hoved h1 { min-width: 0; }
+  .valg-hoved .laes-op { flex: none; width: var(--tryk); padding: 0; border-radius: 50%; }
+  .valg-hoved .laes-op > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .valg-dyr { width: 64px; height: 64px; }
   .valg-ret { width: 72px; height: 72px; }
   .dyr-gitter { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
