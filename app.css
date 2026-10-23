@@ -691,6 +691,7 @@ textarea.kopi-felt { resize: vertical; }
 .ret-valg-raekke { display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; align-items: center; gap: 0 16px; padding: 8px 16px; }
 .ret-valg-raekke + .ret-valg-raekke { border-top: 2px solid var(--creme-moerk); }
 .ret-valg-raekke.valgt { background: var(--sennep-lys); }
+.ret-valg-raekke > .uge-besked { grid-column: 1 / -1; margin: 6px 0 4px; }
 
 /* Forsidens indgang til den voksne */
 .forside-voksen { display: flex; justify-content: center; padding: 0 24px 18px; }

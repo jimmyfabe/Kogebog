@@ -493,6 +493,39 @@ async function oversigtIpad(browser, H) {
     await tjekLayout(side, n + ' ugeplan ' + b + '×' + h);
     await foto(side, n + '-ugeplan-' + b + 'x' + h, { fullPage: true });
   }
+
+  // 11. Kan valget på dagskærmen ikke gemmes (lageret er fuldt), står beskeden ved retten, og man bliver på dagskærmen.
+  //     Et nyt tryk gemmer, når lageret virker igen (code review U2, 23-10: beskeden forsvandt med skiftet til oversigten)
+  await side.setViewportSize(skaerm.viewport);
+  await side.evaluate(() => {
+    const gl = Storage.prototype.setItem;
+    Storage.prototype.setItem = function (noegle, v) {
+      if (window.__lagerFejl && noegle === 'kog-uge-v1') throw new DOMException('Fuldt', 'QuotaExceededError');
+      return gl.call(this, noegle, v);
+    };
+    window.__lagerFejl = true;
+  });
+  await valgHash(side, '#/uge/dag/2');
+  await side.waitForSelector('li[data-ret="koedsovs"] .vaelg-ret');
+  const foerFejl = JSON.stringify(await ugeLager(side));
+  await tryk(side, 'li[data-ret="koedsovs"] .vaelg-ret');
+  await venterPaa(side, () => document.querySelector('.uge-besked.fejl'), null, n + ': et valg, der ikke kan gemmes, skal sige det på dagskærmen');
+  tjek(await hash(side) === '#/uge/dag/2', n + ': et valg, der ikke kan gemmes, bliver på dagskærmen (' + await hash(side) + ')');
+  tjek(JSON.stringify(await ugeLager(side)) === foerFejl, n + ': intet gemmes, når lageret fejler');
+  tjek(await side.evaluate(() => Boolean(document.querySelector('li[data-ret="koedsovs"] .uge-besked.fejl'))), n + ': fejlbeskeden står ved retten, der blev valgt');
+  tjek(await side.evaluate(() => document.activeElement?.closest('[data-ret]')?.dataset.ret) === 'koedsovs', n + ': fokus bliver på rettens knap');
+  await tjekLayout(side, n + ' vælg ret: kunne ikke gemme');
+  await foto(side, n + '-ugeplan-vaelg-ret-fejl');
+  await side.evaluate(() => { window.__lagerFejl = false; });
+  // (Uden rettelsen står siden nu på oversigten: tilbage til dagen, så resten af testen kan køre videre)
+  if (await hash(side) !== '#/uge/dag/2') {
+    await valgHash(side, '#/uge/dag/2');
+    await side.waitForSelector('li[data-ret="koedsovs"] .vaelg-ret');
+  }
+  await tryk(side, 'li[data-ret="koedsovs"] .vaelg-ret');
+  await venterPaa(side, () => location.hash === '#/uge' && document.querySelector('.uge-dage'), null, n + ': når lageret virker igen, gemmer «Vælg» og går til oversigten');
+  tjek(((await ugeLager(side)).dage[1] || {}).ret === 'koedsovs' && !(await side.locator('.uge-besked.fejl').count()),
+    n + ': tirsdag er gemt, og fejlbeskeden er væk (' + JSON.stringify((await ugeLager(side)).dage[1]) + ')');
   tjek(!side.fejl.filter((x) => !/tunfrikadeller\.json/.test(x)).length, n + ' oversigten: ' + side.fejl.join(' | '));
   await ctx.close();
   maal.push(n + ' ugeplan: ' + IPLAN.length + ' retter i ugeplanen, ' + hurtige.length + ' på højst 40 min');

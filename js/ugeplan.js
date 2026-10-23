@@ -428,7 +428,7 @@ const hentPlan = () => Lager.hentUge(K.S.ids);
 // Ændrer planen: læser altid hele planen lige før (alle id'er fra index.json, ikke kun de hentede retter), så en dag,
 // der ikke er vist, aldrig gemmes tom (code review af trin 1-5). fn får en kopi og returnerer ændringen.
 // Svar: den gemte plan eller null (låst af en nyere udgave, eller lageret fejler)
-let oversigtBesked = null; // { tekst, fejl?, felt? } under oversigtens knapper
+let oversigtBesked = null; // { tekst, fejl?, felt?, ret? } under oversigtens knapper (ret: ved den ret på dagskærmen)
 function gemPlan(fn) {
   if (!klar()) return null;
   const p = hentPlan();
@@ -679,14 +679,20 @@ function dagSkaerm(i) {
     return b;
   }));
 
-  // Den voksnes valg står som Bos (afsnit 1). Byttes en ret, beholder dagen dyret og portionerne
+  // Den voksnes valg står som Bos (afsnit 1). Byttes en ret, beholder dagen dyret og portionerne. Kunne valget ikke
+  // gemmes, bliver man her, og beskeden står ved retten (på oversigten ville den forsvinde: code review U2, 23-10)
   const vaelg = (m) => {
     const gemt = gemPlan((q) => {
       const gl = q.dage[i];
       q.dage[i] = { ret: m.id, af: gl ? gl.af : 'bo', n: gl ? gl.n : q.n };
       return { dage: q.dage };
     });
-    if (gemt) K.annoncer(m.navn + ' står nu på ' + navn + '.');
+    if (!gemt) {
+      if (oversigtBesked) oversigtBesked.ret = m.id;
+      tegnIgen('vaelg-' + m.id);
+      return;
+    }
+    K.annoncer(m.navn + ' står nu på ' + navn + '.');
     K.naviger('#/uge');
   };
 
@@ -706,8 +712,9 @@ function dagSkaerm(i) {
           el('span', { class: 'dag-ret-navn', tekst: m.navn }),
           el('span', { class: 'dag-meta', tekst: metaTekst(m, n) }),
           valgt ? el('span', { class: 'dag-af', tekst: 'Står på ' + navn + ' nu' }) : null),
-        K.knap(valgt ? 'Behold' : 'Vælg', { klasse: 'lille vaelg-ret', ikonNavn: 'tjek', label: (valgt ? 'Behold ' : 'Vælg ') + m.navn + ' til ' + navn,
-          onclick: () => vaelg(m) }));
+        medFokus(K.knap(valgt ? 'Behold' : 'Vælg', { klasse: 'lille vaelg-ret', ikonNavn: 'tjek', label: (valgt ? 'Behold ' : 'Vælg ') + m.navn + ' til ' + navn,
+          onclick: () => vaelg(m) }), 'vaelg-' + m.id),
+        oversigtBesked && oversigtBesked.ret === m.id ? oversigtBeskedEl() : null);
     }));
   }
 
