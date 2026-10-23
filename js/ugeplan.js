@@ -109,7 +109,7 @@ function linkForm() {
     const r = afkod(kode, { retter: K.S.ids, idag: new Date() });
     if (!r.ok) {
       if (r.fejl === 'nyere') siger(BESKED_NYERE);
-      else if (r.fejl === 'gammel') siger(BESKED_GAMMEL + ' Send et nyt link fra iPad\'en.');
+      else if (r.fejl === 'gammel') siger(BESKED_GAMMEL + ' Lav en ny plan på iPad\'en, og send linket igen.');
       else siger(BESKED_UGYLDIG + ' Tjek, at hele linket kom med.');
       return;
     }

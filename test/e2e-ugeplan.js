@@ -114,6 +114,14 @@ async function telefon(browser, H) {
   tjek(/^Linket kan ikke læses\./.test(feltFejl), n + ': et forkert link i feltet skal give «Linket kan ikke læses» (' + feltFejl + ')');
   tjek(!(await side.evaluate(() => document.getElementById('app').textContent)).includes('MARK-felt'), n + ': teksten fra feltet må ikke vises');
   tjek(await lager(side) === null, n + ': et forkert link må ikke gemme noget');
+  // Et link til en plan over 8 uger tilbage: iPad'en viser ikke «Send» for sådan en plan, så feltet beder om en ny plan
+  // (code review F4, 23-10)
+  await side.fill('#link-felt', BASE + '/index.html#/hent/' + kod(plusDage(uge, -70), dage));
+  await tryk(side, '.link-knap');
+  const gammelFejl = await side.locator('#link-fejl').textContent();
+  tjek(gammelFejl === 'Linket er for gammelt. Lav en ny plan på iPad\'en, og send linket igen.',
+    n + ': et for gammelt link i feltet skal bede om en ny plan (' + gammelFejl + ')');
+  tjek(await lager(side) === null, n + ': et for gammelt link må ikke gemme noget');
   await side.fill('#link-felt', 'Her er listen: ' + BASE + '/index.html#/hent/' + kode + '.');
   await tryk(side, '.link-knap');
   await venterPaa(side, () => location.hash === '#/indkoeb' && document.querySelector('.liste-tal'), null, n + ': linket i feltet skal åbne listen');
