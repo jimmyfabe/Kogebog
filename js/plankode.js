@@ -11,6 +11,7 @@ export const MAKS_ID = 40;
 export const MAKS_DAGE_VAEK = 56; // ugens mandag højst 8 uger før eller efter i dag
 export const BESKED_NYERE = 'Lavet med en nyere udgave. Opdatér appen.';
 export const BESKED_UGYLDIG = 'Linket kan ikke læses.';
+export const BESKED_GAMMEL = 'Linket er for gammelt.';
 
 const TEGN_RE = /^[a-z0-9._~-]*$/;
 // En dag: tom eller id_portioner med portioner 1-12 uden foranstillet nul. Hele koden er præcis syv dage
@@ -68,13 +69,13 @@ export function kod(uge, dage) {
 }
 
 // retter: id'erne på retterne i ugeplanen (fra index.json og med «tumbi.ugeplan»: true); idag: en Date.
-// Svar: { ok: true, uge, dage, ukendte, kode } eller { ok: false, fejl: 'nyere' | 'ugyldig', besked }. Et gyldigt id,
+// Svar: { ok: true, uge, dage, ukendte, kode } eller { ok: false, fejl: 'nyere' | 'gammel' | 'ugyldig', besked }. Et gyldigt id,
 // der ikke står i «retter», giver en tom dag og tæller i «ukendte». «kode» er genskrevet fra det godkendte og er den,
 // der gemmes
 export function afkod(kode, { retter, idag = new Date() } = {}) {
   if (!Array.isArray(retter)) throw new TypeError('afkod: retter skal være en liste');
   if (!(idag instanceof Date) || Number.isNaN(idag.getTime())) throw new TypeError('afkod: idag skal være en dato');
-  const nej = (fejl) => ({ ok: false, fejl, besked: fejl === 'nyere' ? BESKED_NYERE : BESKED_UGYLDIG });
+  const nej = (fejl) => ({ ok: false, fejl, besked: fejl === 'nyere' ? BESKED_NYERE : fejl === 'gammel' ? BESKED_GAMMEL : BESKED_UGYLDIG });
   // 1. Længden og tegnene, før noget deles op
   if (typeof kode !== 'string' || kode.length > MAKS_LAENGDE || !TEGN_RE.test(kode)) return nej('ugyldig');
   // 2. Hele koden i ét udtryk; en nyere udgave genkendes kun på begyndelsen
@@ -85,7 +86,11 @@ export function afkod(kode, { retter, idag = new Date() } = {}) {
   // 3. En rigtig mandag tæt på i dag, og id'erne
   const ms = mandag(Number(dato.slice(0, 4)), Number(dato.slice(4, 6)), Number(dato.slice(6)));
   const iDag = Date.UTC(idag.getFullYear(), idag.getMonth(), idag.getDate());
-  if (ms === null || Math.abs(ms - iDag) > MAKS_DAGE_VAEK * DAG_MS) return nej('ugyldig');
+  if (ms === null) return nej('ugyldig');
+  // Mere end 8 uger tilbage: et rigtigt link til en gammel plan, ikke et afskåret (code review U4, 23-10). Mere end 8 uger
+  // frem laver appen kun med et forkert ur, så det er «ugyldig» som før
+  if (iDag - ms > MAKS_DAGE_VAEK * DAG_MS) return nej('gammel');
+  if (ms - iDag > MAKS_DAGE_VAEK * DAG_MS) return nej('ugyldig');
   let ukendte = 0;
   const dage = [];
   for (const f of felter.split('~')) {

@@ -9,7 +9,7 @@
 // som tekst (js/dom.js). app.js ejer ruterne og tilstanden (S) og giver sine hjælpere med init().
 import { el, ikon } from './dom.js';
 import * as Lager from './lager.js';
-import { afkod, kod, kodeFraTekst, ukendtTekst, BESKED_UGYLDIG, BESKED_NYERE } from './plankode.js';
+import { afkod, kod, kodeFraTekst, ukendtTekst, BESKED_UGYLDIG, BESKED_NYERE, BESKED_GAMMEL } from './plankode.js';
 import { saml, grupper, tekst as listeTekst } from './indkoeb.js';
 import { DYR, grafikIngrediens, grafikRet, grafikDyr } from './katalog.js';
 import { ugeNr, dagDato, planMandag, DAGE } from './tid.js';
@@ -108,7 +108,9 @@ function linkForm() {
     if (!K.S.ids) { siger('Opskrifterne er ikke hentet endnu. Vent et øjeblik, og prøv igen.'); return; }
     const r = afkod(kode, { retter: K.S.ids, idag: new Date() });
     if (!r.ok) {
-      siger(r.fejl === 'nyere' ? BESKED_NYERE : BESKED_UGYLDIG + ' Tjek, at hele linket kom med.');
+      if (r.fejl === 'nyere') siger(BESKED_NYERE);
+      else if (r.fejl === 'gammel') siger(BESKED_GAMMEL + ' Send et nyt link fra iPad\'en.');
+      else siger(BESKED_UGYLDIG + ' Tjek, at hele linket kom med.');
       return;
     }
     K.naviger('#/hent/' + r.kode);
@@ -127,13 +129,15 @@ function tilListe(ukendte) {
   history.replaceState(null, '', '#/indkoeb');
 }
 
+// Et link til en uge mere end 8 uger tilbage er ikke skåret over: den voksne laver en ny plan (code review U4, 23-10)
 function linkFejl(fejl) {
-  const nyere = fejl === 'nyere';
+  const [besked, tekst] = {
+    nyere: [BESKED_NYERE, 'Telefonen har en ældre udgave af Tumbi Køkken. Genindlæs siden, og åbn linket igen.'],
+    gammel: [BESKED_GAMMEL, 'Linket er til en uge, der ligger mere end 8 uger tilbage. Lav en ny plan på iPad\'en, og send linket igen.'],
+  }[fejl] || [BESKED_UGYLDIG, 'Måske er linket skåret over i beskeden. Send det igen fra iPad\'en, eller sæt hele linket ind herunder.'];
   return K.statusSkaerm({
-    titel: (nyere ? BESKED_NYERE : BESKED_UGYLDIG).replace(/\.$/, ''),
-    tekst: nyere
-      ? 'Telefonen har en ældre udgave af Tumbi Køkken. Genindlæs siden, og åbn linket igen.'
-      : 'Måske er linket skåret over i beskeden. Send det igen fra iPad\'en, eller sæt hele linket ind herunder.',
+    titel: besked.replace(/\.$/, ''),
+    tekst,
     handling: el('div', { class: 'status-handling' }, linkForm(),
       K.knap('Til forsiden', { ikonNavn: 'hjem', onclick: () => K.naviger('#/') })),
   });
@@ -577,6 +581,13 @@ function oversigtSkaerm() {
     if (m.uge.groentG > 0) groent++;
   }
   const sum = harRetter ? 'Ca. ' + Math.round(kr / 10) * 10 + ' kr. · grønt ' + groent + ' af 7 dage' : 'Ingen retter endnu';
+  // Et link til en uge mere end 8 uger fra i dag afviser afkod (på telefonen og på #/hent/ her). Så er «Indkøbsliste» og
+  // «Send til telefon» væk, og advarslen siger, hvad den voksne gør; «Del som tekst» og «Print» virker stadig (U4, 23-10)
+  const kanSendes = !harRetter || afkod(data.kode, { retter: K.S.ids, idag: new Date() }).ok;
+  let advarsel = null;
+  if (!kanSendes && ugenErGaaet(p.uge)) advarsel = 'Uge ' + ugeNr(uge) + ' er mere end 8 uger siden, så listen kan ikke sendes til telefonen. Hold «Ny uge» for at lave en plan til uge ' + ugeNr(planMandag()) + '.';
+  else if (!kanSendes) advarsel = 'Uge ' + ugeNr(uge) + ' ligger mere end 8 uger fremme, så listen kan ikke sendes til telefonen. Tjek datoen på iPad\'en, eller hold «Ny uge».';
+  else if (ugenErGaaet(p.uge)) advarsel = 'Uge ' + ugeNr(p.uge) + ' er gået. Hold «Ny uge» for at lave en plan til uge ' + ugeNr(planMandag()) + '.';
 
   const indstillinger = el('div', { class: 'uge-indstillinger' },
     el('div', { class: 'indstilling' }, el('span', { class: 'indstilling-navn', tekst: 'Portioner til nye retter' }),
@@ -609,8 +620,8 @@ function oversigtSkaerm() {
   }), 'ny-uge');
 
   const knapper = harRetter ? [
-    medFokus(K.knap('Indkøbsliste', { klasse: 'primaer', ikonNavn: 'kurv', onclick: () => K.naviger('#/hent/' + data.kode) }), 'liste'),
-    medFokus(K.knap('Send til telefon', { ikonNavn: 'telefon', onclick: () => sendLink(data) }), 'send'),
+    kanSendes ? medFokus(K.knap('Indkøbsliste', { klasse: 'primaer', ikonNavn: 'kurv', onclick: () => K.naviger('#/hent/' + data.kode) }), 'liste') : null,
+    kanSendes ? medFokus(K.knap('Send til telefon', { ikonNavn: 'telefon', onclick: () => sendLink(data) }), 'send') : null,
     medFokus(K.knap('Del som tekst', { ikonNavn: 'liste', onclick: () => delTekst(data) }), 'del'),
     el('a', { class: 'knap print-link', href: 'print.html?uge' }, ikon('print'), el('span', { tekst: 'Print' })),
   ] : [];
@@ -621,9 +632,7 @@ function oversigtSkaerm() {
       el('header', { class: 'uge-hoved' },
         el('h1', { tabindex: '-1', tekst: 'Ugeplan' }),
         el('p', { class: 'uge-nr', tekst: 'Uge ' + ugeNr(uge) + ' · ' + dagDato(uge, 0) + '–' + dagDato(uge, 6) })),
-      ugenErGaaet(p.uge)
-        ? el('p', { class: 'uge-advarsel', role: 'status', tekst: 'Uge ' + ugeNr(p.uge) + ' er gået. Hold «Ny uge» for at lave en plan til uge ' + ugeNr(planMandag()) + '.' })
-        : null,
+      advarsel ? el('p', { class: 'uge-advarsel', role: 'status', tekst: advarsel }) : null,
       indstillinger,
       el('ol', { class: 'uge-dage', role: 'list', 'aria-label': 'Ugens dage' }, p.dage.map((d, i) => dagRaekke(p, d, i))),
       el('div', { class: 'uge-bund' },

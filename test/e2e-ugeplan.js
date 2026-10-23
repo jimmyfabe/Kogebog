@@ -208,6 +208,7 @@ async function telefon(browser, H) {
     [kode.slice(0, -4) + 'ffff', 'Linket kan ikke læses'], // forkert kontrolsum
     [kode.slice(0, 30), 'Linket kan ikke læses'], // skåret over i beskeden
     ['v1.' + 'markf'.repeat(1000), 'Linket kan ikke læses'],
+    [kod(plusDage(uge, -70), dage), 'Linket er for gammelt'], // en plan fra for 10 uger siden er ikke skåret over (U4, 23-10)
     [gyldigUkendt, 'Der er ingen retter i ugeplanen'], // gyldig kode, men retten findes ikke: id'et må ikke vises
   ];
   const foerFjendtlig = await lager(side);
@@ -593,6 +594,20 @@ async function oversigtDesktop(browser, H) {
   await side.keyboard.up('Space');
   await side.waitForSelector('text=Planen er tømt');
   tjek((await ugeLager(side)).dage.every((d) => d === null), n + ': mellemrum holdt på «Ny uge» tømmer planen');
+  // En plan fra for 10 uger siden: telefonen ville afvise linket, så «Indkøbsliste» og «Send til telefon» er væk, og
+  // advarslen siger «Ny uge». «Del som tekst» virker stadig (code review U4, 23-10)
+  await side.evaluate((p) => localStorage.setItem('kog-uge-v1', JSON.stringify(p)), { ...plan, uge: plusDage(uge, -70), rettet: Date.now() });
+  await side.reload();
+  await side.waitForSelector('.uge-dage');
+  const gammel = await side.evaluate(() => ({
+    knapper: [...document.querySelectorAll('.uge-knapper .knap')].map((b) => b.textContent.trim()),
+    advarsel: document.querySelector('.uge-advarsel')?.textContent || '',
+  }));
+  tjek(!gammel.knapper.some((t) => /Indkøbsliste|Send til telefon/.test(t)) && gammel.knapper.some((t) => t.includes('Del som tekst')),
+    n + ': en plan fra for 10 uger siden kan ikke sendes, men kan deles som tekst (' + gammel.knapper.join(', ') + ')');
+  tjek(gammel.advarsel.includes('mere end 8 uger') && gammel.advarsel.includes('Ny uge'), n + ': advarslen siger, at planen er for gammel (' + gammel.advarsel + ')');
+  await tjekLayout(side, n + ' ugeplan for gammel');
+  await foto(side, n + '-ugeplan-gammel', { fullPage: true });
   tjek(!side.fejl.length, n + ' oversigten: ' + side.fejl.join(' | '));
   await ctx.close();
 }

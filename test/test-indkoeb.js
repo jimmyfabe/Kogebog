@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { saml, visMaengde, vareTekst, grupper, tekst, MAKS_M } from '../js/indkoeb.js';
-import { kod, afkod, fnv1a, kontrolsum, ukendtTekst, kodeFraTekst, BESKED_NYERE, BESKED_UGYLDIG } from '../js/plankode.js';
+import { kod, afkod, fnv1a, kontrolsum, ukendtTekst, kodeFraTekst, BESKED_NYERE, BESKED_UGYLDIG, BESKED_GAMMEL } from '../js/plankode.js';
 import * as lager from '../js/lager.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -171,6 +171,7 @@ const af = (kode, retter = UGEPLAN) => afkod(kode, { retter, idag: IDAG });
 const medSum = (krop) => krop + '.' + kontrolsum(krop);
 const UGYLDIG = { ok: false, fejl: 'ugyldig', besked: BESKED_UGYLDIG };
 const NYERE = { ok: false, fejl: 'nyere', besked: BESKED_NYERE };
+const GAMMEL = { ok: false, fejl: 'gammel', besked: BESKED_GAMMEL };
 const PLAN = [{ ret: 'koedsovs', n: 4 }, null, { ret: 'bolognese-one-pot', n: 6 }, null, null, { ret: 'tunfrikadeller', n: 12 }, null];
 
 test('FNV-1a giver de kendte værdier, og kontrolsummen er 4 hex', () => {
@@ -204,7 +205,13 @@ test('en plan kodes og afkodes tilbage til det samme', () => {
   assert.deepEqual(af(tom), { ok: true, uge: '2026-10-26', dage: Array(7).fill(null), ukendte: 0, kode: tom });
   // 8 uger før og efter i dag er grænsen (52 og 53 dage er med; 59 og 60 er ikke)
   for (const uge of ['2026-08-31', '2026-12-14']) assert.equal(af(kod(uge, PLAN)).ok, true, uge);
-  for (const uge of ['2026-08-24', '2026-12-21']) assert.deepEqual(af(kod(uge, PLAN)), UGYLDIG, uge);
+  // Mere end 8 uger tilbage er en gammel plan, ikke et afskåret link (code review U4, 23-10); mere end 8 uger frem kan
+  // appen ikke lave med et rigtigt ur
+  assert.deepEqual(af(kod('2026-08-24', PLAN)), GAMMEL, '2026-08-24');
+  assert.equal(BESKED_GAMMEL, 'Linket er for gammelt.');
+  assert.deepEqual(af(kod('2026-12-21', PLAN)), UGYLDIG, '2026-12-21');
+  // Et gammelt link, der er skåret over, kan stadig ikke læses (datoen tjekkes først efter formen og kontrolsummen)
+  assert.deepEqual(af(kod('2026-08-24', PLAN).slice(0, -10)), UGYLDIG, 'gammelt og afskåret');
 });
 
 test('kod nægter forkerte planer', () => {
