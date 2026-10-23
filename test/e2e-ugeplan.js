@@ -997,8 +997,9 @@ async function boernValg(browser, H) {
       tjek(new Set((await kortNu(side)).map((x) => x.top)).size === 2, n + ': på højkant står retterne to og to');
     }
     // På telefonen står «Vælg» og «Tilbage» inden for skærmen, når en ret eller en dag er valgt: før lå de 4-10 px under
-    // bunden af 844, og Safaris adresselinje tager mere (UI-review V4, 23-10)
-    if (bredde === 390) {
+    // bunden af 844, og Safaris adresselinje tager mere (UI-review V4, 23-10). På 360×740 lå «Vælg» næsten helt under
+    // kanten: nu står bunden fast, og pilene kan rulles frem over den på hver side (UI-review 2, 23-10)
+    if (bredde <= 390) {
       for (const [h, sel, navn] of [['#/uge/vaelg/pip', '.ret-kort', 'retter'], ['#/uge/vaelg/pip/' + a, '.dag-brik:not(.optaget)', 'dage']]) {
         await valgHash(side, h);
         await vent(200);
@@ -1009,7 +1010,21 @@ async function boernValg(browser, H) {
           return { vaelg: bund('button.knap.primaer.naeste'), tilbage: bund('.knap.tilbage'), hoejde: innerHeight };
         });
         tjek(b.vaelg > 0 && b.vaelg <= b.hoejde && b.tilbage > 0 && b.tilbage <= b.hoejde,
-          n + ' børnene ' + navn + ' 390×844: «Vælg» og «Tilbage» står inden for skærmen (' + JSON.stringify(b) + ')');
+          n + ' børnene ' + navn + ' ' + bredde + '×' + hoejde + ': «Vælg» og «Tilbage» står inden for skærmen (' + JSON.stringify(b) + ')');
+      }
+      await valgHash(side, '#/uge/vaelg/pip');
+      await vent(200);
+      for (let s = 1; s <= 20; s++) {
+        const p = await side.evaluate(() => {
+          scrollTo(0, document.documentElement.scrollHeight);
+          const r = (s) => document.querySelector(s).getBoundingClientRect();
+          return { naeste: Math.round(r('.side-naeste').bottom), forrige: Math.round(r('.side-forrige').bottom),
+            bund: Math.round(r('.valg-bund').top), hoejde: innerHeight, sidst: document.querySelector('.side-naeste').classList.contains('usynlig') };
+        });
+        tjek(p.naeste <= p.bund + 1 && p.forrige <= p.bund + 1 && p.bund < p.hoejde,
+          n + ' børnene retter side ' + s + ' ' + bredde + '×' + hoejde + ': pilene kan rulles frem over bunden (' + JSON.stringify(p) + ')');
+        if (p.sidst) break;
+        await tryk(side, '.side-naeste');
       }
     }
   }
