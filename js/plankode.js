@@ -107,5 +107,14 @@ export function afkod(kode, { retter, idag = new Date() } = {}) {
   return { ok: true, uge, dage, ukendte, kode: kod(uge, dage) };
 }
 
+// Linket i feltet «Sæt linket ind» (eller kun koden): det, der står efter «#/hent/», til første mellemrum («… Hilsen
+// far»), med «%7E» tilbage til «~» (nogle apps koder tilden). Et punktum eller komma efter linket fjernes; koden slutter
+// altid med kontrolsummens hex-tegn. Svaret skal altid gennem afkod() (code review U9, 23-10)
+export function kodeFraTekst(tekst) {
+  const t = String(tekst || '').trim();
+  const i = t.indexOf('#/hent/');
+  return (i >= 0 ? t.slice(i + 7) : t).split(/\s/)[0].replace(/%7e/gi, '~').replace(/[^a-z0-9]+$/, '');
+}
+
 // Teksten til ukendte retter: kun tallet, aldrig id'et fra adressen
 export const ukendtTekst = (n) => (n === 1 ? '1 ret kunne ikke findes' : n + ' retter kunne ikke findes');

@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { saml, visMaengde, vareTekst, grupper, tekst, MAKS_M } from '../js/indkoeb.js';
-import { kod, afkod, fnv1a, kontrolsum, ukendtTekst, BESKED_NYERE, BESKED_UGYLDIG } from '../js/plankode.js';
+import { kod, afkod, fnv1a, kontrolsum, ukendtTekst, kodeFraTekst, BESKED_NYERE, BESKED_UGYLDIG } from '../js/plankode.js';
 import * as lager from '../js/lager.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -297,6 +297,21 @@ test('constructor_4 og andre ukendte retter giver en tom dag og kun et tal', () 
   // En tom liste over retter: alle dage bliver tomme, men koden er stadig gyldig
   assert.deepEqual(af(GOD, []).dage, Array(7).fill(null));
   assert.equal(af(GOD, []).ukendte, 3);
+});
+
+// Code review U9 (23-10): feltet «Sæt linket ind» tog al tekst efter #/hent/, så «… Hilsen far» efter linket, eller en
+// tilde, som en app har kodet til %7E, gav «Linket kan ikke læses»
+test('linket i feltet: koden efter #/hent/ til første mellemrum, og %7E bliver til ~', () => {
+  const url = 'https://jimmyfabe.github.io/Kogebog/index.html#/hent/' + GOD;
+  for (const t of [GOD, url, url + '.', '  ' + url + '  ', 'Her er listen: ' + url + '. Hilsen far', url + ' Hilsen far',
+    url + '\nHilsen far', url + '\tx', url.replaceAll('~', '%7E'), url.replaceAll('~', '%7e') + ', tak']) {
+    assert.equal(kodeFraTekst(t), GOD, JSON.stringify(t));
+  }
+  assert.equal(kodeFraTekst(''), '');
+  assert.equal(kodeFraTekst(null), '');
+  // Andet end koden går stadig gennem afkod og afvises der
+  assert.deepEqual(af(kodeFraTekst('Hej! MARK-felt-123')), UGYLDIG);
+  assert.deepEqual(af(kodeFraTekst(url.replaceAll('.', '%2e'))), UGYLDIG);
 });
 
 test('afkod kræver en liste over retter og en rigtig dato', () => {

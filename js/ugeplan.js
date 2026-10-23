@@ -9,7 +9,7 @@
 // som tekst (js/dom.js). app.js ejer ruterne og tilstanden (S) og giver sine hjælpere med init().
 import { el, ikon } from './dom.js';
 import * as Lager from './lager.js';
-import { afkod, kod, ukendtTekst, BESKED_UGYLDIG, BESKED_NYERE } from './plankode.js';
+import { afkod, kod, kodeFraTekst, ukendtTekst, BESKED_UGYLDIG, BESKED_NYERE } from './plankode.js';
 import { saml, grupper, tekst as listeTekst } from './indkoeb.js';
 import { DYR, grafikIngrediens, grafikRet, grafikDyr } from './katalog.js';
 import { ugeNr, dagDato, planMandag, DAGE } from './tid.js';
@@ -80,14 +80,6 @@ function hentFejl() {
         K.indlaes();
       } })),
   });
-}
-
-// Linket i feltet: alt efter «#/hent/» (eller kun koden). Et punktum eller mellemrum efter linket i beskeden fjernes;
-// koden slutter altid med kontrolsummens hex-tegn
-export function kodeFraTekst(tekst) {
-  const t = String(tekst || '').trim();
-  const i = t.indexOf('#/hent/');
-  return (i >= 0 ? t.slice(i + 7) : t).replace(/[^a-z0-9]+$/, '');
 }
 
 // Nødudgangen: en hjemmeskærm-app deler ikke lager med Safari, så linket kan sættes ind her (afsnit 2, vej a2).
