@@ -997,9 +997,9 @@ const ledigPort = () => new Promise((ok, fejl) => {
 });
 const svarer = (url) => new Promise((ok) => http.get(url, (r) => { r.resume(); ok(true); }).on('error', () => ok(false)));
 const pause = (ms) => new Promise((r) => setTimeout(r, ms));
-// Uden net venter trin 3-5 op til 20 s: mod både 1a3b580 og HEAD stod iPad'en på «Henter retterne …» efter 6 s
-// (23-10, 225 FILER på 4,8 MB i cachen mod 151 før de 30 nye retter). Tiderne står i målingerne: hvornår siden kom fra
-// service workeren (navigationens responseEnd), og hvornår indholdet stod der
+// Uden net venter trin 3-5 op til 20 s. Målt 23-10: siden kommer fra service workeren med det samme, men WebKits fetch
+// til den stoppede server svarer ikke, så opskrifterne kommer først fra cachen efter sw.js' 4 s (index.json og så
+// retterne: 6-8 s). Mod 1a3b580 (uden de 4 s) kom de ikke inden for 20 s. Tiderne står i målingerne
 const UDEN_NET_MS = 20000;
 const tider = async (side, t0) => {
   const nav = await side.evaluate(() => { const e = performance.getEntriesByType('navigation')[0]; return e ? e.responseEnd : -1; }).catch(() => -1);
@@ -1205,7 +1205,12 @@ async function udenNet(H) {
       const sek = Math.round((Date.now() - t0) / 100) / 10;
       if (kom) {
         tjek(await side.evaluate(() => Boolean(navigator.serviceWorker.controller)), 'iphone, nettet svarer aldrig: siden skal komme fra service workeren');
-        tjek(JSON.stringify((await listeNu(side)).afd) === JSON.stringify(forventet(H, dage).afd), 'iphone, nettet svarer aldrig: listen er de to retter');
+        // Det er samme liste som i trin 4: varen, der blev krydset af dér, står nederst i sin afdeling, så rækkefølgen
+        // sammenlignes ikke
+        const sorteret = (afd) => JSON.stringify(afd.map((a) => ({ navn: a.navn, varer: [...a.varer].sort() })));
+        const l6 = await listeNu(side);
+        tjek(sorteret(l6.afd) === sorteret(forventet(H, dage).afd) && l6.koebt.join() === vare,
+          'iphone, nettet svarer aldrig: listen er de to retter, og afkrydsningen fra trin 4 er der stadig (' + l6.koebt.join(', ') + ')');
       }
       maal.push('nettet svarer aldrig: listen ' + (kom ? 'kom efter ' + sek + ' s' : 'kom ikke inden for 15 s'));
       await side.close();
