@@ -787,6 +787,10 @@ async function boernValg(browser, H) {
   tjek(new Set(k.map((x) => x.top)).size === 1, n + ': retterne står på én række på iPad på langs');
   tjek(await side.locator(VAELG).count() === 0, n + ': fluebenet vises først, når en ret er trykket på');
   tjek(await side.locator('.side-forrige').evaluate((b) => b.disabled && getComputedStyle(b).visibility === 'hidden'), n + ': på første side er pilen tilbage væk');
+  // Sidepilene har deres eget ikon: på telefonen står pilen tilbage lige over «Tilbage» (UI-review 2, 23-10)
+  const pilIkon = await side.evaluate(() => ['.side-forrige', '.side-naeste', '.valg-bund .tilbage']
+    .map((s) => [...document.querySelectorAll(s + ' svg path')].map((p) => p.getAttribute('d')).join(' ')));
+  tjek(pilIkon.every(Boolean) && new Set(pilIkon).size === 3, n + ': sidepilene har et andet ikon end «Tilbage» (' + JSON.stringify(pilIkon) + ')');
   await tjekLayout(side, n + ' børnene: retter');
   await foto(side, n + '-boern-retter');
   const [a, b] = k.map((x) => x.id);

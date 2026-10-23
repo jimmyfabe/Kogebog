@@ -41,6 +41,9 @@ const IKONER = {
   plus: ['M12 5v14', 'M5 12h14'],
   minus: ['M5 12h14'],
   kryds: ['M6.5 6.5l11 11', 'M17.5 6.5l-11 11'],
+  // Børnenes sidepile er vinkler som i en billedbog: med pilen fra «Tilbage» stod to ens pile over hinanden (UI-review 2, 23-10)
+  forrige: ['M14.5 5l-7 7 7 7'],
+  frem: ['M9.5 5l7 7-7 7'],
 };
 
 export function ikon(navn, klasse = 'ikon') {

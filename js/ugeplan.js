@@ -900,7 +900,7 @@ function retValgSkaerm(p, dyr) {
     const kan = til >= 0 && til < sider;
     const b = medFokus(K.knap('', {
       klasse: 'rund stor-rund side-knap ' + (retning > 0 ? 'side-naeste' : 'side-forrige') + (kan ? '' : ' usynlig'),
-      ikonNavn: retning > 0 ? 'naeste' : 'tilbage',
+      ikonNavn: retning > 0 ? 'frem' : 'forrige',
       label: retning > 0 ? 'Flere retter' : 'Forrige retter',
       onclick: () => {
         Object.assign(barn, { side: til, ret: null });
