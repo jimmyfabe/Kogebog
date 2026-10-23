@@ -295,8 +295,10 @@ function listeSkaerm(liste) {
       el('span', { class: 'vare-tekst' },
         el('span', { class: 'vare-navn', tekst: v.navn }),
         v.maengde ? el('span', { class: 'vare-maengde', tekst: v.maengde }) : null));
+    // Trykket gør det, knappen viser (koebt fra tegningen), ikke det modsatte af lageret: en fane, der ikke er tegnet om
+    // efter en afkrydsning i en anden fane, må ikke fjerne den (code review F1, 23-10)
     b.addEventListener('click', spaer(() => {
-      if (!aendr(() => { if (st.koebt.has(v.id)) st.koebt.delete(v.id); else st.koebt.add(v.id); })) return;
+      if (!aendr(() => { if (koebt) st.koebt.delete(v.id); else st.koebt.add(v.id); })) return;
       tegn(v.id, '.vare');
       const t = optaelling(alle, st.koebt, st.harVi);
       K.annoncer((st.koebt.has(v.id) ? 'Købt: ' : 'Ikke købt: ') + v.navn + '. ' + t.koebt + ' af ' + t.ialt + ' købt.');

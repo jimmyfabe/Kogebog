@@ -276,6 +276,8 @@ async function telefon(browser, H) {
   // 13. To faner med samme liste (linket trykket to gange): et tryk i hver fane gemmer begge afkrydsninger, og når den
   //     ene fane erstatter listen, skriver den anden aldrig den gamle uges afkrydsninger ind i den nye (code review U1, 23-10)
   const t = await nySide(browser, skaerm, { serviceWorkers: 'block' });
+  // window.__ingenStorage stopper storage-hændelsen, før appen får den (lytteren her står først)
+  await t.ctx.addInitScript(() => addEventListener('storage', (e) => { if (window.__ingenStorage) e.stopImmediatePropagation(); }));
   const fane2 = await t.ctx.newPage();
   fane2.fejl = [];
   fane2.on('pageerror', (e) => fane2.fejl.push('pageerror: ' + e.message));
@@ -294,6 +296,18 @@ async function telefon(browser, H) {
   await tryk(t.side, 'li[data-vare="' + vid[2] + '"] .har-vi');
   to = JSON.parse(await lager(t.side) || '{}');
   tjek((to.harVi || []).join() === vid[2] && (to.koebt || []).length === 2, n + ' to faner: «Har vi» i fane 1 beholder fane 2s afkrydsning (' + JSON.stringify({ koebt: to.koebt, harVi: to.harVi }) + ')');
+  // Fane 2 er ikke tegnet om (storage-hændelsen nåede ikke frem), da fane 1 krydsede en vare af. Et tryk på varen i fane 2,
+  // hvor den står som ikke købt, skal krydse den af, ikke fjerne afkrydsningen (code review F1, 23-10)
+  await fane2.evaluate(() => { window.__ingenStorage = true; });
+  await tryk(t.side, 'li[data-vare="' + vid[3] + '"] .vare');
+  tjek(await fane2.locator('li[data-vare="' + vid[3] + '"] .vare').getAttribute('aria-pressed') === 'false',
+    n + ' to faner: fane 2 skal stå, som før fane 1 krydsede af (testens forudsætning)');
+  await tryk(fane2, 'li[data-vare="' + vid[3] + '"] .vare');
+  await fane2.evaluate(() => { window.__ingenStorage = false; });
+  to = JSON.parse(await lager(t.side) || '{}');
+  const pressed = await fane2.locator('li[data-vare="' + vid[3] + '"] .vare').getAttribute('aria-pressed');
+  tjek(pressed === 'true' && (to.koebt || []).includes(vid[3]),
+    n + ' to faner: et tryk i en fane, der ikke er tegnet om, gør det, knappen viste (aria-pressed ' + pressed + ', ' + JSON.stringify(to.koebt) + ')');
   // Fane 2 erstatter listen med næste uges. Fane 1 skal vise den nye liste, og et tryk dér gemmer kun det ene tryk
   await aabn(fane2, BASE, '#/hent/' + kode2);
   await fane2.waitForSelector('button:has-text("Erstat listen")');
