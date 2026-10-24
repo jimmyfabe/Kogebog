@@ -1,5 +1,16 @@
 # STATUS – Tumbi Køkken
 
+## 24-10-2026 kl. 05:37: Røst-lyden er færdig (gren `claude/ugeplan-22-10`, ikke flettet, ikke pushet)
+
+- **Alle 1.422 replikker har Røst-lyd** (8 bidder, 437a23c..bd1b108, 23-10 kl. 20:10 til 24-10 kl. 05:32). Lyden fylder 28,4 MB. Hver bid har fået nye LYD, UDGAVE_INDHOLD og INDHOLD.
+- **Bør lyttes til:** 191 replikker er stadig mistænkelige efter seed 43 og 44: 179 «lang hale» og 12 «for lang». 116 af dem er timer-optaget-replikker, og 42 er ingredienser. Listen ligger i `D:/Stemmer/kogebog-500m/boer-lyttes-24-10.txt`.
+- **Tests på bd1b108:**
+  - Node-tests: 8 af 9 grønne. `test-lyd` er kun rød på de 3 forældreløse `timer-optaget`-mp3.
+  - E2e i WebKit, delene «fejl» og «ugeplan»: 605 tjek grønne på 119 s.
+- Røst-løkken stoppede én gang, kl. 19:35, fordi låsen var optaget i 90 min af Lystårnets e2e før udgivelse. Den blev genstartet fra mp3-trinnet kl. 19:37, og intet gik tabt.
+
+**Afventer Jimmy** (som i afsnittet nedenfor): V8 (22-10), ja til fletning og push til `main` (23-10), ja til at slette de 3 forældreløse mp3 (23-10), lyttetesten (nu 191 replikker, 24-10) og `main`s åbne punkter.
+
 ## 23-10-2026 kl. 16:31: ugeplanen, UI-rettelser, versionsnummer v1 og Røst-lyd (gren `claude/ugeplan-22-10`, ikke flettet, ikke pushet)
 
 **Gjort** (83 commits oven på `main`s 55ac5b2, heraf 2 fletninger; `main` er ikke rørt):
