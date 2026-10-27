@@ -1,5 +1,26 @@
 # STATUS – Tumbi Køkken
 
+## 27-10-2026 kl. 03:59: e2e grøn, ASR-lytteliste, ui-review efter fletningen og «Hælovin»-prøver (Saga; gren `claude/ugeplan-22-10`, ikke flettet, ikke pushet, ingen kode ændret)
+
+- **Fuld e2e i WebKit på 4ecad7f:** 36.462 tjek grønne på 1.256 s (03:09–03:30, gennem låsen med en ydre vagthund; ingen hæng).
+- **ASR af de 191 mistænkelige** (roest-wav2vec2-315m uden sprogmodel; tal skrevet ud, mellemrum tæller ikke): lyttelisten er `D:/Stemmer/kogebog-500m/lyt-foerst-asr-27-10.txt`. De 191 replikker er 163 forskellige lydfiler, fordi ens tekster deler fil. Lyt i denne rækkefølge:
+  1. Hale med tale: `lyd\chorizo-pasta\13.mp3` (hørt «… over pe»).
+  2. 29 af de 116 `timer-optaget`, hvor «først» ikke høres til sidst (fx «stop en»). De andre 87 ender rigtigt.
+  3. Resten efter cer: ingen over 0,40, 20 over 0,25. «Hæld … si» høres næsten altid som «hel … ti» — sandsynligvis ASR'ens svaghed, ikke stemmens.
+  - Scriptet (`scratchpad/asr-191/ranger.py`) er ikke reviewet. Listen er en rækkefølge at lytte i, ikke en dom, og en stille hale kan ASR ikke høre.
+- **ui-reviewer efter fletningen** (browserpanelet = Chromium, ikke WebKit; 1180×820, 820×1180, 390, 360, 1440): 0 ødelagt, 3 skæve og 9 detaljer. Intet er rettet:
+  1. `#/uge` på 390/360: «Fjern» brydes alene ned på sin egen linje i hver dagsrække (`app.css:685`, `722-729`).
+  2. Børnenes ret- og dagvalg på iPad (begge veje): indholdet hopper ca. 10 px op, når «Vælg ✓» dukker op (`app.css:740`).
+  3. «Hvem skal vælge?»: 6 tallerkener står som 5 + 1 (`app.css:756`, `760`).
+  - Detaljer: retvalgets sidste side med 3 kort er venstrestillet · Erstat-skærmen siger «uge 45» to gange · «Grøntsagsblan/ding» på 360 · genbrugte indkøbsikoner (naan = rugbrød, grøntsagsblanding = ærter, karry = oregano) · «Der kører allerede en timer …» skjult bag bundbjælken på 360×780 · «Tumbi / Køkken» på to linjer på 820×1180 · dyrene i toppen kun 22 px på 360. V8 er uændret.
+- **«Hælovin»-prøver** (Røst 500m, seed 42–44, ikke efterbehandlet, så de er svagere end appens lyd): `G:\Mit drev\Claude\Kogebog\lyt-27-10-halloween\` (6 mp3). ASR hører appens «Halloween» som «halvuvin», «Hælovin» som «hellovin»/«hellogwin» og «Hæloviin» som «hellovi in».
+
+**Afventer Jimmy** (nye 27-10, de gamle står i afsnittet nedenfor):
+- (27-10) Ja til at rette de 3 skæve fra ui-reviewet på grenen (én rettelse pr. commit med en test, der fejler før; version v2)?
+- (27-10) Pips tur: når Bo har valgt 6 retter, er der kun én dag tilbage, og Pip får ingen tur (`js/ugeplan.js:830-834`, kun læst i koden). Skal hvert dyr have et loft?
+- (27-10) Vælg udtalen af «Halloween» efter lytning: behold, «Hælovin» eller «Hæloviin».
+- (24-10) Lyttetesten, nu efter `lyt-foerst-asr-27-10.txt`.
+
 ## 24-10-2026 kl. 05:37: Røst-lyden er færdig (gren `claude/ugeplan-22-10`, ikke flettet, ikke pushet)
 
 - **Alle 1.422 replikker har Røst-lyd** (8 bidder, 437a23c..bd1b108, 23-10 kl. 20:10 til 24-10 kl. 05:32). Lyden fylder 28,4 MB. Hver bid har fået nye LYD, UDGAVE_INDHOLD og INDHOLD.
