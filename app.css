@@ -747,6 +747,10 @@ textarea.kopi-felt { resize: vertical; }
 .valg-ret { display: grid; place-items: center; width: 92px; height: 92px; border: var(--kant); border-radius: 50%; background: var(--sennep-lys); }
 .valg-ret img { width: 92%; }
 .valg-bund { width: 100%; max-width: 1180px; margin: 0 auto; }
+/* «Tilbage» (64 px) har luft over og under, så bunden er lige så høj uden «Vælg» (84 px) som med: før blev bunden 20 px
+   højere, når «Vælg» dukkede op, og retterne og dagene hoppede 10 px op (iPad, UI-review 27-10). Samme regel med
+   telefonens 76 px og de lave skærmes 68 px længere nede */
+.valg-bund .tilbage { margin-block: calc((84px - var(--tryk)) / 2); }
 
 /* Trin 1: dyrene. Under hvert dyr en plads pr. ret: stiplet og tom, til den er valgt */
 .dyr-gitter { display: grid; grid-template-columns: repeat(3, minmax(0, 280px)); justify-content: center; gap: 28px; width: 100%; }
@@ -856,6 +860,7 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .trin .topbar:has(> .pille:not([hidden])) > .topbar-midte { grid-column: 1 / -1; grid-row: 2; }
   .handlinger { gap: 12px; padding: 8px 12px 16px; }
   .knap.primaer { min-height: 76px; font-size: 24px; padding: 0 22px; }
+  .valg-bund .tilbage { margin-block: calc((76px - var(--tryk)) / 2); }
 
   .forside-top { gap: 8px; padding: 12px 10px 0; }
   .forside-titel { padding: 8px 16px 10px; }
@@ -1046,6 +1051,7 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
     padding: 6px 24px max(8px, env(safe-area-inset-bottom));
   }
   .handlinger .knap.primaer { min-height: 68px; font-size: 24px; padding: 0 26px; }
+  .valg-bund .tilbage { margin-block: calc((68px - var(--tryk)) / 2); }
   .ret .handlinger .start { min-width: 0; }
   /* Bunden er én række på 85 px, også med «Fortsæt», plus samme safe-area som bundens padding (21 px på en iPhone på langs) */
   .trin, .ret { --bund: calc(88px + max(8px, env(safe-area-inset-bottom))); }

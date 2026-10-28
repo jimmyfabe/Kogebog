@@ -810,6 +810,18 @@ async function boernValg(browser, H) {
   const uge = planMandag(new Date());
   const hvem = (hvor) => venterPaa(side, () => location.hash === '#/uge/vaelg' && document.querySelector('.dyr-gitter, ol.dag-brikker'), null, n + ': ' + hvor);
   const { ctx, side } = await nySide(browser, skaerm, { serviceWorkers: 'block' });
+  // Står overskriften og retterne (eller dagene) stille, når et tryk får «Vælg» frem? Før blev bunden 20 px højere, og
+  // indholdet hoppede 10 px op (iPad på langs og på højkant, UI-review 27-10). Siden er målt, så en rulning ikke tæller
+  const stille = async (sel, hvor) => {
+    const pos = () => side.evaluate(() => ['.valg-hoved h1', '.ret-gitter, .dag-brikker']
+      .map((s) => Math.round((document.querySelector(s).getBoundingClientRect().top + scrollY) * 10) / 10));
+    const foer = await pos();
+    await tryk(side, sel);
+    await vent(100);
+    const efter = await pos();
+    tjek(await side.locator(VAELG).count() === 1 && efter.every((y, i) => Math.abs(y - foer[i]) < 0.5),
+      hvor + ': overskriften og ' + (sel.includes('dag') ? 'dagene' : 'retterne') + ' står stille, når «Vælg» dukker op (før ' + foer.join(', ') + ', efter ' + efter.join(', ') + ')');
+  };
 
   // 1. Fra oversigten: «Børnene vælger» åbner dyrene, og stemmen spørger, hvem der skal vælge
   await side.goto(BASE + '/index.html#/uge');
@@ -841,7 +853,7 @@ async function boernValg(browser, H) {
   await tjekLayout(side, n + ' børnene: retter');
   await foto(side, n + '-boern-retter');
   const [a, b] = k.map((x) => x.id);
-  await tryk(side, '.ret-kort[data-ret="' + a + '"]');
+  await stille('.ret-kort[data-ret="' + a + '"]', n + ' børnene: retter');
   k = await kortNu(side);
   tjek(k.filter((x) => x.valgt).map((x) => x.id).join() === a, n + ': første tryk markerer retten (' + JSON.stringify(k) + ')');
   tjek(await sagt(side) === siger(R.ugeRet(ret(a))), n + ': stemmen siger rettens navn (' + await sagt(side) + ')');
@@ -883,7 +895,7 @@ async function boernValg(browser, H) {
   tjek(new Set(br.map((x) => x.farve)).size === 7, n + ': hver dag har sin egen farve');
   await tjekLayout(side, n + ' børnene: dage');
   await foto(side, n + '-boern-dage');
-  await tryk(side, '.dag-brik[data-dag="0"]');
+  await stille('.dag-brik[data-dag="0"]', n + ' børnene: dage');
   br = await brikkerNu(side);
   tjek(br[0].valgt && br[0].ret === a && br.filter((x) => x.valgt).length === 1, n + ': mandag er markeret og viser retten på tallerkenen');
   tjek(await sagt(side) === siger(R.dag(0)), n + ': stemmen siger dagen (' + await sagt(side) + ')');
@@ -1047,6 +1059,18 @@ async function boernValg(browser, H) {
       await vent(200);
       tjek(new Set((await kortNu(side)).map((x) => x.top)).size === 2, n + ': på højkant står retterne to og to');
     }
+    // Også på højkant og på telefonen står retterne og dagene stille, når «Vælg» dukker op (UI-review 27-10). Et skift til
+    // et andet dyr nulstiller valget, så «Vælg» ikke står der i forvejen
+    await valgHash(side, '#/uge/vaelg/rosa');
+    await vent(200);
+    await valgHash(side, '#/uge/vaelg/pip');
+    await side.waitForSelector('.ret-gitter');
+    await vent(200);
+    await stille('.ret-kort', n + ' børnene retter ' + bredde + '×' + hoejde);
+    await valgHash(side, '#/uge/vaelg/pip/' + a);
+    await side.waitForSelector('.dag-brikker');
+    await vent(200);
+    await stille('.dag-brik:not(.optaget)', n + ' børnene dage ' + bredde + '×' + hoejde);
     // På telefonen står «Vælg» og «Tilbage» inden for skærmen, når en ret eller en dag er valgt: før lå de 4-10 px under
     // bunden af 844, og Safaris adresselinje tager mere (UI-review V4, 23-10). På 360×740 lå «Vælg» næsten helt under
     // kanten: nu står bunden fast, og pilene kan rulles frem over den på hver side (UI-review 2, 23-10)
