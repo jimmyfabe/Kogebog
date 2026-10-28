@@ -668,18 +668,19 @@ async function oversigtIpad(browser, H) {
     await side.setViewportSize({ width: b, height: h });
     await vent(150);
     // «Indkøbsliste» og «Send til telefon» står fast i bunden på iPad og desktop: på iPad'en på langs lå de under kanten
-    // (UI-review V8, 27-10). Rullet helt ned står dagene og summen over bunden. En knap i den sidste dag, der får fokus,
-    // rulles op over bunden, og Tab fra bunden til «Del som tekst» lægger ikke bunden ind over den
+    // (UI-review V8, 27-10). Bunden har position: sticky og bottom: 0 som i app.css (før målte tjekket, at dagene stod over
+    // bunden rullet helt ned, men det kunne ikke fejle: bunden står efter dem i DOM'en; code review 28-10). En knap i den
+    // sidste dag, der får fokus, rulles op over bunden, og Tab fra bunden til «Del som tekst» lægger ikke bunden ind over den
     if (b > 700) {
       const f = await side.evaluate(() => {
         const r = (s) => document.querySelector(s)?.getBoundingClientRect();
         const bundTop = () => Math.round(r('.uge-handlinger')?.top ?? innerHeight);
         scrollTo(0, 0);
         const knap = (s) => (r(s) ? Math.round(r(s).bottom) : null);
-        const ud = { liste: knap('[data-fokus="liste"]'), send: knap('[data-fokus="send"]'), H: innerHeight };
-        scrollTo(0, document.documentElement.scrollHeight);
-        Object.assign(ud, { dage: Math.round(r('.uge-dage').bottom), sum: Math.round(r('.uge-sum').bottom), bundNederst: bundTop() });
-        scrollTo(0, 0);
+        const bund = document.querySelector('.uge-handlinger');
+        const stil = bund ? getComputedStyle(bund) : null;
+        const ud = { liste: knap('[data-fokus="liste"]'), send: knap('[data-fokus="send"]'), H: innerHeight,
+          position: stil?.position ?? null, bottom: stil?.bottom ?? null };
         const sidst = [...document.querySelectorAll('.uge-dage > li:last-child button')].at(-1);
         sidst.focus();
         Object.assign(ud, { fokus: Math.round(sidst.getBoundingClientRect().bottom), bundFokus: bundTop() });
@@ -687,8 +688,8 @@ async function oversigtIpad(browser, H) {
       });
       tjek(f.liste !== null && f.liste <= f.H && f.send !== null && f.send <= f.H,
         n + ' ugeplan ' + b + '×' + h + ': «Indkøbsliste» og «Send til telefon» ses uden at rulle (' + JSON.stringify(f) + ')');
-      tjek(f.dage <= f.bundNederst && f.sum <= f.bundNederst,
-        n + ' ugeplan ' + b + '×' + h + ': rullet helt ned står dagene og summen over bunden (' + JSON.stringify(f) + ')');
+      tjek(f.position === 'sticky' && f.bottom === '0px',
+        n + ' ugeplan ' + b + '×' + h + ': bunden med «Indkøbsliste» og «Send til telefon» står fast (' + JSON.stringify(f) + ')');
       tjek(f.fokus <= f.bundFokus,
         n + ' ugeplan ' + b + '×' + h + ': en knap i den sidste dag med fokus står over bunden (' + JSON.stringify(f) + ')');
       await side.focus('[data-fokus="send"]');
