@@ -1,5 +1,13 @@
 # STATUS – Tumbi Køkken
 
+## 28-10-2026 kl. 11:15: i gang med at gøre bogen færdig (gren `claude/faerdig-28-10` fra `claude/ugeplan-22-10`)
+
+Jimmy 28-10: «byg videre, så vi bliver færdige» og ja til push. Rækkefølge og stand (opdateres undervejs):
+1. **I gang:** de 3 skæve fra ui-reviewet 27-10, V8 (fast bund på iPad på langs), de små detaljer og Pips tur (loft pr. dyr). Én rettelse pr. commit med en test, der fejler før. Version v2.
+2. **I gang:** Røst laver de replikker om, hvor ASR'en 27-10 viser tydeligt forkerte ord (nye seeds, ASR-tjek igen). Arbejdet ligger i `D:/Stemmer/kogebog-500m/asr-28-10/` og er ikke sat ind endnu.
+3. Bagefter: flet `main` (5153d01, 6ae8160, 956b33b) ind i grenen, sæt lyden ind, fuld e2e, ui-reviewer og code-reviewer, så fast-forward af `main`. `main` = `origin/main` = 956b33b (live).
+- Worktree: `C:/Users/Jimmy/AppData/Local/Temp/claude/D--Claude-Kogebog/aadbdf69-100c-469b-9996-f2e3bdd09dcd/scratchpad/wt`. Stopper sessionen, så fortsæt derfra (`git -C D:/Claude/Kogebog worktree list`).
+
 ## 27-10-2026 kl. 03:59: e2e grøn, ASR-lytteliste, ui-review efter fletningen og «Hælovin»-prøver (Saga; gren `claude/ugeplan-22-10`, ikke flettet, ikke pushet, ingen kode ændret)
 
 - **Fuld e2e i WebKit på 4ecad7f:** 36.462 tjek grønne på 1.256 s (03:09–03:30, gennem låsen med en ydre vagthund; ingen hæng).
