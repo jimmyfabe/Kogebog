@@ -1142,6 +1142,26 @@ async function boernValg(browser, H) {
   await vent(200);
   tjek(await h1(side) === 'Pip vælger mad' && await side.locator('.ret-kort').count() > 0,
     n + ': Pip får sin tur, når Bo har fem dage og Rosa én (' + await h1(side) + ')');
+  // 9c. Det samme med to retter pr. barn («Ny uge» beholder tallet, og den voksne lagde fem retter i oversigten): Rosa er
+  //     færdig med én ret, når den sidste frie dag er Pips. Før var hun først færdig med to, tog begge dage, og Pip hørte
+  //     «Nu er hele ugen fuld» (code review 28-10). Under Rosas flueben står kun hendes ene ret, ingen tom plads
+  await side.evaluate((p) => localStorage.setItem('kog-uge-v1', JSON.stringify(p)),
+    { ...gemt, prBarn: 2, dage: boFem.map((x, i) => (i === 5 ? { ret: b, af: 'rosa', n: 4 } : x)) });
+  await valgHash(side, '#/uge/vaelg');
+  await hvem('fem af Bos retter og én af Rosas, to retter pr. barn');
+  d = await dyrNu(side);
+  tjek(d[0].faerdig && d[1].faerdig && d[1].pladser === 1 && d[1].fyldte === 1 && !d[2].faerdig,
+    n + ': to retter pr. barn, fem af Bos og én af Rosas: Bo og Rosa er færdige, Rosa med én plads, Pip ikke (' + JSON.stringify(d) + ')');
+  await tryk(side, '.dyr-kort[data-dyr="rosa"]');
+  tjek(await hash(side) === '#/uge/vaelg' && await sagt(side) === siger(R.dyrFaerdig('rosa')),
+    n + ': et tryk på Rosa siger, at det er en andens tur (' + await hash(side) + ', ' + await sagt(side) + ')');
+  await valgHash(side, '#/uge/vaelg/rosa');
+  await vent(200);
+  tjek(await h1(side) === 'Hvem skal vælge?', n + ': Rosas retter kan ikke åbnes, når den sidste frie dag er Pips (' + await h1(side) + ')');
+  await valgHash(side, '#/uge/vaelg/pip');
+  await vent(200);
+  tjek(await h1(side) === 'Pip vælger mad' && await side.locator('.ret-kort').count() > 0,
+    n + ': Pip får den sidste frie dag med to retter pr. barn (' + await h1(side) + ')');
   await valgHash(side, '#/uge');
   await venterPaa(side, () => location.hash === '#/uge' && document.querySelector('.uge-dage'), null, n + ': tilbage til oversigten');
 

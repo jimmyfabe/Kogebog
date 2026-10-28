@@ -773,7 +773,9 @@ function dagSkaerm(i) {
 //   #/uge/vaelg/<dyr>/<ret>   «Hvilken dag?»: syv dagbrikker. En optaget dag viser retten og dyret og siger, at den er optaget
 // Rosa og Pip vælger hver højst p.prBarn retter (den voksne sætter 1 eller 2 i oversigten). Bo er den voksne og vælger,
 // så længe der er en fri dag ud over dem, børnene mangler: før kunne Bo tage seks dage, og så fik Pip ingen tur
-// (UI-review 27-10). I oversigten kan den voksne stadig fylde ugen selv. Børnene kan næsten ikke læse: hvert trin har
+// (UI-review 27-10). Et barn med én ret er også færdigt, når der ikke er flere frie dage end børn uden en ret: med to
+// retter pr. barn og fem retter fra oversigten tog Rosa begge frie dage, og Pip fik ingen (code review 28-10). I
+// oversigten kan den voksne stadig fylde ugen selv. Børnene kan næsten ikke læse: hvert trin har
 // «Læs op», og hvert tryk siger, hvad man trykkede på (R.… fra js/replikker.js, test/test-lyd.js). Planen gemmes kun
 // gennem gemPlan, som læser hele planen lige før
 const PR_SIDE = 4;
@@ -782,8 +784,12 @@ const barn = { dyr: null, side: 0, ret: null, dag: null }; // valget undervejs (
 let barnFejl = false; // valget kunne ikke gemmes: den voksne får en fejlskærm
 
 const valgtAf = (p, dyr) => p.dage.filter((d) => d && d.af === dyr).length;
+const fri = (p) => p.dage.filter((d) => !d).length;
 const boernMangler = (p) => BOERN.reduce((s, b) => s + Math.max(0, p.prBarn - valgtAf(p, b)), 0);
-const harValgt = (p, dyr) => (BOERN.includes(dyr) ? valgtAf(p, dyr) >= p.prBarn : p.dage.filter((d) => !d).length <= boernMangler(p));
+const udenRet = (p, dyr) => BOERN.filter((b) => b !== dyr && valgtAf(p, b) === 0).length;
+const harValgt = (p, dyr) => (BOERN.includes(dyr)
+  ? valgtAf(p, dyr) >= p.prBarn || (valgtAf(p, dyr) > 0 && fri(p) <= udenRet(p, dyr))
+  : fri(p) <= boernMangler(p));
 const ugenErFuld = (p) => p.dage.every(Boolean);
 const nulstilBarn = () => Object.assign(barn, { dyr: null, side: 0, ret: null, dag: null });
 
@@ -838,13 +844,14 @@ const brikNavn = (d, i) => {
 };
 
 // Trin 1: hvem vælger? Under hvert dyr en plads pr. ret: Rosa og Pip har så mange, som de må vælge (fyldt med rettens
-// billede, når de har valgt), Bo kun dem, han har valgt
+// billede, når de har valgt), Bo kun dem, han har valgt. Er et barn færdigt med færre (de frie dage gik til den anden),
+// står kun dets retter der: ellers stod en tom plads under fluebenet
 function hvemSkaerm(p) {
   if (ugenErFuld(p)) return fuldSkaerm(p);
   const kort = Object.keys(DYR).map((dyr) => {
     const faerdig = harValgt(p, dyr);
     const retter = p.dage.filter((d) => d && d.af === dyr).map((d) => model(d.ret));
-    const antal = BOERN.includes(dyr) ? Math.max(p.prBarn, retter.length) : retter.length;
+    const antal = BOERN.includes(dyr) && !faerdig ? Math.max(p.prBarn, retter.length) : retter.length;
     const pladser = Array.from({ length: antal }, (_, k) => el('span', { class: 'dyr-plads' + (k < retter.length ? ' fyldt' : '') },
       retter[k] ? K.billede(grafikRet(retter[k].id), '') : null));
     const raekke = pladser.length ? el('span', { class: 'dyr-pladser' + (antal > 3 ? ' mange' : ''), 'aria-hidden': 'true' }, pladser) : null;
