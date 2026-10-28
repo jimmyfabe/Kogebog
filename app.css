@@ -739,10 +739,11 @@ textarea.kopi-felt { resize: vertical; }
 /* iPad og desktop: «Indkøbsliste» og «Send til telefon» står fast i bunden, så de altid kan ses. På iPad'en på langs lå
    de under kanten (UI-review V8, 27-10). Rullet helt ned står bunden på sin plads over «Del som tekst», «Print» og
    «Ny uge», så ingen dag ender bag den. Bunden er 115 px høj (84 px knap, 12 px over, 3 px streg), plus samme safe-area
-   som dens padding; --bund giver 13 px luft til de knapper i dagene, der får fokus. Ikke på telefonen og de lave skærme:
-   dér ville bunden tage for meget af skærmen */
+   som dens padding; --bund giver 13 px luft til de knapper i dagene, der får fokus. Kun når bunden er der: uden retter,
+   eller når linket ikke kan sendes, er den væk, og før blev en dag med fokus rullet op over ingenting (code review 28-10).
+   Ikke på telefonen og de lave skærme: dér ville bunden tage for meget af skærmen */
 @media (min-width: 701px) and (min-height: 521px) {
-  .uge-oversigt { --bund: calc(112px + max(16px, env(safe-area-inset-bottom))); }
+  .uge-oversigt:has(.uge-handlinger) { --bund: calc(112px + max(16px, env(safe-area-inset-bottom))); }
   .uge-oversigt .uge-handlinger {
     position: sticky;
     bottom: 0;
