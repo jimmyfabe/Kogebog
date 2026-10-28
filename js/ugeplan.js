@@ -197,9 +197,12 @@ function hentSkaerm(kode) {
 function erstatSkaerm(gl, ny) {
   const glUge = gl.uge ? 'uge\u00a0' + ugeNr(gl.uge) : 'den gamle uge';
   const tal = optaelling(grupper(gl.varer), new Set(gl.koebt), new Set(gl.harVi));
+  // Hver uges nummer står én gang: før stod den gamle uge både i overskriften og på «Behold», og med et nyt link til samme
+  // uge stod «uge 45» tre steder (UI-review 27-10)
+  const nyUge = gl.uge && gl.uge === ny.uge ? 'Det nye link er en ny liste til samme uge.' : 'Det nye link er til uge\u00a0' + ugeNr(ny.uge) + '.';
   return K.statusSkaerm({
     titel: 'Erstat listen for ' + glUge + '?',
-    tekst: 'Det nye link er til uge\u00a0' + ugeNr(ny.uge) + '. På listen, der er på telefonen nu, er ' + tal.koebt + ' af ' + tal.ialt + ' købt.',
+    tekst: nyUge + ' På listen, der er på telefonen nu, er ' + tal.koebt + ' af ' + tal.ialt + ' købt.',
     handling: el('div', { class: 'status-knapper' },
       // Pilen rundt, ikke kurven: kurven betyder «hent», og Erstat sletter fluebenene på den gamle liste. Erstat er stadig
       // den gule knap, fordi et nyt link næsten altid sendes for at få den nye uges liste (UI-review V9, 23-10)
@@ -215,7 +218,7 @@ function erstatSkaerm(gl, ny) {
         tilListe(v.ukendte);
         K.vis();
       } }),
-      K.knap('Behold listen for ' + glUge, { onclick: () => { tilListe(0); K.vis(); } })),
+      K.knap('Behold den gamle liste', { onclick: () => { tilListe(0); K.vis(); } })),
   });
 }
 

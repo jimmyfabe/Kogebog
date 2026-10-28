@@ -1608,6 +1608,32 @@ async function timerFaerdig(browser) {
   }
 }
 
+// Forsidens top: «Tumbi Køkken» står på én linje, og Rosa og Bo er enten skjult eller mindst halvt så store som
+// afsnittenes knapper (32 px). Før stod «Køkken» på en linje for sig på 820×1180, og dyrene var 22 px på 360 px
+// (UI-review 27-10). 820×1180 er ikke i FORMER, så toppen måles her på én side, der skifter størrelse
+async function forsideTop(browser) {
+  console.log('[forside] titlen på én linje og dyrenes størrelse');
+  const { ctx, side } = await nySide(browser, { viewport: { width: 820, height: 1180 }, hasTouch: true });
+  await side.goto(BASE + '/index.html');
+  await side.waitForSelector('.kort[data-ret]');
+  for (const [b, h] of [[820, 1180], [768, 1024], [744, 1133], [1024, 800], [1180, 820], [1280, 800], [390, 844], [375, 667], [360, 780], [844, 390]]) {
+    await side.setViewportSize({ width: b, height: h });
+    await vent(150);
+    const t = await side.evaluate(() => {
+      const h1 = document.querySelector('.forside-titel h1');
+      const r = document.createRange();
+      r.selectNodeContents(h1);
+      const linjer = new Set([...r.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top))).size;
+      const dyr = [...document.querySelectorAll('.forside-top > .forside-dyr')].map((d) => Math.round(d.getBoundingClientRect().width));
+      return { linjer, dyr };
+    });
+    tjek(t.linjer === 1, 'forside ' + b + '×' + h + ': «Tumbi Køkken» står på én linje (' + t.linjer + ' linjer)');
+    tjek(t.dyr.every((w) => w === 0 || w >= 32), 'forside ' + b + '×' + h + ': Rosa og Bo er skjult eller mindst 32 px brede (' + t.dyr.join(', ') + ' px)');
+  }
+  tjek(side.fejl.length === 0, 'forsidens top: ' + side.fejl.join(' | '));
+  await ctx.close();
+}
+
 async function former(browser) {
   // E2E_FORMER=se-land,land begrænser skærmformerne (standard: alle)
   const valgte = FORMER.filter((s) => !process.env.E2E_FORMER || process.env.E2E_FORMER.split(',').includes(s.navn));
@@ -1887,6 +1913,7 @@ if (DELE.includes('timer')) KOERSEL.push(['«Start timer», mens en anden timer 
 if (DELE.includes('fejl')) KOERSEL.push(['fejltilstande', (b) => fejltilstande(b, SKAERME[0])]);
 if (DELE.includes('beroering')) KOERSEL.push(['berøring', (b) => beroering(b, SKAERME[0])]);
 if (DELE.includes('former')) KOERSEL.push(['skærmformer', (b) => former(b)]);
+if (DELE.includes('former')) KOERSEL.push(['forsidens top', (b) => forsideTop(b)]);
 // Ugeplanen står i sin egen fil (test/e2e-ugeplan.js) og får hjælperne herfra
 if (DELE.includes('ugeplan')) {
   KOERSEL.push(['ugeplan', (b) => ugeplan(b, { BASE, UD, ROD, RETTER, SKAERME, nySide, tjek, tjekLayout, foto, tryk, hold, vent, venterPaa, h1, maal, forfalskninger, LYD_TEKSTER })]);

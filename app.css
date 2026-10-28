@@ -796,7 +796,11 @@ textarea.kopi-felt { resize: vertical; }
 .side-forrige { grid-area: forrige; }
 .side-naeste { grid-area: naeste; }
 .side-knap.usynlig { visibility: hidden; }
-.ret-gitter { grid-area: gitter; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+/* Flex, ikke grid, så en side med færre retter står i midten: før stod den sidste sides tre retter til venstre, og på
+   højkant stod den sidste alene til venstre (UI-review 27-10). Kortene har samme bredde som i et gitter med
+   --pr-raekke kolonner; 0,5 px luft til afrundingen, så det sidste kort i en fuld række ikke ryger ned */
+.ret-gitter { grid-area: gitter; --pr-raekke: 4; --mellem: 20px; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--mellem); }
+.ret-gitter > .kort-plads { flex: 0 0 calc((100% - (var(--pr-raekke) - 1) * var(--mellem)) / var(--pr-raekke) - 0.5px); }
 .ret-kort .kort-navn { font-size: 24px; }
 .kort-dyr { position: absolute; top: 10px; right: 10px; display: grid; place-items: center; width: 48px; aspect-ratio: 1; border: var(--kant); border-radius: 50%; background: var(--hvid); }
 .kort-dyr img { width: 86%; }
@@ -833,7 +837,7 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
 .knap-dyr { width: 40px; height: 40px; }
 
 @media (max-width: 1000px) {
-  .ret-gitter { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ret-gitter { --pr-raekke: 2; }
   .dag-brikker { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
@@ -859,7 +863,7 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .dyr-tjek { top: 6px; right: 6px; width: 40px; height: 40px; }
   .dyr-tjek .ikon { width: 26px; height: 26px; }
   .ret-blad { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "gitter gitter gitter" "forrige prikker naeste"; gap: 14px 12px; }
-  .ret-gitter { gap: 12px; }
+  .ret-gitter { --mellem: 12px; }
   .ret-kort .kort-navn { font-size: 20px; }
   .kort-dyr { top: 6px; right: 6px; width: 36px; }
   .dag-brikker { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
@@ -985,6 +989,10 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .forside-top { gap: 12px; }
   .forside-hop { gap: 8px; }
   .knap.hop { width: var(--tryk); min-height: var(--tryk); }
+  /* «Tumbi Køkken» på én linje: på 820×1180 stod «Køkken» på en linje for sig (UI-review 27-10). Lidt mindre skrift og
+     luft i titlen, så den har plads mellem dyrene og knapperne */
+  .forside-titel { padding: 10px 18px 12px; }
+  .forside-titel h1 { font-size: clamp(30px, 4vw, 52px); }
 }
 
 /* Forsidens top på iPhone på højkant: titlen, afsnittenes knapper og dyrene kan ikke stå i én række. Titlen står øverst
@@ -1003,6 +1011,11 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .forside-top > .forside-dyr:first-child { grid-area: rosa; justify-self: end; }
   .forside-top > .forside-dyr:last-child { grid-area: bo; justify-self: start; }
   .forside-hop { grid-area: hop; align-self: end; }
+}
+/* Under 380 px blev Rosa og Bo kun 22 px brede ved siden af afsnittenes knapper (360 px, UI-review 27-10). Dér skjules
+   de som på de lave skærme, og knapperne står alene i midten */
+@media (max-width: 379px) and (min-height: 521px), (max-width: 379px) and (orientation: portrait) {
+  .forside-top > .forside-dyr { display: none; }
 }
 
 /* Under 400 px er der kun plads til «Start forfra» ved siden af print, når print-knappen er uden ikon (teksten siger det) */

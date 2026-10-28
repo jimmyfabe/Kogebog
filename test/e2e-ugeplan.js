@@ -207,7 +207,12 @@ async function telefon(browser, H) {
   tjek(erstatIkon.startsWith('M4.5 12a7.5'), n + ': «Erstat listen» har ikonet «igen» (pil rundt), ikke kurven (' + erstatIkon + ')');
   await tjekLayout(side, n + ' erstat listen');
   await foto(side, n + '-ugeplan-erstat');
-  await tryk(side, 'button:has-text("Behold listen for uge ' + ugeNr(uge) + '")');
+  // Hver uges nummer står én gang: før stod den gamle uge i overskriften og på «Behold» (UI-review 27-10)
+  const ugerPaa = () => side.evaluate(() => (document.querySelector('main').textContent.match(/[uU]ge\s\d+/g) || []).map((x) => x.replace(/\s/, ' ')));
+  let uger = await ugerPaa();
+  tjek(JSON.stringify(uger) === JSON.stringify(['uge ' + ugeNr(uge), 'uge ' + ugeNr(uge2)]),
+    n + ': «Erstat listen?» nævner hver uge én gang (' + uger.join(', ') + ')');
+  await tryk(side, 'button:has-text("Behold den gamle liste")');
   await venterPaa(side, () => location.hash === '#/indkoeb' && document.querySelector('.liste-tal'), null, n + ': «Behold listen» skal vise den gamle liste');
   tjek(await lager(side) === foer && (await listeNu(side)).tal === '3 af ' + ialt + ' købt', n + ': «Behold listen» beholder listen og afkrydsningerne');
   await aabn(side, BASE, '#/hent/' + kode2);
@@ -219,6 +224,15 @@ async function telefon(browser, H) {
   tjek(JSON.parse(await lager(side)).kode === kode2 && l.uge === 'Uge ' + ugeNr(uge2) && l.tal === '0 af ' + ialt2 + ' købt',
     n + ': «Erstat listen» gemmer den nye liste uden afkrydsninger (' + l.uge + ', ' + l.tal + ')');
   tjek(JSON.stringify(l.afd) === JSON.stringify(F2.afd), n + ': den nye liste skal have den nye uges varer');
+  // Et nyt link til samme uge (andre retter): teksten siger «samme uge» i stedet for ugens nummer en gang til
+  await aabn(side, BASE, '#/hent/' + kod(uge2, [{ ret: 'koedsovs', n: 4 }, ...dage2.slice(1)]));
+  await side.waitForSelector('button:has-text("Behold den gamle liste")');
+  uger = await ugerPaa();
+  tjek(JSON.stringify(uger) === JSON.stringify(['uge ' + ugeNr(uge2)]) && (await side.locator('main').textContent()).includes('en ny liste til samme uge'),
+    n + ': et nyt link til samme uge nævner ugen én gang og siger «samme uge» (' + uger.join(', ') + ')');
+  await tryk(side, 'button:has-text("Behold den gamle liste")');
+  await venterPaa(side, () => location.hash === '#/indkoeb' && document.querySelector('.liste-tal'), null, n + ': «Behold den gamle liste» med samme uge skal vise listen');
+  tjek(JSON.parse(await lager(side)).kode === kode2, n + ': «Behold den gamle liste» med samme uge beholder listen');
 
   // 9. Fjendtlige og ødelagte koder: kun faste tekster, intet fra adressen i DOM'en, og listen står urørt
   const gyldigUkendt = kod(uge, [{ ret: 'markukendt', n: 4 }, null, null, null, null, null, null]);
@@ -1170,6 +1184,29 @@ async function boernValg(browser, H) {
         await tryk(side, '.side-naeste');
       }
     }
+  }
+
+  // 12b. Den sidste side har færre retter, og de står i midten: før stod de tre til venstre på iPad'en på langs, og på
+  //      højkant og telefonen stod den sidste alene til venstre (UI-review 27-10). Løkken sluttede på sidste side, og
+  //      siden huskes, når skærmen skifter størrelse
+  const rest = IPLAN.length % 4 || 4;
+  for (const [bredde, hoejde] of [[360, 740], [390, 844], [820, 1180], [1180, 820], [1280, 800]]) {
+    await side.setViewportSize({ width: bredde, height: hoejde });
+    await vent(150);
+    const c = await side.evaluate(() => {
+      const g = document.querySelector('.ret-gitter').getBoundingClientRect();
+      const raekker = new Map();
+      for (const k of document.querySelectorAll('.ret-kort')) {
+        const r = k.getBoundingClientRect();
+        const y = Math.round(r.top);
+        const x = raekker.get(y) || { v: Infinity, h: -Infinity, n: 0 };
+        raekker.set(y, { v: Math.min(x.v, r.left), h: Math.max(x.h, r.right), n: x.n + 1 });
+      }
+      return { kort: document.querySelectorAll('.ret-kort').length,
+        raekker: [...raekker.values()].map((x) => ({ n: x.n, venstre: Math.round(x.v - g.left), hoejre: Math.round(g.right - x.h) })) };
+    });
+    tjek(c.kort === rest && c.raekker.every((x) => Math.abs(x.venstre - x.hoejre) <= 2),
+      n + ' børnene ' + bredde + '×' + hoejde + ': den sidste sides ' + rest + ' retter står i midten (' + JSON.stringify(c) + ')');
   }
 
   tjek(await side.evaluate(() => window.__taleAfvist) === 0, n + ': stemmen blev aldrig afvist (al oplæsning kom i et tryk)');
