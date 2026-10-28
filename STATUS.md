@@ -1,10 +1,11 @@
 # STATUS – Tumbi Køkken
 
-## 28-10-2026 kl. 11:15: i gang med at gøre bogen færdig (gren `claude/faerdig-28-10` fra `claude/ugeplan-22-10`)
+## 28-10-2026 kl. 11:05: i gang med at gøre bogen færdig (gren `claude/faerdig-28-10` fra `claude/ugeplan-22-10`)
 
 Jimmy 28-10: «byg videre, så vi bliver færdige» og ja til push. Rækkefølge og stand (opdateres undervejs):
-1. **I gang:** de 3 skæve fra ui-reviewet 27-10, V8 (fast bund på iPad på langs), de små detaljer og Pips tur (loft pr. dyr). Én rettelse pr. commit med en test, der fejler før. Version v2.
-2. **I gang:** Røst laver de replikker om, hvor ASR'en 27-10 viser tydeligt forkerte ord (nye seeds, ASR-tjek igen). Arbejdet ligger i `D:/Stemmer/kogebog-500m/asr-28-10/` og er ikke sat ind endnu.
+1. **Bygget, ikke kørt i WebKit** (frontend-dev, 962b4e1..3b04b45, version v2 · 28-10-2026): «Fjern» ved «Byt ret» på telefonen · intet hop, når «Vælg ✓» dukker op · tallerkenerne 3 + 3 · Bo kan kun tage de dage, de andre børn ikke mangler (ny replik `faelles/uge-faerdig-bo.mp3` mangler Røst-lyd) · V8: fast bund med «Indkøbsliste» og «Send til telefon» på iPad på højkant og desktop · sidste side centreret, «uge 45» kun én gang, «Tumbi Køkken» på én linje, dyrene skjules under 380 px · «Grøntsags-/blanding» med blød bindestreg. Node-tests grønne undtagen `test-lyd` (de 3 forældreløse mp3 + den nye replik). Ikke rettet: «Der kører allerede en timer …» bag bundbjælken på 360×780 (kræver en browser at finde årsagen), ny grafik til naan, grøntsagsblanding og karry.
+2. **Venter på RAM:** Røst skal lave 54 lydfiler om (1 hale, 29 «først», 14 andre timer-replikker, 7 trin og 3 ingredienser; `D:/Stemmer/kogebog-500m/asr-28-10/valgte.txt`). Seed 45 og 46 venter i `koer-seeds.sh` (log `koer-seeds-45-46.log`). Talelisten i `D:/Stemmer/kogebog-500m/taleliste.json` er fra 22-10 (579 replikker), og den aktuelle ligger i `asr-28-10/taleliste-28-10.json`.
+- **Blokering kl. 11-14:36:** hele tiden kun 2,2-3,6 GB fri RAM (låsen kræver 4 GB), så hverken Røst eller e2e har kørt. RAM'en bruges af ca. 18 claude-processer, ChatGPT-appen og Signals servere. Claude har ikke lukket noget.
 3. Bagefter: flet `main` (5153d01, 6ae8160, 956b33b) ind i grenen, sæt lyden ind, fuld e2e, ui-reviewer og code-reviewer, så fast-forward af `main`. `main` = `origin/main` = 956b33b (live).
 - Worktree: `C:/Users/Jimmy/AppData/Local/Temp/claude/D--Claude-Kogebog/aadbdf69-100c-469b-9996-f2e3bdd09dcd/scratchpad/wt`. Stopper sessionen, så fortsæt derfra (`git -C D:/Claude/Kogebog worktree list`).
 
