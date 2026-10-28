@@ -616,6 +616,12 @@ async function oversigtIpad(browser, H) {
     tjek(!sumLed.length, n + ' ugeplan ' + b + '×' + h + ': summen brydes kun mellem leddene (brudt: ' + sumLed.join(' | ') + ')');
     const nyBrud = await brudt(side, '.ny-uge', /Ny\suge/);
     tjek(!nyBrud.length, n + ' ugeplan ' + b + '×' + h + ': «Ny uge» står samlet på knappen (' + nyBrud.join(', ') + ')');
+    // «Fjern» står på linje med «Byt ret»: på 390 og 360 px brød «Fjern» alene ned på sin egen linje (UI-review 27-10)
+    const alene = await side.evaluate(() => [...document.querySelectorAll('.dag:not(.fri) .dag-knapper')].filter((k) => {
+      const top = (s) => Math.round(k.querySelector(s)?.getBoundingClientRect().top ?? -1);
+      return top('[data-fokus$="-fjern"]') !== top('[data-fokus$="-byt"]');
+    }).map((k) => k.closest('.dag').dataset.dag));
+    tjek(!alene.length, n + ' ugeplan ' + b + '×' + h + ': «Fjern» står på linje med «Byt ret» (alene på dag ' + alene.join(', ') + ')');
   }
 
   // 11. Kan valget på dagskærmen ikke gemmes (lageret er fuldt), står beskeden ved retten, og man bliver på dagskærmen.

@@ -727,6 +727,9 @@ textarea.kopi-felt { resize: vertical; }
   .dag-hoved, .dag.fri .dag-hoved { grid-column: 1 / -1; grid-row: auto; flex-direction: row; align-items: baseline; gap: 10px; margin: 0 -12px; padding: 8px 12px; border-right: 0; border-bottom: 2px solid var(--creme-moerk); }
   .dag-billede { width: 64px; height: 64px; }
   .dag:not(.fri) .dag-knapper { grid-column: 1 / -1; padding: 0 0 12px; }
+  /* Portionerne har deres egen linje, og «Byt ret» og «Fjern» står sammen under dem: før brød «Fjern» alene ned på en
+     linje for sig i hver række (390 og 360 px, UI-review 27-10) */
+  .dag:not(.fri) .dag-knapper .stepper { flex-basis: 100%; }
   .uge-knapper .ny-uge { margin-left: 0; }
   .ret-valg-raekke { grid-template-columns: 64px minmax(0, 1fr); padding: 10px 12px; }
   .ret-valg-raekke .dag-billede { width: 64px; height: 64px; }
