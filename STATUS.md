@@ -86,6 +86,56 @@ Jimmy 28-10: «byg videre, så vi bliver færdige» og ja til push. Rækkefølge
 - Forslag, ikke afprøvet: `py -m http.server -p HTTP/1.1` i e2e, så forbindelserne genbruges.
 - Ingen har lyttet til den nye Røst-lyd. Kontrollen er den, «Stemmen» beskriver: de mistænkelige laves igen med seed 43 og 44. Der er ikke kørt talegenkender (ASR).
 
+## 23-10-2026 kl. 03:04: Halloween-afsnit, fund 5 og 6, «Start timer», pilletesten og stemmen (gren `claude/kogebog-22-10`, ikke flettet)
+
+**Gjort** (12 commits oven på `main` 5942b76, den sidste er denne STATUS; `main` er ikke rørt og er stadig 4 commits foran `origin/main`):
+- **Halloween** (92bd110): de seks retter står i et eget afsnit sidst på forsiden, med en græskar-tegning og en lys lilla cirkel. Fortrydes ét sted: `opskrifter/index.json`.
+- **Fund 6** (6436425, 7523ac5): «Læs op» på ret-skærmen siger navnet og derefter «Sammen med en voksen». Knappen står som talende, til begge replikker er sagt.
+- **Fund 5** (24753e9, 578baa6, 55ac5b2): i kødsovs, bolognese og cremet kødsovs lægges kødet i uden timer. Så vaskes hænderne, og timeren startes på trinnet efter. Validatoren afviser en timer med råt på hænderne. Æltningen undtages kun, når det rå er i dejen. Hver regel har en test, der fejler mod den gamle validator.
+- **«Start timer» tabte trykket** (2ba24cc, 137f274). Rodårsag: løb en anden timer ud midt i trykket, forsvandt «Der kører allerede en timer», og knappen hoppede ca. 195 px. Slippet landede ved siden af knappen, så WebKit sendte intet click. Nu tegnes blokken ikke om, mens knappen trykkes: til click, ellers 600 ms efter slip, højst 10 s.
+
+  | Playwright WebKit 1180×820, tryk 600 ms | timeren startede |
+  |---|---|
+  | `main` | 0/6 |
+  | første forsøg (knappen blev i DOM'en) | 0/6 |
+  | rettelsen | 6/6 |
+  | kontrol uden anden timer (alle tre) | 6/6 |
+
+  Ny e2e-test: rød mod den gamle kode 3/3 (900 ms tryk), grøn på grenen.
+- **Pilletesten «pillen skal stoppe oplæsningen»** (4030961). Rodårsagen lå i testen, ikke i appen. Den falske lyd varede 1,5 s, og under last kom trykket først efter navnet, så «sammen med en voksen» startede med rette før trykket. Nu tæller kun det, der starter efter trykket, og navnet varer 4 s.
+  - Målt med 16 travle processer: det gamle tjek fejlede 1/20 (4/20 kl. 07 22-10), det nye 0/20.
+  - Mod en app uden `Tale.stop()` ved skærmskift er det nye tjek stadig rødt.
+- **Stemmen** (5153d01): 11 Røst-replikker, lavet i ét aftalt slot 23-10 kl. 02:50-03:00, i 582 s gennem `tung-koersel.sh`. Replikkerne er «Halloween», de 7 ændrede kødtrin og 3 timer-optaget. `LYD` og `INDHOLD` er fulgt med. Lyttefiler: Drev `Claude/Kogebog/lyt-23-10/`.
+- **Tests:**
+  - Fuld e2e i WebKit på 55ac5b2: 17.320 tjek grønne (676 s).
+  - Timer-afsnittet: 84 tjek grønne.
+  - Mutanten (gammel app uden frysning og uden `Tale.stop()`): 7 fejl, som forventet.
+  - Node-tests på 5153d01: 6/7. `test-lyd` fejler kun på de 3 forældreløse mp3 (se nedenfor).
+  - Efter 55ac5b2 er kun lyd og hashes skiftet. E2e er ikke kørt igen for det.
+- **Review:** code-reviewer to gange (rettet i 578baa6, 7523ac5, 137f274 og 55ac5b2) og ui-reviewer i WebKit (390×844, 1180×820, 1280×800). Forslagene nedenfor er ikke lavet.
+
+**Afventer Jimmy:**
+- (22-10) Godkend Halloween-tegningerne: `G:\Mit drev\Claude\Kogebog\halloween-tegninger-22-10.png`. UI-review: græskarret er tungt og kan skaleres til ca. 85 %.
+- (23-10) Udtalen af «Halloween»: lyt til `faelles-gruppe-halloween.mp3` i `lyt-23-10`. Prøverne «Hælovin»/«Hæloviin» blev ikke lavet, fordi der ikke var tid i slottet. De laves med `koer-kogebog.sh 5 42 "" <taleliste> <udmappe>` gennem låsen.
+- (22-10) De valg, Claude har truffet, er alle lette at fortryde:
+  - Halloween ligger sidst og er lilla.
+  - «Læs op» siger også voksen-replikken.
+  - Kødet lægges i uden timer, og timeren kommer på næste trin.
+  - Kødsovs trin 7 samler tomater, puré og krydderier, så trinnumrene og lyden ikke flytter sig. Code review foreslog at dele trinnet.
+  - De genbrugte tegninger er uændrede.
+- (23-10) Ja til at slette de 3 forældreløse `timer-optaget` mp3 (kødsovs 4, bolognese 5, cremet kødsovs 5)? Kommandoen er `node vaerktoej/indsaet-lyd.js D:/Stemmer/kogebog-500m --ryd`. Indtil da er `test-lyd` rød.
+- (23-10) 27 ældre replikker har en anden udgave klar i `D:\Stemmer\kogebog-500m\mp3`. Efterbehandlingen valgte seed 43/44 til dem 21-10 (og pandekager/ingrediens-3 23-10), men de kom aldrig i `lyd/`. Claude har ikke lagt dem ind (uden for opgaven). Den næste `indsaet-lyd.js` tager dem med: ja eller nej? De dukker op som ændrede filer i `lyd/`, når `indsaet-lyd.js` køres.
+- (23-10) Lyt til de 3 nye `timer-optaget` (lang hale, som de 70 andre). Ingen ordkontrol (ASR) er kørt.
+- (22-10) UI-review, ikke lavet og ikke målt:
+  - Rosa og Bo skrumper til 22/37 px ved 360/390 px bredde (`app.css:682-694`).
+  - Titlen knækker på en iPad på højkant (768/744).
+- (21-10) Lyt til `lyd/tunfrikadeller/4.mp3` og `lyd/pizzasnegle/10.mp3`.
+- (22-10) Flet og udgiv, i PowerShell: `cd D:\Claude\Kogebog; git checkout main; git merge claude/kogebog-22-10; git push`. `main` har i forvejen 4 commits, der ikke er pushet.
+
+**Lukket:** (21-10) code review fund 5 og 6, løst med valgene ovenfor.
+
+**Ikke afprøvet:** fingertryk på en rigtig iPad; «Start timer» med tastaturet (mellemrum); UI-forslagene.
+
 ## 22-10-2026 kl. 07:36: `grafik-ai` er flettet og live; gamle filer slettet (venter på push)
 
 - **Jimmy flettede og pushede selv kl. 07:22** (`main` = `origin/main` = 2a1da5d): AI-billederne, advarselstrekanten, de to aftensretter og timer-rettelsen er live.
