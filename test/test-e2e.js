@@ -1467,8 +1467,10 @@ async function medGemt(side, { sidste = null, timer = null }, hash) {
 
 // Timeren rulles frem, når man trykker «Start timer»: ringen og «Stop» skal ses over den faste bund. Før lå de under
 // bunden på alle 34 timer-trin på 667×375 og 844×390 og på 23 af dem på 390×844. Kører en anden timer, skal forklaringen
-// («Der kører allerede en timer …») kunne ses efter trykket. Med «mindre bevægelse» rulles der uden animation
-const TIMER_PAA = ['iphone', 'land', 'se-land'];
+// («Der kører allerede en timer …») kunne ses efter trykket. Med «mindre bevægelse» rulles der uden animation.
+// 360×780 er med, fordi UI-review 27-10 så forklaringen bag bunden dér (målt i et skjult browserpanel, hvor den bløde
+// rulning ikke kører; 28-10 gav en rulning uden animation 25 px luft over bunden i Chromium)
+const TIMER_PAA = ['iphone', 'w360', 'land', 'se-land'];
 const nuSkaerm = '#app > .skaerm:not([data-gammel]) ';
 // Vent, til siden står stille (en blød rulning er færdig)
 const stille = (side) => side.evaluate(() => new Promise((ok) => {
