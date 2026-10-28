@@ -117,9 +117,10 @@ export function manglerTekst(ikkeHentet, ikkeIPlanen) {
 }
 
 // Tekstudgaven til «Del som tekst» (vej b): afdelingens navn som overskrift og én vare pr. linje, så Noter kan gøre
-// linjerne til en tjekliste. «Tjek, at I har» står sidst
+// linjerne til en tjekliste. «Tjek, at I har» står sidst. Bløde bindestreger (U+00AD i VARER) er kun til skærmen
 export function tekst(varer) {
   return grupper(varer)
     .map((g) => [g.navn, ...g.varer.map((v) => (v.maengde ? v.navn + ': ' + v.maengde : v.navn))].join('\n'))
-    .join('\n\n');
+    .join('\n\n')
+    .replace(/\u00ad/g, '');
 }

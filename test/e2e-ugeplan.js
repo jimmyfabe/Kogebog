@@ -33,6 +33,7 @@ const plusDage = (dato, n) => new Date(Date.parse(dato + 'T00:00:00Z') + n * DAG
 
 export async function ugeplan(browser, H) {
   await telefon(browser, H);
+  await listeOrd(browser, H);
   await oversigtIpad(browser, H);
   await boernValg(browser, H);
   await oversigtDesktop(browser, H);
@@ -83,6 +84,50 @@ const listeNu = (side) => side.evaluate(() => {
 async function aabn(side, BASE, hashDel) {
   await side.goto('about:blank');
   await side.goto(BASE + '/index.html' + hashDel);
+}
+
+// Varernes navne på en smal telefon: et ord deles kun ved en blød bindestreg (eller af Safaris orddeling, som WebKit på
+// pc'en ikke har). Før brød «Grøntsagsblanding» som «Grøntsagsblan|ding» på 360 px (UI-review 27-10). Alle varer i
+// ugeplanens retter, syv retter pr. liste
+async function listeOrd(browser, H) {
+  const { BASE, SKAERME, RETTER, nySide, tjek, vent, venterPaa } = H;
+  console.log('[iphone] ugeplan: varernes navne deles ikke midt i ordet');
+  const uge = planMandag(new Date());
+  const IPLAN = Object.keys(RETTER).filter((id) => RETTER[id].tumbi.ugeplan === true);
+  const { ctx, side } = await nySide(browser, SKAERME[1], { serviceWorkers: 'block' });
+  for (const [b, h] of [[360, 780], [390, 844]]) {
+    await side.setViewportSize({ width: b, height: h });
+    const delt = new Set();
+    let varer = 0;
+    for (let i = 0; i < IPLAN.length; i += 7) {
+      const dage = Array.from({ length: 7 }, (_, j) => (IPLAN[i + j] ? { ret: IPLAN[i + j], n: 4 } : null));
+      await side.goto(BASE + '/index.html#/indkoeb');
+      await side.evaluate((k) => localStorage.removeItem(k), LISTE);
+      await side.goto(BASE + '/index.html#/hent/' + kod(uge, dage));
+      await venterPaa(side, () => location.hash === '#/indkoeb' && document.querySelector('.liste-tal'), null, 'iphone ' + b + '×' + h + ': listen til retterne ' + (i + 1) + '-' + (i + 7));
+      await vent(100);
+      const r = await side.evaluate(() => {
+        const ud = [];
+        const navne = [...document.querySelectorAll('.vare-navn')];
+        for (const e of navne) {
+          const t = e.firstChild;
+          // Ordene mellem mellemrum og bløde bindestreger: hver del skal stå på én linje
+          for (const m of t.data.matchAll(/[^\s\u00ad]+/g)) {
+            const rg = document.createRange();
+            rg.setStart(t, m.index);
+            rg.setEnd(t, m.index + m[0].length);
+            if (new Set([...rg.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top))).size > 1) ud.push(m[0]);
+          }
+        }
+        return { delt: ud, varer: navne.length };
+      });
+      r.delt.forEach((x) => delt.add(x));
+      varer += r.varer;
+    }
+    tjek(!delt.size, 'iphone ' + b + '×' + h + ': ingen varenavne deles midt i ordet (' + varer + ' varer; delt: ' + [...delt].join(', ') + ')');
+  }
+  tjek(!side.fejl.length, 'iphone varernes navne: ' + side.fejl.join(' | '));
+  await ctx.close();
 }
 
 async function telefon(browser, H) {

@@ -259,7 +259,9 @@ export const VARER = {
   'aerter': { navn: 'Ærter', afd: 'frost', enhed: 'g', ikon: 'aerter' },
   'broccoliblanding': { navn: 'Broccoli', afd: 'frost', enhed: 'g', ikon: 'broccoli' },
   'suppeurter': { navn: 'Suppeurter', afd: 'frost', enhed: 'g', ikon: 'gulerod' },
-  'groentsagsblanding': { navn: 'Grøntsagsblanding', afd: 'frost', enhed: 'g', ikon: 'aerter' },
+  // Den bløde bindestreg deler ordet mellem «Grøntsags» og «blanding»: på 360 px brød det som «Grøntsagsblan|ding»
+  // (UI-review 27-10). Den fjernes i tekstudgaven (tekst() i js/indkoeb.js)
+  'groentsagsblanding': { navn: 'Grøntsags\u00adblanding', afd: 'frost', enhed: 'g', ikon: 'aerter' },
   'hakket-spinat': { navn: 'Hakket spinat', afd: 'frost', enhed: 'g', ikon: 'spinat' },
   'aerter-gulerod': { navn: 'Ærter og gulerødder', afd: 'frost', enhed: 'g', ikon: 'aerter' },
   'blomkaalsblanding': { navn: 'Blomkål', afd: 'frost', enhed: 'g', ikon: 'blomkaal' },

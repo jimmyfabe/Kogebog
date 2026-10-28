@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { saml, visMaengde, vareTekst, grupper, tekst, manglerTekst, holdSammen, MAKS_M } from '../js/indkoeb.js';
 import { kod, afkod, fnv1a, kontrolsum, ukendtTekst, kodeFraTekst, BESKED_NYERE, BESKED_UGYLDIG, BESKED_GAMMEL } from '../js/plankode.js';
 import * as lager from '../js/lager.js';
+import { VARER } from '../js/katalog.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ret = (id) => JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8'));
@@ -172,6 +173,15 @@ test('en vare kan højst have 100.000 i sin enhed, og listen viser kun kendte va
   ]);
   assert.equal(vareTekst('toString', 5), '');
   assert.equal(tekst([]), '');
+});
+
+// En blød bindestreg i et varenavn (Grøntsags|blanding, UI-review 27-10) er kun til skærmen: «Del som tekst» sender
+// navnet uden den, så den ikke står som et usynligt tegn i Noter eller Beskeder
+test('tekstudgaven har ingen bløde bindestreger', () => {
+  const ids = Object.keys(VARER);
+  assert.ok(ids.some((id) => VARER[id].navn.includes('\u00ad')), 'forventede mindst ét varenavn med en blød bindestreg');
+  const t = tekst(ids.map((id) => ({ id, m: 1 })));
+  assert.ok(t.includes('Grøntsagsblanding') && !t.includes('\u00ad'), 'tekst() skal fjerne U+00AD');
 });
 
 // «Del som tekst» og printet siger, hvor mange dage der mangler på listen, og hvorfor (code review U5 og U6, 23-10)
