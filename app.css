@@ -200,7 +200,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 /* Hvor bunden står fast, sætter --bund dens højde plus lidt luft. En knap i indholdet, der får fokus (Tab, VoiceOver),
    rulles så op over bunden i stedet for ind under den. Margen på knapperne og ikke scroll-padding på html: med den
    rullede siden også, når fokus gik mellem knapperne i selve bunden, så indholdet hoppede (390 px: 0 → 176 → 348 px) */
-.ret-indhold button, .scene button, .valg-indhold button { scroll-margin-bottom: var(--bund, 0px); }
+.ret-indhold button, .scene button, .valg-indhold button, .uge-indstillinger button, .uge-dage button { scroll-margin-bottom: var(--bund, 0px); }
 
 /* ---------- Status: henter, tom, fejl ---------- */
 
@@ -734,6 +734,24 @@ textarea.kopi-felt { resize: vertical; }
   .ret-valg-raekke { grid-template-columns: 64px minmax(0, 1fr); padding: 10px 12px; }
   .ret-valg-raekke .dag-billede { width: 64px; height: 64px; }
   .ret-valg-raekke .knap { grid-column: 1 / -1; justify-self: start; margin-bottom: 4px; }
+}
+
+/* iPad og desktop: «Indkøbsliste» og «Send til telefon» står fast i bunden, så de altid kan ses. På iPad'en på langs lå
+   de under kanten (UI-review V8, 27-10). Rullet helt ned står bunden på sin plads over «Del som tekst», «Print» og
+   «Ny uge», så ingen dag ender bag den. Bunden er 115 px høj (84 px knap, 12 px over, 3 px streg), plus samme safe-area
+   som dens padding; --bund giver 13 px luft til de knapper i dagene, der får fokus. Ikke på telefonen og de lave skærme:
+   dér ville bunden tage for meget af skærmen */
+@media (min-width: 701px) and (min-height: 521px) {
+  .uge-oversigt { --bund: calc(112px + max(16px, env(safe-area-inset-bottom))); }
+  .uge-oversigt .uge-handlinger {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    margin: 0 -24px;
+    padding: 12px 24px max(16px, env(safe-area-inset-bottom));
+    background: var(--creme);
+    border-top: 3px solid var(--creme-moerk);
+  }
 }
 
 /* ---------- Børnene vælger ugens mad: #/uge/vaelg (js/ugeplan.js, iPad på langs) ---------- */

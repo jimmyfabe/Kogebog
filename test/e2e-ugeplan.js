@@ -605,9 +605,45 @@ async function oversigtIpad(browser, H) {
   await side.evaluate((p) => { localStorage.setItem('kog-uge-v1', JSON.stringify(p)); }, { ...gemt, dage: [{ ret: 'koedsovs', af: 'rosa', n: 4 }, null, { ret: 'tunfrikadeller', af: 'pip', n: 12 }, null, null, { ret: 'bolognese-one-pot', af: 'bo', n: 6 }, null] });
   await side.reload();
   await side.waitForSelector('.uge-dage');
-  for (const [b, h] of [[360, 740], [390, 844], [820, 1180], [1180, 820]]) {
+  for (const [b, h] of [[360, 740], [390, 844], [820, 1180], [1180, 820], [1280, 800]]) {
     await side.setViewportSize({ width: b, height: h });
     await vent(150);
+    // «Indkøbsliste» og «Send til telefon» står fast i bunden på iPad og desktop: på iPad'en på langs lå de under kanten
+    // (UI-review V8, 27-10). Rullet helt ned står dagene og summen over bunden. En knap i den sidste dag, der får fokus,
+    // rulles op over bunden, og Tab fra bunden til «Del som tekst» lægger ikke bunden ind over den
+    if (b > 700) {
+      const f = await side.evaluate(() => {
+        const r = (s) => document.querySelector(s)?.getBoundingClientRect();
+        const bundTop = () => Math.round(r('.uge-handlinger')?.top ?? innerHeight);
+        scrollTo(0, 0);
+        const knap = (s) => (r(s) ? Math.round(r(s).bottom) : null);
+        const ud = { liste: knap('[data-fokus="liste"]'), send: knap('[data-fokus="send"]'), H: innerHeight };
+        scrollTo(0, document.documentElement.scrollHeight);
+        Object.assign(ud, { dage: Math.round(r('.uge-dage').bottom), sum: Math.round(r('.uge-sum').bottom), bundNederst: bundTop() });
+        scrollTo(0, 0);
+        const sidst = [...document.querySelectorAll('.uge-dage > li:last-child button')].at(-1);
+        sidst.focus();
+        Object.assign(ud, { fokus: Math.round(sidst.getBoundingClientRect().bottom), bundFokus: bundTop() });
+        return ud;
+      });
+      tjek(f.liste !== null && f.liste <= f.H && f.send !== null && f.send <= f.H,
+        n + ' ugeplan ' + b + '×' + h + ': «Indkøbsliste» og «Send til telefon» ses uden at rulle (' + JSON.stringify(f) + ')');
+      tjek(f.dage <= f.bundNederst && f.sum <= f.bundNederst,
+        n + ' ugeplan ' + b + '×' + h + ': rullet helt ned står dagene og summen over bunden (' + JSON.stringify(f) + ')');
+      tjek(f.fokus <= f.bundFokus,
+        n + ' ugeplan ' + b + '×' + h + ': en knap i den sidste dag med fokus står over bunden (' + JSON.stringify(f) + ')');
+      await side.focus('[data-fokus="send"]');
+      await side.keyboard.press('Tab');
+      await vent(400);
+      const del = await side.evaluate(() => {
+        const r = (s) => document.querySelector(s)?.getBoundingClientRect();
+        return { fokus: document.activeElement?.dataset.fokus, top: Math.round(r('[data-fokus="del"]').top),
+          bund: Math.round(r('[data-fokus="del"]').bottom), bundBund: Math.round(r('.uge-handlinger')?.bottom ?? 0), H: innerHeight };
+      });
+      tjek(del.fokus === 'del' && del.top >= del.bundBund && del.bund <= del.H,
+        n + ' ugeplan ' + b + '×' + h + ': Tab fra «Send til telefon» til «Del som tekst», som står under bunden (' + JSON.stringify(del) + ')');
+      await side.evaluate(() => { document.activeElement?.blur(); scrollTo(0, 0); });
+    }
     await tjekLayout(side, n + ' ugeplan ' + b + '×' + h);
     await foto(side, n + '-ugeplan-' + b + 'x' + h, { fullPage: true });
     const led = await brudteLed(side, '.dag-meta');

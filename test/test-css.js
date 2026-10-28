@@ -37,8 +37,9 @@ test('--bund regner med samme safe-area som den faste bund', () => {
   const medBund = blokke(CSS).regler.filter((b) => b.hoved.startsWith('@media') && b.regler.some((r) => /--bund\s*:/.test(r.deklarationer)));
   assert.ok(medBund.length >= 3, 'forventede --bund i mindst tre @media-blokke (iPhone, iPad på højkant, på langs), fandt ' + medBund.length);
   for (const blok of medBund) {
-    const bund = blok.regler.find((r) => r.hoved.includes('.handlinger') && /position\s*:\s*sticky/.test(r.deklarationer));
-    assert.ok(bund, blok.hoved + ': --bund står i en blok uden en fast bund (.handlinger med position: sticky)');
+    // En fast bund: position: sticky og bottom: 0 (.handlinger på retten, trinene og børnenes valg, .uge-handlinger på ugeplanen)
+    const bund = blok.regler.find((r) => /position\s*:\s*sticky/.test(r.deklarationer) && /(^|;)\s*bottom\s*:\s*0\s*(;|$)/.test(r.deklarationer));
+    assert.ok(bund, blok.hoved + ': --bund står i en blok uden en fast bund (en regel med position: sticky og bottom: 0)');
     const padding = SAFE_AREA.exec(bund.deklarationer);
     assert.ok(padding, blok.hoved + ': bundens padding i bunden bruger ikke max(…, env(safe-area-inset-bottom))');
     for (const r of blok.regler) {

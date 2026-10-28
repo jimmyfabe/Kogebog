@@ -644,12 +644,18 @@ function oversigtSkaerm() {
     },
   }), 'ny-uge');
 
-  const knapper = harRetter ? [
-    kanSendes ? medFokus(K.knap('Indkøbsliste', { klasse: 'primaer', ikonNavn: 'kurv', onclick: () => K.naviger('#/hent/' + data.kode) }), 'liste') : null,
-    kanSendes ? medFokus(K.knap('Send til telefon', { ikonNavn: 'telefon', onclick: () => sendLink(data) }), 'send') : null,
-    medFokus(K.knap('Del som tekst', { ikonNavn: 'liste', onclick: () => delTekst(data) }), 'del'),
-    el('a', { class: 'knap print-link', href: 'print.html?uge' }, ikon('print'), el('span', { tekst: 'Print' })),
+  // «Indkøbsliste» og «Send til telefon» står i deres egen række, som på iPad og desktop står fast i bunden (app.css): på
+  // iPad'en på langs lå de under kanten (UI-review V8, 27-10). Resten står under den, så den faste bund holder sig til én
+  // række. Rækken skal være et barn af .uge: en fast bund kan ikke komme uden for sin forælder
+  const hoved = harRetter && kanSendes ? [
+    medFokus(K.knap('Indkøbsliste', { klasse: 'primaer', ikonNavn: 'kurv', onclick: () => K.naviger('#/hent/' + data.kode) }), 'liste'),
+    medFokus(K.knap('Send til telefon', { ikonNavn: 'telefon', onclick: () => sendLink(data) }), 'send'),
   ] : [];
+  const andre = [
+    harRetter ? medFokus(K.knap('Del som tekst', { ikonNavn: 'liste', onclick: () => delTekst(data) }), 'del') : null,
+    harRetter ? el('a', { class: 'knap print-link', href: 'print.html?uge' }, ikon('print'), el('span', { tekst: 'Print' })) : null,
+    harRetter || p.uge ? ny : null,
+  ].filter(Boolean);
 
   return el('main', { class: 'skaerm uge-oversigt' },
     K.topbar(),
@@ -662,9 +668,10 @@ function oversigtSkaerm() {
       el('ol', { class: 'uge-dage', role: 'list', 'aria-label': 'Ugens dage' }, p.dage.map((d, i) => dagRaekke(p, d, i))),
       el('div', { class: 'uge-bund' },
         el('p', { class: 'uge-sum', tekst: sum }),
-        harRetter ? null : el('p', { class: 'uge-tom', tekst: 'Vælg mindst én ret, så kan listen sendes til telefonen.' }),
-        el('div', { class: 'uge-knapper' }, knapper, harRetter || p.uge ? ny : null),
-        oversigtBeskedEl())));
+        harRetter ? null : el('p', { class: 'uge-tom', tekst: 'Vælg mindst én ret, så kan listen sendes til telefonen.' })),
+      hoved.length ? el('div', { class: 'uge-knapper uge-handlinger' }, hoved) : null,
+      andre.length ? el('div', { class: 'uge-knapper' }, andre) : null,
+      oversigtBeskedEl()));
 }
 
 // Giver iPad'en til børnene: de vælger med dyrene (#/uge/vaelg), og stemmen spørger, hvem der skal vælge
