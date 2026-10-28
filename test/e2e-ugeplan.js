@@ -1254,9 +1254,11 @@ async function boernValg(browser, H) {
 
   // 12b. Den sidste side har færre retter, og de står i midten: før stod de tre til venstre på iPad'en på langs, og på
   //      højkant og telefonen stod den sidste alene til venstre (UI-review 27-10). Løkken sluttede på sidste side, og
-  //      siden huskes, når skærmen skifter størrelse
-  const rest = IPLAN.length % 4 || 4;
-  for (const [bredde, hoejde] of [[360, 740], [390, 844], [820, 1180], [1180, 820], [1280, 800]]) {
+  //      siden huskes, når skærmen skifter størrelse. Går retterne op i 4, er den sidste side fuld, og der er intet at
+  //      tjekke: så siger målingerne, at 12b er sprunget over, så det ikke er grønt i det stille (code review 28-10)
+  const rest = IPLAN.length % 4;
+  if (!rest) maal.push(n + ' børnene: 12b (den sidste sides retter står i midten) er sprunget over: ' + IPLAN.length + ' retter går op i 4, så den sidste side er fuld');
+  for (const [bredde, hoejde] of rest ? [[360, 740], [390, 844], [820, 1180], [1180, 820], [1280, 800]] : []) {
     await side.setViewportSize({ width: bredde, height: hoejde });
     await vent(150);
     const c = await side.evaluate(() => {
