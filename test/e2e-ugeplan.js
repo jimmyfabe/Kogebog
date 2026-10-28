@@ -1026,6 +1026,30 @@ async function boernValg(browser, H) {
   await hold(side, '.til-ugeplan');
   await venterPaa(side, () => location.hash === '#/uge' && document.querySelector('.uge-dage'), null, n + ': holdet skal gå til oversigten');
 
+  // 9b. Bo vælger, så længe der er en fri dag ud over dem, børnene mangler: før kunne Bo tage seks dage, og Pip fik ingen
+  //     tur (UI-review 27-10). Med fem af Bos retter og to frie dage er Bo færdig, og Pip har stadig en dag, når Rosa har valgt
+  const boFem = Array.from({ length: 7 }, (_, i) => (i < 5 ? { ret: a, af: 'bo', n: 4 } : null));
+  await side.evaluate((p) => localStorage.setItem('kog-uge-v1', JSON.stringify(p)), { ...gemt, prBarn: 1, dage: boFem });
+  await valgHash(side, '#/uge/vaelg');
+  await hvem('fem af Bos retter');
+  d = await dyrNu(side);
+  tjek(d[0].faerdig && d[0].pladser === 5 && !d[1].faerdig && !d[2].faerdig,
+    n + ': med fem af Bos retter og to frie dage er Bo færdig, Rosa og Pip ikke (' + JSON.stringify(d) + ')');
+  await tryk(side, '.dyr-kort[data-dyr="bo"]');
+  tjek(await hash(side) === '#/uge/vaelg' && await sagt(side) === siger(R.dyrFaerdig('bo')),
+    n + ': et tryk på Bo siger, at det er en andens tur (' + await hash(side) + ', ' + await sagt(side) + ')');
+  await valgHash(side, '#/uge/vaelg/bo');
+  await vent(200);
+  tjek(await h1(side) === 'Hvem skal vælge?', n + ': Bos retter kan ikke åbnes, når Bo er færdig (' + await h1(side) + ')');
+  await side.evaluate((p) => localStorage.setItem('kog-uge-v1', JSON.stringify(p)),
+    { ...gemt, prBarn: 1, dage: boFem.map((x, i) => (i === 5 ? { ret: b, af: 'rosa', n: 4 } : x)) });
+  await valgHash(side, '#/uge/vaelg/pip');
+  await vent(200);
+  tjek(await h1(side) === 'Pip vælger mad' && await side.locator('.ret-kort').count() > 0,
+    n + ': Pip får sin tur, når Bo har fem dage og Rosa én (' + await h1(side) + ')');
+  await valgHash(side, '#/uge');
+  await venterPaa(side, () => location.hash === '#/uge' && document.querySelector('.uge-dage'), null, n + ': tilbage til oversigten');
+
   // 10. To retter pr. barn: Rosa har to pladser, én fyldt, og er ikke færdig
   await side.evaluate((p) => localStorage.setItem('kog-uge-v1', JSON.stringify(p)),
     { ...gemt, prBarn: 2, dage: [{ ret: a, af: 'rosa', n: 4 }, null, null, null, null, null, null] });

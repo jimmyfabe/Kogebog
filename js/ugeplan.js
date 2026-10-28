@@ -761,16 +761,19 @@ function dagSkaerm(i) {
 //   #/uge/vaelg               «Hvem skal vælge?»: Bo, Rosa og Pip (dyrene, aldrig børnenes navne)
 //   #/uge/vaelg/<dyr>         fire retter pr. side med pile til flere. Første tryk siger navnet, fluebenet vælger
 //   #/uge/vaelg/<dyr>/<ret>   «Hvilken dag?»: syv dagbrikker. En optaget dag viser retten og dyret og siger, at den er optaget
-// Rosa og Pip vælger hver højst p.prBarn retter (den voksne sætter 1 eller 2 i oversigten). Bo er den voksne og har ingen
-// grænse. Børnene kan næsten ikke læse: hvert trin har «Læs op», og hvert tryk siger, hvad man trykkede på (R.… fra
-// js/replikker.js, test/test-lyd.js). Planen gemmes kun gennem gemPlan, som læser hele planen lige før
+// Rosa og Pip vælger hver højst p.prBarn retter (den voksne sætter 1 eller 2 i oversigten). Bo er den voksne og vælger,
+// så længe der er en fri dag ud over dem, børnene mangler: før kunne Bo tage seks dage, og så fik Pip ingen tur
+// (UI-review 27-10). I oversigten kan den voksne stadig fylde ugen selv. Børnene kan næsten ikke læse: hvert trin har
+// «Læs op», og hvert tryk siger, hvad man trykkede på (R.… fra js/replikker.js, test/test-lyd.js). Planen gemmes kun
+// gennem gemPlan, som læser hele planen lige før
 const PR_SIDE = 4;
 const BOERN = ['rosa', 'pip'];
 const barn = { dyr: null, side: 0, ret: null, dag: null }; // valget undervejs (kun i hukommelsen, til det er bekræftet)
 let barnFejl = false; // valget kunne ikke gemmes: den voksne får en fejlskærm
 
 const valgtAf = (p, dyr) => p.dage.filter((d) => d && d.af === dyr).length;
-const harValgt = (p, dyr) => BOERN.includes(dyr) && valgtAf(p, dyr) >= p.prBarn;
+const boernMangler = (p) => BOERN.reduce((s, b) => s + Math.max(0, p.prBarn - valgtAf(p, b)), 0);
+const harValgt = (p, dyr) => (BOERN.includes(dyr) ? valgtAf(p, dyr) >= p.prBarn : p.dage.filter((d) => !d).length <= boernMangler(p));
 const ugenErFuld = (p) => p.dage.every(Boolean);
 const nulstilBarn = () => Object.assign(barn, { dyr: null, side: 0, ret: null, dag: null });
 
