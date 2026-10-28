@@ -765,6 +765,9 @@ textarea.kopi-felt { resize: vertical; }
 .dyr-plads.fyldt { border-style: solid; border-color: var(--kakao); background: var(--hvid); }
 .dyr-plads img { width: 90%; }
 .dyr-pladser.mange .dyr-plads { width: 40px; height: 40px; }
+/* --kolonner (halvdelen af pladserne, sat i js/ugeplan.js) gør rækkerne lige lange: seks som 3 + 3, ikke 5 + 1. 1 px luft til
+   afrundingen */
+.dyr-pladser.mange { max-width: calc(var(--kolonner, 9) * (40px + 8px) - 7px); }
 /* Færdig: kortet bliver creme med et grønt flueben i hjørnet. Det kan stadig trykkes på (stemmen siger, at det er en andens tur) */
 .kort.dyr-kort.faerdig { background: var(--creme-moerk); }
 .dyr-tjek { position: absolute; top: 10px; right: 10px; display: grid; place-items: center; width: 52px; height: 52px; border: var(--kant); border-radius: 50%; background: var(--urt); }
@@ -834,6 +837,7 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .dyr-kort .kort-navn { font-size: 22px; }
   .dyr-plads { width: 44px; height: 44px; }
   .dyr-pladser.mange .dyr-plads { width: 32px; height: 32px; }
+  .dyr-pladser.mange { max-width: calc(var(--kolonner, 9) * (32px + 8px) - 7px); }
   .dyr-tjek { top: 6px; right: 6px; width: 40px; height: 40px; }
   .dyr-tjek .ikon { width: 26px; height: 26px; }
   .ret-blad { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "gitter gitter gitter" "forrige prikker naeste"; gap: 14px 12px; }

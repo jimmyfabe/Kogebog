@@ -834,6 +834,10 @@ function hvemSkaerm(p) {
     const antal = BOERN.includes(dyr) ? Math.max(p.prBarn, retter.length) : retter.length;
     const pladser = Array.from({ length: antal }, (_, k) => el('span', { class: 'dyr-plads' + (k < retter.length ? ' fyldt' : '') },
       retter[k] ? K.billede(grafikRet(retter[k].id), '') : null));
+    const raekke = pladser.length ? el('span', { class: 'dyr-pladser' + (antal > 3 ? ' mange' : ''), 'aria-hidden': 'true' }, pladser) : null;
+    // Fra fire pladser står de på to lige lange rækker (seks som 3 + 3): før stod de, så mange der var plads til, og seks
+    // blev til 5 + 1 (UI-review 27-10). Er kortet for smalt til halvdelen, deler de sig videre (2 + 2 + 2 på telefonen)
+    if (antal > 3) raekke.style.setProperty('--kolonner', String(Math.ceil(antal / 2)));
     return el('li', { class: 'kort-plads' }, el('button', {
       type: 'button',
       class: 'kort dyr-kort' + (faerdig ? ' faerdig' : ''),
@@ -848,7 +852,7 @@ function hvemSkaerm(p) {
     },
     el('span', { class: 'kort-billede' }, K.billede(grafikDyr(dyr), '')),
     el('span', { class: 'kort-navn', tekst: dyrNavn(dyr) }),
-    pladser.length ? el('span', { class: 'dyr-pladser' + (antal > 3 ? ' mange' : ''), 'aria-hidden': 'true' }, pladser) : null,
+    raekke,
     faerdig ? el('span', { class: 'dyr-tjek', 'aria-hidden': 'true' }, ikon('tjek')) : null));
   });
   return valgSide('hvem',

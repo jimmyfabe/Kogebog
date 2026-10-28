@@ -9,7 +9,7 @@
    Svarer nettet ikke inden for HENT_MS (4 s), kommer en opskrift (også index.json) fra cachen, og nettets svar gemmes
    til næste gang. De næste LANGSOM_MS (30 s) tager opskrifterne cachen med det samme (code review U3 og F2, 23-10). */
 const PRAEFIKS = 'kog-';
-const INDHOLD = 'cb053d9db57fe5fd'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = '2cc53f3ac2012dbd'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '5492310a5be481ba'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;

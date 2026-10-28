@@ -1113,6 +1113,32 @@ async function boernValg(browser, H) {
   }
 
   tjek(await side.evaluate(() => window.__taleAfvist) === 0, n + ': stemmen blev aldrig afvist (al oplæsning kom i et tryk)');
+
+  // 13. Pladserne under et dyr står på lige lange rækker (højst én i forskel): før stod de, så mange der var plads til,
+  //     og seks blev til 5 + 1 på iPad'en, fem til 4 + 1 på højkant og fire til 3 + 1 på en bred telefon (UI-review 27-10).
+  //     Efter tjekket af stemmen, for hver plan åbnes i et nyt dokument
+  for (const antal of [4, 5, 6]) {
+    const dage = Array.from({ length: 7 }, (_, i) => (i < antal ? { ret: IPLAN[i], af: 'bo', n: 4 } : null));
+    await side.evaluate((p) => localStorage.setItem('kog-uge-v1', JSON.stringify(p)), { v: 1, uge, dage, n: 4, prBarn: 1, rettet: Date.now() });
+    await side.goto(BASE + '/index.html#/uge/vaelg');
+    await side.waitForSelector('.dyr-gitter');
+    for (const [bredde, hoejde] of [[1180, 820], [1280, 800], [820, 1180], [744, 1133], [430, 932], [390, 844], [360, 740], [844, 390], [667, 375]]) {
+      await side.setViewportSize({ width: bredde, height: hoejde });
+      await vent(100);
+      const raekker = await side.evaluate(() => [...document.querySelectorAll('.dyr-kort')].map((k) => {
+        const r = new Map();
+        for (const p of k.querySelectorAll('.dyr-plads')) {
+          const y = Math.round(p.getBoundingClientRect().top);
+          r.set(y, (r.get(y) || 0) + 1);
+        }
+        return { dyr: k.dataset.dyr, r: [...r.values()] };
+      }));
+      const bo = raekker.find((x) => x.dyr === 'bo');
+      const skaeve = raekker.filter((x) => x.r.length && Math.max(...x.r) - Math.min(...x.r) > 1);
+      tjek(bo.r.reduce((s, x) => s + x, 0) === antal && !skaeve.length,
+        n + ' børnene ' + bredde + '×' + hoejde + ': Bos ' + antal + ' pladser står på lige lange rækker (' + bo.r.join(' + ') + ')');
+    }
+  }
   tjek(!side.fejl.length, n + ' børnene: ' + side.fejl.join(' | '));
   await ctx.close();
   maal.push(n + ' børnene: ' + IPLAN.length + ' retter på ' + sider + (sider === 1 ? ' side' : ' sider'));
