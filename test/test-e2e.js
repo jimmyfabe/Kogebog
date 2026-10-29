@@ -1938,7 +1938,9 @@ try {
 }
 maal.push(cspSprunget + ' CSP-beskeder fra Playwrights eget <style> ved skærmbilleder er ikke talt som fejl (se foto())');
 console.log('\n' + antalTjek + ' tjek (' + KOERSEL.map((k) => k[0]).join(', ') + ') i ' + Math.round((Date.now() - start) / 1000) + ' s · skærmbilleder i ' + UD);
-if (maal.length) console.log(maal.length + ' målinger (ikke fejl):\n  - ' + maal.slice(0, 40).join('\n  - '));
+// De første 40 målinger, og altid et tjek, der er sprunget over: ugeplanen kører sidst, og 29-10 var der 102 målinger
+const visMaal = maal.slice(0, 40).concat(maal.slice(40).filter((m) => m.includes('sprunget over')));
+if (maal.length) console.log(maal.length + ' målinger (ikke fejl' + (visMaal.length < maal.length ? ', ' + visMaal.length + ' vist' : '') + '):\n  - ' + visMaal.join('\n  - '));
 if (fejl.length) {
   console.log(fejl.length + ' FEJL:\n  - ' + fejl.join('\n  - '));
   process.exit(1);
