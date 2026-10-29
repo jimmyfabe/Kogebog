@@ -1,6 +1,6 @@
 # STATUS – Tumbi Køkken
 
-## 29-10-2026 kl. 04:44: bogen gjort færdig, v2 · 28-10-2026 (gren `claude/faerdig-28-10` fra `claude/ugeplan-22-10`, ikke flettet, ikke pushet)
+## 29-10-2026 kl. 05:36: bogen gjort færdig, v2 · 28-10-2026 (gren `claude/faerdig-28-10` fra `claude/ugeplan-22-10`, ikke flettet, ikke pushet)
 
 Jimmy 28-10: «byg videre, så vi bliver færdige» og ja til push.
 1. **Bygget** (frontend-dev, 962b4e1..3b04b45): «Fjern» ved «Byt ret» på telefonen · intet hop, når «Vælg ✓» dukker op · tallerkenerne 3 + 3 · Bo kan kun tage de dage, de andre børn ikke mangler (så Pip altid får en tur) · V8: fast bund med «Indkøbsliste» og «Send til telefon» på iPad på højkant og desktop · sidste side centreret, «uge 45» kun én gang, «Tumbi Køkken» på én linje, dyrene skjules under 380 px · «Grøntsags-/blanding» med blød bindestreg. Ikke rettet: ny grafik til naan, grøntsagsblanding og karry.
@@ -8,11 +8,17 @@ Jimmy 28-10: «byg videre, så vi bliver færdige» og ja til push.
 3. **Timer-blokken på 360×780 er sandsynligvis ikke en fejl** (Chromium, 28-10): i et skjult browserpanel kører `scrollIntoView` med `smooth` slet ikke. e2e tjekker det nu i WebKit med rigtige tryk (`w360` i `TIMER_PAA`, a9166f3).
 4. **Røst-stemmen (83845e0):** 61 lydfiler er valgt efter ASR, og Bo har fået sin replik («Bo har valgt. Nu er det en andens tur.», seed 44). Af de 54 fra ASR-listen 27-10 er 46 nu uden ASR-fejl (før 6), og alle 36 filer, der var ældre i `lyd/` end i `D:/Stemmer`, er uden fejl (før 32). **Valget sker i de færdige mp3, ikke i wav:** ASR'en hører samme lyd forskelligt i wav og mp3 (korrelation 0,99+). ASR-reglen (`asr_maal.py`) er ureviewet.
 5. **Validatoren** kender Bos replik (8973a22). Node-tests: 8 af 9 grønne, og `test-lyd` er kun rød på de 3 forældreløse mp3.
+6. **Fuld e2e i WebKit på acfa7ee:** 36.580 tjek på 1.524 s og 5 fejl, alle i tjek fra 28-10, der aldrig havde kørt i WebKit. Rettet én ad gangen:
+   - «Grøntsagsbouillon» og «Madlavningsfløde» brød midt i ordet på 360 px: bløde bindestreger (59d0256).
+   - «Tumbi Køkken» stod på to linjer på 744×1133 (der manglede 0,3 px): `nowrap` fra 701 til 900 px, målt på én linje og inden for skærmen (7cd7240).
+   - Fokus over ugeplanens faste bund (3 skærme): tjekket brugte `focus()` fra et script, som ikke ruller i WebKit. Med en rigtig Tab står knappen over bunden; modprøve uden margen er rød (0724a73).
+   - Bagefter: delene `ugeplan` og `former` (med forsidens top) 4.026 tjek grønne på 274 s. De øvrige dele var grønne i den fulde kørsel, og rettelserne rører dem ikke.
+7. **Code review 29-10:** 0 kritiske og 8 advarsler. Repoet: et tjek af den tomme oversigts margen (rødt med app.css fra før 5f9e212) og målinger, der er sprunget over, vises altid (0724a73, 4fb5258). `D:/Stemmer` (uden for repoet): fund 1 står i CLAUDE.md (854a1b6), og 2, 4, 5 og 6 er rettet i scriptene og prøvet uden at ændre filer. Fund 3 (`valgt` passer ikke til appens fil i `kvalitet.json`) er latent: `behold-app.py` stopper nu, hvis teksten er ændret.
 - **Kører `efterbehandl_kogebog.py --mp3` igen,** laver den alle mp3 om, og ASR-valget går tabt. Trinnet, der lægger det tilbage, står nu i CLAUDE.md under «Stemmen». `asr_maal.py` bruger kopier af `ranger.py` og ordkontrollen i `asr-28-10/` (før en anden sessions kladdemappe i Temp), og `behold-app.py` rører ikke de 3 filer, der er valgt i mp3, og tjekker alt før den første kopi (code review 29-10).
 - 28-10 kl. 11-19:29 stod alt stille på RAM (under 4 GB fri): en forældreløs `find /` fra Git Bash holdt kernens paged pool, og Claude startede ved en fejl en til (backticks i en bash-streng i dobbelte anførselstegn). Jimmy stoppede begge.
 - Worktree: `C:/Users/Jimmy/AppData/Local/Temp/claude/D--Claude-Kogebog/aadbdf69-100c-469b-9996-f2e3bdd09dcd/scratchpad/wt`. Stopper sessionen, så fortsæt derfra (`git -C D:/Claude/Kogebog worktree list`).
 
-**Mangler:** fuld e2e i WebKit (9b, 9c, 12b, 13, `stille`, sticky og `w360` er aldrig kørt), ui-reviewer (390×844, 360×780, 1180×820, 820×1180, 1280×800), code-reviewer af testrettelserne, fast-forward af `main` og push. `main` = `origin/main` = 956b33b (live).
+**Mangler:** ui-reviewer i WebKit (kører 29-10 kl. 05:36), fast-forward af `main` og push. `main` = `origin/main` = 956b33b (live).
 
 **Afventer Jimmy** (lukket: V8 og Pips tur er bygget, de 3 skæve fra ui-reviewet er rettet):
 - (29-10) **Lyt til disse 9** (`D:\Claude\Kogebog\`, ASR hører stadig noget forkert; de andre 79 af de 88 lød rigtigt for ASR'en):
