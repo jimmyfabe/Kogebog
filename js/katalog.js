@@ -211,7 +211,8 @@ export const VARER = {
   'tomatpure': { navn: 'Tomatpuré', afd: 'toer', enhed: 'g', ikon: 'tomatpure', pakke: [140, 'tube', 'tuber'] },
   'spaghetti': { navn: 'Spaghetti', afd: 'toer', enhed: 'g', ikon: 'spaghetti', pakke: [500, 'pakke', 'pakker'] },
   'fuldkornspasta': { navn: 'Fuldkornspasta', afd: 'toer', enhed: 'g', ikon: 'spaghetti', pakke: [500, 'pakke', 'pakker'] },
-  'bouillonterninger': { navn: 'Grøntsagsbouillon (terninger)', afd: 'toer', enhed: 'stk', ikon: 'bouillon', pakke: [8, 'pakke', 'pakker'] },
+  // Bløde bindestreger som ved «Grøntsagsblanding»: på 360 px brød e2e 29-10 dem som «Grøntsagsbouil|lon» og «Madlav|ningsfløde»
+  'bouillonterninger': { navn: 'Grøntsags\u00adbouillon (terninger)', afd: 'toer', enhed: 'stk', ikon: 'bouillon', pakke: [8, 'pakke', 'pakker'] },
   'tun': { navn: 'Tun i vand', afd: 'toer', enhed: 'g', ikon: 'tun', pakke: [185, 'dåse', 'dåser'] },
   'havregryn': { navn: 'Havregryn', afd: 'toer', enhed: 'g', ikon: 'havregryn', pakke: [1000, 'pose', 'poser'] },
   'penne': { navn: 'Penne', afd: 'toer', enhed: 'g', ikon: 'spaghetti', pakke: [500, 'pakke', 'pakker'] },
@@ -235,7 +236,7 @@ export const VARER = {
   'hakket-oksekoed': { navn: 'Hakket oksekød', afd: 'koel', enhed: 'g', ikon: 'koed', pakke: [500, 'bakke', 'bakker'] },
   'chorizo': { navn: 'Chorizo', afd: 'koel', enhed: 'g', ikon: 'chorizo', pakke: [250, 'pakke', 'pakker'] },
   'flodeost': { navn: 'Flødeost', afd: 'koel', enhed: 'g', ikon: 'flodeost', pakke: [200, 'bæger', 'bægre'] },
-  'madlavningsflode': { navn: 'Madlavningsfløde', afd: 'koel', enhed: 'ml', ikon: 'flode', pakke: [250, 'bæger', 'bægre'] },
+  'madlavningsflode': { navn: 'Madlavnings\u00adfløde', afd: 'koel', enhed: 'ml', ikon: 'flode', pakke: [250, 'bæger', 'bægre'] },
   'parmesan': { navn: 'Revet parmesan', afd: 'koel', enhed: 'g', ikon: 'ost', pakke: [100, 'pose', 'poser'] },
   'revet-ost': { navn: 'Revet ost', afd: 'koel', enhed: 'g', ikon: 'ost', pakke: [175, 'pose', 'poser'] },
   'graesk-yoghurt': { navn: 'Græsk yoghurt', afd: 'koel', enhed: 'g', ikon: 'yoghurt', pakke: [500, 'bæger', 'bægre'] },
