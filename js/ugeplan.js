@@ -295,6 +295,9 @@ function listeSkaerm(liste) {
     return true;
   }
 
+  // Varenavnet uden bløde bindestreger (U+00AD i VARER) til knappernes navn og det, der læses op (UI-review 29-10)
+  const ren = (navn) => navn.replace(/\u00ad/g, '');
+
   function vareKnap(v) {
     const koebt = st.koebt.has(v.id);
     const b = el('button', { type: 'button', class: 'vare', 'aria-pressed': String(koebt) },
@@ -309,17 +312,17 @@ function listeSkaerm(liste) {
       if (!aendr(() => { if (koebt) st.koebt.delete(v.id); else st.koebt.add(v.id); })) return;
       tegn(v.id, '.vare');
       const t = optaelling(alle, st.koebt, st.harVi);
-      K.annoncer((st.koebt.has(v.id) ? 'Købt: ' : 'Ikke købt: ') + v.navn + '. ' + t.koebt + ' af ' + t.ialt + ' købt.');
+      K.annoncer((st.koebt.has(v.id) ? 'Købt: ' : 'Ikke købt: ') + ren(v.navn) + '. ' + t.koebt + ' af ' + t.ialt + ' købt.');
     }));
     return b;
   }
 
   function flytKnap(v, harVi) {
     const tekst = harVi ? 'Skal købes' : 'Har vi';
-    return K.knap(tekst, { klasse: 'har-vi', label: tekst + ': ' + v.navn, onclick: spaer(() => {
+    return K.knap(tekst, { klasse: 'har-vi', label: tekst + ': ' + ren(v.navn), onclick: spaer(() => {
       if (!aendr(() => { if (harVi) st.harVi.delete(v.id); else { st.harVi.add(v.id); st.koebt.delete(v.id); } })) return;
       tegn(v.id, '.har-vi');
-      K.annoncer(harVi ? v.navn + ' skal købes.' : v.navn + ' står under «Har vi allerede».');
+      K.annoncer(harVi ? ren(v.navn) + ' skal købes.' : ren(v.navn) + ' står under «Har vi allerede».');
     }) });
   }
 
