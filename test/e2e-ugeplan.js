@@ -659,6 +659,12 @@ async function oversigtIpad(browser, H) {
   gemt = await ugeLager(side);
   tjek(gemt.dage.every((d) => d === null) && gemt.uge === planMandag(new Date()), n + ': «Ny uge» tømmer planen (' + JSON.stringify(gemt.dage) + ')');
   tjek(JSON.stringify(await raekker(side)) === JSON.stringify([null, null, null, null, null, null, null]), n + ': oversigten er tom efter «Ny uge»');
+  // Uden retter er bunden væk, og så har dagenes knapper ingen margen til den: før blev en dag med fokus rullet op over
+  // ingenting (5f9e212, code review 28-10). Skærmen er over 700×520, hvor bunden ellers står fast
+  const tomBund = await side.evaluate(() => ({ bund: !!document.querySelector('.uge-handlinger'), w: innerWidth, h: innerHeight,
+    margen: getComputedStyle(document.querySelector('.uge-dage button')).scrollMarginBottom }));
+  tjek(tomBund.w > 700 && tomBund.h > 520 && !tomBund.bund && tomBund.margen === '0px',
+    n + ': uden retter er bunden væk, og dagenes knapper har ingen margen til den (' + JSON.stringify(tomBund) + ')');
 
   // 10. Oversigten på en telefon (360 px), iPad'en på højkant og (for metalinjen) på langs
   await side.evaluate((p) => { localStorage.setItem('kog-uge-v1', JSON.stringify(p)); }, { ...gemt, dage: [{ ret: 'koedsovs', af: 'rosa', n: 4 }, null, { ret: 'tunfrikadeller', af: 'pip', n: 12 }, null, null, { ret: 'bolognese-one-pot', af: 'bo', n: 6 }, null] });
@@ -670,27 +676,36 @@ async function oversigtIpad(browser, H) {
     // «Indkøbsliste» og «Send til telefon» står fast i bunden på iPad og desktop: på iPad'en på langs lå de under kanten
     // (UI-review V8, 27-10). Bunden har position: sticky og bottom: 0 som i app.css (før målte tjekket, at dagene stod over
     // bunden rullet helt ned, men det kunne ikke fejle: bunden står efter dem i DOM'en; code review 28-10). En knap i den
-    // sidste dag, der får fokus, rulles op over bunden, og Tab fra bunden til «Del som tekst» lægger ikke bunden ind over den
+    // sidste dag, der får fokus, rulles op over bunden, og Tab fra bunden til «Del som tekst» lægger ikke bunden ind over den.
+    // Fokus kommer med en rigtig Tab fra knappen før: focus() fra et script ruller slet ikke i WebKit, når knappen er inde
+    // på skærmen, heller ikke ind under bunden (e2e 29-10), og appen selv giver kun fokus med preventScroll. Uden
+    // knappernes scroll-margin er tjekket rødt på 820×1180 (målt 29-10); på langs ruller Tab helt ned, hvor bunden står
+    // på sin plads efter dagene
     if (b > 700) {
       const f = await side.evaluate(() => {
         const r = (s) => document.querySelector(s)?.getBoundingClientRect();
-        const bundTop = () => Math.round(r('.uge-handlinger')?.top ?? innerHeight);
         scrollTo(0, 0);
         const knap = (s) => (r(s) ? Math.round(r(s).bottom) : null);
         const bund = document.querySelector('.uge-handlinger');
         const stil = bund ? getComputedStyle(bund) : null;
         const ud = { liste: knap('[data-fokus="liste"]'), send: knap('[data-fokus="send"]'), H: innerHeight,
           position: stil?.position ?? null, bottom: stil?.bottom ?? null };
-        const sidst = [...document.querySelectorAll('.uge-dage > li:last-child button')].at(-1);
-        sidst.focus();
-        Object.assign(ud, { fokus: Math.round(sidst.getBoundingClientRect().bottom), bundFokus: bundTop() });
+        [...document.querySelectorAll('.uge-dage button')].at(-2).focus({ preventScroll: true });
+        scrollTo(0, 0);
         return ud;
       });
+      await side.keyboard.press('Tab');
+      await vent(400);
+      Object.assign(f, await side.evaluate(() => {
+        const sidst = [...document.querySelectorAll('.uge-dage > li:last-child button')].at(-1);
+        return { tab: document.activeElement === sidst, fokus: Math.round(sidst.getBoundingClientRect().bottom),
+          bundFokus: Math.round(document.querySelector('.uge-handlinger')?.getBoundingClientRect().top ?? innerHeight) };
+      }));
       tjek(f.liste !== null && f.liste <= f.H && f.send !== null && f.send <= f.H,
         n + ' ugeplan ' + b + '×' + h + ': «Indkøbsliste» og «Send til telefon» ses uden at rulle (' + JSON.stringify(f) + ')');
       tjek(f.position === 'sticky' && f.bottom === '0px',
         n + ' ugeplan ' + b + '×' + h + ': bunden med «Indkøbsliste» og «Send til telefon» står fast (' + JSON.stringify(f) + ')');
-      tjek(f.fokus <= f.bundFokus,
+      tjek(f.tab && f.fokus <= f.bundFokus,
         n + ' ugeplan ' + b + '×' + h + ': en knap i den sidste dag med fokus står over bunden (' + JSON.stringify(f) + ')');
       await side.focus('[data-fokus="send"]');
       await side.keyboard.press('Tab');
