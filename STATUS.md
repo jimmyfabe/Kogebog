@@ -1,6 +1,6 @@
 # STATUS – Tumbi Køkken
 
-## 29-10-2026 kl. 05:36: bogen gjort færdig, v2 · 28-10-2026 (gren `claude/faerdig-28-10` fra `claude/ugeplan-22-10`, ikke flettet, ikke pushet)
+## 29-10-2026 kl. 06:11: bogen gjort færdig, v2 · 28-10-2026 (gren `claude/faerdig-28-10`, spolet frem i lokal `main` til 4b7dcfe, ikke pushet)
 
 Jimmy 28-10: «byg videre, så vi bliver færdige» og ja til push.
 1. **Bygget** (frontend-dev, 962b4e1..3b04b45): «Fjern» ved «Byt ret» på telefonen · intet hop, når «Vælg ✓» dukker op · tallerkenerne 3 + 3 · Bo kan kun tage de dage, de andre børn ikke mangler (så Pip altid får en tur) · V8: fast bund med «Indkøbsliste» og «Send til telefon» på iPad på højkant og desktop · sidste side centreret, «uge 45» kun én gang, «Tumbi Køkken» på én linje, dyrene skjules under 380 px · «Grøntsags-/blanding» med blød bindestreg. Ikke rettet: ny grafik til naan, grøntsagsblanding og karry.
@@ -19,9 +19,10 @@ Jimmy 28-10: «byg videre, så vi bliver færdige» og ja til push.
 - 28-10 kl. 11-19:29 stod alt stille på RAM (under 4 GB fri): en forældreløs `find /` fra Git Bash holdt kernens paged pool, og Claude startede ved en fejl en til (backticks i en bash-streng i dobbelte anførselstegn). Jimmy stoppede begge.
 - Worktree: `C:/Users/Jimmy/AppData/Local/Temp/claude/D--Claude-Kogebog/aadbdf69-100c-469b-9996-f2e3bdd09dcd/scratchpad/wt`. Stopper sessionen, så fortsæt derfra (`git -C D:/Claude/Kogebog worktree list`).
 
-**Mangler:** fast-forward af `main` og push. `main` = `origin/main` = 956b33b (live).
+**Mangler:** kun push. Lokal `main` = 4b7dcfe (126 commits foran `origin/main` = 956b33b, som er live). Node-tests i `main`: 8 af 9 grønne (`test-lyd` kun rød på de 3 forældreløse).
 
 **Afventer Jimmy** (lukket: V8 og Pips tur er bygget, de 3 skæve fra ui-reviewet er rettet):
+- (29-10) **Push v2** (går live på GitHub Pages med det samme; Claude pushede ikke, fordi push til Pages-grenen kræver dit ja hver gang). I **PowerShell**: `cd D:\Claude\Kogebog; git push origin main`. Se bagefter versionen «v2 · 28-10-2026» på https://jimmyfabe.github.io/Kogebog/ (en iPad kan skulle åbne appen to gange).
 - (29-10) **Lyt til disse 9** (`D:\Claude\Kogebog\`, ASR hører stadig noget forkert; de andre 79 af de 88 lød rigtigt for ASR'en):
   - «Stop den først» høres ikke til sidst: `lyd\chorizo-pasta\timer-optaget-10.mp3`, `lyd\havregrynskugler\timer-optaget-10.mp3`, `lyd\kyllingekarry\timer-optaget-10.mp3`, `lyd\oejeboller\timer-optaget-10.mp3`, `lyd\one-pot-tomatpasta\timer-optaget-10.mp3`.
   - «den» mangler: `lyd\bradepande-fajitas\timer-optaget-10.mp3`, `lyd\pizzasnegle\timer-optaget-9.mp3`.
