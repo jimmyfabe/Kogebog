@@ -709,9 +709,10 @@ test('lydlisten må kun nævne filer, der findes', () => {
   forventFejl('lyd/liste.json', (d) => { d.filer = ['pandekager/hej.mp3']; }, 'ukendt replik for en ret');
   forventFejl('lyd/liste.json', (d) => { d.filer = ['faelles/hej.mp3']; }, 'ukendt fælles replik');
   forventFejl('lyd/liste.json', (d) => { d.filer = ['faelles/timer-optaget-99.mp3']; }, 'ingen ret har 99 trin');
-  // Ugeplanen: <ret>/uge.mp3 kun for retter i ugeplanen, Bo bliver aldrig færdig (han er den voksne), og ugen har 7 dage
+  // Ugeplanen: <ret>/uge.mp3 kun for retter i ugeplanen, kun de tre dyr i DYR (også Bo bliver færdig fra 28-10), og ugen
+  // har 7 dage
   forventFejl('lyd/liste.json', (d) => { d.filer = ['pandekager/uge.mp3']; }, '«pandekager/uge.mp3»: retten er ikke med i ugeplanen');
-  forventFejl('lyd/liste.json', (d) => { d.filer = ['faelles/uge-faerdig-bo.mp3']; }, 'ukendt fælles replik');
+  forventFejl('lyd/liste.json', (d) => { d.filer = ['faelles/uge-faerdig-ulv.mp3']; }, 'ukendt fælles replik');
   forventFejl('lyd/liste.json', (d) => { d.filer = ['faelles/uge-dag-8.mp3']; }, 'ukendt fælles replik');
 });
 
