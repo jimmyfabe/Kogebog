@@ -991,9 +991,10 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .forside-hop { gap: 8px; }
   .knap.hop { width: var(--tryk); min-height: var(--tryk); }
   /* «Tumbi Køkken» på én linje: på 820×1180 stod «Køkken» på en linje for sig (UI-review 27-10). Lidt mindre skrift og
-     luft i titlen, så den har plads mellem dyrene og knapperne */
+     luft i titlen, så den har plads mellem dyrene og knapperne. Den brydes aldrig: på 744×1133 (iPad mini) manglede
+     0,3 px i WebKit (e2e 29-10), og hvor bred teksten bliver, afhænger af enhedens skrift */
   .forside-titel { padding: 10px 18px 12px; }
-  .forside-titel h1 { font-size: clamp(30px, 4vw, 52px); }
+  .forside-titel h1 { font-size: clamp(30px, 4vw, 52px); white-space: nowrap; }
 }
 
 /* Forsidens top på iPhone på højkant: titlen, afsnittenes knapper og dyrene kan ikke stå i én række. Titlen står øverst
