@@ -1594,6 +1594,9 @@ async function udenNet(H) {
     await tjekLayout(side, 'ipad uden net: hvem');
     await tryk(side, '.dyr-kort[data-dyr="rosa"]');
     await venterPaa(side, () => document.querySelector('.ret-kort'), null, 'ipad uden net: Rosa skal åbne retterne');
+    // Billederne kan være på vej fra cachen, når kortene står der («billeder ikke indlæst: grafik/ret-cremet-koedsovs.webp»
+    // i én af to kørsler 29-10, og billedet stod på skærmbilledet lige efter). Vent, til alle er færdige (også de fejlede)
+    await side.waitForFunction(() => [...document.images].every((i) => i.complete), null, { timeout: 5000 }).catch(() => {});
     await tjekLayout(side, 'ipad uden net: retter');
     await foto(side, 'ipad-uden-net-retter');
     const valgt = await side.locator('.ret-kort').first().getAttribute('data-ret');
