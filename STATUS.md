@@ -1,5 +1,15 @@
 # STATUS – Tumbi Køkken
 
+## 30-10-2026 kl. 23:05: v2 er live (Saga)
+
+- Jimmy pushede `main` 29-10 kl. 17:20 (7de8cdf; `origin/main` = lokal `main`). Live `js/version.js` viser `v2 · 28-10-2026` (læst med curl 30-10). Push-punktet nedenfor er dermed lukket.
+
+**Afventer Jimmy** (ført op fra 29-10):
+- (29-10) Lyt til de 9 lydfiler i listen nedenfor.
+- (23-10) Ja til at slette de 3 forældreløse mp3 (`--ryd`). Indtil da er `test-lyd` rød.
+- (27-10) Udtalen af «Halloween»: behold, «Hælovin» eller «Hæloviin».
+- (23-10) Halloween-tegningerne.
+
 ## 29-10-2026 kl. 06:11: bogen gjort færdig, v2 · 28-10-2026 (gren `claude/faerdig-28-10`, spolet frem i lokal `main` til 4b7dcfe, ikke pushet)
 
 Jimmy 28-10: «byg videre, så vi bliver færdige» og ja til push.
