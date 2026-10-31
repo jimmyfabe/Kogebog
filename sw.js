@@ -9,7 +9,7 @@
    Svarer nettet ikke inden for HENT_MS (4 s), kommer en opskrift (også index.json) fra cachen, og nettets svar gemmes
    til næste gang. De næste LANGSOM_MS (30 s) tager opskrifterne cachen med det samme (code review U3 og F2, 23-10). */
 const PRAEFIKS = 'kog-';
-const INDHOLD = '4244b44de42acaa7'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = '4eaccab9cb573bec'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '74203173dd2ca3fc'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
@@ -129,6 +129,20 @@ const FILER = [
   'opskrifter/stegte-ris-med-aeg-aerter-og-majs.json',
   'opskrifter/sushi-bowl-med-tun.json',
   'opskrifter/teriyaki-kylling-med-broccoli.json',
+  'opskrifter/sproed-kylling-i-rasp.json',
+  'opskrifter/foldet-fladbroed-med-ost.json',
+  'opskrifter/kyllingetaerte-med-butterdej.json',
+  'opskrifter/fisketacos-med-majs.json',
+  'opskrifter/smash-burgere-med-ost.json',
+  'opskrifter/kylling-med-boenner-og-spinat.json',
+  'opskrifter/cremet-fiskesuppe-med-majs.json',
+  'opskrifter/laks-med-sproed-rasp.json',
+  'opskrifter/gul-ris-med-laks-aerter-og-aeg.json',
+  'opskrifter/koteletter-med-aeble.json',
+  'opskrifter/cremet-ostris-med-aerter.json',
+  'opskrifter/koedkaal-med-makaroni.json',
+  'opskrifter/jaegergryde-med-pasta.json',
+  'opskrifter/frossen-yoghurt-med-baer.json',
   'lyd/liste.json',
   'ikoner/ikon.svg',
   'ikoner/ikon-180.png',
@@ -191,6 +205,13 @@ const FILER = [
   'grafik/ret-soed-sur-kylling-med-ananas.webp', 'grafik/ret-spaghetti-chow-mein-med-kylling.webp',
   'grafik/ret-stegte-ris-med-aeg-aerter-og-majs.webp', 'grafik/ret-sushi-bowl-med-tun.webp',
   'grafik/ret-teriyaki-kylling-med-broccoli.webp',
+  'grafik/ret-sproed-kylling-i-rasp.webp', 'grafik/ret-foldet-fladbroed-med-ost.webp',
+  'grafik/ret-kyllingetaerte-med-butterdej.webp', 'grafik/ret-fisketacos-med-majs.webp',
+  'grafik/ret-smash-burgere-med-ost.webp', 'grafik/ret-kylling-med-boenner-og-spinat.webp',
+  'grafik/ret-cremet-fiskesuppe-med-majs.webp', 'grafik/ret-laks-med-sproed-rasp.webp',
+  'grafik/ret-gul-ris-med-laks-aerter-og-aeg.webp', 'grafik/ret-koteletter-med-aeble.webp',
+  'grafik/ret-cremet-ostris-med-aerter.webp', 'grafik/ret-koedkaal-med-makaroni.webp',
+  'grafik/ret-jaegergryde-med-pasta.webp', 'grafik/ret-frossen-yoghurt-med-baer.webp',
   'grafik/gruppe-aftensmad.svg', 'grafik/gruppe-bagning.svg', 'grafik/gruppe-soede-sager.svg', 'grafik/gruppe-halloween.svg',
   'grafik/verbum-aelte.svg', 'grafik/verbum-haelde.svg', 'grafik/verbum-koge.svg', 'grafik/verbum-maale.svg', 'grafik/verbum-roere.svg',
   'grafik/verbum-rulle.svg', 'grafik/verbum-skaere.svg', 'grafik/verbum-smage.svg', 'grafik/verbum-stege.svg',
