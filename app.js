@@ -1,7 +1,7 @@
 // app.js — Tumbi Køkken: forside → ret → ét trin pr. skærm → færdig.
 // Ruterne står i adressen (#/ret/<id>/trin/<nr>), så tilbage-knappen og en genindlæsning virker.
 // Al tekst fra opskrifterne sættes som tekst (textContent), aldrig som HTML.
-import { el, ikon, svgEl } from './js/dom.js';
+import { el, ikon, svgEl, utenBloede } from './js/dom.js';
 import { hentIndex, hentRet } from './js/data.js';
 import * as Tale from './js/tale.js';
 import * as R from './js/replikker.js';
@@ -67,7 +67,7 @@ function lynTekst(m) {
 
 function annoncer(tekst) {
   meddelelse.textContent = '';
-  setTimeout(() => { meddelelse.textContent = tekst; }, 30);
+  setTimeout(() => { meddelelse.textContent = utenBloede(tekst); }, 30);
 }
 
 const hashFor = {

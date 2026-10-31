@@ -10,6 +10,8 @@ export function el(tag, attrs = {}, ...born) {
     if (k === 'class') e.className = v;
     else if (k === 'tekst') e.textContent = v;
     else if (k.startsWith('on') && typeof v === 'function') e.addEventListener(k.slice(2), v);
+    // Skærmlæseren siger den bløde bindestreg (U+00AD i fx retternes navne), så den fjernes fra knappernes navn
+    else if (k === 'aria-label') e.setAttribute(k, utenBloede(String(v)));
     else e.setAttribute(k, v === true ? '' : String(v));
   }
   for (const b of born.flat()) {
@@ -17,6 +19,11 @@ export function el(tag, attrs = {}, ...born) {
     e.append(typeof b === 'string' ? document.createTextNode(b) : b);
   }
   return e;
+}
+
+// Teksten uden bløde bindestreger (U+00AD) til knappernes navn og det, skærmlæseren får annonceret (UI-review 29-10)
+export function utenBloede(tekst) {
+  return tekst.replace(/\u00ad/g, '');
 }
 
 // Faste streg-ikoner (24 × 24). Stierne står her i koden og kommer aldrig fra data.

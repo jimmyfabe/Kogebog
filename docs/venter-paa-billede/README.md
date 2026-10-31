@@ -30,6 +30,9 @@ Sådan kommer de tilbage (Git Bash i Kogebog). Det kan gøres for de retter, der
 5. Sæt den nye `UDGAVE_INDHOLD` først og derefter `INDHOLD` (`node test/test-version.js` og `node test/test-sw.js`
    viser dem; `js/version.js` ligger selv i `FILER`). Hæv `UDGAVE`, hvis udgaven allerede er udgivet.
 6. Lav stemmen til retterne (`CLAUDE.md`, «Stemmen»). `node test/test-lyd.js` viser de manglende replikker.
+7. Kør e2e med `E2E_DELE=former,hele` (kommandoen står i `CLAUDE.md`). Den tjekker blandt andet, at navnene bliver
+   inde i forsidens kort på 360 px. Tre navne har en blød bindestreg (U+00AD) i det lange ord (| herunder): «grøntsags|omeletter»,
+   «Kartoffel|tortilla» og «fiske|frikadeller». Stikker et andet navn ud, så giv det en blød bindestreg på samme måde.
 
 Hvad billederne skal vise (samme stil som de andre retbilleder: hvid bund, set lige oppefra, husets cremefarvede
 tallerken med brun kant, mørkebrune konturer, flade farver, ingen tekst, hænder, bestik eller spisepinde, ingen chili

@@ -10,6 +10,7 @@ import { saml, visMaengde, vareTekst, grupper, tekst, manglerTekst, holdSammen, 
 import { kod, afkod, fnv1a, kontrolsum, ukendtTekst, kodeFraTekst, BESKED_NYERE, BESKED_UGYLDIG, BESKED_GAMMEL } from '../js/plankode.js';
 import * as lager from '../js/lager.js';
 import { VARER } from '../js/katalog.js';
+import { el, utenBloede } from '../js/dom.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ret = (id) => JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8'));
@@ -182,6 +183,22 @@ test('tekstudgaven har ingen bløde bindestreger', () => {
   assert.ok(ids.some((id) => VARER[id].navn.includes('\u00ad')), 'forventede mindst ét varenavn med en blød bindestreg');
   const t = tekst(ids.map((id) => ({ id, m: 1 })));
   assert.ok(t.includes('Grøntsagsblanding') && !t.includes('\u00ad'), 'tekst() skal fjerne U+00AD');
+});
+
+// Retternes navne kan have en blød bindestreg (Fiske|frikadeller, review 31-10). Skærmlæseren siger den, så el() fjerner
+// den fra aria-label (knappernes navn) og kun dér; den synlige tekst beholder den, så ordet kan deles på 360 px
+test('knappernes navn (aria-label) har ingen bløde bindestreger', () => {
+  const foer = globalThis.document;
+  globalThis.document = { createElement: () => ({ attr: {}, setAttribute(k, v) { this.attr[k] = v; }, append() {} }) };
+  try {
+    const b = el('button', { 'aria-label': 'Vælg Fiske\u00adfrikadeller til mandag', title: 'Fiske\u00adfrikadeller' });
+    assert.equal(b.attr['aria-label'], 'Vælg Fiskefrikadeller til mandag');
+    assert.equal(b.attr.title, 'Fiske\u00adfrikadeller');
+  } finally {
+    if (foer === undefined) delete globalThis.document;
+    else globalThis.document = foer;
+  }
+  assert.equal(utenBloede('Grøntsags\u00adbouillon'), 'Grøntsagsbouillon');
 });
 
 // «Del som tekst» og printet siger, hvor mange dage der mangler på listen, og hvorfor (code review U5 og U6, 23-10)
