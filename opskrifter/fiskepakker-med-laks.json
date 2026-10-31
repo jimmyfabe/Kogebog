@@ -1,7 +1,7 @@
 {
   "@context": "https://schema.org",
   "@type": "Recipe",
-  "name": "Fiskepakker med laks, broccoli og kartofler",
+  "name": "Laksepakker med broccoli og kartofler",
   "description": "Laks, broccoli og gulerødder i hver sin pakke af bagepapir, med kogte kartofler til. Tø laksen op i køleskabet dagen før.",
   "image": "grafik/ret-fiskepakker-med-laks.webp",
   "inLanguage": "da",
@@ -18,22 +18,23 @@
     "1 knivspids peber",
     "4 spsk creme fraiche"
   ],
-  "tool": ["gryde med låg", "dørslag", "kniv", "skærebræt", "bagepapir", "bageplade", "lille skål", "spiseske", "grydelapper", "gaffel"],
+  "tool": ["gryde med låg", "dørslag", "kniv", "skærebræt", "bagepapir", "bageplade", "lille skål", "spiseske", "grydelapper", "gaffel", "saks"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
     { "@type": "HowToStep", "text": "Kom kartoflerne i en gryde med koldt vand.", "tumbi": { "verbum": "haelde", "ikoner": ["kartoffel"], "note": "Tænd ovnen på 200 °C varmluft først. Skyl kartoflerne: de skal ikke skrælles. Vand, så de lige er dækket. Gryden er kold, så barnet kan selv." } },
     { "@type": "HowToStep", "text": "Kog kartoflerne under låg.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "note": "Høj varme, til det koger. Så middel varme i ca. 20 min. De koger videre, mens I laver pakkerne." } },
     { "@type": "HowToStep", "text": "Skær gulerødderne i tynde stave.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skræl dem først. Tynde stave bliver møre i pakken på samme tid som laksen." } },
     { "@type": "HowToStep", "text": "Læg broccoli og gulerod på fire stykker bagepapir.", "tumbi": { "verbum": "pynte", "ikoner": ["broccoli", "gulerod"], "note": "Ca. 35 x 35 cm hver. Grøntsagerne midt på papiret. Broccolien kommer direkte fra frost." } },
-    { "@type": "HowToStep", "text": "Læg en laks på hver bunke.", "tumbi": { "verbum": "pynte", "ikoner": ["koed"], "note": "Laksen er rå: rør den så lidt som muligt. Den skal være tøet op i køleskabet." } },
+    { "@type": "HowToStep", "text": "Læg en laks på hver bunke.", "tumbi": { "verbum": "pynte", "ikoner": ["koed"], "note": "Mærk efter ben med fingrene, og tag dem ud. Laksen er rå, så barnet rører den så lidt som muligt. Den skal være tøet op i køleskabet." } },
     { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: rå fisk kan give maveonde." } },
     { "@type": "HowToStep", "text": "Drys salt og peber over laksen.", "tumbi": { "verbum": "drysse", "ikoner": ["salt", "peber"], "note": "Fra en lille skål, uden at røre laksen." } },
-    { "@type": "HowToStep", "text": "Kom en klat creme fraiche på hver laks.", "tumbi": { "verbum": "pynte", "ikoner": ["yoghurt"], "note": "En spiseske på hver. Rør ikke laksen med fingrene." } },
+    { "@type": "HowToStep", "text": "Kom en klat creme fraiche på hver laks.", "tumbi": { "verbum": "pynte", "ikoner": ["yoghurt"], "note": "Kom 4 spsk i en lille skål først, og brug en ren ske: så kommer der ikke rå fisk i bægeret. Rør ikke laksen med fingrene." } },
     { "@type": "HowToStep", "text": "Fold papiret til en lukket pakke.", "tumbi": { "verbum": "pakke-ind", "note": "Fold kanterne sammen et par gange, og drej enderne som på et slik. Læg pakkerne på en bageplade." } },
+    { "@type": "HowToStep", "text": "Vask hænderne igen.", "tumbi": { "verbum": "vaske-haender", "note": "Papiret har rørt den rå laks." } },
     { "@type": "HowToStep", "text": "Bag pakkerne i ovnen i 15 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900, "note": "200 °C varmluft. Tykke stykker laks skal have 18 min." } },
     { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme", "note": "Pakkerne er meget varme. Den voksne åbner én: laksen skal være lys og dele sig let. Ellers 3 min mere." } },
     { "@type": "HowToStep", "text": "Hæld vandet fra kartoflerne.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["kartoffel"], "note": "Mærk med en gaffel, at de er møre. Den voksne hælder gennem dørslaget i vasken. Pas på dampen." } },
-    { "@type": "HowToStep", "text": "Åbn din pakke, og smag på laksen.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "note": "Ved bordet, med kartofler ved siden af. Pas på dampen: åbn pakken væk fra ansigtet." } }
+    { "@type": "HowToStep", "text": "Kig ind i din pakke, og smag på laksen.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne klipper alle pakkerne op først, væk fra ansigtet, og lader dampen gå af. Ved bordet, med kartofler ved siden af." } }
   ],
   "tumbi": {
     "id": "fiskepakker-med-laks",
