@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "Recipe",
   "name": "Gyoza med nudler og wokgrøntsager",
-  "description": "Stegte frosne gyoza med fuldkornsnudler og wokgrøntsager, der koger i samme gryde. Agurkestave og sovsen fra posen til. Allergener: gluten (hvede), soja og sesam; tjek posen for spor af skaldyr, fisk, mælk, selleri og sennep.",
+  "description": "Stegte frosne gyoza med fuldkornsnudler og wokgrøntsager, der koger i samme gryde. Agurkestave og lidt af sovsen fra posen til. Allergener: gluten (hvede), soja og sesam; tjek posen for spor af skaldyr, fisk, mælk, selleri og sennep.",
   "image": "grafik/ret-gyoza-med-noedler-og-groent.webp",
   "inLanguage": "da",
   "recipeYield": "4 personer",
@@ -16,7 +16,7 @@
     "1 agurk",
     "450 g frossen wokblanding",
     "250 g fuldkornsnudler",
-    "3 spsk soja"
+    "1 spsk soja"
   ],
   "tool": ["elkedel", "stor gryde", "pande med låg", "paletkniv", "kniv", "skærebræt", "dørslag", "tang"],
   "recipeInstructions": [
@@ -28,8 +28,8 @@
     { "@type": "HowToStep", "text": "Kom wokgrøntsagerne i det kogende vand.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["broccoli"], "note": "Direkte fra frost. Det kan sprøjte: den voksne hælder." } },
     { "@type": "HowToStep", "text": "Kom nudlerne i gryden.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 240, "ikoner": ["spaghetti"], "note": "Kog som anvist på posen. Grøntsagerne koger med." } },
     { "@type": "HowToStep", "text": "Hæld vandet fra nudlerne.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "note": "Gennem dørslaget i vasken. Dampen er meget varm: barnet står på afstand." } },
-    { "@type": "HowToStep", "text": "Vend nudlerne med soja.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["soja"], "note": "Tilbage i gryden. Vend med en tang." } },
-    { "@type": "HowToStep", "text": "Læg gyoza, nudler og agurk på tallerkenen.", "tumbi": { "verbum": "pynte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["gyoza", "spaghetti", "agurk"], "note": "Dyp gyozaerne i sovsen fra posen. De er meget varme indeni: skær dem over for de mindste, og lad dem køle lidt." } }
+    { "@type": "HowToStep", "text": "Vend nudlerne med soja.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["soja"], "note": "1 spsk soja. Tilbage i gryden. Vend med en tang." } },
+    { "@type": "HowToStep", "text": "Læg gyoza, nudler og agurk på tallerkenen.", "tumbi": { "verbum": "pynte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["gyoza", "spaghetti", "agurk"], "note": "Sovsen fra posen er salt: dyp kun lidt, eller spring den over. De er meget varme indeni: skær dem over for de mindste, og lad dem køle lidt." } }
   ],
   "tumbi": {
     "id": "gyoza-med-noedler-og-groent",
@@ -49,7 +49,7 @@
       { "ikon": "agurk", "maengde": "1", "vare": "agurk", "antal": 1, "enhed": "stk" },
       { "ikon": "broccoli", "maengde": "450 g", "vare": "wokblanding", "antal": 450, "enhed": "g" },
       { "ikon": "spaghetti", "maengde": "250 g", "vare": "nudler", "antal": 250, "enhed": "g" },
-      { "ikon": "soja", "maengde": "3 spsk", "vare": "soja" }
+      { "ikon": "soja", "maengde": "1 spsk", "vare": "soja" }
     ]
   }
 }
