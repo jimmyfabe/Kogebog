@@ -2,7 +2,8 @@
 // Indhold: { v: 1, sidste: { ret, nr, tid } | null, timer: { ret, nr, start, slut, sek } | null }
 // timer er også gemt, når tiden er gået, til nogen trykker «Ok» (slut ligger så i fortiden).
 // Der er ingen fremskridt eller børnedata her; mister vi det, mister man kun «Fortsæt» og en kørende timer.
-// Ugeplanen og indkøbslisten har deres egne nøgler længere nede (hentUge/gemUge/hentListe/gemListe).
+// Ugeplanen, indkøbslisten og familien har deres egne nøgler længere nede (hentUge/gemUge/hentListe/gemListe/
+// hentFamilie/gemFamilie).
 import { VARER, DYR } from './katalog.js';
 import { erMandag } from './plankode.js';
 
@@ -189,5 +190,111 @@ export function gemListe(aendring) {
 export function vedListeAendring(fn) {
   globalThis.addEventListener?.('storage', (e) => {
     if (e.key === LISTE || e.key === null) fn();
+  });
+}
+
+// ---------- Familien til voksendelen (docs/foraeldredel.md, afsnit 3) ----------
+//   kog-familie-v1 (iPad'en): { v: 1, voksne, boern, barnAndel, udvalg: { ids, rettet } | null, favoritter: [id],
+//                              lavet: { id: { gange, sidst } } }
+// Kun ANTAL voksne og børn (0-8, null = ikke sat: appen opfører sig som før), aldrig navn, alder eller fødselsdag.
+// Samme versionsvagt og samme regel for «retter» som kog-uge-v1: et id, der allerede er gemt, bevares ved en skrivning,
+// selvom det ikke står i «retter», og et felt sat til undefined er ingen ændring.
+const FAMILIE = 'kog-familie-v1';
+const FAMILIE_V = 1;
+const MIGRER_FAMILIE = {};
+const MAKS_PERSONER = 8;
+const BARN_ANDEL = 0.7; // standard: et barn spiser 0,7 voksenportion (NNR2023)
+const MAKS_UDVALG = 24;
+const MAKS_FAVORITTER = 200;
+const MAKS_LAVET = 300;
+const MAKS_GANGE = 999;
+const erAntal = (n) => Number.isInteger(n) && n >= 0 && n <= MAKS_PERSONER;
+const nyestFoerst = ([, a], [, b]) => (a.sidst < b.sidst) - (a.sidst > b.sidst);
+
+export const tomFamilie = () => ({ v: FAMILIE_V, voksne: null, boern: null, barnAndel: BARN_ANDEL, udvalg: null, favoritter: [], lavet: {} });
+
+// 0,4-1,0 i trin af 0,1, gemt med én decimal (0,1 + 0,6 bliver 0,7); alt andet giver standarden
+function rensAndel(x) {
+  if (!Number.isFinite(x)) return BARN_ANDEL;
+  const t = Math.round(x * 10);
+  return Math.abs(x * 10 - t) < 1e-9 && t >= 4 && t <= 10 ? t / 10 : BARN_ANDEL;
+}
+
+// Højst «maks» id'er fra listen, hver én gang og i samme rækkefølge
+function rensIds(a, erKendt, maks) {
+  const ud = [];
+  if (!Array.isArray(a)) return ud;
+  for (const id of a) {
+    if (ud.length >= maks) break;
+    if (erRetId(id) && erKendt(id) && !ud.includes(id)) ud.push(id);
+  }
+  return ud;
+}
+
+// Er der flere end MAKS_LAVET, forsvinder dem, der er lavet længst tid siden
+function rensLavet(o, erKendt) {
+  if (!o || typeof o !== 'object' || Array.isArray(o)) return {};
+  const ok = Object.entries(o).filter(([id, x]) => erRetId(id) && erKendt(id) && x && Number.isInteger(x.gange) &&
+    x.gange >= 1 && x.gange <= MAKS_GANGE && erDato(x.sidst));
+  return Object.fromEntries(ok.sort(nyestFoerst).slice(0, MAKS_LAVET).map(([id, x]) => [id, { gange: x.gange, sidst: x.sidst }]));
+}
+
+// erKendt(id): må retten stå her. Formen på id'et tjekkes altid
+function rensFamilie(j, erKendt) {
+  const ud = tomFamilie();
+  if (!j) return ud;
+  if (erAntal(j.voksne)) ud.voksne = j.voksne;
+  if (erAntal(j.boern)) ud.boern = j.boern;
+  if (ud.voksne === 0 && ud.boern === 0) ud.voksne = ud.boern = null; // ingen at lave mad til er det samme som ikke sat
+  ud.barnAndel = rensAndel(j.barnAndel);
+  const ids = rensIds(j.udvalg?.ids, erKendt, MAKS_UDVALG);
+  if (ids.length) ud.udvalg = { ids, rettet: erDato(j.udvalg.rettet) ? j.udvalg.rettet : null };
+  ud.favoritter = rensIds(j.favoritter, erKendt, MAKS_FAVORITTER);
+  ud.lavet = rensLavet(j.lavet, erKendt);
+  return ud;
+}
+
+const gemteIds = (f) => [...(f.udvalg ? f.udvalg.ids : []), ...f.favoritter, ...Object.keys(f.lavet)];
+
+// Fælles for gemFamilie, skiftFavorit og markerLavet: aendring(gl) regner ændringen ud fra den gemte familie (renset for
+// form og grænser, ikke for «retter»), så en kort retter-liste aldrig sletter gemte id'er
+function aendrFamilie(retter, aendring) {
+  tjekRetter(retter);
+  const { j, laast } = laesMedVagt(FAMILIE, FAMILIE_V, MIGRER_FAMILIE);
+  if (laast) return null;
+  const gl = rensFamilie(j, () => true);
+  const tilladt = new Set([...retter, ...gemteIds(gl)]);
+  const ny = rensFamilie({ ...gl, ...udenUndefined(aendring(gl)), v: FAMILIE_V }, (id) => tilladt.has(id));
+  if (!skriv(FAMILIE, ny)) return null;
+  bevar();
+  return rensFamilie(ny, (id) => retter.includes(id));
+}
+
+// retter: id'erne på de retter, appen kender. Svaret har altid «laast» (true: en nyere udgave har skrevet familien)
+export function hentFamilie(retter) {
+  tjekRetter(retter);
+  const { j, laast } = laesMedVagt(FAMILIE, FAMILIE_V, MIGRER_FAMILIE);
+  return { ...rensFamilie(j, (id) => retter.includes(id)), laast };
+}
+
+// Gemmer ændringen oven på den gemte familie og returnerer familien, som hentFamilie(retter) viser den (uden «laast»),
+// eller null, når familien er låst, eller lageret fejler
+export function gemFamilie(aendring, retter) {
+  return aendrFamilie(retter, () => aendring);
+}
+
+// Sætter eller fjerner hjertet på retten id. En ny favorit skal stå i «retter»
+export function skiftFavorit(id, retter) {
+  return aendrFamilie(retter, (gl) => ({
+    favoritter: gl.favoritter.includes(id) ? gl.favoritter.filter((x) => x !== id) : [...gl.favoritter, id],
+  }));
+}
+
+// Retten id er lavet på dato ('ÅÅÅÅ-MM-DD'): én gang mere (højst MAKS_GANGE), og sidst er dato
+export function markerLavet(id, dato, retter) {
+  if (!erDato(dato)) throw new TypeError('dato skal være en tekst som «2026-10-31»');
+  return aendrFamilie(retter, (gl) => {
+    const gange = Object.hasOwn(gl.lavet, id) ? gl.lavet[id].gange : 0;
+    return { lavet: { ...gl.lavet, [id]: { gange: Math.min(gange + 1, MAKS_GANGE), sidst: dato } } };
   });
 }
