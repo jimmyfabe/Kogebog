@@ -9,7 +9,7 @@
    Svarer nettet ikke inden for HENT_MS (4 s), kommer en opskrift (også index.json) fra cachen, og nettets svar gemmes
    til næste gang. De næste LANGSOM_MS (30 s) tager opskrifterne cachen med det samme (code review U3 og F2, 23-10). */
 const PRAEFIKS = 'kog-';
-const INDHOLD = '3c8b2e1d134a55d2'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = 'c42743a7a0d6d0f3'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '74203173dd2ca3fc'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
@@ -103,6 +103,13 @@ const FILER = [
   'opskrifter/bagte-kartofler-med-fyld.json',
   'opskrifter/vegetar-biks.json',
   'opskrifter/kaalpandekager.json',
+  'opskrifter/gulerodsboller.json',
+  'opskrifter/havregrynsmuffins-med-aeble.json',
+  'opskrifter/bakkeret-knuste-kartofler-og-kylling.json',
+  'opskrifter/gyoza-med-noedler-og-groent.json',
+  'opskrifter/milde-asiatiske-fiskefrikadeller.json',
+  'opskrifter/okonomiyaki-med-spidskaal.json',
+  'opskrifter/orange-pasta-med-hemmelig-groentsagssovs.json',
   'lyd/liste.json',
   'ikoner/ikon.svg',
   'ikoner/ikon-180.png',
@@ -150,6 +157,10 @@ const FILER = [
   'grafik/ret-shakshuka-med-boenner.webp', 'grafik/ret-gulerodssuppe-med-linser.webp',
   'grafik/ret-kikaerteboller-i-karry.webp', 'grafik/ret-kikaerteburger.webp',
   'grafik/ret-bagte-kartofler-med-fyld.webp', 'grafik/ret-vegetar-biks.webp', 'grafik/ret-kaalpandekager.webp',
+  'grafik/ret-gulerodsboller.webp', 'grafik/ret-havregrynsmuffins-med-aeble.webp',
+  'grafik/ret-bakkeret-knuste-kartofler-og-kylling.webp', 'grafik/ret-gyoza-med-noedler-og-groent.webp',
+  'grafik/ret-milde-asiatiske-fiskefrikadeller.webp', 'grafik/ret-okonomiyaki-med-spidskaal.webp',
+  'grafik/ret-orange-pasta-med-hemmelig-groentsagssovs.webp',
   'grafik/gruppe-aftensmad.svg', 'grafik/gruppe-bagning.svg', 'grafik/gruppe-soede-sager.svg', 'grafik/gruppe-halloween.svg',
   'grafik/verbum-aelte.svg', 'grafik/verbum-haelde.svg', 'grafik/verbum-koge.svg', 'grafik/verbum-maale.svg', 'grafik/verbum-roere.svg',
   'grafik/verbum-rulle.svg', 'grafik/verbum-skaere.svg', 'grafik/verbum-smage.svg', 'grafik/verbum-stege.svg',
