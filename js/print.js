@@ -1,10 +1,12 @@
 // print.js — A4-printet til den voksne: print.html?ret=<id>. Samme JSON som skærmene.
+// print.html?ret=<id>&n=<1-12> regner mængderne om til n portioner (retten på skærmen, når husstanden er sat).
 // print.html?uge er ugeplanen og indkøbslisten (js/print-uge.js).
 import { el, ikon, sideTitel } from './dom.js';
 import { hentRet, ID_RE } from './data.js';
 import { VERBER, grafikVerbum } from './katalog.js';
 import { varighedKort } from './tid.js';
 import { minutterTekst } from './tekst.js';
+import { faktorFor, skalerMaengde } from './skaler.js';
 import { printUge } from './print-uge.js';
 import { UDGAVE } from './version.js';
 
@@ -13,6 +15,27 @@ const printKnap = document.getElementById('print');
 const tilbage = document.getElementById('tilbage');
 const params = new URLSearchParams(location.search);
 const id = params.get('ret') || '';
+// Kun ét n, et helt tal fra 1 til 12, skrevet som tal uden fortegn og nuller foran. Alt andet giver opskriften, som den står
+const N_RE = /^(?:[1-9]|1[0-2])$/;
+const nAlle = params.getAll('n');
+const n = nAlle.length === 1 && N_RE.test(nAlle[0]) ? Number(nAlle[0]) : null;
+const FADE_OVER = 1.5;
+const FADE_UNDER = 0.5;
+
+// Ingredienslinjen ganget med faktoren, som på skærmen (retSkaerm i app.js): mængden regnes om, navnet står som før
+function skaleretTekst(m, i, faktor) {
+  const x = m.ingredienser[i];
+  const ekstra = (m.uge.tumbi.ingredienser || [])[i];
+  return skalerMaengde(x.maengde, faktor, { vare: ekstra ? ekstra.vare : undefined }).tekst + x.tekst.slice(x.maengde.length);
+}
+
+// Til den voksne, som på skærmen: trinene nævner stadig opskriftens mængder, og fadet passer måske ikke
+function voksenLinjer(m, faktor) {
+  return [
+    'Mængderne i trinene er til ' + m.uge.portioner + ' — se ingredienslisten',
+    faktor > FADE_OVER ? 'Brug to fade — tiden kan blive længere' : faktor < FADE_UNDER ? 'Hold øje med tiden' : null,
+  ].filter(Boolean);
+}
 
 function besked(titel, tekst) {
   ark.replaceChildren(el('h1', { tekst: titel }), el('p', { class: 'besked', tekst }));
@@ -23,7 +46,11 @@ const medDatoer = (tekst) => tekst.split(/(\d{1,2}-\d{1,2}-\d{4})/).map((s, i) =
 
 function tegn(m) {
   sideTitel(m.navn + ' · Tumbi Køkken');
-  const meta = [m.portioner, m.minutter ? minutterTekst(m.minutter) + ' i alt' : '', m.aktivMinutter ? minutterTekst(m.aktivMinutter) + ' forberedelse' : '']
+  // Faktor 1, og bage- og søde retter uden talportioner, printes som før
+  const f = n ? faktorFor(m, n) : null;
+  const faktor = f && f !== 1 ? f : null;
+  const portioner = faktor ? 'Til ' + n + (n === 1 ? ' portion' : ' portioner') : m.portioner;
+  const meta = [portioner, m.minutter ? minutterTekst(m.minutter) + ' i alt' : '', m.aktivMinutter ? minutterTekst(m.aktivMinutter) + ' forberedelse' : '']
     .filter(Boolean).join(' · ');
 
   const trin = m.trin.map((t) => el('li', { class: t.voksen ? 'voksen' : '' },
@@ -55,7 +82,8 @@ function tegn(m) {
     el('div', { class: 'spalter' },
       el('section', { class: 'ingredienser', 'aria-labelledby': 'p-ingr' },
         el('h2', { id: 'p-ingr', tekst: 'Ingredienser' }),
-        el('ul', { class: 'tjek' }, m.ingredienser.map((x) => el('li', { tekst: x.tekst }))),
+        el('ul', { class: 'tjek' }, m.ingredienser.map((x, i) => el('li', { tekst: faktor ? skaleretTekst(m, i, faktor) : x.tekst }))),
+        faktor ? voksenLinjer(m, faktor).map((t) => el('p', { class: 'note', tekst: t })) : null,
         m.redskaber.length ? el('h2', { tekst: 'Redskaber' }) : null,
         m.redskaber.length ? el('p', { class: 'redskaber', tekst: m.redskaber.join(', ') }) : null),
       el('section', { class: 'fremgang', 'aria-labelledby': 'p-trin' },

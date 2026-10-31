@@ -8,6 +8,8 @@ import * as R from './js/replikker.js';
 import * as Timer from './js/timer.js';
 import * as Lager from './js/lager.js';
 import * as Ugeplan from './js/ugeplan.js';
+import * as VoksenDel from './js/voksen-del.js';
+import { portionerFraHusstand, faktorFor, skalerMaengde } from './js/skaler.js';
 import { holdKnap } from './js/hold.js';
 import { trekant, voksenNaeste } from './js/voksen.js';
 import { voksenFarer, erLynhurtig, harTid, LYN_MIN } from './js/model.js';
@@ -35,6 +37,7 @@ const S = {
   vistHash: null,
   oprydning: [],
   listeBesked: null,  // indkøbslisten: en besked efter hentningen (fx at en ret ikke kunne findes)
+  lavetNu: null,      // retten, hvis sidste trin lige er gjort: færdig-skærmen gemmer, at den er lavet
 };
 
 // ---------- Hjælpere ----------
@@ -53,6 +56,10 @@ function knap(tekst, { klasse = '', ikonNavn, ikonEfter = false, label, onclick 
 function billede(src, alt, klasse) {
   return el('img', { src, alt, class: klasse, draggable: 'false', decoding: 'async' });
 }
+
+// Dagens dato som 'ÅÅÅÅ-MM-DD' i enhedens tid (markerLavet i js/lager.js)
+const to = (n) => String(n).padStart(2, '0');
+const idag = (d = new Date()) => d.getFullYear() + '-' + to(d.getMonth() + 1) + '-' + to(d.getDate());
 
 // ⚡ på tallerkenens hjørne, når retten tager højst LYN_MIN minutter i alt (erLynhurtig i js/model.js). Et billede, ikke
 // et ord, for børnene kan næsten ikke læse. Mærket ligger oven på billedet, så kortets mål ikke ændrer sig.
@@ -235,16 +242,17 @@ function forside() {
       el('p', { tekst: 'Hvad skal vi lave i\u00a0dag?' })),
     hop,
     billede(grafikDyr('bo'), '', 'forside-dyr'));
-  // Ugeplanen er den voksnes (js/ugeplan.js): bag et hold på 2 s som print, så et barn ikke kommer derind ved et tilfælde
-  const uge = S.ids && S.ids.length ? el('div', { class: 'forside-voksen' }, holdKnap({
-    klasse: 'lille voksen-hold uge-knap',
-    label: 'Ugeplan til den voksne. Hold knappen inde i 2 sekunder.',
-    indhold: [ikon('kalender'), el('span', { tekst: 'Ugeplan: hold' })],
-    naarFaerdig: () => naviger('#/uge'),
+  // Voksendelen (js/voksen-del.js: husstand, ugens udvalg, favoritter, ugeplan og indkøbsliste): bag et hold på 2 s som
+  // print, så et barn ikke kommer derind ved et tilfælde
+  const voksne = S.ids && S.ids.length ? el('div', { class: 'forside-voksen' }, holdKnap({
+    klasse: 'lille voksen-hold voksen-knap',
+    label: 'Til de voksne. Hold knappen inde i 2 sekunder.',
+    indhold: [ikon('kalender'), el('span', { tekst: 'Voksne: hold' })],
+    naarFaerdig: () => VoksenDel.aabn(),
   })) : null;
   // Røsts licens kræver, at man får at vide, at stemmen er en computerstemme, før den taler (sikkerhedsreview 20-10).
   // Før stod det kun på printet. Versionsnummeret står under, så den voksne kan se, om iPad'en har den nye udgave (js/version.js)
-  return el('main', { class: 'skaerm forside' }, top, el('div', { class: 'forside-timer' }, timerPille()), indhold, uge,
+  return el('main', { class: 'skaerm forside' }, top, el('div', { class: 'forside-timer' }, timerPille()), indhold, voksne,
     el('p', { class: 'forside-fod', tekst: 'Stemmen er en computerstemme (Røst\u00a0fra\u00a0Alexandra\u00a0Instituttet).' }),
     el('p', { class: 'forside-fod forside-version', tekst: 'Version ' + UDGAVE }));
 }
@@ -292,14 +300,55 @@ function startAdvarsel(m) {
     el('span', { class: 'start-advarsel-tekst' }, el('strong', { tekst: 'Sammen med en voksen' }), el('span', { tekst: hvad })));
 }
 
+// Husstandens portioner (docs/foraeldredel.md, afsnit 4): { n, faktor }, eller null, når husstanden ikke er sat i
+// voksendelen, retten ikke har talportioner (bage- og søde retter), eller faktoren er 1. Med null vises retten som før
+function skalering(m) {
+  const f = Lager.hentFamilie(S.ids);
+  const n = portionerFraHusstand(f.voksne, f.boern, f.barnAndel);
+  const faktor = n ? faktorFor(m, n) : null;
+  return faktor && faktor !== 1 ? { n, faktor } : null;
+}
+
+// Ingrediens nr. i ganget med faktoren (varen fra tumbi.ingredienser, så æg bliver hele): { maengde, tekst, skaleret }.
+// En mængde, der ikke kan skaleres (tom, «1 stort»), står uændret og er ikke markeret som skaleret
+function skaleretLinje(m, i, faktor) {
+  const x = m.ingredienser[i];
+  const ekstra = (m.uge.tumbi.ingredienser || [])[i];
+  const s = skalerMaengde(x.maengde, faktor, { vare: ekstra ? ekstra.vare : undefined });
+  if (s.tekst === x.maengde) return { maengde: x.maengde, tekst: x.tekst, skaleret: false };
+  return { maengde: s.tekst, tekst: s.tekst + x.tekst.slice(x.maengde.length), skaleret: true };
+}
+
+const portionerTekst = (n) => n + (n === 1 ? ' portion' : ' portioner');
+
+// Til den voksne, når mængderne er regnet om: trinene læses op og nævner stadig opskriftens mængder, og ved mange eller få
+// portioner passer fadet og tiden måske ikke
+const FADE_OVER = 1.5;
+const FADE_UNDER = 0.5;
+function voksenLinjer(m, faktor) {
+  return [
+    'Mængderne i trinene er til ' + m.uge.portioner + ' — se ingredienslisten',
+    faktor > FADE_OVER ? 'Brug to fade — tiden kan blive længere' : faktor < FADE_UNDER ? 'Hold øje med tiden' : null,
+  ].filter(Boolean);
+}
+
 function retSkaerm(m) {
-  const meta = [m.portioner, m.minutter ? minutterTekst(m.minutter) : ''].filter(Boolean).join(' · ');
+  const sk = skalering(m);
+  const tid = m.minutter ? minutterTekst(m.minutter) : '';
+  // Regnet om: «Til 6 portioner» i stedet for opskriftens «4 personer», markeret som de skalerede mængder
+  const meta = sk
+    ? el('p', { class: 'meta' }, el('span', { class: 'skaleret', tekst: 'Til ' + portionerTekst(sk.n) }), tid ? ' · ' + tid : null)
+    : (m.portioner || tid ? el('p', { class: 'meta', tekst: [m.portioner, tid].filter(Boolean).join(' · ') }) : null);
   const ingr = m.ingredienser.map((x, i) => {
-    const b = el('button', { type: 'button', class: 'ingr', 'aria-label': x.tekst },
+    const l = sk ? skaleretLinje(m, i, sk.faktor) : { maengde: x.maengde, tekst: x.tekst, skaleret: false };
+    const b = el('button', { type: 'button', class: 'ingr', 'aria-label': l.tekst },
       x.ikon ? billede(grafikIngrediens(x.ikon), '', 'ingr-ikon') : null,
-      x.maengde ? el('span', { class: 'ingr-maengde', tekst: x.maengde }) : null,
+      l.maengde ? el('span', { class: 'ingr-maengde' + (l.skaleret ? ' skaleret' : ''), tekst: l.maengde }) : null,
       el('span', { class: 'ingr-navn', tekst: x.navn }));
-    b.addEventListener('click', klik(() => Tale.sig(R.ingrediens(m, i), { knap: b })));
+    // Røst har kun lyd til opskriftens egne mængder: en skaleret linje siges af iPad-stemmen (js/replikker.js)
+    b.addEventListener('click', klik(() => (l.skaleret
+      ? Tale.sig(R.ingrediensSkaleret(l.tekst), { knap: b })
+      : Tale.sig(R.ingrediens(m, i), { knap: b }))));
     return el('li', {}, b);
   });
 
@@ -320,7 +369,7 @@ function retSkaerm(m) {
     klasse: 'lille print-knap',
     label: 'Print opskriften til den voksne. Hold knappen inde i 2 sekunder.',
     indhold: [ikon('print'), el('span', { tekst: 'Print: hold' })],
-    naarFaerdig: () => { location.href = 'print.html?ret=' + encodeURIComponent(m.id); },
+    naarFaerdig: () => { location.href = 'print.html?ret=' + encodeURIComponent(m.id) + (sk ? '&n=' + sk.n : ''); },
     naarKort: () => Tale.sig(R.PRINT_HOLD),
   });
 
@@ -337,7 +386,8 @@ function retSkaerm(m) {
         el('div', { class: 'ret-titel' },
           el('h1', { tabindex: '-1', tekst: m.navn }),
           hoejttaler),
-        meta ? el('p', { class: 'meta', tekst: meta }) : null),
+        meta,
+        sk ? voksenLinjer(m, sk.faktor).map((t) => el('p', { class: 'voksen-linje', tekst: t })) : null),
       el('section', { class: 'ret-ingredienser', 'aria-labelledby': 'ingr-titel' },
         el('h2', { id: 'ingr-titel', tekst: 'Det skal I bruge' }),
         el('ul', { class: 'ingr-gitter' }, ingr))),
@@ -496,8 +546,10 @@ function trinSkaerm(m, nr) {
     : null;
 
   const frem = () => {
-    if (sidst) naviger(hashFor.faerdig(m.id), () => Tale.sig(R.FAERDIG));
-    else gaaTilTrin(m, nr + 1);
+    if (sidst) {
+      S.lavetNu = m.id; // færdig-skærmen gemmer, at retten er lavet
+      naviger(hashFor.faerdig(m.id), () => Tale.sig(R.FAERDIG));
+    } else gaaTilTrin(m, nr + 1);
   };
   const tilbage = () => {
     if (nr > 1) gaaTilTrin(m, nr - 1);
@@ -536,18 +588,37 @@ function trinSkaerm(m, nr) {
 
 // ---------- Færdig ----------
 
-function faerdigSkaerm() {
+// Til den voksne, når færdig-skærmen ikke kunne gemme «lavet» eller hjertet (lageret er fuldt eller slået fra, eller en
+// nyere udgave har gemt voksendelen)
+const FAERDIG_FEJL = 'Det kunne ikke gemmes på denne enhed. Måske er privat browsing slået til, eller lageret er fuldt.';
+
+function faerdigSkaerm(m) {
   Lager.gem({ sidste: null });
+  const fejl = el('p', { class: 'voksen-linje', role: 'alert', hidden: true, tekst: FAERDIG_FEJL });
+  // Retten er lavet («ny for os» i voksendelen): kun når man kom fra sidste trin, så en genindlæsning ikke tæller igen
+  if (S.lavetNu === m.id) {
+    S.lavetNu = null;
+    fejl.hidden = Boolean(Lager.markerLavet(m.id, idag(), S.ids));
+  }
+  // Hjertet (favorit) i topbaren: et ikon uden tekst, og skærmens højde er den samme (knapperne skal ses uden at rulle)
+  const hjerte = knap('', { klasse: 'rund hjerte-knap', label: 'Favorit: ' + m.navn, onclick: () => {
+    const f = Lager.skiftFavorit(m.id, S.ids);
+    if (f) hjerte.setAttribute('aria-pressed', String(f.favoritter.includes(m.id)));
+    fejl.hidden = Boolean(f);
+  } });
+  hjerte.append(VoksenDel.hjerteIkon());
+  hjerte.setAttribute('aria-pressed', String(Lager.hentFamilie(S.ids).favoritter.includes(m.id)));
   const konfetti = el('div', { class: 'konfetti', 'aria-hidden': 'true' }, Array.from({ length: 14 }, (_, i) => el('span', { class: 'k' + (i % 4) })));
   const hoejttaler = knap('Læs op', { ikonNavn: 'hoejttaler' });
   hoejttaler.addEventListener('click', klik(() => Tale.sig(R.FAERDIG, { knap: hoejttaler })));
   return el('main', { class: 'skaerm faerdig' },
-    topbar(),
+    topbar(hjerte),
     konfetti,
     el('div', { class: 'faerdig-indhold' },
       billede(GRAFIK_FAERDIG, 'Bo, Rosa og Pip fejrer, at maden er færdig', 'faerdig-billede'),
       el('h1', { tabindex: '-1', tekst: 'Færdig!' }),
       el('p', { class: 'faerdig-tekst', tekst: 'Godt gået. Velbekomme!' }),
+      fejl,
       el('div', { class: 'status-knapper' },
         hoejttaler,
         knap('Til forsiden', { klasse: 'primaer', ikonNavn: 'hjem', onclick: () => naviger(hashFor.forside()) }))));
@@ -557,6 +628,8 @@ function faerdigSkaerm() {
 
 function vis() {
   for (const fn of S.oprydning.splice(0)) fn();
+  // Voksendelen (#/voksen…) viser selv sin skærm gennem visSkaerm. En anden adresse lukker dens lås
+  if (VoksenDel.rute(location.hash)) { S.valgtKort = null; return; }
   const r = rute();
   let skaerm;
   if (r.side === 'forside') {
@@ -569,11 +642,16 @@ function vis() {
     else if (!m) skaerm = fejlSkaermRet(r.id, S.indexFejl || { findesIkke: true });
     else if (m instanceof Error) skaerm = fejlSkaermRet(r.id, m);
     else if (r.side === 'ret') skaerm = retSkaerm(m);
-    else if (r.side === 'faerdig') skaerm = faerdigSkaerm();
+    else if (r.side === 'faerdig') skaerm = faerdigSkaerm(m);
     else if (Number.isInteger(r.nr) && r.nr >= 1 && r.nr <= m.trin.length) skaerm = trinSkaerm(m, r.nr);
     else skaerm = fejlSkaermRet(r.id, { findesIkke: true });
   }
   if (r.side !== 'forside') S.valgtKort = null;
+  visSkaerm(skaerm);
+}
+
+// Viser en færdig skærm. Ved en ny adresse rulles op, og fokus går til overskriften. js/voksen-del.js bruger den også
+function visSkaerm(skaerm) {
   const skiftet = S.vistHash !== location.hash;
   S.vistHash = location.hash;
   S.tastatur = skaerm.tastatur || null;
@@ -620,6 +698,7 @@ async function indlaes() {
 }
 
 Ugeplan.init({ S, knap, klik, billede, lynMaerke, lynTekst, topbar, statusSkaerm, naviger, annoncer, indlaes, vis });
+VoksenDel.init({ S, knap, klik, billede, topbar, statusSkaerm, naviger, annoncer, indlaes, vis, visSkaerm });
 Timer.gendan();
 Tale.hentLydListe();
 indlaes();

@@ -78,15 +78,27 @@ test('app.js og js/ugeplan.js læser kun op gennem js/replikker.js', () => {
     kald.push(...derefter);
     assert.deepEqual(kald.filter((k) => !/^R\.[A-Za-z_]+(?:\(|$)/.test(k)), [], fil + ': Tale.sig skal have en replik fra js/replikker.js (R.…)');
     // Hver replik, filen læser op (R.NAVN), skal også stå på talelisten (vaerktoej/lav-taleliste.js). Ellers får den
-    // aldrig en lydfil, og alle tjek ovenfor er grønne alligevel (bevist med en ny R.NY i code review 19-10)
+    // aldrig en lydfil, og alle tjek ovenfor er grønne alligevel (bevist med en ny R.NY i code review 19-10).
+    // Undtaget: replikkerne i R.UDEN_LYD, som med vilje ingen lydfil har (testen nedenfor)
     const brugt = [...new Set(kald.map((k) => /^R\.([A-Za-z_]+)/.exec(k)).filter(Boolean).map((m) => m[1]))];
-    assert.deepEqual(brugt.filter((n) => !paaListen.has(n)), [], fil + ' læser disse replikker op, men de mangler i vaerktoej/lav-taleliste.js (så får de ingen lydfil)');
+    assert.deepEqual(brugt.filter((n) => !paaListen.has(n) && !R.UDEN_LYD.includes(n)), [], fil + ' læser disse replikker op, men de mangler i vaerktoej/lav-taleliste.js (så får de ingen lydfil)');
   }
   // Ingen andre filer læser op
   for (const f of fs.readdirSync(path.join(ROD, 'js'))) {
     if (f === 'tale.js' || LAESER_OP.some(([fil]) => fil === 'js/' + f)) continue;
     assert.ok(!/\bsig\(|speechSynthesis/.test(fs.readFileSync(path.join(ROD, 'js', f), 'utf8')), 'js/' + f + ' læser op uden om tale.js');
   }
+});
+
+// En ingredienslinje regnet om til husstanden (fx «450 g» i stedet for «300 g») har ingen Røst-lyd: fil er null, så
+// tale.js lader iPad-stemmen sige den med det samme. Den står ikke på talelisten, og app.js bruger den
+test('replikkerne i R.UDEN_LYD har ingen lydfil og står ikke på talelisten', () => {
+  assert.ok(R.UDEN_LYD.length >= 1, 'R.UDEN_LYD er tom');
+  for (const navn of R.UDEN_LYD) assert.equal(typeof R[navn], 'function', 'R.' + navn + ' findes ikke i js/replikker.js');
+  assert.deepEqual(R.ingrediensSkaleret('450 g pasta'), { tekst: '450 g pasta', fil: null });
+  const taleliste = fs.readFileSync(path.join(ROD, 'vaerktoej/lav-taleliste.js'), 'utf8');
+  for (const navn of R.UDEN_LYD) assert.ok(!new RegExp('\\bR\\.' + navn + '\\b').test(taleliste), 'R.' + navn + ' har ingen lydfil og må ikke stå på talelisten');
+  assert.match(fs.readFileSync(path.join(ROD, 'app.js'), 'utf8'), /Tale\.sig\(R\.ingrediensSkaleret\(/, 'app.js skal sige en skaleret ingrediens med R.ingrediensSkaleret');
 });
 
 // Jimmy 21-10-2026: «Hent en voksen» på hvert voksen-trin (og ved hvert kort tryk på «Næste») var irriterende at høre på.

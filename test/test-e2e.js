@@ -23,6 +23,7 @@ import { formaterTid, varighedTale, HURTIG_SEK } from '../js/tid.js';
 import { GRUPPER } from '../js/katalog.js';
 import { UDGAVE } from '../js/version.js';
 import { ugeplan } from './e2e-ugeplan.js';
+import { voksen } from './e2e-voksen.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const BASE = (process.argv[2] || 'http://127.0.0.1:8091').replace(/\/$/, '');
@@ -2138,9 +2139,9 @@ async function lynOgNavne(browser) {
   await ctx.close();
 }
 
-// E2E_DELE=hele,print,tastatur,timer,fejl,beroering,former,lyn,ugeplan (standard: alle) og E2E_SKAERME=ipad,iphone,desktop (standard: alle)
+// E2E_DELE=hele,print,tastatur,timer,fejl,beroering,former,lyn,ugeplan,voksen (standard: alle) og E2E_SKAERME=ipad,iphone,desktop (standard: alle)
 // «former» kører på sine egne skærme (FORMER) og ser bort fra E2E_SKAERME
-const DELE = (process.env.E2E_DELE || 'hele,print,tastatur,timer,fejl,beroering,former,lyn,ugeplan').split(',').map((x) => x.trim()).filter(Boolean);
+const DELE = (process.env.E2E_DELE || 'hele,print,tastatur,timer,fejl,beroering,former,lyn,ugeplan,voksen').split(',').map((x) => x.trim()).filter(Boolean);
 const VALGTE = SKAERME.filter((s) => !process.env.E2E_SKAERME || process.env.E2E_SKAERME.split(',').includes(s.navn));
 const KOERSEL = [];
 for (const s of VALGTE) if (DELE.includes('hele')) KOERSEL.push(['hele vejen ' + s.navn, (b) => heleVejen(b, s)]);
@@ -2159,6 +2160,10 @@ if (DELE.includes('lyn')) KOERSEL.push(['⚡ og navnene', (b) => lynOgNavne(b)])
 if (DELE.includes('ugeplan')) {
   KOERSEL.push(['ugeplan', (b) => ugeplan(b, { BASE, UD, ROD, RETTER, SKAERME, nySide, tjek, tjekLayout, foto, tryk, hold, vent, venterPaa, h1, maal, forfalskninger, LYD_TEKSTER })]);
 }
+// Forældredelen (docs/foraeldredel.md) står i test/e2e-voksen.js og kører på de valgte skærme
+if (DELE.includes('voksen')) {
+  KOERSEL.push(['voksen', (b) => voksen(b, { BASE, UD, ROD, RETTER, SKAERME, VALGTE, nySide, tjek, tjekLayout, foto, tryk, hold, vent, venterPaa, h1, maal, forfalskninger, LYD_TEKSTER })]);
+}
 
 // Hvilken udgave testen rammer: serverens js/version.js (en gammel server på samme port giver ellers falske fund)
 if (MAAL) {
@@ -2169,21 +2174,25 @@ if (MAAL) {
 
 const browser = await webkit.launch();
 const start = Date.now();
+const prDel = []; // tjek og fejl for hver del
 try {
   // Én del, der går i stå, stopper ikke de andre: så giver én kørsel alle fund
   for (const [navn, del] of KOERSEL) {
+    const foer = { tjek: antalTjek, fejl: fejl.length };
     try {
       await del(browser);
     } catch (e) {
       fejl.push(navn + ' stoppede: ' + (e.stack || e.message).split('\n').slice(0, 4).join(' | '));
       console.log('  STOPPEDE: ' + navn + ': ' + e.message);
     }
+    prDel.push(navn + ': ' + (antalTjek - foer.tjek) + ' tjek, ' + (fejl.length - foer.fejl) + ' fejl');
   }
 } finally {
   await browser.close();
 }
 maal.push(cspSprunget + ' CSP-beskeder fra Playwrights eget <style> ved skærmbilleder er ikke talt som fejl (se foto())');
 console.log('\n' + antalTjek + ' tjek (' + KOERSEL.map((k) => k[0]).join(', ') + ') i ' + Math.round((Date.now() - start) / 1000) + ' s · skærmbilleder i ' + UD);
+console.log('Pr. del:\n  - ' + prDel.join('\n  - '));
 // De første 40 målinger, og altid et tjek, der er sprunget over: ugeplanen kører sidst, og 29-10 var der 102 målinger
 const visMaal = maal.slice(0, 40).concat(maal.slice(40).filter((m) => m.includes('sprunget over')));
 if (maal.length) console.log(maal.length + ' målinger (ikke fejl' + (visMaal.length < maal.length ? ', ' + visMaal.length + ' vist' : '') + '):\n  - ' + visMaal.join('\n  - '));

@@ -33,6 +33,12 @@ export const voksenStart = (m) => {
 // i tæller fra 0 (som m.ingredienser), filen fra 1
 export const ingrediens = (m, i) => r(m.ingredienser[i].tekst, m.id + '/ingrediens-' + (i + 1) + '.mp3');
 
+// Replikker uden lydfil: teksten afhænger af husstanden i voksendelen, så Røst kan ikke lave lyden på forhånd. fil er null,
+// og tale.js lader iPad-stemmen sige teksten. Kun replikkerne i UDEN_LYD må mangle på talelisten (test/test-lyd.js)
+export const UDEN_LYD = ['ingrediensSkaleret'];
+// En ingredienslinje regnet om til husstandens portioner (js/skaler.js), fx «450 g pasta» i stedet for «300 g pasta»
+export const ingrediensSkaleret = (tekst) => r(tekst, null);
+
 // Også et voksen-trin siger kun trinnet: at en voksen hjælper, siger trekanten på skærmen (og voksenStart)
 export const trin = (m, t) => r(t.tekst, m.id + '/' + t.nr + '.mp3');
 

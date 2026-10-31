@@ -524,14 +524,16 @@ async function oversigtIpad(browser, H) {
   const { ctx, side } = await nySide(browser, skaerm, { serviceWorkers: 'block' });
   await ctx.addInitScript(fakeDeling);
 
-  // 1. Forsiden: «Ugeplan» står bag et hold. Et kort tryk bliver på forsiden
+  // 1. Forsiden: ugeplanen står i voksendelen bag et hold («Voksne: hold»). Et kort tryk bliver på forsiden
   await side.goto(BASE + '/index.html');
-  await side.waitForSelector('.uge-knap');
-  await tryk(side, '.uge-knap');
-  tjek(!(await hash(side)).startsWith('#/uge'), n + ': et kort tryk på «Ugeplan» må ikke åbne ugeplanen');
-  tjek(await side.locator('.uge-knap.mind').count() === 1, n + ': et kort tryk på «Ugeplan» skal vise, at knappen skal holdes');
-  await hold(side, '.uge-knap');
-  await venterPaa(side, () => location.hash === '#/uge' && document.querySelector('.uge-dage'), null, n + ': holdet på «Ugeplan» skal åbne oversigten');
+  await side.waitForSelector('.voksen-knap');
+  await tryk(side, '.voksen-knap');
+  tjek(!(await hash(side)).startsWith('#/voksen'), n + ': et kort tryk på «Voksne» må ikke åbne voksendelen');
+  tjek(await side.locator('.voksen-knap.mind').count() === 1, n + ': et kort tryk på «Voksne» skal vise, at knappen skal holdes');
+  await hold(side, '.voksen-knap');
+  await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('.voksen-menu'), null, n + ': holdet på «Voksne» skal åbne voksendelen');
+  await tryk(side, '[data-fokus="ugeplan"]');
+  await venterPaa(side, () => location.hash === '#/uge' && document.querySelector('.uge-dage'), null, n + ': «Ugeplan» i voksendelen skal åbne oversigten');
 
   // 2. En tom plan: syv fri aftener og ingen knapper til at sende
   tjek(await h1(side) === 'Ugeplan', n + ': oversigtens overskrift (' + await h1(side) + ')');
