@@ -215,15 +215,17 @@ test('FNV-1a giver de kendte værdier, og kontrolsummen er 4 hex', () => {
   assert.match(kontrolsum('v1.20261026.koedsovs_4~~~~~~'), /^[0-9a-f]{4}$/);
 });
 
-test('ugeplanen er aftensretterne med ugeplan-felter (de fem første og de billige fra 22-10), og pandekager er ikke med', () => {
+test('ugeplanen er aftensretterne med ugeplan-felter (de fem første, de billige fra 22-10 og de sunde fra 31-10), og pandekager er ikke med', () => {
   assert.deepEqual(UGEPLAN.slice().sort(), [
-    'bolognese-one-pot', 'bradepande-fajitas', 'bradepandekylling', 'chili-con-carne', 'chorizo-pasta',
-    'cremet-koedsovs', 'fiskefars-i-fad', 'fiskepinde-med-baade', 'gryderis-med-kylling', 'halv-halv-koedsovs',
-    'hyrdetaerte', 'koedboller-i-tomatsovs', 'koedsovs', 'kyllinge-nudelsuppe', 'kyllingefrikadeller',
-    'kyllingekarry', 'linse-dhal', 'linsebolognese', 'lun-tunpasta', 'medister-i-ovn', 'minestrone',
-    'one-pot-makaroni', 'one-pot-tomatpasta', 'ovnaeggekage', 'ovnbagt-blomkaal', 'ovnpandekage', 'pastagratin',
-    'pladepizza', 'poelse-boennegryde', 'rugbroedsaften', 'taco-bradepande', 'tomatsuppe-med-boenner',
-    'tunfrikadeller', 'wok-med-nudler', 'wraps-med-boenner',
+    'bagte-kartofler-med-fyld', 'bolognese-one-pot', 'bradepande-fajitas', 'bradepandekylling', 'chili-con-carne',
+    'chorizo-pasta', 'cremet-koedsovs', 'fisk-i-tomatfad', 'fiskefars-i-fad', 'fiskelasagne', 'fiskepakker-med-laks',
+    'fiskepinde-med-baade', 'gryderis-med-kylling', 'gulerodssuppe-med-linser', 'halv-halv-koedsovs',
+    'hyrdetaerte', 'kaalpandekager', 'kikaerteboller-i-karry', 'kikaerteburger', 'koedboller-i-tomatsovs',
+    'koedsovs', 'kyllinge-nudelsuppe', 'kyllingefrikadeller', 'kyllingekarry', 'linse-dhal', 'linsebolognese',
+    'lun-tunpasta', 'medister-i-ovn', 'minestrone', 'one-pot-makaroni', 'one-pot-tomatpasta', 'ovnaeggekage',
+    'ovnbagt-blomkaal', 'ovnpandekage', 'pastagratin', 'pladepizza', 'poelse-boennegryde', 'rugbroedsaften',
+    'shakshuka-med-boenner', 'taco-bradepande', 'tomatsuppe-med-boenner', 'tunfrikadeller', 'vegetar-biks',
+    'wok-med-nudler', 'wraps-med-boenner',
   ]);
   assert.ok(!UGEPLAN.includes('pandekager'));
 });

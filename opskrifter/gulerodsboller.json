@@ -1,0 +1,63 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Grove gulerodsboller til madpakken",
+  "description": "Grove boller med gulerod, havregryn og fuldkornsmel. Uden sukker, og gode i madpakken.",
+  "image": "grafik/ret-gulerodsboller.webp",
+  "inLanguage": "da",
+  "recipeYield": "16 boller",
+  "prepTime": "PT30M",
+  "cookTime": "PT15M",
+  "totalTime": "PT2H",
+  "recipeIngredient": [
+    "1 gulerod",
+    "25 g gær",
+    "2½ dl lunkent vand",
+    "2 dl ymer",
+    "2 dl havregryn",
+    "1 spsk olie",
+    "1 tsk salt",
+    "400 g fuldkornshvedemel eller durummel",
+    "ca. 300 g hvedemel",
+    "½ dl sesamfrø"
+  ],
+  "tool": ["rivejern", "stor skål", "dl-mål", "køkkenvægt", "grydeske", "viskestykke", "bageplade", "bagepapir", "pensel", "rist"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Riv guleroden fint.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skrub guleroden først. Stop, før fingrene kommer tæt på rivejernet." } },
+    { "@type": "HowToStep", "text": "Smuldr gæren ned i en stor skål.", "tumbi": { "verbum": "smuldre", "ikoner": ["gaer"], "note": "25 g gær er en halv pakke." } },
+    { "@type": "HowToStep", "text": "Mål 2½ dl lunkent vand.", "tumbi": { "verbum": "maale", "ikoner": ["vand"], "note": "Lunkent er som en finger i badevand: hverken koldt eller varmt." } },
+    { "@type": "HowToStep", "text": "Hæld vand og ymer over gæren, og rør.", "tumbi": { "verbum": "roere", "ikoner": ["vand", "yoghurt", "gaer"], "note": "2 dl ymer. Rør, til gæren er opløst." } },
+    { "@type": "HowToStep", "text": "Hæld gulerod, havregryn, olie og salt i.", "tumbi": { "verbum": "haelde", "ikoner": ["gulerod", "havregryn", "olie", "salt"], "note": "2 dl havregryn, 1 spsk olie og 1 tsk salt." } },
+    { "@type": "HowToStep", "text": "Rør fuldkornsmelet i.", "tumbi": { "verbum": "roere", "ikoner": ["mel"], "note": "400 g fuldkornshvedemel eller durummel. Brug køkkenvægten." } },
+    { "@type": "HowToStep", "text": "Rør hvedemelet i lidt ad gangen.", "tumbi": { "verbum": "roere", "ikoner": ["mel"], "note": "Ca. 300 g. Stop, når dejen slipper skålen. Den må gerne være lidt klistret." } },
+    { "@type": "HowToStep", "text": "Ælt dejen i 5 minutter.", "tumbi": { "verbum": "aelte", "timer_sek": 300, "note": "På bordet med lidt mel. Tryk, fold og drej." } },
+    { "@type": "HowToStep", "text": "Lad dejen hæve i 45 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 2700, "note": "Tilbage i skålen med et viskestykke over, et lunt sted." } },
+    { "@type": "HowToStep", "text": "Rul dejen til 16 boller.", "tumbi": { "verbum": "rulle", "note": "Del dejen i 16 lige store stykker, og rul dem runde. Læg dem på en bageplade med bagepapir." } },
+    { "@type": "HowToStep", "text": "Lad bollerne hæve i 20 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 1200, "note": "Under viskestykket. Den voksne tænder ovnen på 200 °C varmluft." } },
+    { "@type": "HowToStep", "text": "Pensl bollerne med vand.", "tumbi": { "verbum": "pensle", "ikoner": ["vand"], "note": "Så hænger sesamfrøene fast." } },
+    { "@type": "HowToStep", "text": "Drys sesamfrø på bollerne.", "tumbi": { "verbum": "drysse", "ikoner": ["kerner"], "note": "½ dl sesamfrø til alle bollerne." } },
+    { "@type": "HowToStep", "text": "Bag bollerne i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900, "note": "200 °C varmluft i ca. 15 min, til de er gyldne og lyder hule, når man banker under dem." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Lad bollerne køle af på en rist.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Bagepladen er meget varm. Bollerne kan fryses til madpakken." } },
+    { "@type": "HowToStep", "text": "Smag en bolle.", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "gulerodsboller",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Sundhedsstyrelsen, opskriftskort «Mad og måltider» (https://www.sundhedsstyrelsen.dk/-/media/Viden/Boernesundhed/Projekt/9-Trykfiler/Mad-Maaltider-Opskriftskort-TRYK.ashx). Mængderne er fra et søgemaskine-uddrag af kortet (31-10-2026), fordi selve kortet ikke kunne hentes. 1 tsk salt er lagt til, og ymer er valgt som syrnet mælkeprodukt. Antal boller, hævetider, ovnvarme og bagetid er et skøn (ikke målt). Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "gulerod", "maengde": "1" },
+      { "ikon": "gaer", "maengde": "25 g" },
+      { "ikon": "vand", "maengde": "2½ dl" },
+      { "ikon": "yoghurt", "maengde": "2 dl" },
+      { "ikon": "havregryn", "maengde": "2 dl" },
+      { "ikon": "olie", "maengde": "1 spsk" },
+      { "ikon": "salt", "maengde": "1 tsk" },
+      { "ikon": "mel", "maengde": "400 g" },
+      { "ikon": "mel", "maengde": "ca. 300 g" },
+      { "ikon": "kerner", "maengde": "½ dl" }
+    ]
+  }
+}
