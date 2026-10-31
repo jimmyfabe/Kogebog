@@ -23,8 +23,8 @@
   "tool": ["gryde med låg", "elkedel", "dørslag", "lille skål", "kniv", "skærebræt", "bageplade", "bagepapir", "glas med flad bund", "grydelapper"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
-    { "@type": "HowToStep", "text": "Kom kartoflerne i en gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["kartoffel"], "note": "Skyl dem først: de skal ikke skrælles. Den voksne hælder kogende vand fra elkedlen over, så de er dækket. Tænd ovnen på 220 °C varmluft." } },
-    { "@type": "HowToStep", "text": "Kog kartoflerne møre i 12 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 720, "note": "Låg på. Start timeren, når vandet koger. En kniv skal glide let ind." } },
+    { "@type": "HowToStep", "text": "Kom kartoflerne i en gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["kartoffel"], "note": "Skyl dem først: de skal ikke skrælles. Tænd ovnen på 220 °C varmluft." } },
+    { "@type": "HowToStep", "text": "Kog kartoflerne møre i 12 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 720, "note": "Den voksne hælder kogende vand fra elkedlen over, så de er dækket. Låg på. Start timeren, når vandet koger. En kniv skal glide let ind." } },
     { "@type": "HowToStep", "text": "Rør skyr, hvidløgspulver og lidt salt sammen.", "tumbi": { "verbum": "roere", "ikoner": ["yoghurt", "hvidloeg", "salt"], "note": "Det er dippen. En knivspids af saltet. Stil den i køleskabet." } },
     { "@type": "HowToStep", "text": "Skær gulerødderne i tynde stave.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skræl dem først. Tynde stave bliver møre i ovnen." } },
     { "@type": "HowToStep", "text": "Hæld vandet fra i dørslaget.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["kartoffel"], "note": "Den voksne hælder. Pas på dampen. Lad kartoflerne dampe af i 2 min." } },
