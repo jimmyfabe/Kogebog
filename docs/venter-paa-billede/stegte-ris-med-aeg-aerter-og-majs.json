@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "Recipe",
   "name": "Stegte ris med æg, ærter og majs",
-  "description": "Gårsdagens kolde ris stegt med æg, ærter og majs. Risene koges dagen før. Indeholder æg, soja og gluten (hvede i sojaen).",
+  "description": "Gårsdagens kolde ris stegt med æg, ærter og majs. Risene koges dagen før. Allergener: æg, soja og gluten (hvede i sojaen).",
   "image": "grafik/ret-stegte-ris-med-aeg-aerter-og-majs.webp",
   "inLanguage": "da",
   "recipeYield": "4 personer",
@@ -19,7 +19,7 @@
   ],
   "tool": ["skål", "dåseåbner", "si", "kop", "gaffel", "stor pande eller wok", "grydeske", "tallerken"],
   "recipeInstructions": [
-    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender"}},
+    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Retten indeholder æg, soja og gluten (hvede i sojaen)."}},
     {"@type": "HowToStep", "text": "Del de kolde ris med fingrene.", "tumbi": {"verbum": "smuldre", "ikoner": ["ris"], "note": "Risene skal være kogt i går, kølet hurtigt og have stået i køleskabet, højst et døgn. Så klistrer de ikke. Del klumperne, så risene bliver varme hele vejen igennem."}},
     {"@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad vandet løbe fra."}},
     {"@type": "HowToStep", "text": "Slå æggene ud i en skål.", "tumbi": {"verbum": "haelde", "ikoner": ["aeg"], "note": "Fem æg. Slå dem ud i en kop først, så er det let at fiske skaller op."}},

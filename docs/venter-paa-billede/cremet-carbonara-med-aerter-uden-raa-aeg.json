@@ -20,7 +20,7 @@
   ],
   "tool": ["stor gryde med låg", "pande", "skål", "kop", "dørslag", "grydeske"],
   "recipeInstructions": [
-    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder gluten og mælk. Tjek osten for æg (lysozym)." } },
     { "@type": "HowToStep", "text": "Kog vand til spaghettien.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "3 l vand og 1 tsk salt i en stor gryde på en bagerste plade, med håndtagene ind. Med låg på koger det hurtigere." } },
     { "@type": "HowToStep", "text": "Rør creme fraiche og ost sammen i en skål.", "tumbi": { "verbum": "roere", "ikoner": ["yoghurt", "ost"], "note": "200 g creme fraiche og 50 g ost. Barnet kan selv." } },
     { "@type": "HowToStep", "text": "Hæld baconen på en kold pande.", "tumbi": { "verbum": "haelde", "ikoner": ["koed"], "note": "Uden olie, og panden er ikke tændt endnu. Hæld direkte fra pakken, og rør ikke ved andet, før hænderne er vasket." } },

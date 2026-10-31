@@ -21,7 +21,7 @@
   ],
   "tool": ["stor gryde med låg", "lille gryde med låg", "kartoffelmoser", "stavblender (kan undværes)", "dørslag", "grydeske", "grydelap"],
   "recipeInstructions": [
-    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder gluten og mælk. Tjek osten for æg (lysozym)." } },
     { "@type": "HowToStep", "text": "Kog vand til spaghettien.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "3 l vand og 1 tsk salt i en stor gryde på en bagerste plade, med håndtagene ind. Med låg på koger det hurtigere." } },
     { "@type": "HowToStep", "text": "Hæld broccoli og ærter i en lille gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["broccoli", "aerter"], "note": "Direkte fra frost. Gryden er kold endnu, så barnet kan selv." } },
     { "@type": "HowToStep", "text": "Hæld vandet over, og læg låg på.", "tumbi": { "verbum": "haelde", "ikoner": ["vand"], "note": "1 dl vand." } },

@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "Recipe",
   "name": "Gnocchi på panden med tomat, spinat og mozzarella",
-  "description": "Bløde gnocchi i mild tomatsovs med spinat og smeltet mozzarella. Klar på cirka 20 minutter. Allergener: gluten og mælk (tjek gnocchi-posen for æg).",
+  "description": "Bløde gnocchi i mild tomatsovs med spinat og smeltet mozzarella. Klar på cirka 20 minutter. Allergener: gluten og mælk; tjek gnocchi-posen for æg.",
   "image": "grafik/ret-gnocchi-med-tomat-spinat-og-mozzarella.webp",
   "inLanguage": "da",
   "recipeYield": "4 personer",
@@ -20,7 +20,7 @@
   ],
   "tool": ["stor gryde med låg", "elkedel", "stor pande med låg", "dåseåbner", "grydeske", "dørslag"],
   "recipeInstructions": [
-    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder gluten og mælk. Tjek gnocchi-posen for æg." } },
     { "@type": "HowToStep", "text": "Sæt en stor gryde vand over at koge.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "note": "Med låg, så går det hurtigere. Eller kog vandet i elkedlen først. Vandet er til gnocchierne." } },
     { "@type": "HowToStep", "text": "Hæld olie og tomater på en kold pande.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["olie", "tomat"], "note": "En stor pande med låg. Den voksne åbner dåserne: kanten er skarp. Panden er ikke tændt endnu." } },
     { "@type": "HowToStep", "text": "Kom spinatklumperne på panden.", "tumbi": { "verbum": "haelde", "ikoner": ["spinat"], "note": "Direkte fra frost." } },

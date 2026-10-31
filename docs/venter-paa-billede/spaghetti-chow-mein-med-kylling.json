@@ -23,7 +23,7 @@
   ],
   "tool": ["stor gryde med låg", "stor pande", "glas med låg", "to gafler", "dørslag", "tang"],
   "recipeInstructions": [
-    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder gluten og soja." } },
     { "@type": "HowToStep", "text": "Kog vand til spaghettien.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "3 l vand i en stor gryde på en bagerste plade, med håndtagene ind. Med låg på koger det hurtigere." } },
     { "@type": "HowToStep", "text": "Ryst sovsen sammen i et glas med låg.", "tumbi": { "verbum": "roere", "ikoner": ["soja", "honning", "vand", "hvidloeg"], "note": "3 spsk soja, 1 spsk honning, 3 spsk vand og ½ tsk hvidløgspulver. Skru låget godt på." } },
     { "@type": "HowToStep", "text": "Hæld olien på en stor pande.", "tumbi": { "verbum": "haelde", "ikoner": ["olie"], "note": "Panden er ikke tændt endnu, så barnet kan selv." } },

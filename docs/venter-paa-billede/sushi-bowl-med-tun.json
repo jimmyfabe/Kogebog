@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "Recipe",
   "name": "Sushi-skål med tun, agurk og majs",
-  "description": "Byg-selv-skål med ris, tun, agurk, gulerod og majs og en mild dressing af mayonnaise og soja. Ingen rå fisk.",
+  "description": "Byg-selv-skål med ris, tun, agurk, gulerod og majs og en mild dressing af mayonnaise og soja. Ingen rå fisk. Allergener: fisk, æg (i mayonnaisen), soja og gluten (hvede i sojaen); tjek mayonnaisen for sennep.",
   "image": "grafik/ret-sushi-bowl-med-tun.webp",
   "inLanguage": "da",
   "recipeYield": "4 personer",
@@ -20,7 +20,7 @@
   ],
   "tool": ["si", "gryde med låg", "dåseåbner", "gaffel", "skål", "kniv", "skærebræt", "smørekniv", "rivejern", "lille skål", "4 skåle"],
   "recipeInstructions": [
-    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder fisk, æg (i mayonnaisen), soja og hvede (i sojaen). Børn bør højst få én dåse tun om ugen: vælg ikke en anden tunret samme uge." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder fisk, æg (i mayonnaisen), soja og gluten (hvede i sojaen). Mayonnaise kan indeholde sennep: tjek glasset. Børn bør højst få én dåse tun om ugen: vælg ikke en anden tunret samme uge." } },
     { "@type": "HowToStep", "text": "Hæld risene i en si, og skyl dem.", "tumbi": { "verbum": "haelde", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er klart. Barnet kan selv." } },
     { "@type": "HowToStep", "text": "Sæt risene over at koge.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900, "ikoner": ["ris"], "note": "Vand som anvist på posen. Høj varme, til det koger, og så lav varme under låg. Timeren er ca. 3 min opkog og 12 min småkog. Sluk, og lad risene trække 5-10 min under låg. Lav resten imens. Har I ris fra i går, kølet hurtigt og højst et døgn i køleskabet, så varm dem, til de damper hele vejen igennem: så tager retten ca. 10 min." } },
     { "@type": "HowToStep", "text": "Hæld vandet fra tunen.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["tun"], "note": "Den voksne åbner dåserne: kanten er skarp. Hold låget mod tunen, og hæld vandet i vasken." } },

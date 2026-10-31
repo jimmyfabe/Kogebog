@@ -23,7 +23,7 @@
   ],
   "tool": ["kniv", "skærebræt", "stor pande med låg (ca. 26 cm)", "stor skål", "kop", "gaffel eller piskeris", "ske", "stor flad tallerken"],
   "recipeInstructions": [
-    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder æg og mælk (osten)." } },
     { "@type": "HowToStep", "text": "Skær kartofler og løg i tynde skiver.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kartoffel", "loeg"], "note": "Skyl kartoflerne: skrællen må gerne blive på. Pil løget. Skiverne skal være ca. 3 mm tynde, så bliver de hurtigt møre." } },
     { "@type": "HowToStep", "text": "Steg kartofler og løg i olien under låg.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900, "ikoner": ["olie", "kartoffel", "loeg"], "note": "En stor pande med låg ved middel varme. Vend skiverne et par gange. De skal være møre, ikke sprøde." } },
     { "@type": "HowToStep", "text": "Drys salt, peber og ost i en stor skål.", "tumbi": { "verbum": "drysse", "ikoner": ["salt", "peber", "ost"], "note": "Imens kartoflerne er på panden." } },

@@ -22,7 +22,7 @@
   ],
   "tool": ["stor gryde med låg", "gryde med låg", "dørslag", "kniv", "skærebræt", "gaffel", "grydeske"],
   "recipeInstructions": [
-    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder fisk, gluten og mælk." } },
     { "@type": "HowToStep", "text": "Kog vand til spaghettien.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "3 l vand og 1 tsk salt i en stor gryde på en bagerste plade, med håndtagene ind. Med låg på koger det hurtigere." } },
     { "@type": "HowToStep", "text": "Hæld fløde og spinat i en gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["flode", "spinat"], "note": "En mellemstor gryde med låg. Spinaten direkte fra frost. Gryden er kold endnu, så barnet kan selv." } },
     { "@type": "HowToStep", "text": "Lad spinaten smelte i fløden under låg.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 360, "note": "Middel varme. Rør af og til, til spinaten er tøet op." } },

@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "Recipe",
   "name": "Koreansk risskål med kød, spinat og spejlæg",
-  "description": "Mild bibimbap: ris med hakket oksekød i soja og honning, spinat, revet gulerod og et spejlæg på toppen. Uden chili.",
+  "description": "Mild bibimbap: ris med hakket oksekød i soja og honning, spinat, revet gulerod og et spejlæg på toppen. Uden chili. Allergener: æg, soja og gluten (hvede i sojaen).",
   "image": "grafik/ret-mild-bibimbap-risskaal.webp",
   "inLanguage": "da",
   "recipeYield": "4 personer",
@@ -21,7 +21,7 @@
   ],
   "tool": ["si", "gryde med låg", "rivejern", "kop", "lille gryde med låg", "pande", "grydeske", "skål med låg", "2 kopper", "paletkniv", "4 skåle"],
   "recipeInstructions": [
-    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder æg, soja og hvede (i sojaen)." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder æg, soja og gluten (hvede i sojaen)." } },
     { "@type": "HowToStep", "text": "Hæld risene i en si, og skyl dem.", "tumbi": { "verbum": "haelde", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er klart. Barnet kan selv." } },
     { "@type": "HowToStep", "text": "Sæt risene over at koge.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Vand som anvist på posen. Høj varme, til det koger, så lav varme under låg i 12 min. Sluk, og lad risene trække under låg, mens I laver resten. Ris fra i går, kølet hurtigt og højst et døgn gamle, kan varmes, til de damper hele vejen igennem." } },
     { "@type": "HowToStep", "text": "Riv gulerødderne groft.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skræl dem først. Rivejernet er skarpt, så den voksne river. Læg dem i en lille skål." } },

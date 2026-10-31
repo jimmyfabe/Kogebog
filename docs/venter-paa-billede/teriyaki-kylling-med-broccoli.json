@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "Recipe",
   "name": "Teriyaki-kylling med broccoli og ris",
-  "description": "Kylling, broccoli og gulerødder i en blank sovs af soja og honning, med ris. Indeholder soja og gluten (hvede i sojaen).",
+  "description": "Kylling, broccoli og gulerødder i en blank sovs af soja og honning, med ris. Allergener: soja og gluten (hvede i sojaen).",
   "image": "grafik/ret-teriyaki-kylling-med-broccoli.webp",
   "inLanguage": "da",
   "recipeYield": "4 personer",
@@ -21,7 +21,7 @@
   ],
   "tool": ["si", "gryde med låg", "glas med låg", "kniv", "2 skærebrætter", "stor pande eller wok", "grydeske"],
   "recipeInstructions": [
-    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender"}},
+    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Retten indeholder soja og gluten (hvede i sojaen)."}},
     {"@type": "HowToStep", "text": "Skyl risene i en si.", "tumbi": {"verbum": "haelde", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er næsten klart. Barnet kan selv."}},
     {"@type": "HowToStep", "text": "Sæt risene over at koge.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Vand som på posen, uden salt: sovsen er salt nok. Kog op, skru ned, og lad dem småkoge under låg i 10-12 min. Sluk, og lad dem trække 5-10 min med låget på."}},
     {"@type": "HowToStep", "text": "Ryst sovsen sammen i et glas med låg.", "tumbi": {"verbum": "roere", "ikoner": ["soja", "honning", "vand"], "note": "3 spsk soja, 2 spsk honning og 3 spsk vand. Skru låget godt på."}},

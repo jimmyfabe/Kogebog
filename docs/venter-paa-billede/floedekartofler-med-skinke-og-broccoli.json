@@ -22,7 +22,7 @@
   ],
   "tool": ["stor gryde med låg", "grydeske", "ovnfast fad (ca. 25 × 35 cm)", "ske", "rivejern", "skål", "grydelapper", "gaffel"],
   "recipeInstructions": [
-    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk." } },
     { "@type": "HowToStep", "text": "Hæld fløde og mælk i en stor gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["flode", "maelk"], "note": "2,5 dl fløde og 2 dl mælk. Tænd ovnen på 200 °C varmluft." } },
     { "@type": "HowToStep", "text": "Drys salt og peber i.", "tumbi": { "verbum": "drysse", "ikoner": ["salt", "peber"] } },
     { "@type": "HowToStep", "text": "Hæld kartoffelskiverne i gryden.", "tumbi": { "verbum": "haelde", "ikoner": ["kartoffel"], "note": "Direkte fra frost." } },

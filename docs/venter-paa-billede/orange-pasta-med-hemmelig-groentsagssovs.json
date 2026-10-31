@@ -23,7 +23,7 @@
   ],
   "tool": ["stor gryde med låg", "mellemstor gryde med låg", "kniv", "skærebræt", "stavblender", "dørslag", "grydeske", "grydelap"],
   "recipeInstructions": [
-    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder gluten og mælk. Tjek bouillonen for selleri og osten for æg (lysozym)." } },
     { "@type": "HowToStep", "text": "Kog vand til spaghettien.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "3 l vand og 1 tsk salt i en stor gryde på en bagerste plade, med håndtagene ind. Med låg på koger det hurtigere." } },
     { "@type": "HowToStep", "text": "Skær peberfrugter og løg i små stykker.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["peberfrugt", "loeg"], "note": "Pil løget, og tag kernerne ud af peberfrugterne. Små stykker bliver hurtigt bløde." } },
     { "@type": "HowToStep", "text": "Kom grøntsagerne i en mellemstor gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["peberfrugt", "loeg", "gulerod"], "note": "Også de revne gulerødder. Gryden er kold endnu, så barnet kan selv." } },

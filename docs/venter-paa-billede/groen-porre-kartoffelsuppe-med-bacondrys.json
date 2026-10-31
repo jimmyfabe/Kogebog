@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "Recipe",
   "name": "Grøn porre-kartoffelsuppe med bacondrys",
-  "description": "Glat, lysegrøn suppe af kartofler, porrer og ærter med sprødt bacon på toppen. Rugbrød til. Allergener: mælk og gluten (rugbrødet). Tjek bouillonen for selleri.",
+  "description": "Glat, lysegrøn suppe af kartofler, porrer og ærter med sprødt bacon på toppen. Rugbrød til. Allergener: mælk og gluten (rugbrødet); tjek bouillonen for selleri.",
   "image": "grafik/ret-groen-porre-kartoffelsuppe-med-bacondrys.webp",
   "inLanguage": "da",
   "recipeYield": "4 personer",
@@ -23,7 +23,7 @@
   ],
   "tool": ["kartoffelskræller", "kniv", "skærebræt", "stor skål", "dørslag", "stor gryde med låg", "grydeske", "hulske", "køkkenrulle", "elkedel", "stavblender"],
   "recipeInstructions": [
-    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk og gluten (rugbrødet). Tjek bouillonen for selleri." } },
     { "@type": "HowToStep", "text": "Skræl kartoflerne, og skær dem i tern.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kartoffel"], "note": "Små tern på ca. 2 cm koger hurtigt. Barnet kan skrælle med en kartoffelskræller, når den voksne er ved siden af." } },
     { "@type": "HowToStep", "text": "Skær porrerne i tynde ringe.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["porre"], "note": "Skær roden og den mørkegrønne top af. Det hvide og det lysegrønne bruges." } },
     { "@type": "HowToStep", "text": "Rør porreringene rundt i en skål vand.", "tumbi": { "verbum": "roere", "ikoner": ["porre", "vand"], "note": "Koldt vand. Jorden synker til bunds. Løft ringene op i et dørslag med hænderne." } },

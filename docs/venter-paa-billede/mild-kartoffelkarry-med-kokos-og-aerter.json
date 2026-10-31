@@ -23,7 +23,7 @@
   ],
   "tool": ["kniv", "skærebræt", "dåseåbner", "si", "gryde med låg", "grydeske", "ske"],
   "recipeInstructions": [
-    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten kan indeholde selleri, sennep eller gluten: tjek karryen." } },
     { "@type": "HowToStep", "text": "Skær kartofler og løg i små tern.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kartoffel", "loeg"], "note": "Skyl kartoflerne, og lad skrællen sidde: det sparer tid. Pil løget. Tern på ca. 1½ cm bliver hurtigt møre." } },
     { "@type": "HowToStep", "text": "Hæld kikærterne i en si, og skyl dem.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kikaerter"], "note": "Den voksne åbner dåsen: kanten er skarp. Skyl under koldt vand, og lad vandet løbe fra." } },
     { "@type": "HowToStep", "text": "Steg løget i olien.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "ikoner": ["olie", "loeg"], "note": "En gryde med låg ved middel varme. Rør af og til." } },

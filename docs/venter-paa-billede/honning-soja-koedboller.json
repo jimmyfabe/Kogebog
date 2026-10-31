@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "Recipe",
   "name": "Honning-soja-kødboller med ris og agurk",
-  "description": "Små kødboller med gulerod fra ovnen, vendt i honning og soja. Brune ris og agurkestave til. Indeholder æg, soja og gluten (hvede i sojaen, havre).",
+  "description": "Små kødboller med gulerod fra ovnen, vendt i honning og soja. Brune ris og agurkestave til. Allergener: æg, soja og gluten (hvede i sojaen, havre).",
   "image": "grafik/ret-honning-soja-koedboller.webp",
   "inLanguage": "da",
   "recipeYield": "4 personer",
@@ -23,7 +23,7 @@
   ],
   "tool": ["gryde med låg", "kniv", "skærebræt", "kop", "stor skål", "grydeske", "bageplade", "bagepapir", "grydelapper", "pande", "ske"],
   "recipeInstructions": [
-    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender"}},
+    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Retten indeholder æg, soja og gluten (hvede i sojaen, havre)."}},
     {"@type": "HowToStep", "text": "Sæt risene over at koge.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Brune ris: som der står på posen, ca. 25-30 min, uden salt. Tænd også ovnen på 200 °C varmluft."}},
     {"@type": "HowToStep", "text": "Skær agurken i stave.", "tumbi": {"verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["agurk"], "note": "Del den på langs og så i stave på størrelse med en finger."}},
     {"@type": "HowToStep", "text": "Rør glasuren sammen i en kop.", "tumbi": {"verbum": "roere", "ikoner": ["honning", "soja", "vand"], "note": "2 spsk honning, 2 spsk soja og 2 spsk vand. Den skal bruges til sidst."}},

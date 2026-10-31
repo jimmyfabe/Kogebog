@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "Recipe",
   "name": "Milde asiatiske fiskefrikadeller med ris",
-  "description": "Små fiskefrikadeller af færdig fiskefars med revet gulerod og soja. Ris, agurkestave og en dip af soja og honning til.",
+  "description": "Små fiskefrikadeller af færdig fiskefars med revet gulerod og soja. Ris, agurkestave og en dip af soja og honning til. Allergener: fisk, gluten (hvede), æg og mælk (i fiskefarsen) og soja; tjek fiskefarsens pakke.",
   "image": "grafik/ret-milde-asiatiske-fiskefrikadeller.webp",
   "inLanguage": "da",
   "recipeYield": "4 personer",
@@ -21,7 +21,7 @@
   ],
   "tool": ["si", "gryde med låg", "rivejern", "kniv", "skærebræt", "kop", "stor skål", "grydeske", "pande", "2 spiseskeer", "paletkniv"],
   "recipeInstructions": [
-    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder fisk, hvede, æg og mælk (i fiskefarsen) og soja. Tjek fiskefarsens pakke." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder fisk, gluten (hvede), æg og mælk (i fiskefarsen) og soja. Tjek fiskefarsens pakke." } },
     { "@type": "HowToStep", "text": "Hæld risene i en si, og skyl dem.", "tumbi": { "verbum": "haelde", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er klart. Barnet kan selv." } },
     { "@type": "HowToStep", "text": "Sæt risene over at koge.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Vand som anvist på posen. Høj varme, til det koger, så lav varme under låg i 12 min. Sluk, og lad risene trække under låg, mens I laver frikadellerne. Ris fra i går, kølet hurtigt og højst et døgn gamle, kan varmes, til de damper hele vejen igennem." } },
     { "@type": "HowToStep", "text": "Riv guleroden fint.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skræl den først. Rivejernet er skarpt, så den voksne river." } },

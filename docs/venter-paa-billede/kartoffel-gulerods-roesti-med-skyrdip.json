@@ -22,7 +22,7 @@
   ],
   "tool": ["rivejern eller foodprocessor", "skål til dippen", "stor skål", "rent viskestykke", "kop", "grydeske", "stor pande", "paletkniv", "lille gryde", "si"],
   "recipeInstructions": [
-    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder æg, gluten (melet) og mælk (skyr)." } },
     { "@type": "HowToStep", "text": "Riv agurken groft.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["agurk"], "note": "Rivejernet er skarpt, så den voksne river. Klem saften ud over vasken med hænderne." } },
     { "@type": "HowToStep", "text": "Rør skyr, agurk og lidt salt sammen.", "tumbi": { "verbum": "roere", "ikoner": ["yoghurt", "agurk", "salt"], "note": "En knivspids af saltet. Det er dippen. Stil den i køleskabet." } },
     { "@type": "HowToStep", "text": "Riv kartofler og gulerødder groft.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kartoffel", "gulerod"], "note": "Skræl dem først. Den voksne river på den grove side. Med en foodprocessor går det hurtigere." } },

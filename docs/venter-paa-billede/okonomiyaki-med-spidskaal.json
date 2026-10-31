@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "Recipe",
   "name": "Japansk kålpandekage med spidskål og skinke",
-  "description": "To store, tykke kålpandekager med spidskål, gulerod og skinketern, inspireret af okonomiyaki. Pyntet med striber af ketchup og mayonnaise.",
+  "description": "To store, tykke kålpandekager med spidskål, gulerod og skinketern, inspireret af okonomiyaki. Pyntet med striber af ketchup og mayonnaise. Allergener: gluten (hvede) og æg (også i mayonnaisen); tjek mayonnaisen for sennep.",
   "image": "grafik/ret-okonomiyaki-med-spidskaal.webp",
   "inLanguage": "da",
   "recipeYield": "4 personer",
@@ -22,7 +22,7 @@
   ],
   "tool": ["kniv", "skærebræt", "rivejern", "stor skål", "piskeris", "pande med låg", "stor tallerken"],
   "recipeInstructions": [
-    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder hvede og æg (også i mayonnaisen)." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder gluten (hvede) og æg (også i mayonnaisen). Mayonnaise kan indeholde sennep: tjek glasset." } },
     { "@type": "HowToStep", "text": "Skær spidskålen i tynde strimler.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kaal"], "note": "Den voksne skærer kålen. Barnet kan pille strimlerne fra hinanden." } },
     { "@type": "HowToStep", "text": "Riv guleroden groft.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skræl den først. Rivejernet er skarpt, så den voksne river." } },
     { "@type": "HowToStep", "text": "Hæld mel og vand i en stor skål.", "tumbi": { "verbum": "haelde", "ikoner": ["mel", "vand"], "note": "150 g mel og 1 dl koldt vand. Barnet kan selv." } },
