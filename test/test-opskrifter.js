@@ -42,6 +42,7 @@ const HAENDER_PAA_OVERFLADEN = ['pynte', 'pakke-ind', 'smuldre', ...HAENDER_I_DE
 // vaskes lige bagefter, så det er ikke en pause (code review 21-10 fund 5 gælder kødet, der bruner, mens barnet venter)
 const TIMER_MAALER_HAENDERNE = ['aelte'];
 const TAGE_UD = ['tage-ud', 'tage-ud-form']; // efter ovnen: en flad plade eller en dyb form
+const VENTER = 'docs/venter-paa-billede'; // færdige retter uden retbillede (docs/venter-paa-billede/README.md)
 // Ordvagten går efter stammen: hvert ord, der begynder med stammen (eller har den inde i sig, hvor det står), fanges med
 // alle bøjninger («smelte», «skære», «æggeblommer»). En liste over tilladte former mangler altid en form, og så slipper
 // den igennem i stilhed. De få ord, der ikke er kniv, varme eller råt, står som hele ord i UNDTAGELSER. Mangler et ord
@@ -138,7 +139,7 @@ export function valider(rod = ROD) {
   const fejl = [];
   const fejlI = (fil, besked) => fejl.push(fil + ': ' + besked);
   const findes = (rel) => fs.existsSync(path.join(rod, rel));
-  const tal = { retter: 0, trin: 0, timere: 0, voksentrin: 0 };
+  const tal = { retter: 0, venter: 0, trin: 0, timere: 0, voksentrin: 0 };
 
   function laesJson(rel) {
     let tekst;
@@ -205,16 +206,29 @@ export function valider(rod = ROD) {
     }
   }
 
+  // Retter, der venter på deres billede: samme krav, men uden billedet, index.json og lyden, så en rettelse dér ikke går i
+  // stykker uden at nogen ser det, før retten flyttes ind (review L4, 31-10)
+  let venter = [];
+  if (findes(VENTER)) {
+    try {
+      venter = fs.readdirSync(path.join(rod, VENTER)).filter((n) => n.endsWith('.json')).sort();
+    } catch (e) {
+      fejlI(VENTER + '/', 'mappen kan ikke læses (' + e.code + ')');
+    }
+  }
+
   const trinAntal = new Map(); // id → antal trin (til lydlisten)
   const ingrAntal = new Map(); // id → antal ingredienser (til lydlisten)
   const iUgeplan = new Set(); // id'er på retter i ugeplanen (til lydlisten: <ret>/uge.mp3)
   let flestTrin = 0;
   const sete = new Set();
-  for (const fil of filer) {
-    const rel = 'opskrifter/' + fil;
+  for (const [mappe, fil] of [...filer.map((n) => ['opskrifter', n]), ...venter.map((n) => [VENTER, n])]) {
+    const venterPaaBillede = mappe === VENTER;
+    const rel = mappe + '/' + fil;
     const r = laesJson(rel);
     if (!r) continue;
-    tal.retter++;
+    if (venterPaaBillede) tal.venter++;
+    else tal.retter++;
     const filId = fil.slice(0, -5);
     const f = (besked) => fejlI(rel, besked);
     const redaktion = (hvor, v) => {
@@ -272,17 +286,17 @@ export function valider(rod = ROD) {
       if ('groent_g' in t && !erHeltal(t.groent_g, 0, Infinity)) f('«tumbi.groent_g» skal være et heltal fra 0 (gram grønt i hele retten), fandt ' + JSON.stringify(t.groent_g));
     } else if ('tumbi' in r) f('«tumbi» skal være et objekt');
     const ugeplan = Boolean(t && typeof t === 'object' && t.ugeplan === true);
-    if (ugeplan) iUgeplan.add(filId);
+    if (ugeplan && !venterPaaBillede) iUgeplan.add(filId);
 
     if ('image' in r && r.image !== grafikRet(filId)) f('«image» skal være "' + grafikRet(filId) + '", fandt ' + JSON.stringify(r.image));
-    if (!findes(grafikRet(filId))) fejlI(grafikRet(filId), 'billedet mangler (retten «' + filId + '»)');
+    if (!venterPaaBillede && !findes(grafikRet(filId))) fejlI(grafikRet(filId), 'billedet mangler (retten «' + filId + '»)');
 
     // Ingredienserne og deres ikoner
     const ingr = r.recipeIngredient;
     const retIkoner = new Set();
     if ('recipeIngredient' in r && (!Array.isArray(ingr) || !ingr.length || !ingr.every(erTekst))) f('«recipeIngredient» skal være en liste med tekster');
     if (Array.isArray(ingr)) ingr.forEach((x, i) => redaktion('ingrediens ' + (i + 1), x));
-    if (Array.isArray(ingr)) ingrAntal.set(filId, ingr.length);
+    if (Array.isArray(ingr) && !venterPaaBillede) ingrAntal.set(filId, ingr.length);
     if ('tool' in r && (!Array.isArray(r.tool) || !r.tool.every(erTekst))) f('«tool» skal være en liste med tekster');
     if (Array.isArray(r.tool)) r.tool.forEach((x, i) => redaktion('redskab ' + (i + 1), x)); // printet viser dem under «Redskaber»
     if (t && typeof t === 'object' && Array.isArray(ingr)) {
@@ -320,8 +334,10 @@ export function valider(rod = ROD) {
     const trin = r.recipeInstructions;
     if (!('recipeInstructions' in r)) { /* allerede meldt */ } else if (!Array.isArray(trin) || trin.length < 3) f('«recipeInstructions» skal være en liste med mindst 3 trin');
     else {
-      trinAntal.set(filId, trin.length);
-      flestTrin = Math.max(flestTrin, trin.length);
+      if (!venterPaaBillede) {
+        trinAntal.set(filId, trin.length);
+        flestTrin = Math.max(flestTrin, trin.length);
+      }
       let timerSek = 0;
       const forurenet = new Set(); // trin, der allerede er meldt for at røre andet efter det rå
       let raaDej = null; // { trin, ikoner }: det seneste trin, der blandede noget råt i dejen, indtil der æltes, steges eller bages
@@ -498,5 +514,5 @@ if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.ar
     for (const x of fejl) console.error('  - ' + x);
     process.exit(1);
   }
-  console.log('OK: ' + tal.retter + ' retter, ' + tal.trin + ' trin, ' + tal.voksentrin + ' voksen-trin, ' + tal.timere + ' timere — grafik og index.json passer.');
+  console.log('OK: ' + tal.retter + ' retter (og ' + tal.venter + ', der venter på billedet), ' + tal.trin + ' trin, ' + tal.voksentrin + ' voksen-trin, ' + tal.timere + ' timere — grafik og index.json passer.');
 }

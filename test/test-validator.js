@@ -48,6 +48,25 @@ test('de rigtige opskrifter er gyldige', () => {
   assert.equal(tal.retter, ANTAL_RETTER);
 });
 
+test('retter i docs/venter-paa-billede valideres, uden billede og uden index.json', () => {
+  const m = kopi();
+  try {
+    const d = laes(m, 'opskrifter/pandekager.json');
+    d.tumbi.id = 'ny-ret';
+    d.image = 'grafik/ret-ny-ret.webp';
+    fs.mkdirSync(path.join(m, 'docs/venter-paa-billede'), { recursive: true });
+    skriv(m, 'docs/venter-paa-billede/ny-ret.json', d);
+    const gyldig = valider(m);
+    assert.deepEqual(gyldig.fejl, []);
+    assert.equal(gyldig.tal.venter, 1);
+    assert.equal(gyldig.tal.retter, ANTAL_RETTER);
+    d.recipeInstructions[2].tumbi.verbum = 'hælde';
+    skriv(m, 'docs/venter-paa-billede/ny-ret.json', d);
+    const { fejl } = valider(m);
+    assert.ok(fejl.some((f) => f.startsWith('docs/venter-paa-billede/ny-ret.json: trin 3: ukendt verbum "hælde"')), fejl.join('\n'));
+  } finally { ryd(m); }
+});
+
 // Ret opskriften, og forvent, at alt stadig er gyldigt
 function forventGyldig(fil, ret) {
   const m = kopi();
