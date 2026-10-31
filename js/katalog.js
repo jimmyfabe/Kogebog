@@ -241,6 +241,8 @@ export const VARER = {
   'majs': { navn: 'Majs', afd: 'toer', enhed: 'stk', ikon: 'majs', pakke: [1, 'dåse', 'dåser'] },
   'tacokrydderi': { navn: 'Tacokrydderi (mildt)', afd: 'toer', enhed: 'stk', ikon: 'krydderurt', pakke: [1, 'pose', 'poser'] },
   'kokosmaelk': { navn: 'Kokosmælk', afd: 'toer', enhed: 'stk', ikon: 'kokos', pakke: [1, 'dåse', 'dåser'] },
+  // Små dåser let kokosmælk til den milde kartoffelkarry: mindre mættet fedt efter kostrådene (review 31-10)
+  'let-kokosmaelk': { navn: 'Let kokosmælk', afd: 'toer', enhed: 'ml', ikon: 'kokos', pakke: [165, 'lille dåse', 'små dåser'] },
   'nudler': { navn: 'Nudler', afd: 'toer', enhed: 'g', ikon: 'spaghetti' },
   'suppehorn': { navn: 'Suppehorn', afd: 'toer', enhed: 'g', ikon: 'spaghetti' },
   'makaroni': { navn: 'Makaroni', afd: 'toer', enhed: 'g', ikon: 'spaghetti' },
