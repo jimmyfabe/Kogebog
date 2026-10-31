@@ -229,6 +229,8 @@ export function valider(rod = ROD) {
     if (!r) continue;
     if (venterPaaBillede) tal.venter++;
     else tal.retter++;
+    // OK-linjens trin, voksen-trin og timere er kun retterne i appen (opskrifter/), ikke dem, der venter (review 31-10)
+    const taelt = venterPaaBillede ? { trin: 0, voksentrin: 0, timere: 0 } : tal;
     const filId = fil.slice(0, -5);
     const f = (besked) => fejlI(rel, besked);
     const redaktion = (hvor, v) => {
@@ -344,7 +346,7 @@ export function valider(rod = ROD) {
       let raaPensling = null; // { trin, ikoner }: det seneste trin, der penslede med råt æg, indtil der steges eller bages
       trin.forEach((s, i) => {
         const hvor = 'trin ' + (i + 1);
-        tal.trin++;
+        taelt.trin++;
         if (!s || s['@type'] !== 'HowToStep') f(hvor + ': «@type» skal være "HowToStep"');
         if (!s || !erTekst(s.text)) { f(hvor + ': mangler «text»'); return; }
         const ord = antalOrd(s.text);
@@ -374,11 +376,11 @@ export function valider(rod = ROD) {
           const skal = kniv ? 'kniv' : 'varme';
           if (st.voksen_hjaelp !== skal) f(hvor + ': teksten nævner «' + farlig[0] + '» (' + (kniv ? 'kniv eller rivejern' : 'varme') + '), så «voksen_hjaelp» skal være "' + skal + '", fandt ' + JSON.stringify(st.voksen_hjaelp) + ': «' + s.text + '»');
         }
-        if (st.voksen === true) tal.voksentrin++;
+        if (st.voksen === true) taelt.voksentrin++;
         if ('timer_sek' in st) {
           if (!Number.isInteger(st.timer_sek) || st.timer_sek <= 0) f(hvor + ': «timer_sek» skal være et positivt heltal (sekunder), fandt ' + JSON.stringify(st.timer_sek));
           else if (st.timer_sek > MAKS_TIMER_SEK) f(hvor + ': «timer_sek» er over 4 timer (' + st.timer_sek + ')');
-          else { timerSek += st.timer_sek; tal.timere++; }
+          else { timerSek += st.timer_sek; taelt.timere++; }
         }
         if ('note' in st && !erTekst(st.note)) f(hvor + ': «note» skal være en tekst, der ikke er tom');
         redaktion(hvor + ' (noten)', st.note);

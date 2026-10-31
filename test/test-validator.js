@@ -54,12 +54,16 @@ test('retter i docs/venter-paa-billede valideres, uden billede og uden index.jso
     const d = laes(m, 'opskrifter/pandekager.json');
     d.tumbi.id = 'ny-ret';
     d.image = 'grafik/ret-ny-ret.webp';
+    const foer = valider(m).tal;
     fs.mkdirSync(path.join(m, 'docs/venter-paa-billede'), { recursive: true });
     skriv(m, 'docs/venter-paa-billede/ny-ret.json', d);
     const gyldig = valider(m);
     assert.deepEqual(gyldig.fejl, []);
     assert.equal(gyldig.tal.venter, 1);
     assert.equal(gyldig.tal.retter, ANTAL_RETTER);
+    // OK-linjens trin, voksen-trin og timere er kun retterne i appen (opskrifter/), ikke dem, der venter (review 31-10)
+    const appens = ({ trin, voksentrin, timere }) => ({ trin, voksentrin, timere });
+    assert.deepEqual(appens(gyldig.tal), appens(foer));
     // Lyden kender kun retterne i appen: en lydfil til en ret, der venter, afvises (review 31-10)
     skriv(m, 'lyd/liste.json', { version: 1, filer: ['ny-ret/1.mp3'] });
     const lyd = valider(m).fejl;
