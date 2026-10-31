@@ -1,0 +1,176 @@
+// test-skaler.js — skalering til husstandens portioner (js/skaler.js, docs/foraeldredel.md afsnit 4): husstanden som
+// portioner, faktoren for en ret, afrundingstabellen række for række og alle ingredienslinjer i alle opskrifter.
+// Kør:  node test/test-skaler.js
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { portionerFraHusstand, faktorFor, skalerMaengde, BARN_ANDEL } from '../js/skaler.js';
+import { lavModel } from '../js/model.js';
+
+const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const json = (fil) => JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', fil), 'utf8'));
+const IDS = json('index.json').grupper.flatMap((g) => g.retter);
+const RETTER = IDS.map((id) => {
+  const j = json(id + '.json');
+  return { id, model: lavModel(j), varer: ((j.tumbi && j.tumbi.ingredienser) || []).map((l) => (l && l.vare) || undefined) };
+});
+// Alle ingredienslinjer: { id, maengde, tekst, vare }
+const LINJER = RETTER.flatMap(({ id, model, varer }) => model.ingredienser.map((l, i) => ({ id, maengde: l.maengde, tekst: l.tekst, vare: varer[i] })));
+const FAKTORER = [0.5, 1.5, 3];
+// Mængderne i opskrifterne, der står uændret med 'ukendt'. Får en opskrift et nyt format, fejler testen og nævner det:
+// så skal formatet enten have en regel i js/skaler.js eller skrives på listen her
+const UKENDTE = ['', '1 stort', '8-10 g'];
+
+const sk = (maengde, faktor, vare) => skalerMaengde(maengde, faktor, { vare });
+const tekst = (maengde, faktor, vare) => sk(maengde, faktor, vare).tekst;
+
+test('opskrifterne er indlæst', () => {
+  assert.ok(RETTER.length >= 87, 'retter: ' + RETTER.length);
+  assert.ok(LINJER.length >= 783, 'linjer: ' + LINJER.length);
+});
+
+test('faktor 1 giver nøjagtig den oprindelige tekst for alle ingredienslinjer', () => {
+  for (const l of LINJER) {
+    assert.deepEqual(sk(l.maengde, 1, l.vare), { tekst: l.maengde, advarsel: null }, l.id + ': ' + l.tekst);
+    assert.equal(tekst(l.maengde, 1, l.vare) + l.tekst.slice(l.maengde.length), l.tekst, l.id);
+  }
+});
+
+test('ved 0,5 / 1,5 / 3 er hver linje skaleret eller uændret med en advarsel, aldrig NaN, undefined eller tom', () => {
+  const ukendte = new Set();
+  for (const f of FAKTORER) {
+    for (const l of LINJER) {
+      const hvor = l.id + ' × ' + f + ': «' + l.tekst + '»';
+      const s = sk(l.maengde, f, l.vare);
+      assert.equal(typeof s.tekst, 'string', hvor);
+      assert.ok(!/NaN|undefined|Infinity|null/.test(s.tekst), hvor + ' → ' + s.tekst);
+      assert.ok(!/\d\.\d/.test(s.tekst), 'decimalkomma, ikke punktum: ' + hvor + ' → ' + s.tekst);
+      assert.ok([null, 'form', 'ukendt'].includes(s.advarsel), hvor);
+      if (l.maengde) assert.ok(s.tekst.trim().length > 0, 'tom tekst: ' + hvor);
+      assert.ok((s.tekst + l.tekst.slice(l.maengde.length)).trim().length > 0, hvor);
+      if (s.advarsel === 'ukendt') {
+        assert.equal(s.tekst, l.maengde, hvor);
+        ukendte.add(l.maengde);
+      }
+      // Ved × 3 ændres hver mængde, der kan skaleres; kun knivspids står uændret efter tabellen
+      if (f === 3 && s.advarsel === null && !l.maengde.endsWith('knivspids')) assert.notEqual(s.tekst, l.maengde, hvor);
+    }
+  }
+  assert.deepEqual([...ukendte].sort(), [...UKENDTE].sort());
+});
+
+// Afrundingstabellen (docs/foraeldredel.md, afsnit 4) række for række: [mængde, faktor, svar, advarsel, vare]
+const TABEL = {
+  'g: under 50 g til nærmeste 5 g, ellers 10 g, fra 1 kg i kg med én decimal': [
+    ['40 g', 0.5, '20 g'], ['25 g', 0.5, '15 g'], ['75 g', 0.5, '40 g'], ['10 g', 0.25, '5 g'], ['2 g', 0.5, '2 g'],
+    ['130 g', 1.5, '200 g'], ['350 g', 0.75, '260 g'], ['150 g', 0.5, '80 g'], ['400 g', 0.25, '100 g'],
+    ['800 g', 1.5, '1,2 kg'], ['450 g', 3, '1,4 kg'], ['500 g', 2, '1 kg'], ['330 g', 3, '990 g'], ['ca. 650 g', 0.5, 'ca. 330 g'],
+    ['350 g', 7 / 10, '250 g'], // 350 × 0,7 = 244,99999999999997 i kommatal: skal runde som 245
+  ],
+  'kg: 0,1 kg, og under 1 kg i gram': [
+    ['1,2 kg', 1.5, '1,8 kg'], ['1 kg', 1.25, '1,3 kg'], ['1 kg', 3, '3 kg'], ['1 kg', 0.5, '500 g'], ['1,2 kg', 0.75, '900 g'],
+  ],
+  'dl og l: ½ dl, under 1 l i dl': [
+    ['1 dl', 0.5, '½ dl'], ['3 dl', 0.5, '1,5 dl'], ['1,5 dl', 0.5, '1 dl'], ['2,5 dl', 1.5, '4 dl'], ['¾ dl', 0.5, '½ dl'],
+    ['2½ dl', 0.5, '1,5 dl'], ['1,75 dl', 1.5, '2,5 dl'], ['ca. 1,5 dl', 3, 'ca. 4,5 dl'], ['15 dl', 0.5, '7,5 dl'],
+    ['1 l', 0.5, '5 dl'], ['3 l', 0.5, '1,5 l'], ['6 dl', 3, '1,8 l'], ['1,25 l', 1.5, '1,9 l'], ['2 l', 0.25, '5 dl'],
+  ],
+  'tsk og spsk: ½, mindst ½': [
+    ['½ tsk', 0.5, '½ tsk'], ['½ tsk', 3, '1,5 tsk'], ['1 tsk', 1.5, '1,5 tsk'], ['2 spsk', 0.75, '1,5 spsk'], ['3 spsk', 0.5, '1,5 spsk'],
+    ['4½ spsk', 1.5, '7 spsk'], ['¾ tsk', 0.5, '½ tsk'], ['¼ tsk', 0.5, '¼ tsk'], ['ca. 1 tsk', 0.5, 'ca. ½ tsk'],
+  ],
+  'knivspids: uændret': [
+    ['1 knivspids', 0.5, '1 knivspids'], ['1 knivspids', 3, '1 knivspids'],
+  ],
+  'fed, skiver og blade: hele, mindst 1': [
+    ['2 fed', 0.5, '1 fed'], ['1 fed', 0.5, '1 fed'], ['3 fed', 1.5, '5 fed'], ['2 fed', 3, '6 fed'],
+    ['8 skiver', 0.5, '4 skiver'], ['6 skiver', 1.5, '9 skiver'], ['2 skiver', 0.5, '1 skive'],
+    ['4 blade', 0.5, '2 blade'], ['4 blade', 0.25, '1 blad'],
+  ],
+  'stk (tal uden enhed): ½ op til 3, ellers hele': [
+    ['1', 0.5, '½'], ['1', 1.5, '1,5'], ['2', 1.5, '3'], ['5', 0.5, '2,5'], ['3', 1.5, '5'], ['½', 0.5, '½'], ['½', 3, '1,5'],
+    ['10', 0.75, '8'], ['12', 1.25, '15'],
+  ],
+  'æg: altid hele, rundet op': [
+    ['1', 0.5, '1', null, 'aeg'], ['3', 1.5, '5', null, 'aeg'], ['5', 0.5, '3', null, 'aeg'], ['8', 0.75, '6', null, 'aeg'], ['2', 3, '6', null, 'aeg'],
+  ],
+  'dåse, pose, glas og pakke: ½': [
+    ['1 dåse', 0.5, '½ dåse'], ['2 dåser', 0.5, '1 dåse'], ['1 dåse', 1.5, '1,5 dåse'], ['1 dåse', 3, '3 dåser'], ['2 dåser', 1.25, '2,5 dåser'],
+    ['½ dåse', 3, '1,5 dåse'], ['½ dåse', 0.5, '½ dåse'], ['2 små dåser', 0.5, '1 lille dåse'], ['2 små dåser', 1.5, '3 små dåser'],
+    ['1 pose', 2, '2 poser'], ['2 poser', 0.5, '1 pose'], ['1 glas', 3, '3 glas'], ['1 pakke', 2, '2 pakker'],
+  ],
+  'rulle og plade (dej): hele, rundet op, med advarslen form': [
+    ['1 rulle', 0.5, '1 rulle', 'form'], ['1 rulle', 1.5, '2 ruller', 'form'], ['2 ruller', 0.5, '1 rulle', 'form'], ['1 plade', 3, '3 plader', 'form'],
+  ],
+  'tom, «stort» og ukendt format: uændret med advarslen ukendt': [
+    ['', 0.5, '', 'ukendt'], ['1 stort', 1.5, '1 stort', 'ukendt'], ['8-10 g', 0.5, '8-10 g', 'ukendt'], ['lidt', 3, 'lidt', 'ukendt'],
+    ['0 g', 3, '0 g', 'ukendt'], ['2 bundter', 0.5, '2 bundter', 'ukendt'], ['2  dl', 0.5, '2  dl', 'ukendt'], ['1.5 dl', 0.5, '1.5 dl', 'ukendt'],
+    ['ca.', 0.5, 'ca.', 'ukendt'], ['½½', 0.5, '½½', 'ukendt'],
+  ],
+};
+for (const [raekke, eksempler] of Object.entries(TABEL)) {
+  test('afrunding, ' + raekke, () => {
+    for (const [maengde, faktor, svar, advarsel = null, vare] of eksempler) {
+      assert.deepEqual(sk(maengde, faktor, vare), { tekst: svar, advarsel }, maengde + ' × ' + faktor);
+      assert.deepEqual(sk(maengde, 1, vare), { tekst: maengde, advarsel: null }, maengde + ' × 1');
+    }
+  });
+}
+
+test('skalerMaengde afviser en mængde, der ikke er tekst, og en faktor, der ikke er et positivt tal', () => {
+  for (const m of [null, undefined, 300, {}]) assert.throws(() => skalerMaengde(m, 1.5), TypeError, String(m));
+  for (const f of [0, -1, NaN, Infinity, null, undefined, '1.5']) assert.throws(() => skalerMaengde('300 g', f), RangeError, String(f));
+  assert.deepEqual(skalerMaengde('300 g', 1.5), { tekst: '450 g', advarsel: null });
+});
+
+test('husstanden som portioner: voksne + 0,7 × børn, rundet op og inden for 1-12', () => {
+  assert.equal(BARN_ANDEL, 0.7);
+  assert.equal(portionerFraHusstand(2, 2, 0.7), 4);
+  assert.equal(portionerFraHusstand(1, 0, 0.7), 1);
+  assert.equal(portionerFraHusstand(0, 1, 0.7), 1);
+  assert.equal(portionerFraHusstand(8, 8, 0.7), 12);
+  assert.equal(portionerFraHusstand(null, null, 0.7), null);
+  assert.equal(portionerFraHusstand(2, 2), 4); // standard 0,7
+  assert.equal(portionerFraHusstand(0, 0, 0.7), 1);
+  assert.equal(portionerFraHusstand(null, 2, 0.7), 2);
+  assert.equal(portionerFraHusstand(3, null, 0.7), 3);
+  assert.equal(portionerFraHusstand(2, 2, 0.5), 3);
+  assert.equal(portionerFraHusstand(2, 2, 1), 4);
+  assert.equal(portionerFraHusstand(1, 3, 1), 4);
+  assert.equal(portionerFraHusstand(1, 3, 0.7), 4); // 3,1 → 4
+  // Kommatal: en andel regnet som 0,1 × 6 er 0,6000000000000001, og × 5 børn giver 3,0000000000000004: ikke 4 portioner
+  assert.equal(portionerFraHusstand(0, 5, 0.1 * 6), 3);
+});
+
+test('husstanden afviser forkerte antal og andele', () => {
+  for (const [v, b] of [[-1, 0], [1.5, 0], ['2', 2], [NaN, 1], [undefined, 2], [2, -1], [2, 0.5]]) {
+    assert.throws(() => portionerFraHusstand(v, b, 0.7), RangeError, v + ' + ' + b);
+  }
+  for (const a of [0, -0.7, 1.1, NaN, '0.7', null]) assert.throws(() => portionerFraHusstand(2, 2, a), RangeError, String(a));
+});
+
+test('faktoren er n / rettens portioner, og null uden talportioner eller med et forkert n', () => {
+  const ks = RETTER.find((r) => r.id === 'koedsovs').model;
+  assert.equal(faktorFor(ks, 4), 1);
+  assert.equal(faktorFor(ks, 6), 1.5);
+  assert.equal(faktorFor(ks, 2), 0.5);
+  assert.equal(faktorFor(ks, 1), 0.25);
+  assert.equal(faktorFor(ks, 12), 3);
+  for (const n of [0, 13, 2.5, -4, '4', null, undefined, NaN]) assert.equal(faktorFor(ks, n), null, String(n));
+  const boller = RETTER.find((r) => r.id === 'boller').model;
+  assert.equal(boller.uge, null);
+  assert.equal(faktorFor(boller, 4), null);
+  for (const m of [null, undefined, {}, { uge: { portioner: 0 } }, { uge: { portioner: 2.5 } }, { uge: { portioner: '4' } }]) {
+    assert.equal(faktorFor(m, 4), null, JSON.stringify(m));
+  }
+  assert.equal(faktorFor({ uge: { portioner: 3 } }, 5), 5 / 3);
+});
+
+test('alle ugeplan-retter har faktor 1 til 4 portioner, og alle andre retter har ingen faktor', () => {
+  const uge = RETTER.filter((r) => r.model.uge);
+  assert.ok(uge.length > 0);
+  for (const r of uge) assert.equal(faktorFor(r.model, 4), 1, r.id);
+  for (const r of RETTER.filter((x) => !x.model.uge)) assert.equal(faktorFor(r.model, 4), null, r.id);
+});
