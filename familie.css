@@ -1,0 +1,104 @@
+/* familie.css — forældredelen (docs/foraeldredel.md): voksendelens skærme (js/voksen-del.js) og familiens mærker på de
+   andre skærme. Indlæses efter app.css og bygger på den: farverne, stregen og knapperne (.knap, .lille, .rund, .valg,
+   .stepper, .uge-besked) kommer derfra, og app.css ændres ikke. Voksenknapper er mindst 48 px, børneknapper 64 px. */
+
+/* ---------- Til de andre skærme (børnenes valg, retten, færdig) ---------- */
+
+/* ✨ ny for os og ⭐ favorit på børnenes kort (js/ugeplan.js lægger dem i .kort, efter navnet): øverst til venstre, som
+   spejlbillede af dyret (.kort-dyr, øverst til højre), så de aldrig dækker ⚡ på tallerkenens nederste hjørne. Har retten
+   begge, står ⭐ under ✨ (maerkerFor giver altid ny før favorit). Ikonet er emojien fra MAERKER (js/maerker.js), og
+   skærmlæseren får navnet som aria-label */
+.maerke { position: absolute; top: 10px; left: 10px; --maerke: 48px; display: grid; place-items: center; width: var(--maerke); aspect-ratio: 1; border: var(--kant); border-radius: 50%; background: var(--hvid); font-size: 24px; line-height: 1; }
+.maerke-ny { background: var(--urt-lys); }
+.maerke-fav { background: var(--sennep-lys); }
+.maerke-ny + .maerke-fav { top: calc(10px + var(--maerke) + 6px); }
+
+/* Hjertet (favorit), sammen med .knap.rund: 64 px, for børnene trykker på det på færdig-skærmen. Tomt hjerte er ikke
+   favorit; et rødt hjerte og en dobbelt så tyk kant er favorit, så tilstanden ikke kun er en farve (hjerteIkon() i
+   js/voksen-del.js) */
+.knap.hjerte-knap { width: var(--tryk); min-width: var(--tryk); min-height: var(--tryk); padding: 0; border-radius: 50%; }
+.hjerte-knap .ikon { width: 32px; height: 32px; fill: none; }
+.hjerte-knap[aria-pressed="true"] { background: var(--tomat-lys); box-shadow: inset 0 0 0 3px var(--kakao), 0 5px 0 var(--kakao); }
+.hjerte-knap[aria-pressed="true"] .ikon { fill: var(--tomat); }
+
+/* En mængde, der er regnet om til husstanden («450 g» i stedet for «300 g»): sennepsgul bund, så den voksne kan se, at
+   den ikke står sådan i opskriften */
+.skaleret { padding: 0 6px; border-radius: 8px; background: var(--sennep-lys); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+
+/* En kort besked til den voksne på en børneskærm (fx at mængderne i trinene er til 4): lille, i den blide farve og med
+   voksen-hjælpens orange streg, så den ikke tager blikket fra børnenes billeder */
+.voksen-linje { padding-left: 10px; border-left: 4px solid var(--raev); font-size: 16px; font-weight: 700; line-height: 1.3; color: var(--kakao-blid); }
+
+/* Filterchips, sammen med .knap: 48 px som de voksnes knapper. Valgt som .knap.valg i app.css: sennep og en dobbelt så
+   tyk kant, så tilstanden ikke kun er en farve */
+.knap.filter-chip { min-height: 48px; padding: 0 16px; gap: 8px; font-size: 17px; box-shadow: 0 3px 0 var(--kakao); }
+.knap.filter-chip:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--kakao); }
+.knap.filter-chip[aria-pressed="true"] { background: var(--sennep); box-shadow: inset 0 0 0 3px var(--kakao), 0 3px 0 var(--kakao); }
+
+/* ---------- Voksendelen: #/voksen… (js/voksen-del.js) ---------- */
+
+.voksen-indhold { width: 100%; max-width: 1080px; margin: 0 auto; padding: 4px 24px 40px; display: flex; flex-direction: column; gap: 18px; }
+.voksen-hoved { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; }
+.voksen-hoved h1 { font-size: 38px; line-height: 1.1; }
+.voksen-undertitel { font-size: 20px; font-weight: 750; color: var(--kakao-blid); }
+.voksen-hjaelp { max-width: 40em; font-size: 18px; color: var(--kakao-blid); }
+.voksen-knapper { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.voksen-bund { justify-content: flex-end; }
+.voksen-tom { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; font-size: 18px; color: var(--kakao-blid); }
+/* En knap, der ikke kan bruges nu (husstanden uden voksne og børn, et fuldt udvalg): grå som «Start timer», når en anden
+   timer kører */
+.voksen-del .knap:disabled, .voksen-del .knap[aria-disabled="true"] { background: var(--creme-moerk); color: var(--kakao-blid); border-color: var(--kakao-blid); box-shadow: 0 3px 0 var(--kakao-blid); cursor: default; }
+.voksen-del .knap:disabled { transform: none; }
+
+/* Oversigten: et kort pr. emne med navnet og hvordan det står til lige nu. To kolonner på iPad og desktop, én på telefonen */
+.voksen-menu { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 16px 20px; }
+.voksen-menu > li { display: flex; min-width: 0; }
+.knap.voksen-punkt { width: 100%; min-height: 96px; padding: 14px 22px; justify-content: flex-start; gap: 16px; border-radius: 24px; text-align: left; }
+.voksen-punkt .ikon { width: 34px; height: 34px; }
+.voksen-punkt-tekst { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.voksen-punkt-navn { font-size: 24px; font-weight: 800; }
+.voksen-punkt-status { font-size: 17px; font-weight: 700; color: var(--kakao-blid); overflow-wrap: anywhere; }
+
+/* Husstanden: voksne, børn og hvor meget et barn spiser, og summen nederst */
+.husstand { display: flex; flex-direction: column; gap: 14px; padding: 16px 20px; border: var(--kant); border-radius: 22px; background: var(--hvid); }
+.husstand-raekke { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; }
+.husstand-raekke + .husstand-raekke, .husstand-sum { padding-top: 14px; border-top: 2px solid var(--creme-moerk); }
+.husstand-navn { font-size: 21px; font-weight: 800; }
+.husstand .valg-par { align-items: center; }
+.husstand-enhed { font-size: 18px; font-weight: 750; }
+.husstand-sum { font-size: 30px; font-weight: 800; }
+
+/* Udvalget: filtrene og tallet. Tallet står fast øverst, når listen rulles, så den voksne altid kan se, hvor mange der er valgt */
+.filter-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.udvalg-tal { position: sticky; top: 0; z-index: 2; margin: 0 -24px; padding: 10px 24px; background: var(--creme); border-bottom: 3px solid var(--creme-moerk); font-size: 20px; font-weight: 800; }
+
+/* Listen med retter (udvalget og favoritterne): ét ark som ugeplanen, en række pr. ret med knappen til højre */
+.voksen-liste { border: var(--kant); border-radius: 22px; background: var(--hvid); overflow: hidden; }
+.voksen-liste button { scroll-margin-top: 64px; }
+.voksen-raekke { display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; align-items: center; gap: 0 14px; padding: 8px 16px; }
+.voksen-raekke + .voksen-raekke { border-top: 2px solid var(--creme-moerk); }
+.voksen-raekke.valgt { background: var(--sennep-lys); }
+.voksen-raekke > .uge-besked { grid-column: 1 / -1; margin: 6px 0 4px; }
+/* Fast bredde og højde: listen tegnes om ved hvert tryk, og billedet må ikke få rækken til at hoppe, mens det afkodes */
+.voksen-raekke-billede { width: 72px; height: 72px; object-fit: contain; }
+.voksen-raekke-tekst { min-width: 0; display: flex; flex-direction: column; gap: 2px; padding: 6px 0; }
+.voksen-raekke-navn { font-size: 20px; font-weight: 800; line-height: 1.2; overflow-wrap: anywhere; -webkit-hyphens: auto; hyphens: auto; }
+.voksen-raekke-maerker { display: flex; flex-wrap: wrap; gap: 0 12px; font-size: 16px; color: var(--kakao-blid); overflow-wrap: anywhere; }
+
+/* Telefonen: mindre luft og billeder, så navnet har plads ved siden af knappen på 360-390 px */
+@media (max-width: 700px) {
+  .voksen-indhold { padding: 4px 12px 32px; gap: 14px; }
+  .voksen-hoved h1 { font-size: 32px; }
+  .husstand { padding: 14px 14px; }
+  .husstand-sum { font-size: 26px; }
+  .udvalg-tal { margin: 0 -12px; padding: 8px 12px; font-size: 18px; }
+  .voksen-raekke { grid-template-columns: 56px minmax(0, 1fr) auto; gap: 0 10px; padding: 8px 10px; }
+  .voksen-raekke-billede { width: 56px; height: 56px; }
+  .knap.voksen-punkt { min-height: 84px; padding: 12px 18px; }
+}
+
+/* Telefonen: lige så små og tæt på hjørnet som dyret (.kort-dyr i app.css) */
+@media (max-width: 700px) {
+  .maerke { top: 6px; left: 6px; --maerke: 36px; font-size: 18px; }
+  .maerke-ny + .maerke-fav { top: calc(6px + var(--maerke) + 4px); }
+}
