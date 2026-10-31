@@ -1,0 +1,55 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Stegte ris med æg, ærter og majs",
+  "description": "Gårsdagens kolde ris stegt med æg, ærter og majs. Risene koges dagen før. Indeholder æg, soja og gluten (hvede i sojaen).",
+  "image": "grafik/ret-stegte-ris-med-aeg-aerter-og-majs.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT8M",
+  "cookTime": "PT12M",
+  "totalTime": "PT20M",
+  "recipeIngredient": [
+    "300 g jasminris, kogt og kølet i går",
+    "1 dåse majs",
+    "5 æg",
+    "2 spsk olie",
+    "300 g frosne ærter",
+    "2 spsk soja"
+  ],
+  "tool": ["skål", "dåseåbner", "si", "kop", "gaffel", "stor pande eller wok", "grydeske", "tallerken"],
+  "recipeInstructions": [
+    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender"}},
+    {"@type": "HowToStep", "text": "Del de kolde ris med fingrene.", "tumbi": {"verbum": "smuldre", "ikoner": ["ris"], "note": "Risene skal være kogt i går, kølet hurtigt og have stået i køleskabet, højst et døgn. Så klistrer de ikke. Del klumperne, så risene bliver varme hele vejen igennem."}},
+    {"@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad vandet løbe fra."}},
+    {"@type": "HowToStep", "text": "Slå æggene ud i en skål.", "tumbi": {"verbum": "haelde", "ikoner": ["aeg"], "note": "Fem æg. Slå dem ud i en kop først, så er det let at fiske skaller op."}},
+    {"@type": "HowToStep", "text": "Pisk æggene sammen med en gaffel.", "tumbi": {"verbum": "piske", "note": "Til hvider og blommer er blandet."}},
+    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Med sæbe: der kan være råt æg på fingrene."}},
+    {"@type": "HowToStep", "text": "Steg æggene i olien, og rør rundt.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 120, "ikoner": ["olie"], "note": "1 spsk olie på en stor pande ved middel varme. Den voksne hælder æggene på. Rør, til de er helt faste, og læg dem på en tallerken."}},
+    {"@type": "HowToStep", "text": "Hæld ærter og majs på panden.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["aerter", "majs"], "note": "Resten af olien først. Ærterne direkte fra frost. Den voksne hælder: olien kan sprøjte."}},
+    {"@type": "HowToStep", "text": "Steg grøntsagerne i 3 minutter.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "note": "Høj varme. Den voksne rører."}},
+    {"@type": "HowToStep", "text": "Kom risene på panden.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Den voksne hælder og fordeler dem med grydeskeen."}},
+    {"@type": "HowToStep", "text": "Steg risene i 5 minutter, til de damper.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Rør hele tiden. Risene er kogt i går, så de skal være rygende varme hele vejen igennem. Varm dem kun op én gang."}},
+    {"@type": "HowToStep", "text": "Vend æggene og sojaen i risene.", "tumbi": {"verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["soja"], "note": "2 spsk soja. Sæt sojaen på bordet, så de voksne kan tage mere."}}
+  ],
+  "tumbi": {
+    "id": "stegte-ris-med-aeg-aerter-og-majs",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne bygger på vores research om hurtige retter med ris (31-10-2026). Idé fra British Heart Foundation (https://www.bhf.org.uk/informationsupport/support/healthy-living/healthy-eating/recipe-finder/easy-egg-fried-rice), her uden forårsløg, med majs fra dåse og mindre soja. Kolde ris fra dagen før efter UK Food Standards Agency (https://www.gov.uk/government/publications/home-food-fact-checker/home-food-fact-checker) og Fødevarestyrelsen (https://www.foedevarestyrelsen.dk/kost-og-foedevarer/alt-om-mad/god-koekkenhygiejne/saadan-goer-du/risengroed). Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 47,
+    "pris_dato": "2026-10",
+    "groent_g": 500,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's priser på shop.rema1000.dk 31-10-2026 for den brugte mængde (jasminris 1 kg 15,02 kr.; majs 285 g 7,91 kr.; skrabeæg 10 stk. 31,95 kr.; ærter frost 400 g 13,95 kr. (normalpris fra 1-11; tilbud 12 kr. til 31-10); sojasauce 250 ml 10,50 kr.), i alt 40,11 kr., ganget med 1,09 plus 3 kr. til olie og salt. Grønt er også et skøn (ikke vejet): ærter 300 g og majs ca. 200 g uden lage. Tiden forudsætter ris, der er kogt dagen før.",
+    "ingredienser": [
+      {"ikon": "ris", "maengde": "300 g", "vare": "ris", "antal": 300, "enhed": "g"},
+      {"ikon": "majs", "maengde": "1 dåse", "vare": "majs", "antal": 1, "enhed": "stk"},
+      {"ikon": "aeg", "maengde": "5", "vare": "aeg", "antal": 5, "enhed": "stk"},
+      {"ikon": "olie", "maengde": "2 spsk", "vare": "olie"},
+      {"ikon": "aerter", "maengde": "300 g", "vare": "aerter", "antal": 300, "enhed": "g"},
+      {"ikon": "soja", "maengde": "2 spsk", "vare": "soja"}
+    ]
+  }
+}

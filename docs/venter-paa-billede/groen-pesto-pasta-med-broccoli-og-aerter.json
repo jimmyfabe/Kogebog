@@ -1,0 +1,59 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Grøn pestopasta med broccoli og ærter",
+  "description": "Fuldkornsspaghetti i en grøn pesto af mosede broccoli, ærter og ost, uden nødder. Allergener: gluten og mælk; tjek osten for æg (lysozym).",
+  "image": "grafik/ret-groen-pesto-pasta-med-broccoli-og-aerter.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT20M",
+  "totalTime": "PT25M",
+  "recipeIngredient": [
+    "350 g fuldkornsspaghetti",
+    "3 l vand og 1 tsk salt til spaghettien",
+    "400 g frossen broccoli",
+    "200 g frosne ærter",
+    "1 dl vand til grøntsagerne",
+    "50 g revet parmesan",
+    "2 spsk olie",
+    "1 knivspids salt"
+  ],
+  "tool": ["stor gryde med låg", "lille gryde med låg", "kartoffelmoser", "stavblender (kan undværes)", "dørslag", "grydeske", "grydelap"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Kog vand til spaghettien.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "3 l vand og 1 tsk salt i en stor gryde på en bagerste plade, med håndtagene ind. Med låg på koger det hurtigere." } },
+    { "@type": "HowToStep", "text": "Hæld broccoli og ærter i en lille gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["broccoli", "aerter"], "note": "Direkte fra frost. Gryden er kold endnu, så barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Hæld vandet over, og læg låg på.", "tumbi": { "verbum": "haelde", "ikoner": ["vand"], "note": "1 dl vand." } },
+    { "@type": "HowToStep", "text": "Kog grøntsagerne under låg i 8 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 480, "note": "Middel varme. De skal være så bløde, at de kan moses." } },
+    { "@type": "HowToStep", "text": "Hæld ost og olie i den lille gryde.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ost", "olie"], "note": "50 g ost og 2 spsk olie. Den voksne tager gryden af varmen først: den er varm. Vandet bliver i gryden." } },
+    { "@type": "HowToStep", "text": "Mos det hele til en grøn pesto.", "tumbi": { "verbum": "mose", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["broccoli", "aerter"], "note": "Med en kartoffelmoser, og hold gryden med en grydelap. Skal den være helt glat, kører den voksne den med en stavblender." } },
+    { "@type": "HowToStep", "text": "Kom spaghettien i vandet.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "ikoner": ["spaghetti"], "note": "Når vandet koger. Kog som anvist på pakken, og rør lidt i starten." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra spaghettien.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spaghetti"], "note": "Når timeren ringer. Den voksne hælder gennem dørslaget i vasken. Pas på dampen." } },
+    { "@type": "HowToStep", "text": "Hæld spaghettien tilbage i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spaghetti"], "note": "Den voksne hælder. Gryden er varm." } },
+    { "@type": "HowToStep", "text": "Vend den grønne pesto i spaghettien.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne vender, til al spaghettien er grøn. Er pestoen for tyk, så et skvæt vand." } },
+    { "@type": "HowToStep", "text": "Smag til med salt.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt"], "note": "Pust på skeen først. Der er salt i osten, så smag, før I salter." } }
+  ],
+  "tumbi": {
+    "id": "groen-pesto-pasta-med-broccoli-og-aerter",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra vores research om hurtige hverdagsretter (31-10-2026). Idé fra mummum.dk, pasta med broccoli (https://mummum.dk/broccoli-pasta/), her med en hjemmelavet pesto af frosne broccoli, ærter og ost uden nødder i stedet for købt pesto, som tit har cashewnødder. Runden er inspireret af Jamie Olivers hurtige retter med få ingredienser (jamieoliver.com/inspiration/quick-and-easy-food-introduction/). Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 38,
+    "pris_dato": "2026-10",
+    "groent_g": 600,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's normalpriser på shop.rema1000.dk 31-10-2026 for den brugte mængde (spaghetti fuldkorn 500 g 9,08 kr., økologisk broccoli frost 400 g 13,95 kr. (tilbud 12 kr. til 31-10), fine ærter frost 600 g 10,36 kr., revet hård ost 100 g 15,95 kr.), i alt 31,73 kr., ganget med 1,09 plus 3 kr. til olie og salt. Grønt er også et skøn (ikke vejet): broccoli 400 g og ærter 200 g, uden bælgfrugter og kartofler.",
+    "ingredienser": [
+      { "ikon": "spaghetti", "maengde": "350 g", "vare": "fuldkornspasta", "antal": 350, "enhed": "g" },
+      { "ikon": "vand", "maengde": "3 l", "vare": "vand" },
+      { "ikon": "broccoli", "maengde": "400 g", "vare": "broccoliblanding", "antal": 400, "enhed": "g" },
+      { "ikon": "aerter", "maengde": "200 g", "vare": "aerter", "antal": 200, "enhed": "g" },
+      { "ikon": "vand", "maengde": "1 dl", "vare": "vand" },
+      { "ikon": "ost", "maengde": "50 g", "vare": "parmesan", "antal": 50, "enhed": "g" },
+      { "ikon": "olie", "maengde": "2 spsk", "vare": "olie" },
+      { "ikon": "salt", "maengde": "1 knivspids", "vare": "salt" }
+    ]
+  }
+}

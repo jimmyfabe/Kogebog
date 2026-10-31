@@ -1,0 +1,61 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Kartoffel-gulerods-rösti med agurke-skyrdip",
+  "description": "Sprøde små rösti af revne kartofler og gulerødder med en kold dip af skyr og agurk. Ærter til. Allergener: æg, gluten (melet) og mælk (skyr).",
+  "image": "grafik/ret-kartoffel-gulerods-roesti-med-skyrdip.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT20M",
+  "cookTime": "PT20M",
+  "totalTime": "PT40M",
+  "recipeIngredient": [
+    "½ agurk",
+    "250 g skyr naturel",
+    "1 tsk salt",
+    "600 g kartofler",
+    "3 gulerødder",
+    "3 spsk hvedemel",
+    "2 æg",
+    "4 spsk olie",
+    "300 g frosne ærter"
+  ],
+  "tool": ["rivejern eller foodprocessor", "skål til dippen", "stor skål", "rent viskestykke", "kop", "grydeske", "stor pande", "paletkniv", "lille gryde", "si"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Riv agurken groft.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["agurk"], "note": "Rivejernet er skarpt, så den voksne river. Klem saften ud over vasken med hænderne." } },
+    { "@type": "HowToStep", "text": "Rør skyr, agurk og lidt salt sammen.", "tumbi": { "verbum": "roere", "ikoner": ["yoghurt", "agurk", "salt"], "note": "En knivspids af saltet. Det er dippen. Stil den i køleskabet." } },
+    { "@type": "HowToStep", "text": "Riv kartofler og gulerødder groft.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kartoffel", "gulerod"], "note": "Skræl dem først. Den voksne river på den grove side. Med en foodprocessor går det hurtigere." } },
+    { "@type": "HowToStep", "text": "Vrid saften ud i et rent viskestykke.", "tumbi": { "verbum": "aelte", "ikoner": ["kartoffel", "gulerod"], "note": "Læg det revne midt i viskestykket, drej det sammen, og pres over vasken. Jo tørrere, jo sprødere." } },
+    { "@type": "HowToStep", "text": "Bland det revne med mel og salt.", "tumbi": { "verbum": "roere", "ikoner": ["kartoffel", "gulerod", "mel", "salt"], "note": "I en stor skål. 3 spsk mel og resten af saltet." } },
+    { "@type": "HowToStep", "text": "Kom æggene i, og rør det hele sammen.", "tumbi": { "verbum": "roere", "ikoner": ["aeg"], "note": "Slå æggene ud i en kop først, så er det let at fiske skaller op." } },
+    { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg på fingrene." } },
+    { "@type": "HowToStep", "text": "Steg små rösti i olien.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 240, "ikoner": ["olie"], "note": "Stor pande ved middel varme. 3 spsk dej til hver, trykket flad til ca. 1 cm. Seks ad gangen. Steg, til bunden er gylden." } },
+    { "@type": "HowToStep", "text": "Vend dem forsigtigt med paletkniven.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 240, "note": "Ca. 4 min på den anden side. Den voksne deler den første: der er æg i, så den skal være fast helt ind i midten. Gentag med resten af dejen: det giver ca. 12 rösti. Med to pander går det dobbelt så hurtigt." } },
+    { "@type": "HowToStep", "text": "Kog ærterne i lidt vand.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["aerter"], "note": "Imens den sidste omgang er på panden. 3 min, fra vandet koger. Den voksne hælder vandet fra i en si." } },
+    { "@type": "HowToStep", "text": "Kom en klat dip på din rösti.", "tumbi": { "verbum": "pynte", "ikoner": ["yoghurt"], "note": "Röstien er varm: lad den køle lidt på tallerkenen. Ærterne ved siden af." } }
+  ],
+  "tumbi": {
+    "id": "kartoffel-gulerods-roesti-med-skyrdip",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra vores research om hurtige hverdagsretter (31-10-2026). Idé fra Mummum, «Rösti med gulerod og persille» (https://mummum.dk/rosti-med-gulerod-og-persille/), her uden persille, med en dip af skyr og agurk og med ærter til. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 36,
+    "pris_dato": "2026-10",
+    "groent_g": 775,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's normalpriser på shop.rema1000.dk 31-10-2026 for den brugte mængde (skyr naturel 1 kg 19,95 kr., agurk 10 kr. (tilbud 7 kr.), skrællekartofler 2 kg 18 kr., gulerødder 1 kg 12 kr., skrabeæg 10 stk. 31,95 kr., hvedemel 2 kg 9,95 kr., fine ærter frost 600 g 10,36 kr.), i alt 30,71 kr., ganget med 1,09 plus 3 kr. til olie og salt. Grønt er også et skøn (ikke vejet): agurk 175 g, gulerødder 300 g og ærter 300 g, uden bælgfrugter og kartofler.",
+    "ingredienser": [
+      { "ikon": "agurk", "maengde": "½", "vare": "agurk", "antal": 0.5, "enhed": "stk" },
+      { "ikon": "yoghurt", "maengde": "250 g", "vare": "skyr", "antal": 250, "enhed": "g" },
+      { "ikon": "salt", "maengde": "1 tsk", "vare": "salt" },
+      { "ikon": "kartoffel", "maengde": "600 g", "vare": "kartofler", "antal": 600, "enhed": "g" },
+      { "ikon": "gulerod", "maengde": "3", "vare": "gulerod", "antal": 3, "enhed": "stk" },
+      { "ikon": "mel", "maengde": "3 spsk", "vare": "mel", "antal": 30, "enhed": "g" },
+      { "ikon": "aeg", "maengde": "2", "vare": "aeg", "antal": 2, "enhed": "stk" },
+      { "ikon": "olie", "maengde": "4 spsk", "vare": "olie" },
+      { "ikon": "aerter", "maengde": "300 g", "vare": "aerter", "antal": 300, "enhed": "g" }
+    ]
+  }
+}

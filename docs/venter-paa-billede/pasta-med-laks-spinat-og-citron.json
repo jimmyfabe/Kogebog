@@ -1,0 +1,63 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Pasta med laks, spinat og citron",
+  "description": "Fuldkornsspaghetti i en flødesovs med spinat, ærter og laks, der koger med direkte fra frost. Citronbåde til. Allergener: fisk, gluten og mælk.",
+  "image": "grafik/ret-pasta-med-laks-spinat-og-citron.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT20M",
+  "totalTime": "PT25M",
+  "recipeIngredient": [
+    "350 g fuldkornsspaghetti",
+    "3 l vand og 1 tsk salt til spaghettien",
+    "2,5 dl let madlavningsfløde",
+    "300 g frossen hakket spinat",
+    "400 g frosne lakseportioner",
+    "200 g frosne ærter",
+    "1 citron",
+    "½ tsk salt",
+    "1 knivspids peber"
+  ],
+  "tool": ["stor gryde med låg", "gryde med låg", "dørslag", "kniv", "skærebræt", "gaffel", "grydeske"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Kog vand til spaghettien.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "3 l vand og 1 tsk salt i en stor gryde på en bagerste plade, med håndtagene ind. Med låg på koger det hurtigere." } },
+    { "@type": "HowToStep", "text": "Hæld fløde og spinat i en gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["flode", "spinat"], "note": "En mellemstor gryde med låg. Spinaten direkte fra frost. Gryden er kold endnu, så barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Lad spinaten smelte i fløden under låg.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 360, "note": "Middel varme. Rør af og til, til spinaten er tøet op." } },
+    { "@type": "HowToStep", "text": "Læg laksen ned i sovsen.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["koed"], "note": "Direkte fra frost, ved siden af hinanden. Den voksne lægger stykkerne i: sovsen er varm." } },
+    { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: rå fisk kan give maveonde." } },
+    { "@type": "HowToStep", "text": "Hæld ærterne i sovsen, og læg låg på.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["aerter"], "note": "Direkte fra frost. Lav varme: laksen skal småkoge i ca. 12 min." } },
+    { "@type": "HowToStep", "text": "Kom spaghettien i vandet.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "ikoner": ["spaghetti"], "note": "Når vandet koger. Kog som anvist på pakken, og rør lidt i starten. Laksen småkoger imens." } },
+    { "@type": "HowToStep", "text": "Skær citronen i både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["citron"], "note": "Mens spaghettien koger. Skyl citronen først." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra spaghettien.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spaghetti"], "note": "Når timeren ringer. Den voksne hælder gennem dørslaget i vasken. Pas på dampen." } },
+    { "@type": "HowToStep", "text": "Del laksen i stykker med en gaffel.", "tumbi": { "verbum": "smuldre", "voksen": true, "voksen_hjaelp": "varme", "note": "I gryden. Laksen skal være lys og fast hele vejen igennem. Er den blank og mørk i midten, så 3 min mere med låg. Den voksne fisker skind og ben op." } },
+    { "@type": "HowToStep", "text": "Hæld spaghettien tilbage i den store gryde.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spaghetti"], "note": "Den voksne hælder. Gryden er varm." } },
+    { "@type": "HowToStep", "text": "Hæld laksesovsen over, og vend forsigtigt.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne vender, så laksen ikke går helt i stykker." } },
+    { "@type": "HowToStep", "text": "Smag til med citron, salt og peber.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["citron", "salt", "peber"], "note": "Pres saften af to både over. Pust på skeen først. Resten af bådene kommer på bordet." } }
+  ],
+  "tumbi": {
+    "id": "pasta-med-laks-spinat-og-citron",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra vores research om hurtige hverdagsretter (31-10-2026). Idé fra Madens Verden, pasta med laks og spinat (https://madensverden.dk/pasta-med-laks-og-spinat), her med frosne lakseportioner, der koger med i sovsen, frossen hakket spinat, ærter og fuldkornsspaghetti. Runden er inspireret af Jamie Olivers hurtige retter med få ingredienser (jamieoliver.com/inspiration/quick-and-easy-food-introduction/). Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 108,
+    "pris_dato": "2026-10",
+    "groent_g": 500,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's normalpriser på shop.rema1000.dk 31-10-2026 for den brugte mængde (spaghetti fuldkorn 500 g 9,08 kr., lakseportioner frost 400 g 63,96 kr., hakket spinat frost 750 g 9,95 kr., madlavningsfløde 8 % 250 ml 13,95 kr., fine ærter frost 600 g 10,36 kr., citron 5 kr.), i alt 96,70 kr., ganget med 1,09 plus 3 kr. til salt og peber. Grønt er også et skøn (ikke vejet): spinat 300 g og ærter 200 g, uden bælgfrugter, kartofler og citron.",
+    "ingredienser": [
+      { "ikon": "spaghetti", "maengde": "350 g", "vare": "fuldkornspasta", "antal": 350, "enhed": "g" },
+      { "ikon": "vand", "maengde": "3 l", "vare": "vand" },
+      { "ikon": "flode", "maengde": "2,5 dl", "vare": "madlavningsflode", "antal": 2.5, "enhed": "dl" },
+      { "ikon": "spinat", "maengde": "300 g", "vare": "hakket-spinat", "antal": 300, "enhed": "g" },
+      { "ikon": "koed", "maengde": "400 g", "vare": "laksefileter", "antal": 400, "enhed": "g" },
+      { "ikon": "aerter", "maengde": "200 g", "vare": "aerter", "antal": 200, "enhed": "g" },
+      { "ikon": "citron", "maengde": "1", "vare": "citron", "antal": 1, "enhed": "stk" },
+      { "ikon": "salt", "maengde": "½ tsk", "vare": "salt" },
+      { "ikon": "peber", "maengde": "1 knivspids", "vare": "peber" }
+    ]
+  }
+}

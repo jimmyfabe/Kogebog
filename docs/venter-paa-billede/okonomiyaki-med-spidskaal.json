@@ -1,0 +1,60 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Japansk kålpandekage med spidskål og skinke",
+  "description": "To store, tykke kålpandekager med spidskål, gulerod og skinketern, inspireret af okonomiyaki. Pyntet med striber af ketchup og mayonnaise.",
+  "image": "grafik/ret-okonomiyaki-med-spidskaal.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT10M",
+  "cookTime": "PT20M",
+  "totalTime": "PT30M",
+  "recipeIngredient": [
+    "500 g spidskål",
+    "1 gulerod",
+    "150 g hvedemel",
+    "1 dl koldt vand",
+    "4 æg",
+    "150 g skinketern",
+    "2 spsk olie",
+    "4 spsk ketchup",
+    "4 spsk mayonnaise"
+  ],
+  "tool": ["kniv", "skærebræt", "rivejern", "stor skål", "piskeris", "pande med låg", "stor tallerken"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder hvede og æg (også i mayonnaisen)." } },
+    { "@type": "HowToStep", "text": "Skær spidskålen i tynde strimler.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kaal"], "note": "Den voksne skærer kålen. Barnet kan pille strimlerne fra hinanden." } },
+    { "@type": "HowToStep", "text": "Riv guleroden groft.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skræl den først. Rivejernet er skarpt, så den voksne river." } },
+    { "@type": "HowToStep", "text": "Hæld mel og vand i en stor skål.", "tumbi": { "verbum": "haelde", "ikoner": ["mel", "vand"], "note": "150 g mel og 1 dl koldt vand. Barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Slå æggene ud i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["aeg"], "note": "Slå dem ud i en kop først, så skaller ikke kommer med." } },
+    { "@type": "HowToStep", "text": "Pisk det til en jævn dej.", "tumbi": { "verbum": "piske", "ikoner": ["aeg"], "note": "Uden klumper. Barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg på fingrene." } },
+    { "@type": "HowToStep", "text": "Rør kål, gulerod og skinke i dejen.", "tumbi": { "verbum": "roere", "ikoner": ["kaal", "gulerod", "skinke"], "note": "Det ligner meget kål og lidt dej. Sådan skal det være." } },
+    { "@type": "HowToStep", "text": "Steg en stor pandekage i olie.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "ikoner": ["olie"], "note": "1 spsk olie og halvdelen af dejen på panden ved middel varme. Tryk den flad, ca. 1,5 cm tyk, og læg låg på." } },
+    { "@type": "HowToStep", "text": "Vend pandekagen med en tallerken.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Den voksne vender: tallerken over, vend panden, og lad pandekagen glide tilbage. Den skal være fast i midten. Steg den anden på samme måde." } },
+    { "@type": "HowToStep", "text": "Sprøjt striber af ketchup og mayonnaise på.", "tumbi": { "verbum": "sproejte", "ikoner": ["ketchup", "mayonnaise"], "note": "På tallerkenen, når pandekagen er ude af panden. Den voksne deler den i stykker som en pizza." } }
+  ],
+  "tumbi": {
+    "id": "okonomiyaki-med-spidskaal",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra vores research om hurtige hverdagsretter (31-10-2026). Idé fra Årstiderne, «Okonomiyaki» (https://www.aarstiderne.com/media/2168/aarstiderne_okonomiyaki_2021.pdf), her med spidskål, gulerod og skinketern og med striber af ketchup og mayonnaise som pynt. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 48,
+    "pris_dato": "2026-10",
+    "groent_g": 650,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's normalpriser på shop.rema1000.dk 31-10-2026 for den brugte mængde (spidskål 13 kr., gulerødder 1 kg 12 kr., hvedemel 2 kg 9,95 kr., skrabeæg 15 stk. 45,25 kr., skinketern 150 g 13,59 kr.), i alt 41,20 kr., ganget med 1,09 plus 3 kr. til olie, ketchup og mayonnaise. Grønt er også et skøn (ikke vejet): spidskål 500 g og gulerod 150 g, uden bælgfrugter og kartofler.",
+    "ingredienser": [
+      { "ikon": "kaal", "maengde": "500 g", "vare": "spidskaal", "antal": 500, "enhed": "g" },
+      { "ikon": "gulerod", "maengde": "1", "vare": "gulerod", "antal": 1, "enhed": "stk" },
+      { "ikon": "mel", "maengde": "150 g", "vare": "mel", "antal": 150, "enhed": "g" },
+      { "ikon": "vand", "maengde": "1 dl", "vare": "vand" },
+      { "ikon": "aeg", "maengde": "4", "vare": "aeg", "antal": 4, "enhed": "stk" },
+      { "ikon": "skinke", "maengde": "150 g", "vare": "skinketern", "antal": 150, "enhed": "g" },
+      { "ikon": "olie", "maengde": "2 spsk", "vare": "olie" },
+      { "ikon": "ketchup", "maengde": "4 spsk", "vare": "ketchup" },
+      { "ikon": "mayonnaise", "maengde": "4 spsk", "vare": "mayonnaise" }
+    ]
+  }
+}

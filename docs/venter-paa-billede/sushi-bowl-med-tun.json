@@ -1,0 +1,57 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Sushi-skål med tun, agurk og majs",
+  "description": "Byg-selv-skål med ris, tun, agurk, gulerod og majs og en mild dressing af mayonnaise og soja. Ingen rå fisk.",
+  "image": "grafik/ret-sushi-bowl-med-tun.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT10M",
+  "cookTime": "PT15M",
+  "totalTime": "PT25M",
+  "recipeIngredient": [
+    "300 g jasminris",
+    "2 dåser tun i vand",
+    "1 dåse majs",
+    "1 agurk",
+    "2 gulerødder",
+    "4 spsk mayonnaise",
+    "2 spsk soja"
+  ],
+  "tool": ["si", "gryde med låg", "dåseåbner", "gaffel", "skål", "kniv", "skærebræt", "smørekniv", "rivejern", "lille skål", "4 skåle"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder fisk, æg (i mayonnaisen), soja og hvede (i sojaen). Børn bør højst få én dåse tun om ugen: vælg ikke en anden tunret samme uge." } },
+    { "@type": "HowToStep", "text": "Hæld risene i en si, og skyl dem.", "tumbi": { "verbum": "haelde", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er klart. Barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Sæt risene over at koge.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900, "ikoner": ["ris"], "note": "Vand som anvist på posen. Høj varme, til det koger, og så lav varme under låg. Timeren er ca. 3 min opkog og 12 min småkog. Sluk, og lad risene trække 5-10 min under låg. Lav resten imens. Har I ris fra i går, kølet hurtigt og højst et døgn i køleskabet, så varm dem, til de damper hele vejen igennem: så tager retten ca. 10 min." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra tunen.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["tun"], "note": "Den voksne åbner dåserne: kanten er skarp. Hold låget mod tunen, og hæld vandet i vasken." } },
+    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen. Lad vandet løbe fra." } },
+    { "@type": "HowToStep", "text": "Del tunen i små stykker med en gaffel.", "tumbi": { "verbum": "smuldre", "ikoner": ["tun"], "note": "I en skål. Barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Skær agurken i små tern.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["agurk"], "note": "Den voksne skærer agurken i skiver. Barnet kan skære skiverne i tern med en smørekniv." } },
+    { "@type": "HowToStep", "text": "Riv gulerødderne groft.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skræl dem først. Rivejernet er skarpt, så den voksne river." } },
+    { "@type": "HowToStep", "text": "Rør mayonnaise og soja sammen til en dressing.", "tumbi": { "verbum": "roere", "ikoner": ["mayonnaise", "soja"], "note": "4 spsk mayonnaise og 2 spsk soja i en lille skål." } },
+    { "@type": "HowToStep", "text": "Fordel risene i fire skåle.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Gryden er varm: den voksne fordeler risene. Lad dem køle lidt, så de er lune." } },
+    { "@type": "HowToStep", "text": "Læg tun, agurk, gulerod og majs ovenpå.", "tumbi": { "verbum": "pynte", "ikoner": ["tun", "agurk", "gulerod", "majs"], "note": "Hver bygger sin egen skål. Læg det i små bunker, så alle kan vælge." } },
+    { "@type": "HowToStep", "text": "Kom en klat dressing på.", "tumbi": { "verbum": "pynte", "ikoner": ["mayonnaise", "soja"], "note": "Spis med ske eller gaffel." } }
+  ],
+  "tumbi": {
+    "id": "sushi-bowl-med-tun",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra vores research om hurtige hverdagsretter (31-10-2026). Idé fra MSC, «Tuna sushi bowl» (https://www.msc.org/uk/what-you-can-do/sustainable-seafood-recipes/recipe/tuna-sushi-bowl), her med jasminris, tun i vand, agurk, gulerod og majs og en mild dressing af mayonnaise og soja i stedet for stærke saucer. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 52,
+    "pris_dato": "2026-10",
+    "groent_g": 750,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's normalpriser på shop.rema1000.dk 31-10-2026 for den brugte mængde (jasminris 1 kg 15,02 kr., tun i vand 140 g 9,95 kr. × 2, majs 285 g 7,91 kr., agurk 10 kr. (tilbud 7 kr. til 31-10), gulerødder 1 kg 12 kr.), i alt 44,72 kr., ganget med 1,09 plus 3 kr. til mayonnaise og soja. Grønt er også et skøn (ikke vejet): agurk 350 g, gulerødder 200 g og majs uden lage 200 g, uden bælgfrugter og kartofler.",
+    "ingredienser": [
+      { "ikon": "ris", "maengde": "300 g", "vare": "ris", "antal": 300, "enhed": "g" },
+      { "ikon": "tun", "maengde": "2 dåser", "vare": "tun", "antal": 280, "enhed": "g" },
+      { "ikon": "majs", "maengde": "1 dåse", "vare": "majs", "antal": 1, "enhed": "stk" },
+      { "ikon": "agurk", "maengde": "1", "vare": "agurk", "antal": 1, "enhed": "stk" },
+      { "ikon": "gulerod", "maengde": "2", "vare": "gulerod", "antal": 2, "enhed": "stk" },
+      { "ikon": "mayonnaise", "maengde": "4 spsk", "vare": "mayonnaise" },
+      { "ikon": "soja", "maengde": "2 spsk", "vare": "soja" }
+    ]
+  }
+}

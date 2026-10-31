@@ -1,0 +1,60 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Milde asiatiske fiskefrikadeller med ris",
+  "description": "Små fiskefrikadeller af færdig fiskefars med revet gulerod og soja. Ris, agurkestave og en dip af soja og honning til.",
+  "image": "grafik/ret-milde-asiatiske-fiskefrikadeller.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT10M",
+  "cookTime": "PT20M",
+  "totalTime": "PT30M",
+  "recipeIngredient": [
+    "300 g jasminris",
+    "1 gulerod",
+    "1 agurk",
+    "3 spsk soja",
+    "1 spsk honning",
+    "2 spsk vand",
+    "400 g fiskefars",
+    "3 spsk olie"
+  ],
+  "tool": ["si", "gryde med låg", "rivejern", "kniv", "skærebræt", "kop", "stor skål", "grydeske", "pande", "2 spiseskeer", "paletkniv"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder fisk, hvede, æg og mælk (i fiskefarsen) og soja. Tjek fiskefarsens pakke." } },
+    { "@type": "HowToStep", "text": "Hæld risene i en si, og skyl dem.", "tumbi": { "verbum": "haelde", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er klart. Barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Sæt risene over at koge.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Vand som anvist på posen. Høj varme, til det koger, så lav varme under låg i 12 min. Sluk, og lad risene trække under låg, mens I laver frikadellerne. Ris fra i går, kølet hurtigt og højst et døgn gamle, kan varmes, til de damper hele vejen igennem." } },
+    { "@type": "HowToStep", "text": "Riv guleroden fint.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skræl den først. Rivejernet er skarpt, så den voksne river." } },
+    { "@type": "HowToStep", "text": "Skær agurken i stave.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["agurk"], "note": "Den voksne skærer agurken på langs. Barnet kan dele stavene med en smørekniv." } },
+    { "@type": "HowToStep", "text": "Rør en dip af soja, honning og vand.", "tumbi": { "verbum": "roere", "ikoner": ["soja", "honning", "vand"], "note": "2 spsk soja, 1 spsk honning og 2 spsk vand i en kop. Barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Hæld gulerod og soja i en stor skål.", "tumbi": { "verbum": "haelde", "ikoner": ["gulerod", "soja"], "note": "Den sidste 1 spsk soja." } },
+    { "@type": "HowToStep", "text": "Kom fiskefarsen i skålen, og rør rundt.", "tumbi": { "verbum": "roere", "ikoner": ["koed"], "note": "Med en grydeske, til guleroden er fordelt. Barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Sæt små frikadeller på panden med en ske.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["koed"], "note": "3 spsk olie ved middel varme. Den voksne sætter dem på med to skeer: fedtet kan sprøjte. Dyp skeerne i koldt vand, så farsen slipper." } },
+    { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været rå fisk på fingrene og skeerne. Læg skeerne i opvasken." } },
+    { "@type": "HowToStep", "text": "Steg frikadellerne gyldne i olien.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 240, "ikoner": ["olie"], "note": "Middel varme. Er der ikke plads til alle, så steg dem i to hold." } },
+    { "@type": "HowToStep", "text": "Vend frikadellerne.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 240, "note": "Med paletkniven. De skal være hvide og faste hele vejen igennem." } },
+    { "@type": "HowToStep", "text": "Læg frikadeller, ris og agurk på tallerkenen.", "tumbi": { "verbum": "pynte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris", "agurk"], "note": "Gryden og panden er varme: den voksne tager op. Dyp frikadellerne i dippen." } }
+  ],
+  "tumbi": {
+    "id": "milde-asiatiske-fiskefrikadeller",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra vores research om hurtige hverdagsretter (31-10-2026). Idé fra What Dad Cooked, «Quick and Easy 30 Minute Thai Fish Cakes» (https://www.whatdadcooked.com/recipe/quick-easy-30-minute-thai-fish-cakes/), her med færdig fiskefars, gulerod og soja i stedet for karrypasta og chili, og med agurkestave og en dip af soja og honning. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 59,
+    "pris_dato": "2026-10",
+    "groent_g": 500,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's normalpriser på shop.rema1000.dk 31-10-2026 for den brugte mængde (jasminris 1 kg 15,02 kr., finthakket fiskefars 400 g 34,95 kr., gulerødder 1 kg 12 kr., agurk 10 kr. (tilbud 7 kr. til 31-10)), i alt 51,26 kr., ganget med 1,09 plus 3 kr. til olie, soja og honning. Grønt er også et skøn (ikke vejet): gulerod 150 g og agurk 350 g, uden bælgfrugter og kartofler.",
+    "ingredienser": [
+      { "ikon": "ris", "maengde": "300 g", "vare": "ris", "antal": 300, "enhed": "g" },
+      { "ikon": "gulerod", "maengde": "1", "vare": "gulerod", "antal": 1, "enhed": "stk" },
+      { "ikon": "agurk", "maengde": "1", "vare": "agurk", "antal": 1, "enhed": "stk" },
+      { "ikon": "soja", "maengde": "3 spsk", "vare": "soja" },
+      { "ikon": "honning", "maengde": "1 spsk", "vare": "honning" },
+      { "ikon": "vand", "maengde": "2 spsk", "vare": "vand" },
+      { "ikon": "koed", "maengde": "400 g", "vare": "fiskefars", "antal": 400, "enhed": "g" },
+      { "ikon": "olie", "maengde": "3 spsk", "vare": "olie" }
+    ]
+  }
+}

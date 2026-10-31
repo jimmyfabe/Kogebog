@@ -1,0 +1,62 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Koreansk risskål med kød, spinat og spejlæg",
+  "description": "Mild bibimbap: ris med hakket oksekød i soja og honning, spinat, revet gulerod og et spejlæg på toppen. Uden chili.",
+  "image": "grafik/ret-mild-bibimbap-risskaal.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT10M",
+  "cookTime": "PT20M",
+  "totalTime": "PT30M",
+  "recipeIngredient": [
+    "300 g jasminris",
+    "3 gulerødder",
+    "3 spsk soja",
+    "1 spsk honning",
+    "400 g frossen hakket spinat",
+    "400 g hakket oksekød",
+    "4 æg",
+    "2 spsk olie"
+  ],
+  "tool": ["si", "gryde med låg", "rivejern", "kop", "lille gryde med låg", "pande", "grydeske", "skål med låg", "2 kopper", "paletkniv", "4 skåle"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder æg, soja og hvede (i sojaen)." } },
+    { "@type": "HowToStep", "text": "Hæld risene i en si, og skyl dem.", "tumbi": { "verbum": "haelde", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er klart. Barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Sæt risene over at koge.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Vand som anvist på posen. Høj varme, til det koger, så lav varme under låg i 12 min. Sluk, og lad risene trække under låg, mens I laver resten. Ris fra i går, kølet hurtigt og højst et døgn gamle, kan varmes, til de damper hele vejen igennem." } },
+    { "@type": "HowToStep", "text": "Riv gulerødderne groft.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skræl dem først. Rivejernet er skarpt, så den voksne river. Læg dem i en lille skål." } },
+    { "@type": "HowToStep", "text": "Rør soja og honning sammen i en kop.", "tumbi": { "verbum": "roere", "ikoner": ["soja", "honning"], "note": "3 spsk soja og 1 spsk honning. Barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Sæt spinaten over ved lav varme.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spinat"], "note": "I en lille gryde under låg, direkte fra frost. Rør af og til, til den er tøet og varm, ca. 8 min." } },
+    { "@type": "HowToStep", "text": "Læg kødet på panden.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["koed"], "note": "1 spsk olie på panden ved middel til høj varme. Fedtet kan sprøjte: barnet står på afstand." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt kød på fingrene." } },
+    { "@type": "HowToStep", "text": "Brun kødet, og del det i små stykker.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Med en grydeske. Kødet skal være gennemstegt, uden noget rødt." } },
+    { "@type": "HowToStep", "text": "Hæld soja og honning over kødet.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["soja", "honning"], "note": "Panden er varm: den voksne hælder. Rør rundt i 1 min, og kom så kødet i en skål med låg." } },
+    { "@type": "HowToStep", "text": "Slå æggene ud i to kopper.", "tumbi": { "verbum": "haelde", "ikoner": ["aeg"], "note": "To æg i hver kop, så skaller ikke kommer på panden." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg på fingrene." } },
+    { "@type": "HowToStep", "text": "Steg spejlæggene i olie.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 240, "ikoner": ["olie"], "note": "1 spsk olie på den tørrede pande ved middel varme. Den voksne hælder æggene fra kopperne. Til børnene skal blommen være fast." } },
+    { "@type": "HowToStep", "text": "Læg ris, kød, spinat og gulerod i skålene.", "tumbi": { "verbum": "pynte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris", "spinat", "gulerod"], "note": "Hver ting i sin egen bunke, så alle kan vælge. Gryderne er varme: den voksne tager op." } },
+    { "@type": "HowToStep", "text": "Læg et spejlæg på toppen.", "tumbi": { "verbum": "pynte", "voksen": true, "voksen_hjaelp": "varme", "note": "Med paletkniven fra den varme pande. Rør det hele sammen, når I spiser." } }
+  ],
+  "tumbi": {
+    "id": "mild-bibimbap-risskaal",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra vores research om hurtige hverdagsretter (31-10-2026). Idé fra Arla Foods UK, «Bibimbap» (https://arlafoods.co.uk/recipes/bibimbap), her uden gochujang, med soja og honning på kødet, frossen hakket spinat og rå revet gulerod. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 74,
+    "pris_dato": "2026-10",
+    "groent_g": 700,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's normalpriser på shop.rema1000.dk 31-10-2026 for den brugte mængde (jasminris 1 kg 15,02 kr., hakket oksekød 8-12 % 400 g 39,95 kr., hakket spinat 750 g 9,95 kr., gulerødder 1 kg 12 kr., skrabeæg 15 stk. 45,25 kr.), i alt 65,43 kr., ganget med 1,09 plus 3 kr. til olie, soja og honning. Grønt er også et skøn (ikke vejet): spinat 400 g og gulerødder 300 g, uden bælgfrugter og kartofler.",
+    "ingredienser": [
+      { "ikon": "ris", "maengde": "300 g", "vare": "ris", "antal": 300, "enhed": "g" },
+      { "ikon": "gulerod", "maengde": "3", "vare": "gulerod", "antal": 3, "enhed": "stk" },
+      { "ikon": "soja", "maengde": "3 spsk", "vare": "soja" },
+      { "ikon": "honning", "maengde": "1 spsk", "vare": "honning" },
+      { "ikon": "spinat", "maengde": "400 g", "vare": "hakket-spinat", "antal": 400, "enhed": "g" },
+      { "ikon": "koed", "maengde": "400 g", "vare": "hakket-oksekoed", "antal": 400, "enhed": "g" },
+      { "ikon": "aeg", "maengde": "4", "vare": "aeg", "antal": 4, "enhed": "stk" },
+      { "ikon": "olie", "maengde": "2 spsk", "vare": "olie" }
+    ]
+  }
+}

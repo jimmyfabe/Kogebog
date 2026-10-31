@@ -1,0 +1,61 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Flødekartofler i fad med skinke og broccoli",
+  "description": "Kartoffelskiver i fløde og mælk med skinke og broccoli under gylden ost. Gulerodsråkost til. Allergener: mælk.",
+  "image": "grafik/ret-floedekartofler-med-skinke-og-broccoli.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT10M",
+  "cookTime": "PT35M",
+  "totalTime": "PT45M",
+  "recipeIngredient": [
+    "2,5 dl madlavningsfløde 15 %",
+    "2 dl letmælk",
+    "½ tsk salt",
+    "1 knivspids peber",
+    "1,2 kg frosne kartoffelskiver",
+    "400 g frossen broccoli",
+    "150 g skinketern",
+    "75 g revet ost",
+    "3 gulerødder"
+  ],
+  "tool": ["stor gryde med låg", "grydeske", "ovnfast fad (ca. 25 × 35 cm)", "ske", "rivejern", "skål", "grydelapper", "gaffel"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Hæld fløde og mælk i en stor gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["flode", "maelk"], "note": "2,5 dl fløde og 2 dl mælk. Tænd ovnen på 200 °C varmluft." } },
+    { "@type": "HowToStep", "text": "Drys salt og peber i.", "tumbi": { "verbum": "drysse", "ikoner": ["salt", "peber"] } },
+    { "@type": "HowToStep", "text": "Hæld kartoffelskiverne i gryden.", "tumbi": { "verbum": "haelde", "ikoner": ["kartoffel"], "note": "Direkte fra frost." } },
+    { "@type": "HowToStep", "text": "Kog kartoflerne under låg i 10 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "note": "Middel varme. Start timeren, når det simrer. Rør forsigtigt af og til, så det ikke brænder på i bunden." } },
+    { "@type": "HowToStep", "text": "Riv gulerødderne groft til råkost.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skræl dem først. Rivejernet er skarpt, så den voksne river. Kom dem i en skål." } },
+    { "@type": "HowToStep", "text": "Hæld kartoflerne i et ovnfast fad.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["kartoffel"], "note": "Den voksne hælder fra den varme gryde, også sovsen." } },
+    { "@type": "HowToStep", "text": "Stik broccoli og skinke ned mellem kartoflerne.", "tumbi": { "verbum": "pynte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["broccoli", "skinke"], "note": "Broccolien kommer direkte fra frost. Fadet er varmt: barnet bruger en ske." } },
+    { "@type": "HowToStep", "text": "Drys osten over.", "tumbi": { "verbum": "drysse", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ost"], "note": "Fadet er varmt." } },
+    { "@type": "HowToStep", "text": "Bag flødekartoflerne i ovnen i 20 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1200, "note": "200 °C varmluft. Osten skal være gylden." } },
+    { "@type": "HowToStep", "text": "Tag fadet ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Fadet er meget varmt. Mærk med en gaffel, at kartoflerne er møre, ellers 5 min mere. Lad fadet stå 5 min, så sovsen sætter sig." } },
+    { "@type": "HowToStep", "text": "Smag på en kartoffelskive.", "tumbi": { "verbum": "smage", "ikoner": ["kartoffel"], "note": "Pust først. Gulerodsråkosten ved siden af." } }
+  ],
+  "tumbi": {
+    "id": "floedekartofler-med-skinke-og-broccoli",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra vores research om hurtige hverdagsretter (31-10-2026). Idé fra Arla, «Flødekartofler» (https://www.arla.dk/opskrifter/flodekartofler/), her med frosne kartoffelskiver, madlavningsfløde 15 % og letmælk i stedet for piskefløde, skinketern og frossen broccoli. Kartoflerne simrer først i gryden, så tiden i ovnen bliver kortere. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 98,
+    "pris_dato": "2026-10",
+    "groent_g": 700,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's normalpriser på shop.rema1000.dk 31-10-2026 for den brugte mængde (madlavningsfløde 15 % 250 ml 13,95 kr., letmælk 1 l 10,95 kr., kartoffelskiver frost 600 g 17,95 kr. × 2, broccoli frost 400 g 13,95 kr. (tilbud 12 kr.), skinketern 150 g 13,59 kr., revet pizzatopping 500 g 24,95 kr., gulerødder 1 kg 12 kr.), i alt 86,92 kr., ganget med 1,09 plus 3 kr. til salt og peber. Grønt er også et skøn (ikke vejet): broccoli 400 g og gulerødder 300 g, uden bælgfrugter og kartofler.",
+    "ingredienser": [
+      { "ikon": "flode", "maengde": "2,5 dl", "vare": "madlavningsflode", "antal": 2.5, "enhed": "dl" },
+      { "ikon": "maelk", "maengde": "2 dl", "vare": "maelk", "antal": 2, "enhed": "dl" },
+      { "ikon": "salt", "maengde": "½ tsk", "vare": "salt" },
+      { "ikon": "peber", "maengde": "1 knivspids", "vare": "peber" },
+      { "ikon": "kartoffel", "maengde": "1,2 kg", "vare": "kartoffelskiver", "antal": 1200, "enhed": "g" },
+      { "ikon": "broccoli", "maengde": "400 g", "vare": "broccoliblanding", "antal": 400, "enhed": "g" },
+      { "ikon": "skinke", "maengde": "150 g", "vare": "skinketern", "antal": 150, "enhed": "g" },
+      { "ikon": "ost", "maengde": "75 g", "vare": "revet-ost", "antal": 75, "enhed": "g" },
+      { "ikon": "gulerod", "maengde": "3", "vare": "gulerod", "antal": 3, "enhed": "stk" }
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Cremet carbonara med ærter",
+  "description": "Spaghetti med sprød bacon, ærter og en cremet sovs af creme fraiche og ost. Ingen rå eller halvkogte æg. Allergener: gluten og mælk; tjek osten for æg (lysozym).",
+  "image": "grafik/ret-cremet-carbonara-med-aerter-uden-raa-aeg.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT20M",
+  "totalTime": "PT25M",
+  "recipeIngredient": [
+    "350 g spaghetti",
+    "3 l vand og 1 tsk salt til spaghettien",
+    "200 g creme fraiche",
+    "50 g revet parmesan",
+    "150 g bacon i tern",
+    "400 g frosne ærter",
+    "1 knivspids peber"
+  ],
+  "tool": ["stor gryde med låg", "pande", "skål", "kop", "dørslag", "grydeske"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Kog vand til spaghettien.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "3 l vand og 1 tsk salt i en stor gryde på en bagerste plade, med håndtagene ind. Med låg på koger det hurtigere." } },
+    { "@type": "HowToStep", "text": "Rør creme fraiche og ost sammen i en skål.", "tumbi": { "verbum": "roere", "ikoner": ["yoghurt", "ost"], "note": "200 g creme fraiche og 50 g ost. Barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Hæld baconen på en kold pande.", "tumbi": { "verbum": "haelde", "ikoner": ["koed"], "note": "Uden olie, og panden er ikke tændt endnu. Hæld direkte fra pakken, og rør ikke ved andet, før hænderne er vasket." } },
+    { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: bacon er råt svinekød." } },
+    { "@type": "HowToStep", "text": "Steg baconen sprød i 6 minutter.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 360, "note": "Middel varme. Fedtet smelter ud, så der skal ikke olie på. Rør af og til, og pas på sprøjt. Sluk bagefter, og lad panden stå." } },
+    { "@type": "HowToStep", "text": "Kom spaghettien i vandet.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 360, "ikoner": ["spaghetti"], "note": "Når vandet koger. Kog som anvist på pakken: ærterne kommer i de sidste 3 min. Rør lidt i starten." } },
+    { "@type": "HowToStep", "text": "Hæld ærterne i vandet.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["aerter"], "note": "Direkte fra frost. Den voksne hælder: vandet koger og kan sprøjte." } },
+    { "@type": "HowToStep", "text": "Kog spaghetti og ærter i 3 minutter mere.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180 } },
+    { "@type": "HowToStep", "text": "Øs en kop kogevand op.", "tumbi": { "verbum": "maale", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "Ca. 1 dl. Den voksne øser: vandet koger. Det gør sovsen cremet." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra spaghettien.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spaghetti", "aerter"], "note": "Den voksne hælder gennem dørslaget i vasken. Pas på dampen." } },
+    { "@type": "HowToStep", "text": "Hæld spaghetti og ærter tilbage i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spaghetti", "aerter"], "note": "Den voksne hælder. Gryden er varm." } },
+    { "@type": "HowToStep", "text": "Vend bacon og ostecreme i spaghettien.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["yoghurt", "ost"], "note": "Gryden af varmen. Den voksne vender. Hæld lidt af vandet fra koppen i, til sovsen er cremet." } },
+    { "@type": "HowToStep", "text": "Smag til med peber.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["peber"], "note": "Pust på skeen først. Bacon og ost er salte, så der skal ikke mere salt i." } }
+  ],
+  "tumbi": {
+    "id": "cremet-carbonara-med-aerter-uden-raa-aeg",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra vores research om hurtige hverdagsretter (31-10-2026). Idé fra Arla, spaghetti carbonara (https://www.arla.dk/opskrifter/spaghetti-carbonara-med-mere-gront/), her uden æg: sovsen er creme fraiche og ost, fordi Fødevarestyrelsen anbefaler pasteuriserede æg, når man laver mad til små børn. Squash er taget ud, og der er flere ærter. Runden er inspireret af Jamie Olivers hurtige retter med få ingredienser (jamieoliver.com/inspiration/quick-and-easy-food-introduction/). Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 41,
+    "pris_dato": "2026-10",
+    "groent_g": 400,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's normalpriser på shop.rema1000.dk 31-10-2026 for den brugte mængde (spaghetti 1 kg 8,95 kr., bacon i tern 200 g 12,95 kr., fine ærter frost 600 g 10,36 kr., creme fraiche 18 % 500 g 18,95 kr., revet hård ost 100 g 15,95 kr.), i alt 35,31 kr., ganget med 1,09 plus 3 kr. til salt og peber. Grønt er også et skøn (ikke vejet): ærter 400 g, uden bælgfrugter og kartofler.",
+    "ingredienser": [
+      { "ikon": "spaghetti", "maengde": "350 g", "vare": "spaghetti", "antal": 350, "enhed": "g" },
+      { "ikon": "vand", "maengde": "3 l", "vare": "vand" },
+      { "ikon": "yoghurt", "maengde": "200 g", "vare": "creme-fraiche", "antal": 200, "enhed": "g" },
+      { "ikon": "ost", "maengde": "50 g", "vare": "parmesan", "antal": 50, "enhed": "g" },
+      { "ikon": "koed", "maengde": "150 g", "vare": "bacon-tern", "antal": 150, "enhed": "g" },
+      { "ikon": "aerter", "maengde": "400 g", "vare": "aerter", "antal": 400, "enhed": "g" },
+      { "ikon": "peber", "maengde": "1 knivspids", "vare": "peber" }
+    ]
+  }
+}

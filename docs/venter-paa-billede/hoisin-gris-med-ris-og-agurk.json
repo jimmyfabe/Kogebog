@@ -1,0 +1,60 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Hoisin-gris med ris, agurk og ærter",
+  "description": "Hakket grisekød i en sød og mild hoisinsovs med ærter. Ris, agurk og gulerod i skåle. Indeholder soja, gluten (hvede) og sesam (i hoisinsaucen).",
+  "image": "grafik/ret-hoisin-gris-med-ris-og-agurk.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT10M",
+  "cookTime": "PT15M",
+  "totalTime": "PT25M",
+  "recipeIngredient": [
+    "300 g jasminris",
+    "1 agurk",
+    "80 g hoisinsauce",
+    "½ dl vand",
+    "1 spsk olie",
+    "500 g hakket grisekød",
+    "300 g frosne ærter",
+    "150 g revne gulerødder"
+  ],
+  "tool": ["si", "gryde med låg", "kniv", "skærebræt", "kop", "stor pande", "grydeske", "skåle"],
+  "recipeInstructions": [
+    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender"}},
+    {"@type": "HowToStep", "text": "Skyl risene i en si.", "tumbi": {"verbum": "haelde", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er næsten klart. Barnet kan selv."}},
+    {"@type": "HowToStep", "text": "Sæt risene over at koge.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Vand som på posen, uden salt: sovsen er salt nok. Kog op, skru ned, og lad dem småkoge under låg i 10-12 min. Sluk, og lad dem trække 5-10 min med låget på."}},
+    {"@type": "HowToStep", "text": "Skær agurken i små tern.", "tumbi": {"verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["agurk"], "note": "Del den på langs først. Tern eller stave, som I bedst kan lide."}},
+    {"@type": "HowToStep", "text": "Rør hoisin og vand sammen i en kop.", "tumbi": {"verbum": "roere", "ikoner": ["soja", "vand"], "note": "80 g hoisinsauce, ca. 4 spsk, og ½ dl vand."}},
+    {"@type": "HowToStep", "text": "Læg kødet på panden.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["koed"], "note": "1 spsk olie i en stor pande ved høj varme. Timeren startes efter håndvasken."}},
+    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Med sæbe: efter råt kød."}},
+    {"@type": "HowToStep", "text": "Brun kødet, og del det i små stykker.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Den voksne rører og deler kødet med grydeskeen."}},
+    {"@type": "HowToStep", "text": "Hæld ærterne på panden.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["aerter"], "note": "Direkte fra frost. Den voksne hælder: fedtet kan sprøjte."}},
+    {"@type": "HowToStep", "text": "Steg ærterne med i 3 minutter.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180}},
+    {"@type": "HowToStep", "text": "Hæld sovsen på panden, og rør rundt.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["soja"], "note": "Den voksne hælder."}},
+    {"@type": "HowToStep", "text": "Lad det boble i 2 minutter.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 120, "note": "Til sovsen er tyk og blank. Kødet skal være gennemstegt uden noget lyserødt."}},
+    {"@type": "HowToStep", "text": "Drys gulerødder og agurk på toppen.", "tumbi": {"verbum": "drysse", "ikoner": ["gulerod", "agurk"], "note": "Hver bygger sin egen skål: ris i bunden, så kød og grønt."}}
+  ],
+  "tumbi": {
+    "id": "hoisin-gris-med-ris-og-agurk",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne bygger på vores research om hurtige retter med ris (31-10-2026). Idé fra Love Pork, «Speedy Hoisin Pork Stir Fry» (https://www.lovepork.co.uk/recipes/speedy-hoisin-pork-stir-fry-by-beth-at-mealtimewithmummy/), her med ærter i stedet for løg, peberfrugt og broccoli, uden ingefær, hvidløg og mørk soja, og med revne gulerødder fra pose. Risene som hos BBC Good Food (https://www.bbcgoodfoodme.com/recipes/jasmine-rice/). Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 74,
+    "pris_dato": "2026-10",
+    "groent_g": 800,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's priser på shop.rema1000.dk 31-10-2026 for den brugte mængde (jasminris 1 kg 15,02 kr.; agurk 10 kr. (normalpris fra 1-11; tilbud 7 kr. til 31-10); hoisinsauce 40 g 5 kr.; hakket grisekød 8-12 % 500 g 24,95 kr. (prisen gjaldt til 31-10, prisen fra 1-11 stod ikke i webshoppen); ærter frost 400 g 13,95 kr. (normalpris fra 1-11; tilbud 12 kr. til 31-10); revet gulerod 325 g 12 kr.), i alt 65,46 kr., ganget med 1,09 plus 3 kr. til olie og salt. Grønt er også et skøn (ikke vejet): agurk ca. 350 g, ærter 300 g og revne gulerødder 150 g.",
+    "ingredienser": [
+      {"ikon": "ris", "maengde": "300 g", "vare": "ris", "antal": 300, "enhed": "g"},
+      {"ikon": "agurk", "maengde": "1", "vare": "agurk", "antal": 1, "enhed": "stk"},
+      {"ikon": "soja", "maengde": "80 g", "vare": "hoisin", "antal": 80, "enhed": "g"},
+      {"ikon": "vand", "maengde": "½ dl", "vare": "vand"},
+      {"ikon": "olie", "maengde": "1 spsk", "vare": "olie"},
+      {"ikon": "koed", "maengde": "500 g", "vare": "hakket-svinekoed", "antal": 500, "enhed": "g"},
+      {"ikon": "aerter", "maengde": "300 g", "vare": "aerter", "antal": 300, "enhed": "g"},
+      {"ikon": "gulerod", "maengde": "150 g", "vare": "revet-gulerod", "antal": 150, "enhed": "g"}
+    ]
+  }
+}

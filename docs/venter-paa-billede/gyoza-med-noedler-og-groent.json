@@ -1,0 +1,55 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Gyoza med nudler og wokgrøntsager",
+  "description": "Stegte frosne gyoza med fuldkornsnudler og wokgrøntsager, der koger i samme gryde. Agurkestave og sovsen fra posen til.",
+  "image": "grafik/ret-gyoza-med-noedler-og-groent.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT15M",
+  "totalTime": "PT20M",
+  "recipeIngredient": [
+    "2 l vand til nudlerne",
+    "2 poser frosne gyoza (ca. 380 g)",
+    "2 spsk olie",
+    "1 agurk",
+    "450 g frossen wokblanding",
+    "250 g fuldkornsnudler",
+    "3 spsk soja"
+  ],
+  "tool": ["elkedel", "stor gryde", "pande med låg", "paletkniv", "kniv", "skærebræt", "dørslag", "tang"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder hvede, soja og sesam og kan have spor af skaldyr, fisk, mælk, selleri og sennep: tjek posen. Vælg gyoza med kylling, for dem med grøntsager har jalapeños." } },
+    { "@type": "HowToStep", "text": "Kog vand til nudlerne.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "Brug elkedlen, så går det hurtigere. Hæld vandet i en stor gryde, og hold det i kog." } },
+    { "@type": "HowToStep", "text": "Tæl gyozaerne ud, så alle får lige mange.", "tumbi": { "verbum": "maale", "ikoner": ["gyoza"], "note": "På en tallerken, direkte fra frost. Barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Steg gyozaerne i olie på panden.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["gyoza", "olie"], "note": "Som anvist på posen, ved middel varme under låg. De skal være rygende varme hele vejen igennem. Lav nudlerne imens." } },
+    { "@type": "HowToStep", "text": "Skær agurken i stave.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["agurk"], "note": "Den voksne skærer agurken på langs. Barnet kan dele stavene med en smørekniv." } },
+    { "@type": "HowToStep", "text": "Kom wokgrøntsagerne i det kogende vand.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["broccoli"], "note": "Direkte fra frost. Det kan sprøjte: den voksne hælder." } },
+    { "@type": "HowToStep", "text": "Kom nudlerne i gryden.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 240, "ikoner": ["spaghetti"], "note": "Kog som anvist på posen. Grøntsagerne koger med." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra nudlerne.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "note": "Gennem dørslaget i vasken. Dampen er meget varm: barnet står på afstand." } },
+    { "@type": "HowToStep", "text": "Vend nudlerne med soja.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["soja"], "note": "Tilbage i gryden. Vend med en tang." } },
+    { "@type": "HowToStep", "text": "Læg gyoza, nudler og agurk på tallerkenen.", "tumbi": { "verbum": "pynte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["gyoza", "spaghetti", "agurk"], "note": "Dyp gyozaerne i sovsen fra posen. De er meget varme indeni: skær dem over for de mindste, og lad dem køle lidt." } }
+  ],
+  "tumbi": {
+    "id": "gyoza-med-noedler-og-groent",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra vores research om hurtige hverdagsretter (31-10-2026). Idé fra itsu, «Gyoza recipes for quick weeknight dinners» (https://www.itsu.com/blog/gyoza-recipes-for-quick-weeknight-dinners/), her med fuldkornsnudler i stedet for ris, frosne gyoza med kylling og wokgrøntsager, der koger med nudlerne. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 92,
+    "pris_dato": "2026-10",
+    "groent_g": 800,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's normalpriser på shop.rema1000.dk 31-10-2026 for den brugte mængde (gyoza med kylling 191 g 24,99 kr. × 2, fuldkornsnudler 250 g 8,07 kr., wokblanding 450 g 13,95 kr. (tilbud 12 kr.), agurk 10 kr. (tilbud 7 kr. til 31-10)), i alt 82 kr., ganget med 1,09 plus 3 kr. til olie og soja. Grønt er også et skøn (ikke vejet): wokblanding 450 g og agurk 350 g, uden bælgfrugter og kartofler.",
+    "ingredienser": [
+      { "ikon": "vand", "maengde": "2 l", "vare": "vand" },
+      { "ikon": "gyoza", "maengde": "2 poser", "vare": "gyoza", "antal": 380, "enhed": "g" },
+      { "ikon": "olie", "maengde": "2 spsk", "vare": "olie" },
+      { "ikon": "agurk", "maengde": "1", "vare": "agurk", "antal": 1, "enhed": "stk" },
+      { "ikon": "broccoli", "maengde": "450 g", "vare": "wokblanding", "antal": 450, "enhed": "g" },
+      { "ikon": "spaghetti", "maengde": "250 g", "vare": "nudler", "antal": 250, "enhed": "g" },
+      { "ikon": "soja", "maengde": "3 spsk", "vare": "soja" }
+    ]
+  }
+}

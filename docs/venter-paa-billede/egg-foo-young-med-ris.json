@@ -1,0 +1,58 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Kinesiske grøntsagsomeletter med ris",
+  "description": "Små omeletter med kål, gulerod og ærter, inspireret af egg foo young. Ris og en stænk soja til.",
+  "image": "grafik/ret-egg-foo-young-med-ris.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT10M",
+  "cookTime": "PT20M",
+  "totalTime": "PT30M",
+  "recipeIngredient": [
+    "300 g jasminris",
+    "8 æg",
+    "150 g snittet kål",
+    "2 gulerødder",
+    "150 g frosne ærter",
+    "3 spsk soja",
+    "2 spsk olie"
+  ],
+  "tool": ["si", "gryde med låg", "rivejern", "stor skål", "gaffel", "pande", "øse", "paletkniv"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder æg, soja og hvede (i sojaen)." } },
+    { "@type": "HowToStep", "text": "Hæld risene i en si, og skyl dem.", "tumbi": { "verbum": "haelde", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er klart. Barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Sæt risene over at koge.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Vand som anvist på posen. Høj varme, til det koger, så lav varme under låg i 12 min. Sluk, og lad risene trække under låg, mens I steger omeletterne. Ris fra i går, kølet hurtigt og højst et døgn gamle, kan varmes, til de damper hele vejen igennem." } },
+    { "@type": "HowToStep", "text": "Riv gulerødderne groft.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skræl dem først. Rivejernet er skarpt, så den voksne river." } },
+    { "@type": "HowToStep", "text": "Slå æggene ud i en stor skål.", "tumbi": { "verbum": "haelde", "ikoner": ["aeg"], "note": "Slå dem ud i en kop først, så skaller ikke kommer med." } },
+    { "@type": "HowToStep", "text": "Pisk æggene med en gaffel.", "tumbi": { "verbum": "piske", "ikoner": ["aeg"], "note": "Barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg på fingrene." } },
+    { "@type": "HowToStep", "text": "Kom kål, gulerod, ærter og soja i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["kaal", "gulerod", "aerter", "soja"], "note": "1 spsk soja. Ærterne kan komme i direkte fra frost." } },
+    { "@type": "HowToStep", "text": "Rør det hele godt sammen.", "tumbi": { "verbum": "roere", "ikoner": ["kaal", "gulerod", "aerter"] } },
+    { "@type": "HowToStep", "text": "Steg små omeletter i olie.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 150, "ikoner": ["olie"], "note": "Middel varme. En lille øse pr. omelet, fire ad gangen. Fedtet kan sprøjte, så barnet står på afstand." } },
+    { "@type": "HowToStep", "text": "Vend omeletterne forsigtigt.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 150, "note": "De skal være faste hele vejen igennem. Læg dem på et fad under låg, og steg resten på samme måde: ca. 12 stk." } },
+    { "@type": "HowToStep", "text": "Læg ris og omeletter på tallerkenerne.", "tumbi": { "verbum": "pynte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Gryden og panden er varme: den voksne tager op." } },
+    { "@type": "HowToStep", "text": "Dryp lidt soja over din omelet.", "tumbi": { "verbum": "haelde", "ikoner": ["soja"], "note": "Kun lidt: sojaen er salt. Barnet kan selv." } }
+  ],
+  "tumbi": {
+    "id": "egg-foo-young-med-ris",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra vores research om hurtige hverdagsretter (31-10-2026). Idé fra Red House Spice, «Egg foo young» (https://redhousespice.com/egg-foo-young/), her med snittet kål i stedet for bønnespirer, gulerod og ærter, uden sovs og med soja til at dryppe over. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 44,
+    "pris_dato": "2026-10",
+    "groent_g": 500,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's normalpriser på shop.rema1000.dk 31-10-2026 for den brugte mængde (jasminris 1 kg 15,02 kr., skrabeæg 15 stk. 45,25 kr., snittet hvidkål 400 g 10 kr., gulerødder 1 kg 12 kr., fine ærter 600 g 10,36 kr.), i alt 37,38 kr., ganget med 1,09 plus 3 kr. til olie og soja. Grønt er også et skøn (ikke vejet): kål 150 g, gulerødder 200 g og ærter 150 g, uden bælgfrugter og kartofler.",
+    "ingredienser": [
+      { "ikon": "ris", "maengde": "300 g", "vare": "ris", "antal": 300, "enhed": "g" },
+      { "ikon": "aeg", "maengde": "8", "vare": "aeg", "antal": 8, "enhed": "stk" },
+      { "ikon": "kaal", "maengde": "150 g", "vare": "snittet-kaal", "antal": 150, "enhed": "g" },
+      { "ikon": "gulerod", "maengde": "2", "vare": "gulerod", "antal": 2, "enhed": "stk" },
+      { "ikon": "aerter", "maengde": "150 g", "vare": "aerter", "antal": 150, "enhed": "g" },
+      { "ikon": "soja", "maengde": "3 spsk", "vare": "soja" },
+      { "ikon": "olie", "maengde": "2 spsk", "vare": "olie" }
+    ]
+  }
+}

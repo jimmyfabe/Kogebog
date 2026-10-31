@@ -1,0 +1,60 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Teriyaki-kylling med broccoli og ris",
+  "description": "Kylling, broccoli og gulerødder i en blank sovs af soja og honning, med ris. Indeholder soja og gluten (hvede i sojaen).",
+  "image": "grafik/ret-teriyaki-kylling-med-broccoli.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT10M",
+  "cookTime": "PT15M",
+  "totalTime": "PT25M",
+  "recipeIngredient": [
+    "300 g jasminris",
+    "3 spsk soja",
+    "2 spsk honning",
+    "3 spsk vand",
+    "2 gulerødder",
+    "450 g kyllingebryst",
+    "1 spsk olie",
+    "400 g frossen broccoli"
+  ],
+  "tool": ["si", "gryde med låg", "glas med låg", "kniv", "2 skærebrætter", "stor pande eller wok", "grydeske"],
+  "recipeInstructions": [
+    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender"}},
+    {"@type": "HowToStep", "text": "Skyl risene i en si.", "tumbi": {"verbum": "haelde", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er næsten klart. Barnet kan selv."}},
+    {"@type": "HowToStep", "text": "Sæt risene over at koge.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Vand som på posen, uden salt: sovsen er salt nok. Kog op, skru ned, og lad dem småkoge under låg i 10-12 min. Sluk, og lad dem trække 5-10 min med låget på."}},
+    {"@type": "HowToStep", "text": "Ryst sovsen sammen i et glas med låg.", "tumbi": {"verbum": "roere", "ikoner": ["soja", "honning", "vand"], "note": "3 spsk soja, 2 spsk honning og 3 spsk vand. Skru låget godt på."}},
+    {"@type": "HowToStep", "text": "Skær gulerødderne i tynde skiver.", "tumbi": {"verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skræl dem først. Tynde skiver bliver hurtigt møre."}},
+    {"@type": "HowToStep", "text": "Skær kyllingen i tynde strimler.", "tumbi": {"verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["koed"], "note": "Et rent skærebræt til den rå kylling."}},
+    {"@type": "HowToStep", "text": "Læg kyllingen på panden.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["koed"], "note": "1 spsk olie i en stor pande eller wok ved høj varme. Timeren startes efter håndvasken."}},
+    {"@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": {"verbum": "vaske-haender", "note": "Med sæbe: rå kylling kan give maveonde. Vask også skærebrættet og kniven."}},
+    {"@type": "HowToStep", "text": "Steg kyllingen i 5 minutter.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Den voksne rører, til kyllingen er hvid udenpå."}},
+    {"@type": "HowToStep", "text": "Hæld gulerødder og broccoli på panden.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["gulerod", "broccoli"], "note": "Broccolien direkte fra frost. Den voksne hælder: olien kan sprøjte."}},
+    {"@type": "HowToStep", "text": "Steg grøntsagerne med i 5 minutter.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Rør tit. Broccolien skal være varm hele vejen igennem."}},
+    {"@type": "HowToStep", "text": "Ryst sovsen, og hæld den på panden.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["soja", "honning"], "note": "Den voksne hælder."}},
+    {"@type": "HowToStep", "text": "Lad sovsen boble i 2 minutter.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 120, "note": "Rør, til den er blank og lidt tyk. Den voksne skærer en strimmel over: kyllingen skal være hvid hele vejen igennem. Server med risene."}}
+  ],
+  "tumbi": {
+    "id": "teriyaki-kylling-med-broccoli",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne bygger på vores research om hurtige retter med ris (31-10-2026). Idé fra Madens Verden (https://madensverden.dk/hjemmelavet-teriyaki), her med kyllingebryst i stedet for lårfilet, frossen broccoli, mindre soja og uden sesam. Risene som hos BBC Good Food (https://www.bbcgoodfoodme.com/recipes/jasmine-rice/). Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 68,
+    "pris_dato": "2026-10",
+    "groent_g": 600,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's priser på shop.rema1000.dk 31-10-2026 for den brugte mængde (jasminris 1 kg 15,02 kr.; sojasauce 250 ml 10,50 kr.; honning 425 g 19,09 kr.; gulerødder 1 kg 12 kr.; kyllingebrystfilet 450 g 34,95 kr.; broccoli frost 400 g 13,95 kr. (normalpris fra 1-11; tilbud 12 kr. til 31-10)), i alt 59,58 kr., ganget med 1,09 plus 3 kr. til olie og salt. Grønt er også et skøn (ikke vejet): broccoli 400 g og gulerødder ca. 200 g.",
+    "ingredienser": [
+      {"ikon": "ris", "maengde": "300 g", "vare": "ris", "antal": 300, "enhed": "g"},
+      {"ikon": "soja", "maengde": "3 spsk", "vare": "soja"},
+      {"ikon": "honning", "maengde": "2 spsk", "vare": "honning"},
+      {"ikon": "vand", "maengde": "3 spsk", "vare": "vand"},
+      {"ikon": "gulerod", "maengde": "2", "vare": "gulerod", "antal": 2, "enhed": "stk"},
+      {"ikon": "koed", "maengde": "450 g", "vare": "kyllingebryst", "antal": 450, "enhed": "g"},
+      {"ikon": "olie", "maengde": "1 spsk", "vare": "olie"},
+      {"ikon": "broccoli", "maengde": "400 g", "vare": "broccoliblanding", "antal": 400, "enhed": "g"}
+    ]
+  }
+}

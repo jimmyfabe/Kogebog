@@ -1,0 +1,56 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Gnocchi på panden med tomat, spinat og mozzarella",
+  "description": "Bløde gnocchi i mild tomatsovs med spinat og smeltet mozzarella. Klar på cirka 20 minutter. Allergener: gluten og mælk (tjek gnocchi-posen for æg).",
+  "image": "grafik/ret-gnocchi-med-tomat-spinat-og-mozzarella.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT15M",
+  "totalTime": "PT20M",
+  "recipeIngredient": [
+    "1 spsk olie",
+    "2 dåser hakkede tomater",
+    "200 g frossen hakket spinat",
+    "½ tsk hvidløgspulver",
+    "½ tsk salt",
+    "1 kg gnocchi",
+    "100 g revet mozzarella"
+  ],
+  "tool": ["stor gryde med låg", "elkedel", "stor pande med låg", "dåseåbner", "grydeske", "dørslag"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Sæt en stor gryde vand over at koge.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "note": "Med låg, så går det hurtigere. Eller kog vandet i elkedlen først. Vandet er til gnocchierne." } },
+    { "@type": "HowToStep", "text": "Hæld olie og tomater på en kold pande.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["olie", "tomat"], "note": "En stor pande med låg. Den voksne åbner dåserne: kanten er skarp. Panden er ikke tændt endnu." } },
+    { "@type": "HowToStep", "text": "Kom spinatklumperne på panden.", "tumbi": { "verbum": "haelde", "ikoner": ["spinat"], "note": "Direkte fra frost." } },
+    { "@type": "HowToStep", "text": "Drys hvidløgspulver og salt over.", "tumbi": { "verbum": "drysse", "ikoner": ["hvidloeg", "salt"] } },
+    { "@type": "HowToStep", "text": "Lad sovsen småkoge under låg i 8 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 480, "note": "Middel varme. Rør af og til, til spinaten er tøet og rørt ud i sovsen." } },
+    { "@type": "HowToStep", "text": "Hæld gnocchierne i det kogende vand.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["kartoffel"], "note": "Den voksne hælder, så vandet ikke sprøjter. De er klar, når de flyder op, ca. 2-3 min (se posen). Er gryden lille, så kog dem i to omgange." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra i dørslaget.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["kartoffel"], "note": "Den voksne hælder. Pas på dampen." } },
+    { "@type": "HowToStep", "text": "Vend gnocchierne forsigtigt i sovsen.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "note": "Med en grydeske, så de ikke går i stykker." } },
+    { "@type": "HowToStep", "text": "Drys mozzarellaen over gnocchierne.", "tumbi": { "verbum": "drysse", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 120, "ikoner": ["ost"], "note": "Panden er varm: barnet drysser fra kanten. Låg på i 2 min, til osten er smeltet." } },
+    { "@type": "HowToStep", "text": "Smag på en gnocchi.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "note": "Pust først: gnocchi er meget varme indeni. Smag sovsen til med salt." } }
+  ],
+  "tumbi": {
+    "id": "gnocchi-med-tomat-spinat-og-mozzarella",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra vores research om hurtige hverdagsretter (31-10-2026). Idé fra Valdemarsro, «Bagt gnocchi med tomater» (https://www.valdemarsro.dk/bagt-gnocchi-med-tomater/), her lavet på panden uden ovn, med to dåser hakkede tomater i stedet for friske tomater, frossen spinat og revet mozzarella. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 70,
+    "pris_dato": "2026-10",
+    "groent_g": 1000,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's normalpriser på shop.rema1000.dk 31-10-2026 for den brugte mængde (gnocchi 500 g 19,96 kr. × 2, hakkede tomater 400 g 6,37 kr. × 2, hakket spinat frost 750 g 9,95 kr., revet mozzarella 400 g 23,96 kr.), i alt 61,30 kr., ganget med 1,09 plus 3 kr. til olie, salt og hvidløgspulver. Grønt er også et skøn (ikke vejet): hakkede tomater 800 g og spinat 200 g, uden bælgfrugter og kartofler (gnocchi tæller ikke med).",
+    "ingredienser": [
+      { "ikon": "olie", "maengde": "1 spsk", "vare": "olie" },
+      { "ikon": "tomat", "maengde": "2 dåser", "vare": "hakkede-tomater", "antal": 800, "enhed": "g" },
+      { "ikon": "spinat", "maengde": "200 g", "vare": "hakket-spinat", "antal": 200, "enhed": "g" },
+      { "ikon": "hvidloeg", "maengde": "½ tsk", "vare": "hvidloegspulver" },
+      { "ikon": "salt", "maengde": "½ tsk", "vare": "salt" },
+      { "ikon": "kartoffel", "maengde": "1 kg", "vare": "gnocchi", "antal": 1000, "enhed": "g" },
+      { "ikon": "ost", "maengde": "100 g", "vare": "revet-ost", "antal": 100, "enhed": "g" }
+    ]
+  }
+}

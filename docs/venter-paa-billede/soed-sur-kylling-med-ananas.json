@@ -1,0 +1,61 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Sød-sur kylling med ananas og ris",
+  "description": "Kylling i en mild sød og sur sovs af ketchup og ananas, med peberfrugt og ris. Indeholder soja og gluten (hvede i sojaen).",
+  "image": "grafik/ret-soed-sur-kylling-med-ananas.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT15M",
+  "cookTime": "PT15M",
+  "totalTime": "PT30M",
+  "recipeIngredient": [
+    "300 g jasminris",
+    "1 dåse ananasringe",
+    "4 spsk ketchup",
+    "1 spsk soja",
+    "3 peberfrugter",
+    "450 g kyllingebryst",
+    "1 spsk olie"
+  ],
+  "tool": ["si", "gryde med låg", "dåseåbner", "skål", "ske", "kniv", "2 skærebrætter", "stor pande", "grydeske"],
+  "recipeInstructions": [
+    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender"}},
+    {"@type": "HowToStep", "text": "Skyl risene i en si.", "tumbi": {"verbum": "haelde", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er næsten klart. Barnet kan selv."}},
+    {"@type": "HowToStep", "text": "Sæt risene over at koge.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Vand som på posen, uden salt: sovsen er salt nok. Kog op, skru ned, og lad dem småkoge under låg i 10-12 min. Sluk, og lad dem trække 5-10 min med låget på."}},
+    {"@type": "HowToStep", "text": "Hæld saften fra ananassen i en skål.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["ananas"], "note": "Den voksne åbner dåsen: kanten er skarp. Gem saften til sovsen."}},
+    {"@type": "HowToStep", "text": "Rør ketchup og soja i saften.", "tumbi": {"verbum": "roere", "ikoner": ["ketchup", "soja"], "note": "4 spsk ketchup og 1 spsk soja. Det er den søde og sure sovs."}},
+    {"@type": "HowToStep", "text": "Del ananasringene i små stykker.", "tumbi": {"verbum": "smuldre", "ikoner": ["ananas"], "note": "Med fingrene eller en smørekniv. Ananas er blød og let at dele."}},
+    {"@type": "HowToStep", "text": "Skær peberfrugterne i små stykker.", "tumbi": {"verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["peberfrugt"], "note": "Fjern kernerne og det hvide. Barnet kan pille kernerne ud med fingrene."}},
+    {"@type": "HowToStep", "text": "Skær kyllingen i små stykker.", "tumbi": {"verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["koed"], "note": "Et rent skærebræt til den rå kylling. Stykker på ca. 2 cm bliver hurtigt gennemstegte."}},
+    {"@type": "HowToStep", "text": "Læg kyllingen på panden.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["koed"], "note": "1 spsk olie i en stor pande ved høj varme. Timeren startes efter håndvasken."}},
+    {"@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": {"verbum": "vaske-haender", "note": "Med sæbe: rå kylling kan give maveonde. Vask også skærebrættet og kniven."}},
+    {"@type": "HowToStep", "text": "Steg kyllingen i 5 minutter.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Den voksne rører, til kyllingen er hvid udenpå."}},
+    {"@type": "HowToStep", "text": "Kom peberfrugterne på panden.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["peberfrugt"], "note": "Den voksne hælder: olien kan sprøjte."}},
+    {"@type": "HowToStep", "text": "Steg det hele i 3 minutter mere.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180}},
+    {"@type": "HowToStep", "text": "Hæld sovsen og ananassen på panden.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ketchup", "ananas"], "note": "Den voksne hælder: det kan sprøjte."}},
+    {"@type": "HowToStep", "text": "Lad det småkoge i 3 minutter.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "note": "Rør af og til, til sovsen er tyk og blank. Den voksne skærer et stykke kylling over: det skal være hvidt hele vejen igennem."}},
+    {"@type": "HowToStep", "text": "Smag på sovsen.", "tumbi": {"verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "note": "Pust på skeen først. Server med risene."}}
+  ],
+  "tumbi": {
+    "id": "soed-sur-kylling-med-ananas",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne bygger på vores research om hurtige retter med ris (31-10-2026). Idé fra Klikk.no (https://www.klikk.no/kvinneguiden/mat/dagens-rett-sursot-kyllingwok-2592336), her uden eddike og med tre almindelige peberfrugter i stedet for snackpeber. Risene som hos BBC Good Food (https://www.bbcgoodfoodme.com/recipes/jasmine-rice/). Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 96,
+    "pris_dato": "2026-10",
+    "groent_g": 450,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's priser på shop.rema1000.dk 31-10-2026 for den brugte mængde (jasminris 1 kg 15,02 kr.; ananasringe 340 g 16,95 kr.; tomatketchup 520 g 8,80 kr.; sojasauce 250 ml 10,50 kr.; gul/orange peberfrugt 9 kr. stk.; kyllingebrystfilet 450 g 34,95 kr.), i alt 85,19 kr., ganget med 1,09 plus 3 kr. til olie og salt. Grønt er også et skøn (ikke vejet): peberfrugter 3 × ca. 150 g, uden ananas (frugt).",
+    "ingredienser": [
+      {"ikon": "ris", "maengde": "300 g", "vare": "ris", "antal": 300, "enhed": "g"},
+      {"ikon": "ananas", "maengde": "1 dåse", "vare": "ananas", "antal": 1, "enhed": "stk"},
+      {"ikon": "ketchup", "maengde": "4 spsk", "vare": "ketchup"},
+      {"ikon": "soja", "maengde": "1 spsk", "vare": "soja"},
+      {"ikon": "peberfrugt", "maengde": "3", "vare": "peberfrugt", "antal": 3, "enhed": "stk"},
+      {"ikon": "koed", "maengde": "450 g", "vare": "kyllingebryst", "antal": 450, "enhed": "g"},
+      {"ikon": "olie", "maengde": "1 spsk", "vare": "olie"}
+    ]
+  }
+}
