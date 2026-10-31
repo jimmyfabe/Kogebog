@@ -2,8 +2,10 @@
 //   #/hent/<kode>  telefonen: gemmer listen fra linket og skifter adressen til #/indkoeb (history.replaceState)
 //   #/indkoeb      telefonen: listen, der krydses af i butikken. Er den tom, kan linket sættes ind i et felt
 //   #/uge          iPad og desktop: den voksnes oversigt over ugen, Send til telefon, Del som tekst, Print og Ny uge
-//   #/uge/dag/<n>  den voksne vælger en ret til dag n (1 = mandag) med filtrene højst 40 min, billigst og mindst kniv
-//   #/uge/vaelg    iPad: børnene vælger med dyrene, billederne og stemmen (hvem → ret → dag)
+//   #/uge/dag/<n>  den voksne vælger en ret til dag n (1 = mandag) med filtrene højst 40 min, vegetar, masser af grønt,
+//                  billigst og mindst kniv
+//   #/uge/vaelg    iPad: børnene vælger med dyrene, billederne og stemmen (hvem → ret → dag) blandt ugens udvalg fra
+//                  voksendelen (alle ugeplan-retter, når der intet udvalg er)
 // Koden i linket kommer udefra. Den går kun gennem afkod() i js/plankode.js, og intet fra adressen kommer i DOM'en: fejlene
 // er faste tekster, og listen gemmes med den genskrevne kode. Lageret røres kun gennem js/lager.js, og al tekst sættes
 // som tekst (js/dom.js). app.js ejer ruterne og tilstanden (S) og giver sine hjælpere med init().
@@ -15,6 +17,7 @@ import { DYR, grafikIngrediens, grafikRet, grafikDyr } from './katalog.js';
 import { ugeNr, dagDato, planMandag, DAGE } from './tid.js';
 import { minutterTekst, utenBloede } from './tekst.js';
 import { holdKnap } from './hold.js';
+import { maerkerFor, MAERKER } from './maerker.js';
 import * as Tale from './tale.js';
 import * as R from './replikker.js';
 
@@ -690,12 +693,18 @@ function boernKnap() {
 
 // ---------- #/uge/dag/<n>: den voksne vælger en ret til en dag ----------
 
-const filtre = { hurtig: false, billig: false, kniv: false }; // huskes, til siden lukkes
+const filtre = { hurtig: false, vegetar: false, groent: false, billig: false, kniv: false }; // huskes, til siden lukkes
+// Vegetar og masser af grønt er mærkerne fra js/maerker.js med deres navn. De tre første fjerner retter, de to sidste sorterer
+const MAERKE_FILTRE = ['vegetar', 'groent'];
+const FRAVALG = ['hurtig', ...MAERKE_FILTRE];
 const FILTRE = [
   ['hurtig', 'Højst 40 min'],
+  ...MAERKE_FILTRE.map((k) => [k, MAERKER[k].navn]),
   ['billig', 'Billigst først'],
   ['kniv', 'Mindst kniv først'],
 ];
+const passer = (m) => (!filtre.hurtig || (m.minutter != null && m.minutter <= 40))
+  && MAERKE_FILTRE.every((k) => !filtre[k] || maerkerFor(m).includes(k));
 
 function dagSkaerm(i) {
   if (K.S.indexFejl) return hentFejl();
@@ -707,7 +716,7 @@ function dagSkaerm(i) {
   const n = nu ? nu.n : p.n;
   const alle = iPlanen();
   const prisPP = (m) => m.uge.prisKr / m.uge.portioner;
-  const retter = alle.filter((m) => !filtre.hurtig || (m.minutter != null && m.minutter <= 40))
+  const retter = alle.filter(passer)
     .sort((a, b) => (filtre.kniv ? knivtrin(a) - knivtrin(b) : 0) || (filtre.billig ? prisPP(a) - prisPP(b) : 0));
 
   const chips = el('div', { class: 'filtre', role: 'group', 'aria-label': 'Filtre' }, FILTRE.map(([k, tekst]) => {
@@ -738,8 +747,11 @@ function dagSkaerm(i) {
     indhold = el('p', { class: 'uge-tom', tekst: 'Der er ingen retter i ugeplanen endnu.' });
   } else if (!retter.length) {
     indhold = el('div', { class: 'uge-tom' },
-      el('p', { tekst: 'Ingen af retterne tager højst 40 minutter.' }),
-      medFokus(K.knap('Vis alle retter', { klasse: 'lille', onclick: () => { filtre.hurtig = false; tegnIgen('filter-hurtig'); } }), 'vis-alle'));
+      el('p', { tekst: 'Ingen af retterne passer til de valgte filtre.' }),
+      medFokus(K.knap('Vis alle retter', { klasse: 'lille', onclick: () => {
+        for (const k of FRAVALG) filtre[k] = false;
+        tegnIgen('filter-hurtig');
+      } }), 'vis-alle'));
   } else {
     indhold = el('ul', { class: 'ret-valg', 'aria-label': 'Retter i ugeplanen' }, retter.map((m) => {
       const valgt = Boolean(nu) && nu.ret === m.id;
@@ -795,6 +807,25 @@ const harValgt = (p, dyr) => (BOERN.includes(dyr)
   : fri(p) <= boernMangler(p));
 const ugenErFuld = (p) => p.dage.every(Boolean);
 const nulstilBarn = () => Object.assign(barn, { dyr: null, side: 0, ret: null, dag: null });
+
+// Retterne, børnene vælger mellem: ugens udvalg fra voksendelen (udvalg fra hentFamilie i js/lager.js), men kun dem, der
+// stadig står i alle (ugeplan-retterne), og i samme rækkefølge. Uden udvalg, eller når ingen af dets retter er tilbage,
+// er det alle, som før udvalget fandtes. Ren funktion (test/test-udvalg.js)
+export function retterTilBoern(alle, udvalg) {
+  if (!Array.isArray(alle)) throw new TypeError('retterTilBoern: alle skal være en liste med ugeplan-retterne');
+  const ids = udvalg && Array.isArray(udvalg.ids) ? udvalg.ids : [];
+  const valgte = alle.filter((m) => ids.includes(m.id));
+  return valgte.length ? valgte : alle;
+}
+// Antal sider med PR_SIDE retter, mindst én (også uden retter)
+export const sideAntal = (retter) => Math.max(1, Math.ceil(retter.length / PR_SIDE));
+
+// ✨ ny for os og ⭐ favorit på børnenes kort (maerkerFor i js/maerker.js): kun ikonet, med mærkets navn til skærmlæseren.
+// De står efter rettens navn, som dyret i hjørnet, så navnet siges først
+const BOERNE_MAERKER = { ny: 'maerke-ny', favorit: 'maerke-fav' };
+const boerneMaerker = (m, familie) => maerkerFor(m, { familie })
+  .filter((k) => Object.hasOwn(BOERNE_MAERKER, k))
+  .map((k) => el('span', { class: 'maerke ' + BOERNE_MAERKER[k], role: 'img', 'aria-label': MAERKER[k].navn, tekst: MAERKER[k].ikon }));
 
 function vaelgSkaerm(r) {
   if (K.S.indexFejl) return hentFejl();
@@ -895,8 +926,9 @@ function fuldSkaerm(p) {
 
 // Trin 2: fire retter pr. side. Første tryk siger navnet og markerer retten, fluebenet («Vælg») går videre til dagene
 function retValgSkaerm(p, dyr) {
-  const alle = iPlanen();
-  const sider = Math.max(1, Math.ceil(alle.length / PR_SIDE));
+  const familie = Lager.hentFamilie(K.S.ids);
+  const alle = retterTilBoern(iPlanen(), familie.udvalg);
+  const sider = sideAntal(alle);
   barn.side = Math.min(Math.max(barn.side, 0), sider - 1);
   const vist = alle.slice(barn.side * PR_SIDE, (barn.side + 1) * PR_SIDE);
   if (!vist.some((m) => m.id === barn.ret)) barn.ret = null;
@@ -919,6 +951,7 @@ function retValgSkaerm(p, dyr) {
     },
     el('span', { class: 'kort-billede' }, K.billede(grafikRet(m.id), ''), K.lynMaerke(m)),
     el('span', { class: 'kort-navn', tekst: m.navn }),
+    boerneMaerker(m, familie),
     // Retten står allerede på planen: dyret, der valgte den, i hjørnet (den kan godt vælges igen)
     af.has(m.id) ? el('span', { class: 'kort-dyr' }, K.billede(grafikDyr(af.get(m.id)), 'valgt af ' + dyrNavn(af.get(m.id)))) : null,
     K.lynTekst(m)));
