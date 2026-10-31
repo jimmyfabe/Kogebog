@@ -3,7 +3,8 @@
 // Forside → pandekager → alle trin (med en timer og voksen-hold) → færdig, alle trin i alle retter,
 // print-siden for alle retter (også i printvisning på A4-bredde), tastatur, timere på tværs af skærme og genindlæsning,
 // fejltilstande og «mindre bevægelse». Delen «former» ser desuden 360 px, iPad mini på højkant og iPhones på langs
-// (667×375 til 932×430).
+// (667×375 til 932×430). Delen «lyn» ser ⚡ på de lynhurtige retter (forsiden, børnenes valg, dagens valg og printet)
+// og navnene uden blød bindestreg (aria-label, alt, printets titel og timer-pillen).
 // Tjekker hele vejen: ingen konsolfejl, ingen 404, ingen vandret rulning, billeder indlæst, og knapper mindst
 // 64 px for børnenes knapper (BOERNEKNAPPER) og 48 px for de voksnes (fx print og stop).
 //
@@ -15,7 +16,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { hentPlaywright } from '../vaerktoej/lav-ikoner.js';
-import { tilTale } from '../js/tekst.js';
+import { tilTale, isoTilMinutter, utenBloede } from '../js/tekst.js';
+import { erLynhurtig, LYN_MIN } from '../js/model.js';
 import { formaterTid, HURTIG_SEK } from '../js/tid.js';
 import { GRUPPER } from '../js/katalog.js';
 import { UDGAVE } from '../js/version.js';
@@ -1900,9 +1902,134 @@ async function former(browser) {
   }
 }
 
-// E2E_DELE=hele,print,tastatur,timer,fejl,beroering,former,ugeplan (standard: alle) og E2E_SKAERME=ipad,iphone,desktop (standard: alle)
+// ---------- ⚡ på de lynhurtige retter, og navnene uden blød bindestreg (iPad) ----------
+// ⚡ (lynMaerke i app.js) står på kortet eller rækken for hver ret på højst LYN_MIN minutter, hvor retterne vælges:
+// forsiden, børnenes valg (#/uge/vaelg/<dyr>) og den voksnes valg til en dag (#/uge/dag/<n>). Skærmlæseren får teksten
+// præcis én gang (.sr-kun), og printet nævner det ikke (code review 31-10). Det forventede regnes af appens erLynhurtig,
+// og wok-med-nudler (20 min) med og pandekager og kødsovs uden ⚡ holder testen ærlig, hvis retterne skifter.
+// Navnene, skærmlæseren siger (aria-label og alt), timer-pillens navn og printets titel har ingen blød bindestreg
+const LYN_TEKST = 'Hurtig: højst ' + LYN_MIN + ' minutter';
+const erLyn = (id) => erLynhurtig({ minutter: isoTilMinutter(RETTER[id].totalTime) });
+// Kortene eller rækkerne med data-ret: antal ⚡, og hvor mange gange teksten står i hele kortet og i dets .sr-kun
+const lynPaa = (side, sel) => side.evaluate(({ sel, tekst }) => [...document.querySelectorAll(sel)].map((k) => ({
+  id: k.dataset.ret,
+  lyn: k.querySelectorAll('.lyn').length,
+  tekst: k.textContent.split(tekst).length - 1,
+  srKun: [...k.querySelectorAll('.sr-kun')].reduce((s, e) => s + e.textContent.split(tekst).length - 1, 0),
+})), { sel, tekst: LYN_TEKST });
+function tjekLyn(kort, hvor, uden) {
+  const forkert = kort.filter((k) => {
+    const n = erLyn(k.id) ? 1 : 0;
+    return k.lyn !== n || k.tekst !== n || k.srKun !== n;
+  });
+  tjek(!forkert.length, hvor + ': ⚡ og «' + LYN_TEKST + '» (i .sr-kun) præcis én gang på de lynhurtige retter og ellers ikke (' + kort.length + ' kort; forkert: ' + JSON.stringify(forkert) + ')');
+  const med = kort.find((k) => k.id === 'wok-med-nudler');
+  const ikke = kort.find((k) => k.id === uden);
+  tjek(med && med.lyn === 1 && med.tekst === 1, hvor + ': wok-med-nudler har ⚡ og teksten én gang (' + JSON.stringify(med) + ')');
+  tjek(ikke && ikke.lyn === 0 && ikke.tekst === 0, hvor + ': ' + uden + ' har ingen ⚡ og ingen tekst (' + JSON.stringify(ikke) + ')');
+}
+const bloedeNavne = (side) => side.evaluate(() => [...document.querySelectorAll('[aria-label],[alt]')]
+  .flatMap((e) => [e.getAttribute('aria-label'), e.getAttribute('alt')])
+  .filter((t) => t && t.includes('\u00ad')).map((t) => t.replace(/\u00ad/g, '|')));
+
+async function lynOgNavne(browser) {
+  const skaerm = SKAERME[0];
+  const n = skaerm.navn;
+  console.log('[' + n + '] ⚡ på de lynhurtige retter, og navnene uden blød bindestreg');
+  tjek(erLyn('wok-med-nudler') && !erLyn('pandekager') && !erLyn('koedsovs'), n + ' ⚡: wok-med-nudler er lynhurtig, pandekager og kødsovs er ikke (totalTime)');
+  const IPLAN = index.filter((id) => RETTER[id].tumbi.ugeplan === true);
+  const bloede = new Set();
+  const samlBloede = async (side) => (await bloedeNavne(side)).forEach((x) => bloede.add(x));
+  const { ctx, side } = await nySide(browser, skaerm, { serviceWorkers: 'block' });
+
+  // 1. Forsiden
+  await side.goto(BASE + '/index.html');
+  await side.waitForSelector('.forside .kort[data-ret]');
+  const forside = await lynPaa(side, '.forside .kort[data-ret]');
+  tjek(forside.length === index.length, n + ' ⚡ forsiden: alle ' + index.length + ' kort (' + forside.length + ')');
+  tjekLyn(forside, n + ' ⚡ forsiden', 'pandekager');
+  maal.push(n + ' ⚡ forsiden: ' + forside.length + ' kort, ⚡ på ' + forside.filter((k) => k.lyn).map((k) => k.id).join(', '));
+  await samlBloede(side);
+
+  // 2. Børnenes valg: alle sider med fire retter (Rosa)
+  await side.goto(BASE + '/index.html#/uge/vaelg/rosa');
+  await side.waitForSelector('.ret-gitter .ret-kort');
+  const boern = [];
+  for (let s = 0; s < IPLAN.length; s++) {
+    const k = await lynPaa(side, '.ret-kort[data-ret]');
+    boern.push(...k);
+    await samlBloede(side);
+    if (await side.locator('.side-naeste').evaluate((b) => b.disabled)) break;
+    await tryk(side, '.side-naeste');
+    await venterPaa(side, (f) => document.querySelector('.ret-kort')?.dataset.ret !== f, k[0].id, n + ' ⚡ børnenes valg: pilen frem skal vise de næste retter');
+  }
+  tjek(boern.length === IPLAN.length && new Set(boern.map((k) => k.id)).size === IPLAN.length, n + ' ⚡ børnenes valg: alle ' + IPLAN.length + ' retter i ugeplanen én gang (' + boern.length + ')');
+  tjekLyn(boern, n + ' ⚡ børnenes valg', 'koedsovs');
+  maal.push(n + ' ⚡ børnenes valg: ' + boern.length + ' kort på ' + Math.ceil(boern.length / 4) + ' sider, ⚡ på ' + boern.filter((k) => k.lyn).map((k) => k.id).join(', '));
+
+  // 3. Den voksnes valg til mandag, på iPad og ved 800 px, hvor billedet er 72 px i en kolonne på 84 px (a65829f)
+  for (const [b, h] of [[skaerm.viewport.width, skaerm.viewport.height], [800, 1000]]) {
+    await side.setViewportSize({ width: b, height: h });
+    await side.goto('about:blank');
+    await side.goto(BASE + '/index.html#/uge/dag/1');
+    await side.waitForSelector('li.ret-valg-raekke[data-ret]');
+    await side.waitForFunction(() => [...document.images].every((i) => i.complete));
+    const dag = await lynPaa(side, 'li.ret-valg-raekke[data-ret]');
+    tjek(dag.length === IPLAN.length, n + ' ⚡ ' + b + ' px dagens valg: alle ' + IPLAN.length + ' retter (' + dag.length + ')');
+    tjekLyn(dag, n + ' ⚡ ' + b + ' px dagens valg', 'koedsovs');
+    await samlBloede(side);
+    const hj = await side.evaluate(() => {
+      const r = document.querySelector('li.ret-valg-raekke[data-ret="wok-med-nudler"]');
+      const l = r && r.querySelector('.lyn');
+      const i = r && r.querySelector('.dag-billede');
+      if (!l || !i) return null;
+      const a = l.getBoundingClientRect();
+      const c = i.getBoundingClientRect();
+      const t = (x) => Math.round(x * 10) / 10;
+      return { hoejre: t(a.right - c.right), bund: t(a.bottom - c.bottom), billede: t(c.width), lyn: t(a.width) };
+    });
+    tjek(hj && Math.abs(hj.hoejre) <= 1 && Math.abs(hj.bund) <= 1, n + ' ⚡ ' + b + ' px dagens valg: ⚡ sidder på billedets nederste højre hjørne ±1 px (' + JSON.stringify(hj) + ')');
+    maal.push(n + ' ⚡ ' + b + ' px dagens valg: ⚡ i forhold til billedets hjørne ' + JSON.stringify(hj));
+    await side.locator('li.ret-valg-raekke[data-ret="wok-med-nudler"]').scrollIntoViewIfNeeded();
+    await foto(side, n + '-lyn-dag-' + b);
+  }
+  await side.setViewportSize(skaerm.viewport);
+
+  // 4. Printet nævner det ikke: hverken ⚡ eller teksten
+  await side.goto(BASE + '/print.html?ret=wok-med-nudler');
+  await side.waitForSelector('ol.trin li');
+  const print = await side.evaluate(() => ({ tekst: document.body.textContent, lyn: document.querySelectorAll('.lyn').length }));
+  tjek(!print.tekst.includes('Hurtig') && !print.tekst.includes('⚡') && print.lyn === 0, n + ' ⚡ print.html?ret=wok-med-nudler: ingen «Hurtig» og intet ⚡ (' + print.lyn + ' .lyn)');
+
+  // 5. En ret med blød bindestreg i navnet: printets titel og timer-pillen på forsiden (code review 31-10)
+  const blod = index.find((id) => RETTER[id].name.includes('\u00ad') && RETTER[id].recipeInstructions.some((t) => t.tumbi.timer_sek));
+  if (!blod) maal.push(n + ': ingen ret med blød bindestreg og en timer, så printets titel og timer-pillens navn er sprunget over');
+  else {
+    const navn = utenBloede(RETTER[blod].name);
+    await side.goto(BASE + '/print.html?ret=' + blod);
+    await side.waitForSelector('ol.trin li');
+    const titel = await side.title();
+    tjek(titel === navn + ' · Tumbi Køkken', n + ' print.html?ret=' + blod + ': titlen uden blød bindestreg (' + titel.replace(/\u00ad/g, '|') + ')');
+    const nr = RETTER[blod].recipeInstructions.findIndex((t) => t.tumbi.timer_sek) + 1;
+    await side.goto(BASE + '/index.html');
+    await side.waitForSelector('.forside .kort[data-ret]');
+    await medGemt(side, { timer: { ret: blod, nr, sek: 600, slutOm: 300000 } }, '#/');
+    // Pillen tegnes hvert sekund, og navnet kommer, når opskrifterne er hentet
+    await venterPaa(side, (x) => document.querySelector('.forside-timer .pille:not([hidden])')?.getAttribute('aria-label')?.includes(x),
+      'Gå til ' + navn + ', trin ' + nr + '.', n + ' timer-pillen: navnet uden blød bindestreg');
+    const label = await side.locator('.forside-timer .pille').getAttribute('aria-label');
+    tjek(Boolean(label) && label.includes('Gå til ' + navn + ', trin ' + nr + '.'), n + ' timer-pillen: «Gå til ' + navn + ', trin ' + nr + '.» uden blød bindestreg (' + String(label).replace(/\u00ad/g, '|') + ')');
+    await samlBloede(side);
+    await side.evaluate(() => localStorage.removeItem('kog-v1'));
+  }
+  tjek(!bloede.size, n + ': navnene, skærmlæseren siger (aria-label og alt), har ingen blød bindestreg (' + [...bloede].join(', ') + ')');
+  tjek(side.fejl.length === 0, n + ' (⚡ og navne): ' + side.fejl.join(' | '));
+  await ctx.close();
+}
+
+// E2E_DELE=hele,print,tastatur,timer,fejl,beroering,former,lyn,ugeplan (standard: alle) og E2E_SKAERME=ipad,iphone,desktop (standard: alle)
 // «former» kører på sine egne skærme (FORMER) og ser bort fra E2E_SKAERME
-const DELE = (process.env.E2E_DELE || 'hele,print,tastatur,timer,fejl,beroering,former,ugeplan').split(',').map((x) => x.trim()).filter(Boolean);
+const DELE = (process.env.E2E_DELE || 'hele,print,tastatur,timer,fejl,beroering,former,lyn,ugeplan').split(',').map((x) => x.trim()).filter(Boolean);
 const VALGTE = SKAERME.filter((s) => !process.env.E2E_SKAERME || process.env.E2E_SKAERME.split(',').includes(s.navn));
 const KOERSEL = [];
 for (const s of VALGTE) if (DELE.includes('hele')) KOERSEL.push(['hele vejen ' + s.navn, (b) => heleVejen(b, s)]);
@@ -1916,6 +2043,7 @@ if (DELE.includes('fejl')) KOERSEL.push(['fejltilstande', (b) => fejltilstande(b
 if (DELE.includes('beroering')) KOERSEL.push(['berøring', (b) => beroering(b, SKAERME[0])]);
 if (DELE.includes('former')) KOERSEL.push(['skærmformer', (b) => former(b)]);
 if (DELE.includes('former')) KOERSEL.push(['forsidens top', (b) => forsideTop(b)]);
+if (DELE.includes('lyn')) KOERSEL.push(['⚡ og navnene', (b) => lynOgNavne(b)]);
 // Ugeplanen står i sin egen fil (test/e2e-ugeplan.js) og får hjælperne herfra
 if (DELE.includes('ugeplan')) {
   KOERSEL.push(['ugeplan', (b) => ugeplan(b, { BASE, UD, ROD, RETTER, SKAERME, nySide, tjek, tjekLayout, foto, tryk, hold, vent, venterPaa, h1, maal, forfalskninger, LYD_TEKSTER })]);

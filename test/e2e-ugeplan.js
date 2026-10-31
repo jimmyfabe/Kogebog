@@ -120,8 +120,9 @@ async function listeOrd(browser, H) {
             if (new Set([...rg.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top))).size > 1) ud.push(m[0]);
           }
         }
-        // Knappernes navn har ingen bløde bindestreger (UI-review 29-10: «Har vi: Grøntsags-bouillon»)
-        const bloede = [...document.querySelectorAll('[aria-label]')].map((e) => e.getAttribute('aria-label')).filter((l) => /\u00ad/.test(l));
+        // Knappernes navn og billedernes alt-tekst har ingen bløde bindestreger (UI-review 29-10: «Har vi: Grøntsags-bouillon»)
+        const bloede = [...document.querySelectorAll('[aria-label],[alt]')].flatMap((e) => [e.getAttribute('aria-label'), e.getAttribute('alt')])
+          .filter((l) => l && /\u00ad/.test(l));
         return { delt: ud, varer: navne.length, bloede };
       });
       r.delt.forEach((x) => delt.add(x));
@@ -129,7 +130,7 @@ async function listeOrd(browser, H) {
       varer += r.varer;
     }
     tjek(!delt.size, 'iphone ' + b + '×' + h + ': ingen varenavne deles midt i ordet (' + varer + ' varer; delt: ' + [...delt].join(', ') + ')');
-    tjek(!bloede.size, 'iphone ' + b + '×' + h + ': knappernes navn har ingen bløde bindestreger (' + [...bloede].join(', ') + ')');
+    tjek(!bloede.size, 'iphone ' + b + '×' + h + ': knappernes navn og alt-tekst har ingen bløde bindestreger (' + [...bloede].join(', ') + ')');
   }
   tjek(!side.fejl.length, 'iphone varernes navne: ' + side.fejl.join(' | '));
   await ctx.close();
