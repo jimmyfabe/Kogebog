@@ -228,7 +228,7 @@ export const VARER = {
   // Brød
   'tortillas': { navn: 'Tortillas', afd: 'broed', enhed: 'stk', ikon: 'tortilla' },
   // Egen vare, så indkøbslisten ikke lægger dem sammen med hvide tortillas (fuldkorn i det foldede fladbrød; review 31-10)
-  'fuldkornstortillas': { navn: 'Fuldkornstortillas', afd: 'broed', enhed: 'stk', ikon: 'tortilla' },
+  'fuldkornstortillas': { navn: 'Fuldkorns\u00adtortillas', afd: 'broed', enhed: 'stk', ikon: 'tortilla' },
   'rugbroed': { navn: 'Rugbrød', afd: 'broed', enhed: 'g', ikon: 'broed' },
   'toastbroed': { navn: 'Toastbrød', afd: 'broed', enhed: 'g', ikon: 'broed' },
   'naan': { navn: 'Naanbrød', afd: 'broed', enhed: 'g', ikon: 'broed' },
