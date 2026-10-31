@@ -1,19 +1,24 @@
 # STATUS – Tumbi Køkken
 
-## 31-10-2026 kl. 12:53: 36 nye hverdagsretter og ⚡ på to grene, ikke flettet (Saga)
+## 31-10-2026 kl. 14:44: 36 nye hverdagsretter (17 i bogen, 19 venter på billede), ⚡ og minuttal på forsiden, ikke flettet (Saga)
 
-Jimmy 31-10: flere hverdagsretter i stil med Jamie Olivers 5 ingredienser og 20 minutter (ris, pasta, kinesisk og kartofler), og «Ja du giver den bare gas».
-- **Runde 1:** gren `claude/nye-opskrifter-31-10`, HEAD e64a11c, worktree `D:\Claude\.claude\worktrees\kogebog-nye-3110`. 12 retter med review-rettelser. 10 er i index med Codex-billeder (61 retter i alt). Gulerodsboller og havregrynsmuffins-med-aeble venter på billede i `docs/venter-paa-billede/`. Version v3 · 31-10-2026.
-- **Runde 2:** gren `claude/nye-opskrifter-r2-31-10` oven på runde 1, HEAD a65829f, worktree `D:\Claude\.claude\worktrees\kogebog-r2-3110`. 24 retter (12 ris/kinesisk og 12 pasta/kartofler), 5 nye SVG'er og 12 nye katalogvarer. Alle 24 venter på billede i `docs/venter-paa-billede/`, og README'en dér har trinene til at flytte dem ind. Reviewet for kost og sikkerhed: 1 HØJ, 17 MELLEM, 18 LAV, rettet i 17 commits. Eksempler: kogende vand i et barnetrin (bakkeret), allergenerne vises nu også i appen, og den voksne trykker selv på stavblenderen. Tiderne er ærlige.
-- **⚡** (dce4ea9, a65829f): retter på højst 20 min får et lyn på tallerkenen (forsiden, børnenes valg og den voksnes dag) og en skærmlæsertekst. Saga slog det til, fordi Jimmy ikke svarede. Det er let at fjerne (`LYN_MIN` i `js/model.js`). Nu har kun wok-med-nudler det. Gnocchi, gyoza og stegte ris får det, når de flyttes ind.
-- **Lovet mod faktisk:** forslaget lovede ⚡ på 7 retter, og de ærlige tider giver 3. Pesto, carbonara og chow mein tager 25 min og laks 30. Rugbrødsaften (nu 30 min) og lun tunpasta (25) har mistet ⚡.
-- **Ikke rettet, Jimmys valg:** okonomiyaki ligner kålpandekager, bakkeret ligner bradepandekylling, og tortilla, egg foo young og rösti ligner hinanden. Soja-honning går igen i 6 retter.
-- **Test:** node-tests på a65829f er 8 af 9 grønne (test-lyd er rød som før). Ikke kørt: e2e og ui-reviewer. Code-reviewet af koden kører.
-- **Mangler:** billeder til 26 retter (Codex efter kl. 14:06, prompt i Sagas kladde `kogebog-r2/byg/codex/prompt-r2.txt`). Derefter skal retterne flyttes ind, og e2e og ui-reviewer køres. Røst-lyd mangler til 713 nye og 327 gamle replikker. Ingen af retterne er lavet i et rigtigt køkken.
+Jimmy 31-10: flere hverdagsretter i stil med Jamie Olivers 5 ingredienser og 20 minutter, «Ja du giver den bare gas», og (talebesked) et lille minuttal nede i hjørnet af forsidens kort, så forældrene kan se tiden.
+- **Grenene:** runde 1 `claude/nye-opskrifter-31-10` (HEAD e64a11c, worktree `D:\Claude\.claude\worktrees\kogebog-nye-3110`). Runde 2 `claude/nye-opskrifter-r2-31-10` oven på runde 1 (worktree `D:\Claude\.claude\worktrees\kogebog-r2-3110`). **Runde 2 er den, der skal flettes.** Den indeholder runde 1. Version v3 · 31-10-2026 (ikke udgivet, derfor ikke hævet).
+- **I bogen nu:** 68 retter (før 51). Runde 1 gav 10 med Codex-billeder. Runde 2 flyttede 7 ind (0e30e83): gulerodsboller, havregrynsmuffins med æble og 5 aftensretter (bakkeret, gyoza, fiskefrikadeller, okonomiyaki, orange pasta), som også er med i ugeplanen.
+- **To navne er ændret af agenten**, fordi de var for lange på iPhone på langs: «Bakkeret med kartofler og kylling» og «Japansk kålpandekage med skinke».
+- **Minuttal** (6643868): en creme-pille nederst til venstre på forsidens kort, fx «35 min» eller «1 t 45 min». Skærmlæseren siger fx «Tynde pandekager. 35 minutter.». Ikke i børnenes valg, dagens valg eller printet. Tiden er opskriftens samlede tid, så hævning og køl tæller med (frikadeller og gulerodsboller viser «2 t»).
+- **⚡** (dce4ea9, a65829f): retter på højst 20 min får et lyn nederst til højre. Saga slog det til, fordi Jimmy ikke svarede. Det er let at fjerne (`LYN_MIN` i `js/model.js`). Forslaget lovede 7 retter, de ærlige tider giver 3: wok og gyoza nu, gnocchi og stegte ris, når de flyttes ind.
+- **Review:** kost og sikkerhed 1 HØJ, 17 MELLEM, 18 LAV, rettet i 17 commits. Code review af koden og af minuttallet: 0 blokerende.
+- **Test:** node-tests 8 af 9 grønne (`test-lyd` er rød: Røst-lyd mangler til 523 af 1.946 replikker, og der er 3 forældreløse mp3). e2e i WebKit på 0e30e83: 42.169 tjek, 0 fejl (agentens kørsel). ui-reviewer: se nedenfor, når den er færdig.
+- **Ikke rettet (lav, Jimmys valg):** `svgEl` går uden om `attr()`. `UDEN_OM`-regexen kan omgås. e2e-tjekket af ⚡-titlen springes stille over, hvis ingen ret har blød bindestreg og timer. UGEPLAN-testens titel er forældet. Gyozabilledet har rødligt støv, der kan ligne chili. Dubletter: okonomiyaki og kålpandekager, bakkeret og bradepandekylling, og tortilla, egg foo young og rösti. Soja-honning går igen i 6 retter.
+- **Mangler:** billeder til 19 retter (Codex efter kl. 19:07, prompt i Sagas kladde `kogebog-r2/byg/codex/prompt-r2.txt`). Derefter skal de flyttes ind efter `docs/venter-paa-billede/README.md`, og e2e skal køres igen. Ingen af retterne er lavet i et rigtigt køkken.
+- **Jamie Oliver-research** (Jimmys talebesked 31-10): rapport på Drev `Claude/Kogebog/Jamie-Oliver-research-31-10.md` med 12 forslag til nye retter. De skrives først efter Jimmys «ja».
 
 **Afventer Jimmy** (ført op fra 29-10):
-- (31-10) Kig på de 36 nye retter. Skal ⚡ blive? Skal en af dubletterne skiftes ud?
-- (31-10) Push, når billederne og testene er færdige. Grenene er ikke flettet ind i `main`.
+- (31-10) Kig på retterne og de to nye navne. Skal ⚡ og minuttallet blive? Skal en af dubletterne skiftes ud?
+- (31-10) Ja eller nej til de 12 Jamie-retter (rapporten på Drev).
+- (31-10) Flet og push runde 2-grenen, når billederne og testene er færdige. Grenene er ikke flettet ind i `main`.
+- (31-10) Røst-lyd til de nye replikker: trin 1-5 under «Stemmen» i `CLAUDE.md` (trin 2 køres igen og igen i Git Bash, ca. 20 replikker på 7 minutter).
 - (29-10) Lyt til de 9 lydfiler i 29-10-afsnittet.
 - (23-10) Ja til at slette de 3 forældreløse mp3 (`--ryd`). Indtil da er `test-lyd` rød.
 - (27-10) Udtalen af «Halloween»: behold, «Hælovin» eller «Hæloviin».
