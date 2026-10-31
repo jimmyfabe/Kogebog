@@ -42,7 +42,7 @@ og ingen nødder). Står der skål, pande, bradepande eller fad, tegnes den i st
 - `havregrynsmuffins-med-aeble`: fem havregrynsmuffins i hvide papirforme, hver med en tynd æbleskive og lidt kanel.
 - `bakkeret-knuste-kartofler-og-kylling`: grå bradepande med sprøde, flade kartofler, paprikakylling, broccoli,
   gulerodsstave og en lille skål hvid skyrdip.
-- `cremet-carbonara-med-aerter-uden-raa-aeg`: spaghetti i hvid, cremet sovs med sprød bacon, ærter, ost og peber.
+- `cremet-carbonara-med-aerter-uden-raa-aeg`: fuldkornsspaghetti i hvid, cremet sovs med sprød bacon, ærter, ost og peber.
 - `egg-foo-young-med-ris`: ris og tre små gyldne omeletter med kål, gulerod og ærter, et par dråber soja.
 - `floedekartofler-med-skinke-og-broccoli`: cremefarvet fad med kartoffelskiver, skinketern og broccoli under gylden
   ost, ét hjørne taget ud; en lille skål revet gulerod ved siden af.
@@ -72,7 +72,7 @@ og ingen nødder). Står der skål, pande, bradepande eller fad, tegnes den i st
 - `pasta-med-laks-spinat-og-citron`: fuldkornsspaghetti i hvid sovs med lyserød laks, spinat og ærter, to
   citronbåde.
 - `soed-sur-kylling-med-ananas`: ris og kylling i blank, mild orangerød sød-sur sovs med ananas og peberfrugt.
-- `spaghetti-chow-mein-med-kylling`: spaghetti i lysebrun soja-honningsovs med kyllingestrimler, wokgrøntsager og
+- `spaghetti-chow-mein-med-kylling`: fuldkornsspaghetti i lysebrun soja-honningsovs med kyllingestrimler, snittet kål og
   revet gulerod (ingen dumplings).
 - `stegte-ris-med-aeg-aerter-og-majs`: en bunke gyldne stegte ris med æg, ærter og majs.
 - `sushi-bowl-med-tun`: skål med ris, tun fra dåse, agurketern, revet gulerod og majs i felter og en tynd stribe
