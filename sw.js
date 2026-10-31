@@ -9,7 +9,7 @@
    Svarer nettet ikke inden for HENT_MS (4 s), kommer en opskrift (også index.json) fra cachen, og nettets svar gemmes
    til næste gang. De næste LANGSOM_MS (30 s) tager opskrifterne cachen med det samme (code review U3 og F2, 23-10). */
 const PRAEFIKS = 'kog-';
-const INDHOLD = 'fd140dee3854f32b'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = '088638ec9d6daa3f'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '74203173dd2ca3fc'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
@@ -110,6 +110,25 @@ const FILER = [
   'opskrifter/milde-asiatiske-fiskefrikadeller.json',
   'opskrifter/okonomiyaki-med-spidskaal.json',
   'opskrifter/orange-pasta-med-hemmelig-groentsagssovs.json',
+  'opskrifter/cremet-carbonara-med-aerter-uden-raa-aeg.json',
+  'opskrifter/egg-foo-young-med-ris.json',
+  'opskrifter/floedekartofler-med-skinke-og-broccoli.json',
+  'opskrifter/gnocchi-med-tomat-spinat-og-mozzarella.json',
+  'opskrifter/groen-pesto-pasta-med-broccoli-og-aerter.json',
+  'opskrifter/groen-porre-kartoffelsuppe-med-bacondrys.json',
+  'opskrifter/hoisin-gris-med-ris-og-agurk.json',
+  'opskrifter/honning-soja-koedboller.json',
+  'opskrifter/kartoffel-gulerods-roesti-med-skyrdip.json',
+  'opskrifter/kartoffeltortilla-med-aerter-og-spinat.json',
+  'opskrifter/kylling-salatbaade-med-ris.json',
+  'opskrifter/mild-bibimbap-risskaal.json',
+  'opskrifter/mild-kartoffelkarry-med-kokos-og-aerter.json',
+  'opskrifter/pasta-med-laks-spinat-og-citron.json',
+  'opskrifter/soed-sur-kylling-med-ananas.json',
+  'opskrifter/spaghetti-chow-mein-med-kylling.json',
+  'opskrifter/stegte-ris-med-aeg-aerter-og-majs.json',
+  'opskrifter/sushi-bowl-med-tun.json',
+  'opskrifter/teriyaki-kylling-med-broccoli.json',
   'lyd/liste.json',
   'ikoner/ikon.svg',
   'ikoner/ikon-180.png',
@@ -161,6 +180,16 @@ const FILER = [
   'grafik/ret-bakkeret-knuste-kartofler-og-kylling.webp', 'grafik/ret-gyoza-med-noedler-og-groent.webp',
   'grafik/ret-milde-asiatiske-fiskefrikadeller.webp', 'grafik/ret-okonomiyaki-med-spidskaal.webp',
   'grafik/ret-orange-pasta-med-hemmelig-groentsagssovs.webp',
+  'grafik/ret-cremet-carbonara-med-aerter-uden-raa-aeg.webp', 'grafik/ret-egg-foo-young-med-ris.webp',
+  'grafik/ret-floedekartofler-med-skinke-og-broccoli.webp', 'grafik/ret-gnocchi-med-tomat-spinat-og-mozzarella.webp',
+  'grafik/ret-groen-pesto-pasta-med-broccoli-og-aerter.webp', 'grafik/ret-groen-porre-kartoffelsuppe-med-bacondrys.webp',
+  'grafik/ret-hoisin-gris-med-ris-og-agurk.webp', 'grafik/ret-honning-soja-koedboller.webp',
+  'grafik/ret-kartoffel-gulerods-roesti-med-skyrdip.webp', 'grafik/ret-kartoffeltortilla-med-aerter-og-spinat.webp',
+  'grafik/ret-kylling-salatbaade-med-ris.webp', 'grafik/ret-mild-bibimbap-risskaal.webp',
+  'grafik/ret-mild-kartoffelkarry-med-kokos-og-aerter.webp', 'grafik/ret-pasta-med-laks-spinat-og-citron.webp',
+  'grafik/ret-soed-sur-kylling-med-ananas.webp', 'grafik/ret-spaghetti-chow-mein-med-kylling.webp',
+  'grafik/ret-stegte-ris-med-aeg-aerter-og-majs.webp', 'grafik/ret-sushi-bowl-med-tun.webp',
+  'grafik/ret-teriyaki-kylling-med-broccoli.webp',
   'grafik/gruppe-aftensmad.svg', 'grafik/gruppe-bagning.svg', 'grafik/gruppe-soede-sager.svg', 'grafik/gruppe-halloween.svg',
   'grafik/verbum-aelte.svg', 'grafik/verbum-haelde.svg', 'grafik/verbum-koge.svg', 'grafik/verbum-maale.svg', 'grafik/verbum-roere.svg',
   'grafik/verbum-rulle.svg', 'grafik/verbum-skaere.svg', 'grafik/verbum-smage.svg', 'grafik/verbum-stege.svg',
