@@ -224,6 +224,8 @@ export const VARER = {
   'penne': { navn: 'Penne', afd: 'toer', enhed: 'g', ikon: 'spaghetti', pakke: [500, 'pakke', 'pakker'] },
   'roede-linser': { navn: 'Røde linser', afd: 'toer', enhed: 'g', ikon: 'linser' },
   'ris': { navn: 'Ris', afd: 'toer', enhed: 'g', ikon: 'ris' },
+  // Egen vare, så indkøbslisten ikke lægger dem sammen med hvide ris (fuldkorn efter kostrådene; code review K8, 31-10)
+  'brune-ris': { navn: 'Brune ris (fuldkorn)', afd: 'toer', enhed: 'g', ikon: 'ris' },
   'kidneyboenner': { navn: 'Kidneybønner', afd: 'toer', enhed: 'stk', ikon: 'boenner', pakke: [1, 'dåse', 'dåser'] },
   'sorte-boenner': { navn: 'Sorte bønner', afd: 'toer', enhed: 'stk', ikon: 'boenner', pakke: [1, 'dåse', 'dåser'] },
   'majs': { navn: 'Majs', afd: 'toer', enhed: 'stk', ikon: 'majs', pakke: [1, 'dåse', 'dåser'] },

@@ -52,7 +52,7 @@
     "groent_g": 1250,
     "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's normalpriser fra webshoppen 31-10-2026 for den brugte mængde:rødspættefileter (frost) 300 g 25,00 kr. x 2, løg 1 kg 12,00 kr., gul peberfrugt 9,00 kr., hakkede tomater 400 g 6,37 kr. x 2, sorte bønner 252 g 7,78 kr., hakket spinat (frost) 750 g 9,95 kr. og brune fuldkornsris 1 kg 16,57 kr. I alt 87,52 kr. ganget med 1,09 plus 3 kr. til olie, salt og oregano, regnet med et script. Grønt er også et skøn (ikke vejet): løg 100 g, peberfrugt 150 g, tomater 800 g og spinat 200 g, uden bønner.",
     "ingredienser": [
-      { "ikon": "ris", "maengde": "250 g", "vare": "ris", "antal": 250, "enhed": "g" },
+      { "ikon": "ris", "maengde": "250 g", "vare": "brune-ris", "antal": 250, "enhed": "g" },
       { "ikon": "vand", "maengde": "6 dl", "vare": "vand" },
       { "ikon": "loeg", "maengde": "1", "vare": "loeg", "antal": 1, "enhed": "stk" },
       { "ikon": "peberfrugt", "maengde": "1", "vare": "peberfrugt", "antal": 1, "enhed": "stk" },

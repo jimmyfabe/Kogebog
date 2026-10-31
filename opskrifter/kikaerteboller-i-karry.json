@@ -62,7 +62,7 @@
     "groent_g": 700,
     "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's hyldepriser 31-10-2026 for den brugte mængde (brune fuldkornsris 1 kg 16,57 kr., løg 1 kg 12 kr., gulerødder 1 kg 12 kr., æbler i pose 1,5 kg 18 kr., hvedemel 2 kg 9,95 kr., letmælk 1 l 10,95 kr., kikærter 240 g 7,86 kr. × 2, havregryn 1 kg 7,95 kr., revet pizzatopping 500 g 24,95 kr., skrabeæg 10 stk. 31,95 kr., fine ærter fra frost 600 g 10,36 kr.), i alt 45,85 kr., ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Grønt er også et skøn (ikke målt): gulerødder 300 g, løg 100 g og ærter 300 g, uden bælgfrugter, kartofler og æble.",
     "ingredienser": [
-      { "ikon": "ris", "maengde": "250 g", "vare": "ris", "antal": 250, "enhed": "g" },
+      { "ikon": "ris", "maengde": "250 g", "vare": "brune-ris", "antal": 250, "enhed": "g" },
       { "ikon": "loeg", "maengde": "1", "vare": "loeg", "antal": 1, "enhed": "stk" },
       { "ikon": "gulerod", "maengde": "2", "vare": "gulerod", "antal": 2, "enhed": "stk" },
       { "ikon": "aeble", "maengde": "1", "vare": "aebler", "antal": 1, "enhed": "stk" },
