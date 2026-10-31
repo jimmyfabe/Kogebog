@@ -60,6 +60,11 @@ test('retter i docs/venter-paa-billede valideres, uden billede og uden index.jso
     assert.deepEqual(gyldig.fejl, []);
     assert.equal(gyldig.tal.venter, 1);
     assert.equal(gyldig.tal.retter, ANTAL_RETTER);
+    // Lyden kender kun retterne i appen: en lydfil til en ret, der venter, afvises (review 31-10)
+    skriv(m, 'lyd/liste.json', { version: 1, filer: ['ny-ret/1.mp3'] });
+    const lyd = valider(m).fejl;
+    assert.ok(lyd.includes('lyd/liste.json: «ny-ret/1.mp3»: retten «ny-ret» findes ikke'), lyd.join('\n'));
+    skriv(m, 'lyd/liste.json', { version: 1, filer: [] });
     d.recipeInstructions[2].tumbi.verbum = 'hælde';
     skriv(m, 'docs/venter-paa-billede/ny-ret.json', d);
     const { fejl } = valider(m);
