@@ -121,6 +121,12 @@ export const INGREDIENSER = {
   // De sunde hverdagsretter (31-10-2026): æbler i kikærteboller og muffins, syltede rødbeder til vegetarbiksen
   'aeble': 'æble',
   'roedbede': 'syltede rødbeder',
+  // De hurtige hverdagsretter, runde 2 (31-10-2026): porrer i suppen, frosne gyoza, mayonnaise, citron til laksen og ananas
+  'porre': 'porre',
+  'gyoza': 'gyoza',
+  'mayonnaise': 'mayonnaise',
+  'citron': 'citron',
+  'ananas': 'ananas',
 };
 
 // Ikoner for råt kød og råt æg: efter dem skal der komme et trin med «vaske-haender».
@@ -205,6 +211,10 @@ export const VARER = {
   'peberfrugt': { navn: 'Peberfrugt', afd: 'groent', enhed: 'stk', ikon: 'peberfrugt' },
   'kartofler': { navn: 'Kartofler', afd: 'groent', enhed: 'g', ikon: 'kartoffel' },
   'aebler': { navn: 'Æbler', afd: 'groent', enhed: 'stk', ikon: 'aeble' },
+  'porre': { navn: 'Porrer', afd: 'groent', enhed: 'stk', ikon: 'porre' },
+  'citron': { navn: 'Citron', afd: 'groent', enhed: 'stk', ikon: 'citron' },
+  'icebergsalat': { navn: 'Icebergsalat', afd: 'groent', enhed: 'stk', ikon: 'kaal' },
+  'spidskaal': { navn: 'Spidskål', afd: 'groent', enhed: 'g', ikon: 'kaal' },
   // Brød
   'tortillas': { navn: 'Tortillas', afd: 'broed', enhed: 'stk', ikon: 'tortilla' },
   'rugbroed': { navn: 'Rugbrød', afd: 'broed', enhed: 'g', ikon: 'broed' },
@@ -242,6 +252,9 @@ export const VARER = {
   'fajitakrydderi': { navn: 'Fajitakrydderi (mildt)', afd: 'toer', enhed: 'stk', ikon: 'krydderurt', pakke: [1, 'pose', 'poser'] },
   'lasagneplader': { navn: 'Lasagneplader (fuldkorn)', afd: 'toer', enhed: 'g', ikon: 'spaghetti', pakke: [500, 'pakke', 'pakker'] },
   'roedbeder': { navn: 'Syltede rødbeder', afd: 'toer', enhed: 'g', ikon: 'roedbede' },
+  'ananas': { navn: 'Ananasringe', afd: 'toer', enhed: 'stk', ikon: 'ananas', pakke: [1, 'dåse', 'dåser'] },
+  // Uden pakke: hoisin sælges både i små poser og i flasker
+  'hoisin': { navn: 'Hoisinsauce', afd: 'toer', enhed: 'g', ikon: 'soja' },
   // Køl
   'hakket-oksekoed': { navn: 'Hakket oksekød', afd: 'koel', enhed: 'g', ikon: 'koed', pakke: [500, 'bakke', 'bakker'] },
   'chorizo': { navn: 'Chorizo', afd: 'koel', enhed: 'g', ikon: 'chorizo', pakke: [250, 'pakke', 'pakker'] },
@@ -266,6 +279,9 @@ export const VARER = {
   'medister': { navn: 'Medister', afd: 'koel', enhed: 'g', ikon: 'koed' },
   'partypoelser': { navn: 'Partypølser', afd: 'koel', enhed: 'g', ikon: 'poelse' },
   'hytteost': { navn: 'Hytteost', afd: 'koel', enhed: 'g', ikon: 'hytteost' },
+  'skyr': { navn: 'Skyr naturel', afd: 'koel', enhed: 'g', ikon: 'yoghurt', pakke: [1000, 'bæger', 'bægre'] },
+  'skinketern': { navn: 'Skinketern', afd: 'koel', enhed: 'g', ikon: 'skinke', pakke: [150, 'pakke', 'pakker'] },
+  'gnocchi': { navn: 'Gnocchi', afd: 'koel', enhed: 'g', ikon: 'kartoffel', pakke: [500, 'pakke', 'pakker'] },
   // Frost. Uden pakke: posernes størrelse skifter mellem butikkerne, så listen viser gram
   'aerter': { navn: 'Ærter', afd: 'frost', enhed: 'g', ikon: 'aerter' },
   'broccoliblanding': { navn: 'Broccoli', afd: 'frost', enhed: 'g', ikon: 'broccoli' },
@@ -286,6 +302,7 @@ export const VARER = {
   'kartoffelskiver': { navn: 'Kartoffelskiver', afd: 'frost', enhed: 'g', ikon: 'kartoffel' },
   'fiskefileter': { navn: 'Hvide fiskefileter', afd: 'frost', enhed: 'g', ikon: 'koed' },
   'laksefileter': { navn: 'Laksefileter', afd: 'frost', enhed: 'g', ikon: 'koed' },
+  'gyoza': { navn: 'Gyoza med kylling', afd: 'frost', enhed: 'g', ikon: 'gyoza' },
   // Tjek, at I har
   'salt': { navn: 'Salt', afd: 'basis', enhed: 'g', ikon: 'salt', basis: true },
   'peber': { navn: 'Peber', afd: 'basis', enhed: 'g', ikon: 'peber', basis: true },
@@ -298,5 +315,6 @@ export const VARER = {
   'soja': { navn: 'Soja', afd: 'basis', enhed: 'ml', ikon: 'soja', basis: true },
   'honning': { navn: 'Honning', afd: 'basis', enhed: 'ml', ikon: 'honning', basis: true },
   'ketchup': { navn: 'Ketchup', afd: 'basis', enhed: 'ml', ikon: 'ketchup', basis: true },
+  'mayonnaise': { navn: 'Mayonnaise', afd: 'basis', enhed: 'ml', ikon: 'mayonnaise', basis: true },
   'vand': { navn: 'Vand', afd: 'basis', enhed: 'ml', ikon: 'vand', basis: true, skjul: true },
 };

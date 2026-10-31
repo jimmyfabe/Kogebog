@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<defs>
+  <clipPath id="body-clip">
+    <ellipse cx="114" cy="152" rx="56" ry="70"/>
+  </clipPath>
+</defs>
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="crown">
+    <path fill="#448450" d="M106 90 C86 84 70 74 58 58 C78 58 96 68 112 86 Z"/>
+    <path fill="#448450" d="M122 90 C142 84 158 74 170 58 C150 58 132 68 116 86 Z"/>
+    <path fill="#5BAA6A" d="M110 90 C92 74 80 54 76 34 C94 44 106 64 116 86 Z"/>
+    <path fill="#5BAA6A" d="M118 90 C136 74 148 56 154 36 C136 44 124 64 112 86 Z"/>
+    <path fill="#448450" d="M114 92 C104 68 106 42 114 20 C124 42 126 68 114 92 Z"/>
+  </g>
+  <g id="pineapple">
+    <ellipse cx="114" cy="152" rx="56" ry="70" fill="#F2C14E"/>
+    <path fill="#D9A52E" stroke="none" d="M140 90 C160 104 170 128 170 152 C170 192 146 222 114 222 C140 208 154 182 154 152 C154 124 148 104 140 90 Z"/>
+    <g clip-path="url(#body-clip)" fill="none" stroke="#C99A5B" stroke-width="3">
+      <path d="M30 120 L150 240 M30 80 L190 240 M50 60 L210 220 M90 60 L210 180 M130 60 L210 140"/>
+      <path d="M198 120 L78 240 M198 80 L38 240 M178 60 L18 220 M138 60 L18 180 M98 60 L18 140"/>
+    </g>
+    <path fill="none" stroke="#FAE09A" stroke-width="7" d="M76 120 C70 136 70 158 74 174"/>
+    <ellipse cx="114" cy="152" rx="56" ry="70" fill="none"/>
+  </g>
+  <g id="ring" transform="translate(196 198)">
+    <path fill="#F2C14E" fill-rule="evenodd" d="M-40 0 A40 40 0 1 0 40 0 A40 40 0 1 0 -40 0 Z M-13 0 A13 13 0 1 0 13 0 A13 13 0 1 0 -13 0 Z"/>
+    <path fill="none" stroke="#D9A52E" stroke-width="2.5" d="M0 -18 L0 -34 M0 18 L0 34 M-18 0 L-34 0 M18 0 L34 0 M-13 -13 L-24 -24 M13 13 L24 24 M-13 13 L-24 24 M13 -13 L24 -24"/>
+  </g>
+</g>
+</svg>

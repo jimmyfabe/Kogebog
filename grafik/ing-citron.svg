@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="lemon" transform="translate(110 112) rotate(-24)">
+    <path id="leaf" fill="#5BAA6A" d="M80 -4 C92 -30 120 -40 140 -32 C128 -10 104 -2 80 -4 Z"/>
+    <path fill="none" d="M84 -6 C100 -20 116 -28 132 -31"/>
+    <path id="peel" fill="#F2C14E" d="M-88 0 C-82 -8 -76 -12 -68 -14 C-58 -50 -22 -62 0 -62 C22 -62 58 -50 68 -14 C76 -12 82 -8 88 0 C82 8 76 12 68 14 C58 50 22 62 0 62 C-22 62 -58 50 -68 14 C-76 12 -82 8 -88 0 Z"/>
+    <path fill="#D9A52E" stroke="none" d="M-68 14 C-58 50 -22 62 0 62 C22 62 58 50 68 14 C76 12 82 8 88 0 C62 30 24 44 -14 46 C-36 46 -54 34 -68 14 Z"/>
+    <path fill="none" stroke="#FAE09A" stroke-width="7" d="M-50 -28 C-36 -42 -16 -48 4 -48"/>
+    <g fill="#D9A52E" stroke="none">
+      <circle cx="-30" cy="-6" r="2.5"/>
+      <circle cx="10" cy="-24" r="2.5"/>
+      <circle cx="34" cy="4" r="2.5"/>
+      <circle cx="-4" cy="18" r="2.5"/>
+    </g>
+    <path fill="none" d="M-88 0 C-82 -8 -76 -12 -68 -14 C-58 -50 -22 -62 0 -62 C22 -62 58 -50 68 -14 C76 -12 82 -8 88 0 C82 8 76 12 68 14 C58 50 22 62 0 62 C-22 62 -58 50 -68 14 C-76 12 -82 8 -88 0 Z"/>
+  </g>
+  <g id="lemon-slice" transform="translate(186 190)">
+    <circle r="46" fill="#F2C14E"/>
+    <circle r="38" fill="#FBE6A6" stroke="none"/>
+    <g fill="none" stroke="#FFF4E2" stroke-width="5">
+      <path d="M0 -34 L0 34 M-34 0 L34 0 M-24 -24 L24 24 M-24 24 L24 -24"/>
+    </g>
+    <circle r="7" fill="#FFF4E2" stroke="none"/>
+    <circle r="38" fill="none" stroke="#FFF4E2" stroke-width="4"/>
+    <circle r="46" fill="none"/>
+  </g>
+</g>
+</svg>

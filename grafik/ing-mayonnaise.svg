@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="jar">
+    <path fill="#FFFFFF" d="M88 72 L168 72 L168 88 L88 88 Z"/>
+    <path fill="#FFF4E2" d="M82 88 L174 88 C190 88 198 100 198 116 L198 206 C198 222 188 230 172 230 L84 230 C68 230 58 222 58 206 L58 116 C58 100 66 88 82 88 Z"/>
+    <path fill="#EEDDBF" stroke="none" d="M174 88 C190 88 198 100 198 116 L198 206 C198 222 188 230 172 230 L160 230 C172 224 178 214 178 200 L178 116 C178 102 174 94 166 88 Z"/>
+    <path fill="none" stroke="#FFFFFF" stroke-width="7" d="M72 114 L72 202"/>
+    <path fill="none" d="M82 88 L174 88 C190 88 198 100 198 116 L198 206 C198 222 188 230 172 230 L84 230 C68 230 58 222 58 206 L58 116 C58 100 66 88 82 88 Z"/>
+  </g>
+  <g id="lid">
+    <rect x="76" y="38" width="104" height="36" rx="9" fill="#3E8FB0"/>
+    <path fill="#2E6A83" stroke="none" d="M160 40 L171 40 C176 40 178 44 178 48 L178 64 C178 69 175 72 170 72 L160 72 Z"/>
+    <path fill="none" stroke="#2E6A83" stroke-width="3" d="M96 46 L96 66 M116 46 L116 66 M136 46 L136 66 M156 46 L156 66"/>
+    <rect x="76" y="38" width="104" height="36" rx="9" fill="none"/>
+  </g>
+  <g id="label">
+    <rect x="84" y="126" width="88" height="70" rx="10" fill="#DCE6EE"/>
+    <path fill="#FFFFFF" d="M128 140 C146 140 156 152 154 164 C152 176 142 184 128 184 C114 184 104 176 102 164 C100 152 110 140 128 140 Z"/>
+    <circle cx="128" cy="163" r="11" fill="#F2C14E"/>
+  </g>
+  <g id="dollop">
+    <path fill="#FFF4E2" d="M206 222 C196 222 192 212 200 206 C196 196 206 190 214 194 C218 186 230 190 228 198 C238 202 236 220 224 222 Z"/>
+    <path fill="none" d="M206 210 C212 214 220 214 226 208"/>
+  </g>
+</g>
+</svg>
