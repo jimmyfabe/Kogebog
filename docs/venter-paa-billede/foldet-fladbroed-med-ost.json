@@ -1,0 +1,58 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Foldet fladbrød med ost",
+  "description": "Fuldkornstortillas med ost, skinke, majs og spinat, foldet som en halvmåne og ristet gyldne på en tør pande, med gulerods- og agurkestave ved siden af. Allergener: gluten og mælk.",
+  "image": "grafik/ret-foldet-fladbroed-med-ost.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT8M",
+  "cookTime": "PT12M",
+  "totalTime": "PT20M",
+  "recipeIngredient": [
+    "6 fuldkornstortillas",
+    "175 g revet ost",
+    "150 g skinketern",
+    "1 dåse majs",
+    "75 g frisk spinat",
+    "3 gulerødder",
+    "1 agurk"
+  ],
+  "tool": ["stor pande", "stegespade", "si", "skærebræt", "kniv", "skræller", "fad"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder gluten og mælk." } },
+    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad vandet løbe fra." } },
+    { "@type": "HowToStep", "text": "Skær gulerødder og agurk i stave.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod", "agurk"], "note": "3 gulerødder og 1 agurk. Barnet skræller gulerødderne med skrælleren, den voksne skærer." } },
+    { "@type": "HowToStep", "text": "Drys ost på den ene halvdel af hvert brød.", "tumbi": { "verbum": "drysse", "ikoner": ["tortilla", "ost"], "note": "Læg de 6 brød på bordet. Brug lidt over halvdelen af osten. Barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Drys skinke, majs og spinat ovenpå.", "tumbi": { "verbum": "drysse", "ikoner": ["skinke", "majs", "spinat"], "note": "Kun på den halvdel med ost. Del store spinatblade med fingrene." } },
+    { "@type": "HowToStep", "text": "Drys resten af osten over.", "tumbi": { "verbum": "drysse", "ikoner": ["ost"], "note": "Osten limer brødet sammen, når den bliver varm." } },
+    { "@type": "HowToStep", "text": "Fold brødene som en halvmåne.", "tumbi": { "verbum": "pakke-ind", "ikoner": ["tortilla"], "note": "Fold den tomme halvdel over fyldet, og tryk let." } },
+    { "@type": "HowToStep", "text": "Læg to brød på en tør pande.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["tortilla"], "note": "Middel varme, uden olie. Den voksne lægger dem på." } },
+    { "@type": "HowToStep", "text": "Rist dem i 2 minutter.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 120, "note": "Til undersiden er gylden." } },
+    { "@type": "HowToStep", "text": "Vend dem, og rist 1½ minut mere.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 90, "note": "Den voksne vender med stegespaden. Osten skal være smeltet. Læg dem på et fad." } },
+    { "@type": "HowToStep", "text": "Rist resten på samme måde.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 420, "ikoner": ["tortilla"], "note": "To ad gangen: 2 min, vend, 1½ min. Sluk bagefter." } },
+    { "@type": "HowToStep", "text": "Skær brødene i trekanter.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne skærer hvert brød i to eller tre stykker. Osten indeni er meget varm." } },
+    { "@type": "HowToStep", "text": "Læg stavene ved siden af på tallerkenen.", "tumbi": { "verbum": "pynte", "ikoner": ["gulerod", "agurk"], "note": "Barnet kan selv." } }
+  ],
+  "tumbi": {
+    "id": "foldet-fladbroed-med-ost",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er egne og bygger på vores research om hurtige hverdagsretter (31-10-2026). Idé fra quesadillas, hvor en tortilla med ost foldes og ristes på panden. Her er brødet fuldkorn, fyldet er skinke, majs og spinat, og der er grøntsagsstave ved siden af. Runden er inspireret af Jamie Olivers hurtige retter med få ingredienser (jamieoliver.com/inspiration/quick-and-easy-food-introduction/). Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 69,
+    "pris_dato": "2026-10",
+    "groent_g": 925,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's priser på shop.rema1000.dk 31-10-2026 for den brugte mængde (fuldkornstortillas 370 g 12,45 kr., regnet som 8 stk.; revet pizzatopping 500 g 24,95 kr.; skinketern 150 g 13,59 kr.; majs 285 g 7,91 kr.; spinat 75 g 10 kr. (normalpris fra 1-11; tilbud 8 kr. til 31-10); gulerødder 1 kg 12 kr.; agurk 10 kr. (normalpris fra 1-11; tilbud 7 kr. til 31-10)), i alt 63,17 kr., ganget med 1,09 (retten har ingen olie eller salt). Grønt er også et skøn (ikke vejet): majs 200 g, spinat 75 g, gulerødder 300 g og agurk 350 g.",
+    "ingredienser": [
+      { "ikon": "tortilla", "maengde": "6", "vare": "tortillas", "antal": 6, "enhed": "stk" },
+      { "ikon": "ost", "maengde": "175 g", "vare": "revet-ost", "antal": 175, "enhed": "g" },
+      { "ikon": "skinke", "maengde": "150 g", "vare": "skinketern", "antal": 150, "enhed": "g" },
+      { "ikon": "majs", "maengde": "1 dåse", "vare": "majs", "antal": 1, "enhed": "stk" },
+      { "ikon": "spinat", "maengde": "75 g", "vare": "frisk-spinat", "antal": 75, "enhed": "g" },
+      { "ikon": "gulerod", "maengde": "3", "vare": "gulerod", "antal": 3, "enhed": "stk" },
+      { "ikon": "agurk", "maengde": "1", "vare": "agurk", "antal": 1, "enhed": "stk" }
+    ]
+  }
+}

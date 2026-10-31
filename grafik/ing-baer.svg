@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="leaf" transform="translate(176 70) rotate(-28)">
+    <path fill="#5BAA6A" d="M-46 0 C-30 -26 22 -30 50 0 C22 30 -30 26 -46 0 Z"/>
+    <path fill="#448450" stroke="none" d="M-46 0 C-30 26 22 30 50 0 C20 14 -20 14 -46 0 Z"/>
+    <path fill="none" d="M-46 0 C-30 26 22 30 50 0 C22 30 -30 26 -46 0 Z M-46 0 C-30 -26 22 -30 50 0"/>
+    <path fill="none" d="M-38 0 L40 0 M-12 0 L4 -14 M12 0 L26 -12 M-12 0 L4 13 M12 0 L26 11"/>
+  </g>
+  <g id="raspberry" transform="translate(98 136)">
+    <g fill="#E2513B">
+      <circle cx="-24" cy="-40" r="16"/>
+      <circle cx="0" cy="-44" r="16"/>
+      <circle cx="24" cy="-40" r="16"/>
+      <circle cx="-38" cy="-14" r="16"/>
+      <circle cx="-13" cy="-16" r="16"/>
+      <circle cx="13" cy="-16" r="16"/>
+      <circle cx="38" cy="-14" r="16" fill="#C3331D"/>
+      <circle cx="-38" cy="14" r="16"/>
+      <circle cx="-13" cy="12" r="16"/>
+      <circle cx="13" cy="12" r="16"/>
+      <circle cx="38" cy="14" r="16" fill="#C3331D"/>
+      <circle cx="-25" cy="40" r="16"/>
+      <circle cx="0" cy="40" r="16"/>
+      <circle cx="25" cy="40" r="16" fill="#C3331D"/>
+      <circle cx="-11" cy="62" r="14"/>
+      <circle cx="12" cy="62" r="14" fill="#C3331D"/>
+    </g>
+    <g fill="#F2A0A0" stroke="none">
+      <circle cx="-29" cy="-46" r="4"/>
+      <circle cx="-5" cy="-50" r="4"/>
+      <circle cx="-43" cy="-20" r="4"/>
+      <circle cx="-18" cy="-22" r="4"/>
+      <circle cx="8" cy="-22" r="4"/>
+      <circle cx="-43" cy="8" r="4"/>
+      <circle cx="-18" cy="6" r="4"/>
+      <circle cx="8" cy="6" r="4"/>
+      <circle cx="-30" cy="34" r="4"/>
+      <circle cx="-5" cy="34" r="4"/>
+      <circle cx="-15" cy="57" r="3.5"/>
+    </g>
+    <path id="calyx" fill="#5BAA6A" d="M0 -58 L-30 -72 L-12 -60 L-22 -84 L-2 -64 L4 -88 L8 -63 L28 -80 L14 -58 L34 -62 L10 -52 C4 -50 -4 -50 -10 -52 L-34 -56 Z"/>
+    <path id="stalk" fill="#5E9E35" d="M-3 -66 C-4 -78 -2 -90 4 -98 L10 -95 C5 -86 3 -76 4 -66 Z"/>
+  </g>
+  <g id="blueberry-back" transform="translate(206 140)">
+    <circle r="27" fill="#4A5C9E"/>
+    <path fill="#34437A" stroke="none" d="M27 0 A27 27 0 0 1 -12 24 C6 18 18 6 20 -14 C24 -10 27 -5 27 0 Z"/>
+    <path fill="none" stroke="#8FA0D0" stroke-width="5" d="M-16 -10 C-12 -16 -6 -19 0 -20"/>
+    <circle r="27" fill="none"/>
+    <path fill="#2B3766" d="M0 -9 L3 -3 L9 -3 L4 1 L6 7 L0 3 L-6 7 L-4 1 L-9 -3 L-3 -3 Z"/>
+  </g>
+  <g id="blueberry-front" transform="translate(182 192)">
+    <circle r="34" fill="#4A5C9E"/>
+    <path fill="#34437A" stroke="none" d="M34 0 A34 34 0 0 1 -16 30 C8 22 22 8 25 -18 C30 -12 34 -6 34 0 Z"/>
+    <path fill="none" stroke="#8FA0D0" stroke-width="6" d="M-20 -12 C-15 -20 -8 -24 0 -25"/>
+    <circle r="34" fill="none"/>
+    <path fill="#2B3766" d="M0 -11 L4 -4 L11 -4 L5 1 L7 9 L0 4 L-7 9 L-5 1 L-11 -4 L-4 -4 Z"/>
+  </g>
+</g>
+</svg>

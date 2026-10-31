@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="mushroom" transform="translate(106 124)">
+    <path id="stem" fill="#FFF4E2" d="M-24 6 C-26 32 -30 56 -34 76 C-14 84 14 84 34 76 C30 56 26 32 24 6 Z"/>
+    <path fill="#EBDDC2" stroke="none" d="M10 6 L24 6 C26 32 30 56 34 76 C28 79 22 80 16 81 C20 58 16 28 10 6 Z"/>
+    <path fill="none" d="M-24 6 C-26 32 -30 56 -34 76 C-14 84 14 84 34 76 C30 56 26 32 24 6"/>
+    <path id="cap" fill="#E8D2A6" d="M-86 8 C-90 -42 -50 -80 0 -80 C50 -80 90 -42 86 8 C60 20 -60 20 -86 8 Z"/>
+    <path fill="#CFA976" stroke="none" d="M86 8 C90 -42 50 -80 0 -80 C42 -68 68 -36 66 14 C74 13 81 11 86 8 Z"/>
+    <path fill="none" stroke="#FFF4E2" stroke-width="7" d="M-58 -42 C-48 -58 -32 -66 -16 -68"/>
+    <path fill="none" d="M-86 8 C-90 -42 -50 -80 0 -80 C50 -80 90 -42 86 8 C60 20 -60 20 -86 8 Z"/>
+  </g>
+  <g id="slice" transform="translate(190 190) scale(0.6)">
+    <path id="slice-flesh" fill="#FFF4E2" d="M-82 6 C-86 -42 -48 -76 0 -76 C48 -76 86 -42 82 6 C66 13 42 15 24 13 C26 38 30 58 32 74 C12 82 -12 82 -32 74 C-30 58 -26 38 -24 13 C-42 15 -66 13 -82 6 Z"/>
+    <path id="skin" fill="none" stroke="#CFA976" stroke-width="9" d="M-72 -4 C-72 -42 -40 -66 0 -66 C40 -66 72 -42 72 -4"/>
+    <path id="gills" fill="#9A6A44" d="M-74 6 C-60 0 -40 -2 -24 2 L-24 13 C-42 15 -62 13 -74 6 Z M74 6 C60 0 40 -2 24 2 L24 13 C42 15 62 13 74 6 Z"/>
+    <path fill="none" d="M-82 6 C-86 -42 -48 -76 0 -76 C48 -76 86 -42 82 6 C66 13 42 15 24 13 C26 38 30 58 32 74 C12 82 -12 82 -32 74 C-30 58 -26 38 -24 13 C-42 15 -66 13 -82 6 Z"/>
+  </g>
+</g>
+</svg>

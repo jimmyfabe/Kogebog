@@ -1,0 +1,59 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Cremet ostris med ærter",
+  "description": "Cremet ris som en risotto: grødris kogt i bouillon lidt ad gangen, mens der røres, med ærter og mild revet ost. Allergener: mælk (smør og ost).",
+  "image": "grafik/ret-cremet-ostris-med-aerter.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT30M",
+  "totalTime": "PT35M",
+  "recipeIngredient": [
+    "2 grøntsagsbouillonterninger",
+    "1 l vand",
+    "1 løg",
+    "2 spsk smør",
+    "300 g grødris",
+    "300 g frosne ærter",
+    "100 g revet ost",
+    "1 knivspids peber"
+  ],
+  "tool": ["lille gryde", "stor gryde", "kniv", "skærebræt", "grydeske", "kop"],
+  "recipeInstructions": [
+    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Tag ærterne ud af fryseren. Retten indeholder mælk (smør og ost)."}},
+    {"@type": "HowToStep", "text": "Smuldr bouillonterningerne i en lille gryde.", "tumbi": {"verbum": "smuldre", "ikoner": ["bouillon"], "note": "Barnet kan selv."}},
+    {"@type": "HowToStep", "text": "Hæld vandet i, og varm bouillonen op.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand", "bouillon"], "note": "Til den lige koger. Skru så ned til svag varme: bouillonen skal holdes varm, for den bruges lidt ad gangen."}},
+    {"@type": "HowToStep", "text": "Skær løget i små tern.", "tumbi": {"verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["loeg"], "note": "Pil det først. Det kan barnet."}},
+    {"@type": "HowToStep", "text": "Steg løget blødt i smørret i 3 minutter.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "ikoner": ["loeg", "smoer"], "note": "I den store gryde ved middel varme. Løget skal være blødt og blankt, ikke brunt."}},
+    {"@type": "HowToStep", "text": "Hæld risene i, og rør rundt.", "tumbi": {"verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "I et minut, til risene er blanke af smørret."}},
+    {"@type": "HowToStep", "text": "Rør, og hæld bouillon i lidt ad gangen.", "tumbi": {"verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900, "ikoner": ["bouillon"], "note": "En kop ad gangen. Rør, og hæld mere i, når risene har suget det meste. Barnet rører sammen med den voksne ved gryden. Byt, når armen bliver træt."}},
+    {"@type": "HowToStep", "text": "Hæld ærterne i gryden.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["aerter"], "note": "Direkte fra frost."}},
+    {"@type": "HowToStep", "text": "Kog risene færdige i 3 minutter.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "note": "Med resten af bouillonen. Rør tit. Risene skal være møre med lidt bid, og det hele cremet og løst. Er de ikke møre, så et par minutter mere med lidt varmt vand."}},
+    {"@type": "HowToStep", "text": "Rør det meste af osten i.", "tumbi": {"verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ost"], "note": "Sluk for varmen først. Gem en håndfuld ost til at drysse over. Er risene for tykke, så rør lidt varmt vand i."}},
+    {"@type": "HowToStep", "text": "Smag til med peber.", "tumbi": {"verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["peber"], "note": "Den voksne giver barnet en lille skefuld, der har fået lov at køle af."}},
+    {"@type": "HowToStep", "text": "Drys resten af osten over.", "tumbi": {"verbum": "drysse", "ikoner": ["ost"], "note": "På tallerkenerne."}}
+  ],
+  "tumbi": {
+    "id": "cremet-ostris-med-aerter",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift (31-10-2026) på en enkel risotto med grødris i stedet for risottoris: risene koges i bouillon lidt ad gangen, mens der røres, og ost og ærter kommer i til sidst. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 22,
+    "pris_dato": "2026-10",
+    "groent_g": 450,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's normalpriser på shop.rema1000.dk 31-10-2026 for den brugte mængde (løg 1 kg 12 kr., smør 200 g 7,96 kr., grødris 1 kg 13,08 kr., fine ærter frost 600 g 10,36 kr., revet pizzatopping 500 g 24,95 kr.), i alt 17,09 kr., ganget med 1,09 plus 3 kr. til bouillon og peber. Grønt er også et skøn (ikke vejet): løg ca. 150 g og ærter 300 g, uden bælgfrugter og kartofler.",
+    "ingredienser": [
+      {"ikon": "bouillon", "maengde": "2", "vare": "bouillonterninger", "antal": 2, "enhed": "stk"},
+      {"ikon": "vand", "maengde": "1 l", "vare": "vand"},
+      {"ikon": "loeg", "maengde": "1", "vare": "loeg", "antal": 1, "enhed": "stk"},
+      {"ikon": "smoer", "maengde": "2 spsk", "vare": "smoer", "antal": 30, "enhed": "g"},
+      {"ikon": "ris", "maengde": "300 g", "vare": "groedris", "antal": 300, "enhed": "g"},
+      {"ikon": "aerter", "maengde": "300 g", "vare": "aerter", "antal": 300, "enhed": "g"},
+      {"ikon": "ost", "maengde": "100 g", "vare": "revet-ost", "antal": 100, "enhed": "g"},
+      {"ikon": "peber", "maengde": "1 knivspids", "vare": "peber"}
+    ]
+  }
+}

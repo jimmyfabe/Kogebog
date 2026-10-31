@@ -127,6 +127,9 @@ export const INGREDIENSER = {
   'mayonnaise': 'mayonnaise',
   'citron': 'citron',
   'ananas': 'ananas',
+  // De hurtige hverdagsretter, runde 3 (31-10-2026): champignon i kyllingetærten og jægergryden, frosne bær i den frosne yoghurt
+  'champignon': 'champignon',
+  'baer': 'bær',
 };
 
 // Ikoner for råt kød og råt æg: efter dem skal der komme et trin med «vaske-haender».
@@ -215,12 +218,18 @@ export const VARER = {
   'citron': { navn: 'Citron', afd: 'groent', enhed: 'stk', ikon: 'citron' },
   'icebergsalat': { navn: 'Icebergsalat', afd: 'groent', enhed: 'stk', ikon: 'kaal' },
   'spidskaal': { navn: 'Spidskål', afd: 'groent', enhed: 'g', ikon: 'kaal' },
+  'champignon': { navn: 'Champignon', afd: 'groent', enhed: 'g', ikon: 'champignon', pakke: [250, 'bakke', 'bakker'] },
+  'cherrytomater': { navn: 'Cherrytomater', afd: 'groent', enhed: 'g', ikon: 'tomat', pakke: [250, 'bakke', 'bakker'] },
+  'hvidkaal': { navn: 'Hvidkål', afd: 'groent', enhed: 'g', ikon: 'kaal' },
+  'tomater': { navn: 'Tomater', afd: 'groent', enhed: 'stk', ikon: 'tomat' },
+  'frisk-spinat': { navn: 'Frisk spinat', afd: 'groent', enhed: 'g', ikon: 'spinat' },
   // Brød
   'tortillas': { navn: 'Tortillas', afd: 'broed', enhed: 'stk', ikon: 'tortilla' },
   'rugbroed': { navn: 'Rugbrød', afd: 'broed', enhed: 'g', ikon: 'broed' },
   'toastbroed': { navn: 'Toastbrød', afd: 'broed', enhed: 'g', ikon: 'broed' },
   'naan': { navn: 'Naanbrød', afd: 'broed', enhed: 'g', ikon: 'broed' },
   'burgerboller': { navn: 'Burgerboller (fuldkorn)', afd: 'broed', enhed: 'stk', ikon: 'broed', pakke: [4, 'pose', 'poser'] },
+  'grovbroed': { navn: 'Grovbrød', afd: 'broed', enhed: 'g', ikon: 'broed' },
   // Dåser og tørvarer
   'hakkede-tomater': { navn: 'Hakkede tomater', afd: 'toer', enhed: 'g', ikon: 'tomat', pakke: [400, 'dåse', 'dåser'] },
   'passata': { navn: 'Tomatpassata', afd: 'toer', enhed: 'g', ikon: 'tomat', pakke: [500, 'flaske', 'flasker'] },
@@ -236,6 +245,8 @@ export const VARER = {
   'ris': { navn: 'Ris', afd: 'toer', enhed: 'g', ikon: 'ris' },
   // Egen vare, så indkøbslisten ikke lægger dem sammen med hvide ris (fuldkorn efter kostrådene; code review K8, 31-10)
   'brune-ris': { navn: 'Brune ris (fuldkorn)', afd: 'toer', enhed: 'g', ikon: 'ris' },
+  // Egen vare til den cremede ostris: grødris bliver cremet, det gør jasminris ikke
+  'groedris': { navn: 'Grødris', afd: 'toer', enhed: 'g', ikon: 'ris' },
   'kidneyboenner': { navn: 'Kidneybønner', afd: 'toer', enhed: 'stk', ikon: 'boenner', pakke: [1, 'dåse', 'dåser'] },
   'sorte-boenner': { navn: 'Sorte bønner', afd: 'toer', enhed: 'stk', ikon: 'boenner', pakke: [1, 'dåse', 'dåser'] },
   'majs': { navn: 'Majs', afd: 'toer', enhed: 'stk', ikon: 'majs', pakke: [1, 'dåse', 'dåser'] },
@@ -247,7 +258,9 @@ export const VARER = {
   'suppehorn': { navn: 'Suppehorn', afd: 'toer', enhed: 'g', ikon: 'spaghetti' },
   'makaroni': { navn: 'Makaroni', afd: 'toer', enhed: 'g', ikon: 'spaghetti' },
   'hvide-boenner-tomat': { navn: 'Hvide bønner i tomat', afd: 'toer', enhed: 'stk', ikon: 'boenner', pakke: [1, 'dåse', 'dåser'] },
+  'hvide-boenner': { navn: 'Hvide bønner', afd: 'toer', enhed: 'stk', ikon: 'boenner', pakke: [1, 'dåse', 'dåser'] },
   'mel': { navn: 'Hvedemel', afd: 'toer', enhed: 'g', ikon: 'mel' },
+  'rasp': { navn: 'Rasp', afd: 'toer', enhed: 'g', ikon: 'rasp' },
   'makrel-tomat': { navn: 'Makrel i tomat', afd: 'toer', enhed: 'stk', ikon: 'makrel', pakke: [1, 'dåse', 'dåser'] },
   'kikaerter': { navn: 'Kikærter', afd: 'toer', enhed: 'stk', ikon: 'kikaerter', pakke: [1, 'dåse', 'dåser'] },
   'bulgur': { navn: 'Bulgur', afd: 'toer', enhed: 'g', ikon: 'bulgur' },
@@ -264,26 +277,32 @@ export const VARER = {
   'madlavningsflode': { navn: 'Madlavnings\u00adfløde', afd: 'koel', enhed: 'ml', ikon: 'flode', pakke: [250, 'bæger', 'bægre'] },
   'parmesan': { navn: 'Revet parmesan', afd: 'koel', enhed: 'g', ikon: 'ost', pakke: [100, 'pose', 'poser'] },
   'revet-ost': { navn: 'Revet ost', afd: 'koel', enhed: 'g', ikon: 'ost', pakke: [175, 'pose', 'poser'] },
+  'skiveost': { navn: 'Skiveost', afd: 'koel', enhed: 'g', ikon: 'ost' },
   'graesk-yoghurt': { navn: 'Græsk yoghurt', afd: 'koel', enhed: 'g', ikon: 'yoghurt', pakke: [500, 'bæger', 'bægre'] },
   'aeg': { navn: 'Æg', afd: 'koel', enhed: 'stk', ikon: 'aeg', pakke: [10, 'bakke', 'bakker'] },
   'smoer': { navn: 'Smør', afd: 'koel', enhed: 'g', ikon: 'smoer', pakke: [250, 'pakke', 'pakker'] },
   'yoghurt': { navn: 'Yoghurt naturel', afd: 'koel', enhed: 'g', ikon: 'yoghurt', pakke: [1000, 'bæger', 'bægre'] },
   'pizzadej': { navn: 'Pizzadej (rulle)', afd: 'koel', enhed: 'stk', ikon: 'pizzadej', pakke: [1, 'rulle', 'ruller'] },
+  'butterdej': { navn: 'Butterdej (rulle)', afd: 'koel', enhed: 'stk', ikon: 'pizzadej', pakke: [1, 'rulle', 'ruller'] },
   'creme-fraiche': { navn: 'Creme fraiche', afd: 'koel', enhed: 'g', ikon: 'yoghurt' },
   'fiskefars': { navn: 'Fiskefars', afd: 'koel', enhed: 'g', ikon: 'koed' },
   'kyllingebryst': { navn: 'Kyllingebryst', afd: 'koel', enhed: 'g', ikon: 'koed' },
   'kyllingelaar': { navn: 'Kyllingelår', afd: 'koel', enhed: 'g', ikon: 'koed' },
   'hakket-svinekoed': { navn: 'Hakket svinekød', afd: 'koel', enhed: 'g', ikon: 'koed' },
+  'svinekoteletter': { navn: 'Svine\u00adkoteletter', afd: 'koel', enhed: 'g', ikon: 'koed' },
   'bacon-tern': { navn: 'Bacon i tern', afd: 'koel', enhed: 'g', ikon: 'koed' },
   'maelk': { navn: 'Mælk', afd: 'koel', enhed: 'ml', ikon: 'maelk', pakke: [1000, 'karton', 'kartoner'] },
   'hakket-kylling': { navn: 'Hakket kylling', afd: 'koel', enhed: 'g', ikon: 'koed' },
   'hakket-oksekoed-groent': { navn: 'Hakket oksekød med grønt', afd: 'koel', enhed: 'g', ikon: 'koed' },
   'medister': { navn: 'Medister', afd: 'koel', enhed: 'g', ikon: 'koed' },
   'partypoelser': { navn: 'Partypølser', afd: 'koel', enhed: 'g', ikon: 'poelse' },
+  'cocktailpoelser': { navn: 'Cocktailpølser', afd: 'koel', enhed: 'g', ikon: 'poelse' },
   'hytteost': { navn: 'Hytteost', afd: 'koel', enhed: 'g', ikon: 'hytteost' },
   'skyr': { navn: 'Skyr naturel', afd: 'koel', enhed: 'g', ikon: 'yoghurt', pakke: [1000, 'bæger', 'bægre'] },
   'skinketern': { navn: 'Skinketern', afd: 'koel', enhed: 'g', ikon: 'skinke', pakke: [150, 'pakke', 'pakker'] },
   'gnocchi': { navn: 'Gnocchi', afd: 'koel', enhed: 'g', ikon: 'kartoffel', pakke: [500, 'pakke', 'pakker'] },
+  // Færdig at spise, men «laks» i ingredienslinjen kræver ikonet «koed» og en håndvask. Uden pakke: 100 og 125 g findes
+  'varmroeget-laks': { navn: 'Varmrøget laks', afd: 'koel', enhed: 'g', ikon: 'koed' },
   // Frost. Uden pakke: posernes størrelse skifter mellem butikkerne, så listen viser gram
   'aerter': { navn: 'Ærter', afd: 'frost', enhed: 'g', ikon: 'aerter' },
   'broccoliblanding': { navn: 'Broccoli', afd: 'frost', enhed: 'g', ikon: 'broccoli' },
@@ -292,6 +311,7 @@ export const VARER = {
   // (UI-review 27-10). Den fjernes i tekstudgaven (tekst() i js/indkoeb.js)
   'groentsagsblanding': { navn: 'Grøntsags\u00adblanding', afd: 'frost', enhed: 'g', ikon: 'aerter' },
   'hakket-spinat': { navn: 'Hakket spinat', afd: 'frost', enhed: 'g', ikon: 'spinat' },
+  'helbladet-spinat': { navn: 'Helbladet spinat', afd: 'frost', enhed: 'g', ikon: 'spinat' },
   'aerter-gulerod': { navn: 'Ærter og gulerødder', afd: 'frost', enhed: 'g', ikon: 'aerter' },
   'blomkaalsblanding': { navn: 'Blomkål', afd: 'frost', enhed: 'g', ikon: 'blomkaal' },
   'rodfrugter': { navn: 'Rodfrugter', afd: 'frost', enhed: 'g', ikon: 'gulerod' },
@@ -318,5 +338,6 @@ export const VARER = {
   'honning': { navn: 'Honning', afd: 'basis', enhed: 'ml', ikon: 'honning', basis: true },
   'ketchup': { navn: 'Ketchup', afd: 'basis', enhed: 'ml', ikon: 'ketchup', basis: true },
   'mayonnaise': { navn: 'Mayonnaise', afd: 'basis', enhed: 'ml', ikon: 'mayonnaise', basis: true },
+  'ribsgele': { navn: 'Ribsgelé', afd: 'basis', enhed: 'ml', ikon: 'syltetoej', basis: true },
   'vand': { navn: 'Vand', afd: 'basis', enhed: 'ml', ikon: 'vand', basis: true, skjul: true },
 };
