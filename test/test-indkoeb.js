@@ -187,19 +187,36 @@ test('tekstudgaven har ingen bløde bindestreger', () => {
 });
 
 // Retternes navne kan have en blød bindestreg (Fiske|frikadeller, review 31-10). Skærmlæseren siger den, så el() fjerner
-// den fra aria-label (knappernes navn) og kun dér; den synlige tekst beholder den, så ordet kan deles på 360 px
-test('knappernes navn (aria-label) har ingen bløde bindestreger', () => {
+// den fra aria-label (knappernes navn) og alt (billedets navn, fx retten på børnenes dagbrikker, code review 31-10) og
+// kun dér; den synlige tekst beholder den, så ordet kan deles på 360 px
+test('knappernes navn (aria-label) og billedernes alt-tekst har ingen bløde bindestreger', () => {
   const foer = globalThis.document;
   globalThis.document = { createElement: () => ({ attr: {}, setAttribute(k, v) { this.attr[k] = v; }, append() {} }) };
   try {
     const b = el('button', { 'aria-label': 'Vælg Fiske\u00adfrikadeller til mandag', title: 'Fiske\u00adfrikadeller' });
     assert.equal(b.attr['aria-label'], 'Vælg Fiskefrikadeller til mandag');
     assert.equal(b.attr.title, 'Fiske\u00adfrikadeller');
+    const img = el('img', { src: 'grafik/ret-fiskefrikadeller.webp', alt: 'Milde fiske\u00adfrikadeller' });
+    assert.equal(img.attr.alt, 'Milde fiskefrikadeller');
   } finally {
     if (foer === undefined) delete globalThis.document;
     else globalThis.document = foer;
   }
   assert.equal(utenBloede('Grøntsags\u00adbouillon'), 'Grøntsagsbouillon');
+});
+
+// Uden om el() slap den bløde bindestreg igennem: timer-pillens aria-label («Gå til Edderkoppe|boller, trin 15.») og
+// printets titel (code review 31-10). Kun js/dom.js sætter derfor aria-label, alt og fanens titel (attr og sideTitel)
+test('kun js/dom.js sætter aria-label, alt og fanens titel', () => {
+  const filer = ['app.js', ...fs.readdirSync(path.join(ROD, 'js')).filter((f) => f.endsWith('.js') && f !== 'dom.js').map((f) => 'js/' + f)];
+  const UDEN_OM = /setAttribute\(\s*['"](?:aria-label|alt)['"]|\.(?:alt|ariaLabel)\s*=(?!=)|document\.title\s*=(?!=)/;
+  const fund = [];
+  for (const f of filer) {
+    fs.readFileSync(path.join(ROD, f), 'utf8').split(/\r?\n/).forEach((l, i) => {
+      if (!l.trim().startsWith('//') && UDEN_OM.test(l)) fund.push(f + ':' + (i + 1) + ': ' + l.trim());
+    });
+  }
+  assert.deepEqual(fund, [], 'brug attr() eller el() fra js/dom.js til aria-label og alt, og sideTitel() til fanens titel:\n  ' + fund.join('\n  '));
 });
 
 // «Del som tekst» og printet siger, hvor mange dage der mangler på listen, og hvorfor (code review U5 og U6, 23-10)

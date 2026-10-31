@@ -1,7 +1,7 @@
 // app.js — Tumbi Køkken: forside → ret → ét trin pr. skærm → færdig.
 // Ruterne står i adressen (#/ret/<id>/trin/<nr>), så tilbage-knappen og en genindlæsning virker.
 // Al tekst fra opskrifterne sættes som tekst (textContent), aldrig som HTML.
-import { el, ikon, svgEl } from './js/dom.js';
+import { el, attr, ikon, svgEl } from './js/dom.js';
 import { hentIndex, hentRet } from './js/data.js';
 import * as Tale from './js/tale.js';
 import * as R from './js/replikker.js';
@@ -119,7 +119,7 @@ function timerPille() {
     const navn = m && m.navn ? m.navn + ', trin ' + t.nr : 'trin ' + t.nr;
     b.classList.toggle('faerdig', s.faerdig);
     tal.textContent = formaterTid(s.restSek);
-    b.setAttribute('aria-label', (s.faerdig ? 'Timeren er færdig' : 'Timer: ' + formaterTid(s.restSek) + ' tilbage') + '. Gå til ' + navn + '.');
+    attr(b, 'aria-label', (s.faerdig ? 'Timeren er færdig' : 'Timer: ' + formaterTid(s.restSek) + ' tilbage') + '. Gå til ' + navn + '.');
   }
   S.oprydning.push(Timer.lyt(tegn));
   tegn();

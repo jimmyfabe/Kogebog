@@ -2,7 +2,7 @@
 // bruges). Side 1 er ugen med syv rækker (dagen, rettens billede, navn, tid, personer og dyret, der valgte), side 2 er
 // indkøbslisten med □ efter afdeling. Planen læses af lageret (kog-uge-v1 gennem js/lager.js), ikke af adressen, og
 // listen regnes af js/indkoeb.js som på skærmen. Al tekst sættes som tekst (js/dom.js)
-import { el } from './dom.js';
+import { el, sideTitel } from './dom.js';
 import { hentIndex, hentRet } from './data.js';
 import * as Lager from './lager.js';
 import { saml, grupper, manglerTekst, holdSammen } from './indkoeb.js';
@@ -18,7 +18,7 @@ export async function printUge({ ark, printKnap, tilbage, besked }) {
   tilbage.href = 'index.html#/uge';
   tilbage.textContent = 'Tilbage til ugeplanen';
   printKnap.textContent = 'Print ugeplanen';
-  document.title = 'Ugeplan · Tumbi Køkken';
+  sideTitel('Ugeplan · Tumbi Køkken');
   besked('Ugeplan', 'Henter ugeplanen …');
   let ids;
   try {
@@ -46,7 +46,7 @@ export async function printUge({ ark, printKnap, tilbage, besked }) {
 function tegn(ark, p, hentet) {
   const uge = p.uge || planMandag();
   const nr = ugeNr(uge);
-  document.title = 'Ugeplan uge ' + nr + ' · Tumbi Køkken';
+  sideTitel('Ugeplan uge ' + nr + ' · Tumbi Køkken');
   const periode = dagDato(uge, 0) + '–' + dagDato(uge, 6);
 
   const dage = p.dage.map((d, i) => {

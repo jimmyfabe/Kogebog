@@ -1,6 +1,6 @@
 // print.js — A4-printet til den voksne: print.html?ret=<id>. Samme JSON som skærmene.
 // print.html?uge er ugeplanen og indkøbslisten (js/print-uge.js).
-import { el, ikon } from './dom.js';
+import { el, ikon, sideTitel } from './dom.js';
 import { hentRet, ID_RE } from './data.js';
 import { VERBER, grafikVerbum } from './katalog.js';
 import { varighedKort } from './tid.js';
@@ -22,7 +22,7 @@ function besked(titel, tekst) {
 const medDatoer = (tekst) => tekst.split(/(\d{1,2}-\d{1,2}-\d{4})/).map((s, i) => (i % 2 ? el('span', { class: 'dato', tekst: s }) : s));
 
 function tegn(m) {
-  document.title = m.navn + ' · Tumbi Køkken';
+  sideTitel(m.navn + ' · Tumbi Køkken');
   const meta = [m.portioner, m.minutter ? minutterTekst(m.minutter) + ' i alt' : '', m.aktivMinutter ? minutterTekst(m.aktivMinutter) + ' forberedelse' : '']
     .filter(Boolean).join(' · ');
 

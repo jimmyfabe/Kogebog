@@ -12,15 +12,26 @@ export function el(tag, attrs = {}, ...born) {
     if (k === 'class') e.className = v;
     else if (k === 'tekst') e.textContent = v;
     else if (k.startsWith('on') && typeof v === 'function') e.addEventListener(k.slice(2), v);
-    // Skærmlæseren siger den bløde bindestreg (U+00AD i fx retternes navne), så den fjernes fra knappernes navn
-    else if (k === 'aria-label') e.setAttribute(k, utenBloede(v));
-    else e.setAttribute(k, v === true ? '' : String(v));
+    else attr(e, k, v);
   }
   for (const b of born.flat()) {
     if (b == null || b === false) continue;
     e.append(typeof b === 'string' ? document.createTextNode(b) : b);
   }
   return e;
+}
+
+// Én attribut, som el() sætter den. Skærmlæseren siger den bløde bindestreg (U+00AD i fx retternes navne), så den fjernes
+// fra elementets navn (aria-label) og billedets (alt). Kun denne fil sætter de to og fanens titel (test-indkoeb.js)
+const NAVNE = new Set(['aria-label', 'alt']);
+export function attr(e, k, v) {
+  const s = v === true ? '' : String(v);
+  e.setAttribute(k, NAVNE.has(k) ? utenBloede(s) : s);
+}
+
+// Fanens titel, som skærmlæseren siger, når siden åbnes (printet: retten eller ugeplanen)
+export function sideTitel(tekst) {
+  document.title = utenBloede(tekst);
 }
 
 // Faste streg-ikoner (24 × 24). Stierne står her i koden og kommer aldrig fra data.
