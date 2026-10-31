@@ -21,10 +21,10 @@
     "ca. 300 g hvedemel",
     "½ dl sesamfrø"
   ],
-  "tool": ["rivejern", "stor skål", "dl-mål", "køkkenvægt", "grydeske", "viskestykke", "bageplade", "bagepapir", "pensel", "rist"],
+  "tool": ["rivejern", "stor skål", "dl-mål", "køkkenvægt", "grydeske", "viskestykke", "bageplade", "bagepapir", "pensel", "rist", "paletkniv"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
-    { "@type": "HowToStep", "text": "Riv guleroden fint.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skrub guleroden først. Stop, før fingrene kommer tæt på rivejernet." } },
+    { "@type": "HowToStep", "text": "Riv guleroden fint.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skrub guleroden først. Rivejernet er skarpt, så den voksne river." } },
     { "@type": "HowToStep", "text": "Smuldr gæren ned i en stor skål.", "tumbi": { "verbum": "smuldre", "ikoner": ["gaer"], "note": "25 g gær er en halv pakke." } },
     { "@type": "HowToStep", "text": "Mål 2½ dl lunkent vand.", "tumbi": { "verbum": "maale", "ikoner": ["vand"], "note": "Lunkent er som en finger i badevand: hverken koldt eller varmt." } },
     { "@type": "HowToStep", "text": "Hæld vand og ymer over gæren, og rør.", "tumbi": { "verbum": "roere", "ikoner": ["vand", "yoghurt", "gaer"], "note": "2 dl ymer. Rør, til gæren er opløst." } },
@@ -39,14 +39,14 @@
     { "@type": "HowToStep", "text": "Drys sesamfrø på bollerne.", "tumbi": { "verbum": "drysse", "ikoner": ["kerner"], "note": "½ dl sesamfrø til alle bollerne." } },
     { "@type": "HowToStep", "text": "Bag bollerne i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900, "note": "200 °C varmluft i ca. 15 min, til de er gyldne og lyder hule, når man banker under dem." } },
     { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme" } },
-    { "@type": "HowToStep", "text": "Lad bollerne køle af på en rist.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Bagepladen er meget varm. Bollerne kan fryses til madpakken." } },
+    { "@type": "HowToStep", "text": "Lad bollerne køle af på en rist.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Den voksne flytter bollerne over på risten med en paletkniv. Bagepladen er meget varm. Bollerne kan fryses til madpakken." } },
     { "@type": "HowToStep", "text": "Smag en bolle.", "tumbi": { "verbum": "smage" } }
   ],
   "tumbi": {
     "id": "gulerodsboller",
     "version": 1,
     "afproevet": false,
-    "kilde": "Sundhedsstyrelsen, opskriftskort «Mad og måltider» (https://www.sundhedsstyrelsen.dk/-/media/Viden/Boernesundhed/Projekt/9-Trykfiler/Mad-Maaltider-Opskriftskort-TRYK.ashx). Mængderne er fra et søgemaskine-uddrag af kortet (31-10-2026), fordi selve kortet ikke kunne hentes. 1 tsk salt er lagt til, og ymer er valgt som syrnet mælkeprodukt. Antal boller, hævetider, ovnvarme og bagetid er et skøn (ikke målt). Trinene er egen tekst.",
+    "kilde": "Idé fra Sundhedsstyrelsen, opskriftskort «Mad og måltider» (https://www.sundhedsstyrelsen.dk/-/media/Viden/Boernesundhed/Projekt/9-Trykfiler/Mad-Maaltider-Opskriftskort-TRYK.ashx). Mængderne er fra et søgemaskine-uddrag af kortet (31-10-2026), fordi selve kortet ikke kunne hentes, og de er ikke efterprøvet mod kortet. 1 tsk salt er lagt til, og ymer er valgt som syrnet mælkeprodukt. Antal boller, hævetider, ovnvarme og bagetid er et skøn (ikke målt). Trinene er egen tekst.",
     "ingredienser": [
       { "ikon": "gulerod", "maengde": "1" },
       { "ikon": "gaer", "maengde": "25 g" },
