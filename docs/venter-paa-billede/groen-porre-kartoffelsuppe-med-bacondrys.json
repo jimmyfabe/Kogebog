@@ -17,7 +17,7 @@
     "2 bouillonterninger",
     "150 g frosne ærter",
     "2,5 dl madlavningsfløde 15 %",
-    "½ tsk salt",
+    "1 knivspids salt",
     "1 knivspids peber",
     "6 skiver rugbrød"
   ],
@@ -35,7 +35,7 @@
     { "@type": "HowToStep", "text": "Hæld kartofler, vand og bouillon i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["kartoffel", "vand", "bouillon"], "note": "Det varme vand fra elkedlen: den voksne hælder. Smuldr de 2 bouillonterninger i." } },
     { "@type": "HowToStep", "text": "Kog suppen under låg i 12 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 720, "note": "Start timeren, når suppen koger. Kartoflerne skal være helt møre: en kniv glider let igennem." } },
     { "@type": "HowToStep", "text": "Hæld ærter og fløde i suppen.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["aerter", "flode"], "note": "Ærterne direkte fra frost. Lad suppen koge 2 min mere, så ærterne er varme." } },
-    { "@type": "HowToStep", "text": "Blend suppen glat med stavblenderen.", "tumbi": { "verbum": "mose", "voksen": true, "voksen_hjaelp": "varme", "note": "Tag gryden af varmen først. Den voksne holder stavblenderen helt nede i suppen, så den ikke sprøjter. Barnet må gerne trykke på knappen." } },
+    { "@type": "HowToStep", "text": "Blend suppen glat med stavblenderen.", "tumbi": { "verbum": "mose", "voksen": true, "voksen_hjaelp": "varme", "note": "Tag gryden af varmen først. Den voksne holder stavblenderen og trykker selv, med bladet helt nede i suppen, så den ikke sprøjter. Barnet står på afstand: suppen er kogende varm." } },
     { "@type": "HowToStep", "text": "Smag suppen til med salt og peber.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt", "peber"], "note": "Pust på skeen først. Bacon og bouillon er salte, så smag, før I salter." } },
     { "@type": "HowToStep", "text": "Drys det sprøde bacon over suppen.", "tumbi": { "verbum": "drysse", "note": "I skålene, lidt på hver. Rugbrød til." } }
   ],
@@ -58,7 +58,7 @@
       { "ikon": "bouillon", "maengde": "2", "vare": "bouillonterninger", "antal": 2, "enhed": "stk" },
       { "ikon": "aerter", "maengde": "150 g", "vare": "aerter", "antal": 150, "enhed": "g" },
       { "ikon": "flode", "maengde": "2,5 dl", "vare": "madlavningsflode", "antal": 2.5, "enhed": "dl" },
-      { "ikon": "salt", "maengde": "½ tsk", "vare": "salt" },
+      { "ikon": "salt", "maengde": "1 knivspids", "vare": "salt" },
       { "ikon": "peber", "maengde": "1 knivspids", "vare": "peber" },
       { "ikon": "broed", "maengde": "6 skiver", "vare": "rugbroed", "antal": 270, "enhed": "g" }
     ]
