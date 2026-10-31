@@ -1,14 +1,29 @@
 # STATUS – Tumbi Køkken
 
+## 31-10-2026 kl. 12:53: 36 nye hverdagsretter og ⚡ på to grene, ikke flettet (Saga)
+
+Jimmy 31-10: flere hverdagsretter i stil med Jamie Olivers 5 ingredienser og 20 minutter (ris, pasta, kinesisk og kartofler), og «Ja du giver den bare gas».
+- **Runde 1:** gren `claude/nye-opskrifter-31-10`, HEAD e64a11c, worktree `D:\Claude\.claude\worktrees\kogebog-nye-3110`. 12 retter med review-rettelser. 10 er i index med Codex-billeder (61 retter i alt). Gulerodsboller og havregrynsmuffins-med-aeble venter på billede i `docs/venter-paa-billede/`. Version v3 · 31-10-2026.
+- **Runde 2:** gren `claude/nye-opskrifter-r2-31-10` oven på runde 1, HEAD a65829f, worktree `D:\Claude\.claude\worktrees\kogebog-r2-3110`. 24 retter (12 ris/kinesisk og 12 pasta/kartofler), 5 nye SVG'er og 12 nye katalogvarer. Alle 24 venter på billede i `docs/venter-paa-billede/`, og README'en dér har trinene til at flytte dem ind. Reviewet for kost og sikkerhed: 1 HØJ, 17 MELLEM, 18 LAV, rettet i 17 commits. Eksempler: kogende vand i et barnetrin (bakkeret), allergenerne vises nu også i appen, og den voksne trykker selv på stavblenderen. Tiderne er ærlige.
+- **⚡** (dce4ea9, a65829f): retter på højst 20 min får et lyn på tallerkenen (forsiden, børnenes valg og den voksnes dag) og en skærmlæsertekst. Saga slog det til, fordi Jimmy ikke svarede. Det er let at fjerne (`LYN_MIN` i `js/model.js`). Nu har kun wok-med-nudler det. Gnocchi, gyoza og stegte ris får det, når de flyttes ind.
+- **Lovet mod faktisk:** forslaget lovede ⚡ på 7 retter, og de ærlige tider giver 3. Pesto, carbonara og chow mein tager 25 min og laks 30. Rugbrødsaften (nu 30 min) og lun tunpasta (25) har mistet ⚡.
+- **Ikke rettet, Jimmys valg:** okonomiyaki ligner kålpandekager, bakkeret ligner bradepandekylling, og tortilla, egg foo young og rösti ligner hinanden. Soja-honning går igen i 6 retter.
+- **Test:** node-tests på a65829f er 8 af 9 grønne (test-lyd er rød som før). Ikke kørt: e2e og ui-reviewer. Code-reviewet af koden kører.
+- **Mangler:** billeder til 26 retter (Codex efter kl. 14:06, prompt i Sagas kladde `kogebog-r2/byg/codex/prompt-r2.txt`). Derefter skal retterne flyttes ind, og e2e og ui-reviewer køres. Røst-lyd mangler til 713 nye og 327 gamle replikker. Ingen af retterne er lavet i et rigtigt køkken.
+
+**Afventer Jimmy** (ført op fra 29-10):
+- (31-10) Kig på de 36 nye retter. Skal ⚡ blive? Skal en af dubletterne skiftes ud?
+- (31-10) Push, når billederne og testene er færdige. Grenene er ikke flettet ind i `main`.
+- (29-10) Lyt til de 9 lydfiler i 29-10-afsnittet.
+- (23-10) Ja til at slette de 3 forældreløse mp3 (`--ryd`). Indtil da er `test-lyd` rød.
+- (27-10) Udtalen af «Halloween»: behold, «Hælovin» eller «Hæloviin».
+- (23-10) Halloween-tegningerne.
+
 ## 30-10-2026 kl. 23:05: v2 er live (Saga)
 
 - Jimmy pushede `main` 29-10 kl. 17:20 (7de8cdf; `origin/main` = lokal `main`). Live `js/version.js` viser `v2 · 28-10-2026` (læst med curl 30-10). Push-punktet nedenfor er dermed lukket.
 
-**Afventer Jimmy** (ført op fra 29-10):
-- (29-10) Lyt til de 9 lydfiler i listen nedenfor.
-- (23-10) Ja til at slette de 3 forældreløse mp3 (`--ryd`). Indtil da er `test-lyd` rød.
-- (27-10) Udtalen af «Halloween»: behold, «Hælovin» eller «Hæloviin».
-- (23-10) Halloween-tegningerne.
+**Afventer Jimmy:** ført op til 31-10.
 
 ## 29-10-2026 kl. 06:11: bogen gjort færdig, v2 · 28-10-2026 (gren `claude/faerdig-28-10`, spolet frem i lokal `main` til 4b7dcfe, ikke pushet)
 
