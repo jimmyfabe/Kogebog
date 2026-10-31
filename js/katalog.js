@@ -225,6 +225,8 @@ export const VARER = {
   'frisk-spinat': { navn: 'Frisk spinat', afd: 'groent', enhed: 'g', ikon: 'spinat' },
   // Brød
   'tortillas': { navn: 'Tortillas', afd: 'broed', enhed: 'stk', ikon: 'tortilla' },
+  // Egen vare, så indkøbslisten ikke lægger dem sammen med hvide tortillas (fuldkorn i det foldede fladbrød; review 31-10)
+  'fuldkornstortillas': { navn: 'Fuldkornstortillas', afd: 'broed', enhed: 'stk', ikon: 'tortilla' },
   'rugbroed': { navn: 'Rugbrød', afd: 'broed', enhed: 'g', ikon: 'broed' },
   'toastbroed': { navn: 'Toastbrød', afd: 'broed', enhed: 'g', ikon: 'broed' },
   'naan': { navn: 'Naanbrød', afd: 'broed', enhed: 'g', ikon: 'broed' },
@@ -296,7 +298,6 @@ export const VARER = {
   'hakket-oksekoed-groent': { navn: 'Hakket oksekød med grønt', afd: 'koel', enhed: 'g', ikon: 'koed' },
   'medister': { navn: 'Medister', afd: 'koel', enhed: 'g', ikon: 'koed' },
   'partypoelser': { navn: 'Partypølser', afd: 'koel', enhed: 'g', ikon: 'poelse' },
-  'cocktailpoelser': { navn: 'Cocktailpølser', afd: 'koel', enhed: 'g', ikon: 'poelse' },
   'hytteost': { navn: 'Hytteost', afd: 'koel', enhed: 'g', ikon: 'hytteost' },
   'skyr': { navn: 'Skyr naturel', afd: 'koel', enhed: 'g', ikon: 'yoghurt', pakke: [1000, 'bæger', 'bægre'] },
   'skinketern': { navn: 'Skinketern', afd: 'koel', enhed: 'g', ikon: 'skinke', pakke: [150, 'pakke', 'pakker'] },

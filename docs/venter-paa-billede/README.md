@@ -40,27 +40,24 @@ og ingen nødder). Står der skål, pande, bradepande eller fad, tegnes den i st
   skinke, majs og spinat ses; gulerods- og agurkestave ved siden af.
 - `kyllingetaerte-med-butterdej`: rundt cremefarvet tærtefad med to små hanke og pustet gyldent butterdejslåg; ét
   stykke taget ud, så det cremede fyld med kylling, ærter, gulerodstern og champignon ses.
-- `fisketacos-med-majs`: tre små bløde hvedetortillas foldet som tacos med gyldne stykker stegt hvid fisk, strimlet
+- `fisketacos-med-majs`: to bløde hvedetortillas foldet som tacos med gyldne stykker stegt hvid fisk, strimlet
   salat, majs og agurketern under en stribe hvid yoghurtdressing.
-- `smash-burgere-med-ost`: to burgere i boller uden sesam med tynd, sprød bøf, smeltet ost, salat, tomat og agurk; den
+- `smash-burgere-med-ost`: to burgere i fuldkornsboller uden sesam med tynd, sprød bøf, smeltet ost, salat, tomat og agurk; den
   ene åben med toppen ved siden af; et par gulerodsstave.
 - `kylling-med-boenner-og-spinat`: grå pande med gyldne kyllingestykker, hvide bønner og spinat i let cremet sovs med
   halve cherrytomater.
 - `cremet-fiskesuppe-med-majs`: dyb tallerken med cremet, lysegul suppe med hvid fisk, majs, kartoffel- og
   gulerodstern; to skiver grovbrød på kanten.
-- `laks-med-sproed-rasp`: to laksefileter med gylden rasp på toppen, små kogte kartofler, broccoli og en citronbåd.
-- `gul-ris-med-laks-aerter-og-aeg`: grå pande med mild gul ris, flager af varmrøget laks, mange ærter og fire halve
+- `laks-med-sproed-rasp`: to laksefileter med gylden rasp på toppen, groft moste kartofler med grønne ærter og en
+  citronbåd.
+- `gul-ris-med-laks-aerter-og-aeg`: grå pande med mild gul ris, flager af varmrøget laks, mange ærter og otte halve
   kogte æg på toppen.
 - `koteletter-med-aeble`: to gyldne svinekoteletter med tynd fedtkant, bløde æblebåde med rød skræl, små kogte
   kartofler, grønne bønner og lidt lysebrun pandesovs.
 - `cremet-ostris-med-aerter`: rund cremefarvet skål med cremet, blank ris med ærter og revet ost på toppen.
 - `frossen-yoghurt-med-baer`: rund cremefarvet skål med tre kugler lyserød frossen yoghurt med mørkerøde bærstriber og
-  hele hindbær og blåbær omkring; ingen vaffel, krymmel eller nødder.
+  hele blåbær omkring; ingen vaffel, krymmel eller nødder.
 - `koedkaal-med-makaroni`: makaroni med hvidkålsstrimler, gulerodsstykker og brunet hakket oksekød i mild gul-orange
   karry-tomatsovs.
 - `jaegergryde-med-pasta`: penne i den ene side og cremet, lys orange paprikasovs med hakket svinekød,
-  champignonskiver, sprøde baconterninger og et par cocktailpølser i den anden.
-
-Små forskelle mellem billedet og opskriften (behøver ikke et nyt billede): kyllingetærtens låg får huller med en
-gaffel, ikke snit · laksens broccoli bager på pladen og kan se lidt ristet ud · den gule ris har 4 æg, altså 8 halve ·
-kyllingen med bønner spises med ris, som billedet ikke viser · burgerbollerne er fuldkorn.
+  champignonskiver, bløde baconstykker og et par cocktailpølser i den anden.

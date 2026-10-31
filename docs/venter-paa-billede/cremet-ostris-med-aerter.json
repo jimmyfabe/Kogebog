@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "Recipe",
   "name": "Cremet ostris med ærter",
-  "description": "Cremet ris som en risotto: grødris kogt i bouillon lidt ad gangen, mens der røres, med ærter og mild revet ost. Allergener: mælk (smør og ost).",
+  "description": "Cremet ris som en risotto: grødris kogt i bouillon lidt ad gangen, mens der røres, med ærter og mild revet ost. Allergener: mælk (smør og ost); tjek bouillonen for selleri.",
   "image": "grafik/ret-cremet-ostris-med-aerter.webp",
   "inLanguage": "da",
   "recipeYield": "4 personer",
@@ -21,7 +21,7 @@
   ],
   "tool": ["lille gryde", "stor gryde", "kniv", "skærebræt", "grydeske", "kop"],
   "recipeInstructions": [
-    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Tag ærterne ud af fryseren. Retten indeholder mælk (smør og ost)."}},
+    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Tag ærterne ud af fryseren. Retten indeholder mælk (smør og ost). Tjek bouillonen for selleri."}},
     {"@type": "HowToStep", "text": "Smuldr bouillonterningerne i en lille gryde.", "tumbi": {"verbum": "smuldre", "ikoner": ["bouillon"], "note": "Barnet kan selv."}},
     {"@type": "HowToStep", "text": "Hæld vandet i, og varm bouillonen op.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand", "bouillon"], "note": "Til den lige koger. Skru så ned til svag varme: bouillonen skal holdes varm, for den bruges lidt ad gangen."}},
     {"@type": "HowToStep", "text": "Skær løget i små tern.", "tumbi": {"verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["loeg"], "note": "Pil det først. Det kan barnet."}},
