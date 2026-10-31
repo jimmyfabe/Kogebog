@@ -323,6 +323,13 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 /* Afsnittets billede i hjørnet, som i overskriften: farven alene kan ikke skelnes ved farveblindhed (UI-review 5) */
 .kort-gruppe { position: absolute; top: 10px; left: 10px; display: grid; place-items: center; width: 40px; aspect-ratio: 1; border: var(--kant); border-radius: 50%; background: var(--ret-farve); }
 .kort-gruppe img { width: 80%; }
+/* ⚡ Lynhurtig ret (højst 20 min i alt, lynMaerke i app.js): et mærkat på tallerkenens nederste hjørne, som dyret på
+   dagbrikken. Det ligger oven på billedet, så kortets mål og navnet ikke flytter sig, og vokser med tallerkenen.
+   Kakao-lyn på sennep (8,1:1): et gult lyn på hvidt forsvandt mod de travle retbilleder ved 28 px, og den gule plet
+   kan ikke forveksles med dyrets hvide mærke eller afsnittets lyse */
+.kort-billede { position: relative; }
+.lyn { position: absolute; right: 0; bottom: 0; display: grid; place-items: center; width: clamp(28px, 22%, 44px); aspect-ratio: 1; border: var(--kant); border-radius: 50%; background: var(--sennep); }
+.lyn-ikon { width: 78%; height: 78%; fill: var(--kakao); stroke: var(--kakao); stroke-width: 1.2; stroke-linejoin: round; }
 /* Lange ord deles med bindestreg (lang="da"), ikke midt i ordet uden tegn */
 .kort-navn { font-size: 26px; font-weight: 800; line-height: 1.1; text-align: center; overflow-wrap: break-word; -webkit-hyphens: auto; hyphens: auto; }
 .kort-aabn { display: none; align-items: center; gap: 6px; font-size: 17px; font-weight: 750; }
@@ -701,7 +708,11 @@ textarea.kopi-felt { resize: vertical; }
 /* Valget af en ret til en dag */
 .dag-vaerktoej { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
 .ret-valg { border: var(--kant); border-radius: 22px; background: var(--hvid); overflow: hidden; }
-.ret-valg-raekke { display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; align-items: center; gap: 0 16px; padding: 8px 16px; }
+/* position: relative holder skærmlæserens tekst til ⚡ (.sr-kun) inde i rækken */
+.ret-valg-raekke { position: relative; display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; align-items: center; gap: 0 16px; padding: 8px 16px; }
+/* Rammen om billedet, så ⚡ kan sidde på dets hjørne som på børnenes kort */
+.dag-billede-ramme { position: relative; display: block; }
+.dag-billede-ramme .lyn { width: 28px; }
 .ret-valg-raekke + .ret-valg-raekke { border-top: 2px solid var(--creme-moerk); }
 .ret-valg-raekke.valgt { background: var(--sennep-lys); }
 .ret-valg-raekke > .uge-besked { grid-column: 1 / -1; margin: 6px 0 4px; }

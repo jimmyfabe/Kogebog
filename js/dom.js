@@ -44,6 +44,8 @@ const IKONER = {
   // Børnenes sidepile er vinkler som i en billedbog: med pilen fra «Tilbage» stod to ens pile over hinanden (UI-review 2, 23-10)
   forrige: ['M14.5 5l-7 7 7 7'],
   frem: ['M9.5 5l7 7-7 7'],
+  // Lynet på tallerkenen ved en lynhurtig ret (lynMaerke i app.js). En lukket form, der fyldes (.lyn-ikon i app.css)
+  lyn: ['M13.4 2.5L5 13.6h6l-.9 7.9 8.9-11.4h-6.1z'],
 };
 
 export function ikon(navn, klasse = 'ikon') {

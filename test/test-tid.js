@@ -8,7 +8,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { nyTimer, timerStatus, formaterTid, varighed, varighedKort, varighedTale, HURTIG_SEK, planMandag, ugeNr, dagDato } from '../js/tid.js';
 import { isoTilMinutter, minutterTekst, tilTale, talOrd, ukendtKoen, KOEN, antalOrd, delIngrediens } from '../js/tekst.js';
-import { lavModel } from '../js/model.js';
+import { lavModel, erLynhurtig, LYN_MIN } from '../js/model.js';
 import { hentIndex } from '../js/data.js';
 import { lavTaleliste, alleReplikker } from '../vaerktoej/lav-taleliste.js';
 
@@ -231,6 +231,21 @@ test('modellen af pandekagerne', () => {
   assert.equal(m.trin[0].voksen, false);
   assert.equal(m.trin[0].voksenSlags, null);
   assert.equal(m.afproevet, false);
+});
+
+// ⚡ på tallerkenen: højst 20 minutter i alt. Ingen tid (null), 0 minutter eller ingen model giver intet mærke
+test('lynhurtig ret: højst 20 minutter i alt', () => {
+  assert.equal(LYN_MIN, 20);
+  assert.equal(erLynhurtig({ minutter: 19 }), true);
+  assert.equal(erLynhurtig({ minutter: 20 }), true);
+  assert.equal(erLynhurtig({ minutter: 21 }), false);
+  assert.equal(erLynhurtig({ minutter: null }), false);
+  assert.equal(erLynhurtig({ minutter: 0 }), false);
+  assert.equal(erLynhurtig(null), false);
+  // Fra opskriften: totalTime PT20M (wok-med-nudler) og PT35M (pandekager) gennem lavModel
+  const laes = (id) => lavModel(JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8')));
+  assert.equal(erLynhurtig(laes('wok-med-nudler')), true);
+  assert.equal(erLynhurtig(laes('pandekager')), false);
 });
 
 // Ugeplanen: kun retter med «tumbi.ugeplan» får uge-delen, med de felter, saml() i js/indkoeb.js læser

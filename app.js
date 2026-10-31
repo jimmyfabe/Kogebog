@@ -10,7 +10,7 @@ import * as Lager from './js/lager.js';
 import * as Ugeplan from './js/ugeplan.js';
 import { holdKnap } from './js/hold.js';
 import { trekant, voksenNaeste } from './js/voksen.js';
-import { voksenFarer } from './js/model.js';
+import { voksenFarer, erLynhurtig, LYN_MIN } from './js/model.js';
 import { VERBER, INGREDIENSER, GRUPPER, grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, grafikGruppe, GRAFIK_FAERDIG } from './js/katalog.js';
 import { formaterTid, varighed, varighedTale } from './js/tid.js';
 import { minutterTekst } from './js/tekst.js';
@@ -52,6 +52,17 @@ function knap(tekst, { klasse = '', ikonNavn, ikonEfter = false, label, onclick 
 
 function billede(src, alt, klasse) {
   return el('img', { src, alt, class: klasse, draggable: 'false', decoding: 'async' });
+}
+
+// ⚡ på tallerkenens hjørne, når retten tager højst LYN_MIN minutter i alt (erLynhurtig i js/model.js). Et billede, ikke
+// et ord, for børnene kan næsten ikke læse. Mærket ligger oven på billedet, så kortets mål ikke ændrer sig.
+// Skærmlæseren får teksten for sig (lynTekst), og den står efter navnet, så navnet kommer først
+const LYN_TEKST = 'Hurtig: højst ' + LYN_MIN + ' minutter';
+function lynMaerke(m) {
+  return erLynhurtig(m) ? el('span', { class: 'lyn', 'aria-hidden': 'true' }, ikon('lyn', 'lyn-ikon')) : null;
+}
+function lynTekst(m) {
+  return erLynhurtig(m) ? el('span', { class: 'sr-kun', tekst: '. ' + LYN_TEKST + '.' }) : null;
 }
 
 function annoncer(tekst) {
@@ -179,9 +190,10 @@ function forside() {
       if (m instanceof Error) { fejlede.push(id); return null; }
       const b = el('button', { type: 'button', class: 'kort' + (S.valgtKort === id ? ' valgt' : ''), 'data-ret': id },
         Object.hasOwn(GRUPPER, gruppe) ? el('span', { class: 'kort-gruppe', 'aria-hidden': 'true' }, billede(grafikGruppe(gruppe), '')) : null,
-        el('span', { class: 'kort-billede' }, billede(grafikRet(id), '')),
+        el('span', { class: 'kort-billede' }, billede(grafikRet(id), ''), lynMaerke(m)),
         el('span', { class: 'kort-navn', tekst: m.navn }),
-        el('span', { class: 'kort-aabn', 'aria-hidden': 'true' }, ikon('naeste'), el('span', { tekst: 'Tryk igen' })));
+        el('span', { class: 'kort-aabn', 'aria-hidden': 'true' }, ikon('naeste'), el('span', { tekst: 'Tryk igen' })),
+        lynTekst(m));
       b.addEventListener('click', klik(() => kortTryk(id, b)));
       return el('li', { class: 'kort-plads' }, b);
     };
@@ -596,7 +608,7 @@ async function indlaes() {
   vis();
 }
 
-Ugeplan.init({ S, knap, klik, billede, topbar, statusSkaerm, naviger, annoncer, indlaes, vis });
+Ugeplan.init({ S, knap, klik, billede, lynMaerke, lynTekst, topbar, statusSkaerm, naviger, annoncer, indlaes, vis });
 Timer.gendan();
 Tale.hentLydListe();
 indlaes();

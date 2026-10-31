@@ -18,7 +18,7 @@ import { holdKnap } from './hold.js';
 import * as Tale from './tale.js';
 import * as R from './replikker.js';
 
-// app.js: { S, knap, klik, billede, topbar, statusSkaerm, naviger, annoncer, indlaes, vis }
+// app.js: { S, knap, klik, billede, lynMaerke, lynTekst, topbar, statusSkaerm, naviger, annoncer, indlaes, vis }
 let K = null;
 export function init(k) {
   K = k;
@@ -745,10 +745,12 @@ function dagSkaerm(i) {
   } else {
     indhold = el('ul', { class: 'ret-valg', 'aria-label': 'Retter i ugeplanen' }, retter.map((m) => {
       const valgt = Boolean(nu) && nu.ret === m.id;
+      // ⚡ på billedet som på børnenes kort (K.lynMaerke): billedet står i en ramme, som mærket kan sidde i
       return el('li', { class: 'ret-valg-raekke' + (valgt ? ' valgt' : ''), 'data-ret': m.id },
-        K.billede(grafikRet(m.id), '', 'dag-billede'),
+        el('span', { class: 'dag-billede-ramme' }, K.billede(grafikRet(m.id), '', 'dag-billede'), K.lynMaerke(m)),
         el('div', { class: 'dag-ret' },
           el('span', { class: 'dag-ret-navn', tekst: m.navn }),
+          K.lynTekst(m),
           el('span', { class: 'dag-meta', tekst: metaTekst(m, n) }),
           valgt ? el('span', { class: 'dag-af', tekst: 'Står på ' + navn + ' nu' }) : null),
         medFokus(K.knap(valgt ? 'Behold' : 'Vælg', { klasse: 'lille vaelg-ret', ikonNavn: 'tjek', label: (valgt ? 'Behold ' : 'Vælg ') + m.navn + ' til ' + navn,
@@ -917,10 +919,11 @@ function retValgSkaerm(p, dyr) {
         Tale.sig(R.ugeRet(m));
       }),
     },
-    el('span', { class: 'kort-billede' }, K.billede(grafikRet(m.id), '')),
+    el('span', { class: 'kort-billede' }, K.billede(grafikRet(m.id), ''), K.lynMaerke(m)),
     el('span', { class: 'kort-navn', tekst: m.navn }),
     // Retten står allerede på planen: dyret, der valgte den, i hjørnet (den kan godt vælges igen)
-    af.has(m.id) ? el('span', { class: 'kort-dyr' }, K.billede(grafikDyr(af.get(m.id)), 'valgt af ' + dyrNavn(af.get(m.id)))) : null));
+    af.has(m.id) ? el('span', { class: 'kort-dyr' }, K.billede(grafikDyr(af.get(m.id)), 'valgt af ' + dyrNavn(af.get(m.id)))) : null,
+    K.lynTekst(m)));
   });
 
   // Pilene står i siderne som i en billedbog. Den, der ikke kan bruges, er usynlig (og ude af Tab), så kortene står stille
