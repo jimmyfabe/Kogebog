@@ -47,7 +47,7 @@
     "pris_kr": 49,
     "pris_dato": "2026-10",
     "groent_g": 600,
-    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's normalpriser på shop.rema1000.dk 31-10-2026 (kikærter 240 g 7,86 kr., gulerødder 1 kg 12 kr., havregryn 1 kg 7,95 kr., Hatting fuldkornsburgerboller 4 stk. 20,95 kr., agurk 10 kr. (tilbud 7 kr.)) for den brugte mængde plus 3 kr. til olie, soja, krydderier og ketchup, ganget med 1,09. Grønt er også et skøn (ikke vejet): gulerødder 250 g og agurk ca. 350 g, uden bælgfrugter og kartofler.",
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's normalpriser på shop.rema1000.dk 31-10-2026 for den brugte mængde (kikærter 240 g 7,86 kr., gulerødder 1 kg 12 kr., havregryn 1 kg 7,95 kr., Hatting fuldkornsburgerboller 4 stk. 20,95 kr., agurk 10 kr. (tilbud 7 kr.)), i alt 42,37 kr., ganget med 1,09 plus 3 kr. til olie, soja, krydderier og ketchup. Grønt er også et skøn (ikke vejet): gulerødder 250 g og agurk ca. 350 g, uden bælgfrugter og kartofler.",
     "ingredienser": [
       { "ikon": "kikaerter", "maengde": "1 dåse", "vare": "kikaerter", "antal": 1, "enhed": "stk" },
       { "ikon": "gulerod", "maengde": "3", "vare": "gulerod", "antal": 3, "enhed": "stk" },

@@ -46,7 +46,7 @@
     "pris_kr": 109,
     "pris_dato": "2026-10",
     "groent_g": 800,
-    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's normalpriser på shop.rema1000.dk 31-10-2026 (lakseportioner frost 400 g 63,96 kr., broccoli frost 400 g 13,95 kr. (tilbud 12 kr.), gulerødder 1 kg 12 kr., fraiche 9 % 500 g 17,95 kr., små kartofler 650 g 10 kr.) for den brugte mængde plus 3 kr. til salt, peber og krydderier, ganget med 1,09. Grønt er også et skøn (ikke vejet): broccoli 400 g og gulerødder 400 g, uden kartofler og bælgfrugter.",
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's normalpriser på shop.rema1000.dk 31-10-2026 for den brugte mængde (lakseportioner frost 400 g 63,96 kr., broccoli frost 400 g 13,95 kr. (tilbud 12 kr.), gulerødder 1 kg 12 kr., fraiche 9 % 500 g 17,95 kr., små kartofler 650 g 10 kr.), i alt 97,17 kr., ganget med 1,09 plus 3 kr. til salt og peber. Grønt er også et skøn (ikke vejet): broccoli 400 g og gulerødder 400 g, uden bælgfrugter og kartofler.",
     "ingredienser": [
       { "ikon": "kartoffel", "maengde": "800 g", "vare": "smaa-kartofler", "antal": 800, "enhed": "g" },
       { "ikon": "gulerod", "maengde": "4", "vare": "gulerod", "antal": 4, "enhed": "stk" },
