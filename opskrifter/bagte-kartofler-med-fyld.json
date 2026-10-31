@@ -1,8 +1,8 @@
 {
   "@context": "https://schema.org",
   "@type": "Recipe",
-  "name": "Bagte kartofler med bønner, majs og hytteost",
-  "description": "Halve kartofler bagt sprøde i ovnen. Hver fylder sin egen med hytteost, bønner, majs og ovnbagt broccoli.",
+  "name": "Bagte kartofler med bønner og majs",
+  "description": "Halve kartofler bagt sprøde i ovnen. Hver fylder sin egen med hytteost, bønner, majs og ovnbagt broccoli. Kartoflerne er 40 min i ovnen.",
   "image": "grafik/ret-bagte-kartofler-med-fyld.webp",
   "inLanguage": "da",
   "recipeYield": "4 personer",
@@ -26,8 +26,8 @@
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
     { "@type": "HowToStep", "text": "Skær kartoflerne over på langs.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kartoffel"], "note": "Den voksne tænder ovnen på 220 °C varmluft først. Barnet skrubber kartoflerne rene under vandet. De skal ikke skrælles." } },
-    { "@type": "HowToStep", "text": "Læg kartoflerne på en plade, snitfladen op.", "tumbi": { "verbum": "pynte", "ikoner": ["kartoffel"], "note": "En bageplade med bagepapir." } },
-    { "@type": "HowToStep", "text": "Pensl snitfladerne med olie.", "tumbi": { "verbum": "pensle", "ikoner": ["olie"], "note": "1 spsk olie i en lille skål." } },
+    { "@type": "HowToStep", "text": "Læg kartoflerne på pladen med det hvide op.", "tumbi": { "verbum": "pynte", "ikoner": ["kartoffel"], "note": "En bageplade med bagepapir." } },
+    { "@type": "HowToStep", "text": "Pensl det hvide med olie.", "tumbi": { "verbum": "pensle", "ikoner": ["olie"], "note": "1 spsk olie i en lille skål." } },
     { "@type": "HowToStep", "text": "Drys salt over kartoflerne.", "tumbi": { "verbum": "drysse", "ikoner": ["salt"], "note": "Lidt på hver halvdel." } },
     { "@type": "HowToStep", "text": "Hæld broccolien ud på en anden plade.", "tumbi": { "verbum": "haelde", "ikoner": ["broccoli", "olie"], "note": "Direkte fra frost, på bagepapir. Dryp 1 spsk olie over." } },
     { "@type": "HowToStep", "text": "Bag kartoflerne i ovnen i 25 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1500, "ikoner": ["kartoffel"], "note": "220 °C varmluft. Broccolien venter på køkkenbordet." } },
@@ -36,7 +36,7 @@
     { "@type": "HowToStep", "text": "Hæld bønner og majs i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["boenner", "majs"], "note": "Den voksne åbner dåserne: kanten er skarp. Skyl bønnerne under koldt vand." } },
     { "@type": "HowToStep", "text": "Rør hytteost og paprika sammen i en skål.", "tumbi": { "verbum": "roere", "ikoner": ["hytteost", "krydderurt"], "note": "1 tsk mild paprika." } },
     { "@type": "HowToStep", "text": "Skær gulerødder og agurk i stave.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod", "agurk"], "note": "Til at spise ved siden af." } },
-    { "@type": "HowToStep", "text": "Kom fyld på din kartoffel.", "tumbi": { "verbum": "pynte", "ikoner": ["kartoffel", "hytteost", "boenner", "majs"], "note": "Kartoflerne er varme. Tryk midten lidt flad med en gaffel først. Broccolien kan komme på eller ved siden af." } },
+    { "@type": "HowToStep", "text": "Kom fyld på din kartoffel.", "tumbi": { "verbum": "pynte", "ikoner": ["kartoffel", "hytteost", "boenner", "majs"], "note": "Den voksne lægger kartoflerne på tallerkenerne først. De er varme. Tryk midten lidt flad med en gaffel. Broccolien kan komme på eller ved siden af." } },
     { "@type": "HowToStep", "text": "Drys ost over din kartoffel.", "tumbi": { "verbum": "drysse", "ikoner": ["ost"], "note": "Osten smelter lidt af den varme kartoffel." } }
   ],
   "tumbi": {
