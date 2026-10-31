@@ -713,6 +713,29 @@ test('indkøbsvarerne har en kendt afdeling, en grundenhed, et ikon og en gyldig
   forvent((v) => { v['Hakket Kød'] = { ...v['hakket-oksekoed'] }; }, 'VARER «Hakket Kød»: id\'et skal være små bogstaver');
 });
 
+// Kød og fisk (mærkerne vegetar og fisk i js/maerker.js): en vare med et kød- eller fiskeikon skal have «slags», også
+// chorizo og makrel, som har deres egne ikoner
+test('en vare med kød eller fisk har «slags»: "koed" eller "fisk"', () => {
+  const varer = (aendr, ikoner = INGREDIENSER) => { const v = structuredClone(VARER); aendr(v); return validerVarer({ VARER: v, AFDELINGER, ENHEDER, INGREDIENSER: ikoner }); };
+  const forvent = (aendr, tekst, ikoner) => { const f = varer(aendr, ikoner); assert.ok(f.some((x) => x.includes(tekst)), 'forventede «' + tekst + '», fik:\n  ' + f.join('\n  ')); };
+  for (const id of ['hakket-oksekoed', 'chorizo', 'makrel-tomat', 'tun', 'partypoelser', 'skinketern', 'gyoza', 'laksefileter']) {
+    forvent((v) => { delete v[id].slags; }, 'VARER «' + id + '»: ikonet «' + VARER[id].ikon + '» er kød eller fisk, så varen skal have «slags»: "koed" eller "fisk"');
+  }
+  // En ny kødvare uden feltet
+  forvent((v) => { v.oksesteg = { navn: 'Oksesteg', afd: 'koel', enhed: 'g', ikon: 'koed' }; }, 'VARER «oksesteg»: ikonet «koed» er kød eller fisk');
+  for (const s of ['kød', 'Koed', 'vegetar', '', null, true, 'constructor']) {
+    forvent((v) => { v['hakket-oksekoed'].slags = s; }, 'VARER «hakket-oksekoed»: «slags» skal være "koed" eller "fisk" (udelad feltet ellers), fandt ' + JSON.stringify(s));
+  }
+  // Også på en vare uden kød- eller fiskeikon skal værdien være gyldig
+  forvent((v) => { v.loeg.slags = 'groent'; }, 'VARER «loeg»: «slags» skal være "koed" eller "fisk"');
+  // Grøntsagsbouillonen er ikke kød
+  assert.equal(VARER.bouillonterninger.slags, undefined);
+  // Et ikon på listen, der ikke findes (omdøbt), meldes
+  const { makrel, ...udenMakrel } = INGREDIENSER;
+  assert.ok(makrel);
+  forvent(() => {}, 'KOED_FISK_IKONER: ukendt ikon "makrel"', udenMakrel);
+});
+
 test('manglende grafik for et verbum, en ret eller en gruppe', () => {
   const m = kopi();
   try {

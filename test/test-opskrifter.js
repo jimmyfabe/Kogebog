@@ -31,7 +31,11 @@ const UGEPLAN_MAKS_MIN = 60;
 const UGEPLAN_MAKS_KNIV = 2;
 const KNIV_VERBER = Object.keys(VOKSEN_KRAV).filter((v) => VOKSEN_KRAV[v] === 'kniv'); // skaere og rive
 const PRIS_DATO_RE = /^20\d\d-(?:0[1-9]|1[0-2])$/; // ÅÅÅÅ-MM
-const VARE_NOEGLER = new Set(['navn', 'afd', 'enhed', 'ikon', 'pakke', 'basis', 'skjul']);
+const VARE_NOEGLER = new Set(['navn', 'afd', 'enhed', 'ikon', 'pakke', 'basis', 'skjul', 'slags']);
+// Kød eller fisk i en vare («slags», mærkerne vegetar og fisk i js/maerker.js). En vare med et af disse ikoner skal have
+// «slags». Listen er udtrykkelig, for en regel efter ikonet «koed» alene missede chorizo og makrel (docs/foraeldredel.md)
+const SLAGS = ['koed', 'fisk'];
+const KOED_FISK_IKONER = ['koed', 'chorizo', 'skinke', 'poelse', 'gyoza', 'tun', 'makrel'];
 const ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const ISO_RE = /^P(?:\d+D)?(?:T(?:\d+H)?(?:\d+M)?(?:\d+S)?)?$/;
 const MAKS_TIMER_SEK = 4 * 3600;
@@ -110,6 +114,8 @@ const erHeltal = (v, fra, til) => Number.isInteger(v) && v >= fra && v <= til;
 // argument, så test-validator.js kan prøve en ødelagt kopi. Giver en liste med fejl (tom, når alt er i orden)
 export function validerVarer({ VARER: varer, AFDELINGER: afdelinger, ENHEDER: enheder, INGREDIENSER: ikoner }) {
   const fejl = [];
+  // Et omdøbt ikon må ikke falde ud af listen i stilhed
+  for (const i of KOED_FISK_IKONER) if (!Object.hasOwn(ikoner, i)) fejl.push('test/test-opskrifter.js: KOED_FISK_IKONER: ukendt ikon ' + JSON.stringify(i));
   for (const [id, v] of Object.entries(varer)) {
     const f = (besked) => fejl.push('js/katalog.js: VARER «' + id + '»: ' + besked);
     if (!ID_RE.test(id)) f('id\'et skal være små bogstaver, tal og bindestreg');
@@ -124,6 +130,8 @@ export function validerVarer({ VARER: varer, AFDELINGER: afdelinger, ENHEDER: en
     if ('skjul' in v && v.skjul !== true) f('«skjul» skal være true (udelad feltet ellers)');
     if ((v.basis === true) !== (v.afd === 'basis')) f('«basis»: true og afdelingen «basis» følges ad');
     if (v.skjul === true && v.basis !== true) f('«skjul» gælder kun basisvarer (de lægges ikke sammen)');
+    if ('slags' in v && !SLAGS.includes(v.slags)) f('«slags» skal være "koed" eller "fisk" (udelad feltet ellers), fandt ' + JSON.stringify(v.slags));
+    if (KOED_FISK_IKONER.includes(v.ikon) && !('slags' in v)) f('ikonet «' + v.ikon + '» er kød eller fisk, så varen skal have «slags»: "koed" eller "fisk"');
     if ('pakke' in v) {
       const p = v.pakke;
       if (!Array.isArray(p) || p.length !== 3 || !Number.isInteger(p[0]) || p[0] <= 0 || !erTekst(p[1]) || !erTekst(p[2])) {
