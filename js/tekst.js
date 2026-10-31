@@ -18,6 +18,10 @@ export function minutterTekst(min) {
   return r ? t + H + 't' + H + r + H + 'min' : t + H + 't';
 }
 
+// Teksten uden bløde bindestreger (U+00AD). De står i retternes og varernes navne (Grøntsags|blanding), så et langt ord
+// kan deles på en smal skærm. Stemmen, skærmlæseren og en delt tekst skal ikke have dem (UI-review 29-10)
+export const utenBloede = (t) => String(t).replace(/\u00ad/g, '');
+
 // ---------- Teksten til stemmen ----------
 // Røst-stemmen (lyd/) læser teksten, som den står, og oversætter ikke cifre og tegn: «130 gram» blev til «tretnulsnul»,
 // og «7 + 5 = 12» til «syv procent fem simpel tolv» (målt med talegenkenderen 19-10-2026: fejlrate 0,57 med cifre,
@@ -170,8 +174,7 @@ const ENHEDER_ALENE = [
 ];
 
 function talegrund(tekst, ukendte) {
-  let t = String(tekst)
-    .replace(/­/g, '') // den bløde bindestreg (U+00AD) i «Havregryns­kugler» er kun til skærmen
+  let t = utenBloede(tekst) // den bløde bindestreg i «Havregryns|kugler» er kun til skærmen
     .replace(/([\d½¼¾])\s*[–—]\s*(?=[\d½¼¾])/g, '$1-') // tankestreg i «8–10» som bindestreg
     .replace(/(\d)\s+([½¼¾])/g, '$1$2') // «1 ½ dl» er «1½ dl»
     .replace(/\s*\+\s*/g, ' plus ')

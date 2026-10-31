@@ -3,6 +3,7 @@
 // Der rundes først op, når mængden vises, så to halve dåser bliver én dåse og ikke to.
 // Retterne er opskrifternes JSON (schema.org/Recipe + «tumbi»), som validatoren læser dem: lavModel har ikke varerne.
 import { VARER, AFDELINGER, ENHEDER } from './katalog.js';
+import { utenBloede } from './tekst.js';
 
 export const MAKS_M = 100000; // højst så meget af én vare i varens enhed (samme grænse som listen i lager.js)
 
@@ -119,8 +120,7 @@ export function manglerTekst(ikkeHentet, ikkeIPlanen) {
 // Tekstudgaven til «Del som tekst» (vej b): afdelingens navn som overskrift og én vare pr. linje, så Noter kan gøre
 // linjerne til en tjekliste. «Tjek, at I har» står sidst. Bløde bindestreger (U+00AD i VARER) er kun til skærmen
 export function tekst(varer) {
-  return grupper(varer)
+  return utenBloede(grupper(varer)
     .map((g) => [g.navn, ...g.varer.map((v) => (v.maengde ? v.navn + ': ' + v.maengde : v.navn))].join('\n'))
-    .join('\n\n')
-    .replace(/\u00ad/g, '');
+    .join('\n\n'));
 }

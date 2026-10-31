@@ -1,7 +1,7 @@
 // app.js — Tumbi Køkken: forside → ret → ét trin pr. skærm → færdig.
 // Ruterne står i adressen (#/ret/<id>/trin/<nr>), så tilbage-knappen og en genindlæsning virker.
 // Al tekst fra opskrifterne sættes som tekst (textContent), aldrig som HTML.
-import { el, ikon, svgEl, utenBloede } from './js/dom.js';
+import { el, ikon, svgEl } from './js/dom.js';
 import { hentIndex, hentRet } from './js/data.js';
 import * as Tale from './js/tale.js';
 import * as R from './js/replikker.js';
@@ -13,7 +13,7 @@ import { trekant, voksenNaeste } from './js/voksen.js';
 import { voksenFarer, erLynhurtig, LYN_MIN } from './js/model.js';
 import { VERBER, INGREDIENSER, GRUPPER, grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, grafikGruppe, GRAFIK_FAERDIG } from './js/katalog.js';
 import { formaterTid, varighed, varighedTale } from './js/tid.js';
-import { minutterTekst } from './js/tekst.js';
+import { minutterTekst, utenBloede } from './js/tekst.js';
 import { UDGAVE } from './js/version.js';
 
 // ?hurtig=1 (kun til test): alle timere varer 2 sekunder

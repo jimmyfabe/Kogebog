@@ -10,7 +10,8 @@ import { saml, visMaengde, vareTekst, grupper, tekst, manglerTekst, holdSammen, 
 import { kod, afkod, fnv1a, kontrolsum, ukendtTekst, kodeFraTekst, BESKED_NYERE, BESKED_UGYLDIG, BESKED_GAMMEL } from '../js/plankode.js';
 import * as lager from '../js/lager.js';
 import { VARER } from '../js/katalog.js';
-import { el, utenBloede } from '../js/dom.js';
+import { el } from '../js/dom.js';
+import { utenBloede } from '../js/tekst.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const ret = (id) => JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8'));
