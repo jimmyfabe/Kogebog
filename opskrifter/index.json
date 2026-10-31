@@ -2,8 +2,8 @@
   "version": 2,
   "grupper": [
     { "id": "aftensmad", "retter": ["frikadeller", "koedsovs", "chorizo-pasta", "bolognese-one-pot", "cremet-koedsovs", "tunfrikadeller", "one-pot-tomatpasta", "linsebolognese", "halv-halv-koedsovs", "chili-con-carne", "taco-bradepande", "pladepizza", "fiskepinde-med-baade", "fiskefars-i-fad", "bradepandekylling", "kyllingekarry", "wok-med-nudler", "ovnaeggekage", "tomatsuppe-med-boenner", "minestrone", "koedboller-i-tomatsovs", "medister-i-ovn", "poelse-boennegryde", "kyllingefrikadeller", "wraps-med-boenner", "gryderis-med-kylling", "linse-dhal", "hyrdetaerte", "pastagratin", "one-pot-makaroni", "lun-tunpasta", "ovnpandekage", "kyllinge-nudelsuppe", "rugbroedsaften", "ovnbagt-blomkaal", "bradepande-fajitas", "kartoffelmos", "hvidloegsflutes", "fiskepakker-med-laks", "fisk-i-tomatfad", "fiskelasagne", "shakshuka-med-boenner", "gulerodssuppe-med-linser", "kikaerteboller-i-karry", "kikaerteburger", "bagte-kartofler-med-fyld", "vegetar-biks", "kaalpandekager"] },
-    { "id": "bagning", "retter": ["boller", "hytteostboller", "pizzasnegle", "gulerodsboller"] },
-    { "id": "soede-sager", "retter": ["pandekager", "brownie", "blondie", "havregrynskugler", "havregrynsmuffins-med-aeble"] },
+    { "id": "bagning", "retter": ["boller", "hytteostboller", "pizzasnegle"] },
+    { "id": "soede-sager", "retter": ["pandekager", "brownie", "blondie", "havregrynskugler"] },
     { "id": "halloween", "retter": ["mumiepoelser", "edderkoppeboller", "oejeboller", "graeskar-calzone", "heksefingre", "slimsnegle"] }
   ]
 }
