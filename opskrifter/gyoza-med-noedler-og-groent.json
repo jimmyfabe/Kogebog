@@ -22,7 +22,7 @@
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder gluten (hvede), soja og sesam og kan have spor af skaldyr, fisk, mælk, selleri og sennep: tjek posen. Vælg gyoza med kylling, for dem med grøntsager har jalapeños." } },
     { "@type": "HowToStep", "text": "Kog vand til nudlerne.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "Brug elkedlen, så går det hurtigere. Hæld vandet i en stor gryde, og hold det i kog." } },
-    { "@type": "HowToStep", "text": "Tæl gyozaerne ud, så alle får lige mange.", "tumbi": { "verbum": "maale", "ikoner": ["gyoza"], "note": "På en tallerken, direkte fra frost. Barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Tæl gyozaerne ud, så alle får lige mange.", "tumbi": { "verbum": "pynte", "ikoner": ["gyoza"], "note": "På en tallerken, direkte fra frost. Barnet kan selv." } },
     { "@type": "HowToStep", "text": "Steg gyozaerne i olie på panden.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["gyoza", "olie"], "note": "Som anvist på posen, ved middel varme under låg. De skal være rygende varme hele vejen igennem. Lav nudlerne imens." } },
     { "@type": "HowToStep", "text": "Skær agurken i stave.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["agurk"], "note": "Den voksne skærer agurken på langs. Barnet kan dele stavene med en smørekniv." } },
     { "@type": "HowToStep", "text": "Kom wokgrøntsagerne i det kogende vand.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["broccoli"], "note": "Direkte fra frost. Det kan sprøjte: den voksne hælder." } },
