@@ -115,6 +115,7 @@ const FILER = [
   'grafik/ing-soja.svg', 'grafik/ing-honning.svg',
   'grafik/ing-kaal.svg',
   'grafik/ing-makrel.svg', 'grafik/ing-kikaerter.svg', 'grafik/ing-bulgur.svg',
+  'grafik/ing-aeble.svg', 'grafik/ing-roedbede.svg',
   'grafik/ret-boller.webp', 'grafik/ret-chorizo-pasta.webp', 'grafik/ret-frikadeller.webp', 'grafik/ret-koedsovs.webp', 'grafik/ret-pandekager.webp',
   'grafik/ret-kartoffelmos.webp', 'grafik/ret-hvidloegsflutes.webp', 'grafik/ret-brownie.webp', 'grafik/ret-blondie.webp',
   'grafik/ret-hytteostboller.webp', 'grafik/ret-havregrynskugler.webp', 'grafik/ret-tunfrikadeller.webp',

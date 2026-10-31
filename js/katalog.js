@@ -118,6 +118,9 @@ export const INGREDIENSER = {
   'makrel': 'makrel i tomat',
   'kikaerter': 'kikærter',
   'bulgur': 'bulgur',
+  // De sunde hverdagsretter (31-10-2026): æbler i kikærteboller og muffins, syltede rødbeder til vegetarbiksen
+  'aeble': 'æble',
+  'roedbede': 'syltede rødbeder',
 };
 
 // Ikoner for råt kød og råt æg: efter dem skal der komme et trin med «vaske-haender».
@@ -200,11 +203,14 @@ export const VARER = {
   'revet-gulerod': { navn: 'Revne gulerødder', afd: 'groent', enhed: 'g', ikon: 'gulerod' },
   'snittet-kaal': { navn: 'Snittet kål', afd: 'groent', enhed: 'g', ikon: 'kaal' },
   'peberfrugt': { navn: 'Peberfrugt', afd: 'groent', enhed: 'stk', ikon: 'peberfrugt' },
+  'kartofler': { navn: 'Kartofler', afd: 'groent', enhed: 'g', ikon: 'kartoffel' },
+  'aebler': { navn: 'Æbler', afd: 'groent', enhed: 'stk', ikon: 'aeble' },
   // Brød
   'tortillas': { navn: 'Tortillas', afd: 'broed', enhed: 'stk', ikon: 'tortilla' },
   'rugbroed': { navn: 'Rugbrød', afd: 'broed', enhed: 'g', ikon: 'broed' },
   'toastbroed': { navn: 'Toastbrød', afd: 'broed', enhed: 'g', ikon: 'broed' },
   'naan': { navn: 'Naanbrød', afd: 'broed', enhed: 'g', ikon: 'broed' },
+  'burgerboller': { navn: 'Burgerboller (fuldkorn)', afd: 'broed', enhed: 'stk', ikon: 'broed', pakke: [4, 'pose', 'poser'] },
   // Dåser og tørvarer
   'hakkede-tomater': { navn: 'Hakkede tomater', afd: 'toer', enhed: 'g', ikon: 'tomat', pakke: [400, 'dåse', 'dåser'] },
   'passata': { navn: 'Tomatpassata', afd: 'toer', enhed: 'g', ikon: 'tomat', pakke: [500, 'flaske', 'flasker'] },
@@ -232,6 +238,8 @@ export const VARER = {
   'kikaerter': { navn: 'Kikærter', afd: 'toer', enhed: 'stk', ikon: 'kikaerter', pakke: [1, 'dåse', 'dåser'] },
   'bulgur': { navn: 'Bulgur', afd: 'toer', enhed: 'g', ikon: 'bulgur' },
   'fajitakrydderi': { navn: 'Fajitakrydderi (mildt)', afd: 'toer', enhed: 'stk', ikon: 'krydderurt', pakke: [1, 'pose', 'poser'] },
+  'lasagneplader': { navn: 'Lasagneplader (fuldkorn)', afd: 'toer', enhed: 'g', ikon: 'spaghetti', pakke: [500, 'pakke', 'pakker'] },
+  'roedbeder': { navn: 'Syltede rødbeder', afd: 'toer', enhed: 'g', ikon: 'roedbede' },
   // Køl
   'hakket-oksekoed': { navn: 'Hakket oksekød', afd: 'koel', enhed: 'g', ikon: 'koed', pakke: [500, 'bakke', 'bakker'] },
   'chorizo': { navn: 'Chorizo', afd: 'koel', enhed: 'g', ikon: 'chorizo', pakke: [250, 'pakke', 'pakker'] },
@@ -274,6 +282,8 @@ export const VARER = {
   'koedboller': { navn: 'Kødboller (færdige)', afd: 'frost', enhed: 'g', ikon: 'koed' },
   'rosenkaal': { navn: 'Rosenkål', afd: 'frost', enhed: 'g', ikon: 'kaal' },
   'kartoffelskiver': { navn: 'Kartoffelskiver', afd: 'frost', enhed: 'g', ikon: 'kartoffel' },
+  'fiskefileter': { navn: 'Hvide fiskefileter', afd: 'frost', enhed: 'g', ikon: 'koed' },
+  'laksefileter': { navn: 'Laksefileter', afd: 'frost', enhed: 'g', ikon: 'koed' },
   // Tjek, at I har
   'salt': { navn: 'Salt', afd: 'basis', enhed: 'g', ikon: 'salt', basis: true },
   'peber': { navn: 'Peber', afd: 'basis', enhed: 'g', ikon: 'peber', basis: true },
@@ -285,5 +295,6 @@ export const VARER = {
   'karry': { navn: 'Karry (mild)', afd: 'basis', enhed: 'ml', ikon: 'krydderurt', basis: true },
   'soja': { navn: 'Soja', afd: 'basis', enhed: 'ml', ikon: 'soja', basis: true },
   'honning': { navn: 'Honning', afd: 'basis', enhed: 'ml', ikon: 'honning', basis: true },
+  'ketchup': { navn: 'Ketchup', afd: 'basis', enhed: 'ml', ikon: 'ketchup', basis: true },
   'vand': { navn: 'Vand', afd: 'basis', enhed: 'ml', ikon: 'vand', basis: true, skjul: true },
 };

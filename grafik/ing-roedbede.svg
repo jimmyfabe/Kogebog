@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="beetroot" transform="translate(128 150)">
+    <path fill="none" stroke-width="10" d="M-4 -44 C-10 -60 -20 -74 -34 -84 M0 -46 C0 -62 2 -76 6 -88 M4 -44 C12 -58 24 -68 38 -76"/>
+    <path fill="none" stroke="#B8336A" stroke-width="4" d="M-4 -44 C-10 -60 -20 -74 -34 -84 M0 -46 C0 -62 2 -76 6 -88 M4 -44 C12 -58 24 -68 38 -76"/>
+    <path id="leaf-left" fill="#5BAA6A" d="M-34 -84 C-60 -84 -76 -100 -78 -118 C-56 -120 -38 -106 -34 -84 Z"/>
+    <path id="leaf-mid" fill="#448450" d="M6 -88 C-8 -100 -6 -116 6 -124 C20 -114 20 -100 6 -88 Z"/>
+    <path id="leaf-right" fill="#5BAA6A" d="M38 -76 C50 -96 70 -102 84 -96 C80 -80 62 -72 38 -76 Z"/>
+    <path fill="none" stroke="#B8336A" stroke-width="3" d="M-38 -88 L-70 -114 M6 -94 L6 -118 M44 -78 L78 -94"/>
+    <path id="root" fill="#9B2D5C" d="M0 -46 C36 -48 60 -24 60 4 C60 32 36 50 12 56 C8 62 4 68 0 76 C-4 68 -8 62 -12 56 C-36 50 -60 32 -60 4 C-60 -24 -36 -48 0 -46 Z"/>
+    <path fill="#7A1F47" stroke="none" d="M60 4 C60 32 36 50 12 56 C30 46 46 30 48 4 C48 -16 40 -32 26 -40 C46 -32 60 -14 60 4 Z"/>
+    <path fill="none" stroke="#C2527F" stroke-width="6" d="M-40 -20 C-48 -4 -46 16 -38 28"/>
+    <path fill="none" d="M-22 14 Q-18 18 -20 24 M2 26 Q6 30 4 36 M22 6 Q26 10 24 16"/>
+    <path fill="none" d="M0 -46 C36 -48 60 -24 60 4 C60 32 36 50 12 56 C8 62 4 68 0 76 C-4 68 -8 62 -12 56 C-36 50 -60 32 -60 4 C-60 -24 -36 -48 0 -46 Z"/>
+    <path fill="none" d="M0 76 Q2 82 6 86"/>
+  </g>
+</g>
+</svg>

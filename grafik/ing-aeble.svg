@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="apple" transform="translate(110 130)">
+    <path id="stalk" fill="#9A6A44" d="M-4 -50 C-4 -64 1 -78 8 -86 L14 -82 C8 -74 4 -62 4 -50 Z"/>
+    <path id="leaf" fill="#5BAA6A" d="M8 -72 C20 -92 46 -96 62 -86 C48 -68 26 -64 8 -72 Z"/>
+    <path fill="none" d="M12 -73 C26 -80 42 -84 56 -85"/>
+    <path id="skin" fill="#E2513B" d="M0 -52 C20 -70 72 -66 84 -22 C96 22 70 76 34 82 C20 84 10 78 0 78 C-10 78 -20 84 -34 82 C-70 76 -96 22 -84 -22 C-72 -66 -20 -70 0 -52 Z"/>
+    <path fill="#C3331D" stroke="none" d="M84 -22 C96 22 70 76 34 82 C20 84 10 78 0 78 C30 70 60 40 66 2 C70 -24 62 -46 48 -58 C66 -52 78 -40 84 -22 Z"/>
+    <path fill="none" stroke="#F07A62" stroke-width="7" d="M-60 -26 C-68 -8 -66 14 -58 30"/>
+    <path fill="none" d="M0 -52 C20 -70 72 -66 84 -22 C96 22 70 76 34 82 C20 84 10 78 0 78 C-10 78 -20 84 -34 82 C-70 76 -96 22 -84 -22 C-72 -66 -20 -70 0 -52 Z"/>
+  </g>
+  <g id="apple-half" transform="translate(184 184) scale(0.56)">
+    <path id="half-skin" fill="#E2513B" d="M0 -52 C20 -70 72 -66 84 -22 C96 22 70 76 34 82 C20 84 10 78 0 78 C-10 78 -20 84 -34 82 C-70 76 -96 22 -84 -22 C-72 -66 -20 -70 0 -52 Z"/>
+    <path id="flesh" fill="#FFF4E2" d="M0 -40 C18 -58 62 -54 72 -18 C82 18 60 64 30 70 C18 72 10 66 0 66 C-10 66 -18 72 -30 70 C-60 64 -82 18 -72 -18 C-62 -54 -18 -58 0 -40 Z"/>
+    <path id="core" fill="#F2E3B3" d="M0 -26 C16 -22 22 0 18 18 C14 34 6 40 0 40 C-6 40 -14 34 -18 18 C-22 0 -16 -22 0 -26 Z"/>
+    <path fill="#9A6A44" d="M-8 2 C-14 10 -12 20 -6 22 C-2 16 -2 8 -8 2 Z M8 2 C14 10 12 20 6 22 C2 16 2 8 8 2 Z"/>
+    <path fill="none" stroke-width="6" d="M0 -52 C0 -60 2 -68 6 -74"/>
+  </g>
+</g>
+</svg>
