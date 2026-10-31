@@ -18,7 +18,7 @@
     "3 spsk soja",
     "2 spsk olie"
   ],
-  "tool": ["si", "gryde med låg", "rivejern", "stor skål", "gaffel", "pande", "øse", "paletkniv"],
+  "tool": ["si", "gryde med låg", "rivejern", "kop", "stor skål", "gaffel", "pande", "øse", "paletkniv", "fad med låg"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder æg, soja og gluten (hvede i sojaen)." } },
     { "@type": "HowToStep", "text": "Hæld risene i en si, og skyl dem.", "tumbi": { "verbum": "haelde", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er klart. Barnet kan selv." } },
@@ -30,7 +30,7 @@
     { "@type": "HowToStep", "text": "Kom kål, gulerod, ærter og soja i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["kaal", "gulerod", "aerter", "soja"], "note": "1 spsk soja. Ærterne kan komme i direkte fra frost." } },
     { "@type": "HowToStep", "text": "Rør det hele godt sammen.", "tumbi": { "verbum": "roere", "ikoner": ["kaal", "gulerod", "aerter"] } },
     { "@type": "HowToStep", "text": "Steg små omeletter i olie.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 150, "ikoner": ["olie"], "note": "Middel varme. En lille øse pr. omelet, fire ad gangen. Fedtet kan sprøjte, så barnet står på afstand." } },
-    { "@type": "HowToStep", "text": "Vend omeletterne forsigtigt.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 150, "note": "De skal være faste hele vejen igennem. Læg dem på et fad under låg, og steg resten på samme måde: ca. 12 stk." } },
+    { "@type": "HowToStep", "text": "Vend omeletterne forsigtigt.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 150, "note": "De skal være faste hele vejen igennem. Læg dem på et fad med låg på, og steg resten på samme måde: ca. 12 stk." } },
     { "@type": "HowToStep", "text": "Læg ris og omeletter på tallerkenerne.", "tumbi": { "verbum": "pynte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Gryden og panden er varme: den voksne tager op." } },
     { "@type": "HowToStep", "text": "Dryp lidt soja over din omelet.", "tumbi": { "verbum": "haelde", "ikoner": ["soja"], "note": "Kun lidt: sojaen er salt. Barnet kan selv." } }
   ],
