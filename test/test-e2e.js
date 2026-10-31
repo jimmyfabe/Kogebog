@@ -3,8 +3,9 @@
 // Forside → pandekager → alle trin (med en timer og voksen-hold) → færdig, alle trin i alle retter,
 // print-siden for alle retter (også i printvisning på A4-bredde), tastatur, timere på tværs af skærme og genindlæsning,
 // fejltilstande og «mindre bevægelse». Delen «former» ser desuden 360 px, iPad mini på højkant og iPhones på langs
-// (667×375 til 932×430). Delen «lyn» ser ⚡ på de lynhurtige retter (forsiden, børnenes valg, dagens valg og printet)
-// og navnene uden blød bindestreg (aria-label, alt, printets titel og timer-pillen).
+// (667×375 til 932×430). Delen «lyn» ser ⚡ på de lynhurtige retter (forsiden, børnenes valg, dagens valg og printet),
+// minuttallet på forsidens kort (også i «former») og navnene uden blød bindestreg (aria-label, alt, printets titel og
+// timer-pillen). E2E_MAAL=1 skriver også serverens udgave og de ekstra målinger.
 // Tjekker hele vejen: ingen konsolfejl, ingen 404, ingen vandret rulning, billeder indlæst, og knapper mindst
 // 64 px for børnenes knapper (BOERNEKNAPPER) og 48 px for de voksnes (fx print og stop).
 //
@@ -16,9 +17,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { hentPlaywright } from '../vaerktoej/lav-ikoner.js';
-import { tilTale, isoTilMinutter, utenBloede } from '../js/tekst.js';
+import { tilTale, isoTilMinutter, minutterTekst, utenBloede } from '../js/tekst.js';
 import { erLynhurtig, LYN_MIN } from '../js/model.js';
-import { formaterTid, HURTIG_SEK } from '../js/tid.js';
+import { formaterTid, varighedTale, HURTIG_SEK } from '../js/tid.js';
 import { GRUPPER } from '../js/katalog.js';
 import { UDGAVE } from '../js/version.js';
 import { ugeplan } from './e2e-ugeplan.js';
@@ -43,6 +44,8 @@ const index = INDEX_GRUPPER.flatMap((g) => g.retter);
 const RETTER = Object.fromEntries(index.map((id) => [id, JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8'))]));
 
 const vent = (ms) => new Promise((r) => setTimeout(r, ms));
+// E2E_MAAL=1: skriv også hvilken udgave serveren har (UDGAVE_INDHOLD) og de ekstra målinger (fx minuttallets luft til ⚡)
+const MAAL = Boolean(process.env.E2E_MAAL);
 let antalTjek = 0;
 const fejl = [];
 const maal = []; // målinger, der ikke er fejl (fx at man skal rulle på iPhone)
@@ -1668,6 +1671,7 @@ async function former(browser) {
     await tjekLayout(side, n + ' forside');
     await foto(side, n + '-former-forside');
     await tjekKortMaerke(side, n + ' forside');
+    await tjekMinuttal(side, n + ' forside');
     await tjekHop(side, n + ' forside');
 
     // Fremskridtet med timer-pillen: boller har 16 trin, og timeren fra trin 8 kører på trin 9 og er færdig på trin 13
@@ -1932,6 +1936,81 @@ const bloedeNavne = (side) => side.evaluate(() => [...document.querySelectorAll(
   .flatMap((e) => [e.getAttribute('aria-label'), e.getAttribute('alt')])
   .filter((t) => t && t.includes('\u00ad')).map((t) => t.replace(/\u00ad/g, '|')));
 
+// ---------- Minuttallet på forsidens kort (til den voksne, Jimmy 31-10) ----------
+// Hvert kort på forsiden med en tid (m.minutter fra totalTime, harTid i js/model.js) viser den som et lille tal
+// (minutterTekst, fx «25 min») i tallerkenens nederste venstre hjørne: inde i billedets felt, ikke over ⚡, mindst
+// 12,5 px og aria-hidden. Kortets navn for skærmlæseren får tiden som ord efter navnet («Tynde pandekager. 35 minutter.»).
+// Uden tid eller med 0 minutter er der intet tal. Børnenes valg, dagens valg og printet har intet minuttal
+const tidAf = (id) => isoTilMinutter(RETTER[id].totalTime);
+const TIDER = Object.fromEntries(index.map((id) => [id, tidAf(id)]));
+const forventetNavn = (id, min) => {
+  const lyn = erLynhurtig({ minutter: min });
+  const tid = Number.isFinite(min) && min > 0 ? '. ' + varighedTale(min * 60) + (lyn ? '' : '.') : '';
+  return utenBloede(RETTER[id].name) + tid + (lyn ? '. ' + LYN_TEKST + '.' : '');
+};
+const tidTal = (side) => side.evaluate(() => document.querySelectorAll('.kort-tid').length);
+// Pr. kort: minuttallet, dets felt og billedets og ⚡'s felt, og navnet regnet af indholdet som af skærmlæseren
+// (tekst og alt, uden det, der er aria-hidden)
+const minuttalPaa = (side) => side.evaluate(() => {
+  const felt = (e) => { const b = e.getBoundingClientRect(); return { l: b.left, t: b.top, r: b.right, b: b.bottom }; };
+  const navnAf = (e) => [...e.childNodes].map((c) => (c.nodeType === 3 ? c.data
+    : c.nodeType !== 1 || c.getAttribute('aria-hidden') === 'true' ? ''
+      : c.tagName === 'IMG' ? c.getAttribute('alt') || '' : navnAf(c))).join('');
+  return [...document.querySelectorAll('.forside .kort[data-ret]')].map((k) => {
+    const alle = k.querySelectorAll('.kort-tid');
+    const t = alle[0];
+    const lyn = k.querySelector('.lyn');
+    return {
+      id: k.dataset.ret,
+      antal: alle.length,
+      tekst: t ? t.textContent : null,
+      skjult: t ? t.getAttribute('aria-hidden') === 'true' : null,
+      px: t ? parseFloat(getComputedStyle(t).fontSize) : null,
+      tal: t ? felt(t) : null,
+      billede: felt(k.querySelector('.kort-billede')),
+      lyn: lyn ? felt(lyn) : null,
+      navn: navnAf(k).replace(/\u00ad/g, '').replace(/\s+/g, ' ').replace(/ \./g, '.').trim(),
+    };
+  });
+});
+async function tjekMinuttal(side, hvor, tider = TIDER) {
+  const kort = await minuttalPaa(side);
+  const forkert = [];
+  let mindstLuft = null; // mindste vandrette luft mellem tallet og ⚡ (en måling)
+  for (const k of kort) {
+    const min = tider[k.id];
+    const fejlNavn = k.navn !== forventetNavn(k.id, min) ? 'navn «' + k.navn + '»' : null;
+    if (!(Number.isFinite(min) && min > 0)) {
+      if (k.antal || fejlNavn) forkert.push(k.id + ': uden tid, men ' + k.antal + ' tal, ' + (fejlNavn || 'navnet ok'));
+      continue;
+    }
+    const f = [];
+    if (k.antal !== 1) f.push(k.antal + ' tal');
+    else {
+      const { tal: t, billede: b, lyn: l } = k;
+      if (k.tekst !== minutterTekst(min)) f.push('teksten «' + k.tekst + '»');
+      if (!k.skjult) f.push('ikke aria-hidden');
+      if (!(k.px >= 12.5)) f.push(k.px + ' px');
+      if (t.l < b.l - 0.5 || t.r > b.r + 0.5 || t.t < b.t - 0.5 || t.b > b.b + 0.5) f.push('uden for billedet ' + JSON.stringify({ t, b }));
+      if (Math.abs(t.l - b.l) > 1 || Math.abs(t.b - b.b) > 1) f.push('ikke i nederste venstre hjørne ' + JSON.stringify({ t, b }));
+      if (l) {
+        if (t.l < l.r && l.l < t.r && t.t < l.b && l.t < t.b) f.push('over ⚡ ' + JSON.stringify({ t, l }));
+        const luft = Math.round((l.l - t.r) * 10) / 10;
+        if (!mindstLuft || luft < mindstLuft.luft) mindstLuft = { luft, id: k.id, tal: Math.round(t.r - t.l), billede: Math.round(b.r - b.l) };
+      }
+    }
+    if (fejlNavn) f.push(fejlNavn);
+    if (f.length) forkert.push(k.id + ': ' + f.join(', '));
+  }
+  const medTid = kort.filter((k) => Number.isFinite(tider[k.id]) && tider[k.id] > 0).length;
+  tjek(kort.length > 0 && !forkert.length, hvor + ': minuttallet (rettens tid, aria-hidden, mindst 12,5 px) i billedets nederste venstre hjørne, ikke over ⚡, og tiden i kortets navn på ' + medTid + ' af ' + kort.length + ' kort (forkert: ' + forkert.slice(0, 6).join(' | ') + (forkert.length > 6 ? ' … +' + (forkert.length - 6) : '') + ')');
+  if (MAAL) {
+    const bredest = kort.filter((k) => k.tal).map((k) => ({ id: k.id, tekst: k.tekst, tal: Math.round(k.tal.r - k.tal.l), billede: Math.round(k.billede.r - k.billede.l) }))
+      .reduce((a, k) => (!a || k.tal > a.tal ? k : a), null);
+    console.log('  MÅL ' + hvor + ': minuttal på ' + kort.filter((k) => k.antal).length + ' af ' + kort.length + ' kort; mindste luft til ⚡ ' + JSON.stringify(mindstLuft) + '; bredest ' + JSON.stringify(bredest) + '; skrift ' + [...new Set(kort.map((k) => k.px).filter(Boolean))].join('/') + ' px');
+  }
+}
+
 async function lynOgNavne(browser) {
   const skaerm = SKAERME[0];
   const n = skaerm.navn;
@@ -1950,14 +2029,42 @@ async function lynOgNavne(browser) {
   tjekLyn(forside, n + ' ⚡ forsiden', 'pandekager');
   maal.push(n + ' ⚡ forsiden: ' + forside.length + ' kort, ⚡ på ' + forside.filter((k) => k.lyn).map((k) => k.id).join(', '));
   await samlBloede(side);
+  await side.waitForFunction(() => [...document.images].every((i) => i.complete));
+  await tjekMinuttal(side, n + ' minuttal forsiden');
+  // Skærmlæserens navn fra Playwright selv (ariaSnapshot), for en ret med og en uden ⚡. Playwright sætter et mellemrum
+  // mellem kortets dele («Tynde pandekager . 35 minutter.»), som ikke siges
+  for (const id of ['pandekager', 'wok-med-nudler']) {
+    const snap = (await side.locator('.forside .kort[data-ret="' + id + '"]').ariaSnapshot()).replace(/ \./g, '.');
+    const navn = forventetNavn(id, tidAf(id));
+    tjek(snap.includes('"' + navn + '"'), n + ' minuttal forsiden: Playwrights navn for ' + id + ' er «' + navn + '», uden tallet på billedet (' + snap.trim() + ')');
+  }
+  // Uden tid (totalTime mangler) og med 0 minutter: intet tal og ingen tid i navnet (harTid i js/model.js)
+  const tilpas = { pandekager: (j) => { delete j.totalTime; }, koedsovs: (j) => { j.totalTime = 'PT0M'; } };
+  for (const [id, fn] of Object.entries(tilpas)) {
+    await side.route('**/opskrifter/' + id + '.json', async (route) => {
+      const svar = await route.fetch();
+      const json = await svar.json();
+      fn(json);
+      await route.fulfill({ response: svar, json });
+    });
+  }
+  await side.goto('about:blank');
+  await side.goto(BASE + '/index.html');
+  await side.waitForSelector('.forside .kort[data-ret]');
+  await side.waitForFunction(() => [...document.images].every((i) => i.complete));
+  await tjekMinuttal(side, n + ' minuttal forsiden (pandekager uden tid, kødsovs 0 min)', { ...TIDER, pandekager: null, koedsovs: 0 });
+  await side.unrouteAll({ behavior: 'wait' });
 
-  // 2. Børnenes valg: alle sider med fire retter (Rosa)
+  // 2. Børnenes valg: alle sider med fire retter (Rosa). Et nyt dokument, så retterne hentes uden ændringerne ovenfor
+  await side.goto('about:blank');
   await side.goto(BASE + '/index.html#/uge/vaelg/rosa');
   await side.waitForSelector('.ret-gitter .ret-kort');
   const boern = [];
+  let tidBoern = 0;
   for (let s = 0; s < IPLAN.length; s++) {
     const k = await lynPaa(side, '.ret-kort[data-ret]');
     boern.push(...k);
+    tidBoern += await tidTal(side);
     await samlBloede(side);
     if (await side.locator('.side-naeste').evaluate((b) => b.disabled)) break;
     await tryk(side, '.side-naeste');
@@ -1965,6 +2072,7 @@ async function lynOgNavne(browser) {
   }
   tjek(boern.length === IPLAN.length && new Set(boern.map((k) => k.id)).size === IPLAN.length, n + ' ⚡ børnenes valg: alle ' + IPLAN.length + ' retter i ugeplanen én gang (' + boern.length + ')');
   tjekLyn(boern, n + ' ⚡ børnenes valg', 'koedsovs');
+  tjek(tidBoern === 0, n + ' minuttal: børnenes valg har intet minuttal (' + tidBoern + ' .kort-tid)');
   maal.push(n + ' ⚡ børnenes valg: ' + boern.length + ' kort på ' + Math.ceil(boern.length / 4) + ' sider, ⚡ på ' + boern.filter((k) => k.lyn).map((k) => k.id).join(', '));
 
   // 3. Den voksnes valg til mandag, på iPad og ved 800 px, hvor billedet er 72 px i en kolonne på 84 px (a65829f)
@@ -1977,6 +2085,8 @@ async function lynOgNavne(browser) {
     const dag = await lynPaa(side, 'li.ret-valg-raekke[data-ret]');
     tjek(dag.length === IPLAN.length, n + ' ⚡ ' + b + ' px dagens valg: alle ' + IPLAN.length + ' retter (' + dag.length + ')');
     tjekLyn(dag, n + ' ⚡ ' + b + ' px dagens valg', 'koedsovs');
+    const tidDag = await tidTal(side);
+    tjek(tidDag === 0, n + ' minuttal: ' + b + ' px dagens valg har intet minuttal (' + tidDag + ' .kort-tid)');
     await samlBloede(side);
     const hj = await side.evaluate(() => {
       const r = document.querySelector('li.ret-valg-raekke[data-ret="wok-med-nudler"]');
@@ -1998,8 +2108,9 @@ async function lynOgNavne(browser) {
   // 4. Printet nævner det ikke: hverken ⚡ eller teksten
   await side.goto(BASE + '/print.html?ret=wok-med-nudler');
   await side.waitForSelector('ol.trin li');
-  const print = await side.evaluate(() => ({ tekst: document.body.textContent, lyn: document.querySelectorAll('.lyn').length }));
+  const print = await side.evaluate(() => ({ tekst: document.body.textContent, lyn: document.querySelectorAll('.lyn').length, tid: document.querySelectorAll('.kort-tid').length }));
   tjek(!print.tekst.includes('Hurtig') && !print.tekst.includes('⚡') && print.lyn === 0, n + ' ⚡ print.html?ret=wok-med-nudler: ingen «Hurtig» og intet ⚡ (' + print.lyn + ' .lyn)');
+  tjek(print.tid === 0, n + ' minuttal: print.html?ret=wok-med-nudler har intet minuttal på billedet (' + print.tid + ' .kort-tid)');
 
   // 5. En ret med blød bindestreg i navnet: printets titel og timer-pillen på forsiden (code review 31-10)
   const blod = index.find((id) => RETTER[id].name.includes('\u00ad') && RETTER[id].recipeInstructions.some((t) => t.tumbi.timer_sek));
@@ -2047,6 +2158,13 @@ if (DELE.includes('lyn')) KOERSEL.push(['⚡ og navnene', (b) => lynOgNavne(b)])
 // Ugeplanen står i sin egen fil (test/e2e-ugeplan.js) og får hjælperne herfra
 if (DELE.includes('ugeplan')) {
   KOERSEL.push(['ugeplan', (b) => ugeplan(b, { BASE, UD, ROD, RETTER, SKAERME, nySide, tjek, tjekLayout, foto, tryk, hold, vent, venterPaa, h1, maal, forfalskninger, LYD_TEKSTER })]);
+}
+
+// Hvilken udgave testen rammer: serverens js/version.js (en gammel server på samme port giver ellers falske fund)
+if (MAAL) {
+  const v = await fetch(BASE + '/js/version.js').then((r) => r.text()).catch((e) => 'fejl: ' + e.message);
+  const m = /UDGAVE_INDHOLD = '([^']+)'/.exec(v);
+  console.log('Serveren ' + BASE + ' har UDGAVE_INDHOLD ' + (m ? m[1] : '? (' + v.slice(0, 80) + ')'));
 }
 
 const browser = await webkit.launch();

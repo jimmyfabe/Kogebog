@@ -8,7 +8,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { nyTimer, timerStatus, formaterTid, varighed, varighedKort, varighedTale, HURTIG_SEK, planMandag, ugeNr, dagDato } from '../js/tid.js';
 import { isoTilMinutter, minutterTekst, tilTale, talOrd, ukendtKoen, KOEN, antalOrd, delIngrediens } from '../js/tekst.js';
-import { lavModel, erLynhurtig, LYN_MIN } from '../js/model.js';
+import { lavModel, erLynhurtig, harTid, LYN_MIN } from '../js/model.js';
 import { hentIndex } from '../js/data.js';
 import { lavTaleliste, alleReplikker } from '../vaerktoej/lav-taleliste.js';
 
@@ -246,6 +246,18 @@ test('lynhurtig ret: højst 20 minutter i alt', () => {
   const laes = (id) => lavModel(JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8')));
   assert.equal(erLynhurtig(laes('wok-med-nudler')), true);
   assert.equal(erLynhurtig(laes('pandekager')), false);
+});
+
+// Minuttallet på forsidens kort: kun et positivt antal minutter. Uden totalTime, 0 minutter, et ugyldigt tal eller
+// ingen model giver intet tal
+test('minuttallet vises kun ved et positivt antal minutter', () => {
+  assert.equal(harTid({ minutter: 1 }), true);
+  assert.equal(harTid({ minutter: 150 }), true);
+  for (const minutter of [null, undefined, 0, -5, NaN, Infinity, '25']) assert.equal(harTid({ minutter }), false, String(minutter));
+  assert.equal(harTid(null), false);
+  assert.equal(harTid(lavModel({ name: 'x', tumbi: { id: 'x' } })), false); // ingen totalTime
+  assert.equal(harTid(lavModel({ name: 'x', totalTime: 'PT0M', tumbi: { id: 'x' } })), false);
+  assert.equal(harTid(lavModel({ name: 'x', totalTime: 'PT1H45M', tumbi: { id: 'x' } })), true);
 });
 
 // Ugeplanen: kun retter med «tumbi.ugeplan» får uge-delen, med de felter, saml() i js/indkoeb.js læser

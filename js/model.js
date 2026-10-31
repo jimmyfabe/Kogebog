@@ -40,11 +40,17 @@ export function lavModel(json) {
   };
 }
 
+// Retten har en tid i alt (totalTime) at vise: et positivt antal minutter. Uden tid (null) eller med 0 minutter (en fejl
+// i opskriften) vises intet minuttal og intet ⚡
+export function harTid(m) {
+  return Boolean(m) && Number.isFinite(m.minutter) && m.minutter > 0;
+}
+
 // Lynhurtig ret: højst LYN_MIN minutter i alt (totalTime). Får ⚡ på tallerkenen, hvor retterne vælges (forsiden og
-// ugeplanen). Uden tid (null) eller med 0 minutter (en fejl i opskriften) er retten ikke lynhurtig
+// ugeplanen)
 export const LYN_MIN = 20;
 export function erLynhurtig(m) {
-  return Boolean(m) && Number.isFinite(m.minutter) && m.minutter > 0 && m.minutter <= LYN_MIN;
+  return harTid(m) && m.minutter <= LYN_MIN;
 }
 
 // Hvad den voksne hjælper med i retten: ['kniv'], ['varme'] eller ['kniv', 'varme'] (altid i den rækkefølge), [] når

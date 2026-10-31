@@ -10,7 +10,7 @@ import * as Lager from './js/lager.js';
 import * as Ugeplan from './js/ugeplan.js';
 import { holdKnap } from './js/hold.js';
 import { trekant, voksenNaeste } from './js/voksen.js';
-import { voksenFarer, erLynhurtig, LYN_MIN } from './js/model.js';
+import { voksenFarer, erLynhurtig, harTid, LYN_MIN } from './js/model.js';
 import { VERBER, INGREDIENSER, GRUPPER, grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, grafikGruppe, GRAFIK_FAERDIG } from './js/katalog.js';
 import { formaterTid, varighed, varighedTale } from './js/tid.js';
 import { minutterTekst, utenBloede } from './js/tekst.js';
@@ -63,6 +63,16 @@ function lynMaerke(m) {
 }
 function lynTekst(m) {
   return erLynhurtig(m) ? el('span', { class: 'sr-kun', tekst: '. ' + LYN_TEKST + '.' }) : null;
+}
+
+// Minuttallet (fx «25 min») i tallerkenens nederste venstre hjørne, over for ⚡, kun på forsidens kort: til den voksne,
+// der skal se, hvor lang tid retten tager i alt (Jimmy 31-10). Tallet er aria-hidden, og skærmlæseren får tiden som ord
+// efter navnet (tidTekst: «. 25 minutter.»). Står ⚡-teksten bagefter, giver den punktummet, så navnet ikke får «..»
+function tidMaerke(m) {
+  return harTid(m) ? el('span', { class: 'kort-tid', 'aria-hidden': 'true', tekst: minutterTekst(m.minutter) }) : null;
+}
+function tidTekst(m) {
+  return harTid(m) ? el('span', { class: 'sr-kun', tekst: '. ' + varighedTale(m.minutter * 60) + (erLynhurtig(m) ? '' : '.') }) : null;
 }
 
 function annoncer(tekst) {
@@ -190,9 +200,10 @@ function forside() {
       if (m instanceof Error) { fejlede.push(id); return null; }
       const b = el('button', { type: 'button', class: 'kort' + (S.valgtKort === id ? ' valgt' : ''), 'data-ret': id },
         Object.hasOwn(GRUPPER, gruppe) ? el('span', { class: 'kort-gruppe', 'aria-hidden': 'true' }, billede(grafikGruppe(gruppe), '')) : null,
-        el('span', { class: 'kort-billede' }, billede(grafikRet(id), ''), lynMaerke(m)),
+        el('span', { class: 'kort-billede' }, billede(grafikRet(id), ''), tidMaerke(m), lynMaerke(m)),
         el('span', { class: 'kort-navn', tekst: m.navn }),
         el('span', { class: 'kort-aabn', 'aria-hidden': 'true' }, ikon('naeste'), el('span', { tekst: 'Tryk igen' })),
+        tidTekst(m),
         lynTekst(m));
       b.addEventListener('click', klik(() => kortTryk(id, b)));
       return el('li', { class: 'kort-plads' }, b);
