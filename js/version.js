@@ -4,4 +4,4 @@
 // UDGAVE_INDHOLD er filernes fingeraftryk for nummeret. test/test-version.js fejler, når en fil ændres uden et nyt
 // nummer, og skriver de to nye linjer i fejlbeskeden.
 export const UDGAVE = 'v3 · 31-10-2026';
-export const UDGAVE_INDHOLD = 'v3:858f14c9a5daae65';
+export const UDGAVE_INDHOLD = 'v3:0b0cf719d3e433f0';

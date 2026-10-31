@@ -710,8 +710,9 @@ textarea.kopi-felt { resize: vertical; }
 .ret-valg { border: var(--kant); border-radius: 22px; background: var(--hvid); overflow: hidden; }
 /* position: relative holder skærmlæserens tekst til ⚡ (.sr-kun) inde i rækken */
 .ret-valg-raekke { position: relative; display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; align-items: center; gap: 0 16px; padding: 8px 16px; }
-/* Rammen om billedet, så ⚡ kan sidde på dets hjørne som på børnenes kort */
-.dag-billede-ramme { position: relative; display: block; }
+/* Rammen om billedet, så ⚡ kan sidde på dets hjørne som på børnenes kort. justify-self: start, så rammen er lige så
+   bred som billedet: ved 701-900 px er billedet 72 px i en kolonne på 84 px, og så sad ⚡ 12 px fra billedets hjørne (udledt af CSS'en, review 31-10) */
+.dag-billede-ramme { position: relative; display: block; justify-self: start; }
 .dag-billede-ramme .lyn { width: 28px; }
 .ret-valg-raekke + .ret-valg-raekke { border-top: 2px solid var(--creme-moerk); }
 .ret-valg-raekke.valgt { background: var(--sennep-lys); }
