@@ -11,7 +11,7 @@
   "totalTime": "PT35M",
   "recipeIngredient": [
     "6 æg",
-    "300 g rejer i lage",
+    "2 glas rejer i lage (à 170 g)",
     "8 skiver rugbrød",
     "25 g blødt smør",
     "4 spsk mayonnaise",
@@ -45,7 +45,7 @@
     "kilde": "Julefrokostens klassiker, rugbrød med æg og rejer. Mængderne er vores egne, og æggene koges som i vores rugbrødsaften. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
     "ingredienser": [
       { "ikon": "aeg", "maengde": "6" },
-      { "ikon": "koed", "maengde": "300 g" },
+      { "ikon": "koed", "maengde": "2 glas" },
       { "ikon": "broed", "maengde": "8 skiver" },
       { "ikon": "smoer", "maengde": "25 g" },
       { "ikon": "mayonnaise", "maengde": "4 spsk" },
