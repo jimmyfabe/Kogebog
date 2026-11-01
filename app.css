@@ -1007,16 +1007,25 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   /* Forsidens top står i én række som på iPad på langs, med mindre luft og knapper på 64 px: på to rækker blev toppen
      80 px højere på 768×1024. Med fem afsnit var rækken med Rosa og Bo 773 px på 768 px og 768 px på 744 px (iPad mini),
      og dyrene stak ud over skærmens kanter (review A1, målt i WebKit 01-11-2026; på 810-834 px stod de kun 12-19 px fra
-     kanterne, og enhedens skrift kan være bredere). Dyrene skjules, og rækken (titlen og knapperne) er 600-640 px */
+     kanterne, og enhedens skrift kan være bredere). Dyrene skjules, og rækken (titlen og knapperne) er 600-640 px.
+     Luften, knapperne og titlens skrift står i reglen nedenfor (701-1099 px) */
   .forside-top > .forside-dyr { display: none; }
+  /* «Tumbi Køkken» brydes aldrig: på 744×1133 (iPad mini) manglede 0,3 px i WebKit (e2e 29-10), og hvor bred teksten
+     bliver, afhænger af enhedens skrift */
+  .forside-titel h1 { white-space: nowrap; }
+}
+
+/* Forsidens top fra 701 til 1099 px (iPad på højkant, og på langs 1024×768 og 1080×810): mindre luft, knapper på 64 px og
+   lidt mindre skrift og luft i titlen, så «Tumbi Køkken» står på én linje ved siden af knapperne. På 820×1180 stod
+   «Køkken» på en linje for sig (UI-review 27-10). Med fem afsnit (5 × 72 + 4 × 12 = 408 px) stod titlen på to linjer fra
+   901 til 1099 px, fx på 1024×800, hvor den kun fik 330 px (e2e 01-11-2026). Nu er der ca. 28 px til overs på 901 px og
+   mere på de bredere skærme (regnet ud fra titlens bredde på 900 px i WebKit) */
+@media (min-width: 701px) and (max-width: 1099px) and (min-height: 521px) {
   .forside-top { gap: 12px; }
   .forside-hop { gap: 8px; }
   .knap.hop { width: var(--tryk); min-height: var(--tryk); }
-  /* «Tumbi Køkken» på én linje: på 820×1180 stod «Køkken» på en linje for sig (UI-review 27-10). Lidt mindre skrift og
-     luft i titlen, så den har plads mellem dyrene og knapperne. Den brydes aldrig: på 744×1133 (iPad mini) manglede
-     0,3 px i WebKit (e2e 29-10), og hvor bred teksten bliver, afhænger af enhedens skrift */
   .forside-titel { padding: 10px 18px 12px; }
-  .forside-titel h1 { font-size: clamp(30px, 4vw, 52px); white-space: nowrap; }
+  .forside-titel h1 { font-size: clamp(30px, 4vw, 52px); }
 }
 
 /* Forsidens top på iPhone på højkant: titlen, afsnittenes knapper og dyrene kan ikke stå i én række. Titlen står øverst
