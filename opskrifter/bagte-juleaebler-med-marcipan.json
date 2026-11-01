@@ -1,0 +1,49 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Bagte juleæbler med marcipan",
+  "description": "Æbler fyldt med marcipan, rosiner og kanel, bagt bløde i ovnen. Barnet laver fyldet og fylder æblerne. Allergener: mandler (marcipan), mælk (flødeskum).",
+  "image": "grafik/ret-bagte-juleaebler-med-marcipan.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 æbler",
+  "prepTime": "PT15M",
+  "cookTime": "PT25M",
+  "totalTime": "PT50M",
+  "recipeIngredient": [
+    "4 store æbler",
+    "100 g marcipan",
+    "2 spsk rosiner",
+    "1 tsk kanel",
+    "2 dl piskefløde (kan undlades)"
+  ],
+  "tool": ["lille kniv og skærebræt", "teske", "skål", "ovnfast fad", "grydelapper", "elpisker eller piskeris"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mandler (marcipan) og mælk." } },
+    { "@type": "HowToStep", "text": "Skær kernehuset ud af æblerne.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["aeble"], "note": "Tænd ovnen på 200 °C almindelig ovn (ca. 180 °C varmluft). Lav et hul ovenfra med en lille kniv og en teske. Lad bunden blive, så fyldet bliver i æblet. Vælter æblet, så skær en tynd skive af bunden." } },
+    { "@type": "HowToStep", "text": "Smuldr marcipanen i en skål.", "tumbi": { "verbum": "smuldre", "ikoner": ["marcipan"], "note": "100 g. Små stykker gør det let at ælte." } },
+    { "@type": "HowToStep", "text": "Drys rosiner og kanel i skålen.", "tumbi": { "verbum": "drysse", "ikoner": ["rosiner", "krydderi"], "note": "2 spsk rosiner og ½ tsk kanel. Gem resten af kanelen." } },
+    { "@type": "HowToStep", "text": "Ælt fyldet sammen med hænderne.", "tumbi": { "verbum": "aelte", "ikoner": ["marcipan"] } },
+    { "@type": "HowToStep", "text": "Form fyldet til fire kugler.", "tumbi": { "verbum": "forme", "ikoner": ["marcipan"] } },
+    { "@type": "HowToStep", "text": "Stil æblerne i et fad.", "tumbi": { "verbum": "pynte", "ikoner": ["aeble"], "note": "Et ovnfast fad." } },
+    { "@type": "HowToStep", "text": "Tryk en kugle ned i hvert æble.", "tumbi": { "verbum": "pynte", "ikoner": ["marcipan"], "note": "Det, der ikke kan være i hullet, må gerne ligge ovenpå som et låg." } },
+    { "@type": "HowToStep", "text": "Drys kanel på æblerne.", "tumbi": { "verbum": "drysse", "ikoner": ["krydderi"], "note": "Resten af kanelen, ca. ½ tsk." } },
+    { "@type": "HowToStep", "text": "Bag æblerne i ovnen i 25 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1500, "note": "200 °C almindelig ovn (ca. 180 °C varmluft). De er færdige, når en gaffel glider let ind. Store æbler kan tage 5-10 minutter mere." } },
+    { "@type": "HowToStep", "text": "Tag fadet ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Fadet er meget varmt. Brug grydelapper." } },
+    { "@type": "HowToStep", "text": "Lad æblerne køle af i ti minutter.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Fyldet og æblerne er meget varme indeni." } },
+    { "@type": "HowToStep", "text": "Pisk fløden til let skum.", "tumbi": { "verbum": "piske", "ikoner": ["flode"], "note": "Kan undlades. Med en elpisker hjælper den voksne lidt." } },
+    { "@type": "HowToStep", "text": "Smag med en klat flødeskum!", "tumbi": { "verbum": "smage", "note": "Pust først." } }
+  ],
+  "tumbi": {
+    "id": "bagte-juleaebler-med-marcipan",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Lidl: «Bagte æbler med marcipan og kanel» (https://opskrifter.lidl.dk/recipes/bagte-aebler-med-marcipan-og-kanel), mængderne fordoblet og rosiner i stedet for dadler. Trinene er egen tekst. Varmluften, flødeskummet og tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "aeble", "maengde": "4" },
+      { "ikon": "marcipan", "maengde": "100 g" },
+      { "ikon": "rosiner", "maengde": "2 spsk" },
+      { "ikon": "krydderi", "maengde": "1 tsk" },
+      { "ikon": "flode", "maengde": "2 dl" }
+    ]
+  }
+}
