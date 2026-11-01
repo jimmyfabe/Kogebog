@@ -1,0 +1,55 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Små julemedister­boller",
+  "description": "Små kødboller med julemedisterens krydderier, allehånde og nelliker, bagt i ovnen. Børnene former kuglerne. Allergener: æg, gluten og mælk.",
+  "image": "grafik/ret-julemedisterboller.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 30 små boller (4 personer)",
+  "prepTime": "PT25M",
+  "cookTime": "PT15M",
+  "totalTime": "PT40M",
+  "recipeIngredient": [
+    "500 g hakket grisekød",
+    "1 lille løg",
+    "1 æg",
+    "3 spsk hvedemel",
+    "1 dl mælk",
+    "1 tsk salt",
+    "½ tsk peber",
+    "½ tsk stødt allehånde",
+    "¼ tsk stødt nelliker (kan udelades)"
+  ],
+  "tool": ["rivejern", "stor skål", "spiseske", "teske", "dl-mål", "grydeske", "bageplade", "bagepapir", "kniv"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Tænd ovnen på 200 °C (varmluft 180 °C), og læg bagepapir på en bageplade. Retten indeholder æg, gluten og mælk." } },
+    { "@type": "HowToStep", "text": "Riv løget fint.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["loeg"], "note": "Rivejernet er skarpt, så den voksne river." } },
+    { "@type": "HowToStep", "text": "Mål mel, salt og krydderier i en stor skål.", "tumbi": { "verbum": "maale", "ikoner": ["mel", "salt", "peber", "krydderi"], "note": "3 spsk mel, 1 tsk salt, ½ tsk peber, ½ tsk allehånde og ¼ tsk nelliker." } },
+    { "@type": "HowToStep", "text": "Hæld mælk og løg i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk", "loeg"], "note": "1 dl mælk. Rør rundt, så melet ikke klumper." } },
+    { "@type": "HowToStep", "text": "Slå ægget ud i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["aeg"] } },
+    { "@type": "HowToStep", "text": "Kom kødet i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["koed"], "note": "Ægget og kødet kommer i til sidst, så barnet ikke rører andet med råt kød på fingrene." } },
+    { "@type": "HowToStep", "text": "Rør farsen godt sammen.", "tumbi": { "verbum": "roere", "ikoner": ["koed"], "note": "Med en grydeske i et par minutter, til farsen er sej." } },
+    { "@type": "HowToStep", "text": "Form farsen til 30 små kugler.", "tumbi": { "verbum": "forme", "ikoner": ["koed"], "note": "På størrelse med en valnød. Læg dem på bagepapiret. Det er lettere med våde hænder." } },
+    { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt kød og æg på hænderne." } },
+    { "@type": "HowToStep", "text": "Bag kuglerne i 15 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900, "note": "Midt i ovnen." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne skærer den største bolle over: den skal være stegt igennem uden lyserødt, og saften skal være klar." } },
+    { "@type": "HowToStep", "text": "Smag på en julemedisterbolle.", "tumbi": { "verbum": "smage", "note": "Pust først. Den er varm indeni." } }
+  ],
+  "tumbi": {
+    "id": "julemedisterboller",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift (01-11-2026) med julemedisterens krydderier, allehånde og nelliker, i små boller fra ovnen. Fødevarestyrelsen: hakket kød skal steges igennem, og rå fars skal ikke smages (foedevarestyrelsen.dk). Trinene er egen tekst. Mængderne og tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "koed", "maengde": "500 g" },
+      { "ikon": "loeg", "maengde": "1" },
+      { "ikon": "aeg", "maengde": "1" },
+      { "ikon": "mel", "maengde": "3 spsk" },
+      { "ikon": "maelk", "maengde": "1 dl" },
+      { "ikon": "salt", "maengde": "1 tsk" },
+      { "ikon": "peber", "maengde": "½ tsk" },
+      { "ikon": "krydderi", "maengde": "½ tsk" },
+      { "ikon": "krydderi", "maengde": "¼ tsk" }
+    ]
+  }
+}

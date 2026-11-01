@@ -1,0 +1,56 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Æg og rejer",
+  "description": "Rugbrød med skiver af hårdkogt æg, rejer, mayonnaise og dild. Barnet piller æggene og klemmer mayonnaisen ud. Allergener: æg, krebsdyr (rejer), gluten og mælk; tjek mayonnaisen for sennep.",
+  "image": "grafik/ret-aeg-og-rejer.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer (8 stykker)",
+  "prepTime": "PT20M",
+  "cookTime": "PT15M",
+  "totalTime": "PT35M",
+  "recipeIngredient": [
+    "6 æg",
+    "300 g rejer i lage",
+    "8 skiver rugbrød",
+    "25 g blødt smør",
+    "4 spsk mayonnaise",
+    "1 citron",
+    "frisk dild til pynt"
+  ],
+  "tool": ["kniv", "skærebræt", "gryde", "ske", "si", "æggedeler", "smørekniv", "fad"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder æg, rejer (krebsdyr), gluten og mælk. Tjek mayonnaisen for sennep." } },
+    { "@type": "HowToStep", "text": "Skær citronen i otte både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["citron"], "note": "Gem bådene til pynt." } },
+    { "@type": "HowToStep", "text": "Læg æggene forsigtigt i en gryde.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["aeg"], "note": "Med en ske. Hæld koldt vand på, så det lige dækker æggene. Timeren startes efter håndvasken." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter råt æg." } },
+    { "@type": "HowToStep", "text": "Kog æggene i 9 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 540, "note": "Fra vandet koger, ved middel varme. Så bliver blommerne faste." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra æggene.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne hælder det varme vand fra i vasken og fylder koldt vand på. Pas på dampen." } },
+    { "@type": "HowToStep", "text": "Lad æggene køle af i 5 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 300, "note": "I det kolde vand. Så er de til at røre ved." } },
+    { "@type": "HowToStep", "text": "Pil skallen af æggene.", "tumbi": { "verbum": "pille", "note": "Bank dem let mod bordet, og pil dem under koldt vand. Barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Del æggene i skiver med en æggedeler.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "note": "Barnet kan trykke låget ned, mens den voksne holder æggedeleren. Uden æggedeler skærer den voksne æggene i skiver med en kniv." } },
+    { "@type": "HowToStep", "text": "Smør et tyndt lag smør på rugbrødet.", "tumbi": { "verbum": "smoere", "ikoner": ["smoer", "broed"], "note": "Med en smørekniv. Smørret skal være blødt." } },
+    { "@type": "HowToStep", "text": "Læg æggeskiverne på rugbrødet.", "tumbi": { "verbum": "pynte", "note": "Tæt, så de dækker brødet." } },
+    { "@type": "HowToStep", "text": "Hæld lagen fra rejerne.", "tumbi": { "verbum": "haelde", "ikoner": ["koed"], "note": "I en si over vasken. Rejerne er kolde, så barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Læg rejerne oven på æggene.", "tumbi": { "verbum": "pynte", "ikoner": ["koed"] } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe efter rejerne." } },
+    { "@type": "HowToStep", "text": "Klem mayonnaise ud på rejerne.", "tumbi": { "verbum": "sproejte", "ikoner": ["mayonnaise"], "note": "En lille klat eller en stribe på hvert stykke." } },
+    { "@type": "HowToStep", "text": "Pynt med dild og en citronbåd.", "tumbi": { "verbum": "pynte", "ikoner": ["krydderurt", "citron"] } },
+    { "@type": "HowToStep", "text": "Smag på et stykke.", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "aeg-og-rejer",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Julefrokostens klassiker, rugbrød med æg og rejer. Mængderne er vores egne, og æggene koges som i vores rugbrødsaften. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "aeg", "maengde": "6" },
+      { "ikon": "koed", "maengde": "300 g" },
+      { "ikon": "broed", "maengde": "8 skiver" },
+      { "ikon": "smoer", "maengde": "25 g" },
+      { "ikon": "mayonnaise", "maengde": "4 spsk" },
+      { "ikon": "citron", "maengde": "1" },
+      { "ikon": "krydderurt", "maengde": "" }
+    ]
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Lun lever­postej med bacon og svampe",
+  "description": "Frossen leverpostej bagt i ovnen og serveret lun med sprød bacon, stegte champignoner, rødbeder og rugbrød. Børnene lægger baconen på pladen. Allergener: gluten og mælk; postejen har typisk også æg (tjek pakken).",
+  "image": "grafik/ret-lun-leverpostej-med-bacon-og-svampe.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT15M",
+  "cookTime": "PT1H25M",
+  "totalTime": "PT1H40M",
+  "recipeIngredient": [
+    "500 g frossen leverpostej til at bage selv",
+    "150 g bacon i skiver",
+    "koldt vand til vandbadet",
+    "1 dåse champignon i skiver",
+    "1 spsk smør",
+    "1 glas syltede rødbeder",
+    "8 skiver rugbrød"
+  ],
+  "tool": ["dybt ovnfast fad", "bageplade", "bagepapir", "kande", "dåseåbner", "si", "pande", "grydeske", "grydelapper", "stegetermometer (kan undværes)"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Tænd ovnen på 180 °C. Postejen indeholder typisk hvedemel, mælk og æg: tjek pakken." } },
+    { "@type": "HowToStep", "text": "Sæt de frosne postejer i et dybt fad.", "tumbi": { "verbum": "haelde", "ikoner": ["koed"], "note": "Direkte fra frost, i deres bakker (2 bakker à 250 g). Følg også pakkens anvisning." } },
+    { "@type": "HowToStep", "text": "Læg baconskiverne på en plade med bagepapir.", "tumbi": { "verbum": "pynte", "ikoner": ["koed"], "note": "Side om side. Stil pladen i køleskabet, til den skal i ovnen." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: bacon og leverpostej er råt kød, til det er bagt." } },
+    { "@type": "HowToStep", "text": "Hæld koldt vand i fadet om postejerne.", "tumbi": { "verbum": "haelde", "ikoner": ["vand"], "note": "Til ca. halvt op ad bakkerne." } },
+    { "@type": "HowToStep", "text": "Bag postejerne i 60 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 3600, "note": "Midt i ovnen. Fadet er tungt af vandet, så den voksne bærer det. Har I købt færdig leverpostej i bakke, så lun den i ca. 20 minutter uden vand sammen med baconen." } },
+    { "@type": "HowToStep", "text": "Bag baconen med i 15 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900, "note": "Sæt pladen ind under fadet. Baconen skal være sprød." } },
+    { "@type": "HowToStep", "text": "Tag fadet og pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Pas på det varme vand. Postejen skal være fast i midten og mindst 80 °C (stegetermometer)." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra svampene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["champignon"], "note": "Den voksne åbner dåsen: kanten er skarp. Hæld svampene i en si over vasken." } },
+    { "@type": "HowToStep", "text": "Steg svampene i smør i 5 minutter.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "ikoner": ["champignon", "smoer"], "note": "1 spsk smør på en pande ved middel varme. Rør af og til." } },
+    { "@type": "HowToStep", "text": "Læg bacon og svampe oven på postejerne.", "tumbi": { "verbum": "pynte", "voksen": true, "voksen_hjaelp": "varme", "note": "Postejerne er varme: den voksne lægger på, og barnet viser, hvor det skal ligge." } },
+    { "@type": "HowToStep", "text": "Sæt rødbeder og rugbrød på bordet.", "tumbi": { "verbum": "pynte", "ikoner": ["roedbede", "broed"] } },
+    { "@type": "HowToStep", "text": "Smag på postejen.", "tumbi": { "verbum": "smage", "note": "Pust først. Den er meget varm indeni." } }
+  ],
+  "tumbi": {
+    "id": "lun-leverpostej-med-bacon-og-svampe",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Brødrene Price serverer leverpostejen lun med bacon, stegte svampe og syltede rødbeder (https://www.dr.dk/mad/opskrift/leverpostej). Ovntiden er fra pakken på Rema 1000's frosne leverpostej til at bage selv (180 °C i vandbad i 70-80 minutter, mindst 80 °C i midten). Lunetiden for en færdig leverpostej er et skøn. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "koed", "maengde": "500 g" },
+      { "ikon": "koed", "maengde": "150 g" },
+      { "ikon": "vand", "maengde": "" },
+      { "ikon": "champignon", "maengde": "1 dåse" },
+      { "ikon": "smoer", "maengde": "1 spsk" },
+      { "ikon": "roedbede", "maengde": "1 glas" },
+      { "ikon": "broed", "maengde": "8 skiver" }
+    ]
+  }
+}
