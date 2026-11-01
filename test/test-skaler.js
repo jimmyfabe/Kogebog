@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { portionerFraHusstand, faktorFor, skalerMaengde, BARN_ANDEL, MAKS_PORTIONER, skaleretIngrediens, voksenNoter, portionerTekst } from '../js/skaler.js';
 import * as lager from '../js/lager.js';
 import { lavModel } from '../js/model.js';
-import { boejNavn, NAVNEORD, TILLAEGSORD, KOEN } from '../js/tekst.js';
+import { boejNavn, NAVNEORD, TILLAEGSORD, KOEN, tilTale, ukendtKoen } from '../js/tekst.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const json = (fil) => JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', fil), 'utf8'));
@@ -337,6 +337,25 @@ test('tal i navnet for hele linjen regnes om med linjen; procent, vægt pr. emba
   assert.equal(linje('gyoza-med-noedler-og-groent', '2 poser frosne gyoza (ca. 380 g)', 1.5), '3 poser frosne gyoza (ca. 380 g)', 'vægten er pr. pose');
   assert.equal(linje('chorizo-pasta', '2,5 dl madlavningsfløde 15 %', 2), '5 dl madlavningsfløde 15 %');
   assert.equal(linje('cremet-koedsovs', '3 l vand og 1 tsk salt til pastaen', 0.5), '1,5 l vand og 1 tsk salt til pastaen');
+});
+
+test('stemmen kender kønnet i hver linje regnet om til 1-12 portioner, også efter et tillægsord i flertal', () => {
+  // iPad-stemmen læser den omregnede linje (tilTale): «2,5 store løg» er «to og et halvt», ikke «to og en halv»
+  assert.equal(tilTale('2,5 store løg'), 'to og et halvt store løg');
+  assert.equal(tilTale('2,5 æbler'), 'to og et halvt æbler');
+  assert.equal(tilTale('½ små mozzarellakugler'), 'en halv små mozzarellakugler');
+  assert.equal(tilTale('1 lille løg'), 'et lille løg');
+  const ukendte = [];
+  for (const { id, model } of RETTER.filter((r) => r.model.uge)) {
+    for (let n = 1; n <= MAKS_PORTIONER; n++) {
+      const f = faktorFor(model, n);
+      model.ingredienser.forEach((x, i) => {
+        const t = skaleretIngrediens(model, i, f).tekst;
+        if (ukendtKoen(t).length) ukendte.push(id + ' ved ' + n + ': ' + t);
+      });
+    }
+  }
+  assert.deepEqual([...new Set(ukendte)], []);
 });
 
 test('boejNavn: ental og flertal, tillægsordet efter kønnet, «eller», resten uændret, null for et ukendt ord', () => {

@@ -79,6 +79,8 @@ export const KOEN = Object.freeze({
   // Kan stå efter et tal, når mængden er regnet om til husstanden (NAVNEORD nedenfor): «1 laksefilet», «1 pølse»
   'tortilla': 'n', 'fuldkornstortilla': 'n', 'porre': 'n', 'fuldkornsburgerbolle': 'n', 'laksefilet': 'n', 'pølse': 'n',
   'mozzarellakugle': 'n', 'oliven': 'n', 'pære': 'n',
+  // Enhederne i flertal, som skaler.js giver med et halvt («2,5 dåser» er «to og en halv»)
+  'dåser': 'n', 'poser': 'n', 'pakker': 'n', 'blad': 't', // «1 blad icebergsalat» ved 1 portion
   'lille': null, 'sort': null, 'orange': null,
 });
 
@@ -167,12 +169,16 @@ function koenBetyder(a) {
   return !decimaler && (rest === 0.5 || rest === 0.25 || hel % 100 === 1);
 }
 
-// Køn fra ordene efter tallet (højst to: «1 lille løg»). undefined = ukendt
+// Køn fra ordene efter tallet (højst to: «1 lille løg»). Et navneord i flertal slås op i ental, og et tillægsord uden køn
+// («lille», «store») springes over, for en mængde regnet om til husstanden kan stå foran flertal: «2,5 store løg» er «to
+// og et halvt», ikke «to og en halv» (js/skaler.js). undefined = ukendt
 function koenEfter(rest) {
   const ord = rest.match(/^(?:\s+\p{L}+){1,2}/u);
   if (!ord) return undefined;
   for (const o of ord[0].trim().split(/\s+/)) {
-    const k = Object.hasOwn(KOEN, o.toLowerCase()) ? KOEN[o.toLowerCase()] : undefined;
+    const lav = o.toLowerCase();
+    const ental = NAVNEORD_FORM.has(lav) ? NAVNEORD_FORM.get(lav)[0] : lav;
+    const k = Object.hasOwn(KOEN, ental) ? KOEN[ental] : TILLAEG_FORM.has(lav) ? null : undefined;
     if (k !== null) return k;
   }
   return undefined;
