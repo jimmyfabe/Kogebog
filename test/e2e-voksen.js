@@ -25,6 +25,8 @@ const TO_FADE = 'Brug to fade — tiden kan blive længere';
 const HOLD_OEJE = 'Hold øje med tiden';
 const TAERTE = 'kyllingetaerte-med-butterdej'; // «1 rulle færdig butterdej» rundes op til hele
 const FORM = 'Dej og form er rundet op til hele — formen passer måske ikke';
+// Playwright trykker ikke på en knap med aria-disabled="true" (den er ikke «enabled»), men det kan man på iPad'en
+const AFVIST = { force: true };
 
 export async function voksen(browser, H) {
   for (const skaerm of H.VALGTE) await forloeb(browser, H, skaerm);
@@ -486,7 +488,7 @@ async function migrering(browser, H) {
   await aabnVoksen(H, side, '/husstand', n + ' husstand med data fra v3');
   // Ved 0 børn er «Færre børn» aria-disabled, og et tryk siger grænsen i stedet for ingenting
   tjek(await side.locator('[data-fokus="boern-minus"]').getAttribute('aria-disabled') === 'true', n + ': «Færre børn» er aria-disabled ved 0 børn');
-  await tryk(side, '[data-fokus="boern-minus"]');
+  await tryk(side, '[data-fokus="boern-minus"]', AFVIST);
   await venterPaa(side, () => document.getElementById('meddelelse').textContent === 'Mindst 0 børn', null, n + ': «Færre børn» ved 0 siger «Mindst 0 børn»');
   for (const k of ['voksne-plus', 'voksne-plus', 'voksne-plus']) await tryk(side, '[data-fokus="' + k + '"]');
   await tryk(side, '[data-fokus="gem"]');
@@ -559,7 +561,7 @@ async function husstandLoft(browser, H) {
   // Ved 8 er «Flere» aria-disabled (fokus bliver på knappen), og et tryk siger grænsen
   const graense = await side.evaluate(() => ['voksne-minus', 'voksne-plus', 'boern-plus'].map((k) => document.querySelector('[data-fokus="' + k + '"]').getAttribute('aria-disabled')));
   tjek(JSON.stringify(graense) === JSON.stringify([null, 'true', 'true']), n + ': ved 8 er kun «Flere» aria-disabled (' + JSON.stringify(graense) + ')');
-  await tryk(side, '[data-fokus="voksne-plus"]');
+  await tryk(side, '[data-fokus="voksne-plus"]', AFVIST);
   await venterPaa(side, () => document.getElementById('meddelelse').textContent === 'Højst 8 voksne', null, n + ': «Flere voksne» ved 8 siger «Højst 8 voksne»');
   tjek(await tekstAf(side, '.stepper-tal') === '8 voksne', n + ': de voksne er stadig 8');
   tjek(side.fejl.length === 0, n + ' (8 + 8): ' + side.fejl.join(' | '));
