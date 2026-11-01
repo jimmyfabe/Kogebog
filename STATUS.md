@@ -36,7 +36,7 @@ Jimmy 01-11 (talebesked): «tage de bedste beslutninger på alt det, vi har … 
 
 **Afventer Jimmy:**
 - (01-11) Test på iPad og iPhone: testlisten i Sagas lydbesked 01-11. Tjek også lange ord på en iPhone på langs.
-- (01-11) I `D:\Claude\Kogebog` ligger to usporede mapper fra 31-10, `opskrifter/.claude` (agent-hukommelse) og `opskrifter/.playwright-cli` (logfiler). De gør `test-sw` rød i den checkout (samme commit er grøn i en ren worktree, 13/0). Må de slettes?
+- ~~(01-11) To usporede mapper i `opskrifter/`~~ **Lukket 01-11 kl. 16:19:** slettet efter Jimmys «ja slet dem begge» sammen med de fire midlertidige kopier `val-A/B/C/alle` (alle deres filer findes i `main`). `test-sw` er grøn i `D:\Claude\Kogebog` (13/0).
 - **Udgivet:** flettet i `main` og pushet 01-11 kl. 14:07 (e2b140f) efter Jimmys «du må altså gerne push selv». Den live `js/version.js` viste «v3 · 01-11-2026» kl. 14:07 (læst med curl).
 - **Lukket:** de 7 punkter fra kl. 03:11 og README-spørgsmålet fra kl. 02:40 (se tabellen). Røst-lyden laver Saga (se kl. 02:40).
 
