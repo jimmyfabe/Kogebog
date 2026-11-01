@@ -7,10 +7,15 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { maerkerFor, MAERKER, GROENT_G, BILLIG_KR } from '../js/maerker.js';
-import { lavModel, LYN_MIN } from '../js/model.js';
+import { lavModel, LYN_MIN, knivtrin } from '../js/model.js';
 import { VARER, AFDELINGER, ENHEDER, INGREDIENSER } from '../js/katalog.js';
 import { validerVarer } from './test-opskrifter.js';
 import { tomFamilie } from '../js/lager.js';
+
+// js/hold.js lytter på document, når det indlæses (js/ugeplan.js henter det). Node har intet document, og testen bruger
+// kun den rene knivTekst, så ugeplan.js hentes først, når der er et (som i test-udvalg.js)
+globalThis.document ??= { addEventListener() {} };
+const { knivTekst } = await import('../js/ugeplan.js');
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const json = (id) => JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8'));
@@ -19,7 +24,8 @@ const model = (id, aendr = () => {}) => { const d = json(id); aendr(d); return l
 const har = (m, k, valg) => maerkerFor(m, valg).includes(k);
 const ALLE = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter/index.json'), 'utf8')).grupper.flatMap((g) => g.retter);
 const UGEPLAN = ALLE.map((id) => model(id)).filter((m) => m.uge);
-const KNIV = ['skaere', 'rive'];
+// Et trin, hvor en voksen hjælper med kniven (også dåseåbneren med et andet verbum)
+const erKniv = (s) => s.tumbi.voksen_hjaelp === 'kniv';
 
 test('MAERKER har de otte mærker i fast rækkefølge, hver med ikon og dansk navn', () => {
   assert.deepEqual(Object.keys(MAERKER), ['hurtig', 'groent', 'billig', 'ingenKniv', 'vegetar', 'fisk', 'ny', 'favorit']);
@@ -73,21 +79,37 @@ test('hurtig: højst LYN_MIN minutter i alt, som ⚡ i js/model.js', () => {
   assert.equal(hurtig(undefined), false);
 });
 
-test('ingen kniv: intet trin med verbet skaere eller rive', () => {
+test('ingen kniv: intet trin, hvor en voksen hjælper med kniven, heller ikke dåseåbneren (valg A)', () => {
   // Kødsovsen hakker løget (skaere) og river guleroden (rive)
   const ks = json('koedsovs').recipeInstructions.map((s) => s.tumbi.verbum);
   assert.ok(ks.includes('skaere') && ks.includes('rive'));
   assert.equal(har(model('koedsovs'), 'ingenKniv'), false);
-  const uden = (verber) => model('koedsovs', (d) => { d.recipeInstructions = d.recipeInstructions.filter((s) => !verber.includes(s.tumbi.verbum)); });
-  assert.equal(har(uden(['skaere']), 'ingenKniv'), false, 'rivejernet er også kniv');
-  assert.equal(har(uden(['rive']), 'ingenKniv'), false);
-  assert.equal(har(uden(KNIV), 'ingenKniv'), true);
-  // Dåseåbneren («Hæld tomaterne i gryden.» med voksen-hjælp «kniv») er ikke en kniv: one-pot-tomatpastaen har ingen af verberne
+  const uden = (fjern) => model('koedsovs', (d) => { d.recipeInstructions = d.recipeInstructions.filter((s) => !fjern(s)); });
+  assert.equal(har(uden((s) => s.tumbi.verbum === 'skaere'), 'ingenKniv'), false, 'rivejernet er også kniv');
+  assert.equal(har(uden((s) => s.tumbi.verbum === 'rive'), 'ingenKniv'), false);
+  assert.equal(har(uden(erKniv), 'ingenKniv'), true);
+  // Dåseåbneren («Hæld tomaterne i gryden.» med voksen-hjælp «kniv») er en kniv, selvom verbet er haelde
   const tp = json('one-pot-tomatpasta').recipeInstructions.map((s) => s.tumbi);
-  assert.ok(tp.some((t) => t.voksen_hjaelp === 'kniv') && !tp.some((t) => KNIV.includes(t.verbum)));
-  assert.equal(har(model('one-pot-tomatpasta'), 'ingenKniv'), true);
+  assert.ok(tp.some((t) => t.voksen_hjaelp === 'kniv' && t.verbum === 'haelde'));
+  assert.equal(har(model('one-pot-tomatpasta'), 'ingenKniv'), false);
+  assert.equal(knivtrin(model('one-pot-tomatpasta')), 1);
+  assert.equal(knivtrin(model('taco-bradepande')), 2, 'to dåser');
+  // Uden dåsetrinnet har retten ingen kniv
+  assert.equal(har(model('one-pot-tomatpasta', (d) => { d.recipeInstructions = d.recipeInstructions.filter((s) => !erKniv(s)); }), 'ingenKniv'), true);
+  // Varme er ikke kniv
+  assert.equal(knivtrin({ trin: [{ voksen: true, voksenSlags: 'varme' }, { voksen: false, voksenSlags: null }, null] }), 0);
   // Det samme for alle rigtige retter i ugeplanen
-  for (const m of UGEPLAN) assert.equal(har(m, 'ingenKniv'), !m.trin.some((t) => KNIV.includes(t.verbum)), m.id);
+  for (const m of UGEPLAN) assert.equal(har(m, 'ingenKniv'), !m.trin.some((t) => t.voksenSlags === 'kniv'), m.id);
+});
+
+test('ugeplanens «N knivtrin» / «ingen kniv» og mærket «ingen kniv» er altid enige', () => {
+  assert.equal(knivTekst(model('one-pot-tomatpasta')), '1 knivtrin', 'dåseåbneren tæller');
+  assert.equal(knivTekst(model('taco-bradepande')), '2 knivtrin');
+  for (const id of ALLE) {
+    const m = model(id);
+    assert.equal(knivTekst(m) === 'ingen kniv', har(m, 'ingenKniv'), id + ': ' + knivTekst(m));
+    assert.equal(knivTekst(m), knivtrin(m) ? knivtrin(m) + ' knivtrin' : 'ingen kniv', id);
+  }
 });
 
 test('vegetar og fisk på de rigtige retter', () => {
@@ -152,7 +174,7 @@ test('mærkerne kommer i MAERKERs rækkefølge, og hvert mærke findes på en ri
   const alt = model('linse-dhal', (d) => {
     d.totalTime = 'PT' + LYN_MIN + 'M';
     Object.assign(d.tumbi, { portioner: 4, groent_g: GROENT_G * 4, pris_kr: BILLIG_KR * 4 });
-    d.recipeInstructions = d.recipeInstructions.filter((s) => !KNIV.includes(s.tumbi.verbum));
+    d.recipeInstructions = d.recipeInstructions.filter((s) => !erKniv(s));
   });
   const lavet = { andenRet: { gange: 1, sidst: '2026-10-31' } };
   assert.deepEqual(maerkerFor(alt, { familie: { favoritter: ['linse-dhal'], lavet } }), ['hurtig', 'groent', 'billig', 'ingenKniv', 'vegetar', 'ny', 'favorit']);

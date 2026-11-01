@@ -3,8 +3,8 @@
 // og børnenes kort får kun ikonet med «navn» som aria-label.
 // Grønt, pris, vegetar og fisk kræver rettens tal og varer fra ugeplanen (model.uge), så en ret uden for ugeplanen kan
 // kun få hurtig, ingen kniv, ny og favorit.
-import { VARER, VOKSEN_KRAV } from './katalog.js';
-import { erLynhurtig } from './model.js';
+import { VARER } from './katalog.js';
+import { erLynhurtig, knivtrin } from './model.js';
 
 // Masser af grønt: mindst så mange gram grønt pr. portion. Billig: højst så mange kroner pr. portion
 export const GROENT_G = 250;
@@ -24,8 +24,6 @@ export const MAERKER = {
   favorit: { ikon: '\u2764\uFE0F', navn: 'Favorit' },
 };
 
-// Kniven er verberne skaere og rive. Et voksen-trin med «kniv» og et andet verbum er dåseåbneren («Hæld majsen i en si.»)
-const KNIV_VERBER = Object.keys(VOKSEN_KRAV).filter((v) => VOKSEN_KRAV[v] === 'kniv');
 // Object.hasOwn: «constructor» og «toString» er ikke varer eller retter
 const har = (o, k) => typeof k === 'string' && Object.hasOwn(o, k);
 const erObjekt = (o) => Boolean(o) && typeof o === 'object' && !Array.isArray(o);
@@ -42,7 +40,9 @@ function slagsPaaLinjer(uge) {
   return linjer.map((l) => (l && har(VARER, l.vare) ? VARER[l.vare].slags || '' : null));
 }
 
-const udenKniv = (m) => Array.isArray(m.trin) && !m.trin.some((t) => t && KNIV_VERBER.includes(t.verbum));
+// Ingen kniv: intet trin, hvor en voksen hjælper med kniven, heller ikke dåseåbneren (knivtrin i js/model.js, som
+// ugeplanens «N knivtrin» også tæller med)
+const udenKniv = (m) => Array.isArray(m.trin) && knivtrin(m) === 0;
 
 // model: en ret fra lavModel. familie: fra hentFamilie i js/lager.js; uden den (eller med null) kommer ny og favorit
 // ikke med. Svar: nøgler fra MAERKER i MAERKERs rækkefølge

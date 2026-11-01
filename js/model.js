@@ -60,3 +60,10 @@ export function voksenFarer(m) {
   const trin = m.trin.filter((t) => t.voksen);
   return ['kniv', 'varme'].filter((f) => trin.some((t) => (t.voksenSlags === 'kniv') === (f === 'kniv')));
 }
+
+// Antal trin, hvor en voksen hjælper med kniven (voksen_hjaelp «kniv»): skære og rive, men også dåseåbneren («Hæld majsen
+// i en si.» med kniv). 0 = mærket «ingen kniv» (js/maerker.js), ellers «N knivtrin» i ugeplanen (js/ugeplan.js), så de
+// to altid er enige (Jimmys valg A, 01-11-2026)
+export function knivtrin(m) {
+  return m.trin.filter((t) => Boolean(t) && t.voksen === true && t.voksenSlags === 'kniv').length;
+}

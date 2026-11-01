@@ -136,7 +136,7 @@ Målt på de 69 ugeplan-retter:
 | ⚡ Hurtig | `minutter ≤ LYN_MIN` (20) | Findes (model.js:176) | Findes allerede |
 | 🥕 Masser af grønt | `groent_g / portioner ≥ 250 g` | Findes | 18 (≥ 200 g: 34, ≥ 300 g: 9). Median 196 g, maks. 400 g |
 | 💰 Billig | `pris_kr / portioner ≤ 12 kr` | Findes | 13 (≤ 15 kr: 32). Median 15,5 kr |
-| 🔪 Ingen kniv | 0 trin med `skaere`/`rive` | Findes | 30 |
+| 🔪 Ingen kniv | 0 trin med voksen-hjælp «kniv», også dåseåbneren med et andet verbum (`knivtrin` i js/model.js; Jimmys valg A, 01-11-2026). Ugeplanens «N knivtrin» og «Mindst kniv først» tæller det samme | Findes | 14 af 82 ugeplan-retter (01-11; med kun `skaere`/`rive` var det 30) |
 | 🌱 Vegetar | Ingen vare med `slags: 'koed'\|'fisk'` | **Kræver felt** `slags` på ca. 19 VARER i js/katalog.js | **Foreløbigt 26** (skøn, se nedenfor) |
 | 🐟 Fisk | Mindst én vare med `slags: 'fisk'` | Kræver samme felt | Ikke talt |
 | ✨ Ny for os | `lavet[id]` mangler, og familien har lavet mindst én ret | Brugerdata | — |

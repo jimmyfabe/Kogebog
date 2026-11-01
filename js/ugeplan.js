@@ -18,6 +18,7 @@ import { ugeNr, dagDato, planMandag, DAGE } from './tid.js';
 import { minutterTekst, utenBloede } from './tekst.js';
 import { holdKnap } from './hold.js';
 import { maerkerFor, MAERKER } from './maerker.js';
+import { knivtrin } from './model.js';
 import * as Tale from './tale.js';
 import * as R from './replikker.js';
 
@@ -415,21 +416,25 @@ function listeSkaerm(liste) {
 
 const DAG_MS = 86400000;
 const dyrNavn = (af) => (Object.hasOwn(DYR, af) ? DYR[af].split(',')[0] : '');
-const knivtrin = (m) => m.trin.filter((t) => t.verbum === 'skaere' || t.verbum === 'rive').length;
 const iPlanen = () => K.S.ids.map(model).filter((m) => m && m.uge);
 // Prisen for de valgte portioner (opskriftens pris er for hele retten)
 const prisFor = (m, n) => (m.uge.prisKr * n) / m.uge.portioner;
+// «2 knivtrin» eller «ingen kniv»: tælles af knivtrin i js/model.js, som mærket «ingen kniv» (js/maerker.js) og filteret
+// «Mindst kniv først» også bruger, så de aldrig er uenige. Også dåseåbneren med voksen-kniv tæller (Jimmys valg A, 01-11)
+export function knivTekst(m) {
+  const kniv = knivtrin(m);
+  return kniv ? kniv + ' knivtrin' : 'ingen kniv';
+}
 
 // Tid, pris, grønt og kniv i én linje, som oversigten og valget viser dem. Hvert led holdes sammen med hårde mellemrum, og
 // prikken står sidst på linjen, så linjen kun brydes mellem leddene: før stod der «268 g grønt pr. | person» og
 // «· 2 knivtrin» alene (UI-review V5, 23-10)
 function metaTekst(m, n) {
-  const kniv = knivtrin(m);
   return [
     m.minutter ? minutterTekst(m.minutter) : '',
     'ca. ' + Math.round(prisFor(m, n)) + ' kr.',
     Math.round(m.uge.groentG / m.uge.portioner) + ' g grønt pr. person',
-    kniv ? kniv + ' knivtrin' : 'ingen kniv',
+    knivTekst(m),
   ].filter(Boolean).map((led) => led.replace(/ /g, '\u00a0')).join('\u00a0· ');
 }
 
