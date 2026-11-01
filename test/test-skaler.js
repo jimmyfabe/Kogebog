@@ -97,6 +97,9 @@ const TABEL = {
     ['1', 0.5, '½'], ['1', 1.5, '1,5'], ['2', 1.5, '3'], ['5', 0.5, '2,5'], ['3', 1.5, '5'], ['½', 0.5, '½'], ['½', 3, '1,5'],
     ['10', 0.75, '8'], ['12', 1.25, '15'],
   ],
+  '«N stk.» (i navnet, «(4 stk.)»): som et tal uden enhed': [
+    ['4 stk.', 0.5, '2 stk.'], ['1 stk.', 0.5, '½ stk.'], ['4 stk.', 1.5, '6 stk.'],
+  ],
   'æg: altid hele, rundet op': [
     ['1', 0.5, '1', null, 'aeg'], ['3', 1.5, '5', null, 'aeg'], ['5', 0.5, '3', null, 'aeg'], ['8', 0.75, '6', null, 'aeg'], ['2', 3, '6', null, 'aeg'],
   ],
@@ -195,7 +198,8 @@ const antalAf = (maengde) => {
   const b = { '½': 0.5, '¼': 0.25, '¾': 0.75 }[t.slice(-1)];
   return b ? Number(t.slice(0, -1) || 0) + b : Number(t.replace(',', '.'));
 };
-// Ental efter højst 1 og efter 1,5 («halvanden gulerod»), som enhederne i js/skaler.js
+// Ental efter højst 1 og efter 1,5 («halvanden gulerod»). Med vilje en egen kopi: et uafhængigt facit for erFlertal i
+// js/tekst.js, som skærmen og stemmen bruger
 const erFlertal = (x) => x > 1 && x !== 1.5;
 // Linjerne i ugeplan-retterne med en mængde for hele linjen inde i navnet («(ca. 1 kg)», «(4 stk.)»): tallene dér regnes
 // om med linjen. Får en ret en ny sådan linje, eller ændrer en anden linjes tal i navnet sig, fejler testen og nævner den:
@@ -315,12 +319,12 @@ test('navneordene bøjes rigtigt i de rigtige retter, også med et tillægsord f
   }
 });
 
-test('tal i navnet for hele linjen regnes om med linjen; procent, vægt pr. emballage og «1 tsk salt» står som før', () => {
+test('tal i navnet for hele linjen regnes om med linjen; procent, vægt pr. emballage og pr. stk. og «1 tsk salt» står som før', () => {
   const tal = (t) => (t.match(/\d+(?:,\d+)?|[½¼¾]/g) || []).join(' ');
   const aendret = [];
   for (const { id, model } of RETTER.filter((r) => r.model.uge)) {
     model.ingredienser.forEach((x, i) => {
-      if (!/\d/.test(x.navn)) return;
+      if (!/[\d½¼¾]/.test(x.navn)) return;
       const s = skaleretIngrediens(model, i, 0.5);
       if (tal(s.navn) !== tal(x.navn)) aendret.push([id, x.tekst, s.tekst]);
     });
@@ -337,6 +341,13 @@ test('tal i navnet for hele linjen regnes om med linjen; procent, vægt pr. emba
   assert.equal(linje('gyoza-med-noedler-og-groent', '2 poser frosne gyoza (ca. 380 g)', 1.5), '3 poser frosne gyoza (ca. 380 g)', 'vægten er pr. pose');
   assert.equal(linje('chorizo-pasta', '2,5 dl madlavningsfløde 15 %', 2), '5 dl madlavningsfløde 15 %');
   assert.equal(linje('cremet-koedsovs', '3 l vand og 1 tsk salt til pastaen', 0.5), '1,5 l vand og 1 tsk salt til pastaen');
+  // Linjer, ingen ret har i dag: en mængde pr. stk. står som før, og en brøk i navnet regnes om (code-reviewer 01-11)
+  const linjen = (maengde, navn, f) => skaleretIngrediens({ ingredienser: [{ maengde, navn, tekst: maengde + ' ' + navn }], uge: { tumbi: {} } }, 0, f).tekst;
+  assert.equal(linjen('4', 'bøffer à ca. 150 g', 0.5), '2 bøffer à ca. 150 g');
+  assert.equal(linjen('4', 'kyllingebryst (ca. 150 g pr. stk.)', 0.5), '2 kyllingebryst (ca. 150 g pr. stk.)');
+  assert.equal(linjen('2', 'rugbrød (4 skiver hver)', 0.5), '1 rugbrød (4 skiver hver)');
+  assert.equal(linjen('4', 'laksefileter (ca. 600 g i alt)', 0.5), '2 laksefileter (ca. 300 g i alt)');
+  assert.equal(linjen('4 dl', 'ris (ca. ½ kg)', 0.5), '2 dl ris (ca. 250 g)');
 });
 
 test('stemmen kender kønnet i hver linje regnet om til 1-12 portioner, også efter et tillægsord i flertal', () => {

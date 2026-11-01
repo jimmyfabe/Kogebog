@@ -324,6 +324,8 @@ export function valider(rod = ROD) {
           if (raaOrd && !RAA_IKONER.includes(x.ikon)) f(hvor + ': «' + raaOrd[0] + '» er råt kød eller æg, så ikonet skal være ' + RAA_IKONER.map((r) => '"' + r + '"').join(' eller ') + ', fandt ' + JSON.stringify(x.ikon));
           if (typeof x.maengde !== 'string') f(hvor + ': «maengde» skal være en tekst (tom, hvis der ingen mængde er)');
           else if (x.maengde && typeof ingr[i] === 'string' && !ingr[i].startsWith(x.maengde + ' ')) f(hvor + ': mængden «' + x.maengde + '» passer ikke til «' + ingr[i] + '»');
+          // En tom mængde regnes aldrig om og giver ingen voksen-linje (js/skaler.js), så en glemt mængde skal fanges her
+          else if (x.maengde === '' && typeof ingr[i] === 'string' && /^[\d½¼¾]/.test(ingr[i])) f(hvor + ': linjen «' + ingr[i] + '» starter med et tal, men «maengde» er tom');
           for (const k of Object.keys(x)) if (!INGR_NOEGLER.has(k)) f(hvor + ': ukendt felt «' + k + '»');
           // Indkøbslisten: varen og mængden i en enhed, der kan lægges sammen med varens (kræves i ugeplanen)
           if (!('vare' in x)) { if (ugeplan) f(hvor + ': mangler «vare» (retten er i ugeplanen; varerne står i VARER i js/katalog.js)'); return; }

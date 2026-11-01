@@ -99,8 +99,10 @@ const ENHED = new Map([
 // Emballage: i «2 dåser tun i vand (ca. 185 g)» er vægten i navnet pr. dåse, så tallene i navnet regnes ikke om
 const EMBALLAGE = new Set(['dåse', 'lille dåse', 'pose', 'glas', 'pakke', 'rulle', 'plade']);
 // En mængde for hele linjen inde i navnet: «(ca. 1 kg)», «ca. 400 g i alt», «(4 stk.)», «4 skiver til croutoner». Procent,
-// «1 tsk salt til pastaen» og «à 165 ml» står altid som før. test-skaler.js går alle linjer med et tal i navnet igennem
-const NAVN_MAENGDE_RE = /(?<![\p{L}\p{N},½¼¾])(?:ca\. (?:\d+(?:,\d+)?|\d*[½¼¾]) (?:kg|g|dl|l)|\d+ (?:stk\.|skiver))(?![\p{L}\p{N}])/gu;
+// «1 tsk salt til pastaen» og en mængde pr. stk. («à ca. 150 g», «(ca. 150 g pr. stk.)», «(4 skiver hver)») står altid
+// som før. test-skaler.js går alle linjer med et tal i navnet igennem
+const NAVN_MAENGDE_RE =
+  /(?<![\p{L}\p{N},½¼¾])(?<!à )(?:ca\. (?:\d+(?:,\d+)?|\d*[½¼¾]) (?:kg|g|dl|l)|\d+ (?:stk\.|skiver))(?![\p{L}\p{N}]|\s+(?:pr\.|hver)(?!\p{L}))/gu;
 
 // Mængden ganget med faktoren og rundet efter enheden: { tekst, advarsel }. advarsel er null, 'form' (dej i rulle eller
 // plade, rundet op til hele: formen passer ikke) eller 'ukendt' (et interval eller en ukendt enhed som «1 stort»: teksten
@@ -153,9 +155,10 @@ function navnMaengder(navn, maengde, faktor) {
 }
 
 // Ingrediens nr. i i retten (en model fra lavModel med talportioner) ganget med faktoren: { maengde, navn, tekst,
-// skaleret, advarsel }. Varen fra tumbi.ingredienser gør æg hele, og tal i navnet for hele linjen følger med («(ca. 1 kg)»). En mængde, der ikke ændres (tom, et interval, en
-// knivspids), står uændret med opskriftens navn og er ikke markeret som skaleret; advarslen er skalerMaengdes. Skærmen
-// (retSkaerm i app.js) viser maengde og navn, printet (js/print.js) tekst: de kommer begge herfra
+// skaleret, advarsel }. Varen fra tumbi.ingredienser gør æg hele, og tal i navnet for hele linjen følger med
+// («(ca. 1 kg)»). En mængde, der ikke ændres (tom, et interval, en knivspids), står uændret med opskriftens navn og er
+// ikke markeret som skaleret; advarslen er skalerMaengdes. Skærmen (retSkaerm i app.js) viser maengde og navn, printet
+// (js/print.js) tekst: de kommer begge herfra
 export function skaleretIngrediens(m, i, faktor) {
   const x = m.ingredienser[i];
   const ekstra = (m.uge.tumbi.ingredienser || [])[i];
