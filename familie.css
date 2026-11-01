@@ -20,6 +20,8 @@
 .hjerte-knap .ikon { width: 32px; height: 32px; fill: none; }
 .hjerte-knap[aria-pressed="true"] { background: var(--tomat-lys); box-shadow: inset 0 0 0 3px var(--kakao), 0 5px 0 var(--kakao); }
 .hjerte-knap[aria-pressed="true"] .ikon { fill: var(--tomat); }
+/* Hjertet står midt i færdig-skærmens topbar, som .ret .topbar-midte i app.css */
+.faerdig .topbar-midte { display: flex; justify-content: center; }
 
 /* En mængde, der er regnet om til husstanden («450 g» i stedet for «300 g»): sennepsgul bund, så den voksne kan se, at
    den ikke står sådan i opskriften */

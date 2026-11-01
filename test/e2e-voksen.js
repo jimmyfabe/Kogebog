@@ -289,6 +289,9 @@ async function forloeb(browser, H, skaerm) {
   tjek(f && JSON.stringify(f.lavet[fav]) === JSON.stringify({ gange: 1, sidst: idag }), n + ': færdig-skærmen gemmer, at ' + fav + ' er lavet i dag (' + JSON.stringify(f && f.lavet[fav]) + ')');
   tjek(await side.locator('.hjerte-knap').getAttribute('aria-pressed') === 'false', n + ': hjertet er tomt i starten');
   tjek(await mindsteSide(side, '.hjerte-knap') >= 64, n + ': hjertet er en børneknap på mindst 64 px (' + await mindsteSide(side, '.hjerte-knap') + ')');
+  const midt = await side.evaluate(() => [document.querySelector('.hjerte-knap'), document.querySelector('.faerdig .topbar-midte')]
+    .map((e) => { const b = e.getBoundingClientRect(); return Math.round(b.left + b.width / 2); }));
+  tjek(Math.abs(midt[0] - midt[1]) <= 1, n + ': hjertet står midt i topbaren (hjertet ' + midt[0] + ', midten ' + midt[1] + ')');
   await tryk(side, '.hjerte-knap');
   tjek(await side.locator('.hjerte-knap').getAttribute('aria-pressed') === 'true', n + ': et tryk på hjertet gør det rødt (aria-pressed)');
   f = await laesLager(side, FAMILIE);
