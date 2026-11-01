@@ -9,7 +9,7 @@
    Svarer nettet ikke inden for HENT_MS (4 s), kommer en opskrift (også index.json) fra cachen, og nettets svar gemmes
    til næste gang. De næste LANGSOM_MS (30 s) tager opskrifterne cachen med det samme (code review U3 og F2, 23-10). */
 const PRAEFIKS = 'kog-';
-const INDHOLD = '8f599bacd2f45648'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = 'caf6ae96bdbe2e81'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '74203173dd2ca3fc'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
@@ -147,6 +147,30 @@ const FILER = [
   'opskrifter/koedkaal-med-makaroni.json',
   'opskrifter/jaegergryde-med-pasta.json',
   'opskrifter/frossen-yoghurt-med-baer.json',
+  'opskrifter/pebernoedder.json',
+  'opskrifter/joedekager.json',
+  'opskrifter/sirupskager-til-juletraeet.json',
+  'opskrifter/vroevl.json',
+  'opskrifter/finskbroed.json',
+  'opskrifter/floedekranse-med-kanelsukker.json',
+  'opskrifter/rullede-vaniljekranse.json',
+  'opskrifter/sneglekager.json',
+  'opskrifter/honninghjerter.json',
+  'opskrifter/fedtebroed.json',
+  'opskrifter/smaa-engelske-juletaerter.json',
+  'opskrifter/julekage-med-gaer-og-rosiner.json',
+  'opskrifter/marcipangrise.json',
+  'opskrifter/marcipankonfekt-med-dadler-og-valnoedder.json',
+  'opskrifter/pebernoeddekugler.json',
+  'opskrifter/chokoladetaler-med-julepynt.json',
+  'opskrifter/rocky-road-til-jul.json',
+  'opskrifter/kransekagestykker.json',
+  'opskrifter/boernegloegg.json',
+  'opskrifter/risalamande-med-kirsebaersauce.json',
+  'opskrifter/risengroed-i-ovn.json',
+  'opskrifter/juletrifli-med-pebernoedder-og-kirsebaer.json',
+  'opskrifter/gammeldags-aeblekage.json',
+  'opskrifter/bagte-juleaebler-med-marcipan.json',
   'lyd/liste.json',
   'ikoner/ikon.svg',
   'ikoner/ikon-180.png',
@@ -172,6 +196,8 @@ const FILER = [
   'grafik/ing-aeble.svg', 'grafik/ing-roedbede.svg',
   'grafik/ing-porre.svg', 'grafik/ing-gyoza.svg', 'grafik/ing-mayonnaise.svg', 'grafik/ing-citron.svg', 'grafik/ing-ananas.svg',
   'grafik/ing-champignon.svg', 'grafik/ing-baer.svg',
+  'grafik/ing-marcipan.svg', 'grafik/ing-mandler.svg', 'grafik/ing-krydderi.svg', 'grafik/ing-sirup.svg', 'grafik/ing-appelsin.svg',
+  'grafik/ing-rosiner.svg', 'grafik/ing-krymmel.svg', 'grafik/ing-pebernoedder.svg', 'grafik/ing-noedder.svg', 'grafik/ing-eddike.svg',
   'grafik/ret-boller.webp', 'grafik/ret-chorizo-pasta.webp', 'grafik/ret-frikadeller.webp', 'grafik/ret-koedsovs.webp', 'grafik/ret-pandekager.webp',
   'grafik/ret-kartoffelmos.webp', 'grafik/ret-hvidloegsflutes.webp', 'grafik/ret-brownie.webp', 'grafik/ret-blondie.webp',
   'grafik/ret-hytteostboller.webp', 'grafik/ret-havregrynskugler.webp', 'grafik/ret-tunfrikadeller.webp',
@@ -216,7 +242,20 @@ const FILER = [
   'grafik/ret-gul-ris-med-laks-aerter-og-aeg.webp', 'grafik/ret-koteletter-med-aeble.webp',
   'grafik/ret-cremet-ostris-med-aerter.webp', 'grafik/ret-koedkaal-med-makaroni.webp',
   'grafik/ret-jaegergryde-med-pasta.webp', 'grafik/ret-frossen-yoghurt-med-baer.webp',
+  'grafik/ret-pebernoedder.webp', 'grafik/ret-joedekager.webp',
+  'grafik/ret-sirupskager-til-juletraeet.webp', 'grafik/ret-vroevl.webp',
+  'grafik/ret-finskbroed.webp', 'grafik/ret-floedekranse-med-kanelsukker.webp',
+  'grafik/ret-rullede-vaniljekranse.webp', 'grafik/ret-sneglekager.webp',
+  'grafik/ret-honninghjerter.webp', 'grafik/ret-fedtebroed.webp',
+  'grafik/ret-smaa-engelske-juletaerter.webp', 'grafik/ret-julekage-med-gaer-og-rosiner.webp',
+  'grafik/ret-marcipangrise.webp', 'grafik/ret-marcipankonfekt-med-dadler-og-valnoedder.webp',
+  'grafik/ret-pebernoeddekugler.webp', 'grafik/ret-chokoladetaler-med-julepynt.webp',
+  'grafik/ret-rocky-road-til-jul.webp', 'grafik/ret-kransekagestykker.webp',
+  'grafik/ret-boernegloegg.webp', 'grafik/ret-risalamande-med-kirsebaersauce.webp',
+  'grafik/ret-risengroed-i-ovn.webp', 'grafik/ret-juletrifli-med-pebernoedder-og-kirsebaer.webp',
+  'grafik/ret-gammeldags-aeblekage.webp', 'grafik/ret-bagte-juleaebler-med-marcipan.webp',
   'grafik/gruppe-aftensmad.svg', 'grafik/gruppe-bagning.svg', 'grafik/gruppe-soede-sager.svg', 'grafik/gruppe-halloween.svg',
+  'grafik/gruppe-jul.svg',
   'grafik/verbum-aelte.svg', 'grafik/verbum-haelde.svg', 'grafik/verbum-koge.svg', 'grafik/verbum-maale.svg', 'grafik/verbum-roere.svg',
   'grafik/verbum-rulle.svg', 'grafik/verbum-skaere.svg', 'grafik/verbum-smage.svg', 'grafik/verbum-stege.svg',
   'grafik/verbum-vaske-haender.svg', 'grafik/verbum-vende.svg', 'grafik/verbum-vente.svg',
@@ -224,6 +263,7 @@ const FILER = [
   'grafik/verbum-rive.svg', 'grafik/verbum-smoere.svg',
   'grafik/verbum-tage-ud.svg', 'grafik/verbum-tage-ud-form.svg', 'grafik/verbum-si.svg', 'grafik/verbum-kagerulle.svg', 'grafik/verbum-pakke-ind.svg', 'grafik/verbum-smuldre.svg',
   'grafik/verbum-pynte.svg', 'grafik/verbum-sproejte.svg',
+  'grafik/verbum-stikke-ud.svg', 'grafik/verbum-forme.svg', 'grafik/verbum-pille.svg', 'grafik/verbum-smelte.svg',
 ];
 
 const iScope = (url) => url.href.startsWith(self.registration.scope);

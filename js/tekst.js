@@ -79,6 +79,8 @@ export const KOEN = Object.freeze({
   // Kan stå efter et tal, når mængden er regnet om til husstanden (NAVNEORD nedenfor): «1 laksefilet», «1 pølse»
   'tortilla': 'n', 'fuldkornstortilla': 'n', 'porre': 'n', 'fuldkornsburgerbolle': 'n', 'laksefilet': 'n', 'pølse': 'n',
   'mozzarellakugle': 'n', 'oliven': 'n', 'pære': 'n',
+  // Julens retter (01-11-2026): «½ appelsin», «1 kanelstang», «1 laurbærblad»
+  'appelsin': 'n', 'kanelstang': 'n', 'laurbærblad': 't', 'nellike': 'n', 'sveske': 'n',
   // Enhederne i flertal, som skaler.js giver med et halvt («2,5 dåser» er «to og en halv»)
   'dåser': 'n', 'poser': 'n', 'pakker': 'n', 'blad': 't', // «1 blad icebergsalat» ved 1 portion
   'lille': null, 'sort': null, 'orange': null,
@@ -89,11 +91,13 @@ export const KOEN = Object.freeze({
 // ikke. Kønnet står kun i KOEN. Står et ord efter et antal uden enhed i en opskrift, men ikke her, fejler test-skaler.js
 // og nævner ordet: skriv det her med begge former og dets køn i KOEN
 export const NAVNEORD = Object.freeze({
-  'agurk': 'agurker', 'bouillonterning': 'bouillonterninger', 'citron': 'citroner', 'flute': 'flutes',
+  'agurk': 'agurker', 'appelsin': 'appelsiner', 'bouillonterning': 'bouillonterninger', 'citron': 'citroner', 'flute': 'flutes',
   'fuldkornsburgerbolle': 'fuldkornsburgerboller', 'fuldkornstortilla': 'fuldkornstortillas',
   'grøntsagsbouillonterning': 'grøntsagsbouillonterninger', 'gulerod': 'gulerødder', 'icebergsalat': 'icebergsalater',
-  'kartoffel': 'kartofler', 'laksefilet': 'laksefileter', 'mozzarellakugle': 'mozzarellakugler', 'peberfrugt': 'peberfrugter',
-  'porre': 'porrer', 'pølse': 'pølser', 'pære': 'pærer', 'tomat': 'tomater', 'tortilla': 'tortillas', 'æble': 'æbler',
+  'kanelstang': 'kanelstænger', 'kartoffel': 'kartofler', 'laksefilet': 'laksefileter', 'laurbærblad': 'laurbærblade',
+  'mozzarellakugle': 'mozzarellakugler', 'nellike': 'nelliker', 'peberfrugt': 'peberfrugter',
+  'porre': 'porrer', 'pølse': 'pølser', 'pære': 'pærer', 'sveske': 'svesker', 'tomat': 'tomater', 'tortilla': 'tortillas',
+  'æble': 'æbler',
   // Uændret i flertal
   'løg': 'løg', 'oliven': 'oliven', 'æg': 'æg',
 });

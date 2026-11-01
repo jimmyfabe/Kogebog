@@ -1,9 +1,29 @@
 # Retter, der venter på deres billede
 
-Ingen retter venter nu (01-11-2026). De 14 opskrifter fra runde 3 (31-10-2026) er flyttet ind i `opskrifter/` med
-deres retbillede. Validatoren kræver `grafik/ret-<id>.webp` for hver ret i `opskrifter/`, så en færdig opskrift uden
-billede kan ligge her som `<id>.json` (med katalog, ikoner og varerne til indkøbslisten på plads), indtil Codex har
-tegnet den. Skriv dens gruppe her, og hvad billedet skal vise.
+Validatoren kræver `grafik/ret-<id>.webp` for hver ret i `opskrifter/`, så en færdig opskrift uden billede kan ligge
+her som `<id>.json` (med katalog, ikoner og varerne til indkøbslisten på plads), indtil Codex har tegnet den. Skriv dens
+gruppe her, og hvad billedet skal vise.
+
+## Venter nu: 11 julebordsretter (01-11-2026), gruppe `jul`
+
+Codex-kvoten løb tør kl. 21:07, før julebordsretterne var tegnet. De skal stå sidst i gruppen `jul` i `index.json`, i
+denne rækkefølge (efter `bagte-juleaebler-med-marcipan`). Ingen af dem har `ugeplan`.
+
+| id | Billedet viser |
+|---|---|
+| `aeg-og-rejer` | 3 skiver rugbrød med skiver af hårdkogt æg, lidt mayonnaise, pillede rejer, dild og en citronbåd |
+| `julemedisterboller` | Ca. 14 små gyldenbrune medisterboller |
+| `glaseret-juleskinke-af-hamburgerryg` | Hamburgerryg med fedtet ridset i ruder, en nellike i hver rude, blank appelsinglasur, et par skiver skåret ud |
+| `roedkaalssalat-med-appelsin` | Skål med fintsnittet rå rødkål, appelsinstykker og tranebær |
+| `lun-leverpostej-med-bacon-og-svampe` | Leverpostej i alubakke med sprød bacon og svampe, en skive rugbrød og rødbeder ved siden af |
+| `hjemmelavet-roedkaal` | Gryde med blank rødkål, to laurbærblade og en kanelstang (begge hanke inde i billedet) |
+| `flaeskesteg-med-sproed-svaer` | Flæskesteg med sprød svær i striber, laurbær og nelliker i rillerne, et par skiver skåret ud |
+| `aebleflaesk` | Sprøde skiver stegeflæsk ved en bunke bløde gyldne æblestykker og en skive rugbrød |
+| `brunede-kartofler` | Pande med små pillede kartofler i blank gyldenbrun karamel (hele panden og skaftet inde i billedet) |
+| `smaa-grise-i-dyner` | Ca. 12 cocktailpølser rullet ind i bacon, gyldne og blanke |
+| `andebryst-med-aebler-og-svesker` | 2 andebryster i skiver (lyserødt kød, sprødt skind) på bagte æblebåde og svesker |
+
+Codex-prompterne (engelsk) står i `retter.txt` i kladdemappen `jul-billeder` fra 01-11-2026.
 
 Sådan kommer de tilbage (Git Bash i Kogebog). Det kan gøres for de retter, der har fået et billede, resten bliver her:
 
