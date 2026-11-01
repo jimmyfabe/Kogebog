@@ -368,12 +368,14 @@ function husstandSkaerm(f) {
   const saet = (felt) => (vaerdi, fokus) => {
     if (vaerdi < 0 || vaerdi > MAKS_PERSONER) return;
     k[felt] = vaerdi;
+    besked = null; // beskeden hørte til det, der blev gemt
     tegnIgen(fokus);
     K.annoncer(kladdeTekst(k));
   };
   const andele = BARN_VALG.map((x) => {
     const b = medFokus(K.knap(andelTekst(x), { klasse: 'lille valg', label: andelTekst(x) + ' voksen', onclick: () => {
       k.barnAndel = x;
+      besked = null;
       tegnIgen('andel-' + x);
       K.annoncer(kladdeTekst(k));
     } }), 'andel-' + x);

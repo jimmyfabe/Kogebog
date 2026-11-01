@@ -143,7 +143,11 @@ async function forloeb(browser, H, skaerm) {
   let p = await laesLager(side, UGE);
   tjek(f && f.voksne === 2 && f.boern === 2 && f.barnAndel === 0.7, n + ': husstanden gemmes som antal (' + JSON.stringify(f) + ')');
   tjek(p && p.n === 4 && JSON.stringify(p.dage[0]) === JSON.stringify(mandag), n + ': ugeplanen får 4 portioner, og mandag er uændret (' + JSON.stringify(p) + ')');
-  for (const k of ['voksne-plus', 'voksne-plus', 'voksne-plus', 'voksne-plus', 'boern-minus', 'boern-minus']) await tryk(side, '[data-fokus="' + k + '"]');
+  // «Gemt» forsvinder ved næste ændring: den passer ikke til kladden længere
+  tjek(await side.locator('.voksen-husstand .uge-besked').count() === 1, n + ': «Gem» viser en besked');
+  await tryk(side, '[data-fokus="voksne-plus"]');
+  tjek(await side.locator('.voksen-husstand .uge-besked').count() === 0, n + ': en ændring efter «Gem» fjerner beskeden');
+  for (const k of ['voksne-plus', 'voksne-plus', 'voksne-plus', 'boern-minus', 'boern-minus']) await tryk(side, '[data-fokus="' + k + '"]');
   await tryk(side, '[data-fokus="gem"]');
   p = await laesLager(side, UGE);
   tjek(p && p.n === 6 && JSON.stringify(p.dage[0]) === JSON.stringify(mandag), n + ': 6 voksne giver ugeplanen 6 portioner, og mandag er uændret (' + JSON.stringify(p) + ')');
