@@ -106,15 +106,16 @@ const EMBALLAGE = new Set(['dåse', 'lille dåse', 'pose', 'glas', 'pakke', 'rul
 const NAVN_MAENGDE_RE = /(?<![\p{L}\p{N},½¼¾])(?:ca\. (?:\d+(?:,\d+)?|\d*[½¼¾]) (?:kg|g|dl|l)|\d+ (?:stk\.|skiver))(?![\p{L}\p{N}])/gu;
 
 // Mængden ganget med faktoren og rundet efter enheden: { tekst, advarsel }. advarsel er null, 'form' (dej i rulle eller
-// plade, rundet op til hele: formen passer ikke) eller 'ukendt' (tom mængde, et interval eller en ukendt enhed som
-// «1 stort»: teksten står uændret, for der gættes aldrig). Faktor 1 giver altid den oprindelige tekst og null.
+// plade, rundet op til hele: formen passer ikke) eller 'ukendt' (et interval eller en ukendt enhed som «1 stort»: teksten
+// står uændret, for der gættes aldrig). En tom mængde («peber», «revet ost til servering») har intet at regne om: null.
+// Faktor 1 giver altid den oprindelige tekst og null.
 // vare er varens id i tumbi.ingredienser ('aeg' giver hele æg)
 export function skalerMaengde(maengde, faktor, { vare } = {}) {
   if (typeof maengde !== 'string') throw new TypeError('skalerMaengde: mængden skal være en tekst, ikke ' + maengde);
   if (typeof faktor !== 'number' || !Number.isFinite(faktor) || faktor <= 0) {
     throw new RangeError('skalerMaengde: faktoren skal være et positivt tal, ikke ' + faktor);
   }
-  if (faktor === 1) return { tekst: maengde, advarsel: null };
+  if (faktor === 1 || maengde.trim() === '') return { tekst: maengde, advarsel: null };
   const ukendt = { tekst: maengde, advarsel: 'ukendt' };
   const m = MAENGDE_RE.exec(maengde);
   if (!m) return ukendt;

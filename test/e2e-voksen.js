@@ -176,10 +176,10 @@ async function forloeb(browser, H, skaerm) {
   const mandagLinjer = forventetLinjer(RETTER, IPLAN[0], mandagFaktor).map((l) => l.tekst);
   tjek(mandagFaktor === 0.75 && JSON.stringify(mandagVist) === JSON.stringify(mandagLinjer),
     n + ': mandagens mængder er regnet om × 0,75 (' + mandagVist.slice(0, 4).join(' | ') + ')');
-  // «revet ost til servering» har ingen mængde: den voksne får at vide, at den ikke er regnet om
+  // «revet ost til servering» har ingen mængde, så der er intet at regne om: kun linjen om trinene (01-11)
   const mandagNoter = await side.evaluate(() => [...document.querySelectorAll('.ret .voksen-linje')].map((e) => e.textContent));
-  tjek(JSON.stringify(mandagNoter) === JSON.stringify([TRIN_LINJE, 'Én mængde kunne ikke regnes om og står som til 4']),
-    n + ': mandagens ret siger, at én mængde ikke kunne regnes om (' + JSON.stringify(mandagNoter) + ')');
+  tjek(JSON.stringify(mandagNoter) === JSON.stringify([TRIN_LINJE]),
+    n + ': mandagens ret har kun linjen om trinene, ingen om en mængde uden tal (' + JSON.stringify(mandagNoter) + ')');
 
   // 4. Retten ved 6 portioner: «Til 6», mængderne regnet om og markeret, én voksen-linje, og iPad-stemmen læser op
   const faktor = faktorFor(lavModel(RETTER[RET]), 6);

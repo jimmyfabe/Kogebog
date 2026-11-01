@@ -23,8 +23,9 @@ const LINJER = RETTER.flatMap(({ id, model, varer }) => model.ingredienser.map((
 const FAKTORER = [0.5, 1.5, 3];
 // Mængderne i opskrifterne, der står uændret med 'ukendt'. Får en opskrift et nyt format, fejler testen og nævner det:
 // så skal formatet enten have en regel i js/skaler.js eller skrives på listen her. «1 stort» (løg) er skrevet som «1» og
-// navnet «stort løg» (01-11), så tillægsordet bøjes med navneordet («3 store løg»)
-const UKENDTE = ['', '8-10 g'];
+// navnet «stort løg» (01-11), så tillægsordet bøjes med navneordet («3 store løg»). En tom mængde («peber») er ikke
+// ukendt: der er intet at regne om (01-11)
+const UKENDTE = ['8-10 g'];
 
 const sk = (maengde, faktor, vare) => skalerMaengde(maengde, faktor, { vare });
 const tekst = (maengde, faktor, vare) => sk(maengde, faktor, vare).tekst;
@@ -58,7 +59,7 @@ test('ved 0,5 / 1,5 / 3 er hver linje skaleret eller uændret med en advarsel, a
         ukendte.add(l.maengde);
       }
       // Ved × 3 ændres hver mængde, der kan skaleres; kun knivspids står uændret efter tabellen
-      if (f === 3 && s.advarsel === null && !l.maengde.endsWith('knivspids')) assert.notEqual(s.tekst, l.maengde, hvor);
+      if (f === 3 && s.advarsel === null && l.maengde !== '' && !l.maengde.endsWith('knivspids')) assert.notEqual(s.tekst, l.maengde, hvor);
     }
   }
   assert.deepEqual([...ukendte].sort(), [...UKENDTE].sort());
@@ -107,8 +108,11 @@ const TABEL = {
   'rulle og plade (dej): hele, rundet op, med advarslen form': [
     ['1 rulle', 0.5, '1 rulle', 'form'], ['1 rulle', 1.5, '2 ruller', 'form'], ['2 ruller', 0.5, '1 rulle', 'form'], ['1 plade', 3, '3 plader', 'form'],
   ],
-  'tom, «stort» og ukendt format: uændret med advarslen ukendt': [
-    ['', 0.5, '', 'ukendt'], ['1 stort', 1.5, '1 stort', 'ukendt'], ['8-10 g', 0.5, '8-10 g', 'ukendt'], ['lidt', 3, 'lidt', 'ukendt'],
+  'tom mængde: uændret uden advarsel (intet at regne om)': [
+    ['', 0.5, '', null], [' ', 3, ' ', null],
+  ],
+  '«stort» og ukendt format: uændret med advarslen ukendt': [
+    ['1 stort', 1.5, '1 stort', 'ukendt'], ['8-10 g', 0.5, '8-10 g', 'ukendt'], ['lidt', 3, 'lidt', 'ukendt'],
     ['0 g', 3, '0 g', 'ukendt'], ['2 bundter', 0.5, '2 bundter', 'ukendt'], ['2  dl', 0.5, '2  dl', 'ukendt'], ['1.5 dl', 0.5, '1.5 dl', 'ukendt'],
     ['ca.', 0.5, 'ca.', 'ukendt'], ['½½', 0.5, '½½', 'ukendt'],
   ],
@@ -216,7 +220,7 @@ test('en ingrediens i retten: mængden regnes om, navneordet bøjes med, og adva
   assert.deepEqual(skaleretIngrediens(kt, 10, 1.5), { maengde: '2', navn: 'æg til pensling', tekst: '2 æg til pensling', skaleret: true, advarsel: null }, 'æg er hele');
   const cp = ret('chorizo-pasta');
   assert.deepEqual(skaleretIngrediens(cp, 1, 3), { maengde: '3', navn: 'store løg', tekst: '3 store løg', skaleret: true, advarsel: null });
-  assert.deepEqual(skaleretIngrediens(cp, 9, 3), { maengde: '', navn: 'peber (og evt. salt)', tekst: 'peber (og evt. salt)', skaleret: false, advarsel: 'ukendt' });
+  assert.deepEqual(skaleretIngrediens(cp, 9, 3), { maengde: '', navn: 'peber (og evt. salt)', tekst: 'peber (og evt. salt)', skaleret: false, advarsel: null });
   // Alle linjer i alle ugeplan-retter
   for (const r of RETTER.filter((x) => x.model.uge)) {
     for (const f of FAKTORER) {
@@ -386,12 +390,15 @@ test('noterne siger det, når en mængde ikke kunne regnes om, eller dejen er ru
   const TRIN = 'Mængderne i trinene er til 4 — se ingredienslisten';
   const FADE = 'Brug to fade — tiden kan blive længere';
   const FORM = 'Dej og form er rundet op til hele — formen passer måske ikke';
-  // Chorizo-pastaen har «peber (og evt. salt)» uden mængde («1 stort løg» regnes om til «3 store løg» fra 01-11)
+  // En linje uden mængde («peber (og evt. salt)», «revet ost til servering») tæller ikke som en mængde, der ikke kunne
+  // regnes om: den voksne ville lede efter en mængde, der ikke står der (ui-reviewer 01-11)
   const cp = ret('chorizo-pasta');
-  assert.deepEqual(voksenNoter(cp, 3, linjerTil(cp, 3)), [TRIN, FADE, 'Én mængde kunne ikke regnes om og står som til 4']);
-  // Kødsovsen har kun «revet ost til servering»
+  assert.deepEqual(voksenNoter(cp, 3, linjerTil(cp, 3)), [TRIN, FADE]);
   const ks = ret('koedsovs');
-  assert.deepEqual(voksenNoter(ks, 0.75, linjerTil(ks, 0.75)), [TRIN, 'Én mængde kunne ikke regnes om og står som til 4']);
+  assert.deepEqual(voksenNoter(ks, 0.75, linjerTil(ks, 0.75)), [TRIN]);
+  // Et interval («8-10 g») kan ikke regnes om. Ingen ugeplan-ret har et i dag, så linjerne er skrevet her
+  assert.deepEqual(voksenNoter(ks, 0.75, [{ advarsel: 'ukendt' }, { advarsel: null }]), [TRIN, 'Én mængde kunne ikke regnes om og står som til 4']);
+  assert.deepEqual(voksenNoter(ks, 1.5, [{ advarsel: 'ukendt' }, { advarsel: 'ukendt' }]), [TRIN, '2 mængder kunne ikke regnes om og står som til 4']);
   // Kyllingetærten har «1 rulle færdig butterdej»: rundet op, både når den ganges og halveres
   const kt = ret('kyllingetaerte-med-butterdej');
   assert.deepEqual(voksenNoter(kt, 1.5, linjerTil(kt, 1.5)), [TRIN, FORM]);
