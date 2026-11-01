@@ -482,6 +482,10 @@ async function migrering(browser, H) {
   tjek(familie === null && ugeNu === ugeV3 && listeNu === listeV3, n + ': at se skærmene ændrer intet i lageret (familie: ' + familie + ')');
   // Husstanden gemmes: kun ugeplanens standardportioner (og «rettet») ændres, dagene og listen er de samme
   await aabnVoksen(H, side, '/husstand', n + ' husstand med data fra v3');
+  // Ved 0 børn er «Færre børn» aria-disabled, og et tryk siger grænsen i stedet for ingenting
+  tjek(await side.locator('[data-fokus="boern-minus"]').getAttribute('aria-disabled') === 'true', n + ': «Færre børn» er aria-disabled ved 0 børn');
+  await tryk(side, '[data-fokus="boern-minus"]');
+  await venterPaa(side, () => document.getElementById('meddelelse').textContent === 'Mindst 0 børn', null, n + ': «Færre børn» ved 0 siger «Mindst 0 børn»');
   for (const k of ['voksne-plus', 'voksne-plus', 'voksne-plus']) await tryk(side, '[data-fokus="' + k + '"]');
   await tryk(side, '[data-fokus="gem"]');
   [familie, ugeNu, listeNu] = await raatLager(side);
@@ -531,7 +535,8 @@ async function nyereFamilie(browser, H) {
   await ctx.close();
 }
 
-// 11. Husstanden 8 + 8 (13,6 portioner): loftet på 12 står i summen og på oversigten, så ingen tror, der er nok til 14
+// 11. Husstanden 8 + 8 (13,6 portioner): loftet på 12 står i summen og på oversigten, så ingen tror, der er nok til 14.
+// Og ved 8 siger «Flere» grænsen
 async function husstandLoft(browser, H) {
   const { BASE, SKAERME, nySide, tjek, tjekLayout } = H;
   const n = SKAERME[0].navn;
@@ -549,6 +554,12 @@ async function husstandLoft(browser, H) {
   await aabnVoksen(H, side, '/husstand', n + ' husstanden 8 + 8');
   const sum = await tekstAf(side, '.husstand-sum');
   tjek(sum === '= ' + LOFT, n + ': husstanden siger, at 8 + 8 er skåret ned til 12 (' + sum + ')');
+  // Ved 8 er «Flere» aria-disabled (fokus bliver på knappen), og et tryk siger grænsen
+  const graense = await side.evaluate(() => ['voksne-minus', 'voksne-plus', 'boern-plus'].map((k) => document.querySelector('[data-fokus="' + k + '"]').getAttribute('aria-disabled')));
+  tjek(JSON.stringify(graense) === JSON.stringify([null, 'true', 'true']), n + ': ved 8 er kun «Flere» aria-disabled (' + JSON.stringify(graense) + ')');
+  await tryk(side, '[data-fokus="voksne-plus"]');
+  await venterPaa(side, () => document.getElementById('meddelelse').textContent === 'Højst 8 voksne', null, n + ': «Flere voksne» ved 8 siger «Højst 8 voksne»');
+  tjek(await tekstAf(side, '.stepper-tal') === '8 voksne', n + ': de voksne er stadig 8');
   tjek(side.fejl.length === 0, n + ' (8 + 8): ' + side.fejl.join(' | '));
   await ctx.close();
 }

@@ -341,11 +341,15 @@ const kladdeTekst = (k) => {
   return n ? husstandTekst(k.voksne, k.boern) + ' = ' + sumTekst(husstandSum(k.voksne, k.boern, k.barnAndel)) : 'Vælg mindst én voksen eller ét barn.';
 };
 
+// Ved grænsen (0 og MAKS_PERSONER) er knappen aria-disabled, ikke disabled, så fokus bliver på den, og et tryk siger grænsen
 function stepper({ vaerdi, navn, tekst, fokus, saet }) {
-  return el('div', { class: 'stepper', role: 'group', 'aria-label': navn },
-    medFokus(K.knap('', { klasse: 'rund trin-knap', ikonNavn: 'minus', label: 'Færre ' + navn, onclick: () => saet(vaerdi - 1, fokus + '-minus') }), fokus + '-minus'),
-    el('output', { class: 'stepper-tal', tekst }),
-    medFokus(K.knap('', { klasse: 'rund trin-knap', ikonNavn: 'plus', label: 'Flere ' + navn, onclick: () => saet(vaerdi + 1, fokus + '-plus') }), fokus + '-plus'));
+  const minus = medFokus(K.knap('', { klasse: 'rund trin-knap', ikonNavn: 'minus', label: 'Færre ' + navn,
+    onclick: () => (vaerdi > 0 ? saet(vaerdi - 1, fokus + '-minus') : K.annoncer('Mindst 0 ' + navn)) }), fokus + '-minus');
+  const plus = medFokus(K.knap('', { klasse: 'rund trin-knap', ikonNavn: 'plus', label: 'Flere ' + navn,
+    onclick: () => (vaerdi < MAKS_PERSONER ? saet(vaerdi + 1, fokus + '-plus') : K.annoncer('Højst ' + MAKS_PERSONER + ' ' + navn)) }), fokus + '-plus');
+  if (vaerdi <= 0) minus.setAttribute('aria-disabled', 'true');
+  if (vaerdi >= MAKS_PERSONER) plus.setAttribute('aria-disabled', 'true');
+  return el('div', { class: 'stepper', role: 'group', 'aria-label': navn }, minus, el('output', { class: 'stepper-tal', tekst }), plus);
 }
 
 // Gemmer husstanden og portionerne i ugeplanen: som standard til nye dage (planlagte dage beholder deres antal), og med
