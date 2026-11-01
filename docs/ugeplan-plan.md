@@ -74,7 +74,7 @@ Nyt i `js/katalog.js` (én kilde for appen og validatoren):
 | `tumbi.ugeplan` | `true` | Med i barnets valg og i oversigten |
 | `tumbi.portioner` | heltal 1–12 | `recipeYield` er fritekst («10-12 frikadeller») |
 | `totalTime` | højst PT60M (helst 45) | En time fra hjemkomst til aftensmad |
-| knivtrin | højst 2 `skaere`/`rive` (regnes ud) | Skånsomt for hænderne: frosne hakkede grøntsager, dåser, revet ost |
+| knivtrin | højst 2 `skaere`/`rive` (regnes ud). Dåseåbneren tæller ikke med i loftet, men appen viser den som et knivtrin (`knivtrin` i js/model.js, 01-11), så en ret kan stå med «3 knivtrin» | Skånsomt for hænderne: frosne hakkede grøntsager, dåser, revet ost |
 | `tumbi.pris_kr`, `tumbi.pris_dato` | heltal for hele retten, `ÅÅÅÅ-MM`. Butik og metode står i `tumbi.ugeplan_kilde` (ikke i `kilde`, som printet viser; 23-10) | «Ca. kr.» pr. uge og pr. person |
 | `tumbi.groent_g` | heltal, gram grønt i hele retten | «Grønt pr. person» |
 | `tumbi.ugeplan_kilde` | tekst, der slutter med punktum: butik og metode for pris og grønt, og at de er et skøn | Ingen side viser den; printets fod viser kun `kilde`, som ikke må nævne pris og grønt (23-10) |
