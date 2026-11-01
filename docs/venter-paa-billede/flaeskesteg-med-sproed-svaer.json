@@ -1,0 +1,56 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Flæskesteg med sprød svær",
+  "description": "Juleaftens flæskesteg med laurbærblade og nelliker i rillerne. Barnet salter og pynter, og den voksne tager sig af ovnen og kniven.",
+  "image": "grafik/ret-flaeskesteg-med-sproed-svaer.webp",
+  "inLanguage": "da",
+  "recipeYield": "6 personer",
+  "prepTime": "PT20M",
+  "cookTime": "PT1H55M",
+  "totalTime": "PT2H30M",
+  "recipeIngredient": [
+    "1 løg",
+    "2 gulerødder",
+    "1 l vand",
+    "10 laurbærblade",
+    "1 spsk hele nelliker",
+    "2 spsk groft salt",
+    "1,5 kg ovnklar flæskesteg med ridset svær"
+  ],
+  "tool": ["bradepande", "skærebræt", "skarp kniv", "3 små skåle", "stegetermometer", "grydelapper"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Tænd ovnen på 200 °C. Tag kødet ud af køleskabet." } },
+    { "@type": "HowToStep", "text": "Skær løg og gulerødder i grove stykker.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["loeg", "gulerod"], "note": "Pil løget. Gulerødderne skal bare skylles." } },
+    { "@type": "HowToStep", "text": "Kom grøntsagerne i bradepanden.", "tumbi": { "verbum": "haelde", "ikoner": ["loeg", "gulerod"] } },
+    { "@type": "HowToStep", "text": "Hæld vandet i bradepanden.", "tumbi": { "verbum": "haelde", "ikoner": ["vand"], "note": "1 liter koldt vand." } },
+    { "@type": "HowToStep", "text": "Tæl 10 laurbærblade op i en skål.", "tumbi": { "verbum": "maale", "ikoner": ["krydderi"], "note": "Tæl højt sammen." } },
+    { "@type": "HowToStep", "text": "Mål nelliker og groft salt.", "tumbi": { "verbum": "maale", "ikoner": ["krydderi", "salt"], "note": "1 spsk hele nelliker og 2 spsk groft salt i hver sin lille skål. Så skal barnet ikke røre pakkerne med kød på fingrene bagefter." } },
+    { "@type": "HowToStep", "text": "Læg kødet i bradepanden med sværen opad.", "tumbi": { "verbum": "pynte", "ikoner": ["koed"], "note": "Kødet er tungt: hjælp med at løfte. Sværen skal være over vandet. Herfra rører barnet kun kødet og de små skåle, til hænderne er vasket." } },
+    { "@type": "HowToStep", "text": "Drys saltet ned i rillerne.", "tumbi": { "verbum": "drysse", "ikoner": ["koed"], "note": "Med fingrene fra den lille skål. Gnid saltet godt ned i rillerne, så sværen bliver sprød. Brug det hele." } },
+    { "@type": "HowToStep", "text": "Stik laurbærblade ned i rillerne.", "tumbi": { "verbum": "pynte", "ikoner": ["koed"], "note": "I hver anden rille, så bladene står op." } },
+    { "@type": "HowToStep", "text": "Stik nellikerne ned ved siden af bladene.", "tumbi": { "verbum": "pynte", "ikoner": ["koed"] } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt svinekød på fingrene. Vask også de små skåle." } },
+    { "@type": "HowToStep", "text": "Bag kødet i 1 time og 45 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 6300, "note": "200 °C. Sværen må ikke få vand eller fedt over sig. Fyld lidt vand i bradepanden undervejs, hvis den bliver tør. Kødet er færdigt, når det er 65 °C inderst (stegetermometer)." } },
+    { "@type": "HowToStep", "text": "Giv sværen et par minutter under grillen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "note": "Kun hvis sværen ikke er sprød over det hele. Tænd grillen, og bliv ved ovnen hele tiden: sværen kan brænde på et øjeblik. Er den sprød, så spring over." } },
+    { "@type": "HowToStep", "text": "Tag bradepanden ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Den er meget varm, og fedtet kan sprøjte. Løft kødet over på et skærebræt." } },
+    { "@type": "HowToStep", "text": "Lad kødet hvile i 15 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 900, "note": "Uden låg og staniol over, så sværen bliver ved med at være sprød." } },
+    { "@type": "HowToStep", "text": "Skær kødet i skiver mellem rillerne.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "note": "Med en stor, skarp kniv. Pil laurbærblade og nelliker af: de er ikke gode at tygge på." } },
+    { "@type": "HowToStep", "text": "Smag på et stykke sprød svær.", "tumbi": { "verbum": "smage", "note": "Pust først." } }
+  ],
+  "tumbi": {
+    "id": "flaeskesteg-med-sproed-svaer",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Brødrene Price: «Klassisk flæskesteg» (dr.dk): 200 °C i ca. 35-40 minutter pr. ½ kg, 65 °C i kernen, grill til sidst og hvile i 15-20 minutter. Frøken Jensens Kogebog (1921): salt i sværen, laurbær og nelliker. Trinene er egen tekst. Mængden passer til en ovnklar flæskesteg fra discount, og tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "loeg", "maengde": "1" },
+      { "ikon": "gulerod", "maengde": "2" },
+      { "ikon": "vand", "maengde": "1 l" },
+      { "ikon": "krydderi", "maengde": "10" },
+      { "ikon": "krydderi", "maengde": "1 spsk" },
+      { "ikon": "salt", "maengde": "2 spsk" },
+      { "ikon": "koed", "maengde": "1,5 kg" }
+    ]
+  }
+}

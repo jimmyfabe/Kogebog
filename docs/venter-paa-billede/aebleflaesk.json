@@ -1,0 +1,47 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Æbleflæsk på bradepande",
+  "description": "Sprødt flæsk og bløde æblebåde med sukker og timian, bagt side om side på én bradepande. Spises med rugbrød.",
+  "image": "grafik/ret-aebleflaesk.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT15M",
+  "cookTime": "PT25M",
+  "totalTime": "PT45M",
+  "recipeIngredient": [
+    "5 æbler (gerne syrlige)",
+    "1 spsk sukker",
+    "1 tsk tørret timian",
+    "½ citron",
+    "500 g stegeflæsk i skiver",
+    "8 skiver rugbrød"
+  ],
+  "tool": ["bradepande", "bagepapir", "skærebræt", "kniv", "citronpresser", "grydelapper"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Tænd ovnen på 200 °C. Læg bagepapir i bradepanden. Retten indeholder gluten (rugbrødet)." } },
+    { "@type": "HowToStep", "text": "Skær æblerne i både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["aeble"], "note": "Med skrællen på. Del hvert æble i 8 både, og skær kernehuset væk. Skær også citronen over." } },
+    { "@type": "HowToStep", "text": "Læg æblebådene i den ene side af bradepanden.", "tumbi": { "verbum": "pynte", "ikoner": ["aeble"] } },
+    { "@type": "HowToStep", "text": "Drys sukker og timian over æblerne.", "tumbi": { "verbum": "drysse", "ikoner": ["sukker", "krydderurt"] } },
+    { "@type": "HowToStep", "text": "Klem citronsaften ud over æblerne.", "tumbi": { "verbum": "haelde", "ikoner": ["citron"], "note": "Den halve citron. Klem den med hænderne, eller brug en citronpresser." } },
+    { "@type": "HowToStep", "text": "Læg flæskeskiverne i den anden side.", "tumbi": { "verbum": "pynte", "ikoner": ["koed"], "note": "Ved siden af hinanden, ikke oven på hinanden. Så bliver de sprøde." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt svinekød på fingrene." } },
+    { "@type": "HowToStep", "text": "Bag flæsk og æbler i 25 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1500, "note": "200 °C. Kig efter 20 minutter: flæsket skal være gyldent og sprødt, og æblerne bløde. Ellers et par minutter mere." } },
+    { "@type": "HowToStep", "text": "Tag bradepanden ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Fedtet er meget varmt og kan sprøjte." } },
+    { "@type": "HowToStep", "text": "Smag på æbleflæsket med rugbrød.", "tumbi": { "verbum": "smage", "ikoner": ["broed"], "note": "Pust først. Læg flæsk og æbler på rugbrødet, eller spis det ved siden af." } }
+  ],
+  "tumbi": {
+    "id": "aebleflaesk",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Den gamle danske landret (lex.dk), DR: «Mormors æbleflæsk» og Arla: «Æbleflæsk» (arla.dk). Ovnmetoden og trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "aeble", "maengde": "5" },
+      { "ikon": "sukker", "maengde": "1 spsk" },
+      { "ikon": "krydderurt", "maengde": "1 tsk" },
+      { "ikon": "citron", "maengde": "½" },
+      { "ikon": "koed", "maengde": "500 g" },
+      { "ikon": "broed", "maengde": "8 skiver" }
+    ]
+  }
+}

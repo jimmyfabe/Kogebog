@@ -1,0 +1,53 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Andebryst med æbler og svesker",
+  "description": "Andebryst med sprødt skind, bagt oven på æblebåde og svesker. Til mortensaften eller juleaften.",
+  "image": "grafik/ret-andebryst-med-aebler-og-svesker.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT15M",
+  "cookTime": "PT25M",
+  "totalTime": "PT55M",
+  "recipeIngredient": [
+    "3 æbler (gerne syrlige)",
+    "12 svesker uden sten",
+    "1 tsk tørret timian",
+    "1 tsk salt",
+    "½ tsk peber",
+    "750 g andebryst med skind"
+  ],
+  "tool": ["skærebræt", "skarp kniv", "ildfast fad", "lille skål", "stor pande", "tang", "stegetermometer"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Tænd ovnen på 180 °C. Tag andebrysterne ud af køleskabet. Svesker kan indeholde sulfit: tjek pakken." } },
+    { "@type": "HowToStep", "text": "Skær æblerne i både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["aeble"], "note": "Med skrællen på. Del hvert æble i 8 både, og skær kernehuset væk." } },
+    { "@type": "HowToStep", "text": "Læg æblebåde og svesker i et fad.", "tumbi": { "verbum": "pynte", "ikoner": ["aeble", "rosiner"], "note": "Et fad, der kan tåle ovnen. Tæl 12 svesker." } },
+    { "@type": "HowToStep", "text": "Drys timian over æblerne.", "tumbi": { "verbum": "drysse", "ikoner": ["krydderurt"] } },
+    { "@type": "HowToStep", "text": "Hæld salt og peber i en lille skål.", "tumbi": { "verbum": "haelde", "ikoner": ["salt", "peber"], "note": "1 tsk salt og ½ tsk peber." } },
+    { "@type": "HowToStep", "text": "Rids skindet på andebrysterne.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["koed"], "note": "Skær et mønster af tern i skindet med en skarp kniv, men ikke ind i kødet. Det er 3-4 andebryster, efter butikken." } },
+    { "@type": "HowToStep", "text": "Drys salt og peber på andebrysterne.", "tumbi": { "verbum": "drysse", "ikoner": ["koed"], "note": "Fra den lille skål, på begge sider." } },
+    { "@type": "HowToStep", "text": "Læg andebrysterne på den kolde pande, skindet nedad.", "tumbi": { "verbum": "pynte", "ikoner": ["koed"], "note": "Panden skal være kold og uden fedt: skindet giver selv fedt. Der tændes først for den efter håndvasken." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været rå and på fingrene. Vask også skærebrættet og den lille skål." } },
+    { "@type": "HowToStep", "text": "Steg andebrysterne på skindsiden i 8 minutter.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 480, "note": "Tænd på middel varme. Skindet skal blive gyldent og sprødt. Hæld lidt af fedtet fra, hvis der kommer meget." } },
+    { "@type": "HowToStep", "text": "Læg andebrysterne oven på æblerne, skindet opad.", "tumbi": { "verbum": "pynte", "voksen": true, "voksen_hjaelp": "varme", "note": "Med en tang. De er varme, og fedtet kan sprøjte. Hæld en skefuld af fedtet over æblerne." } },
+    { "@type": "HowToStep", "text": "Bag fadet i ovnen i 15 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900, "note": "180 °C. Fjerkræ skal altid være gennemstegt: kødet må ikke være lyserødt indeni, og saften skal være klar. Med et stegetermometer: ca. 75 °C i den tykkeste del. Ellers 3-5 minutter mere." } },
+    { "@type": "HowToStep", "text": "Tag fadet ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Det er meget varmt." } },
+    { "@type": "HowToStep", "text": "Lad kødet hvile i 5 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 300, "note": "Læg andebrysterne på et skærebræt. Saften i fadet er sovsen." } },
+    { "@type": "HowToStep", "text": "Skær andebrysterne i skiver.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv" } },
+    { "@type": "HowToStep", "text": "Smag på et æble fra fadet.", "tumbi": { "verbum": "smage", "ikoner": ["aeble"], "note": "Pust først." } }
+  ],
+  "tumbi": {
+    "id": "andebryst-med-aebler-og-svesker",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "DR (kokken Anika Madsen, dr.dk): rids skindet, brun andebrystet på panden, og bag det ved 180 °C. Fødevarestyrelsen: fjerkrækød skal være gennemstegt, derfor er tiden i ovnen længere end DR's 12 minutter. Den kolde pande, æbler og svesker i fadet og trinene er egen tekst. Tiderne er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "aeble", "maengde": "3" },
+      { "ikon": "rosiner", "maengde": "12" },
+      { "ikon": "krydderurt", "maengde": "1 tsk" },
+      { "ikon": "salt", "maengde": "1 tsk" },
+      { "ikon": "peber", "maengde": "½ tsk" },
+      { "ikon": "koed", "maengde": "750 g" }
+    ]
+  }
+}

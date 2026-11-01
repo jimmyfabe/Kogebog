@@ -1,0 +1,44 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Små grise i dyner",
+  "description": "Små cocktailpølser rullet ind i bacon og bagt sprøde. En britisk juleklassiker, som barnet næsten kan lave selv.",
+  "image": "grafik/ret-smaa-grise-i-dyner.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 30 grise",
+  "prepTime": "PT15M",
+  "cookTime": "PT25M",
+  "totalTime": "PT45M",
+  "recipeIngredient": [
+    "400 g cocktailpølser",
+    "300 g bacon i skiver",
+    "1 spsk flydende honning"
+  ],
+  "tool": ["bageplade", "bagepapir", "skærebræt", "kniv eller køkkensaks", "skål", "pensel", "fad"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Tænd ovnen på 200 °C. Læg bagepapir på en bageplade. Tjek pølsernes varedeklaration for allergener (fx mælk, sennep og selleri)." } },
+    { "@type": "HowToStep", "text": "Hæld pølserne i en skål.", "tumbi": { "verbum": "haelde", "ikoner": ["poelse"], "note": "Er der lage i pakken, så hæld den fra. Pølserne er færdige og skal kun varmes." } },
+    { "@type": "HowToStep", "text": "Skær baconskiverne over på midten.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["koed"], "note": "Eller klip dem over med en køkkensaks." } },
+    { "@type": "HowToStep", "text": "Rul en baconstrimmel om hver pølse.", "tumbi": { "verbum": "pakke-ind", "ikoner": ["koed"], "note": "Stramt, men ikke for stramt. Barnet ruller selv." } },
+    { "@type": "HowToStep", "text": "Læg grisene på bagepapiret med samlingen nedad.", "tumbi": { "verbum": "pynte", "ikoner": ["koed"], "note": "Så folder baconen sig ikke ud i ovnen." } },
+    { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været rå bacon på fingrene. Vask også skærebrættet." } },
+    { "@type": "HowToStep", "text": "Bag grisene i ovnen i 20 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1200, "note": "200 °C, til baconen er sprød. I airfryer: ca. 180 °C i 10-12 minutter, i flere hold, og hold øje med dem." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Pensl grisene med honning.", "tumbi": { "verbum": "pensle", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["honning"], "note": "Pladen er meget varm. Honningen kan springes over." } },
+    { "@type": "HowToStep", "text": "Bag grisene i 5 minutter mere.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "200 °C." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Lad grisene køle af i 5 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 300, "note": "Pølserne er meget varme indeni. Flyt grisene over på et fad." } },
+    { "@type": "HowToStep", "text": "Smag på en lille gris i dyne!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "smaa-grise-i-dyner",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Den britiske juleklassiker «pigs in blankets». Mængderne passer til pakkerne i Rema 1000 (01-11-2026). Trinene er egen tekst. Tiden og airfryerens tid er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "poelse", "maengde": "400 g" },
+      { "ikon": "koed", "maengde": "300 g" },
+      { "ikon": "honning", "maengde": "1 spsk" }
+    ]
+  }
+}
