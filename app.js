@@ -300,11 +300,16 @@ function startAdvarsel(m) {
     el('span', { class: 'start-advarsel-tekst' }, el('strong', { tekst: 'Sammen med en voksen' }), el('span', { tekst: hvad })));
 }
 
-// Husstandens portioner (docs/foraeldredel.md, afsnit 4): { n, faktor }, eller null, når husstanden ikke er sat i
-// voksendelen, retten ikke har talportioner (bage- og søde retter), eller faktoren er 1. Med null vises retten som før
+// Portionerne (docs/foraeldredel.md, afsnit 4): { n, faktor }, eller null, når der hverken er en dag i ugeplanen eller
+// en husstand, retten ikke har talportioner (bage- og søde retter), eller faktoren er 1. Med null vises retten som før.
+// Dagens n før husstandens: står retten i ugeplanen, gælder dagens antal (i dag, hvis retten står dér, ellers den første
+// dag med retten), så retten passer til indkøbslisten. Husstanden er kun reserven
 function skalering(m) {
+  const p = Lager.hentUge(S.ids);
+  const i = p.uge ? (Date.parse(idag()) - Date.parse(p.uge)) / 86400000 : -1;
+  const dag = (p.dage[i] && p.dage[i].ret === m.id ? p.dage[i] : null) || p.dage.find((d) => d && d.ret === m.id);
   const f = Lager.hentFamilie(S.ids);
-  const n = portionerFraHusstand(f.voksne, f.boern, f.barnAndel);
+  const n = dag ? dag.n : portionerFraHusstand(f.voksne, f.boern, f.barnAndel);
   const faktor = n ? faktorFor(m, n) : null;
   return faktor && faktor !== 1 ? { n, faktor } : null;
 }

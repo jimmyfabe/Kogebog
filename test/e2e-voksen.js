@@ -155,6 +155,16 @@ async function forloeb(browser, H, skaerm) {
   tjek(p && JSON.stringify(p.dage[1]) === JSON.stringify({ ret: RET, af: 'bo', n: 6 }) && p.dage[0].n === 3,
     n + ': en ny dag får husstandens 6 portioner, mandag har stadig 3 (' + JSON.stringify(p && p.dage.slice(0, 2)) + ')');
 
+  // 4a. Dagens n før husstandens: mandagens ret står til mandagens 3 portioner, selvom husstanden er 6
+  const mandagFaktor = faktorFor(lavModel(RETTER[IPLAN[0]]), 3);
+  await gaaTil(side, '#/ret/' + IPLAN[0]);
+  await venterPaa(side, (id) => location.hash === '#/ret/' + id && document.querySelector('.ret h1'), IPLAN[0], n + ': mandagens ret');
+  tjek(/^Til 3 portioner( · |$)/.test(await tekstAf(side, '.ret .meta')), n + ': mandagens ret står til dagens 3 portioner, ikke husstandens 6 (' + await tekstAf(side, '.ret .meta') + ')');
+  const mandagVist = await side.evaluate(() => [...document.querySelectorAll('.ingr')].map((b) => b.getAttribute('aria-label')));
+  const mandagLinjer = forventetLinjer(RETTER, IPLAN[0], mandagFaktor).map((l) => l.tekst);
+  tjek(mandagFaktor === 0.75 && JSON.stringify(mandagVist) === JSON.stringify(mandagLinjer),
+    n + ': mandagens mængder er regnet om × 0,75 (' + mandagVist.slice(0, 4).join(' | ') + ')');
+
   // 4. Retten ved 6 portioner: «Til 6», mængderne regnet om og markeret, én voksen-linje, og iPad-stemmen læser op
   const faktor = faktorFor(lavModel(RETTER[RET]), 6);
   const linjer = forventetLinjer(RETTER, RET, faktor);

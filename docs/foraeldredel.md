@@ -78,6 +78,8 @@
 
 **Regel:** `n = clamp(ceil(voksne + barnAndel × børn), 1, 12)` og `faktor = n / tumbi.portioner`.
 
+- **Dagens n før husstandens:** står retten i ugeplanen, bruger retten (og printet fra den) dagens `d.n` fra `kog-uge-v1`: dagen med dagens dato, hvis retten står dér, ellers den første dag med retten. Så passer retten til indkøbslisten. Husstanden er kun reserven for retter, der ikke står i planen.
+
 - Man runder op til hele portioner, så indkøbsliste, link (`n` er et heltal 1-12, plankode.js) og opskriftsskærm altid viser det samme. Rester er bedre end for lidt.
 - **Barn = 0,7 voksen som standard.** Nordiske Næringsstofanbefalinger 2023 (NNR2023, Tabel 7 og 11) angiver energibehovet:
 
