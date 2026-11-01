@@ -223,6 +223,18 @@ async function forloeb(browser, H, skaerm) {
   tjek(!bag.skaleret && JSON.stringify(bag.maengder) === JSON.stringify(forventetLinjer(RETTER, BAGNING, null).map((l) => l.maengde)),
     n + ': ' + BAGNING + ' (uden talportioner) vises som i opskriften (' + JSON.stringify(bag) + ')');
 
+  // 2b. «Brug på hele ugen» (efter 4a, der skal bruge mandagens 3): de planlagte dage får husstandens 6 portioner med
+  // samme ret og dyr, og indkøbslisten røres ikke
+  await aabnVoksen(H, side, '/husstand', n + ' husstand, hele ugen');
+  const foerDage = (await laesLager(side, UGE)).dage;
+  const foerListe = (await raatLager(side))[2];
+  await tryk(side, '[data-fokus="hele-ugen"]');
+  p = await laesLager(side, UGE);
+  const somFoer = (d, i) => (!d && !foerDage[i]) || (d && foerDage[i] && d.n === 6 && d.ret === foerDage[i].ret && d.af === foerDage[i].af);
+  tjek(foerDage[0] && foerDage[0].n === 3 && p && p.n === 6 && p.dage.every(somFoer),
+    n + ': «Brug på hele ugen» giver alle planlagte dage 6 portioner og beholder ret og dyr (' + JSON.stringify(p && p.dage) + ')');
+  tjek((await raatLager(side))[2] === foerListe, n + ': «Brug på hele ugen» ændrer ikke indkøbslisten');
+
   // 3. Ugens udvalg: «Fyld op med nye» vælger 8 retter, der ikke er lavet før, og børnene ser kun dem, på to sider
   f = await laesLager(side, FAMILIE);
   await saetLager(side, FAMILIE, { ...f, lavet: lavetFoer });
