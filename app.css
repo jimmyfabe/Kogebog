@@ -1018,7 +1018,7 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
 
 /* Forsidens top på iPhone på højkant: titlen, afsnittenes knapper og dyrene kan ikke stå i én række. Titlen står øverst
    og har hele bredden (på 390 px før to linjer mellem dyrene), og knapperne står mellem Rosa og Bo nedenunder.
-   Dyrene bliver smallere, når der ikke er plads (360 px) */
+   Dyrene bliver smallere, når der ikke er plads, og skjules under 452 px (reglen nedenfor) */
 @media (max-width: 700px) and (min-height: 521px), (max-width: 700px) and (orientation: portrait) {
   .forside-top {
     display: grid;
@@ -1033,10 +1033,14 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .forside-top > .forside-dyr:last-child { grid-area: bo; justify-self: start; }
   .forside-hop { grid-area: hop; align-self: end; }
 }
-/* Under 380 px blev Rosa og Bo kun 22 px brede ved siden af afsnittenes knapper (360 px, UI-review 27-10). Dér skjules
-   de som på de lave skærme, og knapperne står alene i midten */
-@media (max-width: 379px) and (min-height: 521px), (max-width: 379px) and (orientation: portrait) {
+/* Under 452 px er der ikke plads til Rosa og Bo ved siden af afsnittenes fem knapper (5 × 64 + 4 × 8 = 352 px): på
+   390×844 blev de 1 px brede (review K1, 01-11-2026; før, med fire knapper, 22 px på 360 px, UI-review 27-10). Hvert dyr
+   skal have mindst 32 px: 352 + 2 × 8 + 2 × 32 = 432 px indhold, altså 452 px skærm. Dyrene skjules som på de lave
+   skærme, og knapperne står alene i midten i én kolonne (uden de to mellemrum til dyrene) */
+@media (max-width: 451px) and (min-height: 521px), (max-width: 451px) and (orientation: portrait) {
+  .forside-top { grid-template-columns: minmax(0, 1fr); grid-template-areas: "titel" "hop"; }
   .forside-top > .forside-dyr { display: none; }
+  .forside-hop { justify-self: center; }
 }
 
 /* Under 400 px er der kun plads til «Start forfra» ved siden af print, når print-knappen er uden ikon (teksten siger det) */
