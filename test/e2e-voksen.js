@@ -7,7 +7,7 @@
 // 9. knapperne (børn 64 px, voksne 48 px) og ingen vandret rulning. Én gang: 4b. printets strenge n (desktop),
 // 5. «Send til telefon» og listen på telefonen, 8. data fra v3 (kun kog-uge-v1 og kog-liste-v1) indlæses uden tab og
 // 10. kog-familie-v1 fra en nyere udgave (oversigten står, siderne og hjertet er låst) og 11. loftet på 12 portioner.
-import { portionerFraHusstand, faktorFor, skaleretIngrediens } from '../js/skaler.js';
+import { portionerFraHusstand, faktorFor, skaleretIngrediens, voksenNoter } from '../js/skaler.js';
 import { lavModel } from '../js/model.js';
 import { kod } from '../js/plankode.js';
 import { saml, grupper } from '../js/indkoeb.js';
@@ -337,6 +337,17 @@ async function forloeb(browser, H, skaerm) {
   await gaaTil(side, '#/ret/' + RET);
   await venterPaa(side, () => document.querySelector('.ret h1'), null, n + ': retten efter genindlæsning');
   tjek(/^Til 6 portioner/.test(await tekstAf(side, '.ret .meta')), n + ': retten står stadig til 6 portioner efter genindlæsning');
+
+  // 4c. Flere voksen-linjer (tærten ved 8 portioner: trinene, to fade og formen) står med fælles venstrekant
+  const taerteFaktor = faktorFor(lavModel(RETTER[TAERTE]), 8);
+  const taerteNoter = voksenNoter(lavModel(RETTER[TAERTE]), taerteFaktor, forventetLinjer(RETTER, TAERTE, taerteFaktor));
+  await saetLager(side, FAMILIE, { ...await laesLager(side, FAMILIE), voksne: 8, boern: 0 });
+  await gaaTil(side, '#/ret/' + TAERTE);
+  await venterPaa(side, (id) => location.hash === '#/ret/' + id && document.querySelector('.ret h1'), TAERTE, n + ': tærten ved 8 portioner');
+  const kanter = await side.evaluate(() => [...document.querySelectorAll('.ret .voksen-linje')].map((e) => [e.textContent, Math.round(e.getBoundingClientRect().left)]));
+  tjek(taerteNoter.length >= 3 && JSON.stringify(kanter.map((k) => k[0])) === JSON.stringify(taerteNoter) && kanter.every((k) => k[1] === kanter[0][1]),
+    n + ': voksen-linjerne ved 8 portioner står med samme venstrekant (' + JSON.stringify(kanter) + ')');
+  await tjekLayout(side, n + ' tærten ved 8 portioner', { knapperSes: bred });
 
   await vent(100);
   tjek(side.fejl.length === 0, n + ' (voksendelen): ' + side.fejl.join(' | '));

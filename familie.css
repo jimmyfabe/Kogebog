@@ -28,6 +28,8 @@
 /* En kort besked til den voksne på en børneskærm (fx at mængderne i trinene er til 4): lille, i den blide farve og med
    voksen-hjælpens orange streg, så den ikke tager blikket fra børnenes billeder */
 .voksen-linje { padding-left: 10px; border-left: 4px solid var(--raev); font-size: 16px; font-weight: 700; line-height: 1.3; color: var(--kakao-blid); }
+/* Flere linjer på retten: én blok, der står midt under titlen som resten af .ret-hoved, men med fælles venstrekant */
+.voksen-linjer { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; max-width: 100%; }
 
 /* Filterchips, sammen med .knap: 48 px som de voksnes knapper. Valgt som .knap.valg i app.css: sennep og en dobbelt så
    tyk kant, så tilstanden ikke kun er en farve */

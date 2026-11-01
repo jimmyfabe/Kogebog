@@ -370,7 +370,7 @@ function retSkaerm(m) {
           el('h1', { tabindex: '-1', tekst: m.navn }),
           hoejttaler),
         meta,
-        sk ? voksenNoter(m, sk.faktor, linjer).map((t) => el('p', { class: 'voksen-linje', tekst: t })) : null),
+        sk ? el('div', { class: 'voksen-linjer' }, voksenNoter(m, sk.faktor, linjer).map((t) => el('p', { class: 'voksen-linje', tekst: t }))) : null),
       el('section', { class: 'ret-ingredienser', 'aria-labelledby': 'ingr-titel' },
         el('h2', { id: 'ingr-titel', tekst: 'Det skal I bruge' }),
         el('ul', { class: 'ingr-gitter' }, ingr))),
