@@ -28,7 +28,7 @@
   "tool": ["lille gryde", "stor skål", "grydeske", "kop", "viskestykke", "bageplade", "bagepapir", "pensel", "lille skål", "teske", "lille frysepose"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
-    { "@type": "HowToStep", "text": "Smelt smørret, og hæld kold mælk i.", "tumbi": { "verbum": "smelte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["smoer", "maelk"], "note": "75 g smør i en lille gryde ved lav varme. Tag gryden af varmen, og hæld 2½ dl kold mælk i. Så bliver det lunt." } },
+    { "@type": "HowToStep", "text": "Smelt smørret, og lun mælken i gryden.", "tumbi": { "verbum": "smelte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["smoer", "maelk"], "note": "75 g smør i en lille gryde ved lav varme. Hæld 2½ dl mælk i, og varm det, til det er fingervarmt (ca. 37 °C). Tag så gryden af varmen. Kold mælk fra køleskabet gør det kun køligt, og så hæver dejen næsten ikke." } },
     { "@type": "HowToStep", "text": "Smuldr gæren ned i en stor skål.", "tumbi": { "verbum": "smuldre", "ikoner": ["gaer"] } },
     { "@type": "HowToStep", "text": "Hæld den lune mælk over gæren, og rør.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["maelk", "gaer"], "note": "Mærk med en finger først: mælken skal være lun, ikke varm, ellers dør gæren. Den voksne hælder fra gryden, og barnet rører, til gæren er opløst." } },
     { "@type": "HowToStep", "text": "Hæld sukker, salt og kardemomme i.", "tumbi": { "verbum": "haelde", "ikoner": ["sukker", "salt", "krydderi"], "note": "50 g sukker, ½ tsk salt og 2 tsk kardemomme." } },
