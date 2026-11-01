@@ -820,7 +820,7 @@ export function retterTilBoern(alle, udvalg) {
 // Antal sider med PR_SIDE retter, mindst én (også uden retter)
 export const sideAntal = (retter) => Math.max(1, Math.ceil(retter.length / PR_SIDE));
 
-// ✨ ny for os og ⭐ favorit på børnenes kort (maerkerFor i js/maerker.js): kun ikonet, med mærkets navn til skærmlæseren.
+// ✨ ny for os og ❤️ favorit på børnenes kort (maerkerFor i js/maerker.js): kun ikonet, med mærkets navn til skærmlæseren.
 // De står efter rettens navn, som dyret i hjørnet, så navnet siges først
 const BOERNE_MAERKER = { ny: 'maerke-ny', favorit: 'maerke-fav' };
 const boerneMaerker = (m, familie) => maerkerFor(m, { familie })

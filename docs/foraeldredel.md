@@ -147,7 +147,7 @@ Målt på de 69 ugeplan-retter:
   - `bouillonterninger` er grøntsagsbouillon og må ikke markeres.
   - De 26 skal efterprøves ret for ret, fx `pladepizza` og `taco-bradepande`.
 - **✨ først, når familien er begyndt at registrere:** før den første ret er lavet (`lavet` er tom), er ingen ret «ny for os», for ellers ville alle retter være nye. «Fyld op med nye» vælger stadig retter uden `lavet`, og udvalgets ✨-chip viser 0, til den første ret er lavet.
-- Børnene ser kun ikoner (⭐ favorit, ✨ ny) med `aria-label` til voksne. Der kommer ingen ny tale i MVP.
+- Børnene ser kun ikoner (❤️ favorit, ✨ ny) med `aria-label` til voksne. Der kommer ingen ny tale i MVP.
 - Filterchips (⚡ 🥕 💰 🔪 🌱 🐟 ✨ ❤️) findes kun i voksendelens udvalgsliste. Om forsiden også skal filtrere, er Jimmys valg.
 
 ## 6. Indkøb på telefonen og koden i linket
@@ -187,7 +187,7 @@ Kontrakterne nedenfor er **forslag** (nye navne), og agenterne bygger mod dem. A
 | **B** | Skalering (ren) | Ny `js/skaler.js` (`portionerFraHusstand`, `faktorFor(model, n)` → tal eller `null`, `skalerMaengde`), ny `test/test-skaler.js` | 1 |
 | **C** | Mærker | Ny `js/maerker.js` (`maerkerFor(model, {familie})` + konstanterne `GROENT_G = 250`, `BILLIG_KR = 12`), `js/katalog.js` (`slags` på kød- og fiskevarer), validatoren som `test/test-validator.js` tester, ny `test/test-maerker.js` | 1 |
 | **D** | Voksendel | Ny `js/voksen-del.js` (`init(K)` og `rute(hash)` i samme mønster som `Ugeplan.init`, app.js:622; skærmene hub/husstand/udvalg/favoritter, vagt og 10-minutters-lås). Ny `familie.css` med **al ny CSS**, også klasserne til E og F (fx `.maerke-ny`, `.maerke-fav`, `.hjerte-knap`, `.skaleret`, `.voksen-linje`) | 2 |
-| **E** | Børnenes valg | `js/ugeplan.js`: `iPlanen` filtreret af udvalget (`null` = alle); ⭐/✨ på kortene; vegetar og grønt i `FILTRE`. **Ingen** ændring i app.css og ingen nye replikker | 2 |
+| **E** | Børnenes valg | `js/ugeplan.js`: `iPlanen` filtreret af udvalget (`null` = alle); ❤️/✨ på kortene; vegetar og grønt i `FILTRE`. **Ingen** ændring i app.css og ingen nye replikker | 2 |
 | **F** | Integration | `app.js` (forside «Voksne: hold», route til D, skalering på `retSkaerm`, `lavet` + hjerte på færdig-skærmen), `js/replikker.js` (dynamisk ingrediens-replik), `index.html` (`<link>` til familie.css), `js/print.js` (`&n=`), `sw.js` (FILER + INDHOLD), `js/version.js` (UDGAVE), `test/koer-alle.js`, `test/test-lyd.js` (kun hvis nødvendigt), ny `test/e2e-voksen.js` + tilmelding i `test/test-e2e.js` | 3 |
 
 - **Rækkefølge:** bølge 1 (A, B og C parallelt) → flet → bølge 2 (D og E) → flet → bølge 3 (F). Kun F kører den fulde suite og e2e gennem `tung-koersel.sh`. Ingen push uden Jimmys ja (regel 7).
@@ -225,7 +225,7 @@ Kontrakterne nedenfor er **forslag** (nye navne), og agenterne bygger mod dem. A
 3. Udvalg på 8 → børnenes valg har 2 sider med kun de 8 retter. «Fyld op med nye» vælger kun retter uden `lavet`.
 4. Opskrift ved n = 6: «300 g» → «450 g» og «Til 6». `print.html?ret=…&n=6` viser det samme.
 5. «Send til telefon» → `#/hent/v1…` → indkøbslisten har de samme mængder (linket er uændret).
-6. Hjerte på færdig-skærmen → retten står under favoritter og får ⭐ i børnenes valg.
+6. Hjerte på færdig-skærmen → retten står under favoritter og får ❤️ i børnenes valg.
 7. Genindlæsning bevarer alt.
 8. **Migrering:** med v3-data (kun `kog-uge-v1` og `kog-liste-v1`) lagt i localStorage indlæses alt uden tab.
 9. Knapper: børn ≥ 64 px, voksne ≥ 48 px (målt med bounding box). Ingen vandret rulning ved 390 px.

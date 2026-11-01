@@ -4,13 +4,14 @@
 
 /* ---------- Til de andre skærme (børnenes valg, retten, færdig) ---------- */
 
-/* ✨ ny for os og ⭐ favorit på børnenes kort (js/ugeplan.js lægger dem i .kort, efter navnet): øverst til venstre, som
+/* ✨ ny for os og ❤️ favorit på børnenes kort (js/ugeplan.js lægger dem i .kort, efter navnet): øverst til venstre, som
    spejlbillede af dyret (.kort-dyr, øverst til højre), så de aldrig dækker ⚡ på tallerkenens nederste hjørne. Har retten
-   begge, står ⭐ under ✨ (maerkerFor giver altid ny før favorit). Ikonet er emojien fra MAERKER (js/maerker.js), og
-   skærmlæseren får navnet som aria-label */
+   begge, står ❤️ under ✨ (maerkerFor giver altid ny før favorit). Ikonet er emojien fra MAERKER (js/maerker.js), og
+   skærmlæseren får navnet som aria-label. Hjertet har samme lyse tomat som det trykkede hjerte på færdig-skærmen
+   (.hjerte-knap nedenfor), så børnene kender det igen */
 .maerke { position: absolute; top: 10px; left: 10px; --maerke: 48px; display: grid; place-items: center; width: var(--maerke); aspect-ratio: 1; border: var(--kant); border-radius: 50%; background: var(--hvid); font-size: 24px; line-height: 1; }
 .maerke-ny { background: var(--urt-lys); }
-.maerke-fav { background: var(--sennep-lys); }
+.maerke-fav { background: var(--tomat-lys); }
 .maerke-ny + .maerke-fav { top: calc(10px + var(--maerke) + 6px); }
 
 /* Hjertet (favorit), sammen med .knap.rund: 64 px, for børnene trykker på det på færdig-skærmen. Tomt hjerte er ikke

@@ -545,7 +545,7 @@ function favoritSkaerm(f) {
   }));
   return voksenSkaerm('voksen-favoritter', 'Favoritter',
     f.favoritter.length ? flertal(f.favoritter.length, 'favorit', 'favoritter') : 'Ingen endnu',
-    el('p', { class: 'voksen-hjaelp', tekst: 'Tryk på hjertet ved de retter, familien er glad for. Favoritterne får en ⭐, når børnene vælger ugens mad.' }),
+    el('p', { class: 'voksen-hjaelp', tekst: 'Tryk på hjertet ved de retter, familien er glad for. Favoritterne får et ' + MAERKER.favorit.ikon + ', når børnene vælger ugens mad.' }),
     el('div', { class: 'voksen-knapper' }, tilbage()),
     liste,
     fejlLinje());

@@ -19,7 +19,9 @@ export const MAERKER = {
   vegetar: { ikon: '🌱', navn: 'Vegetar' },
   fisk: { ikon: '🐟', navn: 'Fisk' },
   ny: { ikon: '✨', navn: 'Ny for os' },
-  favorit: { ikon: '⭐', navn: 'Favorit' },
+  // Et rødt hjerte som hjertet på færdig-skærmen og under favoritterne (hjerteIkon i js/voksen-del.js). U+FE0F gør det
+  // til en farvet emoji: uden den kan ❤ stå som et sort tegn
+  favorit: { ikon: '\u2764\uFE0F', navn: 'Favorit' },
 };
 
 // Kniven er verberne skaere og rive. Et voksen-trin med «kniv» og et andet verbum er dåseåbneren («Hæld majsen i en si.»)

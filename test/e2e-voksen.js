@@ -3,7 +3,7 @@
 // faktorFor, skaleretIngrediens, kod, saml), så testen ser, at skærmen viser det, modulerne regner ud.
 // På hver skærm i E2E_SKAERME (390×844, 1180×820, 1280×800): 1. holdet på forsiden og vagten ved et dybt link,
 // 2. husstanden og portionerne i ugeplanen, 4. retten og printet ved 6 portioner, 3. ugens udvalg med «Fyld op med nye»
-// og børnenes valg på to sider, 6. hjertet på færdig-skærmen (⭐ i børnenes valg, favoritterne), 7. genindlæsning og
+// og børnenes valg på to sider, 6. hjertet på færdig-skærmen (❤️ i børnenes valg, favoritterne), 7. genindlæsning og
 // 9. knapperne (børn 64 px, voksne 48 px) og ingen vandret rulning. Én gang: 4b. printets strenge n (desktop),
 // 5. «Send til telefon» og listen på telefonen, 8. data fra v3 (kun kog-uge-v1 og kog-liste-v1) indlæses uden tab og
 // 10. kog-familie-v1 fra en nyere udgave (oversigten står, siderne og hjertet er låst), 11. loftet på 12 portioner og
@@ -259,6 +259,7 @@ async function forloeb(browser, H, skaerm) {
 
   const kort = () => side.evaluate(() => [...document.querySelectorAll('.ret-kort')].map((b) => ({
     id: b.dataset.ret, ny: Boolean(b.querySelector('.maerke-ny')), fav: Boolean(b.querySelector('.maerke-fav')),
+    favIkon: b.querySelector('.maerke-fav')?.textContent || '', favNavn: b.querySelector('.maerke-fav')?.getAttribute('aria-label') || '',
   })));
   const boernenesValg = async (hvor) => {
     await gaaTil(side, '#/uge/vaelg/rosa');
@@ -279,7 +280,7 @@ async function forloeb(browser, H, skaerm) {
   await tjekLayout(side, n + ' børnenes valg med udvalg');
   await foto(side, n + '-voksen-boern-udvalg');
 
-  // 6. Færdig-skærmen: «lavet» gemmes, og hjertet gør retten til favorit (⭐ i børnenes valg, og under favoritterne)
+  // 6. Færdig-skærmen: «lavet» gemmes, og hjertet gør retten til favorit (❤️ i børnenes valg, og under favoritterne)
   const fav = otte[0];
   const favTrin = lavModel(RETTER[fav]).trin;
   const sidst = favTrin.length;
@@ -312,7 +313,9 @@ async function forloeb(browser, H, skaerm) {
 
   bv = await boernenesValg(n + ' favorit');
   const favKort = bv.sider.flat().find((k) => k.id === fav);
-  tjek(favKort && favKort.fav && !favKort.ny, n + ': favoritten har ⭐ og er ikke ny længere (' + JSON.stringify(favKort) + ')');
+  tjek(favKort && favKort.fav && !favKort.ny, n + ': favoritten har et hjerte og er ikke ny længere (' + JSON.stringify(favKort) + ')');
+  // Samme symbol som hjertet på færdig-skærmen: et rødt hjerte (MAERKER.favorit), og skærmlæseren siger stadig «Favorit»
+  tjek(favKort && favKort.favIkon === '\u2764\uFE0F' && favKort.favNavn === 'Favorit', n + ': favoritten har ❤️ med navnet «Favorit» (' + JSON.stringify(favKort) + ')');
   tjek(bv.sider.flat().filter((k) => k.id !== fav).every((k) => k.ny && !k.fav), n + ': de andre er stadig nye og ikke favoritter');
   await aabnVoksen(H, side, '/favoritter', n + ' favoritter');
   tjek(await side.locator('[data-fokus="fav-' + fav + '"]').getAttribute('aria-pressed') === 'true', n + ': favoritten står med rødt hjerte under favoritterne');

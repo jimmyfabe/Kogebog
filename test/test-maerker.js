@@ -33,6 +33,15 @@ test('MAERKER har de otte mærker i fast rækkefølge, hver med ikon og dansk na
   assert.equal(BILLIG_KR, 12);
 });
 
+test('favorit er et rødt hjerte som på færdig-skærmen, og der står ingen ⭐ i appens filer', () => {
+  // U+2764 med U+FE0F: uden den kan hjertet stå som et sort tegn i stedet for den røde emoji
+  assert.equal(MAERKER.favorit.ikon, '\u2764\uFE0F');
+  assert.equal(MAERKER.favorit.navn, 'Favorit', 'skærmlæseren siger stadig «Favorit»');
+  const filer = ['app.js', 'app.css', 'familie.css', 'print.css', 'index.html', 'print.html',
+    ...fs.readdirSync(path.join(ROD, 'js')).map((f) => 'js/' + f)];
+  assert.deepEqual(filer.filter((f) => fs.readFileSync(path.join(ROD, f), 'utf8').includes('\u2B50')), []);
+});
+
 test('masser af grønt: mindst GROENT_G gram pr. portion, også lige på grænsen', () => {
   for (const p of [1, 3, 4, 12]) {
     const groent = (g) => har(model('koedsovs', (d) => { Object.assign(d.tumbi, { portioner: p, groent_g: g }); }), 'groent');
