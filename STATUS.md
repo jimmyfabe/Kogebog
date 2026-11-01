@@ -1,6 +1,6 @@
 # STATUS – Tumbi Køkken
 
-## 01-11-2026 kl. 21:40: 24 juleretter bygget på grenen jul-0111, review og e2e kører (Saga)
+## 01-11-2026 kl. 21:28: 24 juleretter bygget på grenen jul-0111, review og e2e kører (Saga)
 
 - **Gren `jul-0111`** (worktree `D:/Claude/.claude/worktrees/kogebog-jul-0111`, ikke flettet, ikke pushet): gruppen «Jul» først, 24 juleretter med billeder, 4 nye verber (stikke-ud, forme, pille, smelte = voksen varme), 10 ikoner, discount-bytninger i 11 gamle retter (parmesan → revet hård ost m.m.), reglen «køb i Rema/Netto/365/Lidl» i CLAUDE.md. Alle node-tests grønne undtagen test-lyd (mangler Røst).
 - **11 julebordsretter venter på billeder** i `docs/venter-paa-billede/` (Codex-kvoten løb tør, åbner 02-11 kl. 01:52). 4 retbilleder er pladsholdere, der ikke passer: jødekager, julekage, kransekagestykker, chokoladetaler. Kør `jul-billeder/koer-codex.sh` i kladdemappen igen.
