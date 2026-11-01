@@ -1,0 +1,57 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Fedtebrød",
+  "description": "Gammeldags småkager med kokos og hvid glasur, skåret i skrå stykker. Uden æg.",
+  "image": "grafik/ret-fedtebroed.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 40 stykker",
+  "prepTime": "PT30M",
+  "cookTime": "PT10M",
+  "totalTime": "PT1H20M",
+  "recipeIngredient": [
+    "200 g hvedemel",
+    "100 g kokosmel",
+    "100 g sukker",
+    "½ tsk hjortetakssalt (eller 1 tsk bagepulver)",
+    "200 g blødt smør",
+    "100 g flormelis",
+    "2 spsk lunkent vand",
+    "julekrymmel til pynt"
+  ],
+  "tool": ["køkkenvægt", "stor skål", "teske", "husholdningsfilm", "bageplade", "bagepapir", "lille skål", "ske", "smørekniv", "skarp kniv", "skærebræt", "dåse med låg"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Mål 200 g mel i en stor skål.", "tumbi": { "verbum": "maale", "ikoner": ["mel"] } },
+    { "@type": "HowToStep", "text": "Hæld kokosmel, sukker og hjortetakssalt i.", "tumbi": { "verbum": "haelde", "ikoner": ["kokos", "sukker", "bagepulver"], "note": "100 g kokosmel og 100 g sukker. Den voksne måler ½ tsk hjortetakssalt: det lugter skarpt af ammoniak, så barnet skal ikke snuse til det. Det kan byttes med 1 tsk bagepulver." } },
+    { "@type": "HowToStep", "text": "Ælt det bløde smør ind i melet.", "tumbi": { "verbum": "aelte", "ikoner": ["smoer"], "note": "200 g smør, der har stået fremme. Ælt, til dejen hænger sammen." } },
+    { "@type": "HowToStep", "text": "Stil dejen i køleskabet i 30 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "Pakket ind i film. Tænd ovnen på 200 °C (almindelig ovn), når der er 10 minutter tilbage." } },
+    { "@type": "HowToStep", "text": "Rul dejen til fire lange pølser.", "tumbi": { "verbum": "rulle", "note": "Del dejen i 4 stykker først. Læg pølserne på en bageplade med bagepapir med god afstand: de flyder lidt ud." } },
+    { "@type": "HowToStep", "text": "Tryk pølserne flade på bagepapiret.", "tumbi": { "verbum": "forme", "note": "Ca. 5 cm brede og godt 1 cm tykke." } },
+    { "@type": "HowToStep", "text": "Bag stængerne i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "note": "200 °C i ca. 10 min midt i ovnen, til de er lysegyldne." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Lad stængerne køle helt af.", "tumbi": { "verbum": "vente", "timer_sek": 900, "note": "Pladen er meget varm. Glasuren løber af lune kager." } },
+    { "@type": "HowToStep", "text": "Rør flormelis og lidt vand til glasur.", "tumbi": { "verbum": "roere", "ikoner": ["sukker", "vand"], "note": "100 g flormelis og ca. 2 spsk lunkent vand fra hanen. Hæld vandet i lidt ad gangen: glasuren skal være tyk." } },
+    { "@type": "HowToStep", "text": "Smør glasuren på stængerne.", "tumbi": { "verbum": "smoere", "ikoner": ["sukker"], "note": "Med en ske eller en smørekniv." } },
+    { "@type": "HowToStep", "text": "Drys krymmel på glasuren.", "tumbi": { "verbum": "drysse", "ikoner": ["krymmel"], "note": "Mens glasuren stadig er våd." } },
+    { "@type": "HowToStep", "text": "Lad glasuren stivne lidt.", "tumbi": { "verbum": "vente", "timer_sek": 900 } },
+    { "@type": "HowToStep", "text": "Skær stængerne i skrå stykker.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "note": "Ca. 2 cm brede, med en skarp kniv. Gem dem i en tæt dåse." } },
+    { "@type": "HowToStep", "text": "Smag et fedtebrød!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "fedtebroed",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "DR Mad: «Fedtebrød», Søren Ryges opskrift fra Brødrene Prices program Price Inviterer (dr.dk). Romessensen i glasuren er udeladt, og krymmel er lagt til. Trinene er egen tekst. Antal og de skrå stykker er et skøn.",
+    "ingredienser": [
+      { "ikon": "mel", "maengde": "200 g" },
+      { "ikon": "kokos", "maengde": "100 g" },
+      { "ikon": "sukker", "maengde": "100 g" },
+      { "ikon": "bagepulver", "maengde": "½ tsk" },
+      { "ikon": "smoer", "maengde": "200 g" },
+      { "ikon": "sukker", "maengde": "100 g" },
+      { "ikon": "vand", "maengde": "2 spsk" },
+      { "ikon": "krymmel", "maengde": "" }
+    ]
+  }
+}
