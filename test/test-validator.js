@@ -393,7 +393,7 @@ test('index.json skal passe til filerne', () => {
 test('hver ret står i præcis én kendt gruppe', () => {
   forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'soede-sager').retter.push('boller'); }, '«boller» står i to grupper (bagning og soede-sager)');
   forventFejl('opskrifter/index.json', (d) => { d.grupper[0].id = 'forretter'; }, 'ukendt gruppe «forretter»');
-  forventFejl('opskrifter/index.json', (d) => { d.grupper[1].id = 'aftensmad'; }, 'gruppen «aftensmad» står der to gange');
+  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'bagning').id = 'aftensmad'; }, 'gruppen «aftensmad» står der to gange');
   forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'bagning').retter = []; }, 'gruppen «bagning» skal have mindst én ret');
   forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'bagning').navn = 'Bagværk'; }, 'gruppen «bagning»: ukendt felt «navn»');
   forventFejl('opskrifter/index.json', (d) => { d.version = 1; d.retter = d.grupper.flatMap((g) => g.retter); delete d.grupper; }, '«version» skal være 2');
