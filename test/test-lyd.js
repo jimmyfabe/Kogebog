@@ -182,3 +182,49 @@ test('indsaet-lyd.js nævner gamle mp3-filer og sletter dem kun med --ryd', () =
     fs.rmSync(tmp, { recursive: true, force: true });
   }
 });
+
+// indsaet-lyd.js --kun-rens: tale.js ser ikke på teksten, så en fil med en ændret tekst skal ud af listen, til Røst har
+// lavet den igen (discount-bytningerne 01-11-2026: chorizo-pastaens lyd sagde stadig «parmesan»). Ingen mp3 slettes
+test('indsaet-lyd.js --kun-rens fjerner kun filer med en ændret tekst fra listen og sletter ingen mp3', () => {
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'kog-rens-'));
+  try {
+    for (const d of ['js', 'vaerktoej', 'opskrifter']) fs.cpSync(path.join(ROD, d), path.join(tmp, d), { recursive: true });
+    fs.copyFileSync(path.join(ROD, 'package.json'), path.join(tmp, 'package.json'));
+    const faerdig = TALE.find((x) => x.fil === 'faelles/faerdig.mp3');
+    const filer = [faerdig.fil, 'faelles/print-hold.mp3', 'gammel-ret/1.mp3'];
+    const tekster = { [faerdig.fil]: faerdig.tekst, 'faelles/print-hold.mp3': 'En gammel tekst.', 'gammel-ret/1.mp3': 'Rør rundt.' };
+    const stemme = 'Røst (test)';
+    for (const f of filer) { fs.mkdirSync(path.dirname(path.join(tmp, 'lyd', f)), { recursive: true }); fs.writeFileSync(path.join(tmp, 'lyd', f), 'ID3 falsk'); }
+    fs.writeFileSync(path.join(tmp, 'lyd', 'liste.json'), JSON.stringify({ version: 1, filer }));
+    fs.writeFileSync(path.join(tmp, 'lyd', 'tekster.json'), JSON.stringify({ version: 1, stemme, tekster }));
+    const koer = (...a) => spawnSync(process.execPath, [path.join(tmp, 'vaerktoej', 'indsaet-lyd.js'), ...a], { encoding: 'utf8' });
+    const liste = () => JSON.parse(fs.readFileSync(path.join(tmp, 'lyd', 'liste.json'), 'utf8'));
+    const gemt = () => JSON.parse(fs.readFileSync(path.join(tmp, 'lyd', 'tekster.json'), 'utf8'));
+
+    let k = koer('--kun-rens');
+    assert.equal(k.status, 0, k.stderr);
+    assert.match(k.stdout, /^2 af 3 lydfiler/);
+    assert.match(k.stdout, /faelles\/print-hold\.mp3: lyden siger «En gammel tekst\.»/);
+    assert.match(k.stdout, /gammel-ret\/1\.mp3: .*«\(ingen replik\)»/);
+    assert.deepEqual(liste(), { version: 1, filer: [faerdig.fil] });
+    assert.deepEqual(gemt(), { version: 1, stemme, tekster: { [faerdig.fil]: faerdig.tekst } });
+    for (const f of filer) assert.ok(fs.existsSync(path.join(tmp, 'lyd', f)), f + ' må ikke slettes');
+
+    k = koer('--kun-rens'); // igen: intet at fjerne, og intet skrives om
+    assert.equal(k.status, 0, k.stderr);
+    assert.match(k.stdout, /^0 af 1 lydfiler/);
+    assert.deepEqual(liste(), { version: 1, filer: [faerdig.fil] });
+
+    assert.equal(koer('--kun-rens', '--ryd').status, 2, '--kun-rens sletter aldrig');
+    assert.equal(koer('--kun-rens', path.join(tmp, 'roest')).status, 2, '--kun-rens tager ingen Røst-mappe');
+    assert.equal(koer('--kun-ren').status, 2, 'et ukendt flag afvises');
+
+    fs.writeFileSync(path.join(tmp, 'lyd', 'tekster.json'), JSON.stringify({ version: 1, tekster: [] }));
+    k = koer('--kun-rens');
+    assert.equal(k.status, 1);
+    assert.match(k.stderr, /tekster\.json har ikke formen/);
+    assert.deepEqual(liste(), { version: 1, filer: [faerdig.fil] }, 'en fejl må ikke røre listen');
+  } finally {
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
+});
