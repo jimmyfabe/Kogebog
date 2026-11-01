@@ -136,14 +136,18 @@ export function skaleretIngrediens(m, i, faktor) {
   return { maengde: s.tekst, tekst: s.tekst + x.tekst.slice(x.maengde.length), skaleret: true, advarsel: s.advarsel };
 }
 
-// Til den voksne, når mængderne er regnet om: trinene læses op og nævner stadig opskriftens mængder, og ved mange eller få
-// portioner passer fadet og tiden måske ikke. Faktor 1 giver ingen linjer
+// Til den voksne, når mængderne er regnet om: trinene læses op og nævner stadig opskriftens mængder, ved mange eller få
+// portioner passer fadet og tiden måske ikke, og advarslerne fra linjerne (skaleretIngrediens for hver ingrediens): en
+// mængde, der ikke kunne regnes om, og dej, der er rundet op til hele. Faktor 1 giver ingen linjer
 const FADE_OVER = 1.5;
 const FADE_UNDER = 0.5;
-export function voksenNoter(m, faktor) {
+export function voksenNoter(m, faktor, linjer) {
   if (faktor === 1) return [];
+  const ukendte = linjer.filter((l) => l.advarsel === 'ukendt').length;
   return [
     'Mængderne i trinene er til ' + m.uge.portioner + ' — se ingredienslisten',
     faktor > FADE_OVER ? 'Brug to fade — tiden kan blive længere' : faktor < FADE_UNDER ? 'Hold øje med tiden' : null,
+    ukendte ? (ukendte === 1 ? 'Én mængde' : ukendte + ' mængder') + ' kunne ikke regnes om og står som til ' + m.uge.portioner : null,
+    linjer.some((l) => l.advarsel === 'form') ? 'Dej og form er rundet op til hele — formen passer måske ikke' : null,
   ].filter(Boolean);
 }

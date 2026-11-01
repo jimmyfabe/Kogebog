@@ -206,12 +206,35 @@ test('en ingrediens i retten: mængden regnes om, navnet står som før, og adva
 test('noterne til den voksne: trinene altid, to fade over 1,5, hold øje under 0,5, og ingen ved faktor 1', () => {
   const ks = ret('koedsovs');
   const TRIN = 'Mængderne i trinene er til 4 — se ingredienslisten';
-  assert.deepEqual(voksenNoter(ks, 1), []);
-  assert.deepEqual(voksenNoter(ks, 1.5), [TRIN]);
-  assert.deepEqual(voksenNoter(ks, 1.75), [TRIN, 'Brug to fade — tiden kan blive længere']);
-  assert.deepEqual(voksenNoter(ks, 3), [TRIN, 'Brug to fade — tiden kan blive længere']);
-  assert.deepEqual(voksenNoter(ks, 0.5), [TRIN]);
-  assert.deepEqual(voksenNoter(ks, 0.25), [TRIN, 'Hold øje med tiden']);
+  assert.deepEqual(voksenNoter(ks, 1, []), []);
+  assert.deepEqual(voksenNoter(ks, 1.5, []), [TRIN]);
+  assert.deepEqual(voksenNoter(ks, 1.75, []), [TRIN, 'Brug to fade — tiden kan blive længere']);
+  assert.deepEqual(voksenNoter(ks, 3, []), [TRIN, 'Brug to fade — tiden kan blive længere']);
+  assert.deepEqual(voksenNoter(ks, 0.5, []), [TRIN]);
+  assert.deepEqual(voksenNoter(ks, 0.25, []), [TRIN, 'Hold øje med tiden']);
   assert.equal(portionerTekst(1), '1 portion');
   assert.equal(portionerTekst(6), '6 portioner');
+});
+
+// Linjerne til en ret ved faktoren, som retten og printet regner dem
+const linjerTil = (m, f) => m.ingredienser.map((x, i) => skaleretIngrediens(m, i, f));
+
+test('noterne siger det, når en mængde ikke kunne regnes om, eller dejen er rundet op til hele', () => {
+  const TRIN = 'Mængderne i trinene er til 4 — se ingredienslisten';
+  const FADE = 'Brug to fade — tiden kan blive længere';
+  const FORM = 'Dej og form er rundet op til hele — formen passer måske ikke';
+  // Chorizo-pastaen har «1 stort løg» og «peber (og evt. salt)» uden mængde
+  const cp = ret('chorizo-pasta');
+  assert.deepEqual(voksenNoter(cp, 3, linjerTil(cp, 3)), [TRIN, FADE, '2 mængder kunne ikke regnes om og står som til 4']);
+  // Kødsovsen har kun «revet ost til servering»
+  const ks = ret('koedsovs');
+  assert.deepEqual(voksenNoter(ks, 0.75, linjerTil(ks, 0.75)), [TRIN, 'Én mængde kunne ikke regnes om og står som til 4']);
+  // Kyllingetærten har «1 rulle færdig butterdej»: rundet op, både når den ganges og halveres
+  const kt = ret('kyllingetaerte-med-butterdej');
+  assert.deepEqual(voksenNoter(kt, 1.5, linjerTil(kt, 1.5)), [TRIN, FORM]);
+  assert.deepEqual(voksenNoter(kt, 0.5, linjerTil(kt, 0.5)), [TRIN, FORM]);
+  // One-pot-tomatpastaen kan regnes helt om
+  const tp = ret('one-pot-tomatpasta');
+  assert.deepEqual(voksenNoter(tp, 1.5, linjerTil(tp, 1.5)), [TRIN]);
+  assert.deepEqual(voksenNoter(cp, 1, linjerTil(cp, 1)), [], 'faktor 1: ingen noter');
 });

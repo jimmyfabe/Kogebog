@@ -317,8 +317,9 @@ function retSkaerm(m) {
   const meta = sk
     ? el('p', { class: 'meta' }, el('span', { class: 'skaleret', tekst: 'Til ' + portionerTekst(sk.n) }), tid ? ' · ' + tid : null)
     : (m.portioner || tid ? el('p', { class: 'meta', tekst: [m.portioner, tid].filter(Boolean).join(' · ') }) : null);
+  const linjer = m.ingredienser.map((x, i) => (sk ? skaleretIngrediens(m, i, sk.faktor) : { maengde: x.maengde, tekst: x.tekst, skaleret: false }));
   const ingr = m.ingredienser.map((x, i) => {
-    const l = sk ? skaleretIngrediens(m, i, sk.faktor) : { maengde: x.maengde, tekst: x.tekst, skaleret: false };
+    const l = linjer[i];
     const b = el('button', { type: 'button', class: 'ingr', 'aria-label': l.tekst },
       x.ikon ? billede(grafikIngrediens(x.ikon), '', 'ingr-ikon') : null,
       l.maengde ? el('span', { class: 'ingr-maengde' + (l.skaleret ? ' skaleret' : ''), tekst: l.maengde }) : null,
@@ -365,7 +366,7 @@ function retSkaerm(m) {
           el('h1', { tabindex: '-1', tekst: m.navn }),
           hoejttaler),
         meta,
-        sk ? voksenNoter(m, sk.faktor).map((t) => el('p', { class: 'voksen-linje', tekst: t })) : null),
+        sk ? voksenNoter(m, sk.faktor, linjer).map((t) => el('p', { class: 'voksen-linje', tekst: t })) : null),
       el('section', { class: 'ret-ingredienser', 'aria-labelledby': 'ingr-titel' },
         el('h2', { id: 'ingr-titel', tekst: 'Det skal I bruge' }),
         el('ul', { class: 'ingr-gitter' }, ingr))),

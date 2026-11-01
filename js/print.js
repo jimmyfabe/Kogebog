@@ -32,6 +32,8 @@ function tegn(m) {
   // Faktor 1, og bage- og søde retter uden talportioner, printes som før
   const f = n ? faktorFor(m, n) : null;
   const faktor = f && f !== 1 ? f : null;
+  // Mængden regnes om som på skærmen (retSkaerm i app.js), og navnet står som før
+  const linjer = faktor ? m.ingredienser.map((x, i) => skaleretIngrediens(m, i, faktor)) : null;
   const portioner = faktor ? 'Til ' + portionerTekst(n) : m.portioner;
   const meta = [portioner, m.minutter ? minutterTekst(m.minutter) + ' i alt' : '', m.aktivMinutter ? minutterTekst(m.aktivMinutter) + ' forberedelse' : '']
     .filter(Boolean).join(' · ');
@@ -65,9 +67,8 @@ function tegn(m) {
     el('div', { class: 'spalter' },
       el('section', { class: 'ingredienser', 'aria-labelledby': 'p-ingr' },
         el('h2', { id: 'p-ingr', tekst: 'Ingredienser' }),
-        // Mængden regnes om som på skærmen (retSkaerm i app.js), og navnet står som før
-        el('ul', { class: 'tjek' }, m.ingredienser.map((x, i) => el('li', { tekst: faktor ? skaleretIngrediens(m, i, faktor).tekst : x.tekst }))),
-        faktor ? voksenNoter(m, faktor).map((t) => el('p', { class: 'note', tekst: t })) : null,
+        el('ul', { class: 'tjek' }, m.ingredienser.map((x, i) => el('li', { tekst: linjer ? linjer[i].tekst : x.tekst }))),
+        faktor ? voksenNoter(m, faktor, linjer).map((t) => el('p', { class: 'note', tekst: t })) : null,
         m.redskaber.length ? el('h2', { tekst: 'Redskaber' }) : null,
         m.redskaber.length ? el('p', { class: 'redskaber', tekst: m.redskaber.join(', ') }) : null),
       el('section', { class: 'fremgang', 'aria-labelledby': 'p-trin' },

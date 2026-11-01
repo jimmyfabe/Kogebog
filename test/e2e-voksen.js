@@ -21,6 +21,8 @@ const BAGNING = 'boller';         // ingen talportioner: altid som i opskriften
 const TRIN_LINJE = 'Mængderne i trinene er til 4 — se ingredienslisten';
 const TO_FADE = 'Brug to fade — tiden kan blive længere';
 const HOLD_OEJE = 'Hold øje med tiden';
+const TAERTE = 'kyllingetaerte-med-butterdej'; // «1 rulle færdig butterdej» rundes op til hele
+const FORM = 'Dej og form er rundet op til hele — formen passer måske ikke';
 
 export async function voksen(browser, H) {
   for (const skaerm of H.VALGTE) await forloeb(browser, H, skaerm);
@@ -167,6 +169,10 @@ async function forloeb(browser, H, skaerm) {
   const mandagLinjer = forventetLinjer(RETTER, IPLAN[0], mandagFaktor).map((l) => l.tekst);
   tjek(mandagFaktor === 0.75 && JSON.stringify(mandagVist) === JSON.stringify(mandagLinjer),
     n + ': mandagens mængder er regnet om × 0,75 (' + mandagVist.slice(0, 4).join(' | ') + ')');
+  // «revet ost til servering» har ingen mængde: den voksne får at vide, at den ikke er regnet om
+  const mandagNoter = await side.evaluate(() => [...document.querySelectorAll('.ret .voksen-linje')].map((e) => e.textContent));
+  tjek(JSON.stringify(mandagNoter) === JSON.stringify([TRIN_LINJE, 'Én mængde kunne ikke regnes om og står som til 4']),
+    n + ': mandagens ret siger, at én mængde ikke kunne regnes om (' + JSON.stringify(mandagNoter) + ')');
 
   // 4. Retten ved 6 portioner: «Til 6», mængderne regnet om og markeret, én voksen-linje, og iPad-stemmen læser op
   const faktor = faktorFor(lavModel(RETTER[RET]), 6);
@@ -359,6 +365,8 @@ async function strengtPrint(browser, H) {
       await foto(side, n + '-voksen-print-8');
     }
   }
+  r = await aabn(TAERTE + '&n=6');
+  tjek(r.noter.includes(FORM), n + ': ' + TAERTE + ' ved 6 portioner siger, at dejen er rundet op til hele (' + JSON.stringify(r.noter) + ')');
   tjek(side.fejl.length === 0, n + ' (print med n): ' + side.fejl.join(' | '));
   await ctx.close();
 }
