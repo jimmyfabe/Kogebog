@@ -1,5 +1,42 @@
 # STATUS – Tumbi Køkken
 
+## 01-11-2026 kl. 03:11: forældredelen er bygget og reviewet, ikke flettet (Saga)
+
+Jimmy 31-10 (talebesked): «så kan vi jo lige så godt få bygget det med det samme». Ønskerne var ugens udvalg til børnene, grupper («meget sunde»), voksne og børn, der skalerer mængderne, favoritter, «prøv nye», et voksen-«login» og indkøb på forældrenes telefon.
+- **Grenen:** `claude/foraeldredel-31-10` (worktree `D:\Claude\.claude\worktrees\kogebog-foraeldre-3110`). Den indeholder runde 3 (og dermed runde 1 og 2), så **den kan flettes alene**. Designet står i `docs/foraeldredel.md`. Version stadig v3 · 31-10-2026.
+- **Det kan den:**
+  - «Voksne: hold» (2 s) på forsiden åbner voksendelen (`#/voksen`). Den lukker, når man går ud, efter 10 min uden tryk og med «Luk».
+  - Husstand: voksne og børn giver portioner (et barn = 0,7 voksen, højst 12 portioner, og den siger det, når loftet skærer ned).
+  - Ugens udvalg: 8 retter, højst 24, og «Fyld op med nye» tilføjer 4.
+  - Favoritter (⭐).
+  - Børnenes valg i ugeplanen viser kun udvalget, med ✨ (ny for os, først når familien har lavet en ret) og ⭐. Nye filtre: Vegetar og Masser af grønt.
+  - Opskriftsskærmen og printet regnes om til dagens antal fra ugeplanen (ellers husstandens), med gul markering. Voksen-linjer om fade, mængder, der ikke kunne regnes om, og dej, der er rundet op.
+  - Hjerte på færdig-skærmen og en tæller for «lavet».
+- **Data:** ny nøgle `kog-familie-v1`. Den gemmer kun ANTAL børn. De gamle nøgler er uændrede, og uden den nye nøgle opfører appen sig som før.
+- **Bygget** af 6 agenter (5279704..dc5f084), og runde 3 er flettet ind (f03066a, c681d77).
+- **Review:** code-reviewer, security-auditor og ui-reviewer i WebKit, derefter Fable som dommer. 24 fund og 6 kendte punkter; 18 holdt. 15 er rettet med test og commit (632f57a..5dbcb60), og CLAUDE.md er opdateret (40c1052).
+- **Test (Saga 01-11):** node-tests 13 af 14 grønne (`test-lyd` er rød som på runde 3). Hele e2e i WebKit på 40c1052: 71.737 tjek, 0 fejl (3.075 s), heraf `voksen` 438 og `ugeplan` 688. De nye tests fejler mod den gamle kode (28 fejl), undtagen e2e for husstandens loft og holdet, som aldrig nåede at køre mod den gamle kode.
+- **Ikke rettet:**
+  - Navneord bøjes ikke, fx «2 grøntsagsbouillonterning» og «1 gulerødder». Det kræver nye felter på ca. 58 linjer.
+  - «Ingen kniv»: 16 af de 30 retter har et dåsetrin med voksen-kniv (Jimmys valg).
+  - Afvist af dommeren: voksendelens lås dækker ikke ugeplanens oversigt (den har aldrig været låst).
+- **Usikkert:**
+  - Husstandens knapper ved 0 og 8 og de låste knapper på oversigten kan ikke få fokus. VoiceOver læser dem som nedtonede.
+  - Gemte data med 0 voksne og ingen børn sat læses som «ikke sat».
+  - De rettede skærme (hjertet i topbaren, voksen-linjerne) er kun set af e2e, ikke af ui-revieweren igen.
+
+**Afventer Jimmy:**
+- (01-11) Ja eller nej til den nye nøgle `kog-familie-v1`, før grenen flettes i `main` (ændring i datastrukturen).
+- (01-11) Standardvalgene (`docs/foraeldredel.md` afsnit 9):
+  - et barn = 0,7 voksen, holdeknappen 2 s, udvalget 8 af højst 24, «Fyld op» +4;
+  - grønt 250 g og billig 12 kr pr. portion, intet filter på forsiden;
+  - ✨ først, når familien har lavet en ret.
+- (01-11) ⭐ eller ❤️ til favorit?
+- (01-11) «Ingen kniv»: A = kun retter helt uden kniv, også hos den voksne (14 retter, anbefalet), eller B = behold reglen og omdøb til «Ingen skæring»?
+- (01-11) Skal navneordene bøjes nu eller senere?
+- (01-11) Test på iPad og iPhone (testlisten i Sagas lydbesked 01-11).
+- (01-11) Flet og push: forældredelen (indeholder runde 3), eller kun runde 3 først.
+
 ## 01-11-2026 kl. 02:40: runde 3 — 14 nye retter i bogen (101 i alt), ikke flettet (Saga)
 
 Jimmy 31-10: «kører du bare hele lortet helt færdigt til i morgen» (kødkål, jægergryde og Jamie-retterne).
