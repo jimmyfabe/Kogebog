@@ -7,7 +7,7 @@ Jimmy 31-10: «kører du bare hele lortet helt færdigt til i morgen» (kødkål
 - **Nye retter:** kødkål med makaroni, jægergryde med pasta, cremet fiskesuppe med majs, cremet ostris med ærter, fisketacos med majs, foldet fladbrød med ost, gul ris med laks, ærter og æg, koteletter med æble, kylling med bønner og spinat, kyllingetærte med butterdej, laks med sprød rasp, smash-burgere med ost, sprød kylling i rasp (aftensmad, sidst i README-rækkefølge, med i ugeplanen) og frossen yoghurt med bær (søde sager). Egne mængder; ingen er lavet i et rigtigt køkken.
 - **Commits:** a8bb492 (de 14 skrevet), 2abced8 (rettelser efter review af retterne, 18 filer), 01ffdeb (flyttet ind med Codex-billeder, tjekket på et kontaktark). «Fuldkornstortillas» har fået en blød bindestreg (e2e fandt den på smal skærm).
 - **Test:** node-tests 8 af 9 grønne (`test-lyd` rød: 1.504 af 2.927 replikker mangler Røst-lyd, før 1.043 af 2.466, plus de 3 forældreløse mp3). e2e i WebKit: `hele`, `former`, `lyn` og `ugeplan` grønne.
-- **Mangler:** 4 billeder tegnes om af Codex (planlagt 01-11 kl. 05:20, når Codex-grænsen nulstilles), fordi de blev tegnet efter beskrivelserne før reviewet: laks (mos med ærter, ikke broccoli), frossen yoghurt (kun blåbær), fisketacos (2, ikke 3) og smash-burgere (fuldkornsboller).
+- **4 billeder tegnet om** af Codex 01-11 kl. 05:20-05:23, fordi de første var tegnet efter beskrivelserne før reviewet: laks (mos med ærter, ikke broccoli), frossen yoghurt (kun blåbær), fisketacos (2, ikke 3) og smash-burgere (fuldkornsboller). Tjekket på et kontaktark af Saga.
 
 **Afventer Jimmy:**
 - (01-11) Smag på listen over de 14 retter. Skal de 13 aftensretter stå i README-rækkefølge eller alfabetisk i `opskrifter/index.json`?
