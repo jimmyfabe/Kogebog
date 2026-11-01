@@ -79,7 +79,7 @@ test('gem og hent giver det samme', () => {
   assert.equal(l.skrevet.every((k) => k === NOEGLE), true);
 });
 
-test('voksne og børn: null eller et heltal 0-8, og begge 0 er det samme som ikke sat', () => {
+test('voksne og børn: null eller et heltal 0-8, og ingen at lave mad til (0 eller ikke sat) er det samme som ikke sat', () => {
   for (let n = 0; n <= 8; n++) {
     medLager();
     assert.equal(lager.gemFamilie({ voksne: n, boern: 1 }, RETTER).voksne, n, 'voksne ' + n);
@@ -95,7 +95,12 @@ test('voksne og børn: null eller et heltal 0-8, og begge 0 er det samme som ikk
   assert.deepEqual(lager.gemFamilie({ voksne: 0, boern: 3 }, RETTER), { ...TOM, voksne: 0, boern: 3 });
   // Sætter man børnene til 0, når de voksne allerede er 0, bliver begge null
   assert.deepEqual(lager.gemFamilie({ boern: 0 }, RETTER), TOM);
-  assert.deepEqual(lager.gemFamilie({ voksne: 0 }, RETTER), { ...TOM, voksne: 0 });
+  // 0 og ikke sat er også ingen at lave mad til
+  assert.deepEqual(lager.gemFamilie({ voksne: 0 }, RETTER), TOM);
+  for (const [voksne, boern] of [[0, null], [null, 0], [0, undefined], [undefined, 0]]) {
+    medLager({ [NOEGLE]: { v: 1, voksne, boern } });
+    assert.deepEqual(lager.hentFamilie(RETTER), { ...TOM, laast: false }, JSON.stringify([voksne, boern]));
+  }
 });
 
 test('barnAndel: 0,4-1,0 i trin af 0,1 og gemt med én decimal, ellers 0,7', () => {

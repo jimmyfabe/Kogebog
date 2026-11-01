@@ -247,7 +247,7 @@ function rensFamilie(j, erKendt) {
   if (!j) return ud;
   if (erAntal(j.voksne)) ud.voksne = j.voksne;
   if (erAntal(j.boern)) ud.boern = j.boern;
-  if (ud.voksne === 0 && ud.boern === 0) ud.voksne = ud.boern = null; // ingen at lave mad til er det samme som ikke sat
+  if (!ud.voksne && !ud.boern) ud.voksne = ud.boern = null; // ingen at lave mad til (0 eller ikke sat) er ikke sat
   ud.barnAndel = rensAndel(j.barnAndel);
   const ids = rensIds(j.udvalg?.ids, erKendt, MAKS_UDVALG);
   if (ids.length) ud.udvalg = { ids, rettet: erDato(j.udvalg.rettet) ? j.udvalg.rettet : null };
