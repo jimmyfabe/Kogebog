@@ -542,7 +542,7 @@ async function nyereFamilie(browser, H) {
 // 11. Husstanden 8 + 8 (13,6 portioner): loftet på 12 står i summen og på oversigten, så ingen tror, der er nok til 14.
 // Og ved 8 siger «Flere» grænsen
 async function husstandLoft(browser, H) {
-  const { BASE, SKAERME, nySide, tjek, tjekLayout } = H;
+  const { BASE, SKAERME, nySide, tjek, tjekLayout, tryk, venterPaa } = H;
   const n = SKAERME[0].navn;
   console.log('[' + n + '] voksendelen: husstanden 8 + 8 og loftet på 12 portioner');
   const LOFT = '12 portioner (højst 12 — lav retten to gange til flere)';
