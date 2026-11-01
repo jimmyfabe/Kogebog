@@ -1,5 +1,14 @@
 # STATUS – Tumbi Køkken
 
+## 01-11-2026 kl. 21:40: 24 juleretter bygget på grenen jul-0111, review og e2e kører (Saga)
+
+- **Gren `jul-0111`** (worktree `D:/Claude/.claude/worktrees/kogebog-jul-0111`, ikke flettet, ikke pushet): gruppen «Jul» først, 24 juleretter med billeder, 4 nye verber (stikke-ud, forme, pille, smelte = voksen varme), 10 ikoner, discount-bytninger i 11 gamle retter (parmesan → revet hård ost m.m.), reglen «køb i Rema/Netto/365/Lidl» i CLAUDE.md. Alle node-tests grønne undtagen test-lyd (mangler Røst).
+- **11 julebordsretter venter på billeder** i `docs/venter-paa-billede/` (Codex-kvoten løb tør, åbner 02-11 kl. 01:52). 4 retbilleder er pladsholdere, der ikke passer: jødekager, julekage, kransekagestykker, chokoladetaler. Kør `jul-billeder/koer-codex.sh` i kladdemappen igen.
+- **Røst:** talelisten er skiftet til grenens 3603 replikker kl. 21:30 (backup `D:/Stemmer/kogebog-500m/taleliste-foer-jul-0111.json`), så løkken laver juleretternes lyd med. ca. 2180 mangler ≈ 12 t.
+- **Salgsrapporten** er efterprøvet af en Fable-dommer (0 påstande væltet, 3 rettet) og ligger som Google Doc i Drev `Claude/Kogebog`: https://docs.google.com/document/d/1-iDvMfDBgsl7eiGYxV1hKQHXXjMpRUFMzOHAG2LLUxA/edit
+- **Review-workflow** `wf_63c46d17-2a7` kører: kendte rettelser (jul-farve, gamle mp3 til ændrede tekster fjernes fra liste.json, v4, risalamande fra kold grød), kode-, opskrift- og UI-review med dommer, rettelser og fuld e2e.
+- **Afventer Jimmy (01-11):** temaer og forsidevalg kræver lager v2 (migrering af `kog-familie-v1`) · salg: scenarie A (gratis + portfolio) anbefales · varemærkesøgning på «Tumbi» · licens og offentligt/privat repo.
+
 ## 01-11-2026 kl. 19:55: jul, discount og salgsrapport er i gang (Saga)
 
 Jimmy 01-11 aften (talebesked): mange danske juleopskrifter (småkager, julekager, konfekt og nemt slik, julebordsmad: medister, æbleflæsk, leverpostej, rullepølse og en skinke à la Jamie Oliver), britiske tærter og fish and chips i airfryer. **Alt skal kunne købes i Rema 1000, Netto, 365discount og Lidl**, ingen specialvarer. Temaer i forældredelen («Jul»), så børnene kun ser det valgte, og et forslag til en voksen- og en børneudgave. Desuden en fuld rapport om salg og professionalisering. «Det skal bare spille til næste weekend.» Han svarede **«Ja ♥️»** kl. 19:5x på Sagas forståelse i 3 linjer, så appen må ændres.
