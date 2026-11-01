@@ -54,7 +54,7 @@ test('ugens retter lægges sammen og skaleres til de valgte portioner, før der 
     'gulerod': '2 stk', 'hvidloeg': '4 fed', 'loeg': '2 stk',
     'bouillonterninger': '1 pakke (8 stk)', 'fuldkornspasta': '1 pakke (500 g)', 'hakkede-tomater': '2 dåser (800 g)',
     'passata': '2 flasker (1 kg)', 'spaghetti': '2 pakker (1 kg)', 'tomatpure': '1 tube (140 g)',
-    'chorizo': '1 pakke (250 g)', 'flodeost': '2 bægre (400 g)', 'hakket-oksekoed': '3 bakker (1,5 kg)',
+    'chorizo': '2 pakker (160 g)', 'flodeost': '2 bægre (400 g)', 'hakket-oksekoed': '3 bakker (1,5 kg)',
     'madlavningsflode': '1 bæger (2,5 dl)', 'parmesan': '2 poser (200 g)', 'revet-ost': '1 pose (175 g)',
   });
   // Basisvarerne står én gang uden mængde; vandet står der ikke
@@ -98,6 +98,32 @@ test('tunfrikadellerne: persille i bundter, æg i bakker, og Æ står sidst i K�
   });
   assert.equal(vareTekst('persille', 1), '1 bundt');
   assert.deepEqual(koel.varer[2], { id: 'aeg', navn: 'Æg', ikon: 'aeg', maengde: '1 bakke (10 stk)' });
+});
+
+// «3 pakker chorizo i skiver (à 80 g)» skal også stå som pakker à 80 g på indkøbslisten. Efter discount-bytningen
+// 01-11-2026 havde kataloget stadig 250 g-pakken, så listen sagde «1 pakke (250 g)» til 240 g (code review F2).
+// Linjen og tumbi.ingredienser står i samme rækkefølge (test-opskrifter.js)
+const ENHED_I = { g: ['g', 1], kg: ['g', 1000], ml: ['ml', 1], dl: ['ml', 100], l: ['ml', 1000] };
+test('pakkestørrelsen «à N g» i en ingrediens er den samme som varens pakke i kataloget', () => {
+  let set = 0;
+  for (const mappe of ['opskrifter', path.join('docs', 'venter-paa-billede')]) {
+    for (const fil of fs.readdirSync(path.join(ROD, mappe)).filter((f) => f.endsWith('.json') && f !== 'index.json')) {
+      const r = JSON.parse(fs.readFileSync(path.join(ROD, mappe, fil), 'utf8'));
+      (r.recipeIngredient || []).forEach((linje, i) => {
+        const m = /(?<!\p{L})à\s+(\d+(?:,\d+)?)\s*(kg|g|ml|dl|l)(?!\p{L})/u.exec(linje);
+        const ing = (r.tumbi?.ingredienser || [])[i];
+        if (!m || !ing?.vare) return;
+        set++;
+        const vare = VARER[ing.vare];
+        const [enhed, gange] = ENHED_I[m[2]];
+        assert.ok(vare?.pakke, fil + ': «' + linje + '» har en pakkestørrelse, men ' + ing.vare + ' har ingen pakke i VARER');
+        assert.equal(vare.enhed, enhed, fil + ': «' + linje + '» er i ' + enhed + ', men ' + ing.vare + ' tælles i ' + vare.enhed);
+        assert.equal(vare.pakke[0], Number(m[1].replace(',', '.')) * gange,
+          fil + ': «' + linje + '», men VARER.' + ing.vare + '.pakke er ' + vare.pakke[0] + ' ' + vare.enhed);
+      });
+    }
+  }
+  assert.ok(set >= 3, 'forventede mindst 3 ingredienser med «à N g» eller «à N ml» (chorizo, hoisin, kokosmælk), fandt ' + set);
 });
 
 test('afrunding: stk og fed til hele, gram til 10 g og fra 1 kg til 100 g, ml til ½ dl og fra 1 l til 1 dl', () => {

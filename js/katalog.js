@@ -298,7 +298,8 @@ export const VARER = {
   'hoisin': { navn: 'Hoisinsauce', afd: 'toer', enhed: 'g', ikon: 'soja', pakke: [40, 'pose', 'poser'] },
   // Køl
   'hakket-oksekoed': { navn: 'Hakket oksekød', afd: 'koel', enhed: 'g', ikon: 'koed', pakke: [500, 'bakke', 'bakker'], slags: 'koed' },
-  'chorizo': { navn: 'Chorizo', afd: 'koel', enhed: 'g', ikon: 'chorizo', pakke: [250, 'pakke', 'pakker'], slags: 'koed' },
+  // Chorizo i skiver à 80 g (Rema 1000), som chorizo-pastaen bruger fra discount-tilpasningen 01-11-2026
+  'chorizo': { navn: 'Chorizo', afd: 'koel', enhed: 'g', ikon: 'chorizo', pakke: [80, 'pakke', 'pakker'], slags: 'koed' },
   'flodeost': { navn: 'Flødeost', afd: 'koel', enhed: 'g', ikon: 'flodeost', pakke: [200, 'bæger', 'bægre'] },
   'madlavningsflode': { navn: 'Madlavnings\u00adfløde', afd: 'koel', enhed: 'ml', ikon: 'flode', pakke: [250, 'bæger', 'bægre'] },
   // Id'et er stadig «parmesan», men retterne bruger den billigere revne hårde ost fra 01-11-2026 (discount-tilpasningen)
