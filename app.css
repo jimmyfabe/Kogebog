@@ -17,6 +17,7 @@
   --urt-lys: #DDEFE0;
   --tomat-lys: #F9DCD6;
   --lilla-lys: #EADFF4;     /* Halloween-afsnittet (græskarret står på lilla) */
+  --jul-lys: #F2B8B5;       /* Jul-afsnittet: det grønne juletræ står på julerødt (kakao 8,0:1; tydeligt mørkere end tomat-lys) */
   --dej-lys: #F6E7D0;
   --blaa: #3E8FB0;
   --blaa-moerk: #2E6A83;   /* fokusring */
@@ -274,13 +275,14 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .forside-fod { text-align: center; color: var(--kakao-blid); font-size: 15px; padding: 0 24px 14px; }
 /* Versionsnummeret (js/version.js) under linjen om stemmen: til den voksne, mindre end resten af foden */
 .forside-version { font-size: 13px; }
-/* Fire afsnit (opskrifter/index.json): aftensmad, bagning, søde sager og halloween. Overskriften er et billede på
-   afsnittets farve og et ord, og kortenes cirkel har samme farve, så børnene kan kende gryden, ovnen, kagen og
+/* Fem afsnit (opskrifter/index.json): jul, aftensmad, bagning, søde sager og halloween. Overskriften er et billede på
+   afsnittets farve og et ord, og kortenes cirkel har samme farve, så børnene kan kende juletræet, gryden, ovnen, kagen og
    græskarret igen uden at læse.
    Før stod alle 13 kort i ét gitter, og med to kort pr. række delte pizzasnegle og pandekager række */
 .gruppe { width: min(100%, 990px); margin: 0 auto; padding: 22px 24px 0; }
 .gruppe + .gruppe { margin-top: 10px; }
 /* Afsnittet og dets knap i toppen har samme farve */
+[data-gruppe="jul"] { --ret-farve: var(--jul-lys); }
 [data-gruppe="aftensmad"] { --ret-farve: var(--urt-lys); }
 [data-gruppe="bagning"] { --ret-farve: var(--sennep-lys); }
 [data-gruppe="soede-sager"] { --ret-farve: var(--tomat-lys); }

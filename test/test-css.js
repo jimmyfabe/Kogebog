@@ -7,6 +7,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { GRUPPER } from '../js/katalog.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const CSS = fs.readFileSync(path.join(ROD, 'app.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
@@ -80,4 +81,21 @@ test('printets fod holdes sammen med det sidste trin', () => {
   const regler = (sel) => alle.filter((b) => b.hoved.split(',').map((s) => s.trim()).includes(sel)).map((b) => b.deklarationer).join(';');
   assert.match(regler('.slut'), /break-inside\s*:\s*avoid/, '.slut (det sidste trin og foden) skal have break-inside: avoid, så foden ikke står alene på side 2');
   assert.doesNotMatch(regler('.fod'), /break-before/, '.fod må ikke bruge break-before: Safari kender ikke break-before: avoid, og blokken .slut holder foden sammen med det sidste trin');
+});
+
+// Hvert afsnit på forsiden (GRUPPER i js/katalog.js) har sin egen farve i [data-gruppe] (overskriften, kortenes cirkel og
+// knappen i toppen). Jul kom ind 01-11-2026 uden en regel, og så faldt kortene tilbage til sennep og knappen til ingenting
+test('hvert afsnit har sin egen farve i [data-gruppe] fra en farve på :root', () => {
+  const rod = blokke(CSS);
+  const farver = new Set([...rod.regler.filter((b) => b.hoved === ':root').map((b) => b.deklarationer).join(';')
+    .matchAll(/(--[a-z-]+)\s*:/g)].map((m) => m[1]));
+  const brugt = new Map();
+  for (const id of Object.keys(GRUPPER)) {
+    const regel = rod.regler.filter((b) => b.hoved === '[data-gruppe="' + id + '"]').map((b) => b.deklarationer).join(';');
+    const m = /--ret-farve\s*:\s*var\((--[a-z-]+)\)/.exec(regel);
+    assert.ok(m, 'app.css mangler [data-gruppe="' + id + '"] { --ret-farve: var(--…); }');
+    assert.ok(farver.has(m[1]), '[data-gruppe="' + id + '"] bruger ' + m[1] + ', som ikke står på :root');
+    assert.ok(!brugt.has(m[1]), id + ' og ' + brugt.get(m[1]) + ' har samme farve (' + m[1] + ')');
+    brugt.set(m[1], id);
+  }
 });
