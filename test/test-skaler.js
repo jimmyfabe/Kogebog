@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { portionerFraHusstand, faktorFor, skalerMaengde, BARN_ANDEL, MAKS_PORTIONER, skaleretIngrediens, voksenNoter, portionerTekst } from '../js/skaler.js';
 import * as lager from '../js/lager.js';
 import { lavModel } from '../js/model.js';
+import { boejNavn, NAVNEORD, TILLAEGSORD, KOEN } from '../js/tekst.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const json = (fil) => JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', fil), 'utf8'));
@@ -21,8 +22,9 @@ const RETTER = IDS.map((id) => {
 const LINJER = RETTER.flatMap(({ id, model, varer }) => model.ingredienser.map((l, i) => ({ id, maengde: l.maengde, tekst: l.tekst, vare: varer[i] })));
 const FAKTORER = [0.5, 1.5, 3];
 // Mængderne i opskrifterne, der står uændret med 'ukendt'. Får en opskrift et nyt format, fejler testen og nævner det:
-// så skal formatet enten have en regel i js/skaler.js eller skrives på listen her
-const UKENDTE = ['', '1 stort', '8-10 g'];
+// så skal formatet enten have en regel i js/skaler.js eller skrives på listen her. «1 stort» (løg) er skrevet som «1» og
+// navnet «stort løg» (01-11), så tillægsordet bøjes med navneordet («3 store løg»)
+const UKENDTE = ['', '8-10 g'];
 
 const sk = (maengde, faktor, vare) => skalerMaengde(maengde, faktor, { vare });
 const tekst = (maengde, faktor, vare) => sk(maengde, faktor, vare).tekst;
@@ -182,29 +184,149 @@ test('alle ugeplan-retter har faktor 1 til 4 portioner, og alle andre retter har
 
 const ret = (id) => RETTER.find((r) => r.id === id).model;
 
-test('en ingrediens i retten: mængden regnes om, navnet står som før, og advarslen følger med', () => {
+// Et antal uden enhed («2», «½», «ca. 3»): navneordet efter det bøjes, når antallet regnes om
+const ANTAL_RE = /^(?:ca\. )?(\d+(?:,\d+)?|\d*[½¼¾])$/;
+const antalAf = (maengde) => {
+  const t = ANTAL_RE.exec(maengde)[1];
+  const b = { '½': 0.5, '¼': 0.25, '¾': 0.75 }[t.slice(-1)];
+  return b ? Number(t.slice(0, -1) || 0) + b : Number(t.replace(',', '.'));
+};
+// Ental efter højst 1 og efter 1,5 («halvanden gulerod»), som enhederne i js/skaler.js
+const erFlertal = (x) => x > 1 && x !== 1.5;
+
+test('en ingrediens i retten: mængden regnes om, navneordet bøjes med, og advarslen følger med', () => {
   const tp = ret('one-pot-tomatpasta');
-  assert.deepEqual(skaleretIngrediens(tp, 0, 1.5), { maengde: '450 g', tekst: '450 g penne', skaleret: true, advarsel: null });
-  assert.deepEqual(skaleretIngrediens(tp, 9, 1.5), { maengde: '1 knivspids', tekst: '1 knivspids peber', skaleret: false, advarsel: null });
+  assert.deepEqual(skaleretIngrediens(tp, 0, 1.5), { maengde: '450 g', navn: 'penne', tekst: '450 g penne', skaleret: true, advarsel: null });
+  assert.deepEqual(skaleretIngrediens(tp, 9, 1.5), { maengde: '1 knivspids', navn: 'peber', tekst: '1 knivspids peber', skaleret: false, advarsel: null });
   const kt = ret('kyllingetaerte-med-butterdej');
-  assert.deepEqual(skaleretIngrediens(kt, 9, 1.5), { maengde: '2 ruller', tekst: '2 ruller færdig butterdej', skaleret: true, advarsel: 'form' });
+  assert.deepEqual(skaleretIngrediens(kt, 9, 1.5), { maengde: '2 ruller', navn: 'færdig butterdej', tekst: '2 ruller færdig butterdej', skaleret: true, advarsel: 'form' });
   // Halveret er dejen stadig én rulle: ikke skaleret, men formen passer måske ikke
-  assert.deepEqual(skaleretIngrediens(kt, 9, 0.5), { maengde: '1 rulle', tekst: '1 rulle færdig butterdej', skaleret: false, advarsel: 'form' });
-  assert.deepEqual(skaleretIngrediens(kt, 10, 1.5), { maengde: '2', tekst: '2 æg til pensling', skaleret: true, advarsel: null }, 'æg er hele');
+  assert.deepEqual(skaleretIngrediens(kt, 9, 0.5), { maengde: '1 rulle', navn: 'færdig butterdej', tekst: '1 rulle færdig butterdej', skaleret: false, advarsel: 'form' });
+  assert.deepEqual(skaleretIngrediens(kt, 10, 1.5), { maengde: '2', navn: 'æg til pensling', tekst: '2 æg til pensling', skaleret: true, advarsel: null }, 'æg er hele');
   const cp = ret('chorizo-pasta');
-  assert.deepEqual(skaleretIngrediens(cp, 1, 3), { maengde: '1 stort', tekst: '1 stort løg', skaleret: false, advarsel: 'ukendt' });
-  assert.deepEqual(skaleretIngrediens(cp, 9, 3), { maengde: '', tekst: 'peber (og evt. salt)', skaleret: false, advarsel: 'ukendt' });
+  assert.deepEqual(skaleretIngrediens(cp, 1, 3), { maengde: '3', navn: 'store løg', tekst: '3 store løg', skaleret: true, advarsel: null });
+  assert.deepEqual(skaleretIngrediens(cp, 9, 3), { maengde: '', navn: 'peber (og evt. salt)', tekst: 'peber (og evt. salt)', skaleret: false, advarsel: 'ukendt' });
   // Alle linjer i alle ugeplan-retter
   for (const r of RETTER.filter((x) => x.model.uge)) {
     for (const f of FAKTORER) {
       r.model.ingredienser.forEach((x, i) => {
         const s = skaleretIngrediens(r.model, i, f);
         const hvor = r.id + ' × ' + f + ': «' + x.tekst + '»';
-        assert.equal(s.tekst, s.maengde + x.tekst.slice(x.maengde.length), hvor);
+        // Navnet er bøjet efter et antal uden enhed, der er ændret, og ellers opskriftens
+        const navn = s.skaleret && ANTAL_RE.test(s.maengde) ? boejNavn(x.navn, erFlertal(antalAf(s.maengde))) : x.navn;
+        assert.equal(s.navn, navn, hvor);
+        assert.equal(s.tekst, s.maengde + x.tekst.slice(x.maengde.length).replace(x.navn, () => s.navn), hvor);
         assert.equal(s.skaleret, s.maengde !== x.maengde, hvor);
         assert.deepEqual({ tekst: s.maengde, advarsel: s.advarsel }, sk(x.maengde, f, r.varer[i]), hvor);
       });
     }
+  }
+});
+
+test('ved faktor 1 er hver linje i hver ugeplan-ret nøjagtig opskriftens (Røst-lyden er lavet af den)', () => {
+  for (const r of RETTER.filter((x) => x.model.uge)) {
+    r.model.ingredienser.forEach((x, i) => {
+      assert.deepEqual(skaleretIngrediens(r.model, i, 1), { maengde: x.maengde, navn: x.navn, tekst: x.tekst, skaleret: false, advarsel: null }, r.id + ': ' + x.tekst);
+    });
+  }
+});
+
+// Alle linjer med et antal uden enhed i alle retter (også dem uden talportioner: bliver en af dem en ugeplan-ret, kan den
+// ikke komme med et ord, som skaleringen ikke kan bøje)
+const ANTAL_LINJER = RETTER.flatMap(({ id, model }) => model.ingredienser.filter((x) => ANTAL_RE.test(x.maengde)).map((x) => ({ id, ...x, uge: Boolean(model.uge) })));
+
+test('hvert navneord efter et antal uden enhed står i NAVNEORD i js/tekst.js (eller er udtrykkeligt uændret)', () => {
+  assert.ok(ANTAL_LINJER.length >= 148, 'linjer med et antal uden enhed: ' + ANTAL_LINJER.length);
+  const mangler = ANTAL_LINJER.filter((l) => boejNavn(l.navn, false) === null || boejNavn(l.navn, true) === null);
+  assert.deepEqual(mangler.map((l) => l.id + ': «' + l.tekst + '»'), [],
+    'skriv navneordet i NAVNEORD i js/tekst.js med ental og flertal (samme ord to gange, hvis det ikke bøjes) og dets køn i KOEN');
+  // Opskriften skriver selv den rigtige form efter sit antal: «1 gulerod», «2 gulerødder», «½ agurk», «1 stort løg»
+  for (const l of ANTAL_LINJER) assert.equal(boejNavn(l.navn, erFlertal(antalAf(l.maengde))), l.navn, l.id + ': «' + l.tekst + '»');
+});
+
+test('hver linje uden enhed regnet om til 1 og til mindst 2 står i ental og flertal', () => {
+  let regnet = 0;
+  for (const r of RETTER.filter((x) => x.model.uge)) {
+    r.model.ingredienser.forEach((x, i) => {
+      if (!ANTAL_RE.test(x.maengde)) return;
+      const x0 = antalAf(x.maengde);
+      const hvor = r.id + ': «' + x.tekst + '»';
+      // Til 1 (ved 1 er faktoren 1, og teksten står som i opskriften) og til mindst 2
+      const maal = [...(x0 === 1 ? [] : [[1 / x0, '1']]), [x0 >= 2 ? 1.5 : 2 / x0, null]];
+      for (const [f, tal] of maal) {
+        const s = skaleretIngrediens(r.model, i, f);
+        assert.ok(s.skaleret, hvor + ' × ' + f);
+        if (tal) assert.equal(s.maengde, tal, hvor + ' × ' + f);
+        const flertal = erFlertal(antalAf(s.maengde));
+        assert.equal(flertal, tal === null, hvor + ' × ' + f + ' → ' + s.maengde);
+        // Navneordet står i den form, NAVNEORD har til antallet (også bag et tillægsord)
+        const ord = s.navn.match(/^\p{L}+(?: \p{L}+)?/u)[0].split(' ');
+        const former = Object.entries(NAVNEORD).find(([e, fl]) => ord.includes(e) || ord.includes(fl));
+        assert.ok(former && ord.includes(former[flertal ? 1 : 0]), hvor + ' × ' + f + ' → ' + s.tekst);
+        assert.equal(s.tekst, s.maengde + ' ' + s.navn, hvor);
+        regnet++;
+      }
+    });
+  }
+  assert.ok(regnet >= 187, 'omregnede linjer: ' + regnet);
+});
+
+test('navneordene bøjes rigtigt i de rigtige retter, også med et tillægsord foran', () => {
+  const linje = (id, i, f) => skaleretIngrediens(ret(id), i, f).tekst;
+  const find = (id, tekst) => ret(id).ingredienser.findIndex((x) => x.tekst === tekst);
+  const eksempler = [
+    ['koedsovs', '2 gulerødder', 0.5, '1 gulerod'],
+    ['koedsovs', '2 gulerødder', 0.75, '1,5 gulerod'], // halvanden gulerod
+    ['kikaerteboller-i-karry', '1 gulerod', 2, '2 gulerødder'],
+    ['one-pot-tomatpasta', '1 grøntsagsbouillonterning', 2, '2 grøntsagsbouillonterninger'],
+    ['chorizo-pasta', '2 grøntsagsbouillonterninger', 0.5, '1 grøntsagsbouillonterning'],
+    ['chorizo-pasta', '1 stort løg', 3, '3 store løg'],
+    ['chorizo-pasta', '1 stort løg', 0.5, '½ stort løg'],
+    ['bagte-kartofler-med-fyld', '4 store kartofler (ca. 1 kg)', 0.25, '1 stor kartoffel (ca. 1 kg)'],
+    ['koteletter-med-aeble', '2 røde æbler', 0.5, '1 rødt æble'],
+    ['orange-pasta-med-hemmelig-groentsagssovs', '2 orange peberfrugter', 0.5, '1 orange peberfrugt'],
+    ['tunfrikadeller', '1 løg, groftrevet', 3, '3 løg, groftrevet'],
+    ['kyllingefrikadeller', '1 æg', 2, '2 æg'],
+    ['kylling-salatbaade-med-ris', '1 icebergsalat', 2, '2 icebergsalater'],
+    ['groen-porre-kartoffelsuppe-med-bacondrys', '3 porrer', 0.25, '1 porre'],
+    ['kikaerteburger', '4 fuldkornsburgerboller', 0.25, '1 fuldkornsburgerbolle'],
+    ['taco-bradepande', '6 tortillas', 0.25, '1,5 tortilla'],
+  ];
+  for (const [id, foer, f, efter] of eksempler) {
+    const i = find(id, foer);
+    assert.ok(i >= 0, id + ': «' + foer + '» findes ikke');
+    assert.equal(linje(id, i, f), efter, id + ': «' + foer + '» × ' + f);
+  }
+});
+
+test('boejNavn: ental og flertal, tillægsordet efter kønnet, «eller», resten uændret, null for et ukendt ord', () => {
+  assert.equal(boejNavn('gulerødder', false), 'gulerod');
+  assert.equal(boejNavn('gulerod', true), 'gulerødder');
+  assert.equal(boejNavn('gulerødder', true), 'gulerødder');
+  assert.equal(boejNavn('æg til pensling', true), 'æg til pensling');
+  assert.equal(boejNavn('stort løg', true), 'store løg');
+  assert.equal(boejNavn('store løg', false), 'stort løg', 'et løg');
+  assert.equal(boejNavn('store kartofler', false), 'stor kartoffel', 'en kartoffel');
+  assert.equal(boejNavn('små mozzarellakugler (mini-mozzarella)', false), 'lille mozzarellakugle (mini-mozzarella)');
+  assert.equal(boejNavn('grøn peberfrugt (til stilkene)', true), 'grønne peberfrugter (til stilkene)');
+  assert.equal(boejNavn('æbler eller pærer', false), 'æble eller pære');
+  assert.equal(boejNavn('æble eller pære til pynt', true), 'æbler eller pærer til pynt');
+  assert.equal(boejNavn('æbler eller blommer', false), 'æble eller blommer', 'et ukendt ord efter «eller» står som før');
+  assert.equal(boejNavn('laksefileter, ca. 400 g i alt', false), 'laksefilet, ca. 400 g i alt');
+  for (const n of ['peber', 'stor portion', '(til pensling)', '', ' gulerod', 'Gulerod']) assert.equal(boejNavn(n, true), null, JSON.stringify(n));
+  for (const n of [null, undefined, 3]) assert.throws(() => boejNavn(n, true), TypeError, String(n));
+  for (const f of [1, 'ja', undefined]) assert.throws(() => boejNavn('gulerod', f), TypeError, String(f));
+});
+
+test('NAVNEORD og TILLAEGSORD passer til KOEN, og ingen form står to steder', () => {
+  // Kønnet står kun i KOEN: hvert navneord skal have det, ellers kan tillægsordet («et stort løg») og stemmen ikke bøjes
+  for (const e of Object.keys(NAVNEORD)) assert.ok(KOEN[e] === 'n' || KOEN[e] === 't', e + ': køn i KOEN');
+  const former = Object.entries(NAVNEORD).flatMap(([e, f]) => (e === f ? [e] : [e, f]));
+  assert.equal(new Set(former).size, former.length, 'en form står kun ved ét navneord');
+  for (const [en, et, fl] of TILLAEGSORD) {
+    if (en === et) assert.equal(KOEN[en], null, en + ': samme form i begge køn, så stemmen ser på navneordet');
+    else assert.ok(KOEN[en] === 'n' && KOEN[et] === 't', en + '/' + et + ': kønnet i KOEN');
+    assert.ok(!Object.hasOwn(NAVNEORD, fl) && !former.includes(en), en + ': et tillægsord er ikke et navneord');
   }
 });
 
@@ -228,9 +350,9 @@ test('noterne siger det, når en mængde ikke kunne regnes om, eller dejen er ru
   const TRIN = 'Mængderne i trinene er til 4 — se ingredienslisten';
   const FADE = 'Brug to fade — tiden kan blive længere';
   const FORM = 'Dej og form er rundet op til hele — formen passer måske ikke';
-  // Chorizo-pastaen har «1 stort løg» og «peber (og evt. salt)» uden mængde
+  // Chorizo-pastaen har «peber (og evt. salt)» uden mængde («1 stort løg» regnes om til «3 store løg» fra 01-11)
   const cp = ret('chorizo-pasta');
-  assert.deepEqual(voksenNoter(cp, 3, linjerTil(cp, 3)), [TRIN, FADE, '2 mængder kunne ikke regnes om og står som til 4']);
+  assert.deepEqual(voksenNoter(cp, 3, linjerTil(cp, 3)), [TRIN, FADE, 'Én mængde kunne ikke regnes om og står som til 4']);
   // Kødsovsen har kun «revet ost til servering»
   const ks = ret('koedsovs');
   assert.deepEqual(voksenNoter(ks, 0.75, linjerTil(ks, 0.75)), [TRIN, 'Én mængde kunne ikke regnes om og står som til 4']);

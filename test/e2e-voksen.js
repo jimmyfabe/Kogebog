@@ -75,7 +75,7 @@ async function holdHer(H, side, sel, ms) {
 function forventetLinjer(RETTER, id, faktor) {
   const m = lavModel(RETTER[id]);
   return m.ingredienser.map((x, i) => ({
-    ...(faktor ? skaleretIngrediens(m, i, faktor) : { maengde: x.maengde, tekst: x.tekst, skaleret: false }),
+    ...(faktor ? skaleretIngrediens(m, i, faktor) : { maengde: x.maengde, navn: x.navn, tekst: x.tekst, skaleret: false }),
     original: x.tekst,
   }));
 }
@@ -189,9 +189,11 @@ async function forloeb(browser, H, skaerm) {
   const vist = await side.evaluate(() => [...document.querySelectorAll('.ingr')].map((b) => ({
     maengde: b.querySelector('.ingr-maengde')?.textContent || '',
     skaleret: Boolean(b.querySelector('.ingr-maengde.skaleret')),
+    // Navneordet bøjet efter mængden («1,5 grøntsagsbouillonterning»), som printet viser det
+    navn: b.querySelector('.ingr-navn')?.textContent || '',
     label: b.getAttribute('aria-label'),
   })));
-  const forkert = linjer.map((l, i) => [l, vist[i]]).filter(([l, v]) => !v || v.maengde !== l.maengde || v.skaleret !== l.skaleret || v.label !== l.tekst);
+  const forkert = linjer.map((l, i) => [l, vist[i]]).filter(([l, v]) => !v || v.maengde !== l.maengde || v.navn !== l.navn || v.skaleret !== l.skaleret || v.label !== l.tekst);
   tjek(faktor === 1.5 && vist.length === linjer.length && !forkert.length, n + ': mængderne ved 6 portioner (forkert: ' + JSON.stringify(forkert.slice(0, 3)) + ')');
   const penne = linjer.findIndex((l) => l.original === '300 g penne');
   tjek(penne >= 0 && vist[penne] && vist[penne].maengde === '450 g', n + ': «300 g penne» bliver «450 g» (' + JSON.stringify(vist[penne]) + ')');

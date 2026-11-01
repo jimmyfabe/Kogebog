@@ -70,14 +70,64 @@ const ENHED = {
 // Står et ord, der ikke er her, efter 1, ½ eller x,5, fejler test-tid.js og nævner ordet (så skrives det på listen)
 export const KOEN = Object.freeze({
   'løg': 't', 'æg': 't', 'fed': 't', 'minut': 't', 'sekund': 't', 'stykke': 't', 'trin': 't', 'glas': 't', 'æble': 't', 'bæger': 't',
-  'stort': 't', 'helt': 't', 'mildt': 't',
+  'stort': 't', 'helt': 't', 'mildt': 't', 'rødt': 't', 'grønt': 't',
   'knivspids': 'n', 'dåse': 'n', 'gulerod': 'n', 'flute': 'n', 'bouillonterning': 'n', 'grøntsagsbouillonterning': 'n',
   'kugle': 'n', 'bolle': 'n', 'snegl': 'n', 'skive': 'n', 'time': 'n', 'citron': 'n', 'tomat': 'n', 'kartoffel': 'n',
   'pakke': 'n', 'pose': 'n', 'portion': 'n', 'kage': 'n', 'chorizo': 'n', 'rulle': 'n', 'mozzarella': 'n', 'peberfrugt': 'n',
   'stor': 'n', 'hel': 'n', 'mild': 'n', 'rød': 'n', 'grøn': 'n',
   'agurk': 'n', 'icebergsalat': 'n',
-  'lille': null,
+  // Kan stå efter et tal, når mængden er regnet om til husstanden (NAVNEORD nedenfor): «1 laksefilet», «1 pølse»
+  'tortilla': 'n', 'fuldkornstortilla': 'n', 'porre': 'n', 'fuldkornsburgerbolle': 'n', 'laksefilet': 'n', 'pølse': 'n',
+  'mozzarellakugle': 'n', 'oliven': 'n', 'pære': 'n',
+  'lille': null, 'sort': null, 'orange': null,
 });
+
+// Navneord, der står efter et antal uden enhed, i ental og flertal: «1 gulerod», «2 gulerødder». js/skaler.js bøjer dem
+// med boejNavn, når en mængde regnes om til husstanden. Står samme ord to gange (æg, løg, oliven), bøjes det udtrykkeligt
+// ikke. Kønnet står kun i KOEN. Står et ord efter et antal uden enhed i en opskrift, men ikke her, fejler test-skaler.js
+// og nævner ordet: skriv det her med begge former og dets køn i KOEN
+export const NAVNEORD = Object.freeze({
+  'agurk': 'agurker', 'bouillonterning': 'bouillonterninger', 'citron': 'citroner', 'flute': 'flutes',
+  'fuldkornsburgerbolle': 'fuldkornsburgerboller', 'fuldkornstortilla': 'fuldkornstortillas',
+  'grøntsagsbouillonterning': 'grøntsagsbouillonterninger', 'gulerod': 'gulerødder', 'icebergsalat': 'icebergsalater',
+  'kartoffel': 'kartofler', 'laksefilet': 'laksefileter', 'mozzarellakugle': 'mozzarellakugler', 'peberfrugt': 'peberfrugter',
+  'porre': 'porrer', 'pølse': 'pølser', 'pære': 'pærer', 'tomat': 'tomater', 'tortilla': 'tortillas', 'æble': 'æbler',
+  // Uændret i flertal
+  'løg': 'løg', 'oliven': 'oliven', 'æg': 'æg',
+});
+
+// Tillægsord foran navneordet: [en-ord, et-ord, flertal] («en stor kartoffel», «et stort løg», «store kartofler»)
+export const TILLAEGSORD = Object.freeze([
+  ['stor', 'stort', 'store'], ['lille', 'lille', 'små'], ['rød', 'rødt', 'røde'], ['grøn', 'grønt', 'grønne'],
+  ['sort', 'sort', 'sorte'], ['orange', 'orange', 'orange'],
+].map((t) => Object.freeze(t)));
+
+// Hver form (ental og flertal) → [ental, flertal], og hver form af et tillægsord → dets tre former
+const NAVNEORD_FORM = new Map(Object.entries(NAVNEORD).flatMap(([e, f]) => [[e, [e, f]], [f, [e, f]]]));
+const TILLAEG_FORM = new Map(TILLAEGSORD.flatMap((t) => t.map((form) => [form, t])));
+
+// Navnet efter et antal uden enhed bøjet i ental eller flertal: «gulerødder» → «gulerod», «store kartofler (ca. 1 kg)» →
+// «stor kartoffel (ca. 1 kg)». Et tillægsord foran følger med og bøjes efter navneordets køn i KOEN («et stort løg»), og
+// et navneord efter «eller» bøjes også («æble eller pære»). Resten (komma, parentes, «til pensling») står som før.
+// null, når navneordet ikke står i NAVNEORD
+export function boejNavn(navn, flertal) {
+  if (typeof navn !== 'string') throw new TypeError('boejNavn: navnet skal være en tekst, ikke ' + navn);
+  if (typeof flertal !== 'boolean') throw new TypeError('boejNavn: flertal skal være true eller false, ikke ' + flertal);
+  const m = /^(\p{L}+)(?: (\p{L}+))?/u.exec(navn);
+  if (!m) return null;
+  const tillaeg = m[2] !== undefined && TILLAEG_FORM.has(m[1]) ? TILLAEG_FORM.get(m[1]) : null;
+  const ord = NAVNEORD_FORM.get(tillaeg ? m[2] : m[1]);
+  if (!ord) return null;
+  const foran = tillaeg ? tillaeg[flertal ? 2 : KOEN[ord[0]] === 't' ? 1 : 0] + ' ' : '';
+  return foran + ord[flertal ? 1 : 0] + ellerBoejet(navn.slice(tillaeg ? m[0].length : m[1].length), flertal);
+}
+
+// «… eller pærer»: et navneord efter «eller» bøjes med. Et ukendt ord efter «eller» står som før
+function ellerBoejet(rest, flertal) {
+  if (!rest.startsWith(' eller ')) return rest;
+  const b = boejNavn(rest.slice(' eller '.length), flertal);
+  return b === null ? rest : ' eller ' + b;
+}
 
 const BROEK = { '½': 0.5, '¼': 0.25, '¾': 0.75 };
 const TAL = '\\d+(?:,\\d+)?[½¼¾]?|[½¼¾]';

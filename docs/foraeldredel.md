@@ -108,6 +108,8 @@
 | rulle / plade (dej) | Hele, rundet op + `advarsel: 'form'` |
 | tom, «stort», ukendt format | **Uændret** + `advarsel: 'ukendt'`. Aldrig gæt |
 
+**Navneordet bøjes med** (#9, 01-11-2026): efter et antal uden enhed står navneordet i ental ved højst 1 og ved 1,5 (som enhederne og stemmen: «halvanden gulerod») og ellers i flertal: «1 gulerod», «2 gulerødder», «2 grøntsagsbouillonterninger». Et tillægsord foran følger med og bøjes efter navneordets køn («1 stort løg» → «3 store løg», «2 røde æbler» → «1 rødt æble»). Ordene står ét sted: `NAVNEORD` og `TILLAEGSORD` i `js/tekst.js` (kønnet i `KOEN`), og `boejNavn` bøjer. `skaleretIngrediens` giver `navn` til skærmen og `tekst` til printet, så de bøjer ens. Ved faktor 1 står teksten nøjagtig som i opskriften (Røst-lyden er lavet af den). `test/test-skaler.js` går alle linjer med et antal uden enhed i alle 101 retter igennem og fejler på et ord, der ikke står i `NAVNEORD` (et ord, der ikke bøjes, som «æg» og «løg», står der med samme form to gange). «1 stort» i chorizo-pastaen og frikadellerne er skrevet som «1» + «stort løg», så løget nu regnes om. **Ikke med:** mængder i parentes eller efter et komma («6 gulerødder (ca. 600 g)») regnes ikke om.
+
 **Hvor det slår igennem:**
 
 | Sted | I dag | Ændring |

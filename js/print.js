@@ -32,7 +32,7 @@ function tegn(m) {
   // Faktor 1, og bage- og søde retter uden talportioner, printes som før
   const f = n ? faktorFor(m, n) : null;
   const faktor = f && f !== 1 ? f : null;
-  // Mængden regnes om som på skærmen (retSkaerm i app.js), og navnet står som før
+  // Mængden regnes om, og navneordet bøjes med («1 gulerod»), af samme funktion som på skærmen (retSkaerm i app.js)
   const linjer = faktor ? m.ingredienser.map((x, i) => skaleretIngrediens(m, i, faktor)) : null;
   const portioner = faktor ? 'Til ' + portionerTekst(n) : m.portioner;
   const meta = [portioner, m.minutter ? minutterTekst(m.minutter) + ' i alt' : '', m.aktivMinutter ? minutterTekst(m.aktivMinutter) + ' forberedelse' : '']

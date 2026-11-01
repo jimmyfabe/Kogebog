@@ -4,6 +4,7 @@
 // med decimalkomma (2,5 dl).
 
 import { BARN_ANDEL, MAKS_PORTIONER } from './lager.js';
+import { boejNavn } from './tekst.js';
 
 // Et barn spiser som 0,7 voksen, og højst 12 portioner (samme grænse som n i ugeplanen og i linket): står i js/lager.js
 export { BARN_ANDEL, MAKS_PORTIONER };
@@ -98,8 +99,8 @@ const ENHED = new Map([
 }));
 
 // Mængden ganget med faktoren og rundet efter enheden: { tekst, advarsel }. advarsel er null, 'form' (dej i rulle eller
-// plade, rundet op til hele: formen passer ikke) eller 'ukendt' (tom mængde, et interval, «1 stort» eller en ukendt
-// enhed: teksten står uændret, for der gættes aldrig). Faktor 1 giver altid den oprindelige tekst og null.
+// plade, rundet op til hele: formen passer ikke) eller 'ukendt' (tom mængde, et interval eller en ukendt enhed som
+// «1 stort»: teksten står uændret, for der gættes aldrig). Faktor 1 giver altid den oprindelige tekst og null.
 // vare er varens id i tumbi.ingredienser ('aeg' giver hele æg)
 export function skalerMaengde(maengde, faktor, { vare } = {}) {
   if (typeof maengde !== 'string') throw new TypeError('skalerMaengde: mængden skal være en tekst, ikke ' + maengde);
@@ -128,15 +129,31 @@ export function skalerMaengde(maengde, faktor, { vare } = {}) {
 
 export const portionerTekst = (n) => n + (n === 1 ? ' portion' : ' portioner');
 
-// Ingrediens nr. i i retten (en model fra lavModel med talportioner) ganget med faktoren: { maengde, tekst, skaleret,
-// advarsel }. Varen fra tumbi.ingredienser gør æg hele. En mængde, der ikke ændres (tom, «1 stort», en knivspids), står
-// uændret og er ikke markeret som skaleret; advarslen er skalerMaengdes
+// Navnet efter den nye mængde: efter et antal uden enhed bøjet i ental eller flertal som enhederne («1 gulerod»,
+// «2 gulerødder», «3 store løg»; boejNavn og NAVNEORD i js/tekst.js), ellers som før. Et navneord, der ikke står i
+// NAVNEORD, står som i opskriften: test-skaler.js går alle retter igennem og fejler på det
+function navnEfter(maengde, navn) {
+  const m = MAENGDE_RE.exec(maengde);
+  if (!m || m[3] !== undefined) return navn;
+  const b = boejNavn(navn, flertal(tilTal(m[2])));
+  return b === null ? navn : b;
+}
+
+// Ingrediens nr. i i retten (en model fra lavModel med talportioner) ganget med faktoren: { maengde, navn, tekst,
+// skaleret, advarsel }. Varen fra tumbi.ingredienser gør æg hele. En mængde, der ikke ændres (tom, et interval, en
+// knivspids), står uændret med opskriftens navn og er ikke markeret som skaleret; advarslen er skalerMaengdes. Skærmen
+// (retSkaerm i app.js) viser maengde og navn, printet (js/print.js) tekst: de kommer begge herfra
 export function skaleretIngrediens(m, i, faktor) {
   const x = m.ingredienser[i];
   const ekstra = (m.uge.tumbi.ingredienser || [])[i];
   const s = skalerMaengde(x.maengde, faktor, { vare: ekstra ? ekstra.vare : undefined });
-  if (s.tekst === x.maengde) return { maengde: x.maengde, tekst: x.tekst, skaleret: false, advarsel: s.advarsel };
-  return { maengde: s.tekst, tekst: s.tekst + x.tekst.slice(x.maengde.length), skaleret: true, advarsel: s.advarsel };
+  if (s.tekst === x.maengde) return { maengde: x.maengde, navn: x.navn, tekst: x.tekst, skaleret: false, advarsel: s.advarsel };
+  const navn = navnEfter(s.tekst, x.navn);
+  // Opskriftens tekst er mængden, mellemrum og navnet (delIngrediens i js/tekst.js): kun mængden og navnet skiftes ud
+  const efter = x.tekst.slice(x.maengde.length);
+  const mellem = efter.slice(0, efter.length - efter.trimStart().length);
+  const hale = efter.trimStart().slice(x.navn.length);
+  return { maengde: s.tekst, navn, tekst: s.tekst + mellem + navn + hale, skaleret: true, advarsel: s.advarsel };
 }
 
 // Til den voksne, når mængderne er regnet om: trinene læses op og nævner stadig opskriftens mængder, ved mange eller få

@@ -50,7 +50,7 @@
     "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Prisen på chorizo, fløde, parmesan og hvidløg er eget skøn.",
     "ingredienser": [
       { "ikon": "chorizo", "maengde": "250 g", "vare": "chorizo", "antal": 250, "enhed": "g" },
-      { "ikon": "loeg", "maengde": "1 stort", "vare": "loeg", "antal": 1, "enhed": "stk" },
+      { "ikon": "loeg", "maengde": "1", "vare": "loeg", "antal": 1, "enhed": "stk" },
       { "ikon": "hvidloeg", "maengde": "3 fed", "vare": "hvidloeg", "antal": 3, "enhed": "fed" },
       { "ikon": "tomatpure", "maengde": "1 spsk", "vare": "tomatpure", "antal": 15, "enhed": "g" },
       { "ikon": "vand", "maengde": "1,25 l", "vare": "vand" },

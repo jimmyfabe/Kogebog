@@ -321,13 +321,14 @@ function retSkaerm(m) {
   const meta = sk
     ? el('p', { class: 'meta' }, el('span', { class: 'skaleret', tekst: 'Til ' + portionerTekst(sk.n) }), tid ? ' · ' + tid : null)
     : (m.portioner || tid ? el('p', { class: 'meta', tekst: [m.portioner, tid].filter(Boolean).join(' · ') }) : null);
-  const linjer = m.ingredienser.map((x, i) => (sk ? skaleretIngrediens(m, i, sk.faktor) : { maengde: x.maengde, tekst: x.tekst, skaleret: false }));
+  const linjer = m.ingredienser.map((x, i) => (sk ? skaleretIngrediens(m, i, sk.faktor) : { maengde: x.maengde, navn: x.navn, tekst: x.tekst, skaleret: false }));
   const ingr = m.ingredienser.map((x, i) => {
     const l = linjer[i];
     const b = el('button', { type: 'button', class: 'ingr', 'aria-label': l.tekst },
       x.ikon ? billede(grafikIngrediens(x.ikon), '', 'ingr-ikon') : null,
       l.maengde ? el('span', { class: 'ingr-maengde' + (l.skaleret ? ' skaleret' : ''), tekst: l.maengde }) : null,
-      el('span', { class: 'ingr-navn', tekst: x.navn }));
+      // Navnet bøjes med mængden («1 gulerod», «2 gulerødder»), som i printet: begge fra skaleretIngrediens
+      el('span', { class: 'ingr-navn', tekst: l.navn }));
     // Røst har kun lyd til opskriftens egne mængder: en skaleret linje siges af iPad-stemmen (js/replikker.js)
     b.addEventListener('click', klik(() => (l.skaleret
       ? Tale.sig(R.ingrediensSkaleret(l.tekst), { knap: b })
