@@ -426,6 +426,13 @@ export function knivTekst(m) {
   return kniv ? kniv + ' knivtrin' : 'ingen kniv';
 }
 
+// Rækkefølgen i «Vælg ret» (dagSkaerm): «Mindst kniv først» efter knivtrin (som «N knivtrin»), «Billigst først» efter
+// pris pr. portion, begge valgt: kniv først og så pris. Ellers som i planen. Giver en ny liste
+export function sorterValg(retter, { kniv = false, billig = false } = {}) {
+  const prisPP = (m) => m.uge.prisKr / m.uge.portioner;
+  return [...retter].sort((a, b) => (kniv ? knivtrin(a) - knivtrin(b) : 0) || (billig ? prisPP(a) - prisPP(b) : 0));
+}
+
 // Tid, pris, grønt og kniv i én linje, som oversigten og valget viser dem. Hvert led holdes sammen med hårde mellemrum, og
 // prikken står sidst på linjen, så linjen kun brydes mellem leddene: før stod der «268 g grønt pr. | person» og
 // «· 2 knivtrin» alene (UI-review V5, 23-10)
@@ -720,9 +727,7 @@ function dagSkaerm(i) {
   const nu = p.dage[i];
   const n = nu ? nu.n : p.n;
   const alle = iPlanen();
-  const prisPP = (m) => m.uge.prisKr / m.uge.portioner;
-  const retter = alle.filter(passer)
-    .sort((a, b) => (filtre.kniv ? knivtrin(a) - knivtrin(b) : 0) || (filtre.billig ? prisPP(a) - prisPP(b) : 0));
+  const retter = sorterValg(alle.filter(passer), filtre);
 
   const chips = el('div', { class: 'filtre', role: 'group', 'aria-label': 'Filtre' }, FILTRE.map(([k, tekst]) => {
     const b = medFokus(K.knap(tekst, { klasse: 'lille filter', onclick: () => { filtre[k] = !filtre[k]; tegnIgen('filter-' + k); } }), 'filter-' + k);

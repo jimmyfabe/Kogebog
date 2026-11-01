@@ -15,7 +15,7 @@ import { tomFamilie } from '../js/lager.js';
 // js/hold.js lytter på document, når det indlæses (js/ugeplan.js henter det). Node har intet document, og testen bruger
 // kun den rene knivTekst, så ugeplan.js hentes først, når der er et (som i test-udvalg.js)
 globalThis.document ??= { addEventListener() {} };
-const { knivTekst } = await import('../js/ugeplan.js');
+const { knivTekst, sorterValg } = await import('../js/ugeplan.js');
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const json = (id) => JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8'));
@@ -110,6 +110,27 @@ test('ugeplanens «N knivtrin» / «ingen kniv» og mærket «ingen kniv» er al
     assert.equal(knivTekst(m) === 'ingen kniv', har(m, 'ingenKniv'), id + ': ' + knivTekst(m));
     assert.equal(knivTekst(m), knivtrin(m) ? knivtrin(m) + ' knivtrin' : 'ingen kniv', id);
   }
+});
+
+test('«Mindst kniv først» og «Billigst først» sorterer efter knivtrin og pris pr. portion, uden at ændre listen', () => {
+  const ppPris = (m) => m.uge.prisKr / m.uge.portioner;
+  const kniv = sorterValg(UGEPLAN, { kniv: true });
+  assert.equal(kniv.length, UGEPLAN.length);
+  for (let i = 1; i < kniv.length; i++) assert.ok(knivtrin(kniv[i - 1]) <= knivtrin(kniv[i]), kniv[i].id + ' står efter ' + kniv[i - 1].id);
+  assert.equal(knivTekst(kniv[0]), 'ingen kniv', 'en ret uden kniv står øverst');
+  const billig = sorterValg(UGEPLAN, { billig: true });
+  for (let i = 1; i < billig.length; i++) assert.ok(ppPris(billig[i - 1]) <= ppPris(billig[i]), billig[i].id);
+  // Begge: kniv først, og ved samme antal knivtrin den billigste først
+  const begge = sorterValg(UGEPLAN, { kniv: true, billig: true });
+  for (let i = 1; i < begge.length; i++) {
+    const [a, b] = [begge[i - 1], begge[i]];
+    assert.ok(knivtrin(a) < knivtrin(b) || (knivtrin(a) === knivtrin(b) && ppPris(a) <= ppPris(b)), b.id + ' efter ' + a.id);
+  }
+  // Uden filtre: rækkefølgen fra planen, og den oprindelige liste ændres aldrig
+  const foer = UGEPLAN.map((m) => m.id);
+  assert.deepEqual(sorterValg(UGEPLAN, {}).map((m) => m.id), foer);
+  assert.deepEqual(sorterValg(UGEPLAN).map((m) => m.id), foer);
+  assert.deepEqual(UGEPLAN.map((m) => m.id), foer);
 });
 
 test('vegetar og fisk på de rigtige retter', () => {
