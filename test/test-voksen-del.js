@@ -157,3 +157,22 @@ test('husstanden i ord: ental og flertal, og et tomt antal står ikke med', () =
   assert.equal(V.husstandTekst(null, 3), '3 børn');
   assert.equal(V.husstandTekst(null, null), '');
 });
+
+test('husstandens sum: loftet på 12 portioner siges, når det skærer ned, og kun da', () => {
+  assert.deepEqual(V.husstandSum(8, 8, 0.7), { n: 12, loft: true });
+  assert.deepEqual(V.husstandSum(8, 6, 0.7), { n: 12, loft: true });
+  assert.deepEqual(V.husstandSum(8, 8, 0.5), { n: 12, loft: false });
+  assert.deepEqual(V.husstandSum(8, 5, 0.8), { n: 12, loft: false });
+  assert.deepEqual(V.husstandSum(2, 2, 0.7), { n: 4, loft: false });
+  assert.deepEqual(V.husstandSum(null, null, 0.7), { n: null, loft: false });
+  for (let voksne = 0; voksne <= lager.MAKS_PERSONER; voksne++) {
+    for (let boern = 0; boern <= lager.MAKS_PERSONER; boern++) {
+      for (const andel of V.BARN_VALG) {
+        const { n, loft } = V.husstandSum(voksne, boern, andel);
+        const raa = Math.ceil(Math.round((voksne + andel * boern) * 1e6) / 1e6);
+        assert.equal(loft, raa > lager.MAKS_PORTIONER, voksne + ' + ' + boern + ' × ' + andel);
+        assert.equal(n, loft ? lager.MAKS_PORTIONER : voksne + boern ? raa : 1, voksne + ' + ' + boern + ' × ' + andel);
+      }
+    }
+  }
+});

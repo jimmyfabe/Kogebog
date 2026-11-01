@@ -9,7 +9,7 @@
 // js/lager.js, og al tekst sættes som tekst (js/dom.js). Udseendet står i familie.css.
 import { el, ikon, svgEl } from './dom.js';
 import * as Lager from './lager.js';
-import { MAKS_PERSONER, MAKS_UDVALG as UDVALG_MAKS } from './lager.js';
+import { MAKS_PERSONER, MAKS_PORTIONER, MAKS_UDVALG as UDVALG_MAKS } from './lager.js';
 import { holdKnap } from './hold.js';
 import { portionerFraHusstand } from './skaler.js';
 import { MAERKER, maerkerFor } from './maerker.js';
@@ -77,6 +77,15 @@ const andelTekst = (x) => String(x).replace('.', ',');
 export function husstandTekst(voksne, boern) {
   return [voksne ? flertal(voksne, 'voksen', 'voksne') : '', boern ? flertal(boern, 'barn', 'børn') : ''].filter(Boolean).join(' og ');
 }
+
+// Husstandens portioner (portionerFraHusstand), og om loftet på MAKS_PORTIONER har skåret dem ned. 1e-6: kommatal som
+// 0,8 × 5 må ikke ramme loftet
+export function husstandSum(voksne, boern, barnAndel) {
+  const n = portionerFraHusstand(voksne, boern, barnAndel);
+  return { n, loft: n !== null && (voksne || 0) + barnAndel * (boern || 0) > MAKS_PORTIONER + 1e-6 };
+}
+// «12 portioner (højst 12 — lav retten to gange til flere)»
+const sumTekst = ({ n, loft }) => portionerTekst(n) + (loft ? ' (højst ' + MAKS_PORTIONER + ' — lav retten to gange til flere)' : '');
 
 // ---------- Låsen ----------
 
@@ -302,13 +311,13 @@ function punkt({ navn, status, ikonEl, til, fokus, laast = false }) {
 function hubSkaerm(f) {
   const p = Lager.hentUge(K.S.ids);
   const alle = iPlanen();
-  const n = portionerFraHusstand(f.voksne, f.boern, f.barnAndel);
+  const sum = husstandSum(f.voksne, f.boern, f.barnAndel);
   const valgt = f.udvalg ? alle.filter((m) => f.udvalg.ids.includes(m.id)).length : 0;
   // Familien er gemt med en nyere udgave: husstand, udvalg og favoritter kan ikke åbnes, ugeplanen og listen kan
   const nyere = f.laast ? { status: NYERE, laast: true } : {};
   const punkter = [
     { navn: 'Husstand', ikonEl: stregIkon(PERSONER), til: '#/voksen/husstand', fokus: 'husstand',
-      status: n ? husstandTekst(f.voksne, f.boern) + ' = ' + portionerTekst(n) : 'Ikke sat. Nye retter er til ' + portionerTekst(p.n), ...nyere },
+      status: sum.n ? husstandTekst(f.voksne, f.boern) + ' = ' + sumTekst(sum) : 'Ikke sat. Nye retter er til ' + portionerTekst(p.n), ...nyere },
     { navn: 'Ugens udvalg', ikonEl: ikon('liste'), til: '#/voksen/udvalg', fokus: 'udvalg',
       status: f.udvalg ? flertal(valgt, 'ret', 'retter') + ' at vælge mellem' : 'Alle ' + alle.length + ' retter', ...nyere },
     { navn: 'Favoritter', ikonEl: hjerteIkon(), til: '#/voksen/favoritter', fokus: 'favoritter',
@@ -329,7 +338,7 @@ function hubSkaerm(f) {
 const kladdePortioner = (k) => (k.voksne + k.boern > 0 ? portionerFraHusstand(k.voksne, k.boern, k.barnAndel) : null);
 const kladdeTekst = (k) => {
   const n = kladdePortioner(k);
-  return n ? husstandTekst(k.voksne, k.boern) + ' = ' + portionerTekst(n) : 'Vælg mindst én voksen eller ét barn.';
+  return n ? husstandTekst(k.voksne, k.boern) + ' = ' + sumTekst(husstandSum(k.voksne, k.boern, k.barnAndel)) : 'Vælg mindst én voksen eller ét barn.';
 };
 
 function stepper({ vaerdi, navn, tekst, fokus, saet }) {
@@ -405,7 +414,7 @@ function husstandSkaerm(f) {
       el('div', { class: 'husstand-raekke' }, el('span', { class: 'husstand-navn', id: 'barn-andel', tekst: 'Et barn spiser som' }),
         el('div', { class: 'valg-par', role: 'group', 'aria-labelledby': 'barn-andel' }, andele,
           el('span', { class: 'husstand-enhed', 'aria-hidden': 'true', tekst: 'voksen' }))),
-      el('p', { class: 'husstand-sum', tekst: n ? '= ' + portionerTekst(n) : 'Vælg mindst én voksen eller ét barn.' })),
+      el('p', { class: 'husstand-sum', tekst: n ? '= ' + sumTekst(husstandSum(k.voksne, k.boern, k.barnAndel)) : 'Vælg mindst én voksen eller ét barn.' })),
     el('div', { class: 'voksen-knapper' }, gem, heleUgen),
     forklaring ? el('p', { class: 'voksen-hjaelp', tekst: forklaring }) : null,
     besked ? beskedEl(besked) : null);

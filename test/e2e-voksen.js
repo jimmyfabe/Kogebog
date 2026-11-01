@@ -6,7 +6,7 @@
 // og børnenes valg på to sider, 6. hjertet på færdig-skærmen (⭐ i børnenes valg, favoritterne), 7. genindlæsning og
 // 9. knapperne (børn 64 px, voksne 48 px) og ingen vandret rulning. Én gang: 4b. printets strenge n (desktop),
 // 5. «Send til telefon» og listen på telefonen, 8. data fra v3 (kun kog-uge-v1 og kog-liste-v1) indlæses uden tab og
-// 10. kog-familie-v1 fra en nyere udgave (oversigten står, siderne og hjertet er låst).
+// 10. kog-familie-v1 fra en nyere udgave (oversigten står, siderne og hjertet er låst) og 11. loftet på 12 portioner.
 import { portionerFraHusstand, faktorFor, skaleretIngrediens } from '../js/skaler.js';
 import { lavModel } from '../js/model.js';
 import { kod } from '../js/plankode.js';
@@ -31,6 +31,7 @@ export async function voksen(browser, H) {
   await telefon(browser, H);
   await migrering(browser, H);
   await nyereFamilie(browser, H);
+  await husstandLoft(browser, H);
 }
 
 const ugeplanRetter = (RETTER) => Object.keys(RETTER).filter((id) => RETTER[id].tumbi.ugeplan === true);
@@ -513,5 +514,27 @@ async function nyereFamilie(browser, H) {
     n + ': hjertet gemmes ikke, og færdig-skærmen siger, at det er en nyere udgave (' + fejl + ')');
   tjek(JSON.stringify(await raatLager(side)) === JSON.stringify([nyere, null, null]), n + ': den nyere familie er urørt');
   tjek(side.fejl.length === 0, n + ' (nyere familie): ' + side.fejl.join(' | '));
+  await ctx.close();
+}
+
+// 11. Husstanden 8 + 8 (13,6 portioner): loftet på 12 står i summen og på oversigten, så ingen tror, der er nok til 14
+async function husstandLoft(browser, H) {
+  const { BASE, SKAERME, nySide, tjek, tjekLayout } = H;
+  const n = SKAERME[0].navn;
+  console.log('[' + n + '] voksendelen: husstanden 8 + 8 og loftet på 12 portioner');
+  const LOFT = '12 portioner (højst 12 — lav retten to gange til flere)';
+  const { ctx, side } = await nySide(browser, SKAERME[0], { serviceWorkers: 'block' });
+  await side.goto(BASE + '/index.html');
+  await side.waitForSelector('.kort[data-ret]');
+  await side.evaluate(() => localStorage.clear());
+  await saetLager(side, FAMILIE, { v: 1, voksne: 8, boern: 8, barnAndel: 0.7, udvalg: null, favoritter: [], lavet: {} });
+  await aabnVoksen(H, side, '', n + ' voksendelen med 8 + 8');
+  const status = await tekstAf(side, '[data-fokus="husstand"] .voksen-punkt-status');
+  tjek(status === '8 voksne og 8 børn = ' + LOFT, n + ': oversigten siger, at 8 + 8 er skåret ned til 12 (' + status + ')');
+  await tjekLayout(side, n + ' oversigten med loftet');
+  await aabnVoksen(H, side, '/husstand', n + ' husstanden 8 + 8');
+  const sum = await tekstAf(side, '.husstand-sum');
+  tjek(sum === '= ' + LOFT, n + ': husstanden siger, at 8 + 8 er skåret ned til 12 (' + sum + ')');
+  tjek(side.fejl.length === 0, n + ' (8 + 8): ' + side.fejl.join(' | '));
   await ctx.close();
 }
