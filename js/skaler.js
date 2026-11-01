@@ -1,9 +1,12 @@
 // skaler.js — skalerer opskriftens mængder til husstandens portioner (docs/foraeldredel.md, afsnit 4). Ren logik: ingen
-// DOM og intet lager. Indkøbslisten skalerer selv sine varer (saml i js/indkoeb.js); her er det mængderne, som de står
-// på opskriften («300 g», «½ tsk», «2 dåser»). Tal skrives som i opskrifterne: ½ alene, ellers med decimalkomma (2,5 dl).
+// DOM, og fra js/lager.js kommer kun konstanterne. Indkøbslisten skalerer selv sine varer (saml i js/indkoeb.js); her er
+// det mængderne, som de står på opskriften («300 g», «½ tsk», «2 dåser»). Tal skrives som i opskrifterne: ½ alene, ellers
+// med decimalkomma (2,5 dl).
 
-export const BARN_ANDEL = 0.7; // et barn på 5-9 år spiser som 0,7 voksen (NNR2023, docs/foraeldredel.md afsnit 4)
-export const MAKS_PORTIONER = 12; // samme grænse som n i ugeplanen og i linket (js/plankode.js)
+import { BARN_ANDEL, MAKS_PORTIONER } from './lager.js';
+
+// Et barn spiser som 0,7 voksen, og højst 12 portioner (samme grænse som n i ugeplanen og i linket): står i js/lager.js
+export { BARN_ANDEL, MAKS_PORTIONER };
 
 const erPortioner = (n) => Number.isInteger(n) && n >= 1 && n <= MAKS_PORTIONER;
 const erAntal = (x) => x === null || (Number.isInteger(x) && x >= 0);

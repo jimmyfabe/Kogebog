@@ -6,7 +6,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { portionerFraHusstand, faktorFor, skalerMaengde, BARN_ANDEL, skaleretIngrediens, voksenNoter, portionerTekst } from '../js/skaler.js';
+import { portionerFraHusstand, faktorFor, skalerMaengde, BARN_ANDEL, MAKS_PORTIONER, skaleretIngrediens, voksenNoter, portionerTekst } from '../js/skaler.js';
+import * as lager from '../js/lager.js';
 import { lavModel } from '../js/model.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -127,6 +128,10 @@ test('skalerMaengde afviser en mængde, der ikke er tekst, og en faktor, der ikk
 
 test('husstanden som portioner: voksne + 0,7 × børn, rundet op og inden for 1-12', () => {
   assert.equal(BARN_ANDEL, 0.7);
+  // Konstanterne står kun i js/lager.js (ingen lokal kopi, der kan komme ud af trit)
+  assert.equal(BARN_ANDEL, lager.BARN_ANDEL);
+  assert.equal(MAKS_PORTIONER, lager.MAKS_PORTIONER);
+  assert.equal(MAKS_PORTIONER, 12);
   assert.equal(portionerFraHusstand(2, 2, 0.7), 4);
   assert.equal(portionerFraHusstand(1, 0, 0.7), 1);
   assert.equal(portionerFraHusstand(0, 1, 0.7), 1);

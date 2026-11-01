@@ -4,6 +4,7 @@
 // Kør:  node test/test-voksen-del.js
 import { test, mock } from 'node:test';
 import assert from 'node:assert/strict';
+import * as lager from '../js/lager.js';
 
 const lyttere = {};
 const lavEl = (tag) => ({
@@ -122,6 +123,13 @@ test('«Fyld op med nye»: kun retter, der aldrig er lavet, i listens rækkeføl
   assert.equal(V.fyldOp([...fuld, 'a', 'c'], kandidater, lavet).length, V.UDVALG_MAKS);
   assert.deepEqual(V.fyldOp([], ['a', 'a', 'c'], {}), ['a', 'c'], 'ingen dubletter');
   assert.deepEqual(V.fyldOp([], ['constructor', 'a'], {}), ['constructor', 'a'], 'Object.hasOwn: «constructor» er ikke lavet');
+});
+
+test('grænserne for husstanden og udvalget kommer fra js/lager.js, ikke en lokal kopi', () => {
+  assert.equal(V.UDVALG_MAKS, lager.MAKS_UDVALG);
+  assert.equal(V.MAKS_PERSONER, lager.MAKS_PERSONER);
+  assert.equal(V.UDVALG_MAKS, 24);
+  assert.equal(V.MAKS_PERSONER, 8);
 });
 
 test('afkrydsningen i udvalget: ind, ud, og intet nyt, når der er 24', () => {

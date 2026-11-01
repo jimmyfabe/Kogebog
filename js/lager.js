@@ -64,9 +64,10 @@ const MAKS_VARER = 200;
 const MAKS_M = 100000;
 const MAKS_KODE = 400;
 const MAKS_ID = 40; // samme grænse som et ret-id i linket (plankode.js)
+export const MAKS_PORTIONER = 12; // n i ugeplanen, i linket (plankode.js) og i skaleringen (skaler.js)
 const KODE_RE = /^[a-z0-9._~-]+$/;
 const DATO_RE = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
-const erPortioner = (n) => Number.isInteger(n) && n >= 1 && n <= 12;
+const erPortioner = (n) => Number.isInteger(n) && n >= 1 && n <= MAKS_PORTIONER;
 const erDato = (s) => typeof s === 'string' && DATO_RE.test(s);
 const erRetId = (s) => typeof s === 'string' && s.length <= MAKS_ID && ID_RE.test(s);
 const udenUndefined = (o) => Object.fromEntries(Object.entries(o ?? {}).filter(([, v]) => v !== undefined));
@@ -202,9 +203,10 @@ export function vedListeAendring(fn) {
 const FAMILIE = 'kog-familie-v1';
 const FAMILIE_V = 1;
 const MIGRER_FAMILIE = {};
-const MAKS_PERSONER = 8;
-const BARN_ANDEL = 0.7; // standard: et barn spiser 0,7 voksenportion (NNR2023)
-const MAKS_UDVALG = 24;
+// MAKS_PERSONER, BARN_ANDEL og MAKS_UDVALG står kun her: js/skaler.js og js/voksen-del.js importerer dem
+export const MAKS_PERSONER = 8;
+export const BARN_ANDEL = 0.7; // standard: et barn på 5-9 år spiser 0,7 voksenportion (NNR2023, docs/foraeldredel.md afsnit 4)
+export const MAKS_UDVALG = 24;
 const MAKS_FAVORITTER = 200;
 const MAKS_LAVET = 300;
 const MAKS_GANGE = 999;

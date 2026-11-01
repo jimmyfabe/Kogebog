@@ -9,6 +9,7 @@
 // js/lager.js, og al tekst sættes som tekst (js/dom.js). Udseendet står i familie.css.
 import { el, ikon, svgEl } from './dom.js';
 import * as Lager from './lager.js';
+import { MAKS_PERSONER, MAKS_UDVALG as UDVALG_MAKS } from './lager.js';
 import { holdKnap } from './hold.js';
 import { portionerFraHusstand } from './skaler.js';
 import { MAERKER, maerkerFor } from './maerker.js';
@@ -17,10 +18,9 @@ import { grafikRet } from './katalog.js';
 import { planMandag, idag } from './tid.js';
 
 export const LUK_MS = 10 * 60 * 1000;   // voksendelen lukker efter 10 minutter uden tryk
-export const MAKS_PERSONER = 8;          // voksne og børn hver (samme grænse som i js/lager.js)
-export const BARN_VALG = [0.5, 0.7, 1];  // et barn spiser som … voksen (standarden 0,7 står i js/lager.js og js/skaler.js)
+export { MAKS_PERSONER, UDVALG_MAKS };   // voksne og børn hver, og retter i udvalget: grænserne fra js/lager.js
+export const BARN_VALG = [0.5, 0.7, 1];  // et barn spiser som … voksen (standarden BARN_ANDEL står i js/lager.js)
 export const UDVALG_STANDARD = 8;        // «Fyld op med nye» uden et udvalg: 8 retter (to sider i børnenes valg)
-export const UDVALG_MAKS = 24;           // som MAKS_UDVALG i js/lager.js
 export const FYLD_OP = 4;                // «Fyld op med nye» med et udvalg: 4 retter mere
 const SIDER = ['husstand', 'udvalg', 'favoritter'];
 const LAGER_FEJL = 'Måske er privat browsing slået til, eller lageret er fuldt.';
