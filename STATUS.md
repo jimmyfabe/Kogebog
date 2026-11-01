@@ -1,5 +1,12 @@
 # STATUS – Tumbi Køkken
 
+## 01-11-2026 kl. 19:55: jul, discount og salgsrapport er i gang (Saga)
+
+Jimmy 01-11 aften (talebesked): mange danske juleopskrifter (småkager, julekager, konfekt og nemt slik, julebordsmad: medister, æbleflæsk, leverpostej, rullepølse og en skinke à la Jamie Oliver), britiske tærter og fish and chips i airfryer. **Alt skal kunne købes i Rema 1000, Netto, 365discount og Lidl**, ingen specialvarer. Temaer i forældredelen («Jul»), så børnene kun ser det valgte, og et forslag til en voksen- og en børneudgave. Desuden en fuld rapport om salg og professionalisering. «Det skal bare spille til næste weekend.» Han svarede **«Ja ♥️»** kl. 19:5x på Sagas forståelse i 3 linjer, så appen må ændres.
+- **Research-workflow** `wf_0ef8676a-44e` (8 emner + 2 synteser). Rapporterne skrives i scratchpad `jul-0111/<emne>/rapport.md`, og planen og salgsrapporten i `jul-0111/samlet/`.
+- **Næste skridt:** byg bølge 1 (jul) efter `samlet/plan.md`, og læg salgsrapporten på Drev. Undervejs udgives v4 med Røst-lyden, når løkken siger «ALT LAVET» (01-11 kl. 19:5x manglede 539 af 2927 replikker).
+- **Ny regel fra Jimmy:** en pushbesked, når han skal gøre noget, eller når noget stort er færdigt.
+
 ## 01-11-2026 kl. 12:47: v3 · 01-11-2026 med forældredelen, Saga har truffet valgene (Saga)
 
 Jimmy 01-11 (talebesked): «tage de bedste beslutninger på alt det, vi har … lavet. Og så lave det færdigt». Om favoritten: «Det skal være et hjerte, helt klart».
