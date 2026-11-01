@@ -1,5 +1,44 @@
 # STATUS – Tumbi Køkken
 
+## 01-11-2026 kl. 12:47: v3 · 01-11-2026 med forældredelen, Saga har truffet valgene (Saga)
+
+Jimmy 01-11 (talebesked): «tage de bedste beslutninger på alt det, vi har … lavet. Og så lave det færdigt». Om favoritten: «Det skal være et hjerte, helt klart».
+- **Valgene** (Saga på Jimmys vegne, kan laves om):
+
+  | Spørgsmål | Valg | Commit |
+  |---|---|---|
+  | Ny nøgle `kog-familie-v1` (gemmer kun ANTAL børn) | Ja | — |
+  | Standardvalgene (`docs/foraeldredel.md` afsnit 9) | Beholdt | — |
+  | Favorit | ❤️ | 381444d |
+  | «Ingen kniv» | A: intet trin med voksen-kniv, heller ikke dåseåbneren (14 af 82 ugeplan-retter) | 9bd33cf |
+  | Knivloftet for ugeplanens retter | Dåseåbneren tæller ikke med i loftet (højst 2 trin med skære/rive), men appen viser den som et knivtrin | 03046fd |
+  | Navneord | Bøjes nu («1 gulerod», «3 store løg») | d5bf015 |
+  | Aftensretterne i `opskrifter/index.json` | README-rækkefølgen beholdes | — |
+  | De 7 kortede navne, ⚡ og minuttal, dubletterne | Beholdt | — |
+  | De 3 forældreløse mp3 | Slettes ved næste Røst-kørsel (`indsaet-lyd.js --ryd`) | — |
+  | Udtalen af Halloween | Beholdt | — |
+  | ui-reviewets punkter: emoji-hjerte, kontrast, gul markering, «1,5 løg», 🔪-chip, «1 stort» regnes nu om | Accepteret | — |
+  | Lange ord uden bindestreg | Testes på en rigtig iPhone. Ingen kode nu | — |
+
+- **Rettet efter code-review 01-11.** Hver rettelse har en test, der fejler mod den gamle kode:
+  - tal i navnet for hele linjen regnes om, fx «(ca. 1 kg)» og «(4 stk.)» (31a0054);
+  - en tom mængde tælles ikke som «kunne ikke regnes om» (3bba004);
+  - stemmen finder kønnet efter et tillægsord og efter enheder i flertal (c5cfc02);
+  - «Mindst kniv først» er en ren funktion med test (e2a8456);
+  - reglen om ental ved 1,5 står ét sted (e060181).
+  
+  En anden code-reviewer fandt ingen fejl i logikken. Dens 3 værn er lagt ind (d695321): en mængde pr. stk. («à ca. 150 g», «pr. stk.», «hver») regnes ikke om, og en linje med tal, men tom «maengde», fanges af `test-opskrifter`.
+- **Version** v3 · 01-11-2026 (1e87f2a). Fingeraftrykket er sat igen.
+- **Test:** node 13 af 14 grønne (`test-lyd` er rød, fordi Røst-lyden mangler). Hele e2e i WebKit på 1e87f2a: 71.741 tjek. I den fulde kørsel fejlede skærmformer (134) og berøring (1) forbigående. Det er ikke koden: samme dele var grønne ved omkørsel på både 40c1052 og 1e87f2a (4.074 + 33 tjek, 0 fejl). Resten gav 0 fejl.
+- **Ikke rettet** (står i backlog):
+  - «3½ dl» × 3 vises som «1,05 l»: `rumfang` i `js/skaler.js` runder liter til 2 decimaler.
+  - `'plade'` mangler i `KOEN`. Testen fanger det, hvis en ugeplan-ret får en plade.
+
+**Afventer Jimmy:**
+- (01-11) Test på iPad og iPhone: testlisten i Sagas lydbesked 01-11. Tjek også lange ord på en iPhone på langs.
+- (01-11) Bekræft, at Claude selv må pushe Kogebog efter grønt review og grøn e2e, ligesom de private repoer.
+- **Lukket:** de 7 punkter fra kl. 03:11 og README-spørgsmålet fra kl. 02:40 (se tabellen). Røst-lyden laver Saga (se kl. 02:40).
+
 ## 01-11-2026 kl. 03:11: forældredelen er bygget og reviewet, ikke flettet (Saga)
 
 Jimmy 31-10 (talebesked): «så kan vi jo lige så godt få bygget det med det samme». Ønskerne var ugens udvalg til børnene, grupper («meget sunde»), voksne og børn, der skalerer mængderne, favoritter, «prøv nye», et voksen-«login» og indkøb på forældrenes telefon.
