@@ -1,5 +1,19 @@
 # STATUS – Tumbi Køkken
 
+## 01-11-2026 kl. 02:40: runde 3 — 14 nye retter i bogen (101 i alt), ikke flettet (Saga)
+
+Jimmy 31-10: «kører du bare hele lortet helt færdigt til i morgen» (kødkål, jægergryde og Jamie-retterne).
+- **Grenen:** `claude/nye-opskrifter-r3-31-10` oven på runde 2 (worktree `D:\Claude\.claude\worktrees\kogebog-r3-3110`). **Runde 3 erstatter runde 2 som den gren, der skal flettes** (den indeholder runde 1 og 2). Forældredelen (`claude/foraeldredel-31-10`) indeholder igen runde 3. Version stadig v3 · 31-10-2026.
+- **Nye retter:** kødkål med makaroni, jægergryde med pasta, cremet fiskesuppe med majs, cremet ostris med ærter, fisketacos med majs, foldet fladbrød med ost, gul ris med laks, ærter og æg, koteletter med æble, kylling med bønner og spinat, kyllingetærte med butterdej, laks med sprød rasp, smash-burgere med ost, sprød kylling i rasp (aftensmad, sidst i README-rækkefølge, med i ugeplanen) og frossen yoghurt med bær (søde sager). Egne mængder; ingen er lavet i et rigtigt køkken.
+- **Commits:** a8bb492 (de 14 skrevet), 2abced8 (rettelser efter review af retterne, 18 filer), 01ffdeb (flyttet ind med Codex-billeder, tjekket på et kontaktark). «Fuldkornstortillas» har fået en blød bindestreg (e2e fandt den på smal skærm).
+- **Test:** node-tests 8 af 9 grønne (`test-lyd` rød: 1.504 af 2.927 replikker mangler Røst-lyd, før 1.043 af 2.466, plus de 3 forældreløse mp3). e2e i WebKit: `hele`, `former`, `lyn` og `ugeplan` grønne.
+- **Mangler:** 4 billeder tegnes om af Codex (planlagt 01-11 kl. 05:20, når Codex-grænsen nulstilles), fordi de blev tegnet efter beskrivelserne før reviewet: laks (mos med ærter, ikke broccoli), frossen yoghurt (kun blåbær), fisketacos (2, ikke 3) og smash-burgere (fuldkornsboller).
+
+**Afventer Jimmy:**
+- (01-11) Smag på listen over de 14 retter. Skal de 13 aftensretter stå i README-rækkefølge eller alfabetisk i `opskrifter/index.json`?
+- (01-11) Røst-lyd til de ca. 461 nye replikker (trin 1-5 under «Stemmen» i `CLAUDE.md`).
+- Punkterne fra 31-10 nedenfor gælder stadig, men «flet runde 2» er nu «flet runde 3 (eller forældredelen, som indeholder den)».
+
 ## 31-10-2026 kl. 19:53: 36 nye hverdagsretter i bogen (87 i alt), ⚡ og minuttal på forsiden, ikke flettet (Saga)
 
 Jimmy 31-10: flere hverdagsretter i stil med Jamie Olivers 5 ingredienser og 20 minutter, «Ja du giver den bare gas», og (talebesked) et lille minuttal nede i hjørnet af forsidens kort, så forældrene kan se tiden.
