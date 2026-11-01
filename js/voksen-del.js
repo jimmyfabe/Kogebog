@@ -166,9 +166,10 @@ function skaerm(side) {
   // Beskeden og husstandens kladde hører til den side, de kom på
   if (side !== sidsteSide) { besked = null; kladde = null; }
   sidsteSide = side;
-  if (!erLaastOp()) return vagtSkaerm();
+  // Opskrifterne først: ellers tegnes holdet om, når de er hentet, og et hold, der er i gang, starter forfra
   if (K.S.indexFejl) return hentFejl();
   if (!klar()) return K.statusSkaerm({ titel: 'Henter opskrifterne …', laeser: true });
+  if (!erLaastOp()) return vagtSkaerm();
   const f = Lager.hentFamilie(K.S.ids);
   // En nyere udgave har gemt familien: oversigten står stadig (vejen til ugeplanen og indkøbslisten), siderne ikke
   if (f.laast && side !== 'hub') return laastSkaerm();

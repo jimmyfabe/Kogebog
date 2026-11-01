@@ -6,7 +6,8 @@
 // og børnenes valg på to sider, 6. hjertet på færdig-skærmen (⭐ i børnenes valg, favoritterne), 7. genindlæsning og
 // 9. knapperne (børn 64 px, voksne 48 px) og ingen vandret rulning. Én gang: 4b. printets strenge n (desktop),
 // 5. «Send til telefon» og listen på telefonen, 8. data fra v3 (kun kog-uge-v1 og kog-liste-v1) indlæses uden tab og
-// 10. kog-familie-v1 fra en nyere udgave (oversigten står, siderne og hjertet er låst) og 11. loftet på 12 portioner.
+// 10. kog-familie-v1 fra en nyere udgave (oversigten står, siderne og hjertet er låst), 11. loftet på 12 portioner og
+// 12. holdet først, når opskrifterne er hentet.
 import { portionerFraHusstand, faktorFor, skaleretIngrediens, voksenNoter } from '../js/skaler.js';
 import { lavModel } from '../js/model.js';
 import { kod } from '../js/plankode.js';
@@ -32,6 +33,7 @@ export async function voksen(browser, H) {
   await migrering(browser, H);
   await nyereFamilie(browser, H);
   await husstandLoft(browser, H);
+  await henterFoerHoldet(browser, H);
 }
 
 const ugeplanRetter = (RETTER) => Object.keys(RETTER).filter((id) => RETTER[id].tumbi.ugeplan === true);
@@ -325,7 +327,7 @@ async function forloeb(browser, H, skaerm) {
 
   // 7. Genindlæsning bevarer alt: lageret er byte-for-byte det samme, voksendelen er låst igen og viser det gemte
   const foer = await raatLager(side);
-  // Holdet står der, mens opskrifterne hentes, og tegnes igen, når de er hentet: testen holder først bagefter
+  // Holdet kommer først, når opskrifterne er hentet (12.)
   await side.reload({ waitUntil: 'networkidle' });
   await venterPaa(side, () => document.querySelector('.voksen-vagt'), null, n + ': efter genindlæsning er voksendelen låst');
   await hold(side, '.voksen-vagt');
@@ -561,5 +563,23 @@ async function husstandLoft(browser, H) {
   await venterPaa(side, () => document.getElementById('meddelelse').textContent === 'Højst 8 voksne', null, n + ': «Flere voksne» ved 8 siger «Højst 8 voksne»');
   tjek(await tekstAf(side, '.stepper-tal') === '8 voksne', n + ': de voksne er stadig 8');
   tjek(side.fejl.length === 0, n + ' (8 + 8): ' + side.fejl.join(' | '));
+  await ctx.close();
+}
+
+// 12. Åbnes #/voksen, mens opskrifterne hentes, står «Henter opskrifterne …» der først og holdet bagefter, så holdet
+// ikke tegnes om midt i et tryk
+async function henterFoerHoldet(browser, H) {
+  const { BASE, SKAERME, nySide, tjek, venterPaa } = H;
+  const n = SKAERME[0].navn;
+  console.log('[' + n + '] voksendelen: holdet først, når opskrifterne er hentet');
+  const { ctx, side } = await nySide(browser, SKAERME[0], { serviceWorkers: 'block' });
+  await side.route('**/opskrifter/index.json', async (r) => { await H.vent(1500); await r.continue().catch(() => {}); });
+  await side.goto(BASE + '/index.html#/voksen');
+  await venterPaa(side, () => (document.querySelector('main h1')?.textContent || '').startsWith('Henter opskrifterne'), null, n + ': «Henter opskrifterne …» først');
+  tjek(await side.locator('.voksen-vagt').count() === 0, n + ': holdet står der ikke, mens opskrifterne hentes');
+  await venterPaa(side, () => document.querySelector('.voksen-vagt'), null, n + ': holdet, når opskrifterne er hentet');
+  await holdHer(H, side, '.voksen-vagt');
+  await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('main.voksen-hub'), null, n + ': holdet åbner oversigten');
+  tjek(side.fejl.length === 0, n + ' (henter før holdet): ' + side.fejl.join(' | '));
   await ctx.close();
 }

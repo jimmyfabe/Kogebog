@@ -28,7 +28,7 @@
 
 - **Ingen separat app.** En web-app på hjemmeskærmen har sit eget lager, adskilt fra Safari (docs/ugeplan-plan.md, afsnit 2). En separat «voksen-app» ville derfor ikke kunne se børnenes data. Lystårnet har samme mønster: voksendelen ligger i appen, i en åben og en låst del.
 - **«Login» = holdeknap**, en børnelås og ikke sikkerhed. `holdKnap` findes (js/hold.js, standard `ms=2000`). Forsidens «Ugeplan: hold» bliver til «Voksne: hold» → `#/voksen`.
-  - Vagt: åbnes `#/voksen…` direkte (bogmærke på telefonen), vises først en holdeknap.
+  - Vagt: åbnes `#/voksen…` direkte (bogmærke på telefonen), vises først en holdeknap. Den kommer først, når opskrifterne er hentet («Henter opskrifterne …» imens), så den ikke tegnes om midt i et hold.
   - Låsen holdes kun i hukommelsen (en modulvariabel). Den lukker, når man forlader `#/voksen…`, efter 10 minutter uden tryk, og med knappen «Luk».
   - Ingen sessionStorage i MVP, så regel 5 ikke rammes.
 - **Adgangskode/PIN fravalgt:** en PIN i en offentlig statisk app kan læses i koden og glemmes af forældrene. Holdet er nok mod 5-9-årige.
