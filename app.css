@@ -1005,7 +1005,10 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .trin, .ret { --bund: calc(110px + max(22px, env(safe-area-inset-bottom))); }
   .ret:has(.fortsaet) { --bund: calc(190px + max(22px, env(safe-area-inset-bottom))); }
   /* Forsidens top står i én række som på iPad på langs, med mindre luft og knapper på 64 px: på to rækker blev toppen
-     80 px højere på 768×1024. Rækken er ca. 710 px bred på 768 px og 700 px på 744 px (iPad mini) */
+     80 px højere på 768×1024. Med fem afsnit var rækken med Rosa og Bo 773 px på 768 px og 768 px på 744 px (iPad mini),
+     og dyrene stak ud over skærmens kanter (review A1, målt i WebKit 01-11-2026; på 810-834 px stod de kun 12-19 px fra
+     kanterne, og enhedens skrift kan være bredere). Dyrene skjules, og rækken (titlen og knapperne) er 600-640 px */
+  .forside-top > .forside-dyr { display: none; }
   .forside-top { gap: 12px; }
   .forside-hop { gap: 8px; }
   .knap.hop { width: var(--tryk); min-height: var(--tryk); }
