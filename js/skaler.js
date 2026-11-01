@@ -93,10 +93,17 @@ const ENHED = new Map([
   ['dåse', 'dåser', 'halve'], ['lille dåse', 'små dåser', 'halve'], ['pose', 'poser', 'halve'], ['glas', 'glas', 'halve'],
   ['pakke', 'pakker', 'halve'],
   ['rulle', 'ruller', 'form'], ['plade', 'plader', 'form'],
+  ['stk.', 'stk.', 'stk'],
 ].flatMap(([ental, flertal, regel, gange]) => {
   const e = { ental, flertal, regel, gange };
   return [[ental, e], [flertal, e]];
 }));
+
+// Emballage: i «2 dåser tun i vand (ca. 185 g)» er vægten i navnet pr. dåse, så tallene i navnet regnes ikke om
+const EMBALLAGE = new Set(['dåse', 'lille dåse', 'pose', 'glas', 'pakke', 'rulle', 'plade']);
+// En mængde for hele linjen inde i navnet: «(ca. 1 kg)», «ca. 400 g i alt», «(4 stk.)», «4 skiver til croutoner». Procent,
+// «1 tsk salt til pastaen» og «à 165 ml» står altid som før. test-skaler.js går alle linjer med et tal i navnet igennem
+const NAVN_MAENGDE_RE = /(?<![\p{L}\p{N},½¼¾])(?:ca\. (?:\d+(?:,\d+)?|\d*[½¼¾]) (?:kg|g|dl|l)|\d+ (?:stk\.|skiver))(?![\p{L}\p{N}])/gu;
 
 // Mængden ganget med faktoren og rundet efter enheden: { tekst, advarsel }. advarsel er null, 'form' (dej i rulle eller
 // plade, rundet op til hele: formen passer ikke) eller 'ukendt' (tom mængde, et interval eller en ukendt enhed som
@@ -139,8 +146,16 @@ function navnEfter(maengde, navn) {
   return b === null ? navn : b;
 }
 
+// Mængderne inde i navnet (NAVN_MAENGDE_RE) ganget med samme faktor som linjen, undtagen efter en emballage
+function navnMaengder(navn, maengde, faktor) {
+  const m = MAENGDE_RE.exec(maengde);
+  const e = m && m[3] !== undefined ? ENHED.get(m[3]) : undefined;
+  if (e && EMBALLAGE.has(e.ental)) return navn;
+  return navn.replace(NAVN_MAENGDE_RE, (t) => skalerMaengde(t, faktor).tekst);
+}
+
 // Ingrediens nr. i i retten (en model fra lavModel med talportioner) ganget med faktoren: { maengde, navn, tekst,
-// skaleret, advarsel }. Varen fra tumbi.ingredienser gør æg hele. En mængde, der ikke ændres (tom, et interval, en
+// skaleret, advarsel }. Varen fra tumbi.ingredienser gør æg hele, og tal i navnet for hele linjen følger med («(ca. 1 kg)»). En mængde, der ikke ændres (tom, et interval, en
 // knivspids), står uændret med opskriftens navn og er ikke markeret som skaleret; advarslen er skalerMaengdes. Skærmen
 // (retSkaerm i app.js) viser maengde og navn, printet (js/print.js) tekst: de kommer begge herfra
 export function skaleretIngrediens(m, i, faktor) {
@@ -148,7 +163,7 @@ export function skaleretIngrediens(m, i, faktor) {
   const ekstra = (m.uge.tumbi.ingredienser || [])[i];
   const s = skalerMaengde(x.maengde, faktor, { vare: ekstra ? ekstra.vare : undefined });
   if (s.tekst === x.maengde) return { maengde: x.maengde, navn: x.navn, tekst: x.tekst, skaleret: false, advarsel: s.advarsel };
-  const navn = navnEfter(s.tekst, x.navn);
+  const navn = navnMaengder(navnEfter(s.tekst, x.navn), x.maengde, faktor);
   // Opskriftens tekst er mængden, mellemrum og navnet (delIngrediens i js/tekst.js): kun mængden og navnet skiftes ud
   const efter = x.tekst.slice(x.maengde.length);
   const mellem = efter.slice(0, efter.length - efter.trimStart().length);

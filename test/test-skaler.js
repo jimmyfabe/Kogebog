@@ -193,6 +193,17 @@ const antalAf = (maengde) => {
 };
 // Ental efter højst 1 og efter 1,5 («halvanden gulerod»), som enhederne i js/skaler.js
 const erFlertal = (x) => x > 1 && x !== 1.5;
+// Linjerne i ugeplan-retterne med en mængde for hele linjen inde i navnet («(ca. 1 kg)», «(4 stk.)»): tallene dér regnes
+// om med linjen. Får en ret en ny sådan linje, eller ændrer en anden linjes tal i navnet sig, fejler testen og nævner den:
+// er tallet for hele linjen, skrives linjen her; er det pr. stk., skal mængden have en emballage (EMBALLAGE i js/skaler.js)
+const TAL_FOR_HELE_LINJEN = [
+  ['bagte-kartofler-med-fyld', '4 store kartofler (ca. 1 kg)', '2 store kartofler (ca. 500 g)'],
+  ['fiskepakker-med-laks', '400 g laksefileter (4 stk.)', '200 g laksefileter (2 stk.)'],
+  ['gul-ris-med-laks-aerter-og-aeg', '3½ dl ris, ca. 300 g', '2 dl ris, ca. 150 g'],
+  ['gulerodssuppe-med-linser', '500 g rugbrød (4 skiver til croutoner, resten ved siden af)', '250 g rugbrød (2 skiver til croutoner, resten ved siden af)'],
+  ['gulerodssuppe-med-linser', '6 gulerødder (ca. 600 g)', '3 gulerødder (ca. 300 g)'],
+  ['laks-med-sproed-rasp', '4 laksefileter, ca. 400 g i alt', '2 laksefileter, ca. 200 g i alt'],
+];
 
 test('en ingrediens i retten: mængden regnes om, navneordet bøjes med, og advarslen følger med', () => {
   const tp = ret('one-pot-tomatpasta');
@@ -212,9 +223,10 @@ test('en ingrediens i retten: mængden regnes om, navneordet bøjes med, og adva
       r.model.ingredienser.forEach((x, i) => {
         const s = skaleretIngrediens(r.model, i, f);
         const hvor = r.id + ' × ' + f + ': «' + x.tekst + '»';
-        // Navnet er bøjet efter et antal uden enhed, der er ændret, og ellers opskriftens
+        // Navnet er bøjet efter et antal uden enhed, der er ændret, og ellers opskriftens. Tallene i navnet på linjerne i
+        // TAL_FOR_HELE_LINJEN regnes også om: dem tjekker testen «tal i navnet …» nedenfor
         const navn = s.skaleret && ANTAL_RE.test(s.maengde) ? boejNavn(x.navn, erFlertal(antalAf(s.maengde))) : x.navn;
-        assert.equal(s.navn, navn, hvor);
+        if (!TAL_FOR_HELE_LINJEN.some(([id, t]) => id === r.id && t === x.tekst)) assert.equal(s.navn, navn, hvor);
         assert.equal(s.tekst, s.maengde + x.tekst.slice(x.maengde.length).replace(x.navn, () => s.navn), hvor);
         assert.equal(s.skaleret, s.maengde !== x.maengde, hvor);
         assert.deepEqual({ tekst: s.maengde, advarsel: s.advarsel }, sk(x.maengde, f, r.varer[i]), hvor);
@@ -282,7 +294,7 @@ test('navneordene bøjes rigtigt i de rigtige retter, også med et tillægsord f
     ['chorizo-pasta', '2 grøntsagsbouillonterninger', 0.5, '1 grøntsagsbouillonterning'],
     ['chorizo-pasta', '1 stort løg', 3, '3 store løg'],
     ['chorizo-pasta', '1 stort løg', 0.5, '½ stort løg'],
-    ['bagte-kartofler-med-fyld', '4 store kartofler (ca. 1 kg)', 0.25, '1 stor kartoffel (ca. 1 kg)'],
+    ['bagte-kartofler-med-fyld', '4 store kartofler (ca. 1 kg)', 0.25, '1 stor kartoffel (ca. 250 g)'],
     ['koteletter-med-aeble', '2 røde æbler', 0.5, '1 rødt æble'],
     ['orange-pasta-med-hemmelig-groentsagssovs', '2 orange peberfrugter', 0.5, '1 orange peberfrugt'],
     ['tunfrikadeller', '1 løg, groftrevet', 3, '3 løg, groftrevet'],
@@ -297,6 +309,30 @@ test('navneordene bøjes rigtigt i de rigtige retter, også med et tillægsord f
     assert.ok(i >= 0, id + ': «' + foer + '» findes ikke');
     assert.equal(linje(id, i, f), efter, id + ': «' + foer + '» × ' + f);
   }
+});
+
+test('tal i navnet for hele linjen regnes om med linjen; procent, vægt pr. emballage og «1 tsk salt» står som før', () => {
+  const tal = (t) => (t.match(/\d+(?:,\d+)?|[½¼¾]/g) || []).join(' ');
+  const aendret = [];
+  for (const { id, model } of RETTER.filter((r) => r.model.uge)) {
+    model.ingredienser.forEach((x, i) => {
+      if (!/\d/.test(x.navn)) return;
+      const s = skaleretIngrediens(model, i, 0.5);
+      if (tal(s.navn) !== tal(x.navn)) aendret.push([id, x.tekst, s.tekst]);
+    });
+  }
+  assert.deepEqual(aendret.sort(), [...TAL_FOR_HELE_LINJEN].sort());
+  const linje = (id, tekst, f) => {
+    const m = ret(id);
+    return skaleretIngrediens(m, m.ingredienser.findIndex((x) => x.tekst === tekst), f).tekst;
+  };
+  assert.equal(linje('bagte-kartofler-med-fyld', '4 store kartofler (ca. 1 kg)', 0.25), '1 stor kartoffel (ca. 250 g)');
+  assert.equal(linje('laks-med-sproed-rasp', '4 laksefileter, ca. 400 g i alt', 3), '12 laksefileter, ca. 1,2 kg i alt');
+  assert.equal(linje('gulerodssuppe-med-linser', '500 g rugbrød (4 skiver til croutoner, resten ved siden af)', 0.25), '130 g rugbrød (1 skive til croutoner, resten ved siden af)');
+  assert.equal(linje('tunfrikadeller', '2 dåser tun i vand (ca. 185 g)', 0.5), '1 dåse tun i vand (ca. 185 g)', 'vægten er pr. dåse');
+  assert.equal(linje('gyoza-med-noedler-og-groent', '2 poser frosne gyoza (ca. 380 g)', 1.5), '3 poser frosne gyoza (ca. 380 g)', 'vægten er pr. pose');
+  assert.equal(linje('chorizo-pasta', '2,5 dl madlavningsfløde 15 %', 2), '5 dl madlavningsfløde 15 %');
+  assert.equal(linje('cremet-koedsovs', '3 l vand og 1 tsk salt til pastaen', 0.5), '1,5 l vand og 1 tsk salt til pastaen');
 });
 
 test('boejNavn: ental og flertal, tillægsordet efter kønnet, «eller», resten uændret, null for et ukendt ord', () => {
