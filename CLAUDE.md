@@ -58,10 +58,11 @@ Kør i Git Bash i `D:/Claude/Kogebog`.
 
 Standard schema.org/Recipe med egne felter under `tumbi`. Den fulde tabel står i `docs/gennemgang.md`. Validatoren (`test/test-opskrifter.js`) tjekker:
 
-- `tumbi.id` er filnavnet, og id'et står i præcis én gruppe i `opskrifter/index.json` (version 2: `grupper` med `id` og `retter`). Grupperne er `aftensmad`, `bagning`, `soede-sager` og `halloween` (`GRUPPER` i `js/katalog.js`, billedet `grafik/gruppe-<id>.svg`, farven `[data-gruppe]` i `app.css`, og stemmen `lyd/faelles/gruppe-<id>.mp3`).
-- Hvert trin har `tumbi.verbum` fra de 27 verber i `js/katalog.js`: `roere haelde skaere aelte rulle vende stege koge maale vaske-haender vente smage smoere mose bage piske drysse rive pensle tage-ud tage-ud-form si kagerulle pakke-ind smuldre pynte sproejte`.
+- `tumbi.id` er filnavnet, og id'et står i præcis én gruppe i `opskrifter/index.json` (version 2: `grupper` med `id` og `retter`). Grupperne er `jul` (først fra 01-11-2026), `aftensmad`, `bagning`, `soede-sager` og `halloween` (sidst) (`GRUPPER` i `js/katalog.js`, billedet `grafik/gruppe-<id>.svg`, farven `[data-gruppe]` i `app.css`, og stemmen `lyd/faelles/gruppe-<id>.mp3`).
+- Hvert trin har `tumbi.verbum` fra de 31 verber i `js/katalog.js`: `roere haelde skaere aelte rulle vende stege koge maale vaske-haender vente smage smoere mose bage piske drysse rive pensle tage-ud tage-ud-form si kagerulle pakke-ind smuldre pynte sproejte stikke-ud forme pille smelte` (de 4 sidste kom med julen 01-11-2026).
 - Trinteksten (`text`, den der læses op) er højst 9 ord.
-- Kniv (`skaere`, `rive`) og varme (`stege`, `koge`, `vende`, `bage`, `tage-ud`, `tage-ud-form`, `si`) kræver `"voksen": true` og `voksen_hjaelp` (`"kniv"` eller `"varme"`). De to følges ad. `kagerulle`, `pakke-ind` og `smuldre` kan barnet selv.
+- Kniv (`skaere`, `rive`) og varme (`stege`, `koge`, `vende`, `bage`, `tage-ud`, `tage-ud-form`, `si`, `smelte`) kræver `"voksen": true` og `voksen_hjaelp` (`"kniv"` eller `"varme"`, `VOKSEN_KRAV`). De to følges ad. `smelte` er chokolade eller smør i en skål over en varm gryde, altid den voksne. `kagerulle`, `pakke-ind` og `smuldre` kan barnet selv, og det kan `stikke-ud` (udstikkeren i dejen), `forme` (kugler og kranse) og `pille` (æg og rejer) også, men er der varme med (fx et lunt æg), skal hjælpen være `"varme"` (`KUN_VARME_HJAELP`). `forme` og `stikke-ud` har hænderne i dejen (`HAENDER_I_DEJ`).
+- Potaske og hjortetakssalt får en voksen-note (`note`), ikke et nyt felt: validatorens `voksen_hjaelp` kender kun kniv og varme.
 - **Ordene går efter stammen + undtagelser** (`KNIV_ORD`, `VARME_ORD`, `RAA_ORD`, `REDAKTION` og `UNDTAGELSER` i `test/test-opskrifter.js`). Hvert ord med stammen fanges med alle bøjninger. En liste over tilladte former manglede altid en form («koge», så «smelte», «skære» og «æggeblommer»). Ord, der ikke er kniv, varme, råt eller en redaktionel note, står som hele ord i `UNDTAGELSER` med grunden. Mangler et ord dér, giver det et falsk fund (det sikre fejlvalg): skriv ordet på listen, gør ikke stammen snævrere.
 - **Ordvagten i trinene** (kun `text`, uanset verbet): nævner teksten kniv eller rivejern (`riv…`, `hak…`, `skær…`, `skræl…`, og `kniv` også inde i ord: «brødkniven»), skal trinnet have `"voksen": true` og `"voksen_hjaelp": "kniv"`. Nævner den varme (`bag…`, og `steg`, `kog`, `smelt`, `komfur` og `ovn` også inde i ord: «småkoge», «bageovnen»), skal hjælpen være `"varme"`. Står der begge slags, afvises trinnet: `voksen_hjaelp` er én værdi, så trinnet deles i to. Undtaget er fx «knivspids», «skærebræt», «rivejern», «smørekniv», «hakkede», «bagepapir», «bagepulver», «kogebog», «bagefter» og «hovne», men ikke «bageplade» (pladen kan være varm). **«bag» som forholdsord («bag gryden») giver et falsk fund med vilje:** det kan ikke skelnes fra «og bag dem», så skriv «bagved». «varm» og «brun» er ikke med («en varm skive», «brun farin»).
 - Efter hvert `bage`-trin (med eller uden timer) kommer et `tage-ud`-trin («Tag pladen ud af ovnen.») eller, når der bages i en dyb form, et `tage-ud-form`-trin («Tag formen ud af ovnen.»). Bages der videre i et nyt `bage`-trin, kommer det efter det sidste.
@@ -78,7 +79,7 @@ Standard schema.org/Recipe med egne felter under `tumbi`. Den fulde tabel står 
 
 ## Ny opskrift
 
-1. Kopiér en af `opskrifter/<id>.json`, og skriv id'et i den rigtige gruppe i `opskrifter/index.json` (aftensmad, bagning, søde sager eller halloween).
+1. Kopiér en af `opskrifter/<id>.json`, og skriv id'et i den rigtige gruppe i `opskrifter/index.json` (jul, aftensmad, bagning, søde sager eller halloween). Alle ingredienser skal kunne købes i discount (regel 11). Mangler retbilledet, ligger opskriften i `docs/venter-paa-billede/` (se dens `README.md`), til billedet findes.
 2. Kør `node test/test-opskrifter.js`. Den siger præcis, hvad der er galt.
 3. Læg retbilledet `grafik/ret-<id>.webp` (Codex-PNG gjort til 640 px WebP med `py -I vaerktoej/ret-billede-til-webp.py <png-mappe> grafik <id>`, se faldgruben om Codex) og nye verbum- eller ingrediens-billeder (SVG). Tilføj filerne i `FILER` i `sw.js`.
 4. Kør `node test/test-sw.js`, og sæt den nye `INDHOLD` (se regel 3 nedenfor).
@@ -113,6 +114,7 @@ Al oplæsning er Røst v3 500m fra Alexandra Instituttet (referencestemmen «Nic
 8. **Ingen Google-stemme.** Chirp 3 HD er udelukket, medmindre Google bekræfter skriftligt (`docs/gennemgang.md`).
 9. **Knapper:** børnenes knapper mindst 64 px, de voksnes mindst 48 px. `test-e2e.js` tjekker det.
 10. **Test i WebKit** (Safaris motor) i 1180×820 (iPad), 390×844 (iPhone) og 1280×800 (desktop). Statiske sider testes over HTTP, aldrig `file://`.
+11. **Ingredienserne skal kunne købes i Rema 1000, Netto, 365discount eller Lidl** (fra 01-11-2026). Findes en vare ikke i nogen af dem, så byt den (discount-bytningerne står i `docs/jul-plan-01-11-2026.md`, afsnit 4). Kun Rema 1000 kan søges på nettet, så de tre andre er ofte «ikke bekræftet».
 
 ## Faldgruber (set i praksis)
 
