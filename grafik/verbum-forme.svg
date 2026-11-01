@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="shape-ring" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="board">
+      <path d="M30 184 Q34 168 52 168 L204 168 Q222 168 226 184 L236 224 Q240 238 224 238 L32 238 Q16 238 20 224 Z" fill="#FFF4E2"/>
+      <path d="M21 224 Q128 233 235 224" fill="none"/>
+    </g>
+    <g id="dough-rope">
+      <path d="M97.6 176.1 A72 22 0 1 0 158.4 176.1" fill="none" stroke-width="28"/>
+      <path d="M97.6 176.1 A72 22 0 1 0 158.4 176.1" fill="none" stroke="#E8C79A" stroke-width="21"/>
+      <path d="M74 206 Q128 222 182 206" fill="none" stroke="#CFA976" stroke-width="5"/>
+    </g>
+    <g id="together-motion" fill="#3E8FB0">
+      <path d="M92 112 L108 112 L108 104 L124 118 L108 132 L108 124 L92 124 Z"/>
+      <path d="M164 112 L148 112 L148 104 L132 118 L148 132 L148 124 L164 124 Z"/>
+    </g>
+    <g id="rosa-left-paw" transform="translate(96 178) rotate(-35)">
+      <path d="M-18 -150 L18 -150 L22 -48 L-22 -48 Z" fill="#F08A3C"/>
+      <path d="M-26 -40 C-28 -54 -18 -60 0 -60 C18 -60 28 -54 26 -40 L26 -14 C26 -2 18 2 12 0 C8 4 -8 4 -12 0 C-18 2 -26 -2 -26 -14 Z" fill="#F08A3C"/>
+      <path d="M-8 -1 L-8 -12 M8 -1 L8 -12" fill="none"/>
+    </g>
+    <g id="rosa-right-paw" transform="translate(160 178) rotate(35)">
+      <path d="M-18 -150 L18 -150 L22 -48 L-22 -48 Z" fill="#F08A3C"/>
+      <path d="M-26 -40 C-28 -54 -18 -60 0 -60 C18 -60 28 -54 26 -40 L26 -14 C26 -2 18 2 12 0 C8 4 -8 4 -12 0 C-18 2 -26 -2 -26 -14 Z" fill="#F08A3C"/>
+      <path d="M-8 -1 L-8 -12 M8 -1 L8 -12" fill="none"/>
+    </g>
+  </g>
+</svg>

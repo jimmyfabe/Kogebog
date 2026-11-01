@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="bottle">
+    <path id="body" fill="#E3A44E" d="M74 92 C74 80 82 72 94 72 L142 72 C154 72 162 80 162 92 L162 210 C162 220 154 228 144 228 L92 228 C82 228 74 220 74 210 Z"/>
+    <path fill="#B5763A" stroke="none" d="M146 76 C154 80 158 86 158 94 L158 210 C158 218 152 224 144 224 L136 224 C142 220 146 214 146 206 Z"/>
+    <path fill="none" stroke="#F7CF7E" stroke-width="7" d="M88 100 L88 170"/>
+    <rect id="label" x="86" y="128" width="64" height="58" rx="8" fill="#FFF4E2"/>
+    <path id="drop-label" fill="#E3A44E" d="M118 140 C112 152 108 160 108 166 C108 173 113 178 118 178 C123 178 128 173 128 166 C128 160 124 152 118 140 Z" transform="translate(0 -2)"/>
+    <path fill="none" d="M74 92 C74 80 82 72 94 72 L142 72 C154 72 162 80 162 92 L162 210 C162 220 154 228 144 228 L92 228 C82 228 74 220 74 210 Z"/>
+    <path id="cap" fill="#5BAA6A" d="M98 46 L138 46 Q142 46 142 50 L142 74 L94 74 L94 50 Q94 46 98 46 Z"/>
+    <path fill="#448450" stroke="none" d="M132 48 L138 48 Q140 48 140 50 L140 72 L132 72 Z"/>
+    <path fill="none" d="M94 60 L142 60"/>
+  </g>
+  <g id="spoon" transform="translate(196 120) rotate(18)">
+    <rect x="-6" y="-82" width="12" height="70" rx="6" fill="#8E9AA6"/>
+    <ellipse cx="0" cy="0" rx="20" ry="16" fill="#8E9AA6"/>
+    <ellipse cx="0" cy="-2" rx="15" ry="10" fill="#E3A44E"/>
+  </g>
+  <g id="drip">
+    <path fill="#E3A44E" d="M190 136 C192 150 196 164 196 176 C196 186 190 192 184 192 C178 192 174 186 175 178 C176 168 184 156 186 138 Z"/>
+    <ellipse cx="186" cy="216" rx="22" ry="7" fill="#E3A44E"/>
+  </g>
+</g>
+</svg>

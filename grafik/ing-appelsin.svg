@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="orange" transform="translate(110 120)">
+    <path id="stalk" fill="#5BAA6A" d="M-6 -66 C-6 -74 -2 -80 4 -82 L8 -76 C4 -74 2 -70 2 -66 Z"/>
+    <path id="leaf" fill="#5BAA6A" d="M4 -72 C18 -92 46 -96 62 -84 C48 -66 24 -62 4 -72 Z"/>
+    <path fill="none" d="M8 -73 C24 -80 40 -84 56 -84"/>
+    <circle id="peel" r="72" fill="#F08A3C"/>
+    <path fill="#D9702A" stroke="none" d="M66 -28 C80 14 62 58 22 70 C2 76 -20 74 -38 62 C4 66 46 44 60 4 C64 -8 66 -18 66 -28 Z"/>
+    <path fill="none" stroke="#F7B27A" stroke-width="7" d="M-50 -30 C-40 -46 -24 -56 -6 -58"/>
+    <g fill="#D9702A" stroke="none">
+      <circle cx="-30" cy="-4" r="2.5"/>
+      <circle cx="12" cy="-28" r="2.5"/>
+      <circle cx="36" cy="6" r="2.5"/>
+      <circle cx="-6" cy="22" r="2.5"/>
+      <circle cx="-36" cy="34" r="2.5"/>
+    </g>
+    <circle r="72" fill="none"/>
+  </g>
+  <g id="orange-slice" transform="translate(186 190)">
+    <circle r="46" fill="#F08A3C"/>
+    <circle r="38" fill="#F7B27A" stroke="none"/>
+    <g fill="none" stroke="#FFF4E2" stroke-width="5">
+      <path d="M0 -34 L0 34 M-34 0 L34 0 M-24 -24 L24 24 M-24 24 L24 -24"/>
+    </g>
+    <circle r="7" fill="#FFF4E2" stroke="none"/>
+    <circle r="38" fill="none" stroke="#FFF4E2" stroke-width="4"/>
+    <circle r="46" fill="none"/>
+  </g>
+</g>
+</svg>

@@ -193,6 +193,20 @@ test('tage-ud, tage-ud-form og si kræver en voksen for varmens skyld; kagerulle
   }
 });
 
+// De fire verber til jule-retterne (01-11-2026). «smelte» er altid den voksnes (skålen over den varme gryde); udstikkeren,
+// at forme og at pille kan barnet, og hjælper den voksne, er det for varmens skyld
+test('smelte kræver en voksen for varmens skyld; stikke-ud, forme og pille kan barnet', () => {
+  forventFejl('opskrifter/koedsovs.json', (d) => { const st = d.recipeInstructions[2].tumbi; st.verbum = 'smelte'; delete st.voksen; delete st.voksen_hjaelp; },
+    'trin 3: verbet «smelte» skal have "voksen": true og "voksen_hjaelp": "varme"');
+  forventFejl('opskrifter/koedsovs.json', (d) => { Object.assign(d.recipeInstructions[2].tumbi, { verbum: 'smelte', voksen: true, voksen_hjaelp: 'kniv' }); },
+    'trin 3: verbet «smelte» skal have "voksen": true og "voksen_hjaelp": "varme"');
+  for (const v of ['stikke-ud', 'forme', 'pille']) {
+    forventGyldig('opskrifter/boller.json', (d) => { const st = d.recipeInstructions[10].tumbi; st.verbum = v; delete st.voksen; delete st.voksen_hjaelp; });
+    forventFejl('opskrifter/boller.json', (d) => { Object.assign(d.recipeInstructions[10].tumbi, { verbum: v, voksen: true, voksen_hjaelp: 'kniv' }); },
+      'trin 11: verbet «' + v + '» kan barnet selv');
+  }
+});
+
 // Trinene, der fik de nye verber. Tunfrikadellernes «Hæld vandet fra tunen.» beholder «haelde»: si-billedet viser
 // en varm gryde over dørslaget, og tunen er kold og står i en dåse
 test('trinene med de nye verber', () => {
@@ -402,7 +416,7 @@ test('råt kød uden «vask hænderne» bagefter', () => {
 // At forme farsen eller rulle dejen ud rører det rå lige så meget som at ælte den (code review 19-10).
 // Tunfrikadeller: hænderne vaskes mellem æggene (trin 8) og formningen, og bagefter er der ingen vask
 test('fars og dej med råt æg: hænderne vaskes efter formningen, ikke før', () => {
-  for (const v of ['rulle', 'kagerulle']) {
+  for (const v of ['rulle', 'kagerulle', 'forme', 'stikke-ud']) {
     forventFejl('opskrifter/tunfrikadeller.json', (d) => {
       const r = d.recipeInstructions;
       const form = r.findIndex((s) => s.tumbi.verbum === 'rulle');
@@ -445,7 +459,7 @@ test('pakke ind, smuldre og forme efter en pensling med æg kræver en ny håndv
       r.splice(r.findIndex((s) => s.tumbi.verbum === 'bage'), 0, rul);
     }, 'trin 5: rører råt kød eller æg (aeg) (aeg fra penslingen i trin 3 er stadig råt), men der kommer ikke et «vaske-haender»-trin bagefter');
   }
-  for (const v of ['rulle', 'kagerulle', 'aelte']) {
+  for (const v of ['rulle', 'kagerulle', 'aelte', 'forme', 'stikke-ud']) {
     forventFejl('opskrifter/heksefingre.json', (d) => {
       const r = d.recipeInstructions;
       const pensl = r.findIndex((s) => s.tumbi.verbum === 'pensle');

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="jar">
+    <path id="glass" fill="#FFFFFF" d="M70 82 L170 82 L170 204 C170 216 162 222 150 222 L90 222 C78 222 70 216 70 204 Z"/>
+    <g id="sprinkles-inside" stroke-width="2.5">
+      <rect x="82" y="110" width="18" height="7" rx="3.5" fill="#E2513B" transform="rotate(-30 91 113)"/>
+      <rect x="112" y="104" width="18" height="7" rx="3.5" fill="#5BAA6A" transform="rotate(20 121 107)"/>
+      <rect x="142" y="112" width="18" height="7" rx="3.5" fill="#F2C14E" transform="rotate(-50 151 115)"/>
+      <rect x="92" y="138" width="18" height="7" rx="3.5" fill="#F2C14E" transform="rotate(40 101 141)"/>
+      <rect x="124" y="134" width="18" height="7" rx="3.5" fill="#E2513B" transform="rotate(-10 133 137)"/>
+      <rect x="148" y="146" width="18" height="7" rx="3.5" fill="#3E8FB0" transform="rotate(30 157 149)"/>
+      <rect x="80" y="168" width="18" height="7" rx="3.5" fill="#3E8FB0" transform="rotate(-20 89 171)"/>
+      <rect x="108" y="164" width="18" height="7" rx="3.5" fill="#5BAA6A" transform="rotate(60 117 167)"/>
+      <rect x="132" y="176" width="18" height="7" rx="3.5" fill="#F2C14E" transform="rotate(-36 141 179)"/>
+      <rect x="96" y="194" width="18" height="7" rx="3.5" fill="#E2513B" transform="rotate(16 105 197)"/>
+      <rect x="128" y="200" width="18" height="7" rx="3.5" fill="#5BAA6A" transform="rotate(-60 137 203)"/>
+      <circle cx="120" cy="122" r="5" fill="#FFFFFF"/>
+      <circle cx="104" cy="156" r="5" fill="#E2513B"/>
+      <circle cx="146" cy="128" r="5" fill="#FFFFFF"/>
+      <circle cx="152" cy="190" r="5" fill="#E2513B"/>
+      <circle cx="118" cy="186" r="5" fill="#FFFFFF"/>
+    </g>
+    <path fill="none" stroke="#EDE8E0" stroke-width="7" d="M80 100 L80 180"/>
+    <path fill="none" d="M70 82 L170 82 L170 204 C170 216 162 222 150 222 L90 222 C78 222 70 216 70 204 Z"/>
+    <path id="lid" fill="#E2513B" d="M64 56 L176 56 Q182 56 182 62 L182 82 Q182 88 176 88 L64 88 Q58 88 58 82 L58 62 Q58 56 64 56 Z"/>
+    <path fill="#C3331D" stroke="none" d="M164 58 L176 58 Q180 58 180 62 L180 82 Q180 86 176 86 L164 86 Z"/>
+    <path fill="none" d="M76 56 L76 88 M96 56 L96 88 M116 56 L116 88 M136 56 L136 88 M156 56 L156 88"/>
+  </g>
+  <g id="sprinkles-outside" stroke-width="2.5">
+    <rect x="186" y="200" width="20" height="8" rx="4" fill="#E2513B" transform="rotate(-24 196 204)"/>
+    <rect x="206" y="180" width="20" height="8" rx="4" fill="#5BAA6A" transform="rotate(40 216 184)"/>
+    <rect x="200" y="218" width="20" height="8" rx="4" fill="#F2C14E" transform="rotate(10 210 222)"/>
+    <rect x="34" y="206" width="20" height="8" rx="4" fill="#3E8FB0" transform="rotate(30 44 210)"/>
+    <circle cx="224" cy="208" r="5.5" fill="#FFFFFF"/>
+    <circle cx="44" cy="186" r="5.5" fill="#F2C14E"/>
+  </g>
+</g>
+</svg>

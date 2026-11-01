@@ -31,10 +31,16 @@ export const VERBER = {
   'smuldre': 'smuldre',
   'pynte': 'pynte',
   'sproejte': 'sprøjte',
+  // 4 til jule-retterne (01-11-2026): udstikkeren i dejen, forme kranse og kugler, pille æg og rejer, og smelte chokolade
+  // eller smør (altid den voksne: en skål over en varm gryde)
+  'stikke-ud': 'stikke ud',
+  'forme': 'forme',
+  'pille': 'pille',
+  'smelte': 'smelte',
 };
 
 // Verber, der altid kræver en voksen, og hvilken slags hjælp. Rivejernet skærer, «bage» og «tage-ud» er altid ovnen
-// («tage-ud» er en flad plade, «tage-ud-form» en dyb form), og «si» er kogende vand gennem dørslaget.
+// («tage-ud» er en flad plade, «tage-ud-form» en dyb form), «si» er kogende vand gennem dørslaget, og «smelte» er varmt.
 export const VOKSEN_KRAV = {
   'skaere': 'kniv',
   'rive': 'kniv',
@@ -45,12 +51,14 @@ export const VOKSEN_KRAV = {
   'tage-ud': 'varme',
   'tage-ud-form': 'varme',
   'si': 'varme',
+  'smelte': 'varme',
 };
 
-// Verber, barnet kan selv, når der er koldt: piske dej, pensle boller, mose, drysse ost, pynte og sprøjte ketchup. Er der varme med
-// (varmt fedt, en varm gryde eller pande), skal den voksne hjælpe, og så er det for varmens skyld, aldrig kniven.
+// Verber, barnet kan selv, når der er koldt: piske dej, pensle boller, mose, drysse ost, pynte, sprøjte ketchup, stikke ud,
+// forme og pille. Er der varme med (varmt fedt, en varm gryde eller pande, et lunt æg), skal den voksne hjælpe, og så er det
+// for varmens skyld, aldrig kniven.
 // Validatoren kan ikke se, om der er varme; det skriver opskriften med «voksen». Den tjekker, at hjælpen er «varme».
-export const KUN_VARME_HJAELP = ['piske', 'pensle', 'mose', 'drysse', 'pynte', 'sproejte'];
+export const KUN_VARME_HJAELP = ['piske', 'pensle', 'mose', 'drysse', 'pynte', 'sproejte', 'stikke-ud', 'forme', 'pille'];
 
 export const VOKSEN_HJAELP = {
   kniv: 'Kniv',
@@ -130,6 +138,19 @@ export const INGREDIENSER = {
   // De hurtige hverdagsretter, runde 3 (31-10-2026): champignon i kyllingetærten og jægergryden, frosne bær i den frosne yoghurt
   'champignon': 'champignon',
   'baer': 'bær',
+  // Jule-retterne (01-11-2026, docs/jul-plan-01-11-2026.md afsnit 3b). «krydderi» er de tørrede julekrydderier (kanel,
+  // kardemomme, nelliker, ingefær), «rosiner» al tørret frugt (også dadler og svesker), «krymmel» også perlesukker,
+  // «noedder» valnødder og hasselnødder, og «appelsin» også skal, juice og marmelade
+  'marcipan': 'marcipan',
+  'mandler': 'mandler',
+  'krydderi': 'krydderier',
+  'sirup': 'sirup',
+  'appelsin': 'appelsin',
+  'rosiner': 'rosiner',
+  'krymmel': 'krymmel',
+  'pebernoedder': 'pebernødder',
+  'noedder': 'nødder',
+  'eddike': 'eddike',
 };
 
 // Ikoner for råt kød og råt æg: efter dem skal der komme et trin med «vaske-haender».
@@ -143,10 +164,11 @@ export const DYR = {
 };
 
 // Forsidens afsnit (opskrifter/index.json). Navnet er overskriften; billedet er grafik/gruppe-<id>.svg
-// (en gryde, en ovn, en kage og et græskar), og farven på kortenes cirkel står i app.css under [data-gruppe].
-// Halloween er sit eget afsnit fra 22-10-2026 (sidst, så forsiden ellers er som før). Skal retterne tilbage i
-// Bagning, flyttes de i index.json, og 'halloween' kan blive stående her
+// (et juletræ, en gryde, en ovn, en kage og et græskar), og farven på kortenes cirkel står i app.css under [data-gruppe].
+// Halloween er sit eget afsnit fra 22-10-2026. Jul står først i index.json fra 01-11-2026, og Halloween er flyttet sidst.
+// Skal retterne tilbage i Bagning, flyttes de i index.json, og 'halloween' kan blive stående her
 export const GRUPPER = {
+  'jul': 'Jul',
   'aftensmad': 'Aftensmad',
   'bagning': 'Bagning',
   'soede-sager': 'Søde sager',
@@ -272,14 +294,15 @@ export const VARER = {
   'lasagneplader': { navn: 'Lasagneplader (fuldkorn)', afd: 'toer', enhed: 'g', ikon: 'spaghetti', pakke: [500, 'pakke', 'pakker'] },
   'roedbeder': { navn: 'Syltede rødbeder', afd: 'toer', enhed: 'g', ikon: 'roedbede' },
   'ananas': { navn: 'Ananasringe', afd: 'toer', enhed: 'stk', ikon: 'ananas', pakke: [1, 'dåse', 'dåser'] },
-  // Uden pakke: hoisin sælges både i små poser og i flasker
-  'hoisin': { navn: 'Hoisinsauce', afd: 'toer', enhed: 'g', ikon: 'soja' },
+  // Små poser à 40 g: den eneste størrelse, Rema 1000 har (discount-tilpasningen 01-11-2026)
+  'hoisin': { navn: 'Hoisinsauce', afd: 'toer', enhed: 'g', ikon: 'soja', pakke: [40, 'pose', 'poser'] },
   // Køl
   'hakket-oksekoed': { navn: 'Hakket oksekød', afd: 'koel', enhed: 'g', ikon: 'koed', pakke: [500, 'bakke', 'bakker'], slags: 'koed' },
   'chorizo': { navn: 'Chorizo', afd: 'koel', enhed: 'g', ikon: 'chorizo', pakke: [250, 'pakke', 'pakker'], slags: 'koed' },
   'flodeost': { navn: 'Flødeost', afd: 'koel', enhed: 'g', ikon: 'flodeost', pakke: [200, 'bæger', 'bægre'] },
   'madlavningsflode': { navn: 'Madlavnings\u00adfløde', afd: 'koel', enhed: 'ml', ikon: 'flode', pakke: [250, 'bæger', 'bægre'] },
-  'parmesan': { navn: 'Revet parmesan', afd: 'koel', enhed: 'g', ikon: 'ost', pakke: [100, 'pose', 'poser'] },
+  // Id'et er stadig «parmesan», men retterne bruger den billigere revne hårde ost fra 01-11-2026 (discount-tilpasningen)
+  'parmesan': { navn: 'Revet hård ost', afd: 'koel', enhed: 'g', ikon: 'ost', pakke: [100, 'pose', 'poser'] },
   'revet-ost': { navn: 'Revet ost', afd: 'koel', enhed: 'g', ikon: 'ost', pakke: [175, 'pose', 'poser'] },
   'skiveost': { navn: 'Skiveost', afd: 'koel', enhed: 'g', ikon: 'ost' },
   'graesk-yoghurt': { navn: 'Græsk yoghurt', afd: 'koel', enhed: 'g', ikon: 'yoghurt', pakke: [500, 'bæger', 'bægre'] },
@@ -291,7 +314,7 @@ export const VARER = {
   'creme-fraiche': { navn: 'Creme fraiche', afd: 'koel', enhed: 'g', ikon: 'yoghurt' },
   'fiskefars': { navn: 'Fiskefars', afd: 'koel', enhed: 'g', ikon: 'koed', slags: 'fisk' },
   'kyllingebryst': { navn: 'Kyllingebryst', afd: 'koel', enhed: 'g', ikon: 'koed', slags: 'koed' },
-  'kyllingelaar': { navn: 'Kyllingelår', afd: 'koel', enhed: 'g', ikon: 'koed', slags: 'koed' },
+  'kyllingelaar': { navn: 'Kyllingeoverlår', afd: 'koel', enhed: 'g', ikon: 'koed', slags: 'koed' },
   'hakket-svinekoed': { navn: 'Hakket svinekød', afd: 'koel', enhed: 'g', ikon: 'koed', slags: 'koed' },
   'svinekoteletter': { navn: 'Svine\u00adkoteletter', afd: 'koel', enhed: 'g', ikon: 'koed', slags: 'koed' },
   'bacon-tern': { navn: 'Bacon i tern', afd: 'koel', enhed: 'g', ikon: 'koed', slags: 'koed' },

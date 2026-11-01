@@ -15,7 +15,7 @@
     "6 dl vand",
     "300 g fuldkornspasta, ukogt",
     "220 g flødeost 11 %",
-    "60 g revet parmesan",
+    "60 g revet hård ost",
     "2 tsk tørret oregano",
     "1 tsk hvidløgspulver",
     "½ tsk salt",
@@ -35,8 +35,8 @@
     { "@type": "HowToStep", "text": "Hæld pastaen i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spaghetti"], "note": "Pas på sprøjt. Rør, så al pastaen er dækket af væde." } },
     { "@type": "HowToStep", "text": "Kog under låg i 12 minutter. Rør tit.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 720, "note": "Svag kog. Rør hvert 2.-3. minut, så pastaen ikke brænder på. Bliver det tørt, før pastaen er mør: en sjat vand mere. Er pastaen ikke mør efter 12 min, så 1-2 min mere." } },
     { "@type": "HowToStep", "text": "Rør flødeosten i, til sovsen er cremet.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["flodeost"], "note": "Tag gryden af varmen først. Flødeost 11 %, fx Philadelphia Light." } },
-    { "@type": "HowToStep", "text": "Smag til med salt og peber.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt", "peber"], "note": "Pust på skeen først. Parmesanen er salt, så smag, før der kommer mere salt i." } },
-    { "@type": "HowToStep", "text": "Drys parmesan på maden.", "tumbi": { "verbum": "drysse", "ikoner": ["ost"], "note": "På tallerkenerne." } }
+    { "@type": "HowToStep", "text": "Smag til med salt og peber.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt", "peber"], "note": "Pust på skeen først. Osten er salt, så smag, før der kommer mere salt i." } },
+    { "@type": "HowToStep", "text": "Drys osten på maden.", "tumbi": { "verbum": "drysse", "ikoner": ["ost"], "note": "På tallerkenerne." } }
   ],
   "tumbi": {
     "id": "bolognese-one-pot",
@@ -48,7 +48,7 @@
     "pris_kr": 89,
     "pris_dato": "2026-10",
     "groent_g": 620,
-    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Prisen på flødeost og parmesan er eget skøn.",
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Prisen på flødeost og parmesan er eget skøn. Parmesan er byttet til revet hård ost 01-11-2026 (Rema 1000 100 g 15,95 kr.); prisen er ikke regnet om.",
     "ingredienser": [
       { "ikon": "koed", "maengde": "360 g", "vare": "hakket-oksekoed", "antal": 360, "enhed": "g" },
       { "ikon": "tomat", "maengde": "620 g", "vare": "passata", "antal": 620, "enhed": "g" },

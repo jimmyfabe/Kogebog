@@ -14,7 +14,7 @@
     "ca. 1 dl pizzasauce eller tomatpuré",
     "100 g revet ost",
     "100 g skinketern (eller kyllingepålæg i tern)",
-    "6 små mozzarellakugler (mini-mozzarella)",
+    "1 mozzarellakugle (125 g)",
     "12 sorte oliven uden sten",
     "1 æg (til pensling)",
     "Ketchup (til årerne)"
@@ -26,8 +26,8 @@
     { "@type": "HowToStep", "text": "Smør lidt tomat midt på hver firkant.", "tumbi": { "verbum": "smoere", "ikoner": ["tomatpure"], "note": "En teskefuld er nok." } },
     { "@type": "HowToStep", "text": "Drys ost og skinke på tomaten.", "tumbi": { "verbum": "drysse", "ikoner": ["ost", "skinke"] } },
     { "@type": "HowToStep", "text": "Saml hjørnerne, og vend bollen om.", "tumbi": { "verbum": "pakke-ind", "ikoner": ["pizzadej"], "note": "Klem dejen godt sammen, så samlingen kommer nedad. Læg bollerne på en bageplade med bagepapir." } },
-    { "@type": "HowToStep", "text": "Halvér mozzarellakuglerne, og skær oliven i skiver.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["ost", "oliven"], "note": "12 halve kugler og 12 olivenskiver." } },
-    { "@type": "HowToStep", "text": "Tryk en olivenskive fast på hver mozzarella.", "tumbi": { "verbum": "pynte", "ikoner": ["ost", "oliven"], "note": "Det er øjnene. Den runde side skal vende op, og olivenskiven er pupillen. Læg øjnene på en tallerken." } },
+    { "@type": "HowToStep", "text": "Skær mozzarellaen i tern og oliven i skiver.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["ost", "oliven"], "note": "12 tern og 12 olivenskiver." } },
+    { "@type": "HowToStep", "text": "Tryk en olivenskive fast på hver mozzarella.", "tumbi": { "verbum": "pynte", "ikoner": ["ost", "oliven"], "note": "Det er øjnene: olivenskiven er pupillen. Læg øjnene på en tallerken." } },
     { "@type": "HowToStep", "text": "Pisk ægget, og pensl bollerne.", "tumbi": { "verbum": "pensle", "ikoner": ["aeg"], "note": "Pisk ægget med en gaffel i en kop." } },
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg på fingrene." } },
     { "@type": "HowToStep", "text": "Bag bollerne i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 720, "note": "12 min. De skal i ovnen igen med øjnene." } },
@@ -49,7 +49,7 @@
       { "ikon": "tomatpure", "maengde": "ca. 1 dl" },
       { "ikon": "ost", "maengde": "100 g" },
       { "ikon": "skinke", "maengde": "100 g" },
-      { "ikon": "ost", "maengde": "6" },
+      { "ikon": "ost", "maengde": "1" },
       { "ikon": "oliven", "maengde": "12" },
       { "ikon": "aeg", "maengde": "1" },
       { "ikon": "ketchup", "maengde": "" }

@@ -41,7 +41,9 @@ const ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const ISO_RE = /^P(?:\d+D)?(?:T(?:\d+H)?(?:\d+M)?(?:\d+S)?)?$/;
 const MAKS_TIMER_SEK = 4 * 3600;
 const BLANDER = ['roere', 'haelde', 'piske']; // verber, der blander en ingrediens i dejen eller farsen
-const HAENDER_I_DEJ = ['aelte', 'rulle', 'kagerulle']; // verber, hvor hænderne rører dejen eller farsen
+// Verber, hvor hænderne rører dejen eller farsen. «forme» (kranse, kugler, medisterboller) og «stikke-ud» (udstikkeren i
+// dejen) rører også det rå, der er rørt i (jul, 01-11-2026)
+const HAENDER_I_DEJ = ['aelte', 'rulle', 'kagerulle', 'forme', 'stikke-ud'];
 const HAENDER_PAA_OVERFLADEN = ['pynte', 'pakke-ind', 'smuldre', ...HAENDER_I_DEJ]; // verber, hvor hænderne rører det, der er penslet
 // Verber, hvor timeren måler barnets eget arbejde i det rå («Ælt dejen i 8 minutter»): hænderne er i dejen hele tiden og
 // vaskes lige bagefter, så det er ikke en pause (code review 21-10 fund 5 gælder kødet, der bruner, mens barnet venter)
