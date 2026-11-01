@@ -4,7 +4,7 @@
 // med decimalkomma (2,5 dl).
 
 import { BARN_ANDEL, MAKS_PORTIONER } from './lager.js';
-import { boejNavn } from './tekst.js';
+import { boejNavn, erFlertal } from './tekst.js';
 
 // Et barn spiser som 0,7 voksen, og højst 12 portioner (samme grænse som n i ugeplanen og i linket): står i js/lager.js
 export { BARN_ANDEL, MAKS_PORTIONER };
@@ -58,9 +58,6 @@ function talTekst(x) {
   const r = Math.round(x * 100) / 100;
   return BROEK_TEKST.get(r) || String(r).replace('.', ',');
 }
-
-// Ental efter højst 1 og efter 1,5, som stemmen siger det («halvanden dåse», js/tekst.js), ellers flertal
-const flertal = (x) => x > 1 && x !== 1.5;
 
 // g og kg i gram: under 50 g til nærmeste 5 g, ellers 10 g. Fra 1 kg i kg med én decimal
 function vaegt(g, g0) {
@@ -130,7 +127,7 @@ export function skalerMaengde(maengde, faktor, { vare } = {}) {
   if (e.regel === 'vaegt') return { tekst: ca + vaegt(x * e.gange, x0 * e.gange), advarsel: null };
   if (e.regel === 'rumfang') return { tekst: ca + rumfang(x * e.gange, x0 * e.gange), advarsel: null };
   const r = TAL_REGLER[e.regel](x, x0);
-  return { tekst: ca + talTekst(r) + ' ' + (flertal(r) ? e.flertal : e.ental), advarsel: e.regel === 'form' ? 'form' : null };
+  return { tekst: ca + talTekst(r) + ' ' + (erFlertal(r) ? e.flertal : e.ental), advarsel: e.regel === 'form' ? 'form' : null };
 }
 
 // ---------- Retten og printet ved n portioner (retSkaerm i app.js og js/print.js) ----------
@@ -143,7 +140,7 @@ export const portionerTekst = (n) => n + (n === 1 ? ' portion' : ' portioner');
 function navnEfter(maengde, navn) {
   const m = MAENGDE_RE.exec(maengde);
   if (!m || m[3] !== undefined) return navn;
-  const b = boejNavn(navn, flertal(tilTal(m[2])));
+  const b = boejNavn(navn, erFlertal(tilTal(m[2])));
   return b === null ? navn : b;
 }
 

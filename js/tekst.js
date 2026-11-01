@@ -157,10 +157,13 @@ function maengdeOrd(a, koen) {
   return talOrd(hel, koen) + ' og ' + broek;
 }
 
-// Ental efter højst 1 og efter «halvanden» («halvanden teskefuld»), ellers flertal
+// Ental efter højst 1 og efter 1,5, som stemmen siger det («halvanden teskefuld»), ellers flertal. js/skaler.js bøjer
+// enheder og navne efter samme regel, så skærmen og stemmen altid er enige
+export const erFlertal = (x) => x > 1 && x !== 1.5;
+
 function flertal(a) {
   const { hel, rest } = delMaengde(a);
-  return hel + rest > 1 && !(hel === 1 && rest === 0.5);
+  return erFlertal(hel + rest);
 }
 
 // Hvor ordet efter tallet afgør, om det er «en» eller «et»: 1 (også 1,75), ½, ¼ og x,5/x,25 (ikke 2, 3 … eller ¾)
