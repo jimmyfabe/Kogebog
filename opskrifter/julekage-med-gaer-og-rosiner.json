@@ -41,6 +41,7 @@
     { "@type": "HowToStep", "text": "Lad dejen hæve i 30 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "Dæk skålen med et viskestykke, og stil den et lunt sted." } },
     { "@type": "HowToStep", "text": "Rul dejen til en lang pølse.", "tumbi": { "verbum": "rulle", "note": "Ca. 60 cm lang. Drys lidt mel på bordet." } },
     { "@type": "HowToStep", "text": "Saml pølsen til en krans på pladen.", "tumbi": { "verbum": "forme", "note": "Læg pølsen på en bageplade med bagepapir, og klem enderne godt sammen." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der er råt æg i dejen." } },
     { "@type": "HowToStep", "text": "Lad kransen hæve i 20 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 1200, "note": "Under et rent viskestykke. Tænd ovnen på 200 °C (almindelig ovn) imens." } },
     { "@type": "HowToStep", "text": "Pensl kransen med lidt mælk.", "tumbi": { "verbum": "pensle", "ikoner": ["maelk"] } },
     { "@type": "HowToStep", "text": "Drys perlesukker på kransen.", "tumbi": { "verbum": "drysse", "ikoner": ["krymmel"], "note": "2 spsk perlesukker." } },

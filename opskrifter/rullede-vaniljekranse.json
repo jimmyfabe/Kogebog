@@ -31,6 +31,7 @@
     { "@type": "HowToStep", "text": "Rul en tynd pølse, lang som en blyant.", "tumbi": { "verbum": "rulle", "note": "Ca. 1 cm tyk og 12 cm lang. Knækker den, så varm dejen lidt i hænderne." } },
     { "@type": "HowToStep", "text": "Bøj pølsen til en lille krans.", "tumbi": { "verbum": "forme", "note": "Klem enderne sammen. Læg kransene på en bageplade med bagepapir. En femårig skal måske have hjælp til at lukke kransen." } },
     { "@type": "HowToStep", "text": "Tegn striber på kransene med en gaffel.", "tumbi": { "verbum": "pynte", "note": "Så ligner de vaniljekranse fra en sprøjte." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der er råt æg i dejen." } },
     { "@type": "HowToStep", "text": "Bag kransene i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 540, "note": "200 °C i 8-10 min midt i ovnen, til kanterne er lysegyldne. Én plade ad gangen." } },
     { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme", "note": "Er der flere plader, bager I dem på samme måde." } },
     { "@type": "HowToStep", "text": "Lad kransene køle helt af.", "tumbi": { "verbum": "vente", "timer_sek": 900, "note": "Pladen er meget varm, og lune kranse knækker let. Gem dem i en tæt dåse." } },

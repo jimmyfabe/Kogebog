@@ -35,6 +35,7 @@
     { "@type": "HowToStep", "text": "Rul dejen ud mellem to stykker bagepapir.", "tumbi": { "verbum": "kagerulle", "note": "Ca. 4 mm tyk. Tænd ovnen på 200 °C (almindelig ovn)." } },
     { "@type": "HowToStep", "text": "Stik hjerter og stjerner ud af dejen.", "tumbi": { "verbum": "stikke-ud", "note": "Læg figurerne på en bageplade med bagepapir. Saml resterne, og rul dem ud igen." } },
     { "@type": "HowToStep", "text": "Stik et hul i hver kage med et sugerør.", "tumbi": { "verbum": "stikke-ud", "note": "Et stykke fra kanten. Hullet bliver lidt mindre i ovnen, og båndet skal kunne komme igennem." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der er råt æg i dejen." } },
     { "@type": "HowToStep", "text": "Bag kagerne i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 360, "note": "200 °C i 5-8 min, til de er lidt mørkere i kanten. Én plade ad gangen." } },
     { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme", "note": "Er et hul lukket, så stik det op igen med sugerøret med det samme, mens kagerne er bløde. Er der flere plader, bager I dem på samme måde." } },
     { "@type": "HowToStep", "text": "Lad kagerne køle helt af.", "tumbi": { "verbum": "vente", "timer_sek": 900, "note": "Pladen er meget varm. Glasuren løber, hvis kagerne er lune." } },

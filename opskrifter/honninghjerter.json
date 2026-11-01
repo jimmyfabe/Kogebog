@@ -38,6 +38,7 @@
     { "@type": "HowToStep", "text": "Stil dejen i køleskabet i en time.", "tumbi": { "verbum": "vente", "timer_sek": 3600, "note": "Pakket ind i film. Den kan også stå til næste dag." } },
     { "@type": "HowToStep", "text": "Rul dejen ud mellem to stykker bagepapir.", "tumbi": { "verbum": "kagerulle", "note": "Ca. ½ cm tyk. Tænd ovnen på 200 °C varmluft." } },
     { "@type": "HowToStep", "text": "Stik hjerter ud af dejen.", "tumbi": { "verbum": "stikke-ud", "note": "Læg hjerterne på en bageplade med bagepapir. Saml resterne, og rul dem ud igen." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der er råt æg i dejen." } },
     { "@type": "HowToStep", "text": "Bag hjerterne i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 480, "note": "200 °C varmluft i 7-9 min. Én plade ad gangen." } },
     { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme", "note": "Er der flere plader, bager I dem på samme måde." } },
     { "@type": "HowToStep", "text": "Lad hjerterne køle helt af.", "tumbi": { "verbum": "vente", "timer_sek": 900, "note": "Pladen er meget varm." } },
