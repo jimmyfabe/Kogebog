@@ -1,0 +1,49 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Pebernødder",
+  "description": "Små sprøde julekugler med vanilje og et lille pift af peber. Barnet ruller dem selv.",
+  "image": "grafik/ret-pebernoedder.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 90 pebernødder",
+  "prepTime": "PT35M",
+  "cookTime": "PT30M",
+  "totalTime": "PT1H15M",
+  "recipeIngredient": [
+    "250 g hvedemel",
+    "175 g koldt smør",
+    "125 g sukker",
+    "1 tsk vaniljesukker",
+    "½ tsk stødt hvid peber",
+    "1 æg"
+  ],
+  "tool": ["køkkenvægt", "stor skål", "teske", "kop", "bageplade", "bagepapir", "rist", "dåse med låg"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Mål 250 g mel i en stor skål.", "tumbi": { "verbum": "maale", "ikoner": ["mel"] } },
+    { "@type": "HowToStep", "text": "Smuldr det kolde smør ud i melet.", "tumbi": { "verbum": "smuldre", "ikoner": ["smoer"], "note": "175 g smør, lige fra køleskabet. Gnid det mellem fingrene, til det ligner groft sand." } },
+    { "@type": "HowToStep", "text": "Hæld sukker, vaniljesukker og peber i.", "tumbi": { "verbum": "haelde", "ikoner": ["sukker", "krydderi"], "note": "125 g sukker, 1 tsk vaniljesukker og ½ tsk stødt hvid peber." } },
+    { "@type": "HowToStep", "text": "Slå ægget ud i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["aeg"], "note": "Slå det ud i en kop først, så der ikke kommer skal med." } },
+    { "@type": "HowToStep", "text": "Ælt det hele til en fast dej.", "tumbi": { "verbum": "aelte", "note": "Ælt hurtigt, så smørret ikke bliver for blødt. Smag ikke på dejen: der er råt æg i." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der er råt æg i dejen." } },
+    { "@type": "HowToStep", "text": "Rul små kugler, og læg dem på bagepapir.", "tumbi": { "verbum": "rulle", "note": "Kuglerne skal være på størrelse med en hasselnød. Læg dem på en bageplade med bagepapir med lidt luft imellem. Tænd ovnen på 200 °C (almindelig ovn)." } },
+    { "@type": "HowToStep", "text": "Bag pebernødderne i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 540, "note": "200 °C i 8-10 min midt i ovnen. De er færdige, når de er gyldne i bunden. Én plade ad gangen." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme", "note": "Er der flere plader, bager I dem på samme måde." } },
+    { "@type": "HowToStep", "text": "Lad pebernødderne køle af.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Pladen er meget varm. Pebernødderne bliver sprøde, når de er kolde. Gem dem i en tæt dåse." } },
+    { "@type": "HowToStep", "text": "Smag en pebernød!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "pebernoedder",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "DR Mad: «Pebernødder» (dr.dk). Den ældste kendte danske opskrift er fra 1703 (lex.dk). DR's citronskal er udeladt, så intet skal rives. Trinene er egen tekst. Antallet er et skøn.",
+    "ingredienser": [
+      { "ikon": "mel", "maengde": "250 g" },
+      { "ikon": "smoer", "maengde": "175 g" },
+      { "ikon": "sukker", "maengde": "125 g" },
+      { "ikon": "sukker", "maengde": "1 tsk" },
+      { "ikon": "krydderi", "maengde": "½ tsk" },
+      { "ikon": "aeg", "maengde": "1" }
+    ]
+  }
+}

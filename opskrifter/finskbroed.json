@@ -1,0 +1,52 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Finskbrød",
+  "description": "Små møre fingre med perlesukker og mandler på toppen. Dejen er uden æg, og barnet ruller selv fingrene.",
+  "image": "grafik/ret-finskbroed.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 45 finskbrød",
+  "prepTime": "PT45M",
+  "cookTime": "PT30M",
+  "totalTime": "PT1H40M",
+  "recipeIngredient": [
+    "375 g hvedemel",
+    "100 g sukker",
+    "250 g koldt smør",
+    "50 g hele mandler (kan undværes)",
+    "1 æg til pensling",
+    "ca. 3 spsk perlesukker"
+  ],
+  "tool": ["køkkenvægt", "skål", "skærebræt", "kniv", "kop", "gaffel", "pensel", "bageplade", "bagepapir", "rist"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Mål 375 g mel i en skål.", "tumbi": { "verbum": "maale", "ikoner": ["mel"] } },
+    { "@type": "HowToStep", "text": "Hæld sukkeret i.", "tumbi": { "verbum": "haelde", "ikoner": ["sukker"], "note": "100 g sukker." } },
+    { "@type": "HowToStep", "text": "Smuldr det kolde smør ud i melet.", "tumbi": { "verbum": "smuldre", "ikoner": ["smoer"], "note": "250 g smør, lige fra køleskabet. Gnid det mellem fingrene, til det ligner groft sand." } },
+    { "@type": "HowToStep", "text": "Ælt dejen sammen med hænderne.", "tumbi": { "verbum": "aelte", "note": "Kun til den hænger sammen, så smørret ikke bliver for blødt." } },
+    { "@type": "HowToStep", "text": "Stil dejen i køleskabet i 30 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "Pak den ind i film eller en pose." } },
+    { "@type": "HowToStep", "text": "Hak mandlerne groft.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["mandler"], "note": "Kan springes over: uden mandler er kagerne billigere og uden nødder. Tænd ovnen på 200 °C varmluft." } },
+    { "@type": "HowToStep", "text": "Rul små fingre, og læg dem på bagepapir.", "tumbi": { "verbum": "rulle", "note": "Rul en lille klump dej til en finger, ca. 1 cm tyk og 5 cm lang. Læg fingrene på en bageplade med bagepapir." } },
+    { "@type": "HowToStep", "text": "Pisk ægget, og pensl fingrene.", "tumbi": { "verbum": "pensle", "ikoner": ["aeg"], "note": "Pisk ægget med en gaffel i en kop. Penslet med mælk i stedet bliver kagerne helt uden æg." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg på fingrene." } },
+    { "@type": "HowToStep", "text": "Drys perlesukker og mandler på fingrene.", "tumbi": { "verbum": "drysse", "ikoner": ["krymmel", "mandler"] } },
+    { "@type": "HowToStep", "text": "Bag fingrene i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 720, "note": "200 °C varmluft i 12-15 min, til de er lysegyldne. Én plade ad gangen." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme", "note": "Er der flere plader, bager I dem på samme måde." } },
+    { "@type": "HowToStep", "text": "Lad fingrene køle af på en rist.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Pladen er meget varm. Kagerne er skøre, mens de er lune." } },
+    { "@type": "HowToStep", "text": "Smag et finskbrød!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "finskbroed",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Frøken Jensens Kogebog (1921), «Finskbrød»: dejen uden æg, med smør i stedet for margarine. Pensling, perlesukker, ovntemperatur og ovntid som hos Arla: «Finskbrød» (arla.dk). Fingrene rulles hver for sig, så dejen ikke skal skæres. Trinene er egen tekst. Antallet er et skøn.",
+    "ingredienser": [
+      { "ikon": "mel", "maengde": "375 g" },
+      { "ikon": "sukker", "maengde": "100 g" },
+      { "ikon": "smoer", "maengde": "250 g" },
+      { "ikon": "mandler", "maengde": "50 g" },
+      { "ikon": "aeg", "maengde": "1" },
+      { "ikon": "krymmel", "maengde": "ca. 3 spsk" }
+    ]
+  }
+}

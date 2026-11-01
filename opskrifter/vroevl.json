@@ -1,0 +1,54 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Vrøvl",
+  "description": "En gammel dansk småkage, hvor barnet selv bestemmer formen: stjerner, nisser, grise eller noget helt andet.",
+  "image": "grafik/ret-vroevl.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 40 figurer",
+  "prepTime": "PT35M",
+  "cookTime": "PT20M",
+  "totalTime": "PT1H15M",
+  "recipeIngredient": [
+    "250 g hvedemel",
+    "125 g sukker",
+    "½ tsk hjortetakssalt (eller 1 tsk bagepulver)",
+    "125 g blødt smør",
+    "2 spsk mælk",
+    "1 æg",
+    "ca. 2 spsk perlesukker eller julekrymmel"
+  ],
+  "tool": ["køkkenvægt", "skål", "teske", "spiseske", "kop", "bageplade", "bagepapir", "rist"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Mål 250 g mel i en skål.", "tumbi": { "verbum": "maale", "ikoner": ["mel"] } },
+    { "@type": "HowToStep", "text": "Hæld sukker og hjortetakssalt i.", "tumbi": { "verbum": "haelde", "ikoner": ["sukker", "bagepulver"], "note": "125 g sukker og ½ tsk hjortetakssalt. Mål selv hjortetakssaltet: det dufter skarpt af ammoniak, så lad ikke barnet snuse til posen. Det kan byttes med 1 tsk bagepulver." } },
+    { "@type": "HowToStep", "text": "Ælt det bløde smør ind i melet.", "tumbi": { "verbum": "aelte", "ikoner": ["smoer"], "note": "125 g smør, der har stået fremme." } },
+    { "@type": "HowToStep", "text": "Hæld 2 spsk mælk i.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk"] } },
+    { "@type": "HowToStep", "text": "Slå ægget ud i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["aeg"], "note": "Slå det ud i en kop først, så der ikke kommer skal med." } },
+    { "@type": "HowToStep", "text": "Ælt det hele til en blød dej.", "tumbi": { "verbum": "aelte", "note": "Smag ikke på dejen: der er råt æg i." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der er råt æg i dejen." } },
+    { "@type": "HowToStep", "text": "Stil dejen i køleskabet i 20 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 1200, "note": "Tænd ovnen på 200 °C (almindelig ovn) imens." } },
+    { "@type": "HowToStep", "text": "Form dine helt egne små figurer.", "tumbi": { "verbum": "forme", "note": "Højst en finger tykke, så de bager jævnt. Læg dem på en bageplade med bagepapir med god plads imellem: de flyder lidt ud." } },
+    { "@type": "HowToStep", "text": "Drys perlesukker eller krymmel på figurerne.", "tumbi": { "verbum": "drysse", "ikoner": ["krymmel"], "note": "Tryk det lidt fast, så det bliver siddende." } },
+    { "@type": "HowToStep", "text": "Bag figurerne i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 540, "note": "200 °C i 8-10 min, til de er lysegyldne i kanten. Tykke figurer skal have lidt længere. Én plade ad gangen." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme", "note": "Er der flere plader, bager I dem på samme måde." } },
+    { "@type": "HowToStep", "text": "Lad figurerne køle af.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Pladen er meget varm." } },
+    { "@type": "HowToStep", "text": "Gæt hinandens figurer, og smag!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "vroevl",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Frøken Jensens Kogebog (1921), «Vrøvl»: halv portion med smør i stedet for margarine og 2 spsk mælk i stedet for et halvt æg. Sukkermængden er usikker i den scannede tekst. Ovntemperatur, ovntid og pynt er et skøn. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "mel", "maengde": "250 g" },
+      { "ikon": "sukker", "maengde": "125 g" },
+      { "ikon": "bagepulver", "maengde": "½ tsk" },
+      { "ikon": "smoer", "maengde": "125 g" },
+      { "ikon": "maelk", "maengde": "2 spsk" },
+      { "ikon": "aeg", "maengde": "1" },
+      { "ikon": "krymmel", "maengde": "ca. 2 spsk" }
+    ]
+  }
+}
