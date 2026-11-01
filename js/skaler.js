@@ -120,3 +120,30 @@ export function skalerMaengde(maengde, faktor, { vare } = {}) {
   const r = TAL_REGLER[e.regel](x, x0);
   return { tekst: ca + talTekst(r) + ' ' + (flertal(r) ? e.flertal : e.ental), advarsel: e.regel === 'form' ? 'form' : null };
 }
+
+// ---------- Retten og printet ved n portioner (retSkaerm i app.js og js/print.js) ----------
+
+export const portionerTekst = (n) => n + (n === 1 ? ' portion' : ' portioner');
+
+// Ingrediens nr. i i retten (en model fra lavModel med talportioner) ganget med faktoren: { maengde, tekst, skaleret,
+// advarsel }. Varen fra tumbi.ingredienser gør æg hele. En mængde, der ikke ændres (tom, «1 stort», en knivspids), står
+// uændret og er ikke markeret som skaleret; advarslen er skalerMaengdes
+export function skaleretIngrediens(m, i, faktor) {
+  const x = m.ingredienser[i];
+  const ekstra = (m.uge.tumbi.ingredienser || [])[i];
+  const s = skalerMaengde(x.maengde, faktor, { vare: ekstra ? ekstra.vare : undefined });
+  if (s.tekst === x.maengde) return { maengde: x.maengde, tekst: x.tekst, skaleret: false, advarsel: s.advarsel };
+  return { maengde: s.tekst, tekst: s.tekst + x.tekst.slice(x.maengde.length), skaleret: true, advarsel: s.advarsel };
+}
+
+// Til den voksne, når mængderne er regnet om: trinene læses op og nævner stadig opskriftens mængder, og ved mange eller få
+// portioner passer fadet og tiden måske ikke. Faktor 1 giver ingen linjer
+const FADE_OVER = 1.5;
+const FADE_UNDER = 0.5;
+export function voksenNoter(m, faktor) {
+  if (faktor === 1) return [];
+  return [
+    'Mængderne i trinene er til ' + m.uge.portioner + ' — se ingredienslisten',
+    faktor > FADE_OVER ? 'Brug to fade — tiden kan blive længere' : faktor < FADE_UNDER ? 'Hold øje med tiden' : null,
+  ].filter(Boolean);
+}

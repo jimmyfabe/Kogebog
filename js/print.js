@@ -6,7 +6,7 @@ import { hentRet, ID_RE } from './data.js';
 import { VERBER, grafikVerbum } from './katalog.js';
 import { varighedKort } from './tid.js';
 import { minutterTekst } from './tekst.js';
-import { faktorFor, skalerMaengde } from './skaler.js';
+import { faktorFor, skaleretIngrediens, voksenNoter, portionerTekst } from './skaler.js';
 import { printUge } from './print-uge.js';
 import { UDGAVE } from './version.js';
 
@@ -19,23 +19,6 @@ const id = params.get('ret') || '';
 const N_RE = /^(?:[1-9]|1[0-2])$/;
 const nAlle = params.getAll('n');
 const n = nAlle.length === 1 && N_RE.test(nAlle[0]) ? Number(nAlle[0]) : null;
-const FADE_OVER = 1.5;
-const FADE_UNDER = 0.5;
-
-// Ingredienslinjen ganget med faktoren, som på skærmen (retSkaerm i app.js): mængden regnes om, navnet står som før
-function skaleretTekst(m, i, faktor) {
-  const x = m.ingredienser[i];
-  const ekstra = (m.uge.tumbi.ingredienser || [])[i];
-  return skalerMaengde(x.maengde, faktor, { vare: ekstra ? ekstra.vare : undefined }).tekst + x.tekst.slice(x.maengde.length);
-}
-
-// Til den voksne, som på skærmen: trinene nævner stadig opskriftens mængder, og fadet passer måske ikke
-function voksenLinjer(m, faktor) {
-  return [
-    'Mængderne i trinene er til ' + m.uge.portioner + ' — se ingredienslisten',
-    faktor > FADE_OVER ? 'Brug to fade — tiden kan blive længere' : faktor < FADE_UNDER ? 'Hold øje med tiden' : null,
-  ].filter(Boolean);
-}
 
 function besked(titel, tekst) {
   ark.replaceChildren(el('h1', { tekst: titel }), el('p', { class: 'besked', tekst }));
@@ -49,7 +32,7 @@ function tegn(m) {
   // Faktor 1, og bage- og søde retter uden talportioner, printes som før
   const f = n ? faktorFor(m, n) : null;
   const faktor = f && f !== 1 ? f : null;
-  const portioner = faktor ? 'Til ' + n + (n === 1 ? ' portion' : ' portioner') : m.portioner;
+  const portioner = faktor ? 'Til ' + portionerTekst(n) : m.portioner;
   const meta = [portioner, m.minutter ? minutterTekst(m.minutter) + ' i alt' : '', m.aktivMinutter ? minutterTekst(m.aktivMinutter) + ' forberedelse' : '']
     .filter(Boolean).join(' · ');
 
@@ -82,8 +65,9 @@ function tegn(m) {
     el('div', { class: 'spalter' },
       el('section', { class: 'ingredienser', 'aria-labelledby': 'p-ingr' },
         el('h2', { id: 'p-ingr', tekst: 'Ingredienser' }),
-        el('ul', { class: 'tjek' }, m.ingredienser.map((x, i) => el('li', { tekst: faktor ? skaleretTekst(m, i, faktor) : x.tekst }))),
-        faktor ? voksenLinjer(m, faktor).map((t) => el('p', { class: 'note', tekst: t })) : null,
+        // Mængden regnes om som på skærmen (retSkaerm i app.js), og navnet står som før
+        el('ul', { class: 'tjek' }, m.ingredienser.map((x, i) => el('li', { tekst: faktor ? skaleretIngrediens(m, i, faktor).tekst : x.tekst }))),
+        faktor ? voksenNoter(m, faktor).map((t) => el('p', { class: 'note', tekst: t })) : null,
         m.redskaber.length ? el('h2', { tekst: 'Redskaber' }) : null,
         m.redskaber.length ? el('p', { class: 'redskaber', tekst: m.redskaber.join(', ') }) : null),
       el('section', { class: 'fremgang', 'aria-labelledby': 'p-trin' },

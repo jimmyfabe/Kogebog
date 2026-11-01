@@ -64,6 +64,12 @@ const tilDato = (ms) => new Date(ms).toISOString().slice(0, 10);
 const fraDato = (s) => Date.UTC(Number(s.slice(0, 4)), Number(s.slice(5, 7)) - 1, Number(s.slice(8, 10)));
 const ugedag = (ms) => (new Date(ms).getUTCDay() + 6) % 7; // mandag 0, søndag 6
 
+// Dagens dato som 'ÅÅÅÅ-MM-DD' i enhedens tid («lavet» og udvalgets «rettet» i js/lager.js). d er en lokal Date
+export function idag(d = new Date()) {
+  const to = (n) => String(n).padStart(2, '0');
+  return d.getFullYear() + '-' + to(d.getMonth() + 1) + '-' + to(d.getDate());
+}
+
 // Ugens dage, mandag først (dage[0] i kog-uge-v1)
 export const DAGE = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag', 'Søndag'];
 

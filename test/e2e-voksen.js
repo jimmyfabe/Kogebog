@@ -1,12 +1,12 @@
 // e2e-voksen.js — forældredelen i WebKit (docs/foraeldredel.md, testplanen i afsnit 8). Køres af test-e2e.js med
 // E2E_DELE=voksen, som giver sine hjælpere med (H). Det forventede regnes af appens egen kode (portionerFraHusstand,
-// faktorFor, skalerMaengde, kod, saml), så testen ser, at skærmen viser det, modulerne regner ud.
+// faktorFor, skaleretIngrediens, kod, saml), så testen ser, at skærmen viser det, modulerne regner ud.
 // På hver skærm i E2E_SKAERME (390×844, 1180×820, 1280×800): 1. holdet på forsiden og vagten ved et dybt link,
 // 2. husstanden og portionerne i ugeplanen, 4. retten og printet ved 6 portioner, 3. ugens udvalg med «Fyld op med nye»
 // og børnenes valg på to sider, 6. hjertet på færdig-skærmen (⭐ i børnenes valg, favoritterne), 7. genindlæsning og
 // 9. knapperne (børn 64 px, voksne 48 px) og ingen vandret rulning. Én gang: 4b. printets strenge n (desktop),
 // 5. «Send til telefon» og listen på telefonen og 8. data fra v3 (kun kog-uge-v1 og kog-liste-v1) indlæses uden tab.
-import { portionerFraHusstand, faktorFor, skalerMaengde } from '../js/skaler.js';
+import { portionerFraHusstand, faktorFor, skaleretIngrediens } from '../js/skaler.js';
 import { lavModel } from '../js/model.js';
 import { kod } from '../js/plankode.js';
 import { saml, grupper } from '../js/indkoeb.js';
@@ -62,14 +62,13 @@ async function holdHer(H, side, sel, ms) {
   await H.hold(side, sel, ms);
 }
 
-// Ingredienslinjerne, som retten og printet skal vise dem ved faktoren (som skaleretLinje i app.js)
+// Ingredienslinjerne, som retten og printet skal vise dem ved faktoren (skaleretIngrediens i js/skaler.js)
 function forventetLinjer(RETTER, id, faktor) {
   const m = lavModel(RETTER[id]);
-  const varer = (RETTER[id].tumbi.ingredienser || []).map((l) => (l && l.vare) || undefined);
-  return m.ingredienser.map((x, i) => {
-    const maengde = faktor ? skalerMaengde(x.maengde, faktor, { vare: varer[i] }).tekst : x.maengde;
-    return { maengde, tekst: maengde + x.tekst.slice(x.maengde.length), skaleret: maengde !== x.maengde, original: x.tekst };
-  });
+  return m.ingredienser.map((x, i) => ({
+    ...(faktor ? skaleretIngrediens(m, i, faktor) : { maengde: x.maengde, tekst: x.tekst, skaleret: false }),
+    original: x.tekst,
+  }));
 }
 
 // Voksendelen på adressen #/voksen<del>: står holdet der (låsen lukker, når man går ud af #/voksen…), holdes det.

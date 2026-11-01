@@ -14,7 +14,7 @@ import { portionerFraHusstand } from './skaler.js';
 import { MAERKER, maerkerFor } from './maerker.js';
 import { kod, afkod } from './plankode.js';
 import { grafikRet } from './katalog.js';
-import { planMandag } from './tid.js';
+import { planMandag, idag } from './tid.js';
 
 export const LUK_MS = 10 * 60 * 1000;   // voksendelen lukker efter 10 minutter uden tryk
 export const MAKS_PERSONER = 8;          // voksne og børn hver (samme grænse som i js/lager.js)
@@ -178,8 +178,6 @@ const model = (id) => {
 const alleRetter = () => K.S.ids.map(model).filter(Boolean);
 const iPlanen = () => alleRetter().filter((m) => m.uge);
 const fejlede = () => K.S.ids.filter((id) => K.S.retter.get(id) instanceof Error).length;
-const to = (n) => String(n).padStart(2, '0');
-const idag = (d = new Date()) => d.getFullYear() + '-' + to(d.getMonth() + 1) + '-' + to(d.getDate());
 
 function medFokus(b, noegle) {
   b.dataset.fokus = noegle;

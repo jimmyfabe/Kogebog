@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { portionerFraHusstand, faktorFor, skalerMaengde, BARN_ANDEL } from '../js/skaler.js';
+import { portionerFraHusstand, faktorFor, skalerMaengde, BARN_ANDEL, skaleretIngrediens, voksenNoter, portionerTekst } from '../js/skaler.js';
 import { lavModel } from '../js/model.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -173,4 +173,45 @@ test('alle ugeplan-retter har faktor 1 til 4 portioner, og alle andre retter har
   assert.ok(uge.length > 0);
   for (const r of uge) assert.equal(faktorFor(r.model, 4), 1, r.id);
   for (const r of RETTER.filter((x) => !x.model.uge)) assert.equal(faktorFor(r.model, 4), null, r.id);
+});
+
+const ret = (id) => RETTER.find((r) => r.id === id).model;
+
+test('en ingrediens i retten: mængden regnes om, navnet står som før, og advarslen følger med', () => {
+  const tp = ret('one-pot-tomatpasta');
+  assert.deepEqual(skaleretIngrediens(tp, 0, 1.5), { maengde: '450 g', tekst: '450 g penne', skaleret: true, advarsel: null });
+  assert.deepEqual(skaleretIngrediens(tp, 9, 1.5), { maengde: '1 knivspids', tekst: '1 knivspids peber', skaleret: false, advarsel: null });
+  const kt = ret('kyllingetaerte-med-butterdej');
+  assert.deepEqual(skaleretIngrediens(kt, 9, 1.5), { maengde: '2 ruller', tekst: '2 ruller færdig butterdej', skaleret: true, advarsel: 'form' });
+  // Halveret er dejen stadig én rulle: ikke skaleret, men formen passer måske ikke
+  assert.deepEqual(skaleretIngrediens(kt, 9, 0.5), { maengde: '1 rulle', tekst: '1 rulle færdig butterdej', skaleret: false, advarsel: 'form' });
+  assert.deepEqual(skaleretIngrediens(kt, 10, 1.5), { maengde: '2', tekst: '2 æg til pensling', skaleret: true, advarsel: null }, 'æg er hele');
+  const cp = ret('chorizo-pasta');
+  assert.deepEqual(skaleretIngrediens(cp, 1, 3), { maengde: '1 stort', tekst: '1 stort løg', skaleret: false, advarsel: 'ukendt' });
+  assert.deepEqual(skaleretIngrediens(cp, 9, 3), { maengde: '', tekst: 'peber (og evt. salt)', skaleret: false, advarsel: 'ukendt' });
+  // Alle linjer i alle ugeplan-retter
+  for (const r of RETTER.filter((x) => x.model.uge)) {
+    for (const f of FAKTORER) {
+      r.model.ingredienser.forEach((x, i) => {
+        const s = skaleretIngrediens(r.model, i, f);
+        const hvor = r.id + ' × ' + f + ': «' + x.tekst + '»';
+        assert.equal(s.tekst, s.maengde + x.tekst.slice(x.maengde.length), hvor);
+        assert.equal(s.skaleret, s.maengde !== x.maengde, hvor);
+        assert.deepEqual({ tekst: s.maengde, advarsel: s.advarsel }, sk(x.maengde, f, r.varer[i]), hvor);
+      });
+    }
+  }
+});
+
+test('noterne til den voksne: trinene altid, to fade over 1,5, hold øje under 0,5, og ingen ved faktor 1', () => {
+  const ks = ret('koedsovs');
+  const TRIN = 'Mængderne i trinene er til 4 — se ingredienslisten';
+  assert.deepEqual(voksenNoter(ks, 1), []);
+  assert.deepEqual(voksenNoter(ks, 1.5), [TRIN]);
+  assert.deepEqual(voksenNoter(ks, 1.75), [TRIN, 'Brug to fade — tiden kan blive længere']);
+  assert.deepEqual(voksenNoter(ks, 3), [TRIN, 'Brug to fade — tiden kan blive længere']);
+  assert.deepEqual(voksenNoter(ks, 0.5), [TRIN]);
+  assert.deepEqual(voksenNoter(ks, 0.25), [TRIN, 'Hold øje med tiden']);
+  assert.equal(portionerTekst(1), '1 portion');
+  assert.equal(portionerTekst(6), '6 portioner');
 });

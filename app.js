@@ -9,12 +9,12 @@ import * as Timer from './js/timer.js';
 import * as Lager from './js/lager.js';
 import * as Ugeplan from './js/ugeplan.js';
 import * as VoksenDel from './js/voksen-del.js';
-import { portionerFraHusstand, faktorFor, skalerMaengde } from './js/skaler.js';
+import { portionerFraHusstand, faktorFor, skaleretIngrediens, voksenNoter, portionerTekst } from './js/skaler.js';
 import { holdKnap } from './js/hold.js';
 import { trekant, voksenNaeste } from './js/voksen.js';
 import { voksenFarer, erLynhurtig, harTid, LYN_MIN } from './js/model.js';
 import { VERBER, INGREDIENSER, GRUPPER, grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, grafikGruppe, GRAFIK_FAERDIG } from './js/katalog.js';
-import { formaterTid, varighed, varighedTale } from './js/tid.js';
+import { formaterTid, varighed, varighedTale, idag } from './js/tid.js';
 import { minutterTekst, utenBloede } from './js/tekst.js';
 import { UDGAVE } from './js/version.js';
 
@@ -56,10 +56,6 @@ function knap(tekst, { klasse = '', ikonNavn, ikonEfter = false, label, onclick 
 function billede(src, alt, klasse) {
   return el('img', { src, alt, class: klasse, draggable: 'false', decoding: 'async' });
 }
-
-// Dagens dato som 'ÅÅÅÅ-MM-DD' i enhedens tid (markerLavet i js/lager.js)
-const to = (n) => String(n).padStart(2, '0');
-const idag = (d = new Date()) => d.getFullYear() + '-' + to(d.getMonth() + 1) + '-' + to(d.getDate());
 
 // ⚡ på tallerkenens hjørne, når retten tager højst LYN_MIN minutter i alt (erLynhurtig i js/model.js). Et billede, ikke
 // et ord, for børnene kan næsten ikke læse. Mærket ligger oven på billedet, så kortets mål ikke ændrer sig.
@@ -314,29 +310,6 @@ function skalering(m) {
   return faktor && faktor !== 1 ? { n, faktor } : null;
 }
 
-// Ingrediens nr. i ganget med faktoren (varen fra tumbi.ingredienser, så æg bliver hele): { maengde, tekst, skaleret }.
-// En mængde, der ikke kan skaleres (tom, «1 stort»), står uændret og er ikke markeret som skaleret
-function skaleretLinje(m, i, faktor) {
-  const x = m.ingredienser[i];
-  const ekstra = (m.uge.tumbi.ingredienser || [])[i];
-  const s = skalerMaengde(x.maengde, faktor, { vare: ekstra ? ekstra.vare : undefined });
-  if (s.tekst === x.maengde) return { maengde: x.maengde, tekst: x.tekst, skaleret: false };
-  return { maengde: s.tekst, tekst: s.tekst + x.tekst.slice(x.maengde.length), skaleret: true };
-}
-
-const portionerTekst = (n) => n + (n === 1 ? ' portion' : ' portioner');
-
-// Til den voksne, når mængderne er regnet om: trinene læses op og nævner stadig opskriftens mængder, og ved mange eller få
-// portioner passer fadet og tiden måske ikke
-const FADE_OVER = 1.5;
-const FADE_UNDER = 0.5;
-function voksenLinjer(m, faktor) {
-  return [
-    'Mængderne i trinene er til ' + m.uge.portioner + ' — se ingredienslisten',
-    faktor > FADE_OVER ? 'Brug to fade — tiden kan blive længere' : faktor < FADE_UNDER ? 'Hold øje med tiden' : null,
-  ].filter(Boolean);
-}
-
 function retSkaerm(m) {
   const sk = skalering(m);
   const tid = m.minutter ? minutterTekst(m.minutter) : '';
@@ -345,7 +318,7 @@ function retSkaerm(m) {
     ? el('p', { class: 'meta' }, el('span', { class: 'skaleret', tekst: 'Til ' + portionerTekst(sk.n) }), tid ? ' · ' + tid : null)
     : (m.portioner || tid ? el('p', { class: 'meta', tekst: [m.portioner, tid].filter(Boolean).join(' · ') }) : null);
   const ingr = m.ingredienser.map((x, i) => {
-    const l = sk ? skaleretLinje(m, i, sk.faktor) : { maengde: x.maengde, tekst: x.tekst, skaleret: false };
+    const l = sk ? skaleretIngrediens(m, i, sk.faktor) : { maengde: x.maengde, tekst: x.tekst, skaleret: false };
     const b = el('button', { type: 'button', class: 'ingr', 'aria-label': l.tekst },
       x.ikon ? billede(grafikIngrediens(x.ikon), '', 'ingr-ikon') : null,
       l.maengde ? el('span', { class: 'ingr-maengde' + (l.skaleret ? ' skaleret' : ''), tekst: l.maengde }) : null,
@@ -392,7 +365,7 @@ function retSkaerm(m) {
           el('h1', { tabindex: '-1', tekst: m.navn }),
           hoejttaler),
         meta,
-        sk ? voksenLinjer(m, sk.faktor).map((t) => el('p', { class: 'voksen-linje', tekst: t })) : null),
+        sk ? voksenNoter(m, sk.faktor).map((t) => el('p', { class: 'voksen-linje', tekst: t })) : null),
       el('section', { class: 'ret-ingredienser', 'aria-labelledby': 'ingr-titel' },
         el('h2', { id: 'ingr-titel', tekst: 'Det skal I bruge' }),
         el('ul', { class: 'ingr-gitter' }, ingr))),
