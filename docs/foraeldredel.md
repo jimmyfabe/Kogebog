@@ -62,7 +62,7 @@
   - ukendte id'er (ikke i `S.ids`) fjernes;
   - tal klemmes ind i grænserne;
   - forkerte typer giver standardværdien;
-  - en højere `v` læses som tom og låses (`laast`), som de to andre nøgler gør.
+  - en højere `v` læses som tom og låses (`laast`), som de to andre nøgler gør. Voksendelens oversigt står stadig med vejen til ugeplanen og indkøbslisten, men husstand, udvalg og favoritter kan ikke åbnes, og færdig-skærmen siger, at hjertet ikke kunne gemmes, fordi en nyere udgave har gemt voksendelen.
 - **Migrering:**
   - Den nye nøgle er rent additiv, så intet eksisterende ændres. `kog-v1` (`rens()` må ikke kopieres), `kog-uge-v1` og `kog-liste-v1` er uændrede.
   - En gammel udgave ignorerer nøglen.

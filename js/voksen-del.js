@@ -24,6 +24,7 @@ export const UDVALG_STANDARD = 8;        // «Fyld op med nye» uden et udvalg: 
 export const FYLD_OP = 4;                // «Fyld op med nye» med et udvalg: 4 retter mere
 const SIDER = ['husstand', 'udvalg', 'favoritter'];
 const LAGER_FEJL = 'Måske er privat browsing slået til, eller lageret er fuldt.';
+const NYERE = 'Lavet med en nyere udgave';
 
 // app.js: { S, knap, klik, billede, topbar, statusSkaerm, naviger, annoncer, indlaes, vis, visSkaerm }.
 // vis() kalder rute(location.hash) først og stopper, når den svarer true. visSkaerm(skaerm) viser en færdig skærm, som
@@ -160,7 +161,8 @@ function skaerm(side) {
   if (K.S.indexFejl) return hentFejl();
   if (!klar()) return K.statusSkaerm({ titel: 'Henter opskrifterne …', laeser: true });
   const f = Lager.hentFamilie(K.S.ids);
-  if (f.laast) return laastSkaerm();
+  // En nyere udgave har gemt familien: oversigten står stadig (vejen til ugeplanen og indkøbslisten), siderne ikke
+  if (f.laast && side !== 'hub') return laastSkaerm();
   if (side === 'husstand') return husstandSkaerm(f);
   if (side === 'udvalg') return udvalgSkaerm(f);
   if (side === 'favoritter') return favoritSkaerm(f);
@@ -269,7 +271,9 @@ function laastSkaerm() {
   return K.statusSkaerm({
     titel: 'Voksendelen er gemt med en nyere udgave',
     tekst: 'Denne enhed har en ældre udgave af Tumbi Køkken, som ikke må ændre husstand, udvalg og favoritter. Genindlæs siden, så hentes den nye udgave.',
-    handling: K.knap('Til forsiden', { ikonNavn: 'hjem', onclick: () => K.naviger('#/') }),
+    handling: el('div', { class: 'status-knapper' },
+      K.knap('Tilbage', { ikonNavn: 'tilbage', label: 'Tilbage til voksendelen', onclick: () => K.naviger('#/voksen') }),
+      K.knap('Til forsiden', { ikonNavn: 'hjem', onclick: () => K.naviger('#/') })),
   });
 }
 
@@ -284,10 +288,11 @@ function listeHash() {
   return afkod(kode, { retter: K.S.ids, idag: new Date() }).ok ? '#/hent/' + kode : '#/indkoeb';
 }
 
-function punkt({ navn, status, ikonEl, til, fokus }) {
+function punkt({ navn, status, ikonEl, til, fokus, laast = false }) {
   return el('li', {}, medFokus(el('button', {
     type: 'button',
     class: 'knap voksen-punkt',
+    disabled: laast,
     onclick: K.klik(() => K.naviger(typeof til === 'function' ? til() : til)),
   }, ikonEl, el('span', { class: 'voksen-punkt-tekst' },
     el('span', { class: 'voksen-punkt-navn', tekst: navn }),
@@ -299,15 +304,17 @@ function hubSkaerm(f) {
   const alle = iPlanen();
   const n = portionerFraHusstand(f.voksne, f.boern, f.barnAndel);
   const valgt = f.udvalg ? alle.filter((m) => f.udvalg.ids.includes(m.id)).length : 0;
+  // Familien er gemt med en nyere udgave: husstand, udvalg og favoritter kan ikke åbnes, ugeplanen og listen kan
+  const nyere = f.laast ? { status: NYERE, laast: true } : {};
   const punkter = [
     { navn: 'Husstand', ikonEl: stregIkon(PERSONER), til: '#/voksen/husstand', fokus: 'husstand',
-      status: n ? husstandTekst(f.voksne, f.boern) + ' = ' + portionerTekst(n) : 'Ikke sat. Nye retter er til ' + portionerTekst(p.n) },
+      status: n ? husstandTekst(f.voksne, f.boern) + ' = ' + portionerTekst(n) : 'Ikke sat. Nye retter er til ' + portionerTekst(p.n), ...nyere },
     { navn: 'Ugens udvalg', ikonEl: ikon('liste'), til: '#/voksen/udvalg', fokus: 'udvalg',
-      status: f.udvalg ? flertal(valgt, 'ret', 'retter') + ' at vælge mellem' : 'Alle ' + alle.length + ' retter' },
+      status: f.udvalg ? flertal(valgt, 'ret', 'retter') + ' at vælge mellem' : 'Alle ' + alle.length + ' retter', ...nyere },
     { navn: 'Favoritter', ikonEl: hjerteIkon(), til: '#/voksen/favoritter', fokus: 'favoritter',
-      status: f.favoritter.length ? flertal(f.favoritter.length, 'ret', 'retter') : 'Ingen endnu' },
+      status: f.favoritter.length ? flertal(f.favoritter.length, 'ret', 'retter') : 'Ingen endnu', ...nyere },
     { navn: 'Ugeplan', ikonEl: ikon('kalender'), til: '#/uge', fokus: 'ugeplan',
-      status: p.laast ? 'Lavet med en nyere udgave' : p.dage.filter(Boolean).length + ' af 7 dage har en ret' },
+      status: p.laast ? NYERE : p.dage.filter(Boolean).length + ' af 7 dage har en ret' },
     { navn: 'Indkøbsliste', ikonEl: ikon('kurv'), til: listeHash, fokus: 'indkoeb', status: 'Listen til butikken og telefonen' },
   ];
   return voksenSkaerm('voksen-hub', 'Voksne', 'Lukker efter ' + LUK_MS / 60000 + ' minutter uden tryk',

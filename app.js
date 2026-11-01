@@ -571,13 +571,14 @@ function trinSkaerm(m, nr) {
 
 // ---------- Færdig ----------
 
-// Til den voksne, når færdig-skærmen ikke kunne gemme «lavet» eller hjertet (lageret er fuldt eller slået fra, eller en
-// nyere udgave har gemt voksendelen)
+// Til den voksne, når færdig-skærmen ikke kunne gemme «lavet» eller hjertet: lageret er fuldt eller slået fra, eller en
+// nyere udgave har gemt voksendelen (FAERDIG_NYERE)
 const FAERDIG_FEJL = 'Det kunne ikke gemmes på denne enhed. Måske er privat browsing slået til, eller lageret er fuldt.';
+const FAERDIG_NYERE = 'Det kunne ikke gemmes, fordi voksendelen er gemt med en nyere udgave. Genindlæs siden, så hentes den nye udgave.';
 
 function faerdigSkaerm(m) {
   Lager.gem({ sidste: null });
-  const fejl = el('p', { class: 'voksen-linje', role: 'alert', hidden: true, tekst: FAERDIG_FEJL });
+  const fejl = el('p', { class: 'voksen-linje', role: 'alert', hidden: true, tekst: Lager.hentFamilie(kendte(m)).laast ? FAERDIG_NYERE : FAERDIG_FEJL });
   // Retten er lavet («ny for os» i voksendelen): kun når man kom fra sidste trin, så en genindlæsning ikke tæller igen
   if (S.lavetNu === m.id) {
     S.lavetNu = null;

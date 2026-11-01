@@ -5,7 +5,8 @@
 // 2. husstanden og portionerne i ugeplanen, 4. retten og printet ved 6 portioner, 3. ugens udvalg med «Fyld op med nye»
 // og børnenes valg på to sider, 6. hjertet på færdig-skærmen (⭐ i børnenes valg, favoritterne), 7. genindlæsning og
 // 9. knapperne (børn 64 px, voksne 48 px) og ingen vandret rulning. Én gang: 4b. printets strenge n (desktop),
-// 5. «Send til telefon» og listen på telefonen og 8. data fra v3 (kun kog-uge-v1 og kog-liste-v1) indlæses uden tab.
+// 5. «Send til telefon» og listen på telefonen, 8. data fra v3 (kun kog-uge-v1 og kog-liste-v1) indlæses uden tab og
+// 10. kog-familie-v1 fra en nyere udgave (oversigten står, siderne og hjertet er låst).
 import { portionerFraHusstand, faktorFor, skaleretIngrediens } from '../js/skaler.js';
 import { lavModel } from '../js/model.js';
 import { kod } from '../js/plankode.js';
@@ -29,6 +30,7 @@ export async function voksen(browser, H) {
   await strengtPrint(browser, H);
   await telefon(browser, H);
   await migrering(browser, H);
+  await nyereFamilie(browser, H);
 }
 
 const ugeplanRetter = (RETTER) => Object.keys(RETTER).filter((id) => RETTER[id].tumbi.ugeplan === true);
@@ -473,5 +475,43 @@ async function migrering(browser, H) {
   tjek(u && u.n === 3 && JSON.stringify(u.dage) === JSON.stringify(dage) && u.prBarn === 2 && u.uge === uge, n + ': ugeplanen får 3 portioner, og dagene er uændrede (' + ugeNu + ')');
   tjek(listeNu === listeV3, n + ': indkøbslisten er uændret');
   tjek(side.fejl.length === 0, n + ' (data fra v3): ' + side.fejl.join(' | '));
+  await ctx.close();
+}
+
+// 10. En nyere udgave har gemt kog-familie-v1: oversigten står stadig med vejen til ugeplanen, men husstand, udvalg og
+// favoritter kan ikke åbnes, og færdig-skærmen siger, hvorfor hjertet ikke kunne gemmes. Familien røres ikke
+async function nyereFamilie(browser, H) {
+  const { BASE, SKAERME, nySide, tjek, tryk, venterPaa } = H;
+  const n = SKAERME[0].navn;
+  console.log('[' + n + '] voksendelen: familien er gemt med en nyere udgave');
+  const nyere = JSON.stringify({ v: 2, voksne: 3, boern: 1 });
+  const { ctx, side } = await nySide(browser, SKAERME[0], { serviceWorkers: 'block' });
+  await side.goto(BASE + '/index.html');
+  await side.waitForSelector('.kort[data-ret]');
+  await side.evaluate(() => localStorage.clear());
+  await saetLager(side, FAMILIE, nyere);
+  await side.reload();
+  await side.waitForSelector('.kort[data-ret]');
+  await aabnVoksen(H, side, '', n + ' voksendelen med en nyere familie');
+  const punkter = await side.evaluate(() => Object.fromEntries([...document.querySelectorAll('.voksen-punkt')]
+    .map((b) => [b.dataset.fokus, (b.disabled ? 'låst: ' : '') + (b.querySelector('.voksen-punkt-status')?.textContent || '').replace(/\s+/g, ' ')])));
+  tjek(['husstand', 'udvalg', 'favoritter'].every((k) => punkter[k] === 'låst: Lavet med en nyere udgave') && !/låst/.test(punkter.ugeplan + punkter.indkoeb),
+    n + ': husstand, udvalg og favoritter er låst, ugeplanen og listen ikke (' + JSON.stringify(punkter) + ')');
+  await tryk(side, '[data-fokus="ugeplan"]');
+  await venterPaa(side, () => location.hash === '#/uge' && document.querySelector('.uge-dage'), null, n + ': ugeplanen kan nås fra oversigten');
+  await gaaTil(side, '#/voksen/husstand');
+  await venterPaa(side, () => document.querySelector('.voksen-vagt'), null, n + ': holdet ved husstanden');
+  await holdHer(H, side, '.voksen-vagt');
+  await venterPaa(side, () => document.querySelector('main h1')?.textContent === 'Voksendelen er gemt med en nyere udgave', null, n + ': husstanden siger, at familien er gemt med en nyere udgave');
+  await tryk(side, 'main .knap[aria-label="Tilbage til voksendelen"]');
+  await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('main.voksen-hub'), null, n + ': «Tilbage» går til oversigten');
+  await gaaTil(side, '#/ret/' + RET + '/faerdig');
+  await venterPaa(side, () => document.querySelector('main.faerdig h1'), null, n + ': færdig-skærmen med en nyere familie');
+  await tryk(side, '.hjerte-knap');
+  const fejl = await tekstAf(side, '.faerdig .voksen-linje:not([hidden])');
+  tjek(fejl.includes('nyere udgave') && await side.locator('.hjerte-knap').getAttribute('aria-pressed') === 'false',
+    n + ': hjertet gemmes ikke, og færdig-skærmen siger, at det er en nyere udgave (' + fejl + ')');
+  tjek(JSON.stringify(await raatLager(side)) === JSON.stringify([nyere, null, null]), n + ': den nyere familie er urørt');
+  tjek(side.fejl.length === 0, n + ' (nyere familie): ' + side.fejl.join(' | '));
   await ctx.close();
 }
