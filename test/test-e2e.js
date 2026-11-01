@@ -1333,6 +1333,30 @@ async function fejltilstande(browser, skaerm) {
   const anim = await r.side.evaluate(() => getComputedStyle(document.querySelector('.verbum-billede')).animationName);
   tjek(anim === 'none', 'mindre bevægelse: verbum-billedet må ikke bevæge sig (animation ' + anim + ')');
   await r.ctx.close();
+
+  // Listen fejler ved «Prøv igen» på en anden ret (så kender appen ingen id'er): en ret, der allerede er hentet, vises
+  // stadig, også færdig-skærmen og hjertet, uden en fejl i konsollen
+  const g = await nySide(browser, skaerm, { serviceWorkers: 'block' });
+  await g.side.route('**/opskrifter/boller.json', (x) => x.abort());
+  await g.side.goto(BASE + '/index.html#/ret/pandekager');
+  await g.side.waitForSelector('.ret h1');
+  await g.side.route('**/opskrifter/index.json', (x) => x.abort());
+  await g.side.evaluate(() => { location.hash = '#/ret/boller'; });
+  await g.side.waitForSelector('button:has-text("Prøv igen")');
+  await g.side.evaluate(() => document.querySelector('main').setAttribute('data-gammel', ''));
+  await tryk(g.side, 'button:has-text("Prøv igen")');
+  await g.side.waitForSelector('main:not([data-gammel]) button:has-text("Prøv igen")').catch(() => tjek(false, 'fejl igen: listen skal fejle igen ved «Prøv igen»'));
+  await g.side.evaluate(() => { location.hash = '#/ret/pandekager'; });
+  await g.side.waitForSelector('.ret h1', { timeout: 3000 }).catch(() => tjek(false, 'fejl igen: en hentet ret skal vises, når listen ikke kunne hentes igen'));
+  await g.side.evaluate(() => { location.hash = '#/ret/pandekager/faerdig'; });
+  await g.side.waitForSelector('main.faerdig h1', { timeout: 3000 }).catch(() => tjek(false, 'fejl igen: færdig-skærmen skal vises, når listen ikke kunne hentes igen'));
+  if (await g.side.locator('.hjerte-knap').count()) {
+    await tryk(g.side, '.hjerte-knap');
+    tjek(await g.side.locator('.hjerte-knap').getAttribute('aria-pressed') === 'true', 'fejl igen: hjertet virker, når listen ikke kunne hentes igen');
+  }
+  const uventedeIgen = g.side.fejl.filter((f) => !/opskrifter\/(index|boller)\.json|Failed to load resource/.test(f));
+  tjek(uventedeIgen.length === 0, 'fejl igen: ' + uventedeIgen.join(' | '));
+  await g.ctx.close();
 }
 
 // ---------- Berøring: fingeren på en hold-knap (K10) ----------

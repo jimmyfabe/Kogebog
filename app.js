@@ -296,15 +296,19 @@ function startAdvarsel(m) {
     el('span', { class: 'start-advarsel-tekst' }, el('strong', { tekst: 'Sammen med en voksen' }), el('span', { tekst: hvad })));
 }
 
+// Retterne, lageret må kende, når retten m vises: id'erne fra index.json. Fejlede en ny hentning af listen (S.ids er
+// null), vises en ret, der allerede er hentet, stadig, og så kender lageret kun den
+const kendte = (m) => S.ids || [m.id];
+
 // Portionerne (docs/foraeldredel.md, afsnit 4): { n, faktor }, eller null, når der hverken er en dag i ugeplanen eller
 // en husstand, retten ikke har talportioner (bage- og søde retter), eller faktoren er 1. Med null vises retten som før.
 // Dagens n før husstandens: står retten i ugeplanen, gælder dagens antal (i dag, hvis retten står dér, ellers den første
 // dag med retten), så retten passer til indkøbslisten. Husstanden er kun reserven
 function skalering(m) {
-  const p = Lager.hentUge(S.ids);
+  const p = Lager.hentUge(kendte(m));
   const i = p.uge ? (Date.parse(idag()) - Date.parse(p.uge)) / 86400000 : -1;
   const dag = (p.dage[i] && p.dage[i].ret === m.id ? p.dage[i] : null) || p.dage.find((d) => d && d.ret === m.id);
-  const f = Lager.hentFamilie(S.ids);
+  const f = Lager.hentFamilie(kendte(m));
   const n = dag ? dag.n : portionerFraHusstand(f.voksne, f.boern, f.barnAndel);
   const faktor = n ? faktorFor(m, n) : null;
   return faktor && faktor !== 1 ? { n, faktor } : null;
@@ -577,16 +581,16 @@ function faerdigSkaerm(m) {
   // Retten er lavet («ny for os» i voksendelen): kun når man kom fra sidste trin, så en genindlæsning ikke tæller igen
   if (S.lavetNu === m.id) {
     S.lavetNu = null;
-    fejl.hidden = Boolean(Lager.markerLavet(m.id, idag(), S.ids));
+    fejl.hidden = Boolean(Lager.markerLavet(m.id, idag(), kendte(m)));
   }
   // Hjertet (favorit) i topbaren: et ikon uden tekst, og skærmens højde er den samme (knapperne skal ses uden at rulle)
   const hjerte = knap('', { klasse: 'rund hjerte-knap', label: 'Favorit: ' + m.navn, onclick: () => {
-    const f = Lager.skiftFavorit(m.id, S.ids);
+    const f = Lager.skiftFavorit(m.id, kendte(m));
     if (f) hjerte.setAttribute('aria-pressed', String(f.favoritter.includes(m.id)));
     fejl.hidden = Boolean(f);
   } });
   hjerte.append(VoksenDel.hjerteIkon());
-  hjerte.setAttribute('aria-pressed', String(Lager.hentFamilie(S.ids).favoritter.includes(m.id)));
+  hjerte.setAttribute('aria-pressed', String(Lager.hentFamilie(kendte(m)).favoritter.includes(m.id)));
   const konfetti = el('div', { class: 'konfetti', 'aria-hidden': 'true' }, Array.from({ length: 14 }, (_, i) => el('span', { class: 'k' + (i % 4) })));
   const hoejttaler = knap('Læs op', { ikonNavn: 'hoejttaler' });
   hoejttaler.addEventListener('click', klik(() => Tale.sig(R.FAERDIG, { knap: hoejttaler })));
