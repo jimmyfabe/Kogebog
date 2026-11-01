@@ -1,0 +1,44 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Marcipan­grise",
+  "description": "Små lyserøde grise af marcipan med øjne af krymmel og et rødt bånd. En god mandelgave til risalamanden.",
+  "image": "grafik/ret-marcipangrise.webp",
+  "inLanguage": "da",
+  "recipeYield": "5 grise",
+  "prepTime": "PT30M",
+  "totalTime": "PT40M",
+  "recipeIngredient": [
+    "1 spsk flormelis (til bordet)",
+    "200 g marcipan",
+    "Rød konditorfarve (kan undværes)",
+    "1 spsk julekrymmel eller sukkerperler (til øjnene)"
+  ],
+  "tool": ["køkkenvægt", "spiseske", "tandstik", "rødt gavebånd", "saks", "engangshandsker (kan undværes)", "fad", "dåse med låg"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Drys lidt flormelis på bordet.", "tumbi": { "verbum": "drysse", "ikoner": ["sukker"], "note": "Så klistrer marcipanen ikke fast. Marcipanen er nemmest at forme, når den har stuetemperatur." } },
+    { "@type": "HowToStep", "text": "Dryp 3 dråber rød farve på marcipanen.", "tumbi": { "verbum": "haelde", "ikoner": ["marcipan"], "note": "Farven smitter af på fingrene og bordet. Brug engangshandsker, eller vask hænderne bagefter. Uden farve bliver grisene lyse, og det er også fint." } },
+    { "@type": "HowToStep", "text": "Ælt farven ind, til marcipanen er lyserød.", "tumbi": { "verbum": "aelte", "ikoner": ["marcipan"], "note": "Er den for lys, så en dråbe mere." } },
+    { "@type": "HowToStep", "text": "Rul fem store kugler til kroppe.", "tumbi": { "verbum": "rulle", "ikoner": ["marcipan"], "note": "Ca. 30 g til hver. Gem resten til tryner, ører, ben og haler." } },
+    { "@type": "HowToStep", "text": "Form hver kugle aflang med en tryne.", "tumbi": { "verbum": "forme", "note": "Gør den ene ende lidt smallere, og tryk den flad foran, så den ligner en tryne." } },
+    { "@type": "HowToStep", "text": "Rul små kugler til ører, ben og hale.", "tumbi": { "verbum": "rulle", "ikoner": ["marcipan"], "note": "Tryk ørerne flade til små trekanter. Halen er en tynd pølse, der krølles." } },
+    { "@type": "HowToStep", "text": "Tryk ører, ben og hale fast på grisen.", "tumbi": { "verbum": "pynte" } },
+    { "@type": "HowToStep", "text": "Prik to næsebor med en tandstik.", "tumbi": { "verbum": "pynte" } },
+    { "@type": "HowToStep", "text": "Sæt øjne af krymmel på grisen.", "tumbi": { "verbum": "pynte", "ikoner": ["krymmel"], "note": "To små stykker krymmel eller sukkerperler. Tryk dem lidt ind, så de sidder fast." } },
+    { "@type": "HowToStep", "text": "Bind et rødt bånd om halsen.", "tumbi": { "verbum": "pakke-ind", "note": "Klip båndet i stykker på forhånd. Den voksne slår sløjfen, hvis det er svært." } },
+    { "@type": "HowToStep", "text": "Lad grisene tørre til i morgen.", "tumbi": { "verbum": "vente", "note": "Uden låg på et fad, så de bliver faste. Bagefter holder de sig i en tæt dåse. Én gris kan blive mandelgave til risalamanden." } }
+  ],
+  "tumbi": {
+    "id": "marcipangrise",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "DR Børn (marcipangris, dr.dk/boern) og DR Mad (marcipangrise, dr.dk/mad). Øjne af krymmel i stedet for glasur med æggehvide og mængden pr. gris er et skøn. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "sukker", "maengde": "1 spsk" },
+      { "ikon": "marcipan", "maengde": "200 g" },
+      { "ikon": "krymmel", "maengde": "" },
+      { "ikon": "krymmel", "maengde": "1 spsk" }
+    ]
+  }
+}

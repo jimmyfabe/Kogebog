@@ -1,0 +1,46 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Chokolade­taler med julepynt",
+  "description": "Små runde klatter af chokolade med rosiner, nødder, pebernødder og krymmel. Gode som gave.",
+  "image": "grafik/ret-chokoladetaler-med-julepynt.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 20 taler",
+  "prepTime": "PT20M",
+  "totalTime": "PT55M",
+  "recipeIngredient": [
+    "2 spsk valnødder eller hasselnødder",
+    "25 g pebernødder",
+    "200 g mørk chokolade",
+    "2 spsk rosiner eller tørrede tranebær",
+    "2 spsk julekrymmel"
+  ],
+  "tool": ["køkkenvægt", "frysepose", "kagerulle", "skål, der tåler mikroovn", "grydeske", "teske", "spiseske", "bakke", "bagepapir", "pose og gavebånd (kan undværes)"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Hæld nødder og pebernødder i en frysepose.", "tumbi": { "verbum": "haelde", "ikoner": ["noedder", "pebernoedder"], "note": "Luk posen godt." } },
+    { "@type": "HowToStep", "text": "Knus dem groft med kagerullen.", "tumbi": { "verbum": "kagerulle", "ikoner": ["noedder", "pebernoedder"], "note": "Små stykker, ikke pulver. Knuste nødder er også bedst, hvis der er små søskende med." } },
+    { "@type": "HowToStep", "text": "Bræk chokoladen i stykker i en skål.", "tumbi": { "verbum": "smuldre", "ikoner": ["chokolade"], "note": "En skål, der tåler mikroovn." } },
+    { "@type": "HowToStep", "text": "Smelt chokoladen i mikroovnen i korte ryk.", "tumbi": { "verbum": "smelte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["chokolade"], "note": "20-30 sekunder ad gangen, og rør imellem, til den lige er smeltet. Skålen bliver varm. Eller i en skål over en gryde med varmt vand." } },
+    { "@type": "HowToStep", "text": "Lad chokoladen køle lidt af.", "tumbi": { "verbum": "vente", "timer_sek": 120, "note": "Chokoladen skal være lun, ikke varm. Læg bagepapir på en bakke imens." } },
+    { "@type": "HowToStep", "text": "Klat chokolade på papiret med en teske.", "tumbi": { "verbum": "haelde", "ikoner": ["chokolade"], "note": "Runde klatter på ca. 4 cm med god afstand. Den voksne holder skålen, hvis den stadig er varm." } },
+    { "@type": "HowToStep", "text": "Drys rosiner og nøddekrummer på med det samme.", "tumbi": { "verbum": "drysse", "ikoner": ["rosiner", "noedder", "pebernoedder"], "note": "Før chokoladen stivner. Tryk lidt, så pynten sidder fast." } },
+    { "@type": "HowToStep", "text": "Pynt talerne med krymmel.", "tumbi": { "verbum": "pynte", "ikoner": ["krymmel"] } },
+    { "@type": "HowToStep", "text": "Stil talerne koldt i 30 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "I køleskabet, til chokoladen er stivnet." } },
+    { "@type": "HowToStep", "text": "Pak talerne i en pose med bånd.", "tumbi": { "verbum": "pakke-ind", "note": "Kan undværes. Opbevar dem køligt." } },
+    { "@type": "HowToStep", "text": "Smag en chokoladetaler!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "chokoladetaler-med-julepynt",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Idé efter de franske mendiants og Arla: «Cornflakestoppe» (arla.dk) med klatter af chokolade, der stivner på køl. Mængderne er et skøn, og trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "noedder", "maengde": "2 spsk" },
+      { "ikon": "pebernoedder", "maengde": "25 g" },
+      { "ikon": "chokolade", "maengde": "200 g" },
+      { "ikon": "rosiner", "maengde": "2 spsk" },
+      { "ikon": "krymmel", "maengde": "2 spsk" }
+    ]
+  }
+}

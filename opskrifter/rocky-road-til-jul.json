@@ -1,0 +1,54 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Rocky road til jul",
+  "description": "Chokoladefirkanter med marcipan, skumfiduser, pebernødder, nødder og rosiner. Julegodt uden ovn.",
+  "image": "grafik/ret-rocky-road-til-jul.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 25 stykker",
+  "prepTime": "PT25M",
+  "totalTime": "PT1H35M",
+  "recipeIngredient": [
+    "100 g marcipan",
+    "50 g skumfiduser",
+    "50 g pebernødder",
+    "50 g valnødder eller hasselnødder",
+    "50 g rosiner eller tørrede tranebær",
+    "300 g mørk chokolade",
+    "2 spsk julekrymmel"
+  ],
+  "tool": ["køkkenvægt", "2 skåle (den ene tåler mikroovn)", "frysepose", "kagerulle", "grydeske", "spatel", "lille form eller bakke (ca. 20 × 20 cm)", "bagepapir", "kniv", "skærebræt", "dåse med låg"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Smuldr marcipanen i små stykker i en skål.", "tumbi": { "verbum": "smuldre", "ikoner": ["marcipan"] } },
+    { "@type": "HowToStep", "text": "Del skumfiduserne i små stykker med fingrene.", "tumbi": { "verbum": "smuldre", "ikoner": ["sukker"], "note": "Kom dem i samme skål. Skumfiduser indeholder gelatine, ofte fra svin. Spiser I ikke svinekød, så tag flere rosiner i stedet." } },
+    { "@type": "HowToStep", "text": "Hæld nødder og pebernødder i en frysepose.", "tumbi": { "verbum": "haelde", "ikoner": ["noedder", "pebernoedder"], "note": "Luk posen godt." } },
+    { "@type": "HowToStep", "text": "Knus dem groft med kagerullen.", "tumbi": { "verbum": "kagerulle", "ikoner": ["noedder", "pebernoedder"], "note": "Små stykker, ikke pulver." } },
+    { "@type": "HowToStep", "text": "Hæld krummerne og rosinerne i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["noedder", "pebernoedder", "rosiner"] } },
+    { "@type": "HowToStep", "text": "Bræk chokoladen i stykker i en anden skål.", "tumbi": { "verbum": "smuldre", "ikoner": ["chokolade"], "note": "En skål, der tåler mikroovn. Læg bagepapir i formen." } },
+    { "@type": "HowToStep", "text": "Smelt chokoladen i mikroovnen i korte ryk.", "tumbi": { "verbum": "smelte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["chokolade"], "note": "20-30 sekunder ad gangen, og rør imellem, til den lige er smeltet. Skålen bliver varm. Eller i en skål over en gryde med varmt vand." } },
+    { "@type": "HowToStep", "text": "Lad chokoladen køle lidt af.", "tumbi": { "verbum": "vente", "timer_sek": 180, "note": "Chokoladen skal være lun, ikke varm, før barnet hælder og rører." } },
+    { "@type": "HowToStep", "text": "Hæld blandingen i chokoladen.", "tumbi": { "verbum": "haelde", "ikoner": ["marcipan", "sukker", "rosiner"], "note": "Den voksne holder skålen, hvis den stadig er varm." } },
+    { "@type": "HowToStep", "text": "Rør det godt sammen med en spatel.", "tumbi": { "verbum": "roere", "ikoner": ["chokolade"], "note": "Til alt er dækket af chokolade." } },
+    { "@type": "HowToStep", "text": "Hæld massen i formen med bagepapir.", "tumbi": { "verbum": "haelde", "note": "Glat den lidt ud med spatlen. Laget skal være ca. 1½ cm tykt." } },
+    { "@type": "HowToStep", "text": "Drys krymmel over.", "tumbi": { "verbum": "drysse", "ikoner": ["krymmel"] } },
+    { "@type": "HowToStep", "text": "Stil formen koldt i en time.", "tumbi": { "verbum": "vente", "timer_sek": 3600, "note": "I køleskabet, til den er helt fast." } },
+    { "@type": "HowToStep", "text": "Skær rocky road i små firkanter.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "note": "Ca. 25 stykker. Løft den ud af formen med papiret først. Kniven skærer pænest, når den har ligget i varmt vand og er tørret af." } },
+    { "@type": "HowToStep", "text": "Smag en firkant!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "rocky-road-til-jul",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Arla: «Rocky road med marcipan» (arla.dk), her med pebernødder, nødder og rosiner, som knuses i en pose i stedet for at blive hakket. Mængderne er et skøn, og trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "marcipan", "maengde": "100 g" },
+      { "ikon": "sukker", "maengde": "50 g" },
+      { "ikon": "pebernoedder", "maengde": "50 g" },
+      { "ikon": "noedder", "maengde": "50 g" },
+      { "ikon": "rosiner", "maengde": "50 g" },
+      { "ikon": "chokolade", "maengde": "300 g" },
+      { "ikon": "krymmel", "maengde": "2 spsk" }
+    ]
+  }
+}
