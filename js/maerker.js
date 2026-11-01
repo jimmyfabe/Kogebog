@@ -60,7 +60,8 @@ export function maerkerFor(model, { familie } = {}) {
     // Vegetar kun, når hver linje har en kendt vare: en ukendt linje kunne være kød
     vegetar: slags.length > 0 && slags.every((s) => s === ''),
     fisk: slags.includes('fisk'),
-    ny: familie != null && !har(lavet, model.id),
+    // Ny for os først, når familien er begyndt at registrere: før den første ret er lavet, er alle retter «nye»
+    ny: familie != null && Object.keys(lavet).length > 0 && !har(lavet, model.id),
     favorit: familie != null && favoritter.includes(model.id),
   };
   return Object.keys(MAERKER).filter((k) => gaelder[k]);

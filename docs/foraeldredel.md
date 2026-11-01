@@ -138,13 +138,14 @@ Målt på de 69 ugeplan-retter:
 | 🔪 Ingen kniv | 0 trin med `skaere`/`rive` | Findes | 30 |
 | 🌱 Vegetar | Ingen vare med `slags: 'koed'\|'fisk'` | **Kræver felt** `slags` på ca. 19 VARER i js/katalog.js | **Foreløbigt 26** (skøn, se nedenfor) |
 | 🐟 Fisk | Mindst én vare med `slags: 'fisk'` | Kræver samme felt | Ikke talt |
-| ✨ Ny for os | `lavet[id]` mangler | Brugerdata | — |
+| ✨ Ny for os | `lavet[id]` mangler, og familien har lavet mindst én ret | Brugerdata | — |
 | ❤️ Favorit | id i `favoritter` | Brugerdata | — |
 | «Sund» | **Kan ikke udledes.** Brug «masser af grønt» i stedet | — | — |
 
 - **Vegetar kan ikke udledes af ikonerne.** En ikon-regel (`koed`/`tun`/`skinke`/`poelse`/`gyoza`) missede chorizo (ikon `chorizo`) og makrel (ikon `makrel`). Derfor skal hver kød- og fiskevare have `slags`, og validatoren skal fejle, hvis en vare med et kød- eller fiskeikon mangler feltet.
   - `bouillonterninger` er grøntsagsbouillon og må ikke markeres.
   - De 26 skal efterprøves ret for ret, fx `pladepizza` og `taco-bradepande`.
+- **✨ først, når familien er begyndt at registrere:** før den første ret er lavet (`lavet` er tom), er ingen ret «ny for os», for ellers ville alle retter være nye. «Fyld op med nye» vælger stadig retter uden `lavet`, og udvalgets ✨-chip viser 0, til den første ret er lavet.
 - Børnene ser kun ikoner (⭐ favorit, ✨ ny) med `aria-label` til voksne. Der kommer ingen ny tale i MVP.
 - Filterchips (⚡ 🥕 💰 🔪 🌱 🐟 ✨ ❤️) findes kun i voksendelens udvalgsliste. Om forsiden også skal filtrere, er Jimmys valg.
 

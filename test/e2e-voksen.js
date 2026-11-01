@@ -451,6 +451,10 @@ async function migrering(browser, H) {
   await gaaTil(side, '#/indkoeb');
   await venterPaa(side, () => document.querySelector('.liste-tal'), null, n + ': indkøbslisten fra v3');
   tjek(await side.locator('li.koebt[data-vare="' + varer[0].id + '"]').count() === 1, n + ': listen fra v3 har stadig den købte vare');
+  // Ingen ret er lavet endnu, så ingen er «ny for os» (ellers var alle retter nye)
+  await gaaTil(side, '#/uge/vaelg/rosa');
+  await venterPaa(side, () => location.hash === '#/uge/vaelg/rosa' && document.querySelector('.ret-gitter'), null, n + ': børnenes valg med data fra v3');
+  tjek(await side.locator('.maerke-ny').count() === 0, n + ': uden noget lavet har ingen ret ✨ i børnenes valg');
   await aabnVoksen(H, side, '', n + ' voksendelen med data fra v3');
   const status = await side.evaluate(() => (document.querySelector('[data-fokus="husstand"] .voksen-punkt-status')?.textContent || '').replace(/\s+/g, ' '));
   tjek(status === 'Ikke sat. Nye retter er til 4 portioner', n + ': uden kog-familie-v1 er husstanden ikke sat (' + status + ')');

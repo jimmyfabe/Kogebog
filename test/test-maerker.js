@@ -10,6 +10,7 @@ import { maerkerFor, MAERKER, GROENT_G, BILLIG_KR } from '../js/maerker.js';
 import { lavModel, LYN_MIN } from '../js/model.js';
 import { VARER, AFDELINGER, ENHEDER, INGREDIENSER } from '../js/katalog.js';
 import { validerVarer } from './test-opskrifter.js';
+import { tomFamilie } from '../js/lager.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const json = (id) => JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8'));
@@ -100,23 +101,26 @@ test('vegetar og fisk på de rigtige retter', () => {
   assert.deepEqual(maerkerFor(pk).filter((k) => ['groent', 'billig', 'vegetar', 'fisk'].includes(k)), []);
 });
 
-test('ny og favorit kommer kun med, når familien er givet', () => {
+test('ny og favorit kommer kun med, når familien er givet, og ny først, når familien har lavet en ret', () => {
   const m = model('linse-dhal');
   for (const valg of [undefined, {}, { familie: undefined }, { familie: null }]) {
     const mk = maerkerFor(m, valg);
     assert.ok(!mk.includes('ny') && !mk.includes('favorit'), JSON.stringify(valg));
   }
   const fam = (favoritter, lavet) => ({ familie: { v: 1, voksne: null, boern: null, barnAndel: 0.7, udvalg: null, favoritter, lavet } });
-  assert.equal(har(m, 'ny', fam([], {})), true);
+  // Før den første ret er lavet, er ingen ret «ny for os» (ellers var alle retter nye)
+  assert.equal(har(m, 'ny', { familie: tomFamilie() }), false);
+  assert.equal(har(m, 'ny', fam([], {})), false);
+  assert.equal(har(m, 'ny', { familie: { ...tomFamilie(), lavet: { andenRet: { gange: 1, sidst: '2026-10-31' } } } }), true);
   assert.equal(har(m, 'favorit', fam([], {})), false);
   assert.equal(har(m, 'ny', fam([], { 'linse-dhal': { gange: 1, sidst: '2026-10-31' } })), false);
   assert.equal(har(m, 'ny', fam([], { 'koedsovs': { gange: 2, sidst: '2026-10-30' } })), true);
   assert.equal(har(m, 'favorit', fam(['koedsovs', 'linse-dhal'], {})), true);
   assert.equal(har(m, 'favorit', fam(['koedsovs'], {})), false);
   // Forkerte typer inde i familien giver standardværdierne (ingen favoritter, intet lavet) i stedet for en fejl
-  assert.deepEqual(maerkerFor(m, fam('linse-dhal', null)).filter((k) => k === 'ny' || k === 'favorit'), ['ny']);
+  assert.deepEqual(maerkerFor(m, fam('linse-dhal', null)).filter((k) => k === 'ny' || k === 'favorit'), []);
   // Object.hasOwn: «constructor» er ikke lavet, fordi alle objekter arver navnet
-  assert.equal(har({ ...m, id: 'constructor' }, 'ny', fam([], {})), true);
+  assert.equal(har({ ...m, id: 'constructor' }, 'ny', fam([], { 'koedsovs': { gange: 2, sidst: '2026-10-30' } })), true);
 });
 
 test('forkerte argumenter giver en TypeError', () => {
@@ -129,7 +133,7 @@ test('mærkerne kommer i MAERKERs rækkefølge, og hvert mærke findes på en ri
   const set = new Set();
   for (const id of ALLE) {
     const m = model(id);
-    const mk = maerkerFor(m, { familie: { favoritter: [id], lavet: {} } });
+    const mk = maerkerFor(m, { familie: { favoritter: [id], lavet: { andenRet: { gange: 1, sidst: '2026-10-31' } } } });
     assert.deepEqual(mk, orden.filter((k) => mk.includes(k)), id);
     assert.ok(!(mk.includes('vegetar') && mk.includes('fisk')), id + ': vegetar og fisk udelukker hinanden');
     if (m.uge) for (const k of mk) set.add(k);
@@ -141,7 +145,8 @@ test('mærkerne kommer i MAERKERs rækkefølge, og hvert mærke findes på en ri
     Object.assign(d.tumbi, { portioner: 4, groent_g: GROENT_G * 4, pris_kr: BILLIG_KR * 4 });
     d.recipeInstructions = d.recipeInstructions.filter((s) => !KNIV.includes(s.tumbi.verbum));
   });
-  assert.deepEqual(maerkerFor(alt, { familie: { favoritter: ['linse-dhal'], lavet: {} } }), ['hurtig', 'groent', 'billig', 'ingenKniv', 'vegetar', 'ny', 'favorit']);
+  const lavet = { andenRet: { gange: 1, sidst: '2026-10-31' } };
+  assert.deepEqual(maerkerFor(alt, { familie: { favoritter: ['linse-dhal'], lavet } }), ['hurtig', 'groent', 'billig', 'ingenKniv', 'vegetar', 'ny', 'favorit']);
 });
 
 test('kød- og fiskevarerne i katalog.js har «slags», og validatoren fejler uden det', () => {
