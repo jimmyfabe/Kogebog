@@ -48,7 +48,7 @@
     "pris_kr": 68,
     "pris_dato": "2026-10",
     "groent_g": 1100,
-    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Grønt er også et skøn (ikke målt) og er uden bælgfrugter og kartofler.",
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Grønt er også et skøn (ikke målt) og er uden bælgfrugter og kartofler. Med mere grønt er der 200 g hakket oksekød med grønt mindre og 80 g røde linser mere (REMA 1000's priser på shop.rema1000.dk 02-11-2026: hakket oksekød med 35 % grønt 400 g 29,95 kr. og røde linser 400 g 16,95 kr., ganget med 1,09), og hverken linserne eller grøntet i kødet tælles som grønt.",
     "ingredienser": [
       { "ikon": "spaghetti", "maengde": "300 g", "vare": "penne", "antal": 300, "enhed": "g" },
       { "ikon": "vand", "maengde": "3 l", "vare": "vand" },
@@ -60,6 +60,23 @@
       { "ikon": "salt", "maengde": "½ tsk", "vare": "salt" },
       { "ikon": "peber", "maengde": "1 knivspids", "vare": "peber" },
       { "ikon": "ost", "maengde": "120 g", "vare": "revet-ost", "antal": 120, "enhed": "g" }
-    ]
+    ],
+    "mere_groent": {
+      "ingredienser": [
+        { "i": 3, "tekst": "200 g hakket oksekød med grønt", "antal": 200 }
+      ],
+      "nye_ingredienser": [
+        { "efter": 5, "tekst": "80 g røde linser", "ikon": "linser", "maengde": "80 g", "vare": "roede-linser", "antal": 80, "enhed": "g" },
+        { "efter": 5, "tekst": "2 dl vand", "ikon": "vand", "maengde": "2 dl", "vare": "vand", "antal": 2, "enhed": "dl" }
+      ],
+      "trin": [
+        { "i": 7, "@type": "HowToStep", "text": "Lad kødsovsen småkoge i 15 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900, "note": "Rør af og til, så linserne ikke sætter sig. De skal være helt bløde, og spinaten tøet." } }
+      ],
+      "nye_trin": [
+        { "efter": 6, "@type": "HowToStep", "text": "Hæld linser og vand i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["linser", "vand"], "note": "Gryden er varm. Hold barnets hænder væk fra kanten. Rør godt rundt, så linserne ikke sætter sig." } }
+      ],
+      "pris_kr": 55,
+      "groent_g": 1100
+    }
   }
 }
