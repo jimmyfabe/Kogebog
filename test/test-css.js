@@ -136,10 +136,12 @@ test('forsidens top på iPhone på højkant: Rosa og Bo er skjult eller mindst 3
   const n = Object.keys(GRUPPER).length;
   const smalle = [];
   const ude = [];
+  let maalt = 0;
   for (let b = 360; b <= 700; b++) {
     const h = 1000; // højkant: også (min-height: 521px)
     const top = gaeldende(rod, '.forside-top', b, h);
     if (top.display !== 'grid') continue; // kun iPhone-layoutet på højkant
+    maalt++;
     const indhold = b - 2 * vandret(top.padding);
     const kolonner = (top['grid-template-columns'].match(/minmax\([^)]*\)|[^\s()]+/g) || []).length;
     const gab = kolonner > 1 ? (kolonner - 1) * kolonneGap(top.gap) : 0;
@@ -150,6 +152,9 @@ test('forsidens top på iPhone på højkant: Rosa og Bo er skjult eller mindst 3
     if (knapper > b) ude.push(b + ' px: ' + knapper + ' px');
   }
   const kort = (l) => (l.length > 2 ? l[0] + ' … ' + l.at(-1) : l.join(', '));
+  // Forstår gaeldende() ikke en @media-regel (fx range-syntaks), springes alle bredder over, og testen blev grøn uden at
+  // have målt noget (code-review 02-11-2026)
+  assert.equal(maalt, 700 - 360 + 1, 'kun ' + maalt + ' bredder fik iPhone-gridet: forstår gaeldende() stadig @media-reglen?');
   assert.deepEqual(smalle, [], smalle.length + ' bredder giver Rosa og Bo under ' + MIN_DYR + ' px (' + kort(smalle) + '): skjul dem i reglen med .forside-top > .forside-dyr');
   assert.deepEqual(ude, [], ude.length + ' bredder er smallere end knaprækken (' + kort(ude) + ')');
 });
