@@ -1,8 +1,9 @@
 # STATUS – Tumbi Køkken
 
-## 02-11-2026 kl. 23:31: v6 · 02-11-2026 «Mere grønt i maden» er færdig og grøn (Saga)
+## 02-11-2026 kl. 23:34: v6 · 02-11-2026 «Mere grønt i maden» er færdig og grøn, men IKKE pushet (Saga)
 
 Jimmy svarede «ja, til den» 02-11 kl. 15 og senere «Du tak bare og gør alt færdig». Det er læst som ja til at udgive v6, når alt er grønt. Fortolkningen er ikke bekræftet.
+- **Ud af huset:** push er IKKE gjort. Filteret afviste `git push` 02-11 kl. 23:33. `groent-0211` er spolet frem i `main` lokalt, og live er stadig v5. Jimmy kører i PowerShell: `git -C D:/Claude/Kogebog push origin main`. Bagefter: live-tjek af `js/version.js` (v6) og `js/groent.js` (200), og ret denne linje.
 - **v6 indeholder:**
   - En kontakt i voksendelen, «Mere grønt i maden». Den giver halvt kød og halvt røde linser i 8 retter med hakket kød: kødsovs, cremet kødsovs, one pot bolognese, chili con carne, hyrdetærte, pastagratin, kødkål med makaroni og jægergryde.
   - Den slår igennem på retten, forsidekortet, ugeplanen, indkøbslisten, print og linket til telefonen. En kørende timer holder sin udgave.
