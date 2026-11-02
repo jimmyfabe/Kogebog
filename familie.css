@@ -57,14 +57,25 @@
 .voksen-del .knap:disabled, .voksen-del .knap[aria-disabled="true"] { background: var(--creme-moerk); color: var(--kakao-blid); border-color: var(--kakao-blid); box-shadow: 0 3px 0 var(--kakao-blid); cursor: default; }
 .voksen-del .knap:disabled { transform: none; }
 
-/* Oversigten: et kort pr. emne med navnet og hvordan det står til lige nu. To kolonner på iPad og desktop, én på telefonen */
-.voksen-menu { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 16px 20px; }
+/* Oversigten: et kort pr. emne med navnet og hvordan det står til lige nu. To kolonner på iPad og desktop, én på telefonen.
+   Kontakten «Mere grønt i maden» står under menuen i samme gitter, så den er lige så bred som et kort */
+.voksen-menu, .voksen-groent { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 16px 20px; }
 .voksen-menu > li { display: flex; min-width: 0; }
 .knap.voksen-punkt { width: 100%; min-height: 96px; padding: 14px 22px; justify-content: flex-start; gap: 16px; border-radius: 24px; text-align: left; }
 .voksen-punkt .ikon { width: 34px; height: 34px; }
 .voksen-punkt-tekst { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
 .voksen-punkt-navn { font-size: 24px; font-weight: 800; }
 .voksen-punkt-status { font-size: 17px; font-weight: 700; color: var(--kakao-blid); overflow-wrap: anywhere; }
+
+/* «Mere grønt i maden» (role="switch", js/voksen-del.js): formet som et kort, med et spor i stedet for ikonet. Slået til
+   er sporet grønt, og prikken står til højre, så tilstanden ikke kun er en farve (statuslinjen siger den også med ord).
+   Prikken er kakao i begge tilstande (4,9:1 på urt, 12,5:1 på hvid). Sporet er 64 × 36 med kanten: 28 px at flytte */
+.knap.voksen-kontakt { width: 100%; min-height: 96px; padding: 14px 22px; justify-content: flex-start; gap: 16px; border-radius: 24px; text-align: left; }
+.voksen-kontakt-spor { position: relative; flex: none; width: 64px; height: 36px; border: var(--kant); border-radius: 18px; background: var(--hvid); transition: background-color .15s ease-out; }
+.voksen-kontakt-prik { position: absolute; top: 2px; left: 2px; width: 26px; height: 26px; border-radius: 50%; background: var(--kakao); transition: transform .15s ease-out; }
+.voksen-kontakt[aria-checked="true"] .voksen-kontakt-spor { background: var(--urt); }
+.voksen-kontakt[aria-checked="true"] .voksen-kontakt-prik { transform: translateX(28px); }
+.voksen-groent > .uge-besked { grid-column: 1 / -1; }
 
 /* Husstanden: voksne, børn og hvor meget et barn spiser, og summen nederst */
 .husstand { display: flex; flex-direction: column; gap: 14px; padding: 16px 20px; border: var(--kant); border-radius: 22px; background: var(--hvid); }
@@ -127,6 +138,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .voksen-filtre > summary::before { transition: none; }
+  .voksen-kontakt-spor, .voksen-kontakt-prik { transition: none; }
 }
 
 /* Telefonen: mindre luft og billeder, så navnet har plads ved siden af knappen på 360-390 px */
@@ -138,7 +150,7 @@
   .udvalg-tal { margin: 0 -12px; padding: 8px 12px; font-size: 18px; }
   .voksen-raekke { grid-template-columns: 56px minmax(0, 1fr) auto; gap: 0 10px; padding: 8px 10px; }
   .voksen-raekke-billede { width: 56px; height: 56px; }
-  .knap.voksen-punkt { min-height: 84px; padding: 12px 18px; }
+  .knap.voksen-punkt, .knap.voksen-kontakt { min-height: 84px; padding: 12px 18px; }
   /* Kataloget: i rækker med «Med» får knapperne deres egen linje under billedet og navnet, og «Med i udvalget» bliver til
      «Med». Uden «Med» står hjertet og «Åbn» ved navnet. Hjertet er 48 px som de andre voksenknapper, så navnet har plads */
   .voksen-raekke-knapper.med-udvalg { grid-column: 1 / -1; padding-bottom: 8px; }

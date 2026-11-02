@@ -68,6 +68,7 @@ const { el } = await import('../js/dom.js');
 // app.js' hjælpere, så tyndt som muligt: statusSkaerm giver sine valg tilbage, så vagten kan genkendes. vis() tegner
 // adressens skærm igen, som app.js gør
 let visKald = 0;
+const annonceret = []; // det, skærmlæseren får at vide (K.annoncer)
 const S = { ids: [], retter: new Map(), grupper: [] };
 V.init({
   S,
@@ -79,7 +80,7 @@ V.init({
   klik: (fn) => fn,
   billede: () => lavEl('img'),
   topbar: () => lavEl('header'),
-  annoncer: () => {},
+  annoncer: (tekst) => { annonceret.push(tekst); },
   indlaes: () => {},
 });
 const tryk = () => { for (const fn of lyttere.pointerdown) fn(); };
@@ -495,5 +496,85 @@ test('«Fjern filtrene» i kataloget giver fokus til linjen over filtrene på en
     assert.equal(fokus, medFokusNavn(vist.at(-1), navn), hvor + ': fokus står på ' + navn);
     assert.ok(!filtreI(vist.at(-1)).open || navn === 'gruppe-alle', hvor + ': fokus står på noget, der kan ses');
     V.rute('#/');
+  }
+});
+
+// ---------- «Mere grønt i maden» (js/groent.js) ----------
+
+const groentKontakt = () => medFokusNavn(vist.at(-1), 'groent');
+const groentStatus = () => tekstAf(find(vist.at(-1), (e) => e.attr.id === 'groent-status')[0]);
+const gemtFamilie = () => JSON.parse(lageret.get('kog-familie-v1'));
+
+test('«Mere grønt i maden»: kontakten slår til og fra, gemmer i familien og siger antallet af retter', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  const n = S.ids.filter((id) => S.retter.get(id).groen).length;
+  assert.ok(n >= 1, 'mindst én ret har mere grønt (kødsovsen)');
+  aabnSide('');
+  const k = groentKontakt();
+  assert.equal(k.tag, 'button');
+  assert.equal(k.attr.role, 'switch');
+  assert.equal(k.attr['aria-checked'], 'false');
+  assert.equal(tekstAf(find(vist.at(-1), (e) => e.attr.id === k.attr['aria-labelledby'])[0]), 'Mere grønt i maden');
+  assert.equal(k.attr['aria-describedby'], 'groent-status');
+  assert.equal(groentStatus(), 'Slået fra');
+  assert.equal(lageret.has('kog-familie-v1'), false, 'at vise oversigten gemmer intet');
+  annonceret.length = 0;
+  send(groentKontakt(), 'click');
+  assert.equal(gemtFamilie().mereGroent, true);
+  assert.equal(groentKontakt().attr['aria-checked'], 'true');
+  assert.equal(groentStatus(), 'Halvt kød og halvt røde linser i ' + n + '\u00a0' + (n === 1 ? 'ret' : 'retter'));
+  assert.equal(fokus, groentKontakt(), 'fokus bliver på kontakten, når skærmen er tegnet igen');
+  assert.deepEqual(annonceret, ['Mere grønt i maden er slået til.']);
+  send(groentKontakt(), 'click');
+  assert.equal(gemtFamilie().mereGroent, false);
+  assert.equal(groentKontakt().attr['aria-checked'], 'false');
+  assert.equal(groentStatus(), 'Slået fra');
+  assert.deepEqual(annonceret, ['Mere grønt i maden er slået til.', 'Mere grønt i maden er slået fra.']);
+});
+
+test('«Mere grønt i maden»: valget rører ikke resten af familien, og en fejl i lageret giver en besked uden skift', (t) => {
+  const setItem = globalThis.localStorage.setItem;
+  t.after(() => { globalThis.localStorage.setItem = setItem; V.rute('#/'); });
+  medOpskrifter();
+  aabnSide('');
+  lageret.set('kog-familie-v1', JSON.stringify({ v: 1, voksne: 2, boern: 1, barnAndel: 0.7, udvalg: null, favoritter: [S.ids[0]], lavet: {} }));
+  V.rute(location.hash);
+  send(groentKontakt(), 'click');
+  const f = gemtFamilie();
+  assert.deepEqual([f.voksne, f.boern, f.barnAndel, f.favoritter, f.mereGroent], [2, 1, 0.7, [S.ids[0]], true]);
+  globalThis.localStorage.setItem = () => { throw new Error('lageret er fuldt'); };
+  annonceret.length = 0;
+  send(groentKontakt(), 'click');
+  assert.equal(groentKontakt().attr['aria-checked'], 'true', 'kontakten står, som den stod');
+  const fejl = find(vist.at(-1), (e) => e.attr.role === 'alert');
+  assert.equal(fejl.length, 1);
+  assert.match(tekstAf(fejl[0]), /^Valget kunne ikke gemmes på denne enhed\./);
+  assert.deepEqual(annonceret, [], 'intet «slået fra», når det ikke blev gemt');
+});
+
+test('«Mere grønt i maden»: en familie fra en nyere udgave giver en kontakt, der ikke kan trykkes på', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  aabnSide('');
+  lageret.set('kog-familie-v1', JSON.stringify({ v: 99, mereGroent: true }));
+  V.rute(location.hash);
+  assert.equal(groentKontakt().attr.disabled, '');
+  assert.equal(groentStatus(), 'Lavet med en nyere udgave');
+});
+
+test('«Mere grønt i maden»: «Indkøbsliste» på oversigten giver et link med g, præcis når den er slået til', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  aabnSide('');
+  const ret = S.ids.find((id) => S.retter.get(id).uge);
+  lageret.set('kog-uge-v1', JSON.stringify({ v: 1, uge: null, n: 4, dage: [{ ret, n: 4, af: 'bo' }, null, null, null, null, null, null], rettet: 1 }));
+  for (const til of [false, true]) {
+    lageret.set('kog-familie-v1', JSON.stringify({ v: 1, mereGroent: til }));
+    V.rute(location.hash);
+    send(medFokusNavn(vist.at(-1), 'indkoeb'), 'click');
+    assert.match(location.hash, til ? /^#\/hent\/v2\.[0-9]{8}\..*\.g\.[0-9a-f]{4}$/ : /^#\/hent\/v1\.[0-9]{8}\.[^.]*\.[0-9a-f]{4}$/, location.hash);
+    location.hash = '#/voksen/';
+    V.aabn();
   }
 });

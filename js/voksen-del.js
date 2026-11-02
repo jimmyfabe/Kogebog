@@ -1,5 +1,6 @@
 // voksen-del.js — voksendelen (docs/foraeldredel.md, afsnit 2-5): den voksnes hjørne bag et hold på 2 s.
-//   #/voksen             husstand, ugens udvalg, favoritter og kataloget, vejen til ugeplanen og indkøbslisten, og «Luk»
+//   #/voksen             husstand, ugens udvalg, favoritter og kataloget, vejen til ugeplanen og indkøbslisten, kontakten
+//                        «Mere grønt i maden» (js/groent.js) og «Luk»
 //   #/voksen/husstand    antal voksne og børn → portioner til nye retter i ugeplanen (eller til hele ugen)
 //   #/voksen/udvalg      ugens udvalg: de retter, børnene vælger imellem i ugeplanen (højst 24; intet udvalg = alle)
 //   #/voksen/favoritter  hjerterne
@@ -460,8 +461,47 @@ function laastSkaerm() {
 function listeHash() {
   const p = Lager.hentUge(K.S.ids);
   if (p.laast || !p.dage.some(Boolean)) return '#/indkoeb';
-  const kode = kod(p.uge || planMandag(), p.dage.map((d) => (d ? { ret: d.ret, n: d.n } : null)));
+  const mereGroent = Lager.hentFamilie(K.S.ids).mereGroent === true;
+  const kode = kod(p.uge || planMandag(), p.dage.map((d) => (d ? { ret: d.ret, n: d.n } : null)), { mereGroent });
   return afkod(kode, { retter: K.S.ids, idag: new Date() }).ok ? '#/hent/' + kode : '#/indkoeb';
+}
+
+// «Mere grønt i maden» (js/groent.js): én kontakt på oversigten. Slået til får retter med hakket kød halvt kød og halvt
+// røde linser i retten, ugeplanen, indkøbslisten og printet. Valget gemmes i familien på denne enhed (js/lager.js). En
+// indkøbsliste, telefonen allerede har hentet, bliver, som den er: kun et nyt link giver en ny liste
+const GROENT_NAVN = 'Mere grønt i maden';
+function groentStatus(f) {
+  if (f.laast) return NYERE;
+  if (f.mereGroent !== true) return 'Slået fra';
+  const n = alleRetter().filter((m) => m.groen).length;
+  return n ? 'Halvt kød og halvt røde linser i ' + flertal(n, 'ret', 'retter') : 'Slået til, men ingen af retterne har det endnu';
+}
+
+function groentKontakt(f) {
+  const til = f.mereGroent === true;
+  return el('div', { class: 'voksen-groent' },
+    medFokus(el('button', {
+      type: 'button',
+      class: 'knap voksen-kontakt',
+      role: 'switch',
+      'aria-checked': String(til),
+      'aria-labelledby': 'groent-navn',
+      'aria-describedby': 'groent-status',
+      disabled: f.laast,
+      onclick: K.klik(() => skiftGroent(!til)),
+    }, el('span', { class: 'voksen-kontakt-spor', 'aria-hidden': 'true' }, el('span', { class: 'voksen-kontakt-prik' })),
+    el('span', { class: 'voksen-punkt-tekst' },
+      el('span', { id: 'groent-navn', class: 'voksen-punkt-navn', tekst: GROENT_NAVN }),
+      el('span', { id: 'groent-status', class: 'voksen-punkt-status', tekst: groentStatus(f) }))), 'groent'),
+    besked && besked.groent ? beskedEl(besked) : null);
+}
+
+// Gemmer valget. Kan det ikke gemmes, siger en besked under kontakten det, og kontakten står, som den stod
+function skiftGroent(til) {
+  const ny = Lager.gemFamilie({ mereGroent: til }, K.S.ids);
+  besked = ny ? null : { ...gemFejl('Valget'), groent: true };
+  tegnIgen('groent');
+  if (ny) K.annoncer(GROENT_NAVN + ' er slået ' + (til ? 'til.' : 'fra.'));
 }
 
 function punkt({ navn, status, ikonEl, til, fokus, laast = false }) {
@@ -498,6 +538,7 @@ function hubSkaerm(f) {
   ];
   return voksenSkaerm('voksen-hub', 'Voksne', 'Lukker efter ' + LUK_MS / 60000 + ' minutter uden tryk',
     el('nav', { 'aria-label': 'Voksendelen' }, el('ul', { class: 'voksen-menu' }, punkter.map(punkt))),
+    groentKontakt(f),
     el('div', { class: 'voksen-knapper voksen-bund' },
       medFokus(K.knap('Luk', { ikonNavn: 'kryds', label: 'Luk voksendelen', onclick: luk }), 'luk')));
 }
