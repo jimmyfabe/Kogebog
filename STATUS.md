@@ -1,5 +1,31 @@
 # STATUS – Tumbi Køkken
 
+## 02-11-2026 kl. 09:14: v5 · 02-11-2026 er klar på grenen v5-ret og venter på Jimmys «ja» til at udgive (Saga)
+
+Jimmy 02-11 (talebesked): mere julemad, nytår (kransekage, isdesserter), et katalog med søgning i voksendelen, og «computerstemmen» på forsiden. Han svarede «Ja, du kører bare det hele ind, fuld fart».
+- **v5 indeholder:**
+  - **Røst-stemmen** til alle 3604 replikker. Alle 125 retter har nu `valgt.mp3` på forsiden (før kun 51).
+  - **Kataloget med søgning** i voksendelen: søgefelt, filtre (foldes sammen på telefonen), udvalg og favoritter med samme søgning (`js/soeg.js`, `test-soeg.js`).
+  - **15 nye retter i `docs/venter-paa-billede/`** (endnu ikke synlige i appen): 10 til julemiddag og nytår, fx brun sovs, waldorfsalat, tarteletter, kransekagetårn og nytårstorsk, og 5 isdesserter. Dertil 6 nye ikoner (is, banan, småkager, selleri, asparges, sennep).
+- **Grene:** lyd-0211 + nytaar-0211 + katalog-0211 er flettet i `v5-0211`. Rettelserne efter reviewet ligger på `v5-ret` (worktree `kogebog-v5-ret`). Intet er flettet i main eller pushet.
+- **Review:**
+  - Workflow `wopgognjj`: 46 opskrift-fund, de 3 høje handlede alle om forsidelyden, som Røst-kørslen har løst. Katalog: 17 fund, 9 bekræftet af dommeren og rettet (10 commits).
+  - Code-reviewer bagefter: app.css' `.filtre` (flex) ramte voksendelens filtre. De hedder nu `voksen-filtre`, og test-css afviser genbrugte app.css-klasser (59be3e4). «Fjern filtrene» giver fokus til filterlinjen på telefonen (fcc4509).
+  - Fanget af hovedsessionen: test-validator brugte «banan» som ukendt ikon (observation 0132).
+- **Test:**
+  - `v5-0211` @62d028a: 15 node-testfiler grønne, og hele e2e i WebKit gav 90.036 tjek og 0 fejl.
+  - `v5-ret` @371465c: 15 node-testfiler grønne. e2e skærmformer + forsidens top + voksen gav 5.510 tjek og 0 fejl.
+  - Det spring over lukkede `<details>` i e2e, som workflowet lagde ind (c1431b4), er rullet tilbage (86692fa). Testen er grøn uden det, så de falske layoutfejl kom fra `.filtre`-kollisionen.
+- **Ikke rettet (lave fund):** åben/lukket gemmes ved første klik (ikke en regression) · KOMPAKT-medieforespørgslen står to steder i e2e · e2e har ingen høj skærm, der ikke er kompakt · tarteletternes antal i Remas pakke er ikke bekræftet · lange navne tjekkes i e2e, når de 15 retter kommer ind.
+- **Næste (v6):**
+  - Codex-kvoten åbner **04-11 kl. 11:13**. Kør så `jul-billeder/koer-codex.sh`: 26 retbilleder og 4 pladsholdere.
+  - Flyt de 26 retter ind efter README'en i `docs/venter-paa-billede/`, og omdøb «Jul» til «Jul og nytår» (kræver Røst).
+  - Derefter Røst til de nye replikker, og v6 efter Jimmys ja.
+- **Afventer Jimmy:**
+  - 02-11: «ja» til at udgive v5 (flet `v5-ret` i main og push).
+  - Fra 01-11, stadig åbne: Rosa og Bo skjult på højkant · temaer og forsidevalg kræver lager v2 · scenarie A · varemærkesøgning på «Tumbi» · licens og offentligt/privat repo.
+- **Testliste til Jimmy (rigtig iPad/iPhone):** v5 i foden · forsiden lyder med den pæne stemme (også juleretterne) · voksendelen: søg «kartofler», fold filtrene ud og ind på iPhone, «Fjern filtrene» · udvalget og favoritterne med søgning.
+
 ## 02-11-2026 kl. 03:36: v4 · 01-11-2026 med 24 juleretter er pushet til Pages efter Jimmys «ja, udgiv den» (Saga)
 
 - **Udgivet:** `jul-0111` flettet i main (ed21a10) og pushet. 125 retter, gruppen «Jul» først. Review-workflow `wf_63c46d17-2a7`: 31 fund, 7 bekræftet af dommeren og rettet (bl.a. håndvask efter rå dej i 8 julebagværker, chorizo-pakken 80 g, julekagens lune mælk, æblekagens vente-trin, Rosa og Bo skjules på iPhone på højkant og iPad på højkant, fordi den 5. afsnitsknap tager pladsen). Fuld e2e: 89.574 tjek, 2 fejl rettet (marcipankonfekt på 667×375). Efter-review (code-reviewer + ui-reviewer i WebKit): vrøvl-vasken flyttet, knapperne på 360 px inden for kanten, test-css kan ikke længere blive grøn uden at måle, forsideTop måler 901/1100/1112 px. e2e former + forside: 4.562 tjek, 0 fejl. 13 node-tests grønne på main.
