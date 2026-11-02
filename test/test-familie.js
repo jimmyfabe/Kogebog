@@ -105,6 +105,24 @@ test('mereGroent: kun true slår den til; gemte data uden feltet og forkerte væ
   assert.equal(lager.markerLavet('koedsovs', '2026-11-02', RETTER).mereGroent, true);
 });
 
+// Ét sted siger, om kontakten er slået til (app.js, ugeplanen, voksendelen og ugeprintet), så ingen glemmer «=== true»
+test('mereGroentPaa: true kun med mereGroent: true; uden familie, med forkerte værdier og når lageret ikke kan læses: false', () => {
+  const gammel = { ...FAMILIE };
+  delete gammel.mereGroent;
+  medLager({ [NOEGLE]: { v: 1, ...gammel, mereGroent: true } });
+  assert.equal(lager.mereGroentPaa(RETTER), true);
+  for (const v of [false, 'true', 1, null, undefined]) {
+    medLager({ [NOEGLE]: { v: 1, ...gammel, ...(v === undefined ? {} : { mereGroent: v }) } });
+    assert.equal(lager.mereGroentPaa(RETTER), false, String(v));
+  }
+  medLager();
+  assert.equal(lager.mereGroentPaa(RETTER), false, 'ingen familie');
+  const l = medLager({ [NOEGLE]: { v: 1, ...gammel, mereGroent: true } });
+  l.fejl = 'laes';
+  assert.equal(lager.mereGroentPaa(RETTER), false, 'lageret kan ikke læses');
+  assert.throws(() => lager.mereGroentPaa(), 'uden retter: samme fejl som hentFamilie');
+});
+
 test('voksne og børn: null eller et heltal 0-8, og ingen at lave mad til (0 eller ikke sat) er det samme som ikke sat', () => {
   for (let n = 0; n <= 8; n++) {
     medLager();

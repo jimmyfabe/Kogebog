@@ -70,7 +70,7 @@ const klar = () => Boolean(K.S.ids) && K.S.ids.every((id) => K.S.retter.has(id))
 // «Mere grønt i maden» fra voksendelen (js/groent.js): er den slået til på denne enhed, viser og regner ugeplanen med
 // retten med halvt kød og halvt røde linser (navnet er det samme, prisen, grønt og varerne er dens egne), og linket til
 // telefonen siger det. Telefonen bruger linkets valg, ikke sit eget (hentSkaerm)
-const mereGroent = () => Boolean(K.S.ids) && Lager.hentFamilie(K.S.ids).mereGroent === true;
+const mereGroent = () => Boolean(K.S.ids) && Lager.mereGroentPaa(K.S.ids);
 // Retten i den udgave, groen siger (som standard denne enheds valg), eller null, når den ikke er hentet
 const model = (id, groen = mereGroent()) => {
   const m = K.S.retter.get(id);

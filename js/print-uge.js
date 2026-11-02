@@ -40,7 +40,7 @@ export async function printUge({ ark, printKnap, tilbage, besked }) {
   }
   // Hver ret hentes én gang. En ret, der ikke kan hentes, står som en fejl på sin dag og mangler på listen (det står der)
   const unikke = [...new Set(p.dage.filter(Boolean).map((d) => d.ret))];
-  const mereGroent = Lager.hentFamilie(ids).mereGroent;
+  const mereGroent = Lager.mereGroentPaa(ids);
   const hentet = new Map(await Promise.all(unikke.map((id) => hentRet(id).then((m) => [id, valgt(m, mereGroent)], () => [id, null]))));
   tegn(ark, p, hentet);
   printKnap.disabled = false;

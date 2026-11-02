@@ -315,7 +315,7 @@ const kendte = (m) => S.ids || [m.id];
 // timerens trin til et andet trin uden timer, og den kunne ikke stoppes (code review kode-1)
 const udgave = (m) => {
   const t = Timer.aktuel();
-  return valgt(m, t && t.ret === m.id ? t.groen === true : Lager.hentFamilie(kendte(m)).mereGroent);
+  return valgt(m, t && t.ret === m.id ? t.groen === true : Lager.mereGroentPaa(kendte(m)));
 };
 
 // Timeren a står på trin nr i udgaven m af retten (samme ret, samme nummer og samme udgave)

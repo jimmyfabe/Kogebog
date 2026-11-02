@@ -287,6 +287,9 @@ export function hentFamilie(retter) {
   return { ...rensFamilie(j, (id) => retter.includes(id)), laast };
 }
 
+// Er «Mere grønt i maden» slået til på denne enhed? Kun et gemt true tæller (retter: som hentFamilie)
+export const mereGroentPaa = (retter) => hentFamilie(retter).mereGroent === true;
+
 // Gemmer ændringen oven på den gemte familie og returnerer familien, som hentFamilie(retter) viser den (uden «laast»),
 // eller null, når familien er låst, eller lageret fejler
 export function gemFamilie(aendring, retter) {

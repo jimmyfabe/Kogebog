@@ -239,7 +239,7 @@ const model = (id) => {
 // ugeplanen regner med (code review kode-4)
 const grundRetter = () => K.S.ids.map(model).filter(Boolean);
 const alleRetter = () => {
-  const mereGroent = Lager.hentFamilie(K.S.ids).mereGroent === true;
+  const mereGroent = Lager.mereGroentPaa(K.S.ids);
   return grundRetter().map((m) => valgt(m, mereGroent));
 };
 const iPlanen = () => alleRetter().filter((m) => m.uge);
@@ -469,7 +469,7 @@ function laastSkaerm() {
 function listeHash() {
   const p = Lager.hentUge(K.S.ids);
   if (p.laast || !p.dage.some(Boolean)) return '#/indkoeb';
-  const mereGroent = Lager.hentFamilie(K.S.ids).mereGroent === true;
+  const mereGroent = Lager.mereGroentPaa(K.S.ids);
   const kode = kod(p.uge || planMandag(), p.dage.map((d) => (d ? { ret: d.ret, n: d.n } : null)), { mereGroent });
   return afkod(kode, { retter: K.S.ids, idag: new Date() }).ok ? '#/hent/' + kode : '#/indkoeb';
 }
