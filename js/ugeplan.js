@@ -444,15 +444,16 @@ export function sorterValg(retter, { kniv = false, billig = false } = {}) {
   return [...retter].sort((a, b) => (kniv ? knivtrin(a) - knivtrin(b) : 0) || (billig ? prisPP(a) - prisPP(b) : 0));
 }
 
-// Tid, pris, grønt og kniv i én linje, som oversigten og valget viser dem. Hvert led holdes sammen med hårde mellemrum, og
-// prikken står sidst på linjen, så linjen kun brydes mellem leddene: før stod der «268 g grønt pr. | person» og
-// «· 2 knivtrin» alene (UI-review V5, 23-10)
+// Tid, pris, grønt, kniv og «mere grønt» (derfor er prisen lavere) i én linje, som oversigten og valget viser dem. Hvert led
+// holdes sammen med hårde mellemrum, og prikken står sidst på linjen, så linjen kun brydes mellem leddene: før stod der
+// «268 g grønt pr. | person» og «· 2 knivtrin» alene (UI-review V5, 23-10)
 function metaTekst(m, n) {
   return [
     m.minutter ? minutterTekst(m.minutter) : '',
     'ca. ' + Math.round(prisFor(m, n)) + ' kr.',
     Math.round(m.uge.groentG / m.uge.portioner) + ' g grønt pr. person',
     knivTekst(m),
+    m.erGroen ? 'mere grønt' : '',
   ].filter(Boolean).map((led) => led.replace(/ /g, '\u00a0')).join('\u00a0· ');
 }
 

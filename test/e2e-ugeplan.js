@@ -35,6 +35,7 @@ export async function ugeplan(browser, H) {
   await telefon(browser, H);
   await listeOrd(browser, H);
   await oversigtIpad(browser, H);
+  await mereGroentLinje(browser, H);
   await boernValg(browser, H);
   await oversigtDesktop(browser, H);
   await ugePrint(browser, H);
@@ -780,6 +781,47 @@ async function oversigtIpad(browser, H) {
   tjek(!side.fejl.filter((x) => !/tunfrikadeller\.json/.test(x)).length, n + ' oversigten: ' + side.fejl.join(' | '));
   await ctx.close();
   maal.push(n + ' ugeplan: ' + IPLAN.length + ' retter i ugeplanen, ' + hurtige.length + ' på højst 40 min');
+}
+
+// «Mere grønt i maden»: prisen er lavere, og metalinjen siger hvorfor, både i oversigten og i valget (begge får retten i
+// udgaven med mere grønt). Retter uden en udgave, og alle retter med kontakten fra, siger det ikke (UI-review 02-11)
+async function mereGroentLinje(browser, H) {
+  const { BASE, SKAERME, RETTER, nySide, tjek, venterPaa } = H;
+  const skaerm = SKAERME[0];
+  const n = skaerm.navn;
+  console.log('[' + n + '] ugeplan: «mere grønt» i metalinjen');
+  const IPLAN = Object.keys(RETTER).filter((id) => RETTER[id].tumbi.ugeplan === true);
+  const medGroent = IPLAN.filter((id) => 'mere_groent' in RETTER[id].tumbi);
+  const uden = IPLAN.find((id) => !medGroent.includes(id));
+  const ORD = 'mere grønt';
+  const { ctx, side } = await nySide(browser, skaerm, { serviceWorkers: 'block' });
+  await side.goto(BASE + '/index.html');
+  await side.waitForSelector('.kort[data-ret]');
+  const dage = [medGroent[0], uden, null, null, null, null, null].map((ret) => (ret ? { ret, af: 'bo', n: 4 } : null));
+  await side.evaluate(([uge, d]) => localStorage.setItem('kog-uge-v1', JSON.stringify({ v: 1, uge, dage: d, n: 4, prBarn: 1, rettet: null })), [planMandag(new Date()), dage]);
+  for (const til of [true, false]) {
+    const hvor = n + ' kontakten ' + (til ? 'til' : 'fra');
+    await side.evaluate((v) => localStorage.setItem('kog-familie-v1', JSON.stringify({ v: 1, mereGroent: v })), til);
+    await aabn(side, BASE, '#/uge');
+    await venterPaa(side, () => document.querySelector('.dag[data-dag="1"] .dag-meta'), null, hvor + ': oversigten');
+    const plan = await side.evaluate(() => [...document.querySelectorAll('.dag:not(.fri) .dag-meta')].map((e) => e.textContent));
+    tjek(plan.length === 2 && plan[0].includes(ORD) === til && !plan[1].includes(ORD),
+      hvor + ': oversigten siger «mere grønt» kun ved ' + medGroent[0] + ' med kontakten til (' + JSON.stringify(plan) + ')');
+    if (til) {
+      await side.setViewportSize({ width: 360, height: 780 });
+      const led = await brudteLed(side, '.dag-meta');
+      tjek(!led.length, hvor + ' 360 px: metalinjen brydes kun mellem leddene (brudt: ' + led.join(' | ') + ')');
+      await side.setViewportSize(skaerm.viewport);
+    }
+    await aabn(side, BASE, '#/uge/dag/3');
+    await venterPaa(side, () => document.querySelector('.ret-valg-raekke .dag-meta'), null, hvor + ': valget');
+    const valg = await side.evaluate(() => [...document.querySelectorAll('.ret-valg-raekke')].map((r) => [r.dataset.ret, r.querySelector('.dag-meta').textContent]));
+    const forkert = valg.filter(([id, t]) => t.includes(ORD) !== (til && medGroent.includes(id))).map(([id]) => id);
+    tjek(valg.length === IPLAN.length && !forkert.length,
+      hvor + ': valget siger «mere grønt» ved ' + (til ? medGroent.length : 0) + ' af ' + valg.length + ' retter (forkert: ' + forkert.join(', ') + ')');
+  }
+  tjek(side.fejl.length === 0, n + ' (mere grønt i metalinjen): ' + side.fejl.join(' | '));
+  await ctx.close();
 }
 
 // Desktop: uden delearket kopieres linket og teksten, og kan det heller ikke, står de i et felt. Tastaturet når det hele
