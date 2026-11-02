@@ -50,6 +50,8 @@
 .voksen-knapper { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
 .voksen-bund { justify-content: flex-end; }
 .voksen-tom { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; font-size: 18px; color: var(--kakao-blid); }
+/* Teksten gentager søgningen, som kan være ét langt ord (op til 60 tegn): det brydes ved kanten i stedet for at løbe ud */
+.voksen-tom p { overflow-wrap: anywhere; }
 /* En knap, der ikke kan bruges nu (husstanden uden voksne og børn, et fuldt udvalg): grå som «Start timer», når en anden
    timer kører */
 .voksen-del .knap:disabled, .voksen-del .knap[aria-disabled="true"] { background: var(--creme-moerk); color: var(--kakao-blid); border-color: var(--kakao-blid); box-shadow: 0 3px 0 var(--kakao-blid); cursor: default; }

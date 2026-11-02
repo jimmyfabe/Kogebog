@@ -572,6 +572,16 @@ async function katalog(browser, H, skaerm) {
   tjek(await tekstAf(side, '.soeg-tal') === 'Viser 0 af ' + retter(ALLE.length), n + ': tallet ved ingen træf (' + await tekstAf(side, '.soeg-tal') + ')');
   await tjekLayout(side, n + ' katalog: ingen træf');
   await foto(side, n + '-voksen-katalog-ingen');
+  // Review-fund 4 (02-11): en lang søgetekst uden mellemrum (feltet tillader 60 tegn) brydes inden for skærmen og ikke
+  // ét bogstav pr. linje
+  await side.fill('#soeg-katalog', 'x'.repeat(60));
+  const lang = await side.evaluate(() => {
+    const r = document.querySelector('.voksen-tom p').getBoundingClientRect();
+    return { venstre: Math.round(r.left), hoejre: Math.round(r.right), hoejde: Math.round(r.height), W: innerWidth };
+  });
+  tjek(lang.venstre >= 0 && lang.hoejre <= lang.W && lang.hoejde < 200, n + ': en søgning på 60 tegn uden mellemrum brydes inden for skærmen (' + JSON.stringify(lang) + ')');
+  await tjekLayout(side, n + ' katalog: lang søgning');
+  await foto(side, n + '-voksen-katalog-lang');
   await tryk(side, '[data-fokus="ryd-soegning"]');
   nu = await feltNu(side, 'soeg-katalog');
   tjek(nu.vaerdi === '' && nu.fokus && ens(await raekker(side), AFTENSMAD.map((p) => p.id)), n + ': «Ryd søgningen» tømmer feltet, giver det fokus og viser gruppen igen (' + JSON.stringify(nu) + ')');

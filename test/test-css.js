@@ -177,3 +177,12 @@ test('hvert afsnit har sin egen farve i [data-gruppe] fra en farve på :root', (
     brugt.set(m[1], id);
   }
 });
+
+// Review-fund 4 (02-11): en lang søgetekst uden mellemrum i «Ingen retter passer til «…»» løb ud over højre kant på 390 og
+// 360 px. .voksen-tom står med align-items: flex-start, så teksten fik sin min-content-bredde (hele ordet). overflow-wrap:
+// anywhere gør min-content smal, så teksten brydes ved kanten. e2e skriver 60 tegn uden mellemrum og måler (kataloget)
+test('søgeteksten i «Ingen retter passer til …» kan brydes, også uden mellemrum (familie.css)', () => {
+  const FAM = fs.readFileSync(path.join(ROD, 'familie.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+  const regler = blokke(FAM).regler.filter((b) => b.hoved.split(',').map((s) => s.trim()).includes('.voksen-tom p')).map((b) => b.deklarationer).join(';');
+  assert.match(regler, /overflow-wrap\s*:\s*anywhere/, '.voksen-tom p skal have overflow-wrap: anywhere');
+});
