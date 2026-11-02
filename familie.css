@@ -111,14 +111,14 @@
 /* Filtrene (filterBoks i js/voksen-del.js): udvalgets mærker og katalogets grupper (én ad gangen, «Alle» = ingen) og
    mærker under én linje, der kan foldes sammen. Linjen siger, hvad der er valgt, også når den er foldet sammen. Pilen er en
    vinkel, der peger ned, når filtrene er fremme */
-.filtre { border-top: 2px solid var(--creme-moerk); border-bottom: 2px solid var(--creme-moerk); }
-.filtre > summary { min-height: 52px; padding: 12px 0; list-style: none; cursor: pointer; }
-.filtre > summary::-webkit-details-marker { display: none; }
-.filtre > summary::before { content: ''; display: inline-block; width: 10px; height: 10px; margin: 0 14px 3px 4px; border-right: 3px solid currentColor; border-bottom: 3px solid currentColor; transform: rotate(-45deg); transition: transform .15s ease-out; }
-.filtre[open] > summary::before { transform: rotate(45deg); }
-.filtre-navn { font-size: 20px; font-weight: 800; }
-.filtre-valgt { margin-left: 12px; font-size: 17px; font-weight: 750; color: var(--kakao-blid); }
-.filtre > .filter-chips { padding-bottom: 14px; }
+.voksen-filtre { border-top: 2px solid var(--creme-moerk); border-bottom: 2px solid var(--creme-moerk); }
+.voksen-filtre > summary { min-height: 52px; padding: 12px 0; list-style: none; cursor: pointer; }
+.voksen-filtre > summary::-webkit-details-marker { display: none; }
+.voksen-filtre > summary::before { content: ''; display: inline-block; width: 10px; height: 10px; margin: 0 14px 3px 4px; border-right: 3px solid currentColor; border-bottom: 3px solid currentColor; transform: rotate(-45deg); transition: transform .15s ease-out; }
+.voksen-filtre[open] > summary::before { transform: rotate(45deg); }
+.voksen-filtre-navn { font-size: 20px; font-weight: 800; }
+.voksen-filtre-valgt { margin-left: 12px; font-size: 17px; font-weight: 750; color: var(--kakao-blid); }
+.voksen-filtre > .filter-chips { padding-bottom: 14px; }
 .filter-chip-billede { width: 28px; height: 28px; object-fit: contain; }
 
 /* Katalogets række: «Med» (kun retter til ugeplanen), hjertet og «Åbn» til højre for navnet. «Med» står først, så hjertet
@@ -126,7 +126,7 @@
 .voksen-raekke-knapper { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 10px; }
 
 @media (prefers-reduced-motion: reduce) {
-  .filtre > summary::before { transition: none; }
+  .voksen-filtre > summary::before { transition: none; }
 }
 
 /* Telefonen: mindre luft og billeder, så navnet har plads ved siden af knappen på 360-390 px */

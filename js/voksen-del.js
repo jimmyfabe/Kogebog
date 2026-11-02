@@ -626,10 +626,10 @@ function filterChip(k, antal, valgte = filtre, side = 'udvalg') {
 const KOMPAKT = '(max-width: 700px), (max-height: 900px)';
 const kompakt = () => matchMedia(KOMPAKT).matches;
 function filterBoks(side, navn, valgte, ...chips) {
-  const boks = el('details', { class: 'filtre', open: filterAaben.get(side) ?? !kompakt() },
+  const boks = el('details', { class: 'voksen-filtre', open: filterAaben.get(side) ?? !kompakt() },
     medFokus(el('summary', {},
-      el('span', { class: 'filtre-navn', tekst: navn }),
-      valgte.length ? el('span', { class: 'filtre-valgt', tekst: valgte.join(', ') }) : null), 'filtre-' + side),
+      el('span', { class: 'voksen-filtre-navn', tekst: navn }),
+      valgte.length ? el('span', { class: 'voksen-filtre-valgt', tekst: valgte.join(', ') }) : null), 'filtre-' + side),
     chips);
   boks.addEventListener('toggle', () => { filterAaben.set(side, boks.open); });
   return boks;

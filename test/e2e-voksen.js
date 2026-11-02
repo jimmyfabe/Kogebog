@@ -433,7 +433,7 @@ async function katalog(browser, H, skaerm) {
   const retter = (antal) => antal + ' retter';
   // En chip i filtrene: er de foldet sammen (på telefonen, også efter et valg), foldes de ud først
   const chip = async (fokus) => {
-    if (!await side.evaluate(() => document.querySelector('main .filtre').open)) await tryk(side, 'main .filtre > summary');
+    if (!await side.evaluate(() => document.querySelector('main .voksen-filtre').open)) await tryk(side, 'main .voksen-filtre > summary');
     await tryk(side, '[data-fokus="' + fokus + '"]');
   };
   const { ctx, side } = await nySide(browser, skaerm, { serviceWorkers: 'block' });
@@ -461,7 +461,7 @@ async function katalog(browser, H, skaerm) {
   tjek(await side.locator('.voksen-katalog [data-fokus^="fav-"]').count() === ALLE.length && await side.locator('.voksen-katalog [data-fokus^="aabn-"]').count() === ALLE.length,
     n + ': hver ret i kataloget har et hjerte og «Åbn»');
   // Review-fund 8 (02-11): på en lav skærm starter filtrene foldet sammen, så den første ret ses (før: y≈757 på 820 px)
-  const start = await side.evaluate(() => ({ open: document.querySelector('.filtre').open,
+  const start = await side.evaluate(() => ({ open: document.querySelector('.voksen-filtre').open,
     top: Math.round(document.querySelector('.voksen-liste .voksen-raekke').getBoundingClientRect().top), H: innerHeight }));
   tjek(start.open === !kompakt && start.top < start.H - 120, n + ': grupper og mærker er ' + (kompakt ? 'foldet sammen' : 'foldet ud') + ', og den første ret ses (' + JSON.stringify(start) + ')');
   // Review-fund 9 (02-11): på telefonen får knapperne kun deres egen linje i rækker med «Med». Uden «Med» står hjertet og
@@ -512,9 +512,17 @@ async function katalog(browser, H, skaerm) {
   // Grupperne (med antal): «Aftensmad» viser kun aftensmad, og linjen over chipsene siger, hvad der er valgt. På en
   // kompakt skærm foldes de ud først
   if (kompakt) {
-    await tryk(side, '.filtre > summary');
-    tjek(await side.evaluate(() => document.querySelector('.filtre').open), n + ': et tryk på «Grupper og mærker» folder filtrene ud');
+    await tryk(side, '.voksen-filtre > summary');
+    tjek(await side.evaluate(() => document.querySelector('.voksen-filtre').open), n + ': et tryk på «Grupper og mærker» folder filtrene ud');
   }
+  // Review 02-11: de udfoldede filtre tjekkes også (før stod de kun lukkede ved tjekLayout), og linjen over dem fylder
+  // hele bredden (app.css' «.filtre { display: flex }» gjorde den kun så bred som teksten, før klassen fik sit voksen-navn)
+  const linje = await side.evaluate(() => {
+    const d = document.querySelector('.voksen-filtre');
+    return { display: getComputedStyle(d).display, boks: Math.round(d.getBoundingClientRect().width), linje: Math.round(d.querySelector('summary').getBoundingClientRect().width) };
+  });
+  tjek(linje.display === 'block' && linje.linje >= linje.boks - 2, n + ': linjen over filtrene fylder hele bredden (' + JSON.stringify(linje) + ')');
+  await tjekLayout(side, n + ' katalog med filtrene foldet ud');
   const chips = await side.evaluate(() => [...document.querySelectorAll('[data-fokus^="gruppe-"]')].map((b) => b.textContent.replace(/\s+/g, ' ').trim()));
   const ventChips = ['Alle (' + ALLE.length + ')', ...GRUPPE_IDS.map((g) => GRUPPER[g] + ' (' + POSTER.filter((p) => p.gruppeId === g).length + ')')];
   tjek(ens(chips, ventChips), n + ': gruppe-chipsene med antal (' + chips.join(', ') + ')');
@@ -522,9 +530,9 @@ async function katalog(browser, H, skaerm) {
   const gruppe = await side.evaluate(() => ({
     trykket: document.querySelector('[data-fokus="gruppe-aftensmad"]').getAttribute('aria-pressed'),
     alle: document.querySelector('[data-fokus="gruppe-alle"]').getAttribute('aria-pressed'),
-    valgt: document.querySelector('.filtre-valgt')?.textContent || '',
+    valgt: document.querySelector('.voksen-filtre-valgt')?.textContent || '',
     fokus: document.activeElement?.dataset?.fokus || '',
-    open: document.querySelector('.filtre').open,
+    open: document.querySelector('.voksen-filtre').open,
     top: Math.round(document.querySelector('.voksen-liste .voksen-raekke').getBoundingClientRect().top), H: innerHeight,
   }));
   tjek(ens(await raekker(side), AFTENSMAD.map((p) => p.id)) && gruppe.trykket === 'true' && gruppe.alle === 'false' && gruppe.valgt === 'Aftensmad'
@@ -538,10 +546,10 @@ async function katalog(browser, H, skaerm) {
   await tjekLayout(side, n + ' katalog: aftensmad');
 
   // … og søgningen inden for gruppen. På en kompakt skærm folder det første tegn de udfoldede filtre sammen (review-fund 3)
-  if (kompakt) await tryk(side, '.filtre > summary');
+  if (kompakt) await tryk(side, '.voksen-filtre > summary');
   await tryk(side, '#soeg-katalog');
   await skrivTegnForTegn(H, side, '#soeg-katalog', 'kylling', n + ' katalog, aftensmad', (t) => ids(AFTENSMAD, t));
-  if (kompakt) tjek(!await side.evaluate(() => document.querySelector('.filtre').open), n + ': søgningen folder filtrene sammen');
+  if (kompakt) tjek(!await side.evaluate(() => document.querySelector('.voksen-filtre').open), n + ': søgningen folder filtrene sammen');
   const kylling = ids(AFTENSMAD, 'kylling');
   const kyllingUge = UGEPLAN.map((p) => p.id).filter((id) => kylling.includes(id));
   tjek(kyllingUge.length >= 2, n + ': mindst to retter til ugeplanen med kylling (' + kyllingUge.join(', ') + ')');
@@ -608,7 +616,7 @@ async function katalog(browser, H, skaerm) {
   await tryk(side, '[data-fokus="aabn-' + julRet + '"]');
   await venterPaa(side, (id) => location.hash === '#/ret/' + id && document.querySelector('.ret h1'), julRet, n + ': «Åbn» åbner ' + julRet);
   await aabnVoksen(H, side, '/katalog', n + ' kataloget efter låsen');
-  const glemt = await side.evaluate(() => ({ soegning: document.getElementById('soeg-katalog').value, alle: document.querySelector('[data-fokus="gruppe-alle"]').getAttribute('aria-pressed'), open: document.querySelector('.filtre').open }));
+  const glemt = await side.evaluate(() => ({ soegning: document.getElementById('soeg-katalog').value, alle: document.querySelector('[data-fokus="gruppe-alle"]').getAttribute('aria-pressed'), open: document.querySelector('.voksen-filtre').open }));
   tjek(glemt.soegning === '' && glemt.alle === 'true' && glemt.open === !kompakt && ens(await raekker(side), ALLE),
     n + ': efter låsen er søgningen og gruppen glemt (' + JSON.stringify(glemt) + ')');
 
@@ -627,12 +635,19 @@ async function katalog(browser, H, skaerm) {
     n + ': udvalget viser søgningens tal og stadig «24 af 24 valgt» (' + await tekstAf(side, '.soeg-tal') + ' · ' + await tekstAf(side, '.udvalg-tal') + ')');
   // Review-fund 2 (02-11): på en kompakt skærm står mærkerne foldet sammen, så den første ret ses lige under søgefeltet
   if (kompakt) {
-    const u = await side.evaluate(() => ({ open: document.querySelector('.voksen-udvalg .filtre').open,
+    const u = await side.evaluate(() => ({ open: document.querySelector('.voksen-udvalg .voksen-filtre').open,
       top: Math.round(document.querySelector('.voksen-liste .voksen-raekke').getBoundingClientRect().top), H: innerHeight }));
     tjek(!u.open && u.top < u.H - 60, n + ': udvalgets mærker er foldet sammen, og den første ret ses over kanten efter «kyl» (' + JSON.stringify(u) + ')');
   }
   await tjekLayout(side, n + ' udvalg med søgning');
   await foto(side, n + '-voksen-udvalg-soeg');
+  // … og med mærkerne foldet ud (review 02-11: på en kompakt skærm blev de ellers aldrig tegnet ved tjekLayout). Bagefter
+  // foldes de sammen igen, for åbningen huskes, mens siden står
+  if (kompakt) {
+    await tryk(side, '.voksen-udvalg .voksen-filtre > summary');
+    await tjekLayout(side, n + ' udvalg med mærkerne foldet ud');
+    await tryk(side, '.voksen-udvalg .voksen-filtre > summary');
+  }
 
   // «Luk» glemmer søgningen
   await aabnVoksen(H, side, '', n + ' oversigten før «Luk»');

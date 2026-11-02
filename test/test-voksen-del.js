@@ -357,7 +357,7 @@ test('udvalgets mærker står foldet sammen på telefonen og foldet ud på en st
   assert.equal(find(filtre[0], (e) => String(e.dataset.fokus).startsWith('filter-')).length, 8, 'alle 8 mærker står i boksen');
   const raekke = indholdI(tlf).map(klasseAf);
   const fra = raekke.indexOf('form');
-  assert.deepEqual(raekke.slice(fra, raekke.indexOf('soeg-resultat') + 1), ['form', 'filtre', 'soeg-tal', 'udvalg-tal', 'soeg-resultat'],
+  assert.deepEqual(raekke.slice(fra, raekke.indexOf('soeg-resultat') + 1), ['form', 'voksen-filtre', 'soeg-tal', 'udvalg-tal', 'soeg-resultat'],
     'søgefeltet, filtrene, tallene og listen i den rækkefølge (' + raekke.join(', ') + ')');
   assert.equal(tekstAf(find(filtre[0], (e) => e.tag === 'summary')[0]), 'Mærker');
   V.rute('#/');

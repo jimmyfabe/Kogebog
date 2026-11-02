@@ -197,3 +197,15 @@ test('katalogets knapper får kun deres egen linje på telefonen i rækker med �
   assert.ok(helLinje.includes('.voksen-raekke-knapper.med-udvalg'), 'forventede grid-column: 1 / -1 på .voksen-raekke-knapper.med-udvalg (' + helLinje.join(', ') + ')');
   assert.ok(!helLinje.includes('.voksen-raekke-knapper'), '.voksen-raekke-knapper uden .med-udvalg må ikke få en linje for sig');
 });
+
+// Review 02-11: voksendelens <details class="filtre"> fik også app.css' «.valg-par, .filtre { display: flex }» (til
+// ugeplanens chips), så linjen kun var så bred som teksten, og den lukkede boks lå ved siden af den. familie.css må kun
+// bruge app.css' klassenavne, når det er meningen at bygge videre på dem. Ellers skal klassen have et nyt navn (fx voksen-)
+test('familie.css bruger kun app.css\' klassenavne fra en kendt liste (ingen navne, der kolliderer ved et uheld)', () => {
+  const FAM = fs.readFileSync(path.join(ROD, 'familie.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+  const klasser = (tekst) => new Set(tekst.replace(/\{[^{}]*\}/g, '{}').match(/\.[a-zA-Z][\w-]*/g) ?? []);
+  const iApp = klasser(CSS);
+  const begge = [...klasser(FAM)].filter((k) => iApp.has(k)).sort();
+  const KENDTE = ['.faerdig', '.ikon', '.knap', '.topbar-midte', '.uge-besked', '.valg-par', '.valgt'];
+  assert.deepEqual(begge.filter((k) => !KENDTE.includes(k)), [], 'klasser i både app.css og familie.css (giv dem et nyt navn, eller skriv dem i KENDTE)');
+});
