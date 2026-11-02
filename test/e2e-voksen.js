@@ -16,11 +16,11 @@ import path from 'node:path';
 import { portionerFraHusstand, faktorFor, skaleretIngrediens, voksenNoter } from '../js/skaler.js';
 import { lavModel } from '../js/model.js';
 import { kod } from '../js/plankode.js';
-import { saml, grupper } from '../js/indkoeb.js';
+import { saml, grupper, holdSammen } from '../js/indkoeb.js';
 import { planMandag } from '../js/tid.js';
 import { tilTale } from '../js/tekst.js';
 import { soeg } from '../js/soeg.js';
-import { GRUPPER } from '../js/katalog.js';
+import { GRUPPER, VARER } from '../js/katalog.js';
 import { MAERKER, maerkerFor } from '../js/maerker.js';
 import { medMereGroent, GROENT_TEKST } from '../js/groent.js';
 
@@ -1017,6 +1017,21 @@ async function mereGroent(browser, H, skaerm) {
     const delt = await side.evaluate(() => window.__delt[0] || {});
     const kode = kod(uge, dage.map((d) => (d ? { ret: d.ret, n: d.n } : null)), { mereGroent: true });
     tjek(kode.startsWith('v2.') && delt.url === BASE + '/index.html#/hent/' + kode, n + ': linket er v2 med mere grønt (' + delt.url + ')');
+
+    // Ugeprintet (print.html?uge) har retten og listen med mere grønt, som ugeplanen (code review kode-3)
+    await side.goto(BASE + '/print.html?uge');
+    await venterPaa(side, () => document.querySelectorAll('.uge-dag').length === 7 && !document.getElementById('print').disabled, null, n + ': ugeprintet');
+    const ugePrint = await side.evaluate(() => ({
+      meta: document.querySelector('.uge-dag .uge-ret .meta')?.textContent || '',
+      varer: [...document.querySelectorAll('.liste-side .afd li')].map((li) => li.querySelector('.vare-navn').textContent + '|' + (li.querySelector('.maengde')?.textContent || '')),
+    }));
+    const ugeVarer = grupper(saml([{ ret: medMereGroent(RETTER[GROEN_RET]), n: 4 }]))
+      .flatMap((g) => g.varer.map((v) => v.navn + '|' + (v.maengde ? holdSammen(v.maengde) : '')));
+    tjek(ugeVarer.some((v) => v.startsWith(VARER['roede-linser'].navn + '|')) && JSON.stringify(ugePrint.varer) === JSON.stringify(ugeVarer),
+      n + ': ugeprintets liste har linserne og halvt kød (' + JSON.stringify(ugePrint.varer.slice(0, 4)) + ')');
+    tjek(ugePrint.meta.includes('mere grønt'), n + ': ugeprintets række siger «mere grønt» (' + ugePrint.meta + ')');
+    await side.goto(BASE + '/index.html');
+    await side.waitForSelector('.kort[data-ret]');
 
     // En timer på et trin med mere grønt, før kontakten slås fra
     await gaaTil(side, '#/ret/' + GROEN_RET + '/trin/' + kogNr);
