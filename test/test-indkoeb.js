@@ -548,6 +548,21 @@ test('kog-v1 opfører sig som før: tomt, gem, rens og nulstilling ved en anden 
   assert.deepEqual(lager.gem({ sidste }), { v: 1, sidste, timer: null });
 });
 
+// Retten med mere grønt (js/groent.js) har et trin mere end grundretten, så «Fortsæt» og timeren gemmer, hvilken udgave
+// trinnummeret hører til. Feltet står der kun som true, så grundrettens data er byte for byte som før (testen ovenfor)
+test('kog-v1: groen på sidste og timer gemmes kun som true; false og forkerte værdier giver grundretten uden feltet', () => {
+  const l = medLager();
+  const sidste = { ret: 'koedsovs', nr: 9, tid: 1761120000000 };
+  const timer = { ret: 'koedsovs', nr: 9, start: 1000, slut: 1201000, sek: 1200 };
+  const groen = { v: 1, sidste: { ...sidste, groen: true }, timer: { ...timer, groen: true } };
+  assert.deepEqual(lager.gem({ sidste: { ...sidste, groen: true }, timer: { ...timer, groen: true } }), groen);
+  assert.deepEqual(lager.hent(), groen);
+  for (const v of [false, 'true', 1, null, {}, [true]]) {
+    assert.deepEqual(lager.gem({ sidste: { ...sidste, groen: v }, timer: { ...timer, groen: v } }), { v: 1, sidste, timer }, JSON.stringify(v));
+    assert.equal(l.data.get('kog-v1'), JSON.stringify({ v: 1, sidste, timer }), JSON.stringify(v));
+  }
+});
+
 // Et falsk navigator.storage.persist, der tæller kaldene og svarer, som det får besked på
 function medPersist(svar = () => Promise.resolve(true)) {
   const t = { kald: 0 };

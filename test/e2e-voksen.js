@@ -931,11 +931,19 @@ async function mereGroent(browser, H, skaerm) {
   tjek(Boolean(groen), GROEN_RET + ' har en udgave med mere grønt');
   if (!groen) return;
   const antal = Object.values(RETTER).filter((j) => j.tumbi && 'mere_groent' in j.tumbi).length;
+  // Det første trin med timer efter linsetrinnet. Udgaven med mere grønt har et trin mere, så samme nummer er et andet
+  // trin i grundretten (kødsovsen: småkogningen mod «Kog vand til spaghettien»)
+  const linseNr = groen.trin.findIndex((x) => x.tekst === GROEN_TRIN) + 1;
+  const kogNr = groen.trin.findIndex((x, i) => i >= linseNr && x.timerSek) + 1;
+  tjek(linseNr > 0 && kogNr > 0 && kogNr <= grund.trin.length && grund.trin[kogNr - 1].tekst !== groen.trin[kogNr - 1].tekst,
+    n + ': trin ' + kogNr + ' har en timer med mere grønt og er et andet trin i grundretten');
   const { ctx, side } = await nySide(browser, skaerm, { serviceWorkers: 'block' });
   await ctx.addInitScript(fakeDeling);
   await side.goto(BASE + '/index.html');
   await side.waitForSelector('.kort[data-ret]');
   await side.evaluate(() => localStorage.clear());
+  // Gik man ud af grundretten på trin kogNr (gemt uden «groen», som før), er det ikke samme trin med mere grønt
+  await side.evaluate(([ret, nr]) => localStorage.setItem('kog-v1', JSON.stringify({ v: 1, sidste: { ret, nr, tid: Date.now() }, timer: null })), [GROEN_RET, kogNr]);
 
   // Kontakten: slået fra som standard, og slået til gemmes i familien
   await aabnVoksen(H, side, '', n + ' oversigten');
@@ -956,6 +964,7 @@ async function mereGroent(browser, H, skaerm) {
   tjek(JSON.stringify(ret.ingr) === JSON.stringify(groen.ingredienser.map((x) => x.tekst)),
     n + ': retten viser ingredienserne med mere grønt (' + ret.ingr.slice(0, 3).join(' | ') + ' …)');
   tjek(JSON.stringify(ret.linjer) === JSON.stringify([GROENT_TEKST]), n + ': linjen til den voksne (' + JSON.stringify(ret.linjer) + ')');
+  tjek(!(await side.locator('.fortsaet').count()), n + ': «Fortsæt ved trin ' + kogNr + '» fra grundretten står ikke på retten med mere grønt');
   await tjekLayout(side, n + ' retten med mere grønt', { knapperSes: n !== 'iphone' });
   await foto(side, n + '-voksen-groent-ret');
   if (ipad) {
@@ -966,7 +975,7 @@ async function mereGroent(browser, H, skaerm) {
     const sagt = await sidsteTale(side);
     tjek(linser >= 0 && sagt && (sagt.fil ? sagt.fil === GROEN_RET + '/' + groen.ingredienser[linser].lyd + '.mp3' : sagt.tekst === tilTale(groen.ingredienser[linser].tekst)),
       n + ': de røde linser læses op med deres egen fil eller iPad-stemmen (' + JSON.stringify(sagt) + ')');
-    const nr = groen.trin.findIndex((x) => x.tekst === GROEN_TRIN) + 1;
+    const nr = linseNr;
     await gaaTil(side, '#/ret/' + GROEN_RET + '/trin/' + nr);
     await venterPaa(side, () => document.querySelector('.trin h1'), null, n + ': trin ' + nr);
     tjek(nr > 0 && await h1(side) === GROEN_TRIN, n + ': trin ' + nr + ' er det nye trin med linserne (' + await h1(side) + ')');
@@ -1009,16 +1018,34 @@ async function mereGroent(browser, H, skaerm) {
     const kode = kod(uge, dage.map((d) => (d ? { ret: d.ret, n: d.n } : null)), { mereGroent: true });
     tjek(kode.startsWith('v2.') && delt.url === BASE + '/index.html#/hent/' + kode, n + ': linket er v2 med mere grønt (' + delt.url + ')');
 
+    // En timer på et trin med mere grønt, før kontakten slås fra
+    await gaaTil(side, '#/ret/' + GROEN_RET + '/trin/' + kogNr);
+    await venterPaa(side, () => document.querySelector('.trin .timer-start'), null, n + ': «Start timer» på trin ' + kogNr);
+    await tryk(side, '.timer-start');
+    await venterPaa(side, () => document.querySelector('.timer.koerer'), null, n + ': timeren på trin ' + kogNr + ' skal køre');
+
     // Kontakten slås fra: retten er som før, og planen er urørt
     const foer = await raatLager(side);
     k = await skiftGroent(H, side, false, n);
     tjek(k.status === 'Slået fra' && (await laesLager(side, FAMILIE)).mereGroent === false, n + ': slået fra igen (' + JSON.stringify(k) + ')');
     tjek(JSON.stringify((await raatLager(side)).slice(1)) === JSON.stringify(foer.slice(1)), n + ': kontakten rører ikke den gemte plan og liste');
+    // ... men timeren bliver på sit trin med mere grønt, til den er stoppet: før viste trin kogNr grundrettens trin uden
+    // timer, og timeren kunne ikke stoppes (code review kode-1)
+    await gaaTil(side, '#/ret/' + GROEN_RET + '/trin/' + kogNr);
+    await venterPaa(side, () => document.querySelector('.trin h1'), null, n + ': trin ' + kogNr + ' efter kontakten');
+    const stop = '.timer button[aria-label="Stop timeren"]';
+    tjek(await h1(side) === groen.trin[kogNr - 1].tekst && await side.locator(stop).count() === 1,
+      n + ': slået fra, mens timeren kører: trin ' + kogNr + ' er stadig trinnet med mere grønt og har «Stop» (' + await h1(side) + ')');
+    if (await side.locator(stop).count()) {
+      await tryk(side, stop);
+      await venterPaa(side, () => !document.querySelector('.timer.koerer'), null, n + ': «Stop» skal stoppe timeren');
+    }
     await gaaTil(side, '#/ret/' + GROEN_RET);
     await venterPaa(side, (id) => location.hash === '#/ret/' + id && document.querySelector('.ret h1'), GROEN_RET, n + ': grundretten');
     ret = await retVist(side);
     tjek(JSON.stringify(ret.ingr) === JSON.stringify(grund.ingredienser.map((x) => x.tekst)) && !ret.linjer.length,
       n + ': slået fra viser retten som før og uden linjen (' + ret.ingr.slice(0, 3).join(' | ') + ' …)');
+    tjek(!(await side.locator('.fortsaet').count()), n + ': «Fortsæt ved trin ' + kogNr + '» med mere grønt står ikke på grundretten');
     tjek(side.fejl.length === 0, n + ' (mere grønt): ' + side.fejl.join(' | '));
     await ctx.close();
 

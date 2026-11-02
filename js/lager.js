@@ -1,5 +1,7 @@
 // lager.js — det eneste, der rører localStorage. Nøglen «kog-v1» har et versionsfelt.
-// Indhold: { v: 1, sidste: { ret, nr, tid } | null, timer: { ret, nr, start, slut, sek } | null }
+// Indhold: { v: 1, sidste: { ret, nr, tid, groen? } | null, timer: { ret, nr, start, slut, sek, groen? } | null }
+// groen: true står der kun, når trinnummeret hører til retten med mere grønt (js/groent.js), som har et trin mere end
+// grundretten. Grundrettens data er som før feltet kom (uden en ny v: en ældre udgave af appen dropper bare feltet).
 // timer er også gemt, når tiden er gået, til nogen trykker «Ok» (slut ligger så i fortiden).
 // Der er ingen fremskridt eller børnedata her; mister vi det, mister man kun «Fortsæt» og en kørende timer.
 // Ugeplanen, indkøbslisten og familien har deres egne nøgler længere nede (hentUge/gemUge/hentListe/gemListe/
@@ -13,15 +15,17 @@ const ID_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 const tomt = () => ({ v: VERSION, sidste: null, timer: null });
 const erNr = (n) => Number.isInteger(n) && n > 0;
+// Kun true giver feltet; false, 'true' og alt andet giver grundretten uden feltet
+const medGroen = (fra, ud) => (fra.groen === true ? { ...ud, groen: true } : ud);
 
 function rens(j) {
   const ud = tomt();
   if (!j || typeof j !== 'object' || j.v !== VERSION) return ud; // ukendt eller ældre udgave: start forfra
   const s = j.sidste;
-  if (s && ID_RE.test(String(s.ret)) && erNr(s.nr) && Number.isFinite(s.tid)) ud.sidste = { ret: s.ret, nr: s.nr, tid: s.tid };
+  if (s && ID_RE.test(String(s.ret)) && erNr(s.nr) && Number.isFinite(s.tid)) ud.sidste = medGroen(s, { ret: s.ret, nr: s.nr, tid: s.tid });
   const t = j.timer;
   if (t && ID_RE.test(String(t.ret)) && erNr(t.nr) && Number.isFinite(t.start) && Number.isFinite(t.slut) && erNr(t.sek)) {
-    ud.timer = { ret: t.ret, nr: t.nr, start: t.start, slut: t.slut, sek: t.sek };
+    ud.timer = medGroen(t, { ret: t.ret, nr: t.nr, start: t.start, slut: t.slut, sek: t.sek });
   }
   return ud;
 }

@@ -4,7 +4,7 @@
 import { nyTimer, timerStatus } from './tid.js';
 import * as Lager from './lager.js';
 
-let aktiv = null; // { ret, nr, start, slut, sek, faerdig }
+let aktiv = null; // { ret, nr, groen, start, slut, sek, faerdig }. groen: trinnummeret hører til retten med mere grønt
 let interval = 0;
 let gentag = 0;
 const lyttere = new Set();
@@ -94,7 +94,7 @@ function meld() {
 
 // En færdig timer gemmes også, til nogen trykker «Ok» (stop): så overlever «Tiden er gået» en genindlæsning
 function gemTimer() {
-  Lager.gem({ timer: aktiv ? { ret: aktiv.ret, nr: aktiv.nr, start: aktiv.start, slut: aktiv.slut, sek: aktiv.sek } : null });
+  Lager.gem({ timer: aktiv ? { ret: aktiv.ret, nr: aktiv.nr, start: aktiv.start, slut: aktiv.slut, sek: aktiv.sek, groen: aktiv.groen } : null });
 }
 
 function stopUr() {
@@ -120,10 +120,12 @@ function startUr() {
   interval = setInterval(tik, 250);
 }
 
-export function start(ret, nr, sek) {
+// groen: true, når trinnet er i retten med mere grønt (js/groent.js). Den har et trin mere, så trin nr er et andet trin
+// i grundretten
+export function start(ret, nr, sek, { groen = false } = {}) {
   klargoerLyd();
   clearTimeout(gentag);
-  aktiv = { ret, nr, ...nyTimer(Date.now(), sek), faerdig: false };
+  aktiv = { ret, nr, groen: groen === true, ...nyTimer(Date.now(), sek), faerdig: false };
   gemTimer();
   startUr();
   bedOmLaas();

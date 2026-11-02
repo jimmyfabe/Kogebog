@@ -303,8 +303,16 @@ const kendte = (m) => S.ids || [m.id];
 
 // Den udgave af retten, børnene laver, og den voksne ser og printer: med halvt kød og halvt røde linser, når voksendelens
 // «Mere grønt i maden» er slået til, og retten har en (js/groent.js). Ellers grundretten. Valget læses, hver gang en
-// skærm tegnes, så kontakten gælder fra næste skærm
-const udgave = (m) => valgt(m, Lager.hentFamilie(kendte(m)).mereGroent);
+// skærm tegnes, så kontakten gælder fra næste skærm. Har retten en timer (også en, hvor tiden er gået), er det timerens
+// udgave, til timeren er stoppet: udgaven med mere grønt har et trin mere, så kontakten midt i retten flyttede ellers
+// timerens trin til et andet trin uden timer, og den kunne ikke stoppes (code review kode-1)
+const udgave = (m) => {
+  const t = Timer.aktuel();
+  return valgt(m, t && t.ret === m.id ? t.groen === true : Lager.hentFamilie(kendte(m)).mereGroent);
+};
+
+// Timeren a står på trin nr i udgaven m af retten (samme ret, samme nummer og samme udgave)
+const timerPaa = (a, m, nr) => Boolean(a) && a.ret === m.id && a.nr === nr && (a.groen === true) === (m.erGroen === true);
 
 // Portionerne (docs/foraeldredel.md, afsnit 4): { n, faktor }, eller null, når der hverken er en dag i ugeplanen eller
 // en husstand, retten ikke har talportioner (bage- og søde retter), eller faktoren er 1. Med null vises retten som før.
@@ -344,8 +352,9 @@ function retSkaerm(m) {
     return el('li', {}, b);
   });
 
+  // «Fortsæt» kun i den udgave, trinnummeret er gemt fra: med mere grønt er trin 9 et andet trin end i grundretten
   const sidste = Lager.hent().sidste;
-  const fortsaetNr = sidste && sidste.ret === m.id && sidste.nr > 1 && sidste.nr <= m.trin.length && Date.now() - sidste.tid < FORTSAET_MS
+  const fortsaetNr = sidste && sidste.ret === m.id && (sidste.groen === true) === (m.erGroen === true) && sidste.nr > 1 && sidste.nr <= m.trin.length && Date.now() - sidste.tid < FORTSAET_MS
     ? sidste.nr : 0;
   // Gik man ud midt i retten, er «Fortsæt» den store knap, og «Start forfra» siger, hvad den gør.
   // «Fortsæt» står først i bunden, så Tab når den først (på iPhone og iPad på højkant står den også øverst);
@@ -430,12 +439,12 @@ function timerBlok(m, t) {
   // En anden timer, der stadig kører. En færdig timer tæller med vilje ikke: «Start timer» her erstatter den
   const andenTimer = () => {
     const a = Timer.aktuel();
-    return a && !a.faerdig && !(a.ret === m.id && a.nr === t.nr) ? a : null;
+    return a && !a.faerdig && !timerPaa(a, m, t.nr) ? a : null;
   };
-  // Rettens model, hvis den er hentet (ellers siger teksten kun «trin 8»), i den udgave, trinnumrene hører til
+  // Rettens model, hvis den er hentet (ellers siger teksten kun «trin 8»), i den udgave, timerens trinnummer hører til
   const timerRet = (a) => {
     const r = S.retter.get(a.ret);
-    return r && !(r instanceof Error) ? udgave(r) : null;
+    return r && !(r instanceof Error) ? valgt(r, a.groen === true) : null;
   };
   const hvor = (a) => R.timerHvor(timerRet(a), a.nr, a.ret === m.id);
   startKnap.addEventListener('click', klik(() => {
@@ -445,7 +454,7 @@ function timerBlok(m, t) {
       rulFrem(blok);
       return;
     }
-    Timer.start(m.id, t.nr, sek);
+    Timer.start(m.id, t.nr, sek, { groen: m.erGroen === true });
     annoncer('Timeren er startet: ' + varighedTale(sek) + '.');
     rulFrem(blok);
   }));
@@ -478,7 +487,7 @@ function timerBlok(m, t) {
 
   function tegn() {
     const a = Timer.aktuel();
-    const min = a && a.ret === m.id && a.nr === t.nr;
+    const min = timerPaa(a, m, t.nr);
     if (!min) {
       varFaerdig = false;
       const anden = andenTimer();
@@ -522,7 +531,7 @@ function timerBlok(m, t) {
 function trinSkaerm(m, nr) {
   const t = m.trin[nr - 1];
   const sidst = nr === m.trin.length;
-  Lager.gem({ sidste: { ret: m.id, nr, tid: Date.now() } });
+  Lager.gem({ sidste: { ret: m.id, nr, tid: Date.now(), groen: m.erGroen === true } });
 
   const laesOp = knap('Læs op', { klasse: 'laes-op', ikonNavn: 'hoejttaler' });
   laesOp.addEventListener('click', klik(() => sigTrin(m, t, laesOp)));
