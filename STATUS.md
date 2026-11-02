@@ -1,13 +1,16 @@
 # STATUS – Tumbi Køkken
 
-## 02-11-2026 kl. 09:14: v5 · 02-11-2026 er klar på grenen v5-ret og venter på Jimmys «ja» til at udgive (Saga)
+## 02-11-2026 kl. 11:38: v5 · 02-11-2026 er live på Pages efter Jimmys «Ja, udgiv v5» (Saga)
 
 Jimmy 02-11 (talebesked): mere julemad, nytår (kransekage, isdesserter), et katalog med søgning i voksendelen, og «computerstemmen» på forsiden. Han svarede «Ja, du kører bare det hele ind, fuld fart».
 - **v5 indeholder:**
   - **Røst-stemmen** til alle 3604 replikker. Alle 125 retter har nu `valgt.mp3` på forsiden (før kun 51).
   - **Kataloget med søgning** i voksendelen: søgefelt, filtre (foldes sammen på telefonen), udvalg og favoritter med samme søgning (`js/soeg.js`, `test-soeg.js`).
   - **15 nye retter i `docs/venter-paa-billede/`** (endnu ikke synlige i appen): 10 til julemiddag og nytår, fx brun sovs, waldorfsalat, tarteletter, kransekagetårn og nytårstorsk, og 5 isdesserter. Dertil 6 nye ikoner (is, banan, småkager, selleri, asparges, sennep).
-- **Grene:** lyd-0211 + nytaar-0211 + katalog-0211 er flettet i `v5-0211`. Rettelserne efter reviewet ligger på `v5-ret` (worktree `kogebog-v5-ret`). Intet er flettet i main eller pushet.
+- **Udgivet:**
+  - Vejen: lyd-0211 + nytaar-0211 + katalog-0211 → `v5-0211` → rettelserne på `v5-ret`. Main er spolet frem til 8db814e og pushet.
+  - Live-tjek kl. 11:38: `js/version.js` siger v5, og `js/soeg.js` og juleretternes `valgt.mp3` svarer 200.
+- **Jimmy 02-11 ved middagstid:** han vil have en knap «sundt» i voksendelen, der giver halvt kød og halvt røde linser i retter med hakket kød. Den får sit eget afsnit, når den er bygget. Havregrynskugler findes allerede, så der laves ingen juleudgave.
 - **Review:**
   - Workflow `wopgognjj`: 46 opskrift-fund, de 3 høje handlede alle om forsidelyden, som Røst-kørslen har løst. Katalog: 17 fund, 9 bekræftet af dommeren og rettet (10 commits).
   - Code-reviewer bagefter: app.css' `.filtre` (flex) ramte voksendelens filtre. De hedder nu `voksen-filtre`, og test-css afviser genbrugte app.css-klasser (59be3e4). «Fjern filtrene» giver fokus til filterlinjen på telefonen (fcc4509).
@@ -23,7 +26,6 @@ Jimmy 02-11 (talebesked): mere julemad, nytår (kransekage, isdesserter), et kat
   - Flyt de 26 retter ind efter README'en i `docs/venter-paa-billede/`, og omdøb «Jul» til «Jul og nytår» (kræver Røst).
   - Derefter Røst til de nye replikker, og v6 efter Jimmys ja.
 - **Afventer Jimmy:**
-  - 02-11: «ja» til at udgive v5 (flet `v5-ret` i main og push).
   - Fra 01-11, stadig åbne: Rosa og Bo skjult på højkant · temaer og forsidevalg kræver lager v2 · scenarie A · varemærkesøgning på «Tumbi» · licens og offentligt/privat repo.
 - **Testliste til Jimmy (rigtig iPad/iPhone):** v5 i foden · forsiden lyder med den pæne stemme (også juleretterne) · voksendelen: søg «kartofler», fold filtrene ud og ind på iPhone, «Fjern filtrene» · udvalget og favoritterne med søgning.
 
