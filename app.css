@@ -1106,11 +1106,14 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
      (på 667×375 lå «Kødsovs med spaghetti» på to linjer 10 px under kanten) */
   .kort { padding: 10px 10px 10px; }
   .kort-navn { font-size: 22px; }
-  .forside-top { padding-top: 10px; }
+  /* Med fem afsnit (5 × 64 + 4 × 10 = 360 px) manglede der 3 px på 667×375 (244 + 18 + 360 = 622 px på 619 px), så
+     titlen stod på to linjer, og næste række kort kiggede 0 px frem (e2e 01-11-2026). Med 12 og 8 px luft er rækken
+     608 px (målt i WebKit) */
+  .forside-top { padding-top: 10px; gap: 12px; }
   .forside-titel { margin-bottom: 10px; padding: 6px 22px 8px; }
   .forside-titel h1 { font-size: 30px; }
   .forside-titel p { margin-top: 2px; font-size: 17px; }
-  .forside-hop { gap: 10px; margin-bottom: 10px; }
+  .forside-hop { gap: 8px; margin-bottom: 10px; }
   .knap.hop { width: var(--tryk); min-height: var(--tryk); }
   .gruppe { padding-top: 12px; }
   .gruppe-navn { gap: 10px; margin-bottom: 8px; font-size: 26px; }
