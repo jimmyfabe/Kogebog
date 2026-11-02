@@ -848,7 +848,11 @@ test('mere grønt: halvt hakket kød, røde linser, vand og ét nyt trin', () =>
 test('mere grønt: retten med mere grønt overholder reglerne for en ret', () => {
   groenTilfaelde([
     ['kniv i det nye trin', (d, p) => { p.nye_trin[0].text = 'Hak linserne og hæld dem i.'; }, GR + 'trin 8: teksten nævner «Hak»'],
-    ['timerne er længere end totalTime', (d, p) => { p.nye_trin[0].tumbi.timer_sek = 1500; }, GR + '«totalTime» (50 min) er kortere end timerne tilsammen (63 min)'],
+    // Retten med mere grønt får sin egen totalTime med de ekstra timerminutter oveni (js/groent.js, code review
+    // opskrifter-1): 25 min mere i det nye trin giver 50 + 25 = 75 min, og det er for langt til ugeplanen. Før stod
+    // grundrettens 50 min, og fejlen var «kortere end timerne tilsammen (63 min)»
+    ['timerne er længere end grundrettens totalTime', (d, p) => { p.nye_trin[0].tumbi.timer_sek = 1500; }, GR + '«totalTime» er 75 min, men en ret i ugeplanen tager højst 60 min'],
+    ['10 min timer i det nye trin: totalTime 60 min, inden for ugeplanen', (d, p) => { p.nye_trin[0].tumbi.timer_sek = 600; }, null],
     ['ukendt ikon', (d, p) => { p.nye_ingredienser[0].ikon = 'rumraket'; }, GR + 'ingrediens 8: ukendt ikon "rumraket"'],
     ['mængden passer ikke til teksten', (d, p) => { p.nye_ingredienser[0].maengde = '200 g'; }, GR + 'ingrediens 8: mængden «200 g» passer ikke til «100 g røde linser»'],
     ['ukendt verbum', (d, p) => { p.nye_trin[0].tumbi.verbum = 'hælde'; }, GR + 'trin 8: ukendt verbum "hælde"'],

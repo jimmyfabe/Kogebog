@@ -11,6 +11,8 @@
 // («500 g» → «250 g»). Nye trin er HowToStep som de andre. «lyd» skrives aldrig i opskriften: den sætter medMereGroent.
 // patchFejl tjekker formen. Resten (mindre kød, røde linser, og at retten med mere grønt overholder alle reglerne for en
 // ret) tjekker validatoren (test/test-opskrifter.js). Ren: ingen DOM og intet lager (test/test-groent.js)
+// Tiden: koger linserne længere end grundrettens timere, regner medMereGroent selv «totalTime» og «cookTime» ud (medTid).
+import { isoTilMinutter } from './tekst.js';
 
 // Den linje, voksendelen viser på en ret med mere grønt (retten i voksenvisningen og printet)
 export const GROENT_TEKST = 'Mere grønt: halvt kød, halvt røde linser';
@@ -148,7 +150,24 @@ export function medMereGroent(json) {
   ud.tumbi.ingredienser = ingr.map((x) => x.ekstra);
   ud.recipeInstructions = trin(ud, p);
   for (const k of TAL_FELTER) if (k in p) ud.tumbi[k] = p[k];
+  medTid(ud, timerSek(ud.recipeInstructions) - timerSek(json.recipeInstructions));
   return ud;
+}
+
+// Sekunderne på trinenes timere tilsammen (som js/model.js: kun et positivt heltal er en timer)
+const timerSek = (trin) => (Array.isArray(trin) ? trin : [])
+  .reduce((s, t) => s + (erObjekt(t) && erObjekt(t.tumbi) && Number.isInteger(t.tumbi.timer_sek) && t.tumbi.timer_sek > 0 ? t.tumbi.timer_sek : 0), 0);
+
+// Linserne koger med, så retten med mere grønt kan have længere timere end grundretten. Så får «totalTime» og «cookTime»
+// de ekstra minutter oveni, rundet op til hele 5 minutter («prepTime» er den samme): ellers stod hyrdetærten med mere
+// grønt til 50 minutter med 45 minutters timere (code review opskrifter-1). Uden ekstra tid, eller med en tid, der ikke
+// kan læses (det fanger validatoren), står tiderne, som de var
+function medTid(ud, ekstraSek) {
+  if (ekstraSek <= 0) return;
+  for (const k of ['totalTime', 'cookTime']) {
+    const min = k in ud ? isoTilMinutter(ud[k]) : null;
+    if (min != null) ud[k] = 'PT' + Math.ceil((min + ekstraSek / 60) / 5) * 5 + 'M';
+  }
 }
 
 // Den udgave af retten, der vises og regnes med: den med mere grønt (m.groen fra js/model.js), når indstillingen er slået

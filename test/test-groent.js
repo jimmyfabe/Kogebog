@@ -158,3 +158,20 @@ test('lavModel: m.groen er retten med mere grønt, og stemmen siger hver tekst m
   // Timeren på trin 9 i retten med mere grønt («Lad sovsen småkoge»): «Der kører allerede en timer på … trin 9»
   assert.ok(filer.includes('koedsovs/timer-optaget-9.mp3'));
 });
+
+// Linserne skal koge med, så rettens timere bliver længere. Tiden i alt (og kogetiden) følger med, rundet op til 5 minutter;
+// forberedelsen er den samme. Kødsovsens linser koger med i den småkogning, der var der i forvejen, så den er uændret
+test('tiden i alt følger rettens timere: hyrdetærten med mere grønt tager 60 minutter, kødsovsen stadig 50', () => {
+  const laes = (id) => JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8'));
+  const hyrde = laes('hyrdetaerte');
+  const g = medMereGroent(hyrde);
+  assert.deepEqual([g.totalTime, g.cookTime, g.prepTime], ['PT60M', 'PT50M', hyrde.prepTime]);
+  assert.equal(lavModel(hyrde).groen.minutter, 60);
+  assert.equal(lavModel(hyrde).minutter, 50, 'grundretten er som før');
+  const koed = laes('koedsovs');
+  assert.deepEqual([medMereGroent(koed).totalTime, medMereGroent(koed).cookTime], [koed.totalTime, koed.cookTime]);
+  assert.equal(koed.totalTime, 'PT50M');
+  // Uden timere i trinnene (rettelsen her har ingen) står tiderne, som de var
+  const d = medRettelse();
+  assert.deepEqual([medMereGroent(d).totalTime, medMereGroent(d).cookTime], [d.totalTime, d.cookTime]);
+});
