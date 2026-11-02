@@ -70,7 +70,7 @@
         { "efter": 2, "tekst": "2 dl vand", "ikon": "vand", "maengde": "2 dl", "vare": "vand", "antal": 2, "enhed": "dl" }
       ],
       "nye_trin": [
-        { "efter": 8, "@type": "HowToStep", "text": "Hæld linser og vand i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "ikoner": ["linser", "vand"], "note": "Gryden er varm. Hold barnets hænder væk fra kanten. 2 dl vand. Rør godt rundt, så linserne ikke sætter sig. De koger 3 min ved svag varme, før pastaen kommer i." } }
+        { "efter": 8, "@type": "HowToStep", "text": "Hæld linser og vand i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "ikoner": ["linser", "vand"], "note": "Gryden er varm. Hold barnets hænder væk fra kanten. 2 dl vand. Rør godt rundt, så linserne ikke sætter sig. De koger 5 min ved svag varme, før pastaen kommer i." } }
       ],
       "pris_kr": 73,
       "groent_g": 620
