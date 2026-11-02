@@ -71,6 +71,8 @@
    er sporet grønt, og prikken står til højre, så tilstanden ikke kun er en farve (statuslinjen siger den også med ord).
    Prikken er kakao i begge tilstande (4,9:1 på urt, 12,5:1 på hvid). Sporet er 64 × 36 med kanten: 28 px at flytte */
 .knap.voksen-kontakt { width: 100%; min-height: 96px; padding: 14px 22px; justify-content: flex-start; gap: 16px; border-radius: 24px; text-align: left; }
+/* To linjer status (.knap har linjehøjde 1,1), også ved «Slået fra»: før voksede kortet ved tryk, og «Luk» rykkede (UI-review 02-11) */
+.voksen-kontakt .voksen-punkt-status { min-height: 2.2em; }
 .voksen-kontakt-spor { position: relative; flex: none; width: 64px; height: 36px; border: var(--kant); border-radius: 18px; background: var(--hvid); transition: background-color .15s ease-out; }
 .voksen-kontakt-prik { position: absolute; top: 2px; left: 2px; width: 26px; height: 26px; border-radius: 50%; background: var(--kakao); transition: transform .15s ease-out; }
 .voksen-kontakt[aria-checked="true"] .voksen-kontakt-spor { background: var(--urt); }

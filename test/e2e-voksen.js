@@ -967,9 +967,12 @@ async function mereGroent(browser, H, skaerm) {
   let k = await groenKontakt(side);
   tjek(k && k.rolle === 'switch' && k.til === 'false' && !k.laast && k.status === 'Slået fra' && k.hoejde >= 48,
     n + ': kontakten står slået fra, er mindst 48 px og har role="switch" (' + JSON.stringify(k) + ')');
+  const hoejdeFra = k.hoejde;
   k = await skiftGroent(H, side, true, n);
   tjek(k.status === 'Halvt kød og halvt røde linser i ' + antal + (antal === 1 ? ' ret' : ' retter') && k.fokus,
     n + ': slået til siger antallet af retter, og fokus bliver på kontakten (' + JSON.stringify(k) + ')');
+  // Kortet er lige højt i begge tilstande: før voksede det, og «Luk» under det rykkede (UI-review 02-11)
+  tjek(k.hoejde === hoejdeFra, n + ': kontakten er lige høj slået fra og til (' + hoejdeFra + ' og ' + k.hoejde + ' px)');
   tjek((await laesLager(side, FAMILIE) || {}).mereGroent === true, n + ': valget er gemt i familien');
   await tjekLayout(side, n + ' oversigten med «Mere grønt i maden»');
   await foto(side, n + '-voksen-groent');
