@@ -12,11 +12,12 @@ Jimmy 02-11 (talebesked): mere julemad, nytår (kransekage, isdesserter), et kat
   - Workflow `wopgognjj`: 46 opskrift-fund, de 3 høje handlede alle om forsidelyden, som Røst-kørslen har løst. Katalog: 17 fund, 9 bekræftet af dommeren og rettet (10 commits).
   - Code-reviewer bagefter: app.css' `.filtre` (flex) ramte voksendelens filtre. De hedder nu `voksen-filtre`, og test-css afviser genbrugte app.css-klasser (59be3e4). «Fjern filtrene» giver fokus til filterlinjen på telefonen (fcc4509).
   - Fanget af hovedsessionen: test-validator brugte «banan» som ukendt ikon (observation 0132).
+  - ui-reviewer i WebKit (390, 360, 1024×1366, 1280×800): filterlinjen fylder hele bredden, fokus efter «Fjern filtrene» er rigtig og synlig med tastatur, ingen konsolfejl. 0 høje og 0 middel fund.
 - **Test:**
   - `v5-0211` @62d028a: 15 node-testfiler grønne, og hele e2e i WebKit gav 90.036 tjek og 0 fejl.
   - `v5-ret` @371465c: 15 node-testfiler grønne. e2e skærmformer + forsidens top + voksen gav 5.510 tjek og 0 fejl.
   - Det spring over lukkede `<details>` i e2e, som workflowet lagde ind (c1431b4), er rullet tilbage (86692fa). Testen er grøn uden det, så de falske layoutfejl kom fra `.filtre`-kollisionen.
-- **Ikke rettet (lave fund):** åben/lukket gemmes ved første klik (ikke en regression) · KOMPAKT-medieforespørgslen står to steder i e2e · e2e har ingen høj skærm, der ikke er kompakt · tarteletternes antal i Remas pakke er ikke bekræftet · lange navne tjekkes i e2e, når de 15 retter kommer ind.
+- **Ikke rettet (lave fund):** åben/lukket gemmes ved første klik (ikke en regression) · KOMPAKT-medieforespørgslen står to steder i e2e · e2e har ingen høj skærm, der ikke er kompakt · tarteletternes antal i Remas pakke er ikke bekræftet · lange navne tjekkes i e2e, når de 15 retter kommer ind · på telefonen brydes en lang filtertekst («Aftensmad, Hurtig, …») ud under pilen i stedet for at være rykket ind (familie.css:115/120) · på 360 px deles «Gulerodssup/pe» uden bindestreg i udvalget (familie.css:92, fandtes før v5; tjekkes på rigtig iPhone) · tallene på chipsene følger ikke søgningen («Halloween (6)» ved 0 træf).
 - **Næste (v6):**
   - Codex-kvoten åbner **04-11 kl. 11:13**. Kør så `jul-billeder/koer-codex.sh`: 26 retbilleder og 4 pladsholdere.
   - Flyt de 26 retter ind efter README'en i `docs/venter-paa-billede/`, og omdøb «Jul» til «Jul og nytår» (kræver Røst).
