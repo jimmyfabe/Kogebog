@@ -997,12 +997,16 @@ async function mereGroent(browser, H, skaerm) {
       n + ': printet viser retten med mere grønt og linjen (' + JSON.stringify(pr.meta) + ')');
     // Kilden i foden gælder grundretten: kød, linser og vand med mere grønt er appens egne mængder (code review opskrifter-3)
     tjek(pr.fod.includes(EGNE_MAENGDER), n + ': printets fod siger, at mængderne med mere grønt er egne (' + pr.fod + ')');
-    for (const daarlig of ['groen=1&groen=1', 'groen=true', 'groen=0', 'groen=', 'groen=01']) {
-      await side.goto(BASE + '/print.html?ret=' + GROEN_RET + '&' + daarlig);
-      await venterPaa(side, () => !document.getElementById('print').disabled, null, n + ' print ' + daarlig);
+    // «Tilbage til opskriften» fører tilbage til samme udgave som printet (UI-review 02-11)
+    const tilbageTil = () => side.evaluate(() => document.getElementById('tilbage').getAttribute('href'));
+    tjek((await tilbageTil()).endsWith('#/ret/' + GROEN_RET + '/groen'), n + ': «Tilbage til opskriften» fra printet med mere grønt bliver i udgaven (' + await tilbageTil() + ')');
+    for (const daarlig of ['', '&groen=1&groen=1', '&groen=true', '&groen=0', '&groen=', '&groen=01']) {
+      await side.goto(BASE + '/print.html?ret=' + GROEN_RET + daarlig);
+      await venterPaa(side, () => !document.getElementById('print').disabled, null, n + ' print ' + (daarlig || 'uden groen'));
       pr = await print();
       tjek(JSON.stringify(pr.linjer) === JSON.stringify(RETTER[GROEN_RET].recipeIngredient) && !pr.meta.includes(GROENT_TEKST) && !pr.fod.includes(EGNE_MAENGDER),
-        n + ': «' + daarlig + '» giver grundretten på printet');
+        n + ': «' + (daarlig || 'uden groen') + '» giver grundretten på printet');
+      tjek((await tilbageTil()).endsWith('#/ret/' + GROEN_RET), n + ': «' + (daarlig || 'uden groen') + '»: «Tilbage til opskriften» fører til grundretten (' + await tilbageTil() + ')');
     }
     await side.goto(BASE + '/index.html');
     await side.waitForSelector('.kort[data-ret]');

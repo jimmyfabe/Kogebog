@@ -99,7 +99,8 @@ async function start() {
     besked('Der mangler en opskrift', 'Åbn printet fra en ret i Tumbi Køkken (knappen «Print» på retten).');
     return;
   }
-  tilbage.href = 'index.html#/ret/' + id;
+  // Samme udgave som printet: uden «/groen» viste linket grundretten efter print af retten med mere grønt (UI-review 02-11)
+  tilbage.href = 'index.html#/ret/' + id + (groen ? '/groen' : '');
   try {
     tegn(valgt(await hentRet(id), groen));
   } catch (e) {
