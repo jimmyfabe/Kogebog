@@ -1059,6 +1059,24 @@ async function mereGroent(browser, H, skaerm) {
       .map((li) => [li.dataset.vare, (li.querySelector('.vare-maengde')?.textContent || '').replace(/\s+/g, ' ')]));
     tjek(vist.some(([id]) => id === 'roede-linser') && JSON.stringify(vist) === JSON.stringify(forventet),
       'iphone: listen fra v2-linket har linserne og halvt kød (' + JSON.stringify(vist.slice(0, 4)) + ')');
+    // «Ugens retter» åbner retten i linkets udgave, ikke telefonens egen (slået fra): før viste retten alt kødet og ingen
+    // linser, mens listen havde linserne (code review kode-2 og data-1). Start, trinene og Tilbage bliver i udgaven
+    await tryk(tlf.side, '.ret-link >> nth=0');
+    await venterPaa(tlf.side, () => document.querySelector('.ret h1'), null, 'iphone: «Ugens retter» skal åbne retten');
+    const tlfRet = await retVist(tlf.side);
+    tjek(JSON.stringify(tlfRet.ingr) === JSON.stringify(groen.ingredienser.map((x) => x.tekst)) && JSON.stringify(tlfRet.linjer) === JSON.stringify([GROENT_TEKST]),
+      'iphone: retten fra «Ugens retter» er med mere grønt (' + tlfRet.ingr.slice(0, 3).join(' | ') + ' … ' + JSON.stringify(tlfRet.linjer) + ')');
+    await tryk(tlf.side, '.handlinger .start');
+    await venterPaa(tlf.side, () => document.querySelector('.trin h1'), null, 'iphone: «Start» skal åbne trin 1');
+    tjek(await hash(tlf.side) === '#/ret/' + GROEN_RET + '/groen/trin/1', 'iphone: «Start» bliver i udgaven med mere grønt (' + await hash(tlf.side) + ')');
+    await gaaTil(tlf.side, '#/ret/' + GROEN_RET + '/groen/trin/' + linseNr);
+    await venterPaa(tlf.side, () => document.querySelector('.trin h1'), null, 'iphone: trin ' + linseNr + ' med mere grønt');
+    tjek(await h1(tlf.side) === GROEN_TRIN, 'iphone: #/ret/' + GROEN_RET + '/groen/trin/' + linseNr + ' er linsetrinnet (' + await h1(tlf.side) + ')');
+    if (await tlf.side.locator('.trin .tilbage').count()) {
+      await tryk(tlf.side, '.trin .tilbage');
+      await venterPaa(tlf.side, (h) => location.hash === h && document.querySelector('.trin h1'), '#/ret/' + GROEN_RET + '/groen/trin/' + (linseNr - 1),
+        'iphone: «Tilbage» bliver i udgaven med mere grønt');
+    }
     tjek(tlf.side.fejl.length === 0, 'iphone (listen med mere grønt): ' + tlf.side.fejl.join(' | '));
     await tlf.ctx.close();
     return;

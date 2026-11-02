@@ -1,5 +1,6 @@
 // app.js — Tumbi Køkken: forside → ret → ét trin pr. skærm → færdig.
-// Ruterne står i adressen (#/ret/<id>/trin/<nr>), så tilbage-knappen og en genindlæsning virker.
+// Ruterne står i adressen (#/ret/<id>/trin/<nr>), så tilbage-knappen og en genindlæsning virker. Retten med mere grønt
+// (js/groent.js) har «/groen» efter id'et (#/ret/<id>/groen/trin/<nr>).
 // Al tekst fra opskrifterne sættes som tekst (textContent), aldrig som HTML.
 import { el, attr, ikon, svgEl } from './js/dom.js';
 import { hentIndex, hentRet } from './js/data.js';
@@ -84,11 +85,12 @@ function annoncer(tekst) {
   setTimeout(() => { meddelelse.textContent = utenBloede(tekst); }, 30);
 }
 
+// groen: retten med mere grønt. Den står i adressen, så Start, trinene og Tilbage bliver i den udgave, retten blev åbnet i
 const hashFor = {
   forside: () => '#/',
-  ret: (id) => '#/ret/' + id,
-  trin: (id, nr) => '#/ret/' + id + '/trin/' + nr,
-  faerdig: (id) => '#/ret/' + id + '/faerdig',
+  ret: (id, groen) => '#/ret/' + id + (groen ? '/groen' : ''),
+  trin: (id, nr, groen) => hashFor.ret(id, groen) + '/trin/' + nr,
+  faerdig: (id, groen) => hashFor.ret(id, groen) + '/faerdig',
 };
 
 function rute() {
@@ -96,9 +98,12 @@ function rute() {
   if (u) return u;
   const d = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
   if (d[0] === 'ret' && d[1]) {
-    if (d[2] === 'trin') return { side: 'trin', id: d[1], nr: Number.parseInt(d[3], 10) };
-    if (d[2] === 'faerdig') return { side: 'faerdig', id: d[1] };
-    return { side: 'ret', id: d[1] };
+    // «/groen» efter id'et: retten med mere grønt, uanset kontakten på denne enhed (fx fra «Ugens retter» på telefonen)
+    const groen = d[2] === 'groen';
+    const [side, nr] = groen ? d.slice(3) : d.slice(2);
+    if (side === 'trin') return { side: 'trin', id: d[1], nr: Number.parseInt(nr, 10), groen };
+    if (side === 'faerdig') return { side: 'faerdig', id: d[1], groen };
+    return { side: 'ret', id: d[1], groen };
   }
   return { side: 'forside' };
 }
@@ -120,16 +125,18 @@ function timerPille() {
   const b = el('button', { type: 'button', class: 'knap pille', hidden: true }, ikon('ur'), tal, slut);
   b.addEventListener('click', klik(() => {
     const t = Timer.aktuel();
-    if (t) naviger(hashFor.trin(t.ret, t.nr));
+    if (t) naviger(hashFor.trin(t.ret, t.nr, t.groen));
   }));
   function tegn() {
     const t = Timer.aktuel();
     const r = rute();
-    const her = t && r.side === 'trin' && r.id === t.ret && r.nr === t.nr;
+    const m = S.retter.get(t ? t.ret : '');
+    // Uden «/groen» i adressen følger retten timeren (udgave()). Med «/groen» og en timer i grundretten er det et andet trin
+    const andenUdgave = t && r.groen && t.groen !== true && Boolean(m && !(m instanceof Error) && m.groen);
+    const her = t && r.side === 'trin' && r.id === t.ret && r.nr === t.nr && !andenUdgave;
     b.hidden = !t || her;
     if (!t || her) return;
     const s = Timer.status();
-    const m = S.retter.get(t.ret);
     const navn = m && m.navn ? m.navn + ', trin ' + t.nr : 'trin ' + t.nr;
     b.classList.toggle('faerdig', s.faerdig);
     tal.textContent = formaterTid(s.restSek);
@@ -407,7 +414,7 @@ function sigTrin(m, t, b) {
 
 function gaaTilTrin(m, nr) {
   const t = m.trin[nr - 1];
-  naviger(hashFor.trin(m.id, nr), () => sigTrin(m, t));
+  naviger(hashFor.trin(m.id, nr, m.erGroen), () => sigTrin(m, t));
 }
 
 function fremskridt(m, nr) {
@@ -549,12 +556,12 @@ function trinSkaerm(m, nr) {
   const frem = () => {
     if (sidst) {
       S.lavetNu = m.id; // færdig-skærmen gemmer, at retten er lavet
-      naviger(hashFor.faerdig(m.id), () => Tale.sig(R.FAERDIG));
+      naviger(hashFor.faerdig(m.id, m.erGroen), () => Tale.sig(R.FAERDIG));
     } else gaaTilTrin(m, nr + 1);
   };
   const tilbage = () => {
     if (nr > 1) gaaTilTrin(m, nr - 1);
-    else { Tale.stop(); naviger(hashFor.ret(m.id)); }
+    else { Tale.stop(); naviger(hashFor.ret(m.id, m.erGroen)); }
   };
 
   const naesteTekst = sidst ? 'Færdig' : 'Næste';
@@ -643,7 +650,8 @@ function vis() {
     if (!m && (!S.ids || S.ids.includes(r.id)) && !S.indexFejl) skaerm = henterSkaerm();
     else if (!m) skaerm = fejlSkaermRet(r.id, S.indexFejl || { findesIkke: true });
     else if (m instanceof Error) skaerm = fejlSkaermRet(r.id, m);
-    else skaerm = retternesSkaerm(r, udgave(m));
+    // «/groen» i adressen vælger retten med mere grønt; ellers kontakten eller en timer på retten (udgave())
+    else skaerm = retternesSkaerm(r, r.groen ? valgt(m, true) : udgave(m));
   }
   if (r.side !== 'forside') S.valgtKort = null;
   visSkaerm(skaerm);

@@ -378,7 +378,9 @@ function listeSkaerm(liste) {
     const links = r.dage.map((d, i) => {
       const m = d && model(d.ret, r.mereGroent);
       if (!m || !m.uge) return null;
-      return el('li', {}, el('a', { class: 'ret-link', href: '#/ret/' + m.id },
+      // Retten åbnes i linkets udgave (med «/groen»), ikke telefonens egen: ellers viste retten alt kødet og ingen linser,
+      // mens listen havde linserne (code review kode-2)
+      return el('li', {}, el('a', { class: 'ret-link', href: '#/ret/' + m.id + (m.erGroen ? '/groen' : '') },
         K.billede(grafikRet(m.id), '', 'ret-link-billede'),
         el('span', { class: 'vare-tekst' },
           el('span', { class: 'vare-navn', tekst: m.navn }),
