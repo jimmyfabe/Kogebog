@@ -1,5 +1,5 @@
 // voksen-del.js — voksendelen (docs/foraeldredel.md, afsnit 2-5): den voksnes hjørne bag et hold på 2 s.
-//   #/voksen             husstand, ugens udvalg og favoritter, vejen til ugeplanen og indkøbslisten, og «Luk»
+//   #/voksen             husstand, ugens udvalg, favoritter og kataloget, vejen til ugeplanen og indkøbslisten, og «Luk»
 //   #/voksen/husstand    antal voksne og børn → portioner til nye retter i ugeplanen (eller til hele ugen)
 //   #/voksen/udvalg      ugens udvalg: de retter, børnene vælger imellem i ugeplanen (højst 24; intet udvalg = alle)
 //   #/voksen/favoritter  hjerterne
@@ -43,8 +43,8 @@ export function init(k) {
 
 // ---------- Ren logik (test/test-voksen-del.js) ----------
 
-// Siden i voksendelen, som adressen peger på ('hub', 'husstand', 'udvalg' eller 'favoritter'), eller null, når adressen
-// ikke er voksendelens. En ukendt side herinde er oversigten
+// Siden i voksendelen, som adressen peger på ('hub', 'husstand', 'udvalg', 'favoritter' eller 'katalog'), eller null,
+// når adressen ikke er voksendelens. En ukendt side herinde er oversigten
 export function voksenSide(hash) {
   const raa = String(hash).replace(/^#\/?/, '');
   if (raa !== 'voksen' && !raa.startsWith('voksen/')) return null;
@@ -480,7 +480,8 @@ function hubSkaerm(f) {
   const alle = iPlanen();
   const sum = husstandSum(f.voksne, f.boern, f.barnAndel);
   const valgt = f.udvalg ? alle.filter((m) => f.udvalg.ids.includes(m.id)).length : 0;
-  // Familien er gemt med en nyere udgave: husstand, udvalg og favoritter kan ikke åbnes, ugeplanen og listen kan
+  // Familien er gemt med en nyere udgave: husstand, udvalg, favoritter og kataloget kan ikke åbnes, ugeplanen og
+  // listen kan
   const nyere = f.laast ? { status: NYERE, laast: true } : {};
   const punkter = [
     { navn: 'Husstand', ikonEl: stregIkon(PERSONER), til: '#/voksen/husstand', fokus: 'husstand',
