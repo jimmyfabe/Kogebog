@@ -21,6 +21,7 @@ import { kod, afkod } from './plankode.js';
 import { grafikRet, grafikGruppe, GRUPPER } from './katalog.js';
 import { planMandag, idag } from './tid.js';
 import { soeg } from './soeg.js';
+import { valgt } from './groent.js';
 
 export const LUK_MS = 10 * 60 * 1000;   // voksendelen lukker efter 10 minutter uden tryk
 export { MAKS_PERSONER, UDVALG_MAKS };   // voksne og børn hver, og retter i udvalget: grænserne fra js/lager.js
@@ -233,7 +234,14 @@ const model = (id) => {
   const m = K.S.retter.get(id);
   return m && !(m instanceof Error) ? m : null;
 };
-const alleRetter = () => K.S.ids.map(model).filter(Boolean);
+// Grundretterne, som opskrifterne står. alleRetter() er dem i den udgave, retten vises i: med mere grønt, når kontakten er
+// slået til, og retten har en (js/groent.js). Så finder søgningen linserne i retten med mere grønt, og pris og tid er dem,
+// ugeplanen regner med (code review kode-4)
+const grundRetter = () => K.S.ids.map(model).filter(Boolean);
+const alleRetter = () => {
+  const mereGroent = Lager.hentFamilie(K.S.ids).mereGroent === true;
+  return grundRetter().map((m) => valgt(m, mereGroent));
+};
 const iPlanen = () => alleRetter().filter((m) => m.uge);
 const fejlede = () => K.S.ids.filter((id) => K.S.retter.get(id) instanceof Error).length;
 
@@ -473,7 +481,7 @@ const GROENT_NAVN = 'Mere grønt i maden';
 function groentStatus(f) {
   if (f.laast) return NYERE;
   if (f.mereGroent !== true) return 'Slået fra';
-  const n = alleRetter().filter((m) => m.groen).length;
+  const n = grundRetter().filter((m) => m.groen).length;
   return n ? 'Halvt kød og halvt røde linser i ' + flertal(n, 'ret', 'retter') : 'Slået til, men ingen af retterne har det endnu';
 }
 

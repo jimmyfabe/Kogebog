@@ -578,3 +578,21 @@ test('«Mere grønt i maden»: «Indkøbsliste» på oversigten giver et link me
     V.aabn();
   }
 });
+
+// Kataloget søger i den udgave, der vises og laves: slået til finder «røde linser» også retterne med mere grønt (før
+// søgte voksendelen altid i grundretten og fandt dem ikke). Retter med linser i grundretten findes begge gange
+test('«Mere grønt i maden»: søgningen i kataloget finder retterne med mere grønt på linserne, præcis når den er slået til', (t) => {
+  t.after(() => { skriv(vist.at(-1), ''); V.rute('#/'); });
+  medOpskrifter();
+  const groenne = S.ids.filter((id) => S.retter.get(id).groen);
+  const fundet = {};
+  for (const til of [false, true]) {
+    aabnSide('katalog');
+    lageret.set('kog-familie-v1', JSON.stringify({ v: 1, mereGroent: til }));
+    V.rute(location.hash);
+    skriv(vist.at(-1), 'røde linser');
+    fundet[til] = raekkerI(vist.at(-1));
+  }
+  assert.ok(groenne.length >= 1 && groenne.every((id) => !fundet.false.includes(id)), 'slået fra: ingen af retterne med mere grønt (' + fundet.false.join(', ') + ')');
+  assert.deepEqual(fundet.true, S.ids.filter((id) => fundet.false.includes(id) || groenne.includes(id)), 'slået til: også retterne med mere grønt');
+});
