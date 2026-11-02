@@ -200,14 +200,11 @@ const SKAERMKNAPPER = '.handlinger .knap'; // skal kunne ses uden at rulle på i
 async function tjekLayout(side, hvor, { knapperSes = false } = {}) {
   const r = await side.evaluate(({ boern, skaermknapper }) => {
     const navn = (e) => (typeof e.className === 'string' && e.className ? '.' + e.className.trim().split(/\s+/).join('.') : e.tagName.toLowerCase());
-    // Indhold i en lukket <details> tegnes ikke, men WebKit giver det alligevel en kasse (filterchips 64 px brede ved
-    // x=350 med teksten uden for, målt 02-11). checkVisibility() er false dér, så det tjekkes ikke
-    const vises = (e) => typeof e.checkVisibility !== 'function' || e.checkVisibility();
     const smaa = [];
     const smaaBoern = [];
     for (const e of document.querySelectorAll('button, a[href], [role="button"]')) {
       const b = e.getBoundingClientRect();
-      if (!b.width || !b.height || getComputedStyle(e).visibility === 'hidden' || !vises(e)) continue;
+      if (!b.width || !b.height || getComputedStyle(e).visibility === 'hidden') continue;
       const mindst = Math.min(b.width, b.height);
       if (mindst < 48) smaa.push(navn(e) + ' ' + Math.round(b.width) + '×' + Math.round(b.height));
       else if (mindst < 63.5 && e.matches(boern) && e.closest('#app')) smaaBoern.push(navn(e) + ' ' + Math.round(b.width) + '×' + Math.round(b.height));
@@ -216,7 +213,7 @@ async function tjekLayout(side, hvor, { knapperSes = false } = {}) {
     const traengt = [];
     for (const k of document.querySelectorAll('#app .knap')) {
       const b = k.getBoundingClientRect();
-      if (!b.width || !b.height || !vises(k)) continue;
+      if (!b.width || !b.height) continue;
       for (const c of k.children) {
         const cs = getComputedStyle(c);
         if (cs.position === 'absolute' || cs.display === 'none' || c.classList.contains('hold-fyld')) continue;
@@ -231,7 +228,7 @@ async function tjekLayout(side, hvor, { knapperSes = false } = {}) {
     for (const e of document.querySelectorAll('body *')) {
       if (e.closest('.konfetti, .sr-kun, svg, noscript')) continue;
       const b = e.getBoundingClientRect();
-      if (!b.width || !b.height || !vises(e)) continue;
+      if (!b.width || !b.height) continue;
       if (b.right > W + 1 || b.left < -1) udenfor.push(navn(e) + ' ' + Math.round(b.left) + '…' + Math.round(b.right));
     }
     const H = window.innerHeight;
