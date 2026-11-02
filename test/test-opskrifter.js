@@ -233,22 +233,17 @@ export function valider(rod = ROD) {
   const iUgeplan = new Set(); // id'er på retter i ugeplanen (til lydlisten: <ret>/uge.mp3)
   let flestTrin = 0;
   const sete = new Set();
-  for (const [mappe, fil] of [...filer.map((n) => ['opskrifter', n]), ...venter.map((n) => [VENTER, n])]) {
-    const venterPaaBillede = mappe === VENTER;
-    const rel = mappe + '/' + fil;
-    const r = laesJson(rel);
-    if (!r) continue;
-    if (venterPaaBillede) tal.venter++;
-    else tal.retter++;
+  // Én ret: r er den læste JSON, rel stien i fejlene, filId filnavnet uden .json. venterPaaBillede: retten ligger i
+  // docs/venter-paa-billede (uden billede, index.json og lyd)
+  function tjekRet(r, { rel, filId, venterPaaBillede }) {
     // OK-linjens trin, voksen-trin og timere er kun retterne i appen (opskrifter/), ikke dem, der venter (review 31-10)
     const taelt = venterPaaBillede ? { trin: 0, voksentrin: 0, timere: 0 } : tal;
-    const filId = fil.slice(0, -5);
     const f = (besked) => fejlI(rel, besked);
     const redaktion = (hvor, v) => {
       const m = fund(REDAKTION, v);
       if (m) f(hvor + ': «' + m[0] + '» er en redaktionel note: den hører til i «tumbi.kilde», ikke i teksten, der vises: «' + v + '»');
     };
-    if (typeof r !== 'object' || Array.isArray(r)) { f('skal være ét JSON-objekt'); continue; }
+    if (typeof r !== 'object' || Array.isArray(r)) { f('skal være ét JSON-objekt'); return; }
 
     for (const k of PAAKRAEVET) if (!(k in r)) f('mangler «' + k + '»');
     for (const k of Object.keys(r)) if (!TOP_NOEGLER.has(k)) f('ukendt felt «' + k + '»');
@@ -487,6 +482,16 @@ export function valider(rod = ROD) {
         if (kniv > UGEPLAN_MAKS_KNIV) f('en ret i ugeplanen har højst ' + UGEPLAN_MAKS_KNIV + ' trin med kniv eller rivejern (skånsomt for hænderne), fandt ' + kniv + ': brug frosne hakkede grøntsager, dåser eller revet ost');
       }
     }
+  }
+
+  for (const [mappe, fil] of [...filer.map((n) => ['opskrifter', n]), ...venter.map((n) => [VENTER, n])]) {
+    const venterPaaBillede = mappe === VENTER;
+    const rel = mappe + '/' + fil;
+    const r = laesJson(rel);
+    if (!r) continue;
+    if (venterPaaBillede) tal.venter++;
+    else tal.retter++;
+    tjekRet(r, { rel, filId: fil.slice(0, -5), venterPaaBillede });
   }
 
   // Lydlisten: hver fil skal findes og høre til en rigtig ret og et rigtigt trin (eller en ingrediens).
