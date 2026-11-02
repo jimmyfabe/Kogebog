@@ -1,14 +1,46 @@
 # STATUS – Tumbi Køkken
 
-## 02-11-2026 kl. 15:01: «Mere grønt i maden» på pause (Jimmy sætter en disk i)
+## 02-11-2026 kl. 23:31: v6 · 02-11-2026 «Mere grønt i maden» er færdig og grøn (Saga)
 
-- Gren `groent-0211` (22 commits fra e4c0ec9, rent arbejdstræ): kerne, 8 retter med halvt røde linser, review med Fable som dommer og rettelserne er færdige. Workflowet `wf_14045647-16a` blev stoppet under det sidste trin, ui-review.
-- **Næste:**
-  1. Genoptag med `Workflow({scriptPath: <sessionens scripts>/kogebog-mere-groent-wf_14045647-16a.js, resumeFromRunId: "wf_14045647-16a"})`. Kun ui-review kører igen.
-  2. Tjek diffen selv.
-  3. Lav Røst-lyd til de nye `groen-*`-replikker.
-  4. Udgiv som v6.
-- Jimmy svarede «ja, til den» 02-11 kl. 15. Det er læst som ja til at udgive v6, når alt er grønt. Fortolkningen er ikke bekræftet endnu.
+Jimmy svarede «ja, til den» 02-11 kl. 15 og senere «Du tak bare og gør alt færdig». Det er læst som ja til at udgive v6, når alt er grønt. Fortolkningen er ikke bekræftet.
+- **v6 indeholder:**
+  - En kontakt i voksendelen, «Mere grønt i maden». Den giver halvt kød og halvt røde linser i 8 retter med hakket kød: kødsovs, cremet kødsovs, one pot bolognese, chili con carne, hyrdetærte, pastagratin, kødkål med makaroni og jægergryde.
+  - Den slår igennem på retten, forsidekortet, ugeplanen, indkøbslisten, print og linket til telefonen. En kørende timer holder sin udgave.
+  - Teknik: `tumbi.mere_groent` og `js/groent.js`, feltet `mereGroent` i `kog-familie-v1` uden versionsløft, plankode v2, ruterne `#/ret/<id>/groen` og `print.html?ret=<id>&groen=1`.
+  - Røst-lyd til de 49 nye replikker.
+- **Review:**
+  - Workflow `wf_14045647-16a` med Fable som dommer: 11 fund dømt, 7 rettet, opskrifter-2 rettet bagefter (linsetrinnet i one pot bolognese har nu 5 min timer), data-2 er udgivelsesnoten nedenfor.
+  - ui-reviewer: 4 rettet (print «Tilbage» bliver i udgaven, forsidens tid følger udgaven, ugeplanen siger «mere grønt», kontakten hopper ikke).
+  - code-reviewer på rettelserne (477324b..0a7663a): 0 høje, 0 middel, 2 lave.
+- **Test @ce649bd:** 16 node-testfiler grønne. Hele e2e i WebKit: 90.189 tjek og 0 fejl (3813 s). Ikke afprøvet på rigtig iPad/iPhone, og ingen af retterne er lavet i et køkken (`afproevet: false`).
+- **Udgivelsesnote:** en åben side fra v5 kan slå «Mere grønt i maden» fra igen. Genindlæs alle åbne faner efter opdateringen.
+- **Ikke rettet (lave fund):**
+  - Print af kødsovs og hyrdetærte går fra 1 til 2 A4-ark med mere grønt (6 af de 8 fylder allerede 2).
+  - Kødsovs har 14 kort: på 1180×820 ligger 4. række bag foden, til man ruller (virker; 6 basisopskrifter har allerede 13-17 ingredienser).
+  - «Mere grønt i / maden» brydes på nogle bredder. `print.html?uge` på 390 px skærm bryder «mere / grønt» (A4 er fint).
+  - Den låste kontakt ser mere aktiv ud, end den er.
+  - «Røde linser 270 g» står uden pakke, og ikonerne for havregryn, ris og linser ligner hinanden. Linsetrinnet har det generelle «hælde»-billede.
+  - «madlavningsflø/de» på jægergryde (nok ikke nyt).
+  - Ingen e2e for forsidekortet med en timer på basisopskriften.
+  - Ordvalg: «mere grønt» står ved et uændret grammetal, fordi linser ikke tæller som grønt (alternativ: «halvt linser»).
+  - 9 nye `timer-optaget`-linjer er stadig på listen «bør lyttes til» med lang hale: koedsovs 9, bolognese-one-pot 10 og 12, cremet-koedsovs 11, chili-con-carne 14, hyrdetaerte 11, pastagratin 10 og 14, koedkaal-med-makaroni 14.
+  - Usikkert: statusteksten har plads til to linjer, men `ui-rounded` på en rigtig iPad kan ikke måles her (plads til 14,6-22,3 % bredere skrift).
+- **Næste (v7):**
+  - Codex-kvoten åbner **04-11 kl. 11:13**. Kør så `jul-billeder/koer-codex.sh`: 26 retbilleder og 4 pladsholdere.
+  - Flyt de 26 retter ind efter README'en i `docs/venter-paa-billede/`, og omdøb «Jul» til «Jul og nytår» (kræver Røst).
+  - Derefter Røst til de nye replikker, og v7 efter Jimmys ja.
+- **Afventer Jimmy:**
+  - Fra 02-11: bekræft at «ja, til den» + «gør alt færdig» dækkede udgivelsen · er «mere grønt» det rigtige ord, eller «halvt linser»?
+  - Fra 01-11, stadig åbne: Rosa og Bo skjult på højkant · temaer og forsidevalg kræver lager v2 · scenarie A · varemærkesøgning på «Tumbi» · licens og offentligt/privat repo.
+- **Testliste til Jimmy (rigtig iPad/iPhone):**
+  1. v6 i foden.
+  2. Kontakten i voksendelen hopper ikke, og statusteksten er højst to linjer.
+  3. Kødsovs med kontakten slået til: 250 g kød + linser, Røst læser de nye linjer.
+  4. Forsiden: hyrdetærte viser «1 t».
+  5. Ugeplanen siger «mere grønt», og indkøbslisten har røde linser.
+  6. Link til telefon holder udgaven, og print med «Tilbage» bliver i udgaven.
+  7. Lyt til de 9 `timer-optaget`-linjer.
+  8. Lav én af retterne i et rigtigt køkken.
 
 ## 02-11-2026 kl. 11:38: v5 · 02-11-2026 er live på Pages efter Jimmys «Ja, udgiv v5» (Saga)
 
@@ -31,12 +63,7 @@ Jimmy 02-11 (talebesked): mere julemad, nytår (kransekage, isdesserter), et kat
   - `v5-ret` @371465c: 15 node-testfiler grønne. e2e skærmformer + forsidens top + voksen gav 5.510 tjek og 0 fejl.
   - Det spring over lukkede `<details>` i e2e, som workflowet lagde ind (c1431b4), er rullet tilbage (86692fa). Testen er grøn uden det, så de falske layoutfejl kom fra `.filtre`-kollisionen.
 - **Ikke rettet (lave fund):** åben/lukket gemmes ved første klik (ikke en regression) · KOMPAKT-medieforespørgslen står to steder i e2e · e2e har ingen høj skærm, der ikke er kompakt · tarteletternes antal i Remas pakke er ikke bekræftet · lange navne tjekkes i e2e, når de 15 retter kommer ind · på telefonen brydes en lang filtertekst («Aftensmad, Hurtig, …») ud under pilen i stedet for at være rykket ind (familie.css:115/120) · på 360 px deles «Gulerodssup/pe» uden bindestreg i udvalget (familie.css:92, fandtes før v5; tjekkes på rigtig iPhone) · tallene på chipsene følger ikke søgningen («Halloween (6)» ved 0 træf).
-- **Næste (v6):**
-  - Codex-kvoten åbner **04-11 kl. 11:13**. Kør så `jul-billeder/koer-codex.sh`: 26 retbilleder og 4 pladsholdere.
-  - Flyt de 26 retter ind efter README'en i `docs/venter-paa-billede/`, og omdøb «Jul» til «Jul og nytår» (kræver Røst).
-  - Derefter Røst til de nye replikker, og v6 efter Jimmys ja.
-- **Afventer Jimmy:**
-  - Fra 01-11, stadig åbne: Rosa og Bo skjult på højkant · temaer og forsidevalg kræver lager v2 · scenarie A · varemærkesøgning på «Tumbi» · licens og offentligt/privat repo.
+- **Næste og Afventer Jimmy:** ført op i afsnittet for v6.
 - **Testliste til Jimmy (rigtig iPad/iPhone):** v5 i foden · forsiden lyder med den pæne stemme (også juleretterne) · voksendelen: søg «kartofler», fold filtrene ud og ind på iPhone, «Fjern filtrene» · udvalget og favoritterne med søgning.
 
 ## 02-11-2026 kl. 03:36: v4 · 01-11-2026 med 24 juleretter er pushet til Pages efter Jimmys «ja, udgiv den» (Saga)
