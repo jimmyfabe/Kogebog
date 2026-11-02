@@ -342,3 +342,28 @@ test('ingen træf med filtre: «Fjern filtrene» står ved «Ryd søgningen» i 
     V.rute('#/');
   }
 });
+
+// Review-fund 2 (02-11): på 390 px stod udvalgets 8 mærker mellem søgefeltet og listen, så «kylling» ikke viste nogen
+// ret over kanten. Mærkerne står nu foldet sammen på telefonen som katalogets filtre, og listen kommer lige efter tallene
+const indholdI = (rod) => medKlasse(rod, 'voksen-indhold')[0].born.filter(Boolean);
+const klasseAf = (e) => (e.tag === 'form' ? 'form' : String(e.className || e.tag).split(/\s+/)[0]);
+test('udvalgets mærker står foldet sammen på telefonen og foldet ud på en stor skærm, og listen kommer lige efter tallene', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  const tlf = aabnSide('udvalg', { b: 390, h: 844 });
+  const filtre = find(tlf, (e) => e.tag === 'details');
+  assert.equal(filtre.length, 1, 'udvalget har én boks med filtre, der kan foldes');
+  assert.equal(filtre[0].open, false, 'foldet sammen på telefonen');
+  assert.equal(find(filtre[0], (e) => String(e.dataset.fokus).startsWith('filter-')).length, 8, 'alle 8 mærker står i boksen');
+  const raekke = indholdI(tlf).map(klasseAf);
+  const fra = raekke.indexOf('form');
+  assert.deepEqual(raekke.slice(fra, raekke.indexOf('soeg-resultat') + 1), ['form', 'filtre', 'soeg-tal', 'udvalg-tal', 'soeg-resultat'],
+    'søgefeltet, filtrene, tallene og listen i den rækkefølge (' + raekke.join(', ') + ')');
+  assert.equal(tekstAf(find(filtre[0], (e) => e.tag === 'summary')[0]), 'Mærker');
+  V.rute('#/');
+  const stor = aabnSide('udvalg', { b: 1280, h: 1000 });
+  assert.equal(find(stor, (e) => e.tag === 'details')[0].open, true, 'foldet ud på en stor skærm');
+  send(medFokusNavn(stor, 'filter-vegetar'), 'click');
+  assert.equal(tekstAf(find(vist.at(-1), (e) => e.tag === 'summary')[0]), 'MærkerVegetar', 'linjen siger, hvilke mærker der er valgt');
+  send(medFokusNavn(vist.at(-1), 'filter-vegetar'), 'click');
+});

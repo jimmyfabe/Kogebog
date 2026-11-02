@@ -180,15 +180,17 @@ let sidsteSide = null;
 let besked = null;  // { tekst, fejl?, ret? } under knapperne (ret: i rækken med den ret)
 let kladde = null;  // husstanden, til den gemmes: { voksne, boern, barnAndel } (kun i hukommelsen)
 const filtre = new Set(); // udvalgets filterchips (nøgler fra MAERKER): huskes, til siden lukkes
-// Søgefeltets tekst pr. side ('udvalg', 'favoritter', 'katalog') og katalogets valg: gruppen (null = alle), mærkerne og
-// om filtrene er foldet ud (null = efter skærmen). Kun i hukommelsen, og glemt, når voksendelen låses
+// Søgefeltets tekst pr. side ('udvalg', 'favoritter', 'katalog'), katalogets valg (gruppen, null = alle, og mærkerne) og
+// om filtrene er foldet ud pr. side ('udvalg', 'katalog'; ingen værdi = efter skærmen). Kun i hukommelsen, og glemt, når
+// voksendelen låses
 const soegning = new Map();
-const katalogValg = { gruppe: null, maerker: new Set(), aabne: null };
+const katalogValg = { gruppe: null, maerker: new Set() };
+const filterAaben = new Map();
 function glemSoegning() {
   soegning.clear();
   katalogValg.gruppe = null;
   katalogValg.maerker.clear();
-  katalogValg.aabne = null;
+  filterAaben.clear();
 }
 
 // Viser voksendelens skærm og svarer true, når adressen er voksendelens. Ellers lukker låsen, og svaret er false
@@ -239,8 +241,8 @@ function medFokus(b, noegle) {
 }
 
 // Tegner skærmen igen uden at skifte adresse, og giver fokus tilbage til knappen med data-fokus. Kan knappen ikke få
-// fokus (et hjerte, der ikke er favorit længere, under filteret «Favorit», eller en chip i katalogets sammenfoldede
-// filtre), får overskriften det, så fokus ikke forsvinder
+// fokus (et hjerte, der ikke er favorit længere, under filteret «Favorit», eller en chip i de sammenfoldede filtre), får
+// overskriften det, så fokus ikke forsvinder
 function tegnIgen(fokus) {
   K.vis();
   if (!fokus) return;
@@ -614,6 +616,19 @@ function filterChip(k, antal, valgte = filtre) {
   return b;
 }
 
+// Filtrene (udvalgets mærker, katalogets grupper og mærker) under én linje, der kan foldes sammen og siger, hvad der er
+// valgt. Foldet ud på iPad og desktop, sammen på telefonen, så listen står lige under søgefeltet, mens tastaturet er
+// fremme. Den voksnes valg huskes, til låsen lukker. side: 'udvalg' eller 'katalog'
+function filterBoks(side, navn, valgte, ...chips) {
+  const boks = el('details', { class: 'filtre', open: filterAaben.get(side) ?? !matchMedia('(max-width: 700px)').matches },
+    el('summary', {},
+      el('span', { class: 'filtre-navn', tekst: navn }),
+      valgte.length ? el('span', { class: 'filtre-valgt', tekst: valgte.join(', ') }) : null),
+    chips);
+  boks.addEventListener('toggle', () => { filterAaben.set(side, boks.open); });
+  return boks;
+}
+
 // Linjen under navnet: gruppen (kun i kataloget) og mærkerne
 function maerkeLinje(noegler, gruppe = null) {
   if (!noegler.length && !gruppe) return null;
@@ -650,8 +665,9 @@ function udvalgSkaerm(f) {
     naarFaerdig: () => gemUdvalg([], 'Intet udvalg: børnene kan vælge alle ' + alle.length + ' retter.', 'fyld-op'),
   }), 'alle-retter') : null;
 
-  const chips = el('div', { class: 'filter-chips', role: 'group', 'aria-label': 'Filtre' },
-    Object.keys(MAERKER).map((k) => filterChip(k, alle.filter((p) => p.noegler.includes(k)).length)));
+  const chips = filterBoks('udvalg', 'Mærker', [...filtre].map((k) => MAERKER[k].navn),
+    el('div', { class: 'filter-chips', role: 'group', 'aria-label': 'Mærker' },
+      Object.keys(MAERKER).map((k) => filterChip(k, alle.filter((p) => p.noegler.includes(k)).length))));
 
   const s = soegeListe('udvalg', alle, {
     passer,
@@ -716,22 +732,16 @@ function gruppeChip(id, navn, antal) {
   return b;
 }
 
-// Grupper og mærker, foldet sammen under én linje, der siger, hvad der er valgt. Foldet ud på iPad og desktop, sammen på
-// telefonen, så listen står lige under søgefeltet, mens tastaturet er fremme. Den voksnes valg huskes, til låsen lukker
+// Grupper og mærker i filterBoks
 function katalogFiltre(alle) {
   const v = katalogValg;
   const valgte = [v.gruppe ? GRUPPER[v.gruppe] : null, ...[...v.maerker].map((k) => MAERKER[k].navn)].filter(Boolean);
-  const boks = el('details', { class: 'katalog-filtre', open: v.aabne ?? !matchMedia('(max-width: 700px)').matches },
-    el('summary', {},
-      el('span', { class: 'katalog-filtre-navn', tekst: 'Grupper og mærker' }),
-      valgte.length ? el('span', { class: 'katalog-filtre-valgt', tekst: valgte.join(', ') }) : null),
+  return filterBoks('katalog', 'Grupper og mærker', valgte,
     el('div', { class: 'filter-chips', role: 'group', 'aria-label': 'Grupper' },
       gruppeChip(null, 'Alle', alle.length),
       K.S.grupper.filter((g) => Object.hasOwn(GRUPPER, g.id)).map((g) => gruppeChip(g.id, GRUPPER[g.id], alle.filter((p) => p.gruppeId === g.id).length))),
     el('div', { class: 'filter-chips', role: 'group', 'aria-label': 'Mærker' },
       Object.keys(MAERKER).map((k) => filterChip(k, alle.filter((p) => p.noegler.includes(k)).length, v.maerker))));
-  boks.addEventListener('toggle', () => { v.aabne = boks.open; });
-  return boks;
 }
 
 // En ret i kataloget: «Med» (kun retter til ugeplanen) først, så hjertet og «Åbn» altid står samme sted
