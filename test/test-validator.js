@@ -640,6 +640,8 @@ const KOEDSOVS_VARER = [
 ];
 function iUgeplan(d) {
   Object.assign(d.tumbi, { ugeplan: true, portioner: 4, pris_kr: 90, pris_dato: '2026-10', groent_g: 1100 });
+  // Retten med mere grønt (js/groent.js) har sin egen pris og sit eget grønt: lavere pris og mindst lige så meget grønt
+  if (d.tumbi.mere_groent) Object.assign(d.tumbi.mere_groent, { pris_kr: 67, groent_g: 1100 });
   d.tumbi.ingredienser.forEach((x, i) => {
     const [vare, antal, enhed] = KOEDSOVS_VARER[i];
     delete x.antal;
@@ -659,7 +661,8 @@ test('en ret i ugeplanen med alle felterne er gyldig', () => {
   ugeplanGyldig((d) => { Object.assign(d.tumbi, { portioner: 1, groent_g: 0 }); d.totalTime = 'PT1H'; });
   ugeplanGyldig((d) => { d.tumbi.portioner = 12; Object.assign(d.tumbi.ingredienser[0], { antal: 1, enhed: 'spsk' }); });
   // Enhederne med samme dimension som varen: kg for gram, dl, l, spsk og tsk for ml
-  ugeplanGyldig((d) => { Object.assign(d.tumbi.ingredienser[1], { antal: 0.5, enhed: 'kg' }); });
+  // Kødet i kg: rettelsen med mere grønt (det halve) har grundrettens enhed
+  ugeplanGyldig((d) => { Object.assign(d.tumbi.ingredienser[1], { antal: 0.5, enhed: 'kg' }); d.tumbi.mere_groent.ingredienser[0].antal = 0.25; });
 });
 
 test('tumbi.ugeplan kræver portioner, pris, prisens måned, grønt og noten om pris og grønt', () => {
@@ -763,6 +766,96 @@ test('manglende grafik for et verbum, en ret eller en gruppe', () => {
   } finally { ryd(m); }
 });
 
+// «Mere grønt i maden» (js/groent.js): kødsovsen har rettelsen i «tumbi.mere_groent» (250 g kød i stedet for 500, 100 g
+// røde linser og 3 dl vand efter tomatpuréen, ét nyt trin efter trin 7). Kopien er det langsomme, så alle tilfældene
+// bruger den samme: hvert tilfælde ændrer kødsovsen (d) og rettelsen (p) og forventer en fejl med teksten, eller ingen (null)
+function groenTilfaelde(tilfaelde) {
+  const m = kopi();
+  try {
+    const grund = laes(m, KS);
+    assert.ok(grund.tumbi.mere_groent, 'kødsovsen skal have «tumbi.mere_groent»');
+    for (const [navn, ret, forventet] of tilfaelde) {
+      const d = structuredClone(grund);
+      ret(d, d.tumbi.mere_groent);
+      skriv(m, KS, d);
+      const { fejl } = valider(m);
+      if (forventet === null) assert.deepEqual(fejl, [], navn);
+      else assert.ok(fejl.some((f) => f.includes(forventet)), navn + ': forventede en fejl med «' + forventet + '», fik:\n  ' + fejl.join('\n  '));
+    }
+  } finally { ryd(m); }
+}
+const linje = (tekst, vare, ikon, antal, enhed, efter = 6) => ({ efter, tekst, ikon, maengde: tekst.split(' ').slice(0, 2).join(' '), vare, antal, enhed });
+const G = 'opskrifter/koedsovs.json: «tumbi.mere_groent»: ';
+const GR = 'opskrifter/koedsovs.json (mere grønt): ';
+
+test('mere grønt: rettelsen er gyldig, og grænserne for kød, linser og vand holder', () => {
+  groenTilfaelde([
+    ['kødsovsen med mere grønt', () => {}, null],
+    ['kødet på 45 %', (d, p) => { p.ingredienser[0] = { i: 1, tekst: '225 g hakket oksekød', antal: 225 }; }, null],
+    ['kødet på 55 %', (d, p) => { p.ingredienser[0] = { i: 1, tekst: '275 g hakket oksekød', antal: 275 }; }, null],
+    ['vandet i ml', (d, p) => { Object.assign(p.nye_ingredienser[1], { antal: 300, enhed: 'ml' }); }, null],
+    ['linser og vand på grænserne (75 g og 2-4 gange)', (d, p) => {
+      p.nye_ingredienser = [linje('75 g røde linser', 'roede-linser', 'linser', 75, 'g'), linje('150 ml vand', 'vand', 'vand', 150, 'ml')];
+    }, null],
+    ['linser og vand på grænserne (125 g og 4 gange)', (d, p) => {
+      p.nye_ingredienser = [linje('125 g røde linser', 'roede-linser', 'linser', 125, 'g'), linje('5 dl vand', 'vand', 'vand', 5, 'dl')];
+    }, null],
+    ['uden ugeplan, pris og grønt', (d, p) => {
+      for (const k of ['ugeplan', 'pris_kr', 'groent_g']) delete d.tumbi[k];
+      delete p.pris_kr;
+      delete p.groent_g;
+    }, null],
+  ]);
+});
+
+test('mere grønt: formen på rettelsen', () => {
+  groenTilfaelde([
+    ['i uden for grundretten', (d, p) => { p.ingredienser[0].i = 12; }, G + 'ingredienser 1: «i» skal være et heltal fra 0 til 11'],
+    ['efter uden for grundretten', (d, p) => { p.nye_trin[0].efter = 13; }, G + 'nye_trin 1: «efter» skal være et heltal fra -1 til 12'],
+    ['lyd i opskriften', (d, p) => { p.nye_trin[0].tumbi.lyd = 'groen-8'; }, G + 'nye_trin 1: «tumbi.lyd» skrives ikke i opskriften'],
+    ['ukendt felt', (d, p) => { p.trinn = []; }, G + 'ukendt felt «trinn»'],
+    ['vare på en skiftet linje', (d, p) => { p.ingredienser[0].vare = 'roede-linser'; }, G + 'ingredienser 1: ukendt felt «vare»'],
+    ['pris uden grundrettens', (d) => { delete d.tumbi.pris_kr; }, G + '«pris_kr» skal stå der, præcis når grundretten har «tumbi.pris_kr»'],
+    ['ikke et objekt', (d) => { d.tumbi.mere_groent = []; }, G + '«tumbi.mere_groent» skal være et objekt'],
+  ]);
+});
+
+test('mere grønt: halvt hakket kød, røde linser, vand og ét nyt trin', () => {
+  groenTilfaelde([
+    ['intet hakket kød', (d) => { d.tumbi.ingredienser[1].vare = 'hakket-spinat'; }, G + 'grundretten har intet hakket kød'],
+    ['kødet er ikke skiftet', (d, p) => { p.ingredienser = []; }, G + 'ingrediens 2 («500 g hakket oksekød») er hakket kød: skift den til det halve i «ingredienser»'],
+    ['for meget kød', (d, p) => { p.ingredienser[0] = { i: 1, tekst: '300 g hakket oksekød', antal: 300 }; }, G + 'ingrediens 2 («500 g hakket oksekød»): kødet skal være det halve (45-55 % af 500 g), fandt 300 g'],
+    ['for lidt kød', (d, p) => { p.ingredienser[0] = { i: 1, tekst: '200 g hakket oksekød', antal: 200 }; }, G + 'ingrediens 2 («500 g hakket oksekød»): kødet skal være det halve (45-55 % af 500 g), fandt 200 g'],
+    ['mængden passer ikke til antal', (d, p) => { p.ingredienser[0].tekst = '200 g hakket oksekød'; }, G + 'ingrediens 2 i retten med mere grønt: mængden er «200 g», men «antal» er 250'],
+    ['ingen linser', (d, p) => { p.nye_ingredienser.splice(0, 1); }, G + 'der mangler en ny linje med røde linser'],
+    ['for mange linser', (d, p) => { p.nye_ingredienser[0] = linje('150 g røde linser', 'roede-linser', 'linser', 150, 'g'); }, G + 'røde linser: 150 g, men det skal være 30-50 % af det fjernede kød (250 g), altså 75-125 g'],
+    ['for få linser', (d, p) => { p.nye_ingredienser[0] = linje('70 g røde linser', 'roede-linser', 'linser', 70, 'g'); }, G + 'røde linser: 70 g'],
+    ['linser i grundretten', (d) => { d.tumbi.ingredienser[11].vare = 'roede-linser'; }, G + 'grundretten har allerede røde linser'],
+    ['intet vand', (d, p) => { p.nye_ingredienser.splice(1, 1); }, G + 'vand: 0 ml mere end grundretten, men 100 g linser skal have 200-400 ml'],
+    ['vand uden antal', (d, p) => { delete p.nye_ingredienser[1].antal; delete p.nye_ingredienser[1].enhed; }, G + 'vand: 0 ml mere end grundretten'],
+    ['for meget vand', (d, p) => { p.nye_ingredienser[1] = linje('1 l vand', 'vand', 'vand', 1, 'l'); }, G + 'vand: 1000 ml mere end grundretten'],
+    ['intet nyt trin', (d, p) => { p.nye_trin = []; }, G + 'der skal være præcis ét nyt trin i «nye_trin», fandt 0'],
+    ['to nye trin', (d, p) => { p.nye_trin.push({ efter: 7, '@type': 'HowToStep', text: 'Rør i gryden.', tumbi: { verbum: 'roere', voksen: true, voksen_hjaelp: 'varme' } }); }, G + 'der skal være præcis ét nyt trin i «nye_trin», fandt 2'],
+    ['det nye trin uden linser', (d, p) => { p.nye_trin[0].tumbi.ikoner = ['vand']; }, G + 'det nye trin skal vise linserne'],
+    ['linserne til sidst koger ikke', (d, p) => { p.nye_trin[0].efter = 11; }, G + 'linserne skal koge mindst 15 min, men timerne fra trinnet med linserne og frem er 0 min'],
+    ['prisen er ikke lavere', (d, p) => { p.pris_kr = 86; }, G + '«pris_kr» (86 kr.) skal være lavere end grundrettens (86 kr.)'],
+    ['mindre grønt', (d, p) => { p.groent_g = 1000; }, G + '«groent_g» (1000 g) må ikke være mindre end grundrettens (1070 g)'],
+    ['noten nævner ikke linserne', (d) => { d.tumbi.ugeplan_kilde = 'Prisen er et skøn.'; }, G + '«tumbi.ugeplan_kilde» skal også sige, hvordan prisen med mere grønt er regnet'],
+  ]);
+});
+
+// Retten med mere grønt tjekkes efter alle reglerne for en ret: fejlene har «(mere grønt)» efter filnavnet
+test('mere grønt: retten med mere grønt overholder reglerne for en ret', () => {
+  groenTilfaelde([
+    ['kniv i det nye trin', (d, p) => { p.nye_trin[0].text = 'Hak linserne og hæld dem i.'; }, GR + 'trin 8: teksten nævner «Hak»'],
+    ['timerne er længere end totalTime', (d, p) => { p.nye_trin[0].tumbi.timer_sek = 1500; }, GR + '«totalTime» (50 min) er kortere end timerne tilsammen (63 min)'],
+    ['ukendt ikon', (d, p) => { p.nye_ingredienser[0].ikon = 'rumraket'; }, GR + 'ingrediens 8: ukendt ikon "rumraket"'],
+    ['mængden passer ikke til teksten', (d, p) => { p.nye_ingredienser[0].maengde = '200 g'; }, GR + 'ingrediens 8: mængden «200 g» passer ikke til «100 g røde linser»'],
+    ['ukendt verbum', (d, p) => { p.nye_trin[0].tumbi.verbum = 'hælde'; }, GR + 'trin 8: ukendt verbum "hælde"'],
+    ['en vare, der ikke findes', (d, p) => { p.nye_ingredienser[0].vare = 'linser'; }, GR + 'ingrediens 8: ukendt vare "linser"'],
+  ]);
+});
+
 test('lydlisten må kun nævne filer, der findes', () => {
   forventFejl('lyd/liste.json', (d) => { d.filer = ['pandekager/3.mp3']; }, '«pandekager/3.mp3» står på listen, men filen lyd/pandekager/3.mp3 findes ikke');
   forventFejl('lyd/liste.json', (d) => { d.filer = ['pandekager/99.mp3']; }, 'retten har kun 11 trin');
@@ -779,6 +872,22 @@ test('lydlisten må kun nævne filer, der findes', () => {
   forventFejl('lyd/liste.json', (d) => { d.filer = ['pandekager/uge.mp3']; }, '«pandekager/uge.mp3»: retten er ikke med i ugeplanen');
   forventFejl('lyd/liste.json', (d) => { d.filer = ['faelles/uge-faerdig-ulv.mp3']; }, 'ukendt fælles replik');
   forventFejl('lyd/liste.json', (d) => { d.filer = ['faelles/uge-dag-8.mp3']; }, 'ukendt fælles replik');
+  // Mere grønt (js/groent.js): groen-<nr> og groen-ingrediens-<n> kun for retter med en rettelse, og inden for retten med
+  // mere grønt (kødsovsen: 14 trin og 14 ingredienser). Timeren kan være i et af dens trin
+  forventFejl('lyd/liste.json', (d) => { d.filer = ['koedsovs/groen-8.mp3']; }, '«koedsovs/groen-8.mp3» står på listen, men filen lyd/koedsovs/groen-8.mp3 findes ikke');
+  forventFejl('lyd/liste.json', (d) => { d.filer = ['koedsovs/groen-15.mp3']; }, '«koedsovs/groen-15.mp3»: retten med mere grønt har kun 14 trin');
+  forventFejl('lyd/liste.json', (d) => { d.filer = ['koedsovs/groen-x.mp3']; }, '«koedsovs/groen-x.mp3»: retten med mere grønt har kun 14 trin');
+  forventFejl('lyd/liste.json', (d) => { d.filer = ['koedsovs/groen-ingrediens-15.mp3']; }, 'retten med mere grønt har kun 14 ingredienser');
+  forventFejl('lyd/liste.json', (d) => { d.filer = ['koedsovs/groen-ingrediens-1x.mp3']; }, 'retten med mere grønt har kun 14 ingredienser');
+  forventFejl('lyd/liste.json', (d) => { d.filer = ['pandekager/groen-1.mp3']; }, '«pandekager/groen-1.mp3»: retten har ingen udgave med mere grønt');
+  forventFejl('lyd/liste.json', (d) => { d.filer = ['koedsovs/timer-optaget-15.mp3']; }, '«koedsovs/timer-optaget-15.mp3»: retten har kun 14 trin');
+  const m = kopi();
+  try {
+    // Inden for grænserne er der kun fejlen om den manglende fil
+    const filer = ['koedsovs/groen-14.mp3', 'koedsovs/groen-ingrediens-14.mp3', 'koedsovs/timer-optaget-14.mp3'];
+    skriv(m, 'lyd/liste.json', { version: 1, filer });
+    assert.deepEqual(valider(m).fejl, filer.map((f) => 'lyd/liste.json: «' + f + '» står på listen, men filen lyd/' + f + ' findes ikke'));
+  } finally { ryd(m); }
 });
 
 test('kommandolinjen giver exit 1 og fejlen på stderr', () => {

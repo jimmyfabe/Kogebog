@@ -10,6 +10,7 @@ import {
 } from '../js/katalog.js';
 import { isoTilMinutter, antalOrd } from '../js/tekst.js';
 import * as R from '../js/replikker.js';
+import { harMereGroent, patchFejl, medMereGroent } from '../js/groent.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -22,7 +23,7 @@ const PAAKRAEVET = [
   'recipeIngredient', 'tool', 'recipeInstructions', 'tumbi',
 ];
 const TRIN_NOEGLER = new Set(['verbum', 'voksen', 'voksen_hjaelp', 'timer_sek', 'note', 'ikoner']);
-const RET_TUMBI = new Set(['id', 'version', 'afproevet', 'kilde', 'ingredienser', 'ugeplan', 'portioner', 'pris_kr', 'pris_dato', 'groent_g', 'ugeplan_kilde']);
+const RET_TUMBI = new Set(['id', 'version', 'afproevet', 'kilde', 'ingredienser', 'ugeplan', 'portioner', 'pris_kr', 'pris_dato', 'groent_g', 'ugeplan_kilde', 'mere_groent']);
 const INGR_NOEGLER = new Set(['ikon', 'maengde', 'vare', 'antal', 'enhed']);
 // Ugeplanen (docs/ugeplan-plan.md, afsnit 4): felterne, en ret med «tumbi.ugeplan»: true skal have, og dens grænser.
 // En time fra hjemkomst til aftensmad, og højst 2 trin med kniv eller rivejern (skånsomt for hænderne). Dåseåbneren
@@ -101,7 +102,8 @@ function fund(re, tekst) {
   return null;
 }
 // Lydfilerne (js/replikker.js): <ret>/<trin>.mp3, <ret>/navn.mp3, <ret>/valgt.mp3, <ret>/ingrediens-<n>.mp3,
-// <ret>/timer-optaget-<trin>.mp3, <ret>/uge.mp3 (kun retter i ugeplanen) og faelles/<navn>.mp3
+// <ret>/timer-optaget-<trin>.mp3, <ret>/uge.mp3 (kun retter i ugeplanen), <ret>/groen-<trin>.mp3 og
+// <ret>/groen-ingrediens-<n>.mp3 (kun retter med mere grønt, js/groent.js) og faelles/<navn>.mp3
 const LYD_RE = /^([a-z0-9]+(?:-[a-z0-9]+)*)\/(\d+|navn|valgt|ingrediens-\d+|timer-optaget-\d+|[a-z]+(?:-[a-z0-9]+)*)\.mp3$/;
 // Børnenes valg af ugens mad (js/ugeplan.js): de samme fælles replikker som i vaerktoej/lav-taleliste.js
 const UGE_FAELLES = [R.UGE_HVEM, R.HVILKEN_DAG, R.DAG_OPTAGET, R.UGE_TAK, R.ALLE_VALGT, R.UGE_FULD, R.GEM_FEJL, R.SIDE_FLERE,
@@ -112,6 +114,114 @@ const LYD_FAELLES = new Set(['faerdig', 'print-hold', 'voksen-start-begge', 'vok
 const erTekst = (v) => typeof v === 'string' && v.trim().length > 0;
 const liste = (a) => a.join(', ');
 const erHeltal = (v, fra, til) => Number.isInteger(v) && v >= fra && v <= til;
+
+// «Mere grønt i maden» (js/groent.js): retter med hakket kød får halvt kød og halvt røde linser, vand til linserne og ét
+// nyt trin. Formen på «tumbi.mere_groent» tjekker patchFejl; her tjekkes, at rettelsen gør det, den lover, og
+// tjekMereGroent i valider() tjekker retten med mere grønt som enhver anden ret
+const GROEN_KOED = [0.45, 0.55]; // det hakkede kød: halvdelen af grundrettens
+const GROEN_LINSER = [0.3, 0.5]; // tørre røde linser i forhold til det fjernede kød (100 g linser for 250 g kød)
+const GROEN_VAND = [2, 4]; // ml vand pr. g linser (3 dl til 100 g)
+const GROEN_KOGETID = 900; // sek.: linserne koger mindst 15 min (timerne fra trinnet med linserne og frem; en grov kontrol)
+const erHakketKoed = (vare) => typeof vare === 'string' && vare.startsWith('hakket-') && Object.hasOwn(VARER, vare) && VARER[vare].slags === 'koed';
+const erLinser = (vare) => vare === 'roede-linser';
+const erVand = (vare) => vare === 'vand';
+const procent = (x) => Math.round(x * 100);
+
+// Hvor meget en ret har af de varer, testen vælger, i varens grundenhed (g eller ml). Linjer uden «antal» tæller ikke
+function vareMaengde(json, test) {
+  const ti = json && json.tumbi && Array.isArray(json.tumbi.ingredienser) ? json.tumbi.ingredienser : [];
+  let sum = 0;
+  for (const x of ti) {
+    if (x && test(x.vare) && typeof x.antal === 'number' && Object.hasOwn(ENHEDER, x.enhed)) sum += x.antal * ENHEDER[x.enhed].faktor;
+  }
+  return sum;
+}
+
+// «250 g» med «enhed» "g": tallet i mængden og «antal» skal være det samme, når enheden står i mængden
+function tekstAntalFejl(hvor, x) {
+  const m = /^(\d+(?:[.,]\d+)?) (\S+)$/.exec(x && typeof x.maengde === 'string' ? x.maengde : '');
+  if (!m || m[2] !== x.enhed || Number(m[1].replace(',', '.')) === x.antal) return [];
+  return [hvor + ': mængden er «' + x.maengde + '», men «antal» er ' + JSON.stringify(x.antal)];
+}
+
+// Det hakkede kød i grundretten: hver linje skal skiftes til det halve
+function koedFejl(r, p) {
+  const grund = Array.isArray(r.tumbi.ingredienser) ? r.tumbi.ingredienser : [];
+  const skift = Array.isArray(p.ingredienser) ? p.ingredienser : [];
+  const koed = grund.map((x, i) => [x, i]).filter(([x]) => x && erHakketKoed(x.vare));
+  if (!koed.length) return ['grundretten har intet hakket kød (en vare «hakket-…» med «slags»: "koed" i «tumbi.ingredienser»)'];
+  const fejl = [];
+  const [fra, til] = GROEN_KOED;
+  for (const [x, i] of koed) {
+    const ny = skift.find((s) => s.i === i);
+    const hvor = 'ingrediens ' + (i + 1) + ' («' + (Array.isArray(r.recipeIngredient) ? r.recipeIngredient[i] : '') + '»)';
+    if (!ny) fejl.push(hvor + ' er hakket kød: skift den til det halve i «ingredienser»');
+    else if (typeof x.antal === 'number' && typeof ny.antal === 'number' && (ny.antal < x.antal * fra || ny.antal > x.antal * til)) {
+      fejl.push(hvor + ': kødet skal være det halve (' + procent(fra) + '-' + procent(til) + ' % af ' + x.antal + ' ' + x.enhed + '), fandt ' + ny.antal + ' ' + x.enhed);
+    }
+  }
+  return fejl;
+}
+
+// Røde linser i forhold til det fjernede kød, og vand nok til at koge dem. r er grundretten, g retten med mere grønt
+function linseFejl(r, g) {
+  if (vareMaengde(r, erLinser) > 0) return ['grundretten har allerede røde linser'];
+  const linser = vareMaengde(g, erLinser);
+  if (linser <= 0) return ['der mangler en ny linje med røde linser i «nye_ingredienser» («vare»: "roede-linser" med «antal» og «enhed»)'];
+  const fejl = [];
+  const koed = vareMaengde(r, erHakketKoed) - vareMaengde(g, erHakketKoed);
+  const [lFra, lTil] = [Math.ceil(koed * GROEN_LINSER[0]), Math.floor(koed * GROEN_LINSER[1])];
+  if (koed > 0 && (linser < lFra || linser > lTil)) {
+    fejl.push('røde linser: ' + linser + ' g, men det skal være ' + procent(GROEN_LINSER[0]) + '-' + procent(GROEN_LINSER[1]) + ' % af det fjernede kød (' + koed + ' g), altså ' + lFra + '-' + lTil + ' g');
+  }
+  const vand = vareMaengde(g, erVand) - vareMaengde(r, erVand);
+  const [vFra, vTil] = [linser * GROEN_VAND[0], linser * GROEN_VAND[1]];
+  if (vand < vFra || vand > vTil) {
+    fejl.push('vand: ' + vand + ' ml mere end grundretten, men ' + linser + ' g linser skal have ' + vFra + '-' + vTil + ' ml (en ny linje med «vare»: "vand", «antal» og «enhed»)');
+  }
+  return fejl;
+}
+
+// Præcis ét nyt trin, som viser linserne, og tid nok til at koge dem
+function groenTrinFejl(p, g) {
+  const nye = Array.isArray(p.nye_trin) ? p.nye_trin : [];
+  const harLinser = (s) => Boolean(s && s.tumbi && Array.isArray(s.tumbi.ikoner) && s.tumbi.ikoner.includes('linser'));
+  const fejl = [];
+  if (nye.length !== 1) fejl.push('der skal være præcis ét nyt trin i «nye_trin», fandt ' + nye.length);
+  if (nye.length && !nye.some(harLinser)) fejl.push('det nye trin skal vise linserne (ikonet "linser" i «tumbi.ikoner»)');
+  const k = g.recipeInstructions.findIndex(harLinser);
+  if (k >= 0) {
+    const sek = g.recipeInstructions.slice(k).reduce((sum, s) => sum + (s && s.tumbi && Number.isInteger(s.tumbi.timer_sek) ? s.tumbi.timer_sek : 0), 0);
+    if (sek < GROEN_KOGETID) fejl.push('linserne skal koge mindst ' + GROEN_KOGETID / 60 + ' min, men timerne fra trinnet med linserne og frem er ' + Math.round(sek / 60) + ' min');
+  }
+  return fejl;
+}
+
+// Pris og grønt: linser er billigere end kød, og de tæller ikke som grønt. Noten om prisen siger, hvordan den er regnet
+function prisFejl(t, p) {
+  const fejl = [];
+  if (Number.isInteger(t.pris_kr) && Number.isInteger(p.pris_kr) && p.pris_kr >= t.pris_kr) {
+    fejl.push('«pris_kr» (' + p.pris_kr + ' kr.) skal være lavere end grundrettens (' + t.pris_kr + ' kr.): linser er billigere end kød');
+  }
+  if (Number.isInteger(t.groent_g) && Number.isInteger(p.groent_g) && p.groent_g < t.groent_g) {
+    fejl.push('«groent_g» (' + p.groent_g + ' g) må ikke være mindre end grundrettens (' + t.groent_g + ' g); linser tæller ikke som grønt');
+  }
+  if ('pris_kr' in p && erTekst(t.ugeplan_kilde) && !/linser/i.test(t.ugeplan_kilde)) {
+    fejl.push('«tumbi.ugeplan_kilde» skal også sige, hvordan prisen med mere grønt er regnet (nævn linserne)');
+  }
+  return fejl;
+}
+
+// Alt, rettelsen skal gøre. r er grundretten (formen er tjekket), g retten med mere grønt (medMereGroent)
+export function groentIndholdFejl(r, g) {
+  const p = r.tumbi.mere_groent;
+  const fejl = [...koedFejl(r, p), ...linseFejl(r, g), ...groenTrinFejl(p, g), ...prisFejl(r.tumbi, p)];
+  // Mængden på de nye og skiftede linjer (lyd groen-ingrediens-<n>) passer til «antal»
+  g.tumbi.ingredienser.forEach((x, i) => {
+    if (x && typeof x.lyd === 'string' && x.lyd.startsWith('groen-')) fejl.push(...tekstAntalFejl('ingrediens ' + (i + 1) + ' i retten med mere grønt', x));
+  });
+  return fejl;
+}
 
 // Indkøbsvarerne i js/katalog.js: afdeling, grundenhed, ikon og pakke skal passe sammen. Tager katalogets tabeller som
 // argument, så test-validator.js kan prøve en ødelagt kopi. Giver en liste med fejl (tom, når alt er i orden)
@@ -231,13 +341,16 @@ export function valider(rod = ROD) {
   const trinAntal = new Map(); // id → antal trin (til lydlisten)
   const ingrAntal = new Map(); // id → antal ingredienser (til lydlisten)
   const iUgeplan = new Set(); // id'er på retter i ugeplanen (til lydlisten: <ret>/uge.mp3)
+  const groenTrin = new Map(); // id → antal trin i retten med mere grønt (til lydlisten: <ret>/groen-<nr>.mp3)
+  const groenIngr = new Map(); // id → antal ingredienser i retten med mere grønt
   let flestTrin = 0;
   const sete = new Set();
   // Én ret: r er den læste JSON, rel stien i fejlene, filId filnavnet uden .json. venterPaaBillede: retten ligger i
-  // docs/venter-paa-billede (uden billede, index.json og lyd)
-  function tjekRet(r, { rel, filId, venterPaaBillede }) {
+  // docs/venter-paa-billede (uden billede, index.json og lyd). groen: r er retten med mere grønt (medMereGroent), som
+  // tjekkes efter grundretten: den har samme id og billede, «lyd» på ingredienser og trin, og tælles ikke for sig
+  function tjekRet(r, { rel, filId, venterPaaBillede, groen = false }) {
     // OK-linjens trin, voksen-trin og timere er kun retterne i appen (opskrifter/), ikke dem, der venter (review 31-10)
-    const taelt = venterPaaBillede ? { trin: 0, voksentrin: 0, timere: 0 } : tal;
+    const taelt = venterPaaBillede || groen ? { trin: 0, voksentrin: 0, timere: 0 } : tal;
     const f = (besked) => fejlI(rel, besked);
     const redaktion = (hvor, v) => {
       const m = fund(REDAKTION, v);
@@ -264,7 +377,7 @@ export function valider(rod = ROD) {
       if (t.id !== filId) f('tumbi.id ' + JSON.stringify(t.id) + ' passer ikke til filnavnet «' + filId + '»');
       if (typeof t.id === 'string') id = t.id;
       if (!ID_RE.test(filId)) f('filnavnet skal være små bogstaver, tal og bindestreg (æ, ø og å skrives ae, oe og aa)');
-      if (sete.has(id)) f('id «' + id + '» bruges også af en anden opskrift');
+      if (!groen && sete.has(id)) f('id «' + id + '» bruges også af en anden opskrift');
       sete.add(id);
       if (t.version !== 1) f('«tumbi.version» skal være 1');
       if (typeof t.afproevet !== 'boolean') f('«tumbi.afproevet» skal være true eller false');
@@ -294,17 +407,17 @@ export function valider(rod = ROD) {
       if ('groent_g' in t && !erHeltal(t.groent_g, 0, Infinity)) f('«tumbi.groent_g» skal være et heltal fra 0 (gram grønt i hele retten), fandt ' + JSON.stringify(t.groent_g));
     } else if ('tumbi' in r) f('«tumbi» skal være et objekt');
     const ugeplan = Boolean(t && typeof t === 'object' && t.ugeplan === true);
-    if (ugeplan && !venterPaaBillede) iUgeplan.add(filId);
+    if (ugeplan && !venterPaaBillede && !groen) iUgeplan.add(filId);
 
     if ('image' in r && r.image !== grafikRet(filId)) f('«image» skal være "' + grafikRet(filId) + '", fandt ' + JSON.stringify(r.image));
-    if (!venterPaaBillede && !findes(grafikRet(filId))) fejlI(grafikRet(filId), 'billedet mangler (retten «' + filId + '»)');
+    if (!venterPaaBillede && !groen && !findes(grafikRet(filId))) fejlI(grafikRet(filId), 'billedet mangler (retten «' + filId + '»)');
 
     // Ingredienserne og deres ikoner
     const ingr = r.recipeIngredient;
     const retIkoner = new Set();
     if ('recipeIngredient' in r && (!Array.isArray(ingr) || !ingr.length || !ingr.every(erTekst))) f('«recipeIngredient» skal være en liste med tekster');
     if (Array.isArray(ingr)) ingr.forEach((x, i) => redaktion('ingrediens ' + (i + 1), x));
-    if (Array.isArray(ingr) && !venterPaaBillede) ingrAntal.set(filId, ingr.length);
+    if (Array.isArray(ingr) && !venterPaaBillede) (groen ? groenIngr : ingrAntal).set(filId, ingr.length);
     if ('tool' in r && (!Array.isArray(r.tool) || !r.tool.every(erTekst))) f('«tool» skal være en liste med tekster');
     if (Array.isArray(r.tool)) r.tool.forEach((x, i) => redaktion('redskab ' + (i + 1), x)); // printet viser dem under «Redskaber»
     if (t && typeof t === 'object' && Array.isArray(ingr)) {
@@ -323,7 +436,7 @@ export function valider(rod = ROD) {
           else if (x.maengde && typeof ingr[i] === 'string' && !ingr[i].startsWith(x.maengde + ' ')) f(hvor + ': mængden «' + x.maengde + '» passer ikke til «' + ingr[i] + '»');
           // En tom mængde regnes aldrig om og giver ingen voksen-linje (js/skaler.js), så en glemt mængde skal fanges her
           else if (x.maengde === '' && typeof ingr[i] === 'string' && /^[\d½¼¾]/.test(ingr[i])) f(hvor + ': linjen «' + ingr[i] + '» starter med et tal, men «maengde» er tom');
-          for (const k of Object.keys(x)) if (!INGR_NOEGLER.has(k)) f(hvor + ': ukendt felt «' + k + '»');
+          for (const k of Object.keys(x)) if (!INGR_NOEGLER.has(k) && !(groen && k === 'lyd')) f(hvor + ': ukendt felt «' + k + '»');
           // Indkøbslisten: varen og mængden i en enhed, der kan lægges sammen med varens (kræves i ugeplanen)
           if (!('vare' in x)) { if (ugeplan) f(hvor + ': mangler «vare» (retten er i ugeplanen; varerne står i VARER i js/katalog.js)'); return; }
           if (typeof x.vare !== 'string' || !Object.hasOwn(VARER, x.vare)) { f(hvor + ': ukendt vare ' + JSON.stringify(x.vare) + ' (står ikke i VARER i js/katalog.js)'); return; }
@@ -345,7 +458,7 @@ export function valider(rod = ROD) {
     if (!('recipeInstructions' in r)) { /* allerede meldt */ } else if (!Array.isArray(trin) || trin.length < 3) f('«recipeInstructions» skal være en liste med mindst 3 trin');
     else {
       if (!venterPaaBillede) {
-        trinAntal.set(filId, trin.length);
+        (groen ? groenTrin : trinAntal).set(filId, trin.length);
         flestTrin = Math.max(flestTrin, trin.length);
       }
       let timerSek = 0;
@@ -362,7 +475,7 @@ export function valider(rod = ROD) {
         redaktion(hvor, s.text);
         const st = s.tumbi;
         if (!st || typeof st !== 'object') { f(hvor + ': mangler «tumbi» med et verbum'); return; }
-        for (const k of Object.keys(st)) if (!TRIN_NOEGLER.has(k)) f(hvor + ': ukendt felt «tumbi.' + k + '»');
+        for (const k of Object.keys(st)) if (!TRIN_NOEGLER.has(k) && !(groen && k === 'lyd')) f(hvor + ': ukendt felt «tumbi.' + k + '»');
         if (!Object.hasOwn(VERBER, st.verbum)) f(hvor + ': ukendt verbum ' + JSON.stringify(st.verbum) + ' — brug et af: ' + liste(Object.keys(VERBER)));
         if ('voksen_hjaelp' in st && !Object.hasOwn(VOKSEN_HJAELP, st.voksen_hjaelp)) f(hvor + ': «voksen_hjaelp» skal være ' + liste(Object.keys(VOKSEN_HJAELP).map((x) => '"' + x + '"')) + ', fandt ' + JSON.stringify(st.voksen_hjaelp));
         // «voksen: true» viser advarselstrekanten; «voksen_hjaelp» siger hvorfor (kniven eller flammen). De to følges ad.
@@ -482,6 +595,24 @@ export function valider(rod = ROD) {
         if (kniv > UGEPLAN_MAKS_KNIV) f('en ret i ugeplanen har højst ' + UGEPLAN_MAKS_KNIV + ' trin med kniv eller rivejern (skånsomt for hænderne), fandt ' + kniv + ': brug frosne hakkede grøntsager, dåser eller revet ost');
       }
     }
+    if (!groen && harMereGroent(r)) tjekMereGroent(r, { rel, filId, venterPaaBillede });
+  }
+
+  // «Mere grønt i maden»: rettelsens form (patchFejl), at den gør det, den lover (groentIndholdFejl), og retten med mere
+  // grønt efter alle reglerne for en ret (fejlene står med «(mere grønt)» efter filnavnet)
+  function tjekMereGroent(r, { rel, filId, venterPaaBillede }) {
+    const f = (besked) => fejlI(rel, '«tumbi.mere_groent»: ' + besked);
+    const form = patchFejl(r);
+    if (form.length) { form.forEach(f); return; }
+    let g;
+    try {
+      g = medMereGroent(r);
+    } catch (e) {
+      f(e.message);
+      return;
+    }
+    groentIndholdFejl(r, g).forEach(f);
+    tjekRet(g, { rel: rel + ' (mere grønt)', filId, venterPaaBillede, groen: true });
   }
 
   for (const [mappe, fil] of [...filer.map((n) => ['opskrifter', n]), ...venter.map((n) => [VENTER, n])]) {
@@ -512,8 +643,18 @@ export function valider(rod = ROD) {
         } else if (!trinAntal.has(m[1])) fejlI('lyd/liste.json', '«' + fil + '»: retten «' + m[1] + '» findes ikke');
         else if (/^ingrediens-/.test(m[2])) {
           if (!Number.isInteger(nr) || nr < 1 || nr > (ingrAntal.get(m[1]) || 0)) fejlI('lyd/liste.json', '«' + fil + '»: retten har kun ' + ingrAntal.get(m[1]) + ' ingredienser');
-        } else if (/^(\d+|timer-optaget-\d+)$/.test(m[2])) {
+        } else if (/^\d+$/.test(m[2])) {
           if (!Number.isInteger(nr) || nr < 1 || nr > trinAntal.get(m[1])) fejlI('lyd/liste.json', '«' + fil + '»: retten har kun ' + trinAntal.get(m[1]) + ' trin');
+        } else if (/^timer-optaget-/.test(m[2])) {
+          // Timeren kan også være i retten med mere grønt, som kan have flere trin
+          const n = Math.max(trinAntal.get(m[1]), groenTrin.get(m[1]) || 0);
+          if (!Number.isInteger(nr) || nr < 1 || nr > n) fejlI('lyd/liste.json', '«' + fil + '»: retten har kun ' + n + ' trin');
+        } else if (/^groen-/.test(m[2])) {
+          const ingrediens = /^groen-ingrediens-/.test(m[2]);
+          const n = (ingrediens ? groenIngr : groenTrin).get(m[1]);
+          const gyldig = ingrediens ? /^groen-ingrediens-\d+$/.test(m[2]) : /^groen-\d+$/.test(m[2]);
+          if (n === undefined) fejlI('lyd/liste.json', '«' + fil + '»: retten har ingen udgave med mere grønt');
+          else if (!gyldig || nr < 1 || nr > n) fejlI('lyd/liste.json', '«' + fil + '»: retten med mere grønt har kun ' + n + (ingrediens ? ' ingredienser' : ' trin'));
         } else if (m[2] === 'uge') {
           if (!iUgeplan.has(m[1])) fejlI('lyd/liste.json', '«' + fil + '»: retten er ikke med i ugeplanen');
         } else if (m[2] !== 'navn' && m[2] !== 'valgt') fejlI('lyd/liste.json', '«' + fil + '»: ukendt replik for en ret');

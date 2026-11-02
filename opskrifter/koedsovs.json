@@ -49,7 +49,7 @@
     "pris_kr": 86,
     "pris_dato": "2026-10",
     "groent_g": 1070,
-    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Prisen på hvidløg og mængden af revet ost på indkøbslisten er eget skøn.",
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Prisen på hvidløg og mængden af revet ost på indkøbslisten er eget skøn. Med mere grønt er der 250 g oksekød mindre og 100 g røde linser mere (Rema 1000's hyldepriser 31-10-2026: oksekød 39,95 kr. for 400 g og røde linser 16,95 kr. for 400 g, ganget med 1,09), og linserne tælles ikke som grønt.",
     "ingredienser": [
       { "ikon": "olie", "maengde": "1 spsk", "vare": "olie" },
       { "ikon": "koed", "maengde": "500 g", "vare": "hakket-oksekoed", "antal": 500, "enhed": "g" },
@@ -63,6 +63,20 @@
       { "ikon": "peber", "maengde": "1 knivspids", "vare": "peber" },
       { "ikon": "spaghetti", "maengde": "400 g", "vare": "spaghetti", "antal": 400, "enhed": "g" },
       { "ikon": "ost", "maengde": "", "vare": "revet-ost", "antal": 100, "enhed": "g" }
-    ]
+    ],
+    "mere_groent": {
+      "ingredienser": [
+        { "i": 1, "tekst": "250 g hakket oksekød", "antal": 250 }
+      ],
+      "nye_ingredienser": [
+        { "efter": 6, "tekst": "100 g røde linser", "ikon": "linser", "maengde": "100 g", "vare": "roede-linser", "antal": 100, "enhed": "g" },
+        { "efter": 6, "tekst": "3 dl vand", "ikon": "vand", "maengde": "3 dl", "vare": "vand", "antal": 3, "enhed": "dl" }
+      ],
+      "nye_trin": [
+        { "efter": 6, "@type": "HowToStep", "text": "Hæld linser og vand i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["linser", "vand"], "note": "Gryden er varm. Hold barnets hænder væk fra kanten. Rør godt rundt, så linserne ikke sætter sig." } }
+      ],
+      "pris_kr": 63,
+      "groent_g": 1070
+    }
   }
 }
