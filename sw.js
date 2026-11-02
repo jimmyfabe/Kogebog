@@ -11,7 +11,7 @@
 const PRAEFIKS = 'kog-';
 const INDHOLD = '32efe5388f09d417'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
-const LYD = '74203173dd2ca3fc'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
+const LYD = '1ebe76e54ae410e7'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
 const HENT_MS = 4000; // så længe venter en lydfil (før iPad-stemmen tager over) eller en opskrift (før cachen) på nettet
 const LANGSOM_MS = 30000; // så længe tager opskrifterne cachen med det samme, efter at nettet ikke svarede inden for HENT_MS
