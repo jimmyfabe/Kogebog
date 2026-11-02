@@ -17,8 +17,8 @@ import { portionerFraHusstand, faktorFor, skaleretIngrediens, voksenNoter } from
 import { lavModel } from '../js/model.js';
 import { kod } from '../js/plankode.js';
 import { saml, grupper, holdSammen } from '../js/indkoeb.js';
-import { planMandag } from '../js/tid.js';
-import { tilTale } from '../js/tekst.js';
+import { planMandag, varighedTale } from '../js/tid.js';
+import { tilTale, minutterTekst } from '../js/tekst.js';
 import { soeg } from '../js/soeg.js';
 import { GRUPPER, VARER } from '../js/katalog.js';
 import { MAERKER, maerkerFor } from '../js/maerker.js';
@@ -915,6 +915,14 @@ const retVist = (side) => side.evaluate(() => ({
   ingr: [...document.querySelectorAll('.ingr')].map((b) => b.getAttribute('aria-label')),
   linjer: [...document.querySelectorAll('.ret .voksen-linje')].map((e) => e.textContent),
 }));
+// Forsidens kort viser tiden på den udgave, retten viser. Hyrdetærten tager længere med mere grønt (ikke lynhurtig, så
+// skærmlæserens tekst slutter med punktum: tidTekst i app.js)
+const TID_RET = 'hyrdetaerte';
+const kortTid = (side) => side.evaluate((id) => {
+  const k = document.querySelector('.forside .kort[data-ret="' + id + '"]');
+  return k ? { tal: k.querySelector('.kort-tid')?.textContent, tale: k.querySelector('.sr-kun')?.textContent } : null;
+}, TID_RET);
+const tidFor = (m) => ({ tal: minutterTekst(m.minutter), tale: '. ' + varighedTale(m.minutter * 60) + '.' });
 
 async function skiftGroent(H, side, til, hvor) {
   await aabnVoksen(H, side, '', hvor + ': oversigten');
@@ -946,6 +954,13 @@ async function mereGroent(browser, H, skaerm) {
   await side.evaluate(() => localStorage.clear());
   // Gik man ud af grundretten på trin kogNr (gemt uden «groen», som før), er det ikke samme trin med mere grønt
   await side.evaluate(([ret, nr]) => localStorage.setItem('kog-v1', JSON.stringify({ v: 1, sidste: { ret, nr, tid: Date.now() }, timer: null })), [GROEN_RET, kogNr]);
+  const tidRet = lavModel(RETTER[TID_RET]);
+  const tjekKortTid = async (m, hvor) => {
+    const vist = await kortTid(side);
+    tjek(tidRet.minutter !== tidRet.groen.minutter && JSON.stringify(vist) === JSON.stringify(tidFor(m)),
+      n + ': ' + hvor + ': hyrdetærtens kort skal vise ' + JSON.stringify(tidFor(m)) + ' (' + JSON.stringify(vist) + ')');
+  };
+  await tjekKortTid(tidRet, 'kontakten fra');
 
   // Kontakten: slået fra som standard, og slået til gemmes i familien
   await aabnVoksen(H, side, '', n + ' oversigten');
@@ -958,6 +973,19 @@ async function mereGroent(browser, H, skaerm) {
   tjek((await laesLager(side, FAMILIE) || {}).mereGroent === true, n + ': valget er gemt i familien');
   await tjekLayout(side, n + ' oversigten med «Mere grønt i maden»');
   await foto(side, n + '-voksen-groent');
+
+  // Forsidens kort: tallet følger kontakten begge veje, når man går tilbage med «Luk». Før stod hyrdetærten til 50 min på
+  // kortet og 1 t på retten og i ugeplanen (UI-review 02-11)
+  const tilForsiden = async () => {
+    await tryk(side, '[data-fokus="luk"]');
+    await venterPaa(side, () => document.querySelector('.forside .kort[data-ret]'), null, n + ': «Luk» skal føre til forsiden');
+  };
+  await tilForsiden();
+  await tjekKortTid(tidRet.groen, 'kontakten til');
+  await skiftGroent(H, side, false, n);
+  await tilForsiden();
+  await tjekKortTid(tidRet, 'kontakten fra igen');
+  await skiftGroent(H, side, true, n);
 
   // Retten: halvt kød, linser og vand, og linjen til den voksne
   await gaaTil(side, '#/ret/' + GROEN_RET);

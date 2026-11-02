@@ -209,13 +209,15 @@ function forside() {
       const m = S.retter.get(id);
       if (!m) return el('li', { class: 'kort-plads' }, el('div', { class: 'kort tomt', 'aria-hidden': 'true' }));
       if (m instanceof Error) { fejlede.push(id); return null; }
+      // Tiden er den udgave, retten viser, når den åbnes: med kontakten stod hyrdetærten til 50 min her og 1 t på retten (UI-review 02-11)
+      const u = udgave(m);
       const b = el('button', { type: 'button', class: 'kort' + (S.valgtKort === id ? ' valgt' : ''), 'data-ret': id },
         Object.hasOwn(GRUPPER, gruppe) ? el('span', { class: 'kort-gruppe', 'aria-hidden': 'true' }, billede(grafikGruppe(gruppe), '')) : null,
-        el('span', { class: 'kort-billede' }, billede(grafikRet(id), ''), tidMaerke(m), lynMaerke(m)),
+        el('span', { class: 'kort-billede' }, billede(grafikRet(id), ''), tidMaerke(u), lynMaerke(u)),
         el('span', { class: 'kort-navn', tekst: m.navn }),
         el('span', { class: 'kort-aabn', 'aria-hidden': 'true' }, ikon('naeste'), el('span', { tekst: 'Tryk igen' })),
-        tidTekst(m),
-        lynTekst(m));
+        tidTekst(u),
+        lynTekst(u));
       b.addEventListener('click', klik(() => kortTryk(id, b)));
       return el('li', { class: 'kort-plads' }, b);
     };
