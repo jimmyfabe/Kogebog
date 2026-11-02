@@ -149,14 +149,16 @@ test('forsidens top på iPhone på højkant: Rosa og Bo er skjult eller mindst 3
     const skjult = gaeldende(rod, '.forside-top > .forside-dyr', b, h).display === 'none';
     const dyr = skjult ? 0 : (indhold - gab - knapper) / 2;
     if (!skjult && dyr < MIN_DYR) smalle.push(b + ' px: ' + dyr + ' px');
-    if (knapper > b) ude.push(b + ' px: ' + knapper + ' px');
+    // Knaprækken skal være inden for dugens padding: på 360 px stod Jul og Halloween 4 px fra skærmkanten, og
+    // fokusringen på den yderste knap blev skåret af (UI-review 02-11-2026)
+    if (knapper > indhold) ude.push(b + ' px: ' + knapper + ' px i ' + indhold + ' px');
   }
   const kort = (l) => (l.length > 2 ? l[0] + ' … ' + l.at(-1) : l.join(', '));
   // Forstår gaeldende() ikke en @media-regel (fx range-syntaks), springes alle bredder over, og testen blev grøn uden at
   // have målt noget (code-review 02-11-2026)
   assert.equal(maalt, 700 - 360 + 1, 'kun ' + maalt + ' bredder fik iPhone-gridet: forstår gaeldende() stadig @media-reglen?');
   assert.deepEqual(smalle, [], smalle.length + ' bredder giver Rosa og Bo under ' + MIN_DYR + ' px (' + kort(smalle) + '): skjul dem i reglen med .forside-top > .forside-dyr');
-  assert.deepEqual(ude, [], ude.length + ' bredder er smallere end knaprækken (' + kort(ude) + ')');
+  assert.deepEqual(ude, [], ude.length + ' bredder har ikke plads til knaprækken inden for dugens padding (' + kort(ude) + ')');
 });
 
 // Hvert afsnit på forsiden (GRUPPER i js/katalog.js) har sin egen farve i [data-gruppe] (overskriften, kortenes cirkel og

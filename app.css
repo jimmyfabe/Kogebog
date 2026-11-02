@@ -1054,6 +1054,12 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .forside-top > .forside-dyr { display: none; }
   .forside-hop { justify-self: center; }
 }
+/* Under 380 px er knaprækken (352 px) bredere end dugens indhold (340 px på 360 px): Jul og Halloween stod 4 px fra
+   skærmkanten, og fokusringen blev skåret af (UI-review 02-11-2026). Med 4 px mellemrum er rækken 336 px, ca. 12 px
+   fra kanten som kortene */
+@media (max-width: 379px) and (min-height: 521px), (max-width: 379px) and (orientation: portrait) {
+  .forside-hop { gap: 4px; }
+}
 
 /* Under 400 px er der kun plads til «Start forfra» ved siden af print, når print-knappen er uden ikon (teksten siger det) */
 @media (max-width: 399px) {
