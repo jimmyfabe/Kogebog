@@ -350,6 +350,25 @@ function ingenTraef(tekst, { ryd, fjernFiltre = null, filterTekst = 'Ingen rette
       fjernFiltre ? medFokus(K.knap('Fjern filtrene', { klasse: 'lille', onclick: fjernFiltre }), 'fjern-filtre') : null));
 }
 
+// Søgefeltet, tallet og listen under dem (udvalget, favoritterne og kataloget). passer(tekst): de poster, søgningen og
+// filtrene viser nu. tom: teksten, når der slet ingen retter er. ingen(tekst, ryd): det, der står, når intet passer.
+// liste(vist): listen med rækkerne. Ved hvert tegn tegnes kun tallet og listen om (soegeFelt). Svar: { form, tal, boks }
+function soegeListe(side, alle, { passer, tom = 'Der er ingen retter at vise.', ingen, liste }) {
+  const tal = soegeTal(side);
+  const boks = el('div', { class: 'soeg-resultat' });
+  const felt = soegeFelt(side, tegn);
+  function tegn() {
+    const tekst = soegeTekstFor(side);
+    const vist = passer(tekst);
+    tal.textContent = alle.length ? visTekst(vist.length, alle.length) : '';
+    if (!alle.length) boks.replaceChildren(el('p', { class: 'voksen-tom', tekst: tom }));
+    else if (!vist.length) boks.replaceChildren(ingen(tekst, felt.ryd));
+    else boks.replaceChildren(liste(vist));
+  }
+  tegn();
+  return { form: felt.form, tal, boks };
+}
+
 // ---------- Rækkernes knapper (udvalget, favoritterne og kataloget) ----------
 
 function skiftFavorit(m) {
@@ -608,11 +627,11 @@ function udvalgSkaerm(f) {
   const ids = f.udvalg ? f.udvalg.ids : [];
   const fuldt = ids.length >= UDVALG_MAKS;
   // Læses ved hvert tryk og hvert tegn: søgefeltet tegner kun listen om, ikke skærmen
-  const vistNu = () => filtrer(alle, { maerker: [...filtre], tekst: soegeTekstFor('udvalg') });
+  const passer = (tekst) => filtrer(alle, { maerker: [...filtre], tekst });
 
   // Kun blandt de viste retter, så filtrene og søgningen også gælder her (fx kun nye vegetarretter)
   const fyld = () => {
-    const ny = fyldOp(ids, vistNu().map((p) => p.m.id), f.lavet, { antal: f.udvalg ? FYLD_OP : UDVALG_STANDARD });
+    const ny = fyldOp(ids, passer(soegeTekstFor('udvalg')).map((p) => p.m.id), f.lavet, { antal: f.udvalg ? FYLD_OP : UDVALG_STANDARD });
     const flere = ny.length - ids.length;
     if (!flere) {
       besked = { tekst: fuldt
@@ -634,26 +653,17 @@ function udvalgSkaerm(f) {
   const chips = el('div', { class: 'filter-chips', role: 'group', 'aria-label': 'Filtre' },
     Object.keys(MAERKER).map((k) => filterChip(k, alle.filter((p) => p.noegler.includes(k)).length)));
 
-  const tal = soegeTal('udvalg');
-  const boks = el('div', { class: 'soeg-resultat' });
-  const soegefelt = soegeFelt('udvalg', tegn);
-  function tegn() {
-    const vist = vistNu();
-    tal.textContent = alle.length ? visTekst(vist.length, alle.length) : '';
-    if (!alle.length) {
-      boks.replaceChildren(el('p', { class: 'voksen-tom', tekst: 'Der er ingen retter i ugeplanen endnu.' }));
-    } else if (!vist.length) {
-      boks.replaceChildren(ingenTraef(soegeTekstFor('udvalg'), {
-        ryd: soegefelt.ryd,
-        fjernFiltre: filtre.size ? () => { filtre.clear(); tegnIgen('fyld-op'); } : null,
-        filterTekst: 'Ingen retter har alle de valgte mærker.',
-      }));
-    } else {
-      boks.replaceChildren(el('ul', { class: 'voksen-liste', 'aria-label': 'Retter i ugeplanen' },
-        vist.map((p) => raekke(p.m, { valgt: ids.includes(p.m.id), under: maerkeLinje(p.noegler), knap: medKnap(p.m, ids, fuldt) }))));
-    }
-  }
-  tegn();
+  const s = soegeListe('udvalg', alle, {
+    passer,
+    tom: 'Der er ingen retter i ugeplanen endnu.',
+    ingen: (tekst, ryd) => ingenTraef(tekst, {
+      ryd,
+      fjernFiltre: filtre.size ? () => { filtre.clear(); tegnIgen('fyld-op'); } : null,
+      filterTekst: 'Ingen retter har alle de valgte mærker.',
+    }),
+    liste: (vist) => el('ul', { class: 'voksen-liste', 'aria-label': 'Retter i ugeplanen' },
+      vist.map((p) => raekke(p.m, { valgt: ids.includes(p.m.id), under: maerkeLinje(p.noegler), knap: medKnap(p.m, ids, fuldt) }))),
+  });
 
   return voksenSkaerm('voksen-udvalg', 'Ugens udvalg', null,
     el('p', { class: 'voksen-hjaelp', tekst: 'Når børnene vælger ugens mad, ser de kun retterne i udvalget. Uden et udvalg ser de alle ' + alle.length + ' retter.' }),
@@ -662,11 +672,11 @@ function udvalgSkaerm(f) {
       medFokus(K.knap('Fyld op med nye', { klasse: 'lille', ikonNavn: 'plus', onclick: fyld }), 'fyld-op'),
       alleKnap),
     besked && !besked.ret ? beskedEl(besked) : null,
-    soegefelt.form,
+    s.form,
     chips,
-    tal,
+    s.tal,
     el('p', { class: 'udvalg-tal', tekst: f.udvalg ? valgtTekst(ids.length) : 'Intet udvalg: børnene ser alle retter' }),
-    boks,
+    s.boks,
     fejlLinje());
 }
 
@@ -674,28 +684,19 @@ function udvalgSkaerm(f) {
 
 function favoritSkaerm(f) {
   const alle = poster(alleRetter(), f);
-  const tal = soegeTal('favoritter');
-  const boks = el('div', { class: 'soeg-resultat' });
-  const soegefelt = soegeFelt('favoritter', tegn);
-  function tegn() {
-    const tekst = soegeTekstFor('favoritter');
-    const vist = filtrer(alle, { tekst });
-    tal.textContent = alle.length ? visTekst(vist.length, alle.length) : '';
-    if (!alle.length) boks.replaceChildren(el('p', { class: 'voksen-tom', tekst: 'Der er ingen retter at vise.' }));
-    else if (!vist.length) boks.replaceChildren(ingenTraef(tekst, { ryd: soegefelt.ryd }));
-    else {
-      boks.replaceChildren(el('ul', { class: 'voksen-liste', 'aria-label': 'Retter' },
-        vist.map((p) => raekke(p.m, { valgt: f.favoritter.includes(p.m.id), knap: hjerteKnap(p.m, f) }))));
-    }
-  }
-  tegn();
+  const s = soegeListe('favoritter', alle, {
+    passer: (tekst) => filtrer(alle, { tekst }),
+    ingen: (tekst, ryd) => ingenTraef(tekst, { ryd }),
+    liste: (vist) => el('ul', { class: 'voksen-liste', 'aria-label': 'Retter' },
+      vist.map((p) => raekke(p.m, { valgt: f.favoritter.includes(p.m.id), knap: hjerteKnap(p.m, f) }))),
+  });
   return voksenSkaerm('voksen-favoritter', 'Favoritter',
     f.favoritter.length ? flertal(f.favoritter.length, 'favorit', 'favoritter') : 'Ingen endnu',
     el('p', { class: 'voksen-hjaelp', tekst: 'Tryk på hjertet ved de retter, familien er glad for. Favoritterne får et ' + MAERKER.favorit.ikon + ', når børnene vælger ugens mad.' }),
     el('div', { class: 'voksen-knapper' }, tilbage()),
-    soegefelt.form,
-    tal,
-    boks,
+    s.form,
+    s.tal,
+    s.boks,
     fejlLinje());
 }
 
@@ -755,24 +756,17 @@ function katalogSkaerm(f) {
     v.maerker.clear();
     tegnIgen('gruppe-alle');
   };
-  const tal = soegeTal('katalog');
-  const boks = el('div', { class: 'soeg-resultat' });
-  const soegefelt = soegeFelt('katalog', tegn);
-  function tegn() {
-    const tekst = soegeTekstFor('katalog');
-    const vist = filtrer(alle, { gruppe: v.gruppe, maerker: [...v.maerker], tekst });
-    tal.textContent = alle.length ? visTekst(vist.length, alle.length) : '';
-    if (!alle.length) boks.replaceChildren(el('p', { class: 'voksen-tom', tekst: 'Der er ingen retter at vise.' }));
-    else if (!vist.length) boks.replaceChildren(ingenTraef(tekst, { ryd: soegefelt.ryd, fjernFiltre: v.gruppe || v.maerker.size ? fjernFiltre : null }));
-    else boks.replaceChildren(el('ul', { class: 'voksen-liste', 'aria-label': 'Retter' }, vist.map((p) => katalogRaekke(p, f, ids, fuldt))));
-  }
-  tegn();
+  const s = soegeListe('katalog', alle, {
+    passer: (tekst) => filtrer(alle, { gruppe: v.gruppe, maerker: [...v.maerker], tekst }),
+    ingen: (tekst, ryd) => ingenTraef(tekst, { ryd, fjernFiltre: v.gruppe || v.maerker.size ? fjernFiltre : null }),
+    liste: (vist) => el('ul', { class: 'voksen-liste', 'aria-label': 'Retter' }, vist.map((p) => katalogRaekke(p, f, ids, fuldt))),
+  });
   return voksenSkaerm('voksen-katalog', 'Katalog', 'Ugens udvalg: ' + (f.udvalg ? ids.length + ' af ' + UDVALG_MAKS : 'ingen valgt'),
     el('p', { class: 'voksen-hjaelp', tekst: 'Hjertet gør en ret til favorit. «Med» sætter den i ugens udvalg til børnene og står kun ved retter til ugeplanen.' }),
     el('div', { class: 'voksen-knapper' }, tilbage()),
-    soegefelt.form,
+    s.form,
     katalogFiltre(alle),
-    tal,
-    boks,
+    s.tal,
+    s.boks,
     fejlLinje());
 }

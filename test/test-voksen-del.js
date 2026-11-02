@@ -4,34 +4,78 @@
 // Kør:  node test/test-voksen-del.js
 import { test, mock } from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import * as lager from '../js/lager.js';
+import { lavModel } from '../js/model.js';
 
+// Et lille falsk DOM: nok til, at voksendelens skærme kan tegnes og trykkes på. Elementerne husker deres børn, attributter
+// og lyttere; send(e, 'click') kalder lytterne. querySelector kender kun '[data-fokus="…"]' og 'main h1' på den viste skærm
 const lyttere = {};
+let fokus = null;
 const lavEl = (tag) => ({
-  tag, born: [], attr: {}, dataset: {}, style: { setProperty() {} }, classList: { add() {}, remove() {} },
-  setAttribute(k, v) { this.attr[k] = v; }, append(...b) { this.born.push(...b); }, prepend() {}, addEventListener() {},
+  tag, born: [], attr: {}, dataset: {}, lyt: {}, hidden: false, value: '', open: false,
+  style: { setProperty() {} }, classList: { add() {}, remove() {} },
+  setAttribute(k, v) { this.attr[k] = String(v); if (k === 'open') this.open = true; },
+  getAttribute(k) { return Object.hasOwn(this.attr, k) ? this.attr[k] : null; },
+  append(...b) { this.born.push(...b); }, prepend(...b) { this.born.unshift(...b); }, replaceChildren(...b) { this.born = b; },
+  addEventListener(type, fn) { (this.lyt[type] ??= []).push(fn); },
+  focus() { fokus = this; }, blur() { if (fokus === this) fokus = null; },
 });
+const alleI = (e) => (e && typeof e === 'object' ? [e, ...(e.born || []).flatMap(alleI)] : []);
+const find = (rod, f) => alleI(rod).filter((e) => e.tag && f(e));
+const tekstAf = (e) => (e == null ? '' : typeof e.tekst === 'string' ? e.tekst : (e.textContent ?? '') + (e.born || []).map(tekstAf).join(''));
+const send = (e, type) => { for (const fn of e.lyt[type] || []) fn({ preventDefault() {}, type }); };
+const vist = [];
 globalThis.document = {
   addEventListener: (type, fn) => { (lyttere[type] ??= []).push(fn); },
   createElement: lavEl,
   createElementNS: (ns, tag) => lavEl(tag),
   createTextNode: (tekst) => ({ tekst }),
-  querySelector: () => null,
+  querySelector: (sel) => {
+    const m = /^\[data-fokus="([^"]*)"\]$/.exec(sel);
+    const skaerm = vist.at(-1);
+    if (m) return find(skaerm, (e) => e.dataset.fokus === m[1])[0] ?? null;
+    if (sel === 'main h1') return find(skaerm, (e) => e.tag === 'h1')[0] ?? null;
+    return null;
+  },
+  get activeElement() { return fokus; },
 };
 globalThis.location = { hash: '#/' };
+// Skærmens størrelse til matchMedia: kun (max-width: …), (max-height: …) og (pointer: coarse), som voksendelen bruger
+const skaermMaal = { b: 1280, h: 800, groft: false };
+globalThis.matchMedia = (q) => ({
+  matches: q.split(',').some((alt) => alt.trim().split(/\s+and\s+/).every((del) => {
+    const m = /^\(\s*([a-z-]+)\s*:\s*([a-z0-9.]+)\s*\)$/.exec(del.trim());
+    if (!m) throw new Error('matchMedia i testen kender ikke ' + del);
+    if (m[1] === 'max-width') return skaermMaal.b <= parseFloat(m[2]);
+    if (m[1] === 'max-height') return skaermMaal.h <= parseFloat(m[2]);
+    if (m[1] === 'pointer') return (m[2] === 'coarse') === skaermMaal.groft;
+    throw new Error('matchMedia i testen kender ikke ' + del);
+  })),
+});
+const lageret = new Map();
+globalThis.localStorage = {
+  getItem: (k) => (lageret.has(k) ? lageret.get(k) : null),
+  setItem: (k, v) => { lageret.set(k, String(v)); },
+  removeItem: (k) => { lageret.delete(k); },
+};
 
 const V = await import('../js/voksen-del.js');
+const { el } = await import('../js/dom.js');
 
-// app.js' hjælpere, så tyndt som muligt: statusSkaerm giver sine valg tilbage, så vagten kan genkendes
-const vist = [];
+// app.js' hjælpere, så tyndt som muligt: statusSkaerm giver sine valg tilbage, så vagten kan genkendes. vis() tegner
+// adressens skærm igen, som app.js gør
 let visKald = 0;
+const S = { ids: [], retter: new Map(), grupper: [] };
 V.init({
-  S: { ids: [], retter: new Map() },
+  S,
   naviger: (hash) => { location.hash = hash; },
-  vis: () => { visKald++; },
+  vis: () => { visKald++; V.rute(location.hash); },
   visSkaerm: (s) => { vist.push(s); },
   statusSkaerm: (valg) => ({ status: valg }),
-  knap: () => lavEl('button'),
+  knap: (tekst, { klasse = '', label, onclick } = {}) => el('button', { type: 'button', class: 'knap ' + klasse, 'aria-label': label, onclick }, tekst ? el('span', { tekst }) : null),
   klik: (fn) => fn,
   billede: () => lavEl('img'),
   topbar: () => lavEl('header'),
@@ -221,5 +265,80 @@ test('husstandens sum: loftet på 12 portioner siges, når det skærer ned, og k
         assert.equal(n, loft ? lager.MAKS_PORTIONER : voksne + boern ? raa : 1, voksne + ' + ' + boern + ' × ' + andel);
       }
     }
+  }
+});
+
+// ---------- Skærmene med de rigtige opskrifter (i det falske DOM øverst) ----------
+
+const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const IX = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', 'index.json'), 'utf8'));
+function medOpskrifter() {
+  S.grupper = IX.grupper;
+  S.ids = IX.grupper.flatMap((g) => g.retter);
+  for (const id of S.ids) S.retter.set(id, lavModel(JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8'))));
+}
+const harKlasse = (e, k) => typeof e.className === 'string' && e.className.split(/\s+/).includes(k);
+const medKlasse = (rod, k) => find(rod, (e) => harKlasse(e, k));
+const medFokusNavn = (rod, n) => find(rod, (e) => e.dataset.fokus === n)[0];
+const raekkerI = (rod) => find(rod, (e) => e.tag === 'li' && e.attr['data-ret']).map((e) => e.attr['data-ret']);
+const feltI = (rod) => find(rod, (e) => e.tag === 'input')[0];
+const talI = (rod) => tekstAf(medKlasse(rod, 'soeg-tal')[0]);
+const ingenTekst = (rod) => tekstAf(find(medKlasse(rod, 'voksen-tom')[0], (e) => e.tag === 'p')[0]);
+const knapperI = (rod) => find(rod, (e) => e.tag === 'button').map((b) => b.dataset.fokus);
+function skriv(rod, tekst) {
+  const f = feltI(rod);
+  f.value = tekst;
+  send(f, 'input');
+}
+// Låser op og viser voksendelens side på en skærm b × h (under 701 px: en telefon med fingre). Svar: den viste skærm
+function aabnSide(side, { b = 1280, h = 800 } = {}) {
+  Object.assign(skaermMaal, { b, h, groft: b <= 700 });
+  lageret.clear();
+  V.aabn();
+  location.hash = '#/voksen/' + side;
+  V.rute(location.hash);
+  return vist.at(-1);
+}
+
+test('søgefeltet på kataloget, udvalget og favoritterne: tallet og listen følger hvert tegn, og feltet tegnes ikke om', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  const uge = S.ids.filter((id) => S.retter.get(id).uge);
+  for (const [side, alle] of [['katalog', S.ids], ['udvalg', uge], ['favoritter', S.ids]]) {
+    const skaerm = aabnSide(side);
+    const antal = vist.length;
+    assert.deepEqual(raekkerI(skaerm), alle, side + ': alle retter i starten');
+    assert.equal(talI(skaerm), V.visTekst(alle.length, alle.length), side);
+    skriv(skaerm, 'kylling');
+    const kylling = raekkerI(skaerm);
+    assert.ok(kylling.length > 0 && kylling.length < alle.length, side + ': «kylling» viser nogle af retterne (' + kylling.length + ')');
+    assert.equal(talI(skaerm), V.visTekst(kylling.length, alle.length), side);
+    skriv(skaerm, 'xyzzy');
+    assert.deepEqual(raekkerI(skaerm), [], side + ': ingen træf');
+    assert.equal(ingenTekst(skaerm), 'Ingen retter passer til «xyzzy».', side);
+    assert.equal(talI(skaerm), V.visTekst(0, alle.length), side);
+    send(medFokusNavn(skaerm, 'ryd-soegning'), 'click');
+    assert.equal(feltI(skaerm).value, '', side + ': «Ryd søgningen» tømmer feltet');
+    assert.equal(fokus, feltI(skaerm), side + ': og giver det fokus');
+    assert.deepEqual(raekkerI(skaerm), alle, side + ': og viser alle retter igen');
+    assert.equal(vist.length, antal, side + ': skærmen er ikke tegnet om, mens der blev skrevet');
+  }
+});
+
+test('ingen træf med filtre: «Fjern filtrene» står ved «Ryd søgningen» i kataloget (gruppen) og udvalget (mærket)', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  for (const [side, chip, fjernet] of [['katalog', 'gruppe-halloween', S.ids.length], ['udvalg', 'filter-fisk', S.ids.filter((id) => S.retter.get(id).uge).length]]) {
+    aabnSide(side);
+    send(medFokusNavn(vist.at(-1), chip), 'click');
+    assert.equal(medFokusNavn(vist.at(-1), chip).getAttribute('aria-pressed'), 'true', side + ': ' + chip + ' er valgt');
+    skriv(vist.at(-1), 'xyzzy');
+    assert.equal(ingenTekst(vist.at(-1)), 'Ingen retter passer til «xyzzy» med de valgte filtre.', side);
+    assert.deepEqual(knapperI(medKlasse(vist.at(-1), 'voksen-tom')[0]), ['ryd-soegning', 'fjern-filtre'], side);
+    send(medFokusNavn(vist.at(-1), 'fjern-filtre'), 'click');
+    assert.equal(medFokusNavn(vist.at(-1), chip).getAttribute('aria-pressed'), 'false', side + ': «Fjern filtrene» fjerner ' + chip);
+    skriv(vist.at(-1), '');
+    assert.equal(raekkerI(vist.at(-1)).length, fjernet, side + ': uden filtre og søgning står alle retter der igen');
+    V.rute('#/');
   }
 });
