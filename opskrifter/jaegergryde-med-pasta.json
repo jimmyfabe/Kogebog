@@ -58,7 +58,7 @@
     "pris_kr": 74,
     "pris_dato": "2026-10",
     "groent_g": 350,
-    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's priser på shop.rema1000.dk 31-10-2026 for den brugte mængde (penne rigate 500 g 8,72 kr.; bacon i tern 200 g 12,95 kr.; hakket grisekød 8-12 % 500 g 24,95 kr. (prisen gjaldt til 31-10, prisen fra 1-11 stod ikke i webshoppen); løg 1 kg 12 kr.; champignon 250 g 16 kr.; tomatpuré 140 g 6,10 kr.; madlavningsfløde 8 % 250 ml 13,95 kr.; cocktailpølser 200 g 18,89 kr.), i alt 65,14 kr., ganget med 1,09 plus 3 kr. til salt, peber, paprika, bouillon, mel og ribsgelé. Grønt er også et skøn (ikke vejet): champignon 250 g og løg 100 g.",
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's priser på shop.rema1000.dk 31-10-2026 for den brugte mængde (penne rigate 500 g 8,72 kr.; bacon i tern 200 g 12,95 kr.; hakket grisekød 8-12 % 500 g 24,95 kr. (prisen gjaldt til 31-10, prisen fra 1-11 stod ikke i webshoppen); løg 1 kg 12 kr.; champignon 250 g 16 kr.; tomatpuré 140 g 6,10 kr.; madlavningsfløde 8 % 250 ml 13,95 kr.; cocktailpølser 200 g 18,89 kr.), i alt 65,14 kr., ganget med 1,09 plus 3 kr. til salt, peber, paprika, bouillon, mel og ribsgelé. Grønt er også et skøn (ikke vejet): champignon 250 g og løg 100 g. Med mere grønt er der 150 g hakket grisekød mindre og 60 g røde linser mere (REMA 1000's priser 31-10-2026: hakket grisekød 8-12 % 500 g 24,95 kr. og røde splitlinser 400 g 16,95 kr.), i alt 60,20 kr., ganget med 1,09 plus 3 kr., og linserne tælles ikke som grønt.",
     "ingredienser": [
       { "ikon": "spaghetti", "maengde": "300 g", "vare": "penne", "antal": 300, "enhed": "g" },
       { "ikon": "vand", "maengde": "3 l", "vare": "vand" },
@@ -75,6 +75,20 @@
       { "ikon": "syltetoej", "maengde": "1 tsk", "vare": "ribsgele" },
       { "ikon": "poelse", "maengde": "100 g", "vare": "partypoelser", "antal": 100, "enhed": "g" },
       { "ikon": "peber", "maengde": "1 knivspids", "vare": "peber" }
-    ]
+    ],
+    "mere_groent": {
+      "ingredienser": [
+        { "i": 3, "tekst": "150 g hakket svinekød", "antal": 150 }
+      ],
+      "nye_ingredienser": [
+        { "efter": 7, "tekst": "60 g røde linser", "ikon": "linser", "maengde": "60 g", "vare": "roede-linser", "antal": 60, "enhed": "g" },
+        { "efter": 7, "tekst": "1½ dl vand", "ikon": "vand", "maengde": "1½ dl", "vare": "vand", "antal": 1.5, "enhed": "dl" }
+      ],
+      "nye_trin": [
+        { "efter": 12, "@type": "HowToStep", "text": "Hæld linser og vand i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "ikoner": ["linser", "vand"], "note": "Den voksne hælder: gryden er varm. 1½ dl vand. Rør godt rundt, så linserne ikke sætter sig. De koger 5 min, før fløden kommer i. Bliver sovsen for tyk, så en sjat vand." } }
+      ],
+      "pris_kr": 69,
+      "groent_g": 350
+    }
   }
 }
