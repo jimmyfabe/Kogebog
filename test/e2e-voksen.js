@@ -7,13 +7,19 @@
 // 9. knapperne (børn 64 px, voksne 48 px) og ingen vandret rulning. Én gang: 4b. printets strenge n (desktop),
 // 5. «Send til telefon» og listen på telefonen, 8. data fra v3 (kun kog-uge-v1 og kog-liste-v1) indlæses uden tab og
 // 10. kog-familie-v1 fra en nyere udgave (oversigten står, siderne og hjertet er låst), 11. loftet på 12 portioner og
-// 12. holdet først, når opskrifterne er hentet.
+// 12. holdet først, når opskrifterne er hentet. 13. Kataloget og søgefeltet (også på udvalget og favoritterne) på hver
+// skærm: feltet tegnes ikke om, mens der skrives, «jul» giver juleretterne, grupperne, ingen træf, hjertet og «Med».
+import fs from 'node:fs';
+import path from 'node:path';
 import { portionerFraHusstand, faktorFor, skaleretIngrediens, voksenNoter } from '../js/skaler.js';
 import { lavModel } from '../js/model.js';
 import { kod } from '../js/plankode.js';
 import { saml, grupper } from '../js/indkoeb.js';
 import { planMandag } from '../js/tid.js';
 import { tilTale } from '../js/tekst.js';
+import { soeg } from '../js/soeg.js';
+import { GRUPPER } from '../js/katalog.js';
+import { MAERKER, maerkerFor } from '../js/maerker.js';
 
 const FAMILIE = 'kog-familie-v1';
 const UGE = 'kog-uge-v1';
@@ -30,6 +36,7 @@ const AFVIST = { force: true };
 
 export async function voksen(browser, H) {
   for (const skaerm of H.VALGTE) await forloeb(browser, H, skaerm);
+  for (const skaerm of H.VALGTE) await katalog(browser, H, skaerm);
   await strengtPrint(browser, H);
   await telefon(browser, H);
   await migrering(browser, H);
@@ -81,7 +88,7 @@ function forventetLinjer(RETTER, id, faktor) {
 }
 
 // Voksendelen på adressen #/voksen<del>: står holdet der (låsen lukker, når man går ud af #/voksen…), holdes det.
-const VOKSEN_SKAERM = { '': 'voksen-hub', '/husstand': 'voksen-husstand', '/udvalg': 'voksen-udvalg', '/favoritter': 'voksen-favoritter' };
+const VOKSEN_SKAERM = { '': 'voksen-hub', '/husstand': 'voksen-husstand', '/udvalg': 'voksen-udvalg', '/favoritter': 'voksen-favoritter', '/katalog': 'voksen-katalog' };
 async function aabnVoksen(H, side, del, hvor) {
   const til = '#/voksen' + del;
   await gaaTil(side, til);
@@ -363,6 +370,231 @@ async function forloeb(browser, H, skaerm) {
 
   await vent(100);
   tjek(side.fejl.length === 0, n + ' (voksendelen): ' + side.fejl.join(' | '));
+  await ctx.close();
+}
+
+// ---------- 13. Kataloget og søgefeltet ----------
+
+// Retterne, som voksendelen søger i (soegePost i js/voksen-del.js): navn, ingredienser, gruppens navn og mærkerne, som
+// en familie uden favoritter og «lavet». Søgeordene i testen («jul», «kylling», «kyl», «xyzzy») står ikke i noget
+// mærkes navn, så familiens egne mærker (ny, favorit) ændrer ikke svaret
+function katalogPoster(RETTER, ROD) {
+  const ix = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter/index.json'), 'utf8')).grupper;
+  const familie = { favoritter: [], lavet: {} };
+  return ix.flatMap((g) => g.retter.map((id) => {
+    const m = lavModel(RETTER[id]);
+    return { id, gruppeId: g.id, uge: Boolean(m.uge), navn: m.navn, ingredienser: m.ingredienser, gruppe: GRUPPER[g.id],
+      maerker: maerkerFor(m, { familie }).map((k) => MAERKER[k].navn) };
+  }));
+}
+const raekker = (side) => side.evaluate(() => [...document.querySelectorAll('#app > main .voksen-liste .voksen-raekke')].map((r) => r.dataset.ret));
+const ens = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+const feltNu = (side, id) => side.evaluate((x) => {
+  const f = document.getElementById(x);
+  return { vaerdi: f ? f.value : null, fokus: document.activeElement === f, ryd: document.querySelector('.soeg-ryd')?.hidden ?? null };
+}, id);
+
+// Skriver tekst ét tegn ad gangen i feltet, der har fokus (og er tomt eller har markøren til sidst). Efter hvert tegn:
+// samme input-element og samme skærm (intet er tegnet om, så Safari ikke lukker tastaturet), fokus i feltet, markøren til
+// sidst, og listen er præcis forventet(det skrevne)
+async function skrivTegnForTegn(H, side, sel, tekst, hvor, forventet) {
+  await side.evaluate((s) => { window.__felt = document.querySelector(s); window.__skaerm = document.querySelector('#app > main'); }, sel);
+  let skrevet = await side.evaluate(() => window.__felt.value);
+  for (const tegn of tekst) {
+    await side.keyboard.type(tegn);
+    skrevet += tegn;
+    const s = await side.evaluate((x) => {
+      const f = window.__felt;
+      return { samme: document.querySelector(x) === f && f.isConnected && document.querySelector('#app > main') === window.__skaerm,
+        fokus: document.activeElement === f, vaerdi: f.value, markoer: [f.selectionStart, f.selectionEnd] };
+    }, sel);
+    H.tjek(s.samme && s.fokus && s.vaerdi === skrevet && s.markoer[0] === skrevet.length && s.markoer[1] === skrevet.length,
+      hvor + ': efter «' + skrevet + '» er feltet det samme element, med fokus og markøren til sidst (' + JSON.stringify(s) + ')');
+    const vist = await raekker(side);
+    const ventet = forventet(skrevet);
+    H.tjek(ens(vist, ventet), hvor + ': listen efter «' + skrevet + '» (' + vist.length + ' vist, ' + ventet.length + ' ventet)');
+  }
+}
+
+async function katalog(browser, H, skaerm) {
+  const { BASE, RETTER, ROD, nySide, tjek, tjekLayout, foto, tryk, vent, venterPaa, h1 } = H;
+  const n = skaerm.navn;
+  console.log('[' + n + '] voksendelen: kataloget og søgefeltet (også på udvalget og favoritterne)');
+  const POSTER = katalogPoster(RETTER, ROD);
+  const ALLE = POSTER.map((p) => p.id);
+  const UGEPLAN = POSTER.filter((p) => p.uge);
+  const AFTENSMAD = POSTER.filter((p) => p.gruppeId === 'aftensmad');
+  const JUL = POSTER.filter((p) => p.gruppeId === 'jul').map((p) => p.id);
+  const GRUPPE_IDS = [...new Set(POSTER.map((p) => p.gruppeId))];
+  const ids = (liste, tekst) => soeg(liste, tekst).map((p) => p.id);
+  const retter = (antal) => antal + ' retter';
+  const { ctx, side } = await nySide(browser, skaerm, { serviceWorkers: 'block' });
+  await side.goto(BASE + '/index.html');
+  await side.waitForSelector('.kort[data-ret]');
+
+  // Oversigten: «Katalog» er det fjerde punkt og siger, hvor mange retter der kan søges i
+  await aabnVoksen(H, side, '', n + ' katalog: oversigten');
+  const punkter = await side.evaluate(() => [...document.querySelectorAll('.voksen-punkt')].map((b) => b.dataset.fokus));
+  const status = await tekstAf(side, '[data-fokus="katalog"] .voksen-punkt-status');
+  tjek(punkter[3] === 'katalog' && status === 'Søg i alle ' + retter(ALLE.length), n + ': «Katalog» er det fjerde punkt på oversigten (' + punkter.join(', ') + ' · ' + status + ')');
+  await tryk(side, '[data-fokus="katalog"]');
+  await venterPaa(side, () => location.hash === '#/voksen/katalog' && document.querySelector('main.voksen-katalog'), null, n + ': «Katalog» åbner kataloget');
+  tjek(await h1(side) === 'Katalog', n + ': katalogets overskrift (' + await h1(side) + ')');
+  const felt = await side.evaluate(() => {
+    const f = document.getElementById('soeg-katalog');
+    return f && { type: f.type, label: document.querySelector('label[for="soeg-katalog"]')?.textContent || '', hoejde: Math.round(f.getBoundingClientRect().height), vaerdi: f.value };
+  });
+  tjek(felt && felt.type === 'search' && felt.label === 'Søg i retterne' && felt.hoejde >= 48 && felt.vaerdi === '',
+    n + ': søgefeltet er type="search" med den synlige label «Søg i retterne» og mindst 48 px højt (' + JSON.stringify(felt) + ')');
+  tjek(ens(await raekker(side), ALLE) && await tekstAf(side, '.soeg-tal') === 'Viser alle ' + retter(ALLE.length),
+    n + ': kataloget viser alle ' + ALLE.length + ' retter (' + await tekstAf(side, '.soeg-tal') + ')');
+  const medVed = await side.evaluate(() => [...document.querySelectorAll('.voksen-raekke')].filter((r) => r.querySelector('[data-fokus^="ret-"]')).map((r) => r.dataset.ret));
+  tjek(ens(medVed, UGEPLAN.map((p) => p.id)), n + ': «Med i udvalget» står kun ved de ' + UGEPLAN.length + ' retter til ugeplanen (' + medVed.length + ')');
+  tjek(await side.locator('.voksen-katalog [data-fokus^="fav-"]').count() === ALLE.length && await side.locator('.voksen-katalog [data-fokus^="aabn-"]').count() === ALLE.length,
+    n + ': hver ret i kataloget har et hjerte og «Åbn»');
+  let aabne = await side.evaluate(() => document.querySelector('.katalog-filtre').open);
+  tjek(aabne === (n !== 'iphone'), n + ': grupper og mærker er ' + (n === 'iphone' ? 'foldet sammen på telefonen' : 'foldet ud') + ' (open: ' + aabne + ')');
+  await tjekLayout(side, n + ' katalog');
+  await foto(side, n + '-voksen-katalog');
+
+  // «jul», ét tegn ad gangen: feltet tegnes aldrig om, og listen ender med præcis juleretterne
+  await tryk(side, '#soeg-katalog');
+  await skrivTegnForTegn(H, side, '#soeg-katalog', 'jul', n + ' katalog', (t) => ids(POSTER, t));
+  tjek(ens(await raekker(side), JUL) && await tekstAf(side, '.soeg-tal') === 'Viser ' + JUL.length + ' af ' + retter(ALLE.length),
+    n + ': «jul» viser kun de ' + JUL.length + ' juleretter (' + await tekstAf(side, '.soeg-tal') + ')');
+  tjek((await feltNu(side, 'soeg-katalog')).ryd === false, n + ': «Ryd søgningen» (×) står i feltet, når der er skrevet noget');
+  await tjekLayout(side, n + ' katalog med «jul»');
+  await foto(side, n + '-voksen-katalog-jul');
+
+  // Hjertet fra kataloget: favorit, fokus bliver på hjertet, og søgningen står der stadig, efter at skærmen er tegnet om
+  const julRet = JUL[0];
+  await tryk(side, '[data-fokus="fav-' + julRet + '"]');
+  let f = await laesLager(side, FAMILIE);
+  const hjerte = await side.evaluate((id) => ({
+    trykket: document.querySelector('[data-fokus="fav-' + id + '"]')?.getAttribute('aria-pressed'),
+    fokus: document.activeElement?.dataset?.fokus || document.activeElement?.tagName,
+    soegning: document.getElementById('soeg-katalog').value,
+    maerker: (document.querySelector('.voksen-raekke[data-ret="' + id + '"] .voksen-raekke-maerker')?.textContent || '').replace(/\s+/g, ' '),
+  }), julRet);
+  tjek(f && ens(f.favoritter, [julRet]) && hjerte.trykket === 'true' && hjerte.fokus === 'fav-' + julRet,
+    n + ': hjertet i kataloget gør ' + julRet + ' til favorit, og fokus bliver på hjertet (' + JSON.stringify({ favoritter: f && f.favoritter, ...hjerte }) + ')');
+  tjek(hjerte.soegning === 'jul' && ens(await raekker(side), JUL), n + ': søgningen «jul» står der stadig, efter at hjertet har tegnet skærmen om');
+  tjek(hjerte.maerker.startsWith('Jul') && hjerte.maerker.includes('❤️ Favorit'), n + ': rækken viser gruppen og mærket ❤️ Favorit (' + hjerte.maerker + ')');
+
+  // × tømmer feltet, giver det fokus og viser alle retter
+  await tryk(side, '.soeg-ryd');
+  let nu = await feltNu(side, 'soeg-katalog');
+  tjek(nu.vaerdi === '' && nu.fokus && nu.ryd === true && ens(await raekker(side), ALLE), n + ': × tømmer søgefeltet, giver det fokus og viser alle retter (' + JSON.stringify(nu) + ')');
+
+  // Grupperne (med antal): «Aftensmad» viser kun aftensmad, og linjen over chipsene siger, hvad der er valgt. På
+  // telefonen foldes de ud først
+  if (n === 'iphone') {
+    await tryk(side, '.katalog-filtre > summary');
+    tjek(await side.evaluate(() => document.querySelector('.katalog-filtre').open), n + ': et tryk på «Grupper og mærker» folder filtrene ud');
+  }
+  const chips = await side.evaluate(() => [...document.querySelectorAll('[data-fokus^="gruppe-"]')].map((b) => b.textContent.replace(/\s+/g, ' ').trim()));
+  const ventChips = ['Alle (' + ALLE.length + ')', ...GRUPPE_IDS.map((g) => GRUPPER[g] + ' (' + POSTER.filter((p) => p.gruppeId === g).length + ')')];
+  tjek(ens(chips, ventChips), n + ': gruppe-chipsene med antal (' + chips.join(', ') + ')');
+  await tryk(side, '[data-fokus="gruppe-aftensmad"]');
+  const gruppe = await side.evaluate(() => ({
+    trykket: document.querySelector('[data-fokus="gruppe-aftensmad"]').getAttribute('aria-pressed'),
+    alle: document.querySelector('[data-fokus="gruppe-alle"]').getAttribute('aria-pressed'),
+    valgt: document.querySelector('.katalog-filtre-valgt')?.textContent || '',
+    fokus: document.activeElement?.dataset?.fokus || '',
+  }));
+  tjek(ens(await raekker(side), AFTENSMAD.map((p) => p.id)) && gruppe.trykket === 'true' && gruppe.alle === 'false' && gruppe.valgt === 'Aftensmad' && gruppe.fokus === 'gruppe-aftensmad',
+    n + ': «Aftensmad» viser kun de ' + AFTENSMAD.length + ' retter til aftensmad (' + JSON.stringify(gruppe) + ')');
+  tjek(await tekstAf(side, '.soeg-tal') === 'Viser ' + AFTENSMAD.length + ' af ' + retter(ALLE.length), n + ': tallet følger gruppen (' + await tekstAf(side, '.soeg-tal') + ')');
+  await tjekLayout(side, n + ' katalog: aftensmad');
+
+  // … og søgningen inden for gruppen
+  await tryk(side, '#soeg-katalog');
+  await skrivTegnForTegn(H, side, '#soeg-katalog', 'kylling', n + ' katalog, aftensmad', (t) => ids(AFTENSMAD, t));
+  const kylling = ids(AFTENSMAD, 'kylling');
+  const kyllingUge = UGEPLAN.map((p) => p.id).filter((id) => kylling.includes(id));
+  tjek(kyllingUge.length >= 2, n + ': mindst to retter til ugeplanen med kylling (' + kyllingUge.join(', ') + ')');
+  await tjekLayout(side, n + ' katalog: aftensmad med «kylling»');
+  await foto(side, n + '-voksen-katalog-kylling');
+
+  // «Med» fra kataloget: retten kommer i udvalget, og overskriftens linje tæller med
+  const medRet = kyllingUge[0];
+  await tryk(side, '[data-fokus="ret-' + medRet + '"]');
+  f = await laesLager(side, FAMILIE);
+  tjek(f && f.udvalg && ens(f.udvalg.ids, [medRet]) && await side.locator('[data-fokus="ret-' + medRet + '"]').getAttribute('aria-pressed') === 'true',
+    n + ': «Med» i kataloget sætter ' + medRet + ' i udvalget (' + JSON.stringify(f && f.udvalg) + ')');
+  tjek(await tekstAf(side, '.voksen-undertitel') === 'Ugens udvalg: 1 af 24' && (await feltNu(side, 'soeg-katalog')).vaerdi === 'kylling',
+    n + ': overskriften siger «Ugens udvalg: 1 af 24», og søgningen står der stadig (' + await tekstAf(side, '.voksen-undertitel') + ')');
+
+  // Grænsen: med 24 retter i udvalget er «Med» aria-disabled, og et tryk siger det i rækken, som på udvalgssiden. Søgningen
+  // og gruppen huskes, når man går til oversigten og tilbage (låsen er ikke lukket)
+  const anden = kyllingUge[1];
+  const fyldte = UGEPLAN.map((p) => p.id).filter((id) => id !== anden).slice(0, 24);
+  await saetLager(side, FAMILIE, { ...f, udvalg: { ids: fyldte, rettet: f.udvalg.rettet } });
+  await tryk(side, 'main .knap[aria-label="Tilbage til voksendelen"]');
+  await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('main.voksen-hub'), null, n + ': «Tilbage» fra kataloget går til oversigten');
+  await tryk(side, '[data-fokus="katalog"]');
+  await venterPaa(side, () => document.querySelector('main.voksen-katalog'), null, n + ': kataloget igen fra oversigten');
+  const husket = await side.evaluate(() => ({ soegning: document.getElementById('soeg-katalog').value, gruppe: document.querySelector('[data-fokus="gruppe-aftensmad"]').getAttribute('aria-pressed') }));
+  tjek(husket.soegning === 'kylling' && husket.gruppe === 'true', n + ': søgningen og gruppen huskes mellem voksendelens sider (' + JSON.stringify(husket) + ')');
+  tjek(await side.locator('[data-fokus="ret-' + anden + '"]').getAttribute('aria-disabled') === 'true', n + ': «Med» er aria-disabled, når udvalget er fuldt');
+  await tryk(side, '[data-fokus="ret-' + anden + '"]', AFVIST);
+  const fuld = await tekstAf(side, '.voksen-raekke[data-ret="' + anden + '"] .uge-besked');
+  f = await laesLager(side, FAMILIE);
+  tjek(fuld === 'Udvalget er fuldt: højst 24 retter. Fjern en ret først.' && ens(f.udvalg.ids, fyldte),
+    n + ': «Med» ved et fuldt udvalg siger grænsen i rækken og ændrer intet (' + fuld + ')');
+  await tjekLayout(side, n + ' katalog: fuldt udvalg');
+
+  // Ingen træf: en kort tekst med det, der er søgt efter, og «Ryd søgningen» og «Fjern filtrene»
+  await tryk(side, '.soeg-ryd');
+  await skrivTegnForTegn(H, side, '#soeg-katalog', 'xyzzy', n + ' katalog, ingen træf', (t) => ids(AFTENSMAD, t));
+  const tom = await side.evaluate(() => ({ tekst: document.querySelector('.voksen-tom p')?.textContent || '', knapper: [...document.querySelectorAll('.voksen-tom .knap')].map((b) => b.dataset.fokus) }));
+  tjek(tom.tekst === 'Ingen retter passer til «xyzzy» med de valgte filtre.' && ens(tom.knapper, ['ryd-soegning', 'fjern-filtre']),
+    n + ': ingen træf viser teksten og «Ryd søgningen» og «Fjern filtrene» (' + JSON.stringify(tom) + ')');
+  tjek(await tekstAf(side, '.soeg-tal') === 'Viser 0 af ' + retter(ALLE.length), n + ': tallet ved ingen træf (' + await tekstAf(side, '.soeg-tal') + ')');
+  await tjekLayout(side, n + ' katalog: ingen træf');
+  await foto(side, n + '-voksen-katalog-ingen');
+  await tryk(side, '[data-fokus="ryd-soegning"]');
+  nu = await feltNu(side, 'soeg-katalog');
+  tjek(nu.vaerdi === '' && nu.fokus && ens(await raekker(side), AFTENSMAD.map((p) => p.id)), n + ': «Ryd søgningen» tømmer feltet, giver det fokus og viser gruppen igen (' + JSON.stringify(nu) + ')');
+  await tryk(side, '[data-fokus="gruppe-alle"]');
+  tjek(ens(await raekker(side), ALLE), n + ': «Alle» viser alle retter igen');
+
+  // «Åbn» går til retten. Ud af voksendelen lukker låsen, og søgningen, gruppen og foldningen er glemt, når den åbnes igen
+  await tryk(side, '[data-fokus="gruppe-jul"]');
+  await tryk(side, '#soeg-katalog');
+  await side.keyboard.type('jul');
+  await tryk(side, '[data-fokus="aabn-' + julRet + '"]');
+  await venterPaa(side, (id) => location.hash === '#/ret/' + id && document.querySelector('.ret h1'), julRet, n + ': «Åbn» åbner ' + julRet);
+  await aabnVoksen(H, side, '/katalog', n + ' kataloget efter låsen');
+  const glemt = await side.evaluate(() => ({ soegning: document.getElementById('soeg-katalog').value, alle: document.querySelector('[data-fokus="gruppe-alle"]').getAttribute('aria-pressed'), open: document.querySelector('.katalog-filtre').open }));
+  tjek(glemt.soegning === '' && glemt.alle === 'true' && glemt.open === (n !== 'iphone') && ens(await raekker(side), ALLE),
+    n + ': efter låsen er søgningen og gruppen glemt (' + JSON.stringify(glemt) + ')');
+
+  // Søgefeltet på favoritterne og udvalget: samme felt, der heller ikke tegnes om, mens der skrives
+  await aabnVoksen(H, side, '/favoritter', n + ' favoritter med søgning');
+  await tryk(side, '#soeg-favoritter');
+  await skrivTegnForTegn(H, side, '#soeg-favoritter', 'kyl', n + ' favoritter', (t) => ids(POSTER, t));
+  tjek(await tekstAf(side, '.soeg-tal') === 'Viser ' + ids(POSTER, 'kyl').length + ' af ' + retter(ALLE.length), n + ': tallet på favoritterne (' + await tekstAf(side, '.soeg-tal') + ')');
+  await tjekLayout(side, n + ' favoritter med søgning');
+  await foto(side, n + '-voksen-favoritter-soeg');
+  await aabnVoksen(H, side, '/udvalg', n + ' udvalg med søgning');
+  tjek((await feltNu(side, 'soeg-udvalg')).vaerdi === '', n + ': udvalget har sin egen søgning (tom)');
+  await tryk(side, '#soeg-udvalg');
+  await skrivTegnForTegn(H, side, '#soeg-udvalg', 'kyl', n + ' udvalg', (t) => ids(UGEPLAN, t));
+  tjek(await tekstAf(side, '.soeg-tal') === 'Viser ' + ids(UGEPLAN, 'kyl').length + ' af ' + retter(UGEPLAN.length) && await tekstAf(side, '.udvalg-tal') === '24 af 24 valgt',
+    n + ': udvalget viser søgningens tal og stadig «24 af 24 valgt» (' + await tekstAf(side, '.soeg-tal') + ' · ' + await tekstAf(side, '.udvalg-tal') + ')');
+  await tjekLayout(side, n + ' udvalg med søgning');
+  await foto(side, n + '-voksen-udvalg-soeg');
+
+  // «Luk» glemmer søgningen
+  await aabnVoksen(H, side, '', n + ' oversigten før «Luk»');
+  await tryk(side, '[data-fokus="luk"]');
+  await venterPaa(side, () => location.hash === '#/' && document.querySelector('.voksen-knap'), null, n + ': «Luk» går til forsiden');
+  await aabnVoksen(H, side, '/udvalg', n + ' udvalget efter «Luk»');
+  tjek((await feltNu(side, 'soeg-udvalg')).vaerdi === '' && ens(await raekker(side), UGEPLAN.map((p) => p.id)), n + ': efter «Luk» er søgningen på udvalget glemt');
+
+  await vent(100);
+  tjek(side.fejl.length === 0, n + ' (kataloget): ' + side.fejl.join(' | '));
   await ctx.close();
 }
 
