@@ -180,11 +180,12 @@ let sidsteSide = null;
 let besked = null;  // { tekst, fejl?, ret? } under knapperne (ret: i rækken med den ret)
 let kladde = null;  // husstanden, til den gemmes: { voksne, boern, barnAndel } (kun i hukommelsen)
 const filtre = new Set(); // udvalgets filterchips (nøgler fra MAERKER): huskes, til siden lukkes
-// Søgefeltets tekst pr. side ('udvalg', 'favoritter', 'katalog'), katalogets valg (gruppen, null = alle, og mærkerne) og
-// om filtrene er foldet ud pr. side ('udvalg', 'katalog'; ingen værdi = efter skærmen). Kun i hukommelsen, og glemt, når
-// voksendelen låses
+// Søgefeltets tekst pr. side ('udvalg', 'favoritter', 'katalog') og katalogets valg (gruppen, null = alle, og mærkerne).
+// Kun i hukommelsen, og glemt, når voksendelen låses
 const soegning = new Map();
 const katalogValg = { gruppe: null, maerker: new Set() };
+// Om filtrene er foldet ud ('udvalg', 'katalog'; ingen værdi = efter skærmen). Glemt, når man går til en anden side, så
+// telefonen altid starter med listen lige under søgefeltet
 const filterAaben = new Map();
 function glemSoegning() {
   soegning.clear();
@@ -206,8 +207,8 @@ export function rute(hash) {
 }
 
 function skaerm(side) {
-  // Beskeden og husstandens kladde hører til den side, de kom på
-  if (side !== sidsteSide) { besked = null; kladde = null; }
+  // Beskeden, husstandens kladde og filtrenes foldning hører til den side, de kom på
+  if (side !== sidsteSide) { besked = null; kladde = null; filterAaben.clear(); }
   sidsteSide = side;
   // Opskrifterne først: ellers tegnes holdet om, når de er hentet, og et hold, der er i gang, starter forfra
   if (K.S.indexFejl) return hentFejl();
@@ -354,11 +355,12 @@ function ingenTraef(tekst, { ryd, fjernFiltre = null, filterTekst = 'Ingen rette
 
 // Søgefeltet, tallet og listen under dem (udvalget, favoritterne og kataloget). passer(tekst): de poster, søgningen og
 // filtrene viser nu. tom: teksten, når der slet ingen retter er. ingen(tekst, ryd): det, der står, når intet passer.
-// liste(vist): listen med rækkerne. Ved hvert tegn tegnes kun tallet og listen om (soegeFelt). Svar: { form, tal, boks }
-function soegeListe(side, alle, { passer, tom = 'Der er ingen retter at vise.', ingen, liste }) {
+// liste(vist): listen med rækkerne. naarSkrevet(): kaldes ved hvert tegn, før listen tegnes. Ved hvert tegn tegnes kun
+// tallet og listen om (soegeFelt). Svar: { form, tal, boks }
+function soegeListe(side, alle, { passer, tom = 'Der er ingen retter at vise.', ingen, liste, naarSkrevet = null }) {
   const tal = soegeTal(side);
   const boks = el('div', { class: 'soeg-resultat' });
-  const felt = soegeFelt(side, tegn);
+  const felt = soegeFelt(side, () => { naarSkrevet?.(); tegn(); });
   function tegn() {
     const tekst = soegeTekstFor(side);
     const vist = passer(tekst);
@@ -604,12 +606,12 @@ function gemUdvalg(ids, tekst, fokus, ret) {
   if (f) K.annoncer(tekst);
 }
 
-// En mærke-chip (udvalget og kataloget): valgte er sættet, den slår mærket til og fra i
-function filterChip(k, antal, valgte = filtre) {
+// En mærke-chip (udvalget og kataloget): valgte er sættet, den slår mærket til og fra i, og side er filtrenes side
+function filterChip(k, antal, valgte = filtre, side = 'udvalg') {
   const b = medFokus(K.knap(MAERKER[k].navn + ' (' + antal + ')', { klasse: 'filter-chip', onclick: () => {
     if (valgte.has(k)) valgte.delete(k);
     else valgte.add(k);
-    tegnIgen('filter-' + k);
+    efterFilterValg(side, 'filter-' + k);
   } }), 'filter-' + k);
   b.prepend(el('span', { 'aria-hidden': 'true', tekst: MAERKER[k].ikon }));
   b.setAttribute('aria-pressed', String(valgte.has(k)));
@@ -618,15 +620,33 @@ function filterChip(k, antal, valgte = filtre) {
 
 // Filtrene (udvalgets mærker, katalogets grupper og mærker) under én linje, der kan foldes sammen og siger, hvad der er
 // valgt. Foldet ud på iPad og desktop, sammen på telefonen, så listen står lige under søgefeltet, mens tastaturet er
-// fremme. Den voksnes valg huskes, til låsen lukker. side: 'udvalg' eller 'katalog'
+// fremme. Hvad den voksne har foldet ud, huskes, mens siden står (filterAaben). side: 'udvalg' eller 'katalog'
+const SMAL = '(max-width: 700px)';
+const smal = () => matchMedia(SMAL).matches;
 function filterBoks(side, navn, valgte, ...chips) {
-  const boks = el('details', { class: 'filtre', open: filterAaben.get(side) ?? !matchMedia('(max-width: 700px)').matches },
-    el('summary', {},
+  const boks = el('details', { class: 'filtre', open: filterAaben.get(side) ?? !smal() },
+    medFokus(el('summary', {},
       el('span', { class: 'filtre-navn', tekst: navn }),
-      valgte.length ? el('span', { class: 'filtre-valgt', tekst: valgte.join(', ') }) : null),
+      valgte.length ? el('span', { class: 'filtre-valgt', tekst: valgte.join(', ') }) : null), 'filtre-' + side),
     chips);
   boks.addEventListener('toggle', () => { filterAaben.set(side, boks.open); });
   return boks;
+}
+
+// Et valg i filtrene. På telefonen fylder de udfoldede filtre skærmen, så de foldes sammen, og tallet og listen står lige
+// under linjen, der siger, hvad der er valgt (den får fokus). Ellers bliver filtrene stående, og fokus bliver på chippen
+function efterFilterValg(side, fokus) {
+  const fold = smal();
+  if (fold) filterAaben.set(side, false);
+  tegnIgen(fold ? 'filtre-' + side : fokus);
+}
+
+// Et tegn i søgefeltet på telefonen folder filtrene sammen, så træffene står lige under feltet. Skærmen tegnes ikke om
+// (tastaturet bliver fremme)
+function foldVedSoegning(side, boks) {
+  if (!boks.open || !smal()) return;
+  boks.open = false;
+  filterAaben.set(side, false);
 }
 
 // Linjen under navnet: gruppen (kun i kataloget) og mærkerne
@@ -665,12 +685,13 @@ function udvalgSkaerm(f) {
     naarFaerdig: () => gemUdvalg([], 'Intet udvalg: børnene kan vælge alle ' + alle.length + ' retter.', 'fyld-op'),
   }), 'alle-retter') : null;
 
-  const chips = filterBoks('udvalg', 'Mærker', [...filtre].map((k) => MAERKER[k].navn),
+  const filtreEl = filterBoks('udvalg', 'Mærker', [...filtre].map((k) => MAERKER[k].navn),
     el('div', { class: 'filter-chips', role: 'group', 'aria-label': 'Mærker' },
       Object.keys(MAERKER).map((k) => filterChip(k, alle.filter((p) => p.noegler.includes(k)).length))));
 
   const s = soegeListe('udvalg', alle, {
     passer,
+    naarSkrevet: () => foldVedSoegning('udvalg', filtreEl),
     tom: 'Der er ingen retter i ugeplanen endnu.',
     ingen: (tekst, ryd) => ingenTraef(tekst, {
       ryd,
@@ -689,7 +710,7 @@ function udvalgSkaerm(f) {
       alleKnap),
     besked && !besked.ret ? beskedEl(besked) : null,
     s.form,
-    chips,
+    filtreEl,
     s.tal,
     el('p', { class: 'udvalg-tal', tekst: f.udvalg ? valgtTekst(ids.length) : 'Intet udvalg: børnene ser alle retter' }),
     s.boks,
@@ -725,7 +746,7 @@ function gruppeChip(id, navn, antal) {
   const fokus = 'gruppe-' + (id || 'alle');
   const b = medFokus(K.knap(navn + ' (' + antal + ')', { klasse: 'filter-chip', onclick: () => {
     katalogValg.gruppe = valgt ? null : id;
-    tegnIgen(fokus);
+    efterFilterValg('katalog', fokus);
   } }), fokus);
   if (id) b.prepend(K.billede(grafikGruppe(id), '', 'filter-chip-billede'));
   b.setAttribute('aria-pressed', String(valgt));
@@ -741,7 +762,7 @@ function katalogFiltre(alle) {
       gruppeChip(null, 'Alle', alle.length),
       K.S.grupper.filter((g) => Object.hasOwn(GRUPPER, g.id)).map((g) => gruppeChip(g.id, GRUPPER[g.id], alle.filter((p) => p.gruppeId === g.id).length))),
     el('div', { class: 'filter-chips', role: 'group', 'aria-label': 'Mærker' },
-      Object.keys(MAERKER).map((k) => filterChip(k, alle.filter((p) => p.noegler.includes(k)).length, v.maerker))));
+      Object.keys(MAERKER).map((k) => filterChip(k, alle.filter((p) => p.noegler.includes(k)).length, v.maerker, 'katalog'))));
 }
 
 // En ret i kataloget: «Med» (kun retter til ugeplanen) først, så hjertet og «Åbn» altid står samme sted
@@ -766,8 +787,10 @@ function katalogSkaerm(f) {
     v.maerker.clear();
     tegnIgen('gruppe-alle');
   };
+  const filtreEl = katalogFiltre(alle);
   const s = soegeListe('katalog', alle, {
     passer: (tekst) => filtrer(alle, { gruppe: v.gruppe, maerker: [...v.maerker], tekst }),
+    naarSkrevet: () => foldVedSoegning('katalog', filtreEl),
     ingen: (tekst, ryd) => ingenTraef(tekst, { ryd, fjernFiltre: v.gruppe || v.maerker.size ? fjernFiltre : null }),
     liste: (vist) => el('ul', { class: 'voksen-liste', 'aria-label': 'Retter' }, vist.map((p) => katalogRaekke(p, f, ids, fuldt))),
   });
@@ -775,7 +798,7 @@ function katalogSkaerm(f) {
     el('p', { class: 'voksen-hjaelp', tekst: 'Hjertet gør en ret til favorit. «Med» sætter den i ugens udvalg til børnene og står kun ved retter til ugeplanen.' }),
     el('div', { class: 'voksen-knapper' }, tilbage()),
     s.form,
-    katalogFiltre(alle),
+    filtreEl,
     s.tal,
     s.boks,
     fejlLinje());

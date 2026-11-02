@@ -428,6 +428,11 @@ async function katalog(browser, H, skaerm) {
   const GRUPPE_IDS = [...new Set(POSTER.map((p) => p.gruppeId))];
   const ids = (liste, tekst) => soeg(liste, tekst).map((p) => p.id);
   const retter = (antal) => antal + ' retter';
+  // En chip i filtrene: er de foldet sammen (på telefonen, også efter et valg), foldes de ud først
+  const chip = async (fokus) => {
+    if (!await side.evaluate(() => document.querySelector('main .filtre').open)) await tryk(side, 'main .filtre > summary');
+    await tryk(side, '[data-fokus="' + fokus + '"]');
+  };
   const { ctx, side } = await nySide(browser, skaerm, { serviceWorkers: 'block' });
   await side.goto(BASE + '/index.html');
   await side.waitForSelector('.kort[data-ret]');
@@ -501,15 +506,24 @@ async function katalog(browser, H, skaerm) {
     alle: document.querySelector('[data-fokus="gruppe-alle"]').getAttribute('aria-pressed'),
     valgt: document.querySelector('.filtre-valgt')?.textContent || '',
     fokus: document.activeElement?.dataset?.fokus || '',
+    open: document.querySelector('.filtre').open,
+    top: Math.round(document.querySelector('.voksen-liste .voksen-raekke').getBoundingClientRect().top), H: innerHeight,
   }));
-  tjek(ens(await raekker(side), AFTENSMAD.map((p) => p.id)) && gruppe.trykket === 'true' && gruppe.alle === 'false' && gruppe.valgt === 'Aftensmad' && gruppe.fokus === 'gruppe-aftensmad',
+  tjek(ens(await raekker(side), AFTENSMAD.map((p) => p.id)) && gruppe.trykket === 'true' && gruppe.alle === 'false' && gruppe.valgt === 'Aftensmad'
+    && gruppe.fokus === (n === 'iphone' ? 'filtre-katalog' : 'gruppe-aftensmad'),
     n + ': «Aftensmad» viser kun de ' + AFTENSMAD.length + ' retter til aftensmad (' + JSON.stringify(gruppe) + ')');
+  // Review-fund 3 (02-11): på telefonen folder valget filtrene sammen, så tallet og den første ret ses, og fokus står på
+  // linjen, der siger, hvad der er valgt. Ellers bliver filtrene stående
+  tjek(gruppe.open === (n !== 'iphone') && (n !== 'iphone' || gruppe.top < gruppe.H - 60),
+    n + ': ' + (n === 'iphone' ? 'valget folder filtrene sammen, og den første ret ses over kanten' : 'filtrene bliver foldet ud efter valget') + ' (' + JSON.stringify(gruppe) + ')');
   tjek(await tekstAf(side, '.soeg-tal') === 'Viser ' + AFTENSMAD.length + ' af ' + retter(ALLE.length), n + ': tallet følger gruppen (' + await tekstAf(side, '.soeg-tal') + ')');
   await tjekLayout(side, n + ' katalog: aftensmad');
 
-  // … og søgningen inden for gruppen
+  // … og søgningen inden for gruppen. På telefonen folder det første tegn de udfoldede filtre sammen (review-fund 3)
+  if (n === 'iphone') await tryk(side, '.filtre > summary');
   await tryk(side, '#soeg-katalog');
   await skrivTegnForTegn(H, side, '#soeg-katalog', 'kylling', n + ' katalog, aftensmad', (t) => ids(AFTENSMAD, t));
+  if (n === 'iphone') tjek(!await side.evaluate(() => document.querySelector('.filtre').open), n + ': søgningen folder filtrene sammen på telefonen');
   const kylling = ids(AFTENSMAD, 'kylling');
   const kyllingUge = UGEPLAN.map((p) => p.id).filter((id) => kylling.includes(id));
   tjek(kyllingUge.length >= 2, n + ': mindst to retter til ugeplanen med kylling (' + kyllingUge.join(', ') + ')');
@@ -556,11 +570,11 @@ async function katalog(browser, H, skaerm) {
   await tryk(side, '[data-fokus="ryd-soegning"]');
   nu = await feltNu(side, 'soeg-katalog');
   tjek(nu.vaerdi === '' && nu.fokus && ens(await raekker(side), AFTENSMAD.map((p) => p.id)), n + ': «Ryd søgningen» tømmer feltet, giver det fokus og viser gruppen igen (' + JSON.stringify(nu) + ')');
-  await tryk(side, '[data-fokus="gruppe-alle"]');
+  await chip('gruppe-alle');
   tjek(ens(await raekker(side), ALLE), n + ': «Alle» viser alle retter igen');
 
   // «Åbn» går til retten. Ud af voksendelen lukker låsen, og søgningen, gruppen og foldningen er glemt, når den åbnes igen
-  await tryk(side, '[data-fokus="gruppe-jul"]');
+  await chip('gruppe-jul');
   await tryk(side, '#soeg-katalog');
   await side.keyboard.type('jul');
   await tryk(side, '[data-fokus="aabn-' + julRet + '"]');

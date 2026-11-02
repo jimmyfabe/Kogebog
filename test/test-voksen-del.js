@@ -367,3 +367,68 @@ test('udvalgets mærker står foldet sammen på telefonen og foldet ud på en st
   assert.equal(tekstAf(find(vist.at(-1), (e) => e.tag === 'summary')[0]), 'MærkerVegetar', 'linjen siger, hvilke mærker der er valgt');
   send(medFokusNavn(vist.at(-1), 'filter-vegetar'), 'click');
 });
+
+// Review-fund 3 (02-11): på telefonen fyldte de udfoldede filtre skærmen, så et tryk på en gruppe kun ændrede chippen,
+// mens tallet og listen stod under kanten, og udfoldningen blev husket, til låsen lukkede. Nu folder et valg og et tegn i
+// søgefeltet filtrene sammen på telefonen, fokus står på linjen, der siger, hvad der er valgt, og en ny side starter efter
+// skærmen
+const filtreI = (rod) => find(rod, (e) => e.tag === 'details')[0];
+function foldUd(rod) {
+  const d = filtreI(rod);
+  d.open = true;
+  send(d, 'toggle');
+  return d;
+}
+test('på telefonen folder et valg i filtrene dem sammen, og fokus står på linjen, der siger, hvad der er valgt', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  const halloween = IX.grupper.find((g) => g.id === 'halloween').retter;
+  foldUd(aabnSide('katalog', { b: 390, h: 844 }));
+  send(medFokusNavn(vist.at(-1), 'gruppe-halloween'), 'click');
+  let d = filtreI(vist.at(-1));
+  assert.equal(d.open, false, 'et tryk på en gruppe folder filtrene sammen, så listen ses');
+  assert.deepEqual(raekkerI(vist.at(-1)), halloween, 'listen viser gruppen');
+  assert.equal(fokus, find(d, (e) => e.tag === 'summary')[0], 'fokus står på linjen over filtrene');
+  assert.equal(tekstAf(fokus), 'Grupper og mærkerHalloween');
+  foldUd(vist.at(-1));
+  send(medFokusNavn(vist.at(-1), 'filter-vegetar'), 'click');
+  d = filtreI(vist.at(-1));
+  assert.equal(d.open, false, 'også et mærke folder dem sammen');
+  assert.equal(tekstAf(find(d, (e) => e.tag === 'summary')[0]), 'Grupper og mærkerHalloween, Vegetar');
+  V.rute('#/');
+  foldUd(aabnSide('udvalg', { b: 390, h: 844 }));
+  send(medFokusNavn(vist.at(-1), 'filter-fisk'), 'click');
+  assert.equal(filtreI(vist.at(-1)).open, false, 'udvalgets mærker foldes også sammen');
+  assert.equal(fokus, medFokusNavn(vist.at(-1), 'filtre-udvalg'), 'og fokus står på udvalgets linje');
+  send(medFokusNavn(vist.at(-1), 'filter-fisk'), 'click');
+});
+
+test('på telefonen folder et tegn i søgefeltet filtrene sammen, og en ny side starter med dem foldet sammen', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  const skaerm = aabnSide('katalog', { b: 390, h: 844 });
+  const d = foldUd(skaerm);
+  skriv(skaerm, 'k');
+  assert.equal(d.open, false, 'det første tegn folder filtrene sammen (uden at tegne skærmen om)');
+  assert.equal(vist.at(-1), skaerm);
+  foldUd(skaerm);
+  location.hash = '#/voksen';
+  V.rute(location.hash);
+  location.hash = '#/voksen/katalog';
+  V.rute(location.hash);
+  assert.equal(filtreI(vist.at(-1)).open, false, 'tilbage på kataloget er filtrene foldet sammen igen');
+  foldUd(vist.at(-1));
+  send(medFokusNavn(vist.at(-1), 'fav-' + S.ids[0]), 'click');
+  assert.equal(filtreI(vist.at(-1)).open, true, 'et hjerte i listen folder dem ikke sammen (listen hopper ikke under fingeren)');
+});
+
+test('på en stor skærm bliver filtrene foldet ud efter et valg og et tegn, og fokus bliver på chippen', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  const skaerm = aabnSide('katalog', { b: 1280, h: 1000 });
+  skriv(skaerm, 'k');
+  assert.equal(filtreI(skaerm).open, true);
+  send(medFokusNavn(skaerm, 'gruppe-jul'), 'click');
+  assert.equal(filtreI(vist.at(-1)).open, true);
+  assert.equal(fokus, medFokusNavn(vist.at(-1), 'gruppe-jul'));
+});
