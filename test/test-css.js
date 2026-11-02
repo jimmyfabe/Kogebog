@@ -7,6 +7,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { GRUPPER } from '../js/katalog.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const CSS = fs.readFileSync(path.join(ROD, 'app.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
@@ -80,4 +81,99 @@ test('printets fod holdes sammen med det sidste trin', () => {
   const regler = (sel) => alle.filter((b) => b.hoved.split(',').map((s) => s.trim()).includes(sel)).map((b) => b.deklarationer).join(';');
   assert.match(regler('.slut'), /break-inside\s*:\s*avoid/, '.slut (det sidste trin og foden) skal have break-inside: avoid, så foden ikke står alene på side 2');
   assert.doesNotMatch(regler('.fod'), /break-before/, '.fod må ikke bruge break-before: Safari kender ikke break-before: avoid, og blokken .slut holder foden sammen med det sidste trin');
+});
+
+// Forsidens top på iPhone på højkant: afsnittenes knapper står mellem Rosa og Bo i et grid (minmax(0, 1fr) auto
+// minmax(0, 1fr)). Dyrene skal være skjult eller mindst 32 px brede (som forsideTop i test-e2e.js), og knaprækken må ikke
+// være bredere end skærmen (den står i midten og må gerne gå ind i toppens margen: på 360 px står den 4 px fra kanterne,
+// målt i WebKit). Med jul blev knapperne fem (352 px), og på 390×844 blev dyrene 1 px brede (review K1, 01-11-2026).
+// Testen regner bredderne ud af app.css og antallet af afsnit for hver skærmbredde fra 360 til 700 px på højkant, så en
+// sjette knap eller en ny afstand fanges uden en browser
+const MIN_DYR = 32;
+function mediaPasser(hoved, b, h) {
+  const betingelser = hoved.replace(/^@media\s*/, '');
+  return betingelser.split(',').some((alt) => alt.trim().split(/\s+and\s+/).every((del) => {
+    const m = /^\(\s*([a-z-]+)\s*:\s*([a-z0-9.]+)\s*\)$/.exec(del.trim());
+    if (!m) return false;
+    const [, navn, v] = m;
+    const tal = parseFloat(v);
+    if (navn === 'max-width') return b <= tal;
+    if (navn === 'min-width') return b >= tal;
+    if (navn === 'max-height') return h <= tal;
+    if (navn === 'min-height') return h >= tal;
+    if (navn === 'orientation') return v === (h >= b ? 'portrait' : 'landscape');
+    return false; // hover, prefers-reduced-motion og andet: ikke det, der styrer toppen
+  }));
+}
+// Deklarationerne for vaelger, i kildens rækkefølge (samme vægt, så den sidste vinder), ved bredden b og højden h
+function gaeldende(rod, vaelger, b, h) {
+  const ud = {};
+  const brug = (r) => {
+    if (!r.hoved.split(',').map((s) => s.trim()).includes(vaelger)) return;
+    for (const d of r.deklarationer.split(';')) {
+      const i = d.indexOf(':');
+      if (i > 0) ud[d.slice(0, i).trim()] = d.slice(i + 1).trim();
+    }
+  };
+  for (const r of rod.regler) {
+    if (!r.hoved.startsWith('@')) brug(r);
+    else if (r.hoved.startsWith('@media') && mediaPasser(r.hoved, b, h)) r.regler.forEach(brug);
+  }
+  return ud;
+}
+test('forsidens top på iPhone på højkant: Rosa og Bo er skjult eller mindst 32 px, og knaprækken er højst skærmens bredde', () => {
+  const rod = blokke(CSS);
+  const rodVar = Object.fromEntries([...rod.regler.filter((r) => r.hoved === ':root').map((r) => r.deklarationer).join(';')
+    .matchAll(/(--[a-z-]+)\s*:\s*([^;]+)/g)].map((m) => [m[1], m[2].trim()]));
+  const px = (v) => {
+    const m = /^var\((--[a-z-]+)\)$/.exec(v);
+    const t = m ? rodVar[m[1]] : v;
+    assert.match(t, /^\d+(\.\d+)?px$|^0$/, 'forventede en værdi i px, fandt ' + v);
+    return parseFloat(t);
+  };
+  const vandret = (v) => { const d = v.split(/\s+/); return px(d.length === 1 ? d[0] : d[1]); }; // padding: højre/venstre
+  const kolonneGap = (v) => { const d = v.split(/\s+/); return px(d.length === 1 ? d[0] : d[1]); }; // gap: række kolonne
+  const n = Object.keys(GRUPPER).length;
+  const smalle = [];
+  const ude = [];
+  let maalt = 0;
+  for (let b = 360; b <= 700; b++) {
+    const h = 1000; // højkant: også (min-height: 521px)
+    const top = gaeldende(rod, '.forside-top', b, h);
+    if (top.display !== 'grid') continue; // kun iPhone-layoutet på højkant
+    maalt++;
+    const indhold = b - 2 * vandret(top.padding);
+    const kolonner = (top['grid-template-columns'].match(/minmax\([^)]*\)|[^\s()]+/g) || []).length;
+    const gab = kolonner > 1 ? (kolonner - 1) * kolonneGap(top.gap) : 0;
+    const knapper = n * px(gaeldende(rod, '.knap.hop', b, h).width) + (n - 1) * px(gaeldende(rod, '.forside-hop', b, h).gap);
+    const skjult = gaeldende(rod, '.forside-top > .forside-dyr', b, h).display === 'none';
+    const dyr = skjult ? 0 : (indhold - gab - knapper) / 2;
+    if (!skjult && dyr < MIN_DYR) smalle.push(b + ' px: ' + dyr + ' px');
+    // Knaprækken skal være inden for dugens padding: på 360 px stod Jul og Halloween 4 px fra skærmkanten, og
+    // fokusringen på den yderste knap blev skåret af (UI-review 02-11-2026)
+    if (knapper > indhold) ude.push(b + ' px: ' + knapper + ' px i ' + indhold + ' px');
+  }
+  const kort = (l) => (l.length > 2 ? l[0] + ' … ' + l.at(-1) : l.join(', '));
+  // Forstår gaeldende() ikke en @media-regel (fx range-syntaks), springes alle bredder over, og testen blev grøn uden at
+  // have målt noget (code-review 02-11-2026)
+  assert.equal(maalt, 700 - 360 + 1, 'kun ' + maalt + ' bredder fik iPhone-gridet: forstår gaeldende() stadig @media-reglen?');
+  assert.deepEqual(smalle, [], smalle.length + ' bredder giver Rosa og Bo under ' + MIN_DYR + ' px (' + kort(smalle) + '): skjul dem i reglen med .forside-top > .forside-dyr');
+  assert.deepEqual(ude, [], ude.length + ' bredder har ikke plads til knaprækken inden for dugens padding (' + kort(ude) + ')');
+});
+
+// Hvert afsnit på forsiden (GRUPPER i js/katalog.js) har sin egen farve i [data-gruppe] (overskriften, kortenes cirkel og
+// knappen i toppen). Jul kom ind 01-11-2026 uden en regel, og så faldt kortene tilbage til sennep og knappen til ingenting
+test('hvert afsnit har sin egen farve i [data-gruppe] fra en farve på :root', () => {
+  const rod = blokke(CSS);
+  const farver = new Set([...rod.regler.filter((b) => b.hoved === ':root').map((b) => b.deklarationer).join(';')
+    .matchAll(/(--[a-z-]+)\s*:/g)].map((m) => m[1]));
+  const brugt = new Map();
+  for (const id of Object.keys(GRUPPER)) {
+    const regel = rod.regler.filter((b) => b.hoved === '[data-gruppe="' + id + '"]').map((b) => b.deklarationer).join(';');
+    const m = /--ret-farve\s*:\s*var\((--[a-z-]+)\)/.exec(regel);
+    assert.ok(m, 'app.css mangler [data-gruppe="' + id + '"] { --ret-farve: var(--…); }');
+    assert.ok(farver.has(m[1]), '[data-gruppe="' + id + '"] bruger ' + m[1] + ', som ikke står på :root');
+    assert.ok(!brugt.has(m[1]), id + ' og ' + brugt.get(m[1]) + ' har samme farve (' + m[1] + ')');
+    brugt.set(m[1], id);
+  }
 });

@@ -1,0 +1,46 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Juletrifli med pebernødder og kirsebær",
+  "description": "Knuste pebernødder, kirsebærsauce og flødeskum i lag i glas. Barnet kan lave det hele selv, uden ovn og uden kniv. Allergener: gluten og mælk; tjek pakken på pebernødderne (kan indeholde æg, soja og spor af nødder).",
+  "image": "grafik/ret-juletrifli-med-pebernoedder-og-kirsebaer.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 glas",
+  "prepTime": "PT20M",
+  "totalTime": "PT50M",
+  "recipeIngredient": [
+    "100 g pebernødder",
+    "2½ dl piskefløde",
+    "1 spsk vaniljesukker",
+    "½ tsk kanel",
+    "½ glas kirsebærsauce (ca. 250 g)"
+  ],
+  "tool": ["frysepose", "kagerulle", "skål", "elpisker eller piskeris", "spiseske", "4 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder gluten og mælk." } },
+    { "@type": "HowToStep", "text": "Kom pebernødderne i en frysepose.", "tumbi": { "verbum": "haelde", "ikoner": ["pebernoedder"], "note": "100 g. Gem 4 hele pebernødder til pynt. Luk posen godt." } },
+    { "@type": "HowToStep", "text": "Knus dem med kagerullen.", "tumbi": { "verbum": "kagerulle", "ikoner": ["pebernoedder"], "note": "Bank og rul, til de er krummer. Små stykker må gerne blive tilbage." } },
+    { "@type": "HowToStep", "text": "Hæld fløden i en skål.", "tumbi": { "verbum": "haelde", "ikoner": ["flode"], "note": "2½ dl piskefløde, lige fra køleskabet." } },
+    { "@type": "HowToStep", "text": "Drys vaniljesukker og kanel i fløden.", "tumbi": { "verbum": "drysse", "ikoner": ["sukker", "krydderi"], "note": "1 spsk vaniljesukker og ½ tsk kanel." } },
+    { "@type": "HowToStep", "text": "Pisk fløden til let skum.", "tumbi": { "verbum": "piske", "ikoner": ["flode"], "note": "Med en elpisker hjælper den voksne lidt. Stop i tide, ellers bliver det til smør." } },
+    { "@type": "HowToStep", "text": "Drys krummerne i bunden af glassene.", "tumbi": { "verbum": "drysse", "ikoner": ["pebernoedder"], "note": "Fordel dem i 4 glas." } },
+    { "@type": "HowToStep", "text": "Hæld kirsebærsauce over krummerne.", "tumbi": { "verbum": "haelde", "ikoner": ["syltetoej"], "note": "Ca. 2 spsk i hvert glas, kold lige fra glasset." } },
+    { "@type": "HowToStep", "text": "Kom flødeskum på som et låg.", "tumbi": { "verbum": "haelde", "ikoner": ["flode"], "note": "Med en ske." } },
+    { "@type": "HowToStep", "text": "Pynt med en pebernød på toppen.", "tumbi": { "verbum": "pynte", "ikoner": ["pebernoedder"] } },
+    { "@type": "HowToStep", "text": "Stil glassene i køleskabet i 30 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "Så bliver krummerne bløde som kage." } },
+    { "@type": "HowToStep", "text": "Smag!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "juletrifli-med-pebernoedder-og-kirsebaer",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Vores egen sammensætning med idé fra Arla: «Kirsebærtrifli» (https://www.arla.dk/opskrifter/kirsebartrifli/) og Arlas julecheesecake med pebernøddebund. Trinene er egen tekst. Mængderne er et skøn.",
+    "ingredienser": [
+      { "ikon": "pebernoedder", "maengde": "100 g" },
+      { "ikon": "flode", "maengde": "2½ dl" },
+      { "ikon": "sukker", "maengde": "1 spsk" },
+      { "ikon": "krydderi", "maengde": "½ tsk" },
+      { "ikon": "syltetoej", "maengde": "½ glas" }
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Risengrød i ovn",
+  "description": "Julens grød med kanelsukker og en smørklat. I ovnen brænder grøden ikke på. Husk at sætte en skål ud til nissen! Allergener: mælk.",
+  "image": "grafik/ret-risengroed-i-ovn.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT20M",
+  "cookTime": "PT1H",
+  "totalTime": "PT1H30M",
+  "recipeIngredient": [
+    "3 dl vand",
+    "180 g grødris",
+    "1 l sødmælk",
+    "¼ tsk salt",
+    "4 spsk sukker eller rørsukker",
+    "2 tsk kanel",
+    "50 g smør"
+  ],
+  "tool": ["gryde med låg, der kan tåle ovnen", "dl-mål", "køkkenvægt", "grydeske", "grydelapper", "kop", "teske", "spiseske", "4 skåle"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk." } },
+    { "@type": "HowToStep", "text": "Mål 3 dl vand i gryden.", "tumbi": { "verbum": "maale", "ikoner": ["vand"], "note": "En gryde med låg, der kan tåle ovnen. Tænd ovnen på 125 °C varmluft (ca. 145 °C almindelig ovn)." } },
+    { "@type": "HowToStep", "text": "Hæld 180 g grødris i gryden.", "tumbi": { "verbum": "haelde", "ikoner": ["ris"], "note": "Gryden er kold endnu, så barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Kog ris og vand i to minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 120, "note": "Rør hele tiden. Start timeren, når det koger." } },
+    { "@type": "HowToStep", "text": "Hæld mælken i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["maelk"], "note": "1 l sødmælk. Gryden er varm, så den voksne hælder." } },
+    { "@type": "HowToStep", "text": "Kog grøden op, og rør i ti minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "note": "Middel varme. Rør hele tiden i bunden, så grøden ikke brænder på." } },
+    { "@type": "HowToStep", "text": "Sæt gryden i ovnen i 35 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 2100, "note": "Med låg på, 125 °C varmluft. Er grøden for tynd, så 10 minutter mere." } },
+    { "@type": "HowToStep", "text": "Tag gryden ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Gryden og låget er meget varme. Brug grydelapper." } },
+    { "@type": "HowToStep", "text": "Lad grøden hvile i ti minutter.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Med låg på. Rør ikke gryden: den er meget varm." } },
+    { "@type": "HowToStep", "text": "Rør kanel og sukker sammen i en kop.", "tumbi": { "verbum": "roere", "ikoner": ["krydderi", "sukker"], "note": "2 tsk kanel og 4 spsk sukker. Det er kanelsukker." } },
+    { "@type": "HowToStep", "text": "Rør saltet i grøden.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt"], "note": "¼ tsk salt. Grøden er varm, så den voksne rører. Smag til." } },
+    { "@type": "HowToStep", "text": "Øs grøden op i skåle.", "tumbi": { "verbum": "maale", "voksen": true, "voksen_hjaelp": "varme", "note": "Grøden er meget varm." } },
+    { "@type": "HowToStep", "text": "Drys kanelsukker på grøden.", "tumbi": { "verbum": "drysse", "ikoner": ["krydderi", "sukker"] } },
+    { "@type": "HowToStep", "text": "Læg en smørklat i midten.", "tumbi": { "verbum": "pynte", "ikoner": ["smoer"], "note": "50 g smør delt i 4 klatter. Den smelter i den varme grød." } },
+    { "@type": "HowToStep", "text": "Smag, og husk nissens skål!", "tumbi": { "verbum": "smage", "note": "Pust først. Grøden er varm." } }
+  ],
+  "tumbi": {
+    "id": "risengroed-i-ovn",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Arla: «Risengrød i ovn» (https://www.arla.dk/opskrifter/risengrod-i-ovn/), smørklatten fra Arlas risengrød med kanelsukker. Trinene er egen tekst. Temperaturen i almindelig ovn og tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "vand", "maengde": "3 dl" },
+      { "ikon": "ris", "maengde": "180 g" },
+      { "ikon": "maelk", "maengde": "1 l" },
+      { "ikon": "salt", "maengde": "¼ tsk" },
+      { "ikon": "sukker", "maengde": "4 spsk" },
+      { "ikon": "krydderi", "maengde": "2 tsk" },
+      { "ikon": "smoer", "maengde": "50 g" }
+    ]
+  }
+}

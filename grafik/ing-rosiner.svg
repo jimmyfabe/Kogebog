@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="bowl">
+    <path fill="#3E8FB0" d="M36 140 C40 196 80 222 128 222 C176 222 216 196 220 140 Z"/>
+    <path fill="#2E6A83" stroke="none" d="M190 150 C184 186 160 208 132 214 C176 214 210 190 216 146 Z"/>
+    <ellipse cx="128" cy="140" rx="92" ry="20" fill="#2E6A83"/>
+  </g>
+  <g id="raisins">
+    <g transform="translate(78 128) rotate(-20)">
+      <ellipse rx="19" ry="14" fill="#6E3B4E"/>
+      <path fill="none" stroke="#4E2A38" stroke-width="3" d="M-10 -4 Q-2 2 8 -6 M-6 6 Q2 10 10 4"/>
+    </g>
+    <g transform="translate(112 122) rotate(14)">
+      <ellipse rx="19" ry="14" fill="#7E4A5C"/>
+      <path fill="none" stroke="#4E2A38" stroke-width="3" d="M-10 -4 Q-2 2 8 -6 M-6 6 Q2 10 10 4"/>
+    </g>
+    <g transform="translate(148 124) rotate(-8)">
+      <ellipse rx="19" ry="14" fill="#6E3B4E"/>
+      <path fill="none" stroke="#4E2A38" stroke-width="3" d="M-10 -4 Q-2 2 8 -6 M-6 6 Q2 10 10 4"/>
+    </g>
+    <g transform="translate(182 130) rotate(24)">
+      <ellipse rx="19" ry="14" fill="#7E4A5C"/>
+      <path fill="none" stroke="#4E2A38" stroke-width="3" d="M-10 -4 Q-2 2 8 -6 M-6 6 Q2 10 10 4"/>
+    </g>
+    <g transform="translate(96 100) rotate(30)">
+      <ellipse rx="19" ry="14" fill="#7E4A5C"/>
+      <path fill="none" stroke="#4E2A38" stroke-width="3" d="M-10 -4 Q-2 2 8 -6 M-6 6 Q2 10 10 4"/>
+    </g>
+    <g transform="translate(132 96) rotate(-24)">
+      <ellipse rx="19" ry="14" fill="#6E3B4E"/>
+      <path fill="none" stroke="#4E2A38" stroke-width="3" d="M-10 -4 Q-2 2 8 -6 M-6 6 Q2 10 10 4"/>
+    </g>
+    <g transform="translate(166 104) rotate(12)">
+      <ellipse rx="19" ry="14" fill="#6E3B4E"/>
+      <path fill="none" stroke="#4E2A38" stroke-width="3" d="M-10 -4 Q-2 2 8 -6 M-6 6 Q2 10 10 4"/>
+    </g>
+    <g transform="translate(116 72) rotate(8)">
+      <ellipse rx="19" ry="14" fill="#7E4A5C"/>
+      <path fill="none" stroke="#4E2A38" stroke-width="3" d="M-10 -4 Q-2 2 8 -6 M-6 6 Q2 10 10 4"/>
+    </g>
+    <g transform="translate(150 74) rotate(-14)">
+      <ellipse rx="19" ry="14" fill="#6E3B4E"/>
+      <path fill="none" stroke="#4E2A38" stroke-width="3" d="M-10 -4 Q-2 2 8 -6 M-6 6 Q2 10 10 4"/>
+    </g>
+  </g>
+  <g id="bowl-front">
+    <path fill="#3E8FB0" d="M36 140 C40 196 80 222 128 222 C176 222 216 196 220 140 C200 156 168 162 128 162 C88 162 56 156 36 140 Z"/>
+    <path fill="#2E6A83" stroke="none" d="M190 158 C184 188 160 208 132 214 C176 214 210 190 216 148 C210 152 200 156 190 158 Z"/>
+  </g>
+</g>
+</svg>

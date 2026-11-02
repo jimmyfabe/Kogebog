@@ -1,0 +1,48 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Marcipan­konfekt med dadler og valnødder",
+  "description": "To slags julekonfekt: dadler med marcipan og marcipankugler med en valnød, dyppet i chokolade.",
+  "image": "grafik/ret-marcipankonfekt-med-dadler-og-valnoedder.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 30 stykker",
+  "prepTime": "PT40M",
+  "totalTime": "PT1H15M",
+  "recipeIngredient": [
+    "150 g dadler med sten (ca. 15 stk.)",
+    "1 spsk flormelis (til bordet)",
+    "200 g marcipan",
+    "40 g valnødder (ca. 15 halve)",
+    "100 g mørk chokolade"
+  ],
+  "tool": ["kniv", "skærebræt", "køkkenvægt", "spiseske", "skål, der tåler mikroovn", "grydeske", "bakke", "bagepapir", "30 små papirforme", "dåse med låg"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Skær dadlerne op, og tag stenen ud.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["rosiner"], "note": "Skær kun i den ene side, så dadlen hænger sammen. Er dadlerne uden sten, skal de bare skæres op." } },
+    { "@type": "HowToStep", "text": "Drys lidt flormelis på bordet.", "tumbi": { "verbum": "drysse", "ikoner": ["sukker"], "note": "Så klistrer marcipanen ikke fast." } },
+    { "@type": "HowToStep", "text": "Rul 15 små pølser af marcipan.", "tumbi": { "verbum": "rulle", "ikoner": ["marcipan"], "note": "Ca. 6 g hver og lige så lange som en daddel. Det er knap halvdelen af marcipanen." } },
+    { "@type": "HowToStep", "text": "Læg en marcipanpølse i hver daddel.", "tumbi": { "verbum": "pynte", "ikoner": ["marcipan", "rosiner"], "note": "Klem dadlen let sammen om marcipanen." } },
+    { "@type": "HowToStep", "text": "Rul 15 små kugler af resten.", "tumbi": { "verbum": "rulle", "ikoner": ["marcipan"], "note": "Ca. 7 g hver." } },
+    { "@type": "HowToStep", "text": "Tryk en halv valnød på hver kugle.", "tumbi": { "verbum": "pynte", "ikoner": ["noedder"] } },
+    { "@type": "HowToStep", "text": "Bræk chokoladen i stykker i en skål.", "tumbi": { "verbum": "smuldre", "ikoner": ["chokolade"], "note": "En skål, der tåler mikroovn." } },
+    { "@type": "HowToStep", "text": "Smelt chokoladen i mikroovnen i korte ryk.", "tumbi": { "verbum": "smelte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["chokolade"], "note": "20-30 sekunder ad gangen, og rør imellem, til den lige er smeltet. Skålen bliver varm. Eller i en skål over en gryde med varmt vand." } },
+    { "@type": "HowToStep", "text": "Lad chokoladen køle lidt af.", "tumbi": { "verbum": "vente", "timer_sek": 180, "note": "Chokoladen skal være lun, ikke varm, før barnet dypper. Læg bagepapir på en bakke imens." } },
+    { "@type": "HowToStep", "text": "Dyp kuglerne halvt i chokoladen.", "tumbi": { "verbum": "rulle", "ikoner": ["chokolade"], "note": "Hold i valnødden, og dyp bunden. Læg kuglerne på bagepapiret. Den voksne holder skålen, hvis den stadig er varm." } },
+    { "@type": "HowToStep", "text": "Stil konfekten koldt i 30 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "I køleskabet, til chokoladen er stivnet." } },
+    { "@type": "HowToStep", "text": "Læg konfekten i små papirforme.", "tumbi": { "verbum": "pakke-ind", "note": "Opbevar konfekten i en tæt dåse i køleskabet." } },
+    { "@type": "HowToStep", "text": "Smag en af hver slags!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "marcipankonfekt-med-dadler-og-valnoedder",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Arla: «Marcipankonfekt» og «Daddelkonfekt» (arla.dk). Sammensætningen og mængderne er et skøn, og nougaten er udeladt, så alt kan købes i discountbutikker. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "rosiner", "maengde": "150 g" },
+      { "ikon": "sukker", "maengde": "1 spsk" },
+      { "ikon": "marcipan", "maengde": "200 g" },
+      { "ikon": "noedder", "maengde": "40 g" },
+      { "ikon": "chokolade", "maengde": "100 g" }
+    ]
+  }
+}

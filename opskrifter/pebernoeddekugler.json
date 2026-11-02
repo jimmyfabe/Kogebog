@@ -1,0 +1,45 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Pebernødde­kugler",
+  "description": "Søde kugler af knuste pebernødder, kakao og syltetøj, rullet i krymmel. Uden ovn og uden kniv.",
+  "image": "grafik/ret-pebernoeddekugler.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 16 kugler",
+  "prepTime": "PT25M",
+  "totalTime": "PT1H",
+  "recipeIngredient": [
+    "300 g pebernødder",
+    "3 spsk kakao",
+    "1 dl hindbærsyltetøj",
+    "50 g blødt smør",
+    "ca. 1 dl julekrymmel eller kokosmel (til at rulle i)"
+  ],
+  "tool": ["køkkenvægt", "stor frysepose", "kagerulle", "stor skål", "dl-mål", "spiseske", "tallerken", "dåse med låg"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Hæld pebernødderne i en stor frysepose.", "tumbi": { "verbum": "haelde", "ikoner": ["pebernoedder"], "note": "Luk posen godt, og pres luften ud først." } },
+    { "@type": "HowToStep", "text": "Knus dem til krummer med kagerullen.", "tumbi": { "verbum": "kagerulle", "ikoner": ["pebernoedder"], "note": "Bank og rul, til der næsten ingen hele pebernødder er tilbage." } },
+    { "@type": "HowToStep", "text": "Hæld krummerne i en stor skål.", "tumbi": { "verbum": "haelde", "ikoner": ["pebernoedder"] } },
+    { "@type": "HowToStep", "text": "Hæld kakao og syltetøj i.", "tumbi": { "verbum": "haelde", "ikoner": ["kakao", "syltetoej"], "note": "3 spsk kakao og 1 dl syltetøj." } },
+    { "@type": "HowToStep", "text": "Ælt det bløde smør i.", "tumbi": { "verbum": "aelte", "ikoner": ["smoer"], "note": "Smørret skal være blødt, ikke smeltet." } },
+    { "@type": "HowToStep", "text": "Ælt, til massen hænger sammen.", "tumbi": { "verbum": "aelte", "note": "Er den for tør, så lidt mere syltetøj. Er den for blød, så lidt flere krummer." } },
+    { "@type": "HowToStep", "text": "Rul 16 kugler i hænderne.", "tumbi": { "verbum": "rulle" } },
+    { "@type": "HowToStep", "text": "Rul kuglerne i krymmel.", "tumbi": { "verbum": "rulle", "ikoner": ["krymmel"], "note": "Kom krymmel på en tallerken, og trill kuglerne rundt i det. Rullet i kokosmel ligner de snebolde." } },
+    { "@type": "HowToStep", "text": "Stil kuglerne koldt i 30 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "I køleskabet, så de bliver faste. Opbevar dem i en tæt dåse i køleskabet." } },
+    { "@type": "HowToStep", "text": "Smag en pebernøddekugle!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "pebernoeddekugler",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Idé efter Arla: «Romkugler» (arla.dk), her med pebernødder og uden rom. Mængderne er et skøn, og trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "pebernoedder", "maengde": "300 g" },
+      { "ikon": "kakao", "maengde": "3 spsk" },
+      { "ikon": "syltetoej", "maengde": "1 dl" },
+      { "ikon": "smoer", "maengde": "50 g" },
+      { "ikon": "krymmel", "maengde": "ca. 1 dl" }
+    ]
+  }
+}

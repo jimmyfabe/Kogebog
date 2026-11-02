@@ -1,0 +1,56 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Hjemme­lavet rødkål",
+  "description": "Sød og syrlig rødkål med ribsgelé, appelsin og kanel. Det hele kommer i en kold gryde, så børnene kan selv, før den voksne tænder. Allergener: mælk (smør).",
+  "image": "grafik/ret-hjemmelavet-roedkaal.webp",
+  "inLanguage": "da",
+  "recipeYield": "4-6 personer",
+  "prepTime": "PT15M",
+  "cookTime": "PT45M",
+  "totalTime": "PT1H",
+  "recipeIngredient": [
+    "500 g rødkål",
+    "3 spsk sukker",
+    "3 spsk æblecidereddike eller 2 spsk lagereddike",
+    "3 spsk ribsgelé",
+    "1 tsk groft salt",
+    "1 knivspids peber",
+    "1 appelsin",
+    "3 laurbærblade",
+    "1 kanelstang",
+    "25 g smør"
+  ],
+  "tool": ["kniv", "skærebræt", "stor gryde med låg", "spiseske", "rivejern", "citronpresser (kan undværes)", "grydeske"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Rødkålen kan laves dagene før og holder sig i køleskabet. Den indeholder mælk (smør)." } },
+    { "@type": "HowToStep", "text": "Snit rødkålen i fine strimler.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kaal"], "note": "Fjern de yderste blade og stokken først." } },
+    { "@type": "HowToStep", "text": "Hæld kålen i den kolde gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["kaal"], "note": "En stor gryde med låg. Den er kold, så barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Mål sukker, eddike og ribsgelé.", "tumbi": { "verbum": "maale", "ikoner": ["sukker", "eddike", "syltetoej"], "note": "3 spsk af hver. Med lagereddike kun 2 spsk: den er stærkere." } },
+    { "@type": "HowToStep", "text": "Hæld det hele over kålen.", "tumbi": { "verbum": "haelde", "ikoner": ["sukker", "eddike", "syltetoej"] } },
+    { "@type": "HowToStep", "text": "Drys salt og peber over kålen.", "tumbi": { "verbum": "drysse", "ikoner": ["salt", "peber"], "note": "1 tsk groft salt og en knivspids peber." } },
+    { "@type": "HowToStep", "text": "Riv skallen af appelsinen, og skær den over.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["appelsin"], "note": "Riv skallen fint direkte ned i gryden, kun det orange: det hvide er bittert." } },
+    { "@type": "HowToStep", "text": "Pres saften ud over kålen.", "tumbi": { "verbum": "haelde", "ikoner": ["appelsin"], "note": "Med hænderne eller en citronpresser. Fisk kernerne op." } },
+    { "@type": "HowToStep", "text": "Læg laurbærblade, kanel og smør i gryden.", "tumbi": { "verbum": "pynte", "ikoner": ["krydderi", "smoer"] } },
+    { "@type": "HowToStep", "text": "Kog kålen under låg i 45 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 2700, "note": "Tænd først nu, ved svag varme. Rør af og til, og hæld lidt vand i, hvis den brænder på. Fisk laurbærblade og kanelstang op til sidst." } },
+    { "@type": "HowToStep", "text": "Smag på rødkålen.", "tumbi": { "verbum": "smage", "note": "Pust først. Smag til med mere sukker, eddike eller salt." } }
+  ],
+  "tumbi": {
+    "id": "hjemmelavet-roedkaal",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra Arla, «Rødkål» (https://www.arla.dk/opskrifter/rodkal/). At starte i en kold gryde, så børnene kan komme det hele i selv, er vores eget. Frøken Jensens Kogebog (1921, nr. 638) har også rødkål med smør, sukker og eddike. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "kaal", "maengde": "500 g" },
+      { "ikon": "sukker", "maengde": "3 spsk" },
+      { "ikon": "eddike", "maengde": "3 spsk" },
+      { "ikon": "syltetoej", "maengde": "3 spsk" },
+      { "ikon": "salt", "maengde": "1 tsk" },
+      { "ikon": "peber", "maengde": "1 knivspids" },
+      { "ikon": "appelsin", "maengde": "1" },
+      { "ikon": "krydderi", "maengde": "3" },
+      { "ikon": "krydderi", "maengde": "1" },
+      { "ikon": "smoer", "maengde": "25 g" }
+    ]
+  }
+}

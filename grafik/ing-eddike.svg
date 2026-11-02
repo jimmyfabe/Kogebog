@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <path id="bottle" fill="#FFFFFF" d="M114 50 L142 50 L142 80 C142 92 170 100 170 122 L170 214 C170 222 164 228 156 228 L100 228 C92 228 86 222 86 214 L86 122 C86 100 114 92 114 80 Z"/>
+  <path id="vinegar" fill="#DCEAF0" stroke="none" d="M86 120 L170 120 L170 214 C170 222 164 228 156 228 L100 228 C92 228 86 222 86 214 Z"/>
+  <path fill="#B9D3DE" stroke="none" d="M154 120 L170 120 L170 214 C170 222 164 228 156 228 L146 228 C152 222 154 216 154 208 Z"/>
+  <path fill="none" d="M86 120 L170 120"/>
+  <path fill="none" stroke="#FFFFFF" stroke-width="7" d="M98 132 L98 200"/>
+  <rect id="label" x="98" y="146" width="60" height="58" rx="6" fill="#FFF4E2"/>
+  <path fill="#E2513B" d="M98 186 L158 186 L158 198 Q158 204 152 204 L104 204 Q98 204 98 198 Z"/>
+  <g id="drop" fill="#B9D3DE">
+    <path d="M128 152 C122 162 118 168 118 173 C118 179 123 183 128 183 C133 183 138 179 138 173 C138 168 134 162 128 152 Z"/>
+  </g>
+  <path fill="none" d="M114 50 L142 50 L142 80 C142 92 170 100 170 122 L170 214 C170 222 164 228 156 228 L100 228 C92 228 86 222 86 214 L86 122 C86 100 114 92 114 80 Z"/>
+  <path id="cap" fill="#E2513B" d="M110 26 L146 26 Q150 26 150 30 L150 52 L106 52 L106 30 Q106 26 110 26 Z"/>
+  <path fill="#C3331D" stroke="none" d="M140 28 L146 28 Q148 28 148 30 L148 50 L140 50 Z"/>
+  <path fill="none" d="M106 40 L150 40"/>
+</g>
+</svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="cut-out" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="board">
+      <path d="M40 192 Q44 180 58 180 L198 180 Q212 180 216 192 L228 222 Q232 234 218 234 L38 234 Q24 234 28 222 Z" fill="#FFF4E2"/>
+      <path d="M29 222 Q128 230 227 222" fill="none"/>
+    </g>
+    <g id="rolled-dough">
+      <path d="M54 196 Q56 184 78 184 L182 184 Q208 184 210 198 Q212 214 188 218 L76 220 Q50 218 54 196 Z" fill="#E8C79A"/>
+    </g>
+    <g id="heart-hole" transform="translate(84 204) scale(0.45)">
+      <path d="M0 22 C-30 4 -38 -14 -28 -25 C-18 -35 -5 -30 0 -19 C5 -30 18 -35 28 -25 C38 -14 30 4 0 22 Z" fill="#FFF4E2"/>
+    </g>
+    <g id="heart-cutter" transform="translate(160 176) scale(1.2)">
+      <path d="M0 30 C-30 12 -38 -6 -28 -17 C-18 -27 -5 -22 0 -11 C5 -22 18 -27 28 -17 C38 -6 30 12 0 30 Z" fill="#6D7B8A"/>
+      <path d="M0 22 C-30 4 -38 -14 -28 -25 C-18 -35 -5 -30 0 -19 C5 -30 18 -35 28 -25 C38 -14 30 4 0 22 Z" fill="#8E9AA6"/>
+      <path d="M0 22 C-30 4 -38 -14 -28 -25 C-18 -35 -5 -30 0 -19 C5 -30 18 -35 28 -25 C38 -14 30 4 0 22 Z" fill="#CFA976" transform="scale(0.74)"/>
+    </g>
+    <g id="downward-motion">
+      <path d="M90 70 L102 70 L102 104 L112 104 L96 126 L80 104 L90 104 Z" fill="#3E8FB0"/>
+    </g>
+    <g id="rosa-forearm">
+      <path d="M256 48 C232 60 210 80 190 106 L198 134 C218 114 238 98 256 92 Z" fill="#F08A3C"/>
+    </g>
+    <g id="rosa-pressing-paw">
+      <path d="M128 128 C126 112 142 104 160 104 L186 106 C200 108 204 126 194 136 C188 142 176 140 172 138 C166 144 154 144 150 138 C144 144 132 142 130 136 C126 134 128 130 128 128 Z" fill="#F08A3C"/>
+      <path d="M150 138 L152 128 M172 138 L173 128" fill="none"/>
+    </g>
+  </g>
+</svg>

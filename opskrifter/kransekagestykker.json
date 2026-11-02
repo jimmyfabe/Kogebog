@@ -1,0 +1,54 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Kransekage­stykker",
+  "description": "Små bløde kransekagestykker af marcipan med hvid glasur i zigzag. Barnet ælter og former, og den voksne bager.",
+  "image": "grafik/ret-kransekagestykker.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 12 stykker",
+  "prepTime": "PT30M",
+  "cookTime": "PT10M",
+  "totalTime": "PT1H15M",
+  "recipeIngredient": [
+    "1 spsk flormelis (til bordet)",
+    "200 g ren rå marcipan",
+    "60 g flormelis (til dejen)",
+    "1½ spsk pasteuriseret æggehvide (fra karton)",
+    "50 g flormelis (til glasuren)",
+    "1 tsk vand"
+  ],
+  "tool": ["køkkenvægt", "stor skål", "spiseske", "teske", "kniv", "skærebræt", "bageplade", "bagepapir", "lille skål", "lille frysepose", "saks"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Drys lidt flormelis på bordet.", "tumbi": { "verbum": "drysse", "ikoner": ["sukker"], "note": "Den voksne tænder ovnen på 200 °C nu." } },
+    { "@type": "HowToStep", "text": "Smuldr marcipanen i en stor skål.", "tumbi": { "verbum": "smuldre", "ikoner": ["marcipan"] } },
+    { "@type": "HowToStep", "text": "Hæld 60 g flormelis i.", "tumbi": { "verbum": "haelde", "ikoner": ["sukker"] } },
+    { "@type": "HowToStep", "text": "Hæld 1½ spsk æggehvide i.", "tumbi": { "verbum": "haelde", "ikoner": ["aeg"], "note": "Pasteuriseret æggehvide fra en karton (ryst den først), eller hviden fra et lille æg." } },
+    { "@type": "HowToStep", "text": "Ælt dejen i 2 minutter.", "tumbi": { "verbum": "aelte", "timer_sek": 120, "note": "Til dejen er glat og hænger sammen. Klistrer den, så ælt den i flormelisen på bordet." } },
+    { "@type": "HowToStep", "text": "Rul dejen til fire tykke pølser.", "tumbi": { "verbum": "rulle", "note": "Ca. 2½ cm tykke og ca. 18 cm lange." } },
+    { "@type": "HowToStep", "text": "Klem pølserne, så de bliver trekantede.", "tumbi": { "verbum": "forme", "note": "Klem fra begge sider med tommel- og pegefinger, så toppen bliver spids." } },
+    { "@type": "HowToStep", "text": "Skær pølserne skråt i stykker på 6 cm.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "note": "Ca. 12 stykker. Skær skråt, så enderne bliver spidse." } },
+    { "@type": "HowToStep", "text": "Læg stykkerne på en plade med bagepapir.", "tumbi": { "verbum": "pynte", "note": "Lidt afstand mellem dem." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt æg i dejen." } },
+    { "@type": "HowToStep", "text": "Bag stykkerne i 10 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "note": "10-12 min ved 200 °C, til kanterne er lysebrune. Indeni skal de være bløde." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Lad stykkerne køle helt af.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "Pladen er meget varm. Er kagerne lune, løber glasuren." } },
+    { "@type": "HowToStep", "text": "Rør flormelis og vand til tyk glasur.", "tumbi": { "verbum": "roere", "ikoner": ["sukker", "vand"], "note": "50 g flormelis og 1 tsk vand i en lille skål. Er den for tyk, så en dråbe vand mere. Glasuren er uden æggehvide, fordi den ikke bliver bagt." } },
+    { "@type": "HowToStep", "text": "Sprøjt glasur i zigzag på stykkerne.", "tumbi": { "verbum": "sproejte", "ikoner": ["sukker"], "note": "Kom glasuren i en lille frysepose, og klip et lille hul i det ene hjørne." } },
+    { "@type": "HowToStep", "text": "Smag et kransekagestykke!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "kransekagestykker",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Arla: «Kransekagestykker» og «Kransekagekonfekt» (arla.dk). Glasuren er med vand i stedet for æggehvide, fordi den ikke bliver bagt. Mængderne er tilpasset én pakke marcipan (et skøn), og trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "sukker", "maengde": "1 spsk" },
+      { "ikon": "marcipan", "maengde": "200 g" },
+      { "ikon": "sukker", "maengde": "60 g" },
+      { "ikon": "aeg", "maengde": "1½ spsk" },
+      { "ikon": "sukker", "maengde": "50 g" },
+      { "ikon": "vand", "maengde": "1 tsk" }
+    ]
+  }
+}

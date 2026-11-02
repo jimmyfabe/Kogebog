@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "Recipe",
   "name": "Cremet kødsovs",
-  "description": "Kødsovs med tomat og flødeost. Pastaen koges for sig, og parmesan på toppen.",
+  "description": "Kødsovs med tomat og flødeost. Pastaen koges for sig, og revet ost på toppen.",
   "image": "grafik/ret-cremet-koedsovs.webp",
   "inLanguage": "da",
   "recipeYield": "4 personer",
@@ -15,7 +15,7 @@
     "220 g flødeost 11 %",
     "300 g fuldkornspasta, ukogt",
     "3 l vand og 1 tsk salt til pastaen",
-    "60 g revet parmesan",
+    "60 g revet hård ost",
     "2 tsk tørret oregano",
     "1 tsk hvidløgspulver",
     "½ tsk salt",
@@ -35,8 +35,8 @@
     { "@type": "HowToStep", "text": "Kom pastaen i vandet.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "ikoner": ["spaghetti"], "note": "Kog som anvist på pakken, ca. 10-12 min. Rør lidt i starten, så den ikke klistrer." } },
     { "@type": "HowToStep", "text": "Hæld vandet fra pastaen.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spaghetti"], "note": "Gem en lille kop pastavand først. Den voksne hælder gennem dørslaget i vasken. Pas på dampen." } },
     { "@type": "HowToStep", "text": "Rør flødeosten i sovsen.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["flodeost"], "note": "Til sidst, så sovsen bliver cremet. Er den for tyk, så en sjat pastavand. Flødeost 11 %, fx Philadelphia Light." } },
-    { "@type": "HowToStep", "text": "Smag sovsen til med salt og peber.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt", "peber"], "note": "Pust på skeen først. Parmesanen er salt, så smag, før der kommer mere salt i." } },
-    { "@type": "HowToStep", "text": "Drys parmesan på maden.", "tumbi": { "verbum": "drysse", "ikoner": ["ost"], "note": "Pastaen på tallerkenen, kødsovsen over og parmesan på toppen." } }
+    { "@type": "HowToStep", "text": "Smag sovsen til med salt og peber.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt", "peber"], "note": "Pust på skeen først. Osten er salt, så smag, før der kommer mere salt i." } },
+    { "@type": "HowToStep", "text": "Drys osten på maden.", "tumbi": { "verbum": "drysse", "ikoner": ["ost"], "note": "Pastaen på tallerkenen, kødsovsen over og osten på toppen." } }
   ],
   "tumbi": {
     "id": "cremet-koedsovs",
@@ -48,7 +48,7 @@
     "pris_kr": 89,
     "pris_dato": "2026-10",
     "groent_g": 620,
-    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Prisen på flødeost og parmesan er eget skøn.",
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Prisen på flødeost og parmesan er eget skøn. Parmesan er byttet til revet hård ost 01-11-2026 (Rema 1000 100 g 15,95 kr.); prisen er ikke regnet om.",
     "ingredienser": [
       { "ikon": "koed", "maengde": "360 g", "vare": "hakket-oksekoed", "antal": 360, "enhed": "g" },
       { "ikon": "tomat", "maengde": "620 g", "vare": "passata", "antal": 620, "enhed": "g" },

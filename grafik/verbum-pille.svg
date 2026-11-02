@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="peel" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="plate">
+      <ellipse cx="120" cy="222" rx="90" ry="16" fill="#FFF4E2"/>
+      <path d="M50 220 L60 214 L68 222 L58 228 Z" fill="#EEDDBF"/>
+      <path d="M178 224 L188 216 L198 222 L190 230 Z" fill="#EEDDBF"/>
+    </g>
+    <g id="egg">
+      <path d="M120 96 C150 96 170 140 170 172 C170 204 148 222 120 222 C92 222 70 204 70 172 C70 140 90 96 120 96 Z" fill="#FFFFFF"/>
+      <path d="M146 112 C160 130 166 152 167 166 L158 176 L150 164 C152 146 150 126 146 112 Z" fill="#FFF4E2" stroke="none"/>
+      <path d="M70.5 168 L76 160 L88 174 L100 158 L112 172 L124 158 L136 174 L148 160 L158 176 L169.5 166 C170 168 170 170 170 172 C170 204 148 222 120 222 C92 222 70 204 70 172 Z" fill="#EEDDBF"/>
+      <path d="M96 198 L104 190 L100 184 M138 204 L146 196" fill="none"/>
+      <path d="M120 96 C150 96 170 140 170 172 C170 204 148 222 120 222 C92 222 70 204 70 172 C70 140 90 96 120 96 Z" fill="none"/>
+    </g>
+    <g id="peel-motion" transform="translate(126 88) rotate(-50)">
+      <path d="M0 -6 L26 -6 L26 -14 L44 0 L26 14 L26 6 L0 6 Z" fill="#3E8FB0"/>
+    </g>
+    <g id="shell-piece">
+      <path d="M164 98 L178 92 L190 100 L186 112 L170 114 Z" fill="#EEDDBF"/>
+    </g>
+    <g id="rosa-forearm">
+      <path d="M261 26 L302 26 C286 56 262 74 233 91 L209 71 C227 55 242 41 261 26 Z" fill="#F08A3C"/>
+    </g>
+    <g id="rosa-pinching-paw" transform="translate(56 26)">
+      <path d="M166 39 C154 33 139 35 127 44 L115 54 C108 59 112 66 120 64 L132 58 L125 68 C122 75 130 79 135 72 C141 77 148 74 150 67 C158 73 167 67 165 59 C174 57 174 46 166 39 Z" fill="#F08A3C"/>
+      <path d="M145 43 Q135 41 126 50 L122 56 Q132 52 140 58 Q147 64 156 58 Q160 48 145 43 Z" fill="#FFF4E2"/>
+      <path d="M140 62 L138 68 M151 59 L150 64" fill="none"/>
+    </g>
+  </g>
+</svg>

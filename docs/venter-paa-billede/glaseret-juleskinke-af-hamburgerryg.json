@@ -1,0 +1,58 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Glaseret juleskinke",
+  "description": "Røget hamburgerryg, kogt mør og bagt med en blank glasur af appelsinmarmelade. Børnene sætter nelliker i fedtet og pensler glasuren på. Allergener: tjek pakken på hamburgerryggen og marmeladen.",
+  "image": "grafik/ret-glaseret-juleskinke-af-hamburgerryg.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer (og rester)",
+  "prepTime": "PT30M",
+  "cookTime": "PT1H10M",
+  "totalTime": "PT2H45M",
+  "recipeIngredient": [
+    "ca. 1 kg røget hamburgerryg i ét stykke",
+    "1 løg",
+    "3 laurbærblade",
+    "1 tsk hele peberkorn",
+    "koldt vand, så det dækker skinken",
+    "4 spsk appelsinmarmelade",
+    "2 spsk appelsinjuice",
+    "1 spsk hele nelliker"
+  ],
+  "tool": ["stor gryde med låg", "kande", "2 store gafler", "fad", "køkkensaks", "kniv", "skærebræt", "skål", "spiseske", "ovnfast fad", "pensel", "grydelapper", "stegetermometer (kan undværes)"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Læs pakken på hamburgerryggen: den skal koges. Retten kan laves over to dage (se trin 8)." } },
+    { "@type": "HowToStep", "text": "Læg løg, laurbærblade og peberkorn i gryden.", "tumbi": { "verbum": "haelde", "ikoner": ["loeg", "krydderi", "peber"], "note": "En stor gryde med låg. Løget kommer i helt, med skallen på." } },
+    { "@type": "HowToStep", "text": "Læg skinken i gryden.", "tumbi": { "verbum": "haelde", "ikoner": ["koed"], "note": "Gryden er kold, så barnet kan selv. Lad nettet sidde på." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der har været råt kød på hænderne." } },
+    { "@type": "HowToStep", "text": "Hæld koldt vand over skinken.", "tumbi": { "verbum": "haelde", "ikoner": ["vand"], "note": "Med en kande, til vandet lige dækker skinken." } },
+    { "@type": "HowToStep", "text": "Kog skinken stille i 50 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 3000, "note": "Under låg ved svag varme: vandet må kun lige simre. Timeren startes, når det simrer. Skinken er færdig ved 65 °C i midten (stegetermometer)." } },
+    { "@type": "HowToStep", "text": "Løft skinken op på et fad.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "note": "Med to store gafler. Vandet er kogende varmt. Kogevandet kan hældes ud." } },
+    { "@type": "HowToStep", "text": "Lad skinken køle af i en time.", "tumbi": { "verbum": "vente", "timer_sek": 3600, "note": "Til den er rar at røre ved. Eller kog den dagen før, og stil den i køleskabet til næste dag. Tænd ovnen på 200 °C (varmluft 180 °C) i god tid." } },
+    { "@type": "HowToStep", "text": "Klip nettet af, og skær tern i fedtet.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "note": "Snit ca. 1 cm ned i fedtet, ikke ned i kødet, med 2 cm mellem snittene. Er der svær på, skæres den af først." } },
+    { "@type": "HowToStep", "text": "Mål marmelade og appelsinjuice i en skål.", "tumbi": { "verbum": "maale", "ikoner": ["appelsin"], "note": "4 spsk appelsinmarmelade og 2 spsk appelsinjuice. Til en skinke kun for voksne kan juicen byttes med 2 spsk rom. Alkoholen forsvinder ikke på 20 minutter i ovnen, så børnenes glasur laves med juice." } },
+    { "@type": "HowToStep", "text": "Rør glasuren godt sammen.", "tumbi": { "verbum": "roere", "ikoner": ["appelsin"] } },
+    { "@type": "HowToStep", "text": "Sæt en nellike i hvert tern.", "tumbi": { "verbum": "pynte", "ikoner": ["krydderi"], "note": "Tryk dem godt ned, så de sidder fast." } },
+    { "@type": "HowToStep", "text": "Pensl glasuren på skinken.", "tumbi": { "verbum": "pensle", "ikoner": ["appelsin"], "note": "Læg skinken i et ovnfast fad først. Pensl over det hele, også ned i snittene." } },
+    { "@type": "HowToStep", "text": "Bag skinken i 20 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1200, "note": "Midt i ovnen, til glasuren er blank og bobler. Hold øje til sidst: marmeladen brænder let på. Kommer skinken kold fra køleskabet, så giv den 15-20 minutter mere, gerne under staniol." } },
+    { "@type": "HowToStep", "text": "Tag fadet ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Lad skinken hvile i 10 minutter, før den skæres." } },
+    { "@type": "HowToStep", "text": "Skær skinken i tynde skiver.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "note": "Pil nellikerne af: de skal ikke spises." } },
+    { "@type": "HowToStep", "text": "Smag på en skive skinke.", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "glaseret-juleskinke-af-hamburgerryg",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Idé fra Jamie Olivers juleskinke med appelsinmarmelade og rom («Jamie's jerk-spiced ham», https://www.jamieoliver.com/recipes/pork/jamie-s-jerk-ham), her dansk og mild: røget hamburgerryg fra Rema 1000, ingen chili og appelsinjuice i stedet for rom. Kogetiden (ca. 50 minutter til 1 kg og 65 °C i midten) er fra danske madblogs og er ikke tjekket mod pakken. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "koed", "maengde": "ca. 1 kg" },
+      { "ikon": "loeg", "maengde": "1" },
+      { "ikon": "krydderi", "maengde": "3" },
+      { "ikon": "peber", "maengde": "1 tsk" },
+      { "ikon": "vand", "maengde": "" },
+      { "ikon": "appelsin", "maengde": "4 spsk" },
+      { "ikon": "appelsin", "maengde": "2 spsk" },
+      { "ikon": "krydderi", "maengde": "1 spsk" }
+    ]
+  }
+}

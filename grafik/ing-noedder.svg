@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="walnut" transform="translate(104 116)">
+    <path fill="#C98A4B" d="M0 -66 C40 -66 64 -36 64 0 C64 38 38 62 0 62 C-38 62 -64 38 -64 0 C-64 -36 -40 -66 0 -66 Z"/>
+    <path fill="#9A6A44" stroke="none" d="M40 -50 C58 -34 64 -14 62 8 C58 38 36 56 8 60 C40 46 56 18 54 -10 C52 -26 48 -40 40 -50 Z"/>
+    <path fill="none" d="M0 -66 C-8 -40 8 -20 0 0 C-8 20 8 40 0 62"/>
+    <path fill="none" stroke="#9A6A44" stroke-width="3" d="M-40 -36 C-30 -30 -34 -20 -24 -16 M-46 4 C-36 0 -30 10 -20 6 M-36 36 C-28 28 -20 34 -14 28 M28 -40 C22 -30 30 -22 22 -14 M36 0 C26 6 32 14 22 18 M30 36 C24 30 18 36 12 30"/>
+    <path fill="none" d="M0 -66 C40 -66 64 -36 64 0 C64 38 38 62 0 62 C-38 62 -64 38 -64 0 C-64 -36 -40 -66 0 -66 Z"/>
+  </g>
+  <g id="hazelnut-left" transform="translate(150 196)">
+    <path fill="#9A6A44" d="M0 -40 C10 -40 34 -20 34 4 C34 24 18 36 0 36 C-18 36 -34 24 -34 4 C-34 -20 -10 -40 0 -40 Z"/>
+    <path fill="#704D31" stroke="none" d="M18 -26 C30 -12 32 6 28 18 C22 30 12 34 2 35 C18 24 24 2 18 -26 Z"/>
+    <path fill="#E8C79A" d="M-30 16 C-24 30 -12 36 0 36 C12 36 24 30 30 16 C20 22 10 24 0 24 C-10 24 -20 22 -30 16 Z"/>
+    <path fill="none" stroke="#CFA976" stroke-width="5" d="M-20 -14 C-16 -24 -10 -30 -4 -32"/>
+  </g>
+  <g id="hazelnut-right" transform="translate(206 160) rotate(18)">
+    <path fill="#9A6A44" d="M0 -40 C10 -40 34 -20 34 4 C34 24 18 36 0 36 C-18 36 -34 24 -34 4 C-34 -20 -10 -40 0 -40 Z"/>
+    <path fill="#704D31" stroke="none" d="M18 -26 C30 -12 32 6 28 18 C22 30 12 34 2 35 C18 24 24 2 18 -26 Z"/>
+    <path fill="#E8C79A" d="M-30 16 C-24 30 -12 36 0 36 C12 36 24 30 30 16 C20 22 10 24 0 24 C-10 24 -20 22 -30 16 Z"/>
+    <path fill="none" stroke="#CFA976" stroke-width="5" d="M-20 -14 C-16 -24 -10 -30 -4 -32"/>
+  </g>
+</g>
+</svg>

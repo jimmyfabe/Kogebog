@@ -1,0 +1,55 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Børnegløgg",
+  "description": "Varm julesaft med solbær, appelsin, kanel og nelliker. Rosiner og mandler i koppen, ligesom i de voksnes gløgg, men uden alkohol. Allergener: mandler.",
+  "image": "grafik/ret-boernegloegg.webp",
+  "inLanguage": "da",
+  "recipeYield": "6 kopper",
+  "prepTime": "PT10M",
+  "cookTime": "PT15M",
+  "totalTime": "PT25M",
+  "recipeIngredient": [
+    "6 dl vand",
+    "4 spsk appelsinjuice",
+    "4 tsk citronsaft (eller saft af ½ citron)",
+    "3 spsk sukker",
+    "3 nelliker",
+    "1 kanelstang",
+    "2 dl solbærsaft (koncentrat)",
+    "50 g hele mandler",
+    "60 g rosiner"
+  ],
+  "tool": ["kniv og skærebræt", "gryde", "dl-mål", "spiseske", "teske", "lille si", "grydeske", "6 kopper med hank"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mandler." } },
+    { "@type": "HowToStep", "text": "Hak mandlerne groft.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["mandler"], "note": "50 g. Skindet må gerne blive på. Vil I have dem hvide, så hæld kogende vand over, vent 2 minutter, og klem dem ud af skindet." } },
+    { "@type": "HowToStep", "text": "Mål 2 dl vand i gryden.", "tumbi": { "verbum": "maale", "ikoner": ["vand"], "note": "Gryden er kold endnu, så barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Hæld juice, citronsaft og sukker i.", "tumbi": { "verbum": "haelde", "ikoner": ["appelsin", "citron", "sukker"], "note": "4 spsk appelsinjuice, 4 tsk citronsaft og 3 spsk sukker." } },
+    { "@type": "HowToStep", "text": "Kom nelliker og kanelstang i gryden.", "tumbi": { "verbum": "haelde", "ikoner": ["krydderi"], "note": "3 hele nelliker og 1 kanelstang." } },
+    { "@type": "HowToStep", "text": "Kog saften op, og lad den trække fem minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Start timeren, når det koger, og skru ned, så det kun lige simrer." } },
+    { "@type": "HowToStep", "text": "Si krydderierne fra.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["krydderi"], "note": "Den voksne hælder saften gennem en lille si og tilbage i gryden. Eller fisk de 3 nelliker og kanelstangen op med en ske." } },
+    { "@type": "HowToStep", "text": "Hæld solbærsaft og vand i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["baer", "vand"], "note": "2 dl solbærsaft og 4 dl vand. Gryden er varm, så den voksne hælder." } },
+    { "@type": "HowToStep", "text": "Varm gløggen godt igennem.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "note": "Den skal være varm, men ikke koge. Er den for sur, så smag til med lidt mere sukker." } },
+    { "@type": "HowToStep", "text": "Drys rosiner og mandler i kopperne.", "tumbi": { "verbum": "drysse", "ikoner": ["rosiner", "mandler"], "note": "60 g rosiner og de hakkede mandler fordelt i 6 kopper. Små søskende under ca. 3 år skal ikke have nødder og mandler." } },
+    { "@type": "HowToStep", "text": "Hæld gløggen i kopperne.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "note": "Gløggen er varm. Kopper med hank er nemmest at holde." } },
+    { "@type": "HowToStep", "text": "Smag, og pust først!", "tumbi": { "verbum": "smage", "note": "Rosinerne og mandlerne spises med en teske til sidst." } }
+  ],
+  "tumbi": {
+    "id": "boernegloegg",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Arla: «Børnegløgg» (https://www.arla.dk/opskrifter/borneglogg/). Appelsinjuice på flaske i stedet for friskpresset og hele mandler, som den voksne hakker, er vores valg. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "vand", "maengde": "6 dl" },
+      { "ikon": "appelsin", "maengde": "4 spsk" },
+      { "ikon": "citron", "maengde": "4 tsk" },
+      { "ikon": "sukker", "maengde": "3 spsk" },
+      { "ikon": "krydderi", "maengde": "3" },
+      { "ikon": "krydderi", "maengde": "1" },
+      { "ikon": "baer", "maengde": "2 dl" },
+      { "ikon": "mandler", "maengde": "50 g" },
+      { "ikon": "rosiner", "maengde": "60 g" }
+    ]
+  }
+}

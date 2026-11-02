@@ -1,0 +1,44 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Brunede kartofler",
+  "description": "Små kartofler, som barnet piller, vendt i blank karamel af den voksne. De hører til julemiddagen.",
+  "image": "grafik/ret-brunede-kartofler.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT15M",
+  "cookTime": "PT20M",
+  "totalTime": "PT40M",
+  "recipeIngredient": [
+    "800 g små kartofler, kogt dagen før",
+    "100 g sukker",
+    "30 g smør",
+    "1 tsk flagesalt"
+  ],
+  "tool": ["gryde (dagen før)", "viskestykke", "køkkenvægt", "stor pande", "grydeske", "skål", "lille skål"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Kartoflerne koges dagen før med skrællen på (ca. 15-20 min, til de er møre) og står koldt natten over. Retten indeholder mælk (smørret)." } },
+    { "@type": "HowToStep", "text": "Pil skindet af kartoflerne.", "tumbi": { "verbum": "pille", "ikoner": ["kartoffel"], "note": "Med fingrene: skindet glider let af kolde kartofler. Bruger I perlekartofler på dåse (3 dåser), så hæld bare vandet fra." } },
+    { "@type": "HowToStep", "text": "Rul kartoflerne tørre i et viskestykke.", "tumbi": { "verbum": "rulle", "ikoner": ["kartoffel"], "note": "Våde kartofler får karamellen til at sprøjte." } },
+    { "@type": "HowToStep", "text": "Mål sukker og smør.", "tumbi": { "verbum": "maale", "ikoner": ["sukker", "smoer"], "note": "100 g sukker og 30 g smør." } },
+    { "@type": "HowToStep", "text": "Smelt sukkeret på panden.", "tumbi": { "verbum": "smelte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["sukker"], "note": "Ved middel varme, og rør ikke, før det er lysebrunt. Karamel er meget varmere end kogende vand og klistrer til huden: barnet står et godt stykke væk, til kartoflerne er færdige." } },
+    { "@type": "HowToStep", "text": "Rør smørret i karamellen.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["smoer"], "note": "Det bobler og kan sprøjte." } },
+    { "@type": "HowToStep", "text": "Vend kartoflerne i karamellen.", "tumbi": { "verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["kartoffel"], "note": "Kom kartoflerne forsigtigt på panden, og vend dem med en grydeske." } },
+    { "@type": "HowToStep", "text": "Brun kartoflerne i 10 minutter.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "ikoner": ["kartoffel"], "note": "Ved svag til middel varme. Vend dem tit, til de er varme helt ind og blanke af karamel (10-15 min)." } },
+    { "@type": "HowToStep", "text": "Drys flagesalt over kartoflerne.", "tumbi": { "verbum": "drysse", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt"], "note": "Hæld kartoflerne over i en skål først. Barnet drysser fra oven og rører ikke: karamellen er stadig meget varm." } },
+    { "@type": "HowToStep", "text": "Lad kartoflerne køle af i 5 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 300 } },
+    { "@type": "HowToStep", "text": "Smag på en kartoffel.", "tumbi": { "verbum": "smage", "ikoner": ["kartoffel"], "note": "Pust længe først. Karamellen holder længe på varmen." } }
+  ],
+  "tumbi": {
+    "id": "brunede-kartofler",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er fra Arla: «Brunede kartofler» (arla.dk). Frøken Jensens Kogebog (1921) har samme metode: små kogte, pillede kartofler i brunet sukker og smør. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "kartoffel", "maengde": "800 g" },
+      { "ikon": "sukker", "maengde": "100 g" },
+      { "ikon": "smoer", "maengde": "30 g" },
+      { "ikon": "salt", "maengde": "1 tsk" }
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Rødkåls­salat med appelsin",
+  "description": "Frisk julesalat af rå rødkål, som børnene masserer mør med salt, med appelsin, tranebær og en sød dressing. Allergener: ingen af de 14 store; balsamico kan indeholde sulfit.",
+  "image": "grafik/ret-roedkaalssalat-med-appelsin.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT20M",
+  "totalTime": "PT20M",
+  "recipeIngredient": [
+    "400 g rødkål",
+    "¾ tsk groft salt",
+    "2 appelsiner",
+    "1 spsk olivenolie",
+    "1 spsk æblecidereddike eller balsamico",
+    "½ spsk honning",
+    "50 g tørrede tranebær"
+  ],
+  "tool": ["kniv", "skærebræt", "stor skål", "teske", "spiseske", "kop", "gaffel", "salatbestik"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Salaten kan laves et par timer før og stå i køleskabet." } },
+    { "@type": "HowToStep", "text": "Snit rødkålen i fine strimler.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kaal"], "note": "Fjern de yderste blade og stokken først. Jo finere strimler, jo mere mør bliver kålen." } },
+    { "@type": "HowToStep", "text": "Drys salt over kålen.", "tumbi": { "verbum": "drysse", "ikoner": ["salt"], "note": "¾ tsk groft salt. Kålen ligger i en stor skål." } },
+    { "@type": "HowToStep", "text": "Massér kålen med hænderne i 2 minutter.", "tumbi": { "verbum": "aelte", "timer_sek": 120, "ikoner": ["kaal"], "note": "Klem og gnid kålen, til den bliver blød og blank." } },
+    { "@type": "HowToStep", "text": "Skær appelsinerne i små stykker.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["appelsin"], "note": "Den voksne skærer skrællen og det hvide af og deler frugten i små tern." } },
+    { "@type": "HowToStep", "text": "Hæld appelsinstykkerne i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["appelsin"], "note": "Saften på brættet kommer med." } },
+    { "@type": "HowToStep", "text": "Pisk olie, eddike og honning sammen i en kop.", "tumbi": { "verbum": "piske", "ikoner": ["olie", "eddike", "honning"], "note": "1 spsk olie, 1 spsk eddike og ½ spsk honning. Med en gaffel." } },
+    { "@type": "HowToStep", "text": "Hæld dressingen over salaten.", "tumbi": { "verbum": "haelde" } },
+    { "@type": "HowToStep", "text": "Rør salaten godt sammen.", "tumbi": { "verbum": "roere" } },
+    { "@type": "HowToStep", "text": "Drys tranebær over salaten.", "tumbi": { "verbum": "drysse", "ikoner": ["rosiner"], "note": "Eller kernerne fra ½ granatæble: den voksne skærer det over, og barnet banker kernerne ud med en ske over en skål." } },
+    { "@type": "HowToStep", "text": "Smag på salaten.", "tumbi": { "verbum": "smage", "note": "Mangler den noget, så lidt mere salt eller honning." } }
+  ],
+  "tumbi": {
+    "id": "roedkaalssalat-med-appelsin",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Idé og mængder fra Arla, «Julesalat med rødkål» (https://www.arla.dk/opskrifter/julesalat-med-rodkal/): rødkål, groft salt, appelsiner og dressingen. Her uden rødløg, persille, salatost og nødder og med tørrede tranebær i stedet for granatæble. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "kaal", "maengde": "400 g" },
+      { "ikon": "salt", "maengde": "¾ tsk" },
+      { "ikon": "appelsin", "maengde": "2" },
+      { "ikon": "olie", "maengde": "1 spsk" },
+      { "ikon": "eddike", "maengde": "1 spsk" },
+      { "ikon": "honning", "maengde": "½ spsk" },
+      { "ikon": "rosiner", "maengde": "50 g" }
+    ]
+  }
+}

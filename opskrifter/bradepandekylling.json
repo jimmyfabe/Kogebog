@@ -14,7 +14,7 @@
     "4 gulerødder",
     "450 g frosne rodfrugter",
     "2 spsk olie",
-    "1 kg kyllingelår",
+    "1 kg kyllingeoverlår",
     "2 tsk paprika",
     "1 tsk salt",
     "150 g yoghurt naturel",
@@ -43,7 +43,7 @@
     "pris_kr": 78,
     "pris_dato": "2026-10",
     "groent_g": 750,
-    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Grønt er også et skøn (ikke målt) og er uden bælgfrugter og kartofler.",
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Grønt er også et skøn (ikke målt) og er uden bælgfrugter og kartofler. Kyllingelår er byttet til kyllingeoverlår 01-11-2026 (Rema 1000 800 g 29,95 kr.); prisen er ikke regnet om.",
     "ingredienser": [
       { "ikon": "kartoffel", "maengde": "600 g", "vare": "smaa-kartofler", "antal": 600, "enhed": "g" },
       { "ikon": "gulerod", "maengde": "4", "vare": "gulerod", "antal": 4, "enhed": "stk" },

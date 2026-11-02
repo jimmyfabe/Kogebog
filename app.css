@@ -17,6 +17,7 @@
   --urt-lys: #DDEFE0;
   --tomat-lys: #F9DCD6;
   --lilla-lys: #EADFF4;     /* Halloween-afsnittet (græskarret står på lilla) */
+  --jul-lys: #F2B8B5;       /* Jul-afsnittet: det grønne juletræ står på julerødt (kakao 8,0:1; tydeligt mørkere end tomat-lys) */
   --dej-lys: #F6E7D0;
   --blaa: #3E8FB0;
   --blaa-moerk: #2E6A83;   /* fokusring */
@@ -274,13 +275,14 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .forside-fod { text-align: center; color: var(--kakao-blid); font-size: 15px; padding: 0 24px 14px; }
 /* Versionsnummeret (js/version.js) under linjen om stemmen: til den voksne, mindre end resten af foden */
 .forside-version { font-size: 13px; }
-/* Fire afsnit (opskrifter/index.json): aftensmad, bagning, søde sager og halloween. Overskriften er et billede på
-   afsnittets farve og et ord, og kortenes cirkel har samme farve, så børnene kan kende gryden, ovnen, kagen og
+/* Fem afsnit (opskrifter/index.json): jul, aftensmad, bagning, søde sager og halloween. Overskriften er et billede på
+   afsnittets farve og et ord, og kortenes cirkel har samme farve, så børnene kan kende juletræet, gryden, ovnen, kagen og
    græskarret igen uden at læse.
    Før stod alle 13 kort i ét gitter, og med to kort pr. række delte pizzasnegle og pandekager række */
 .gruppe { width: min(100%, 990px); margin: 0 auto; padding: 22px 24px 0; }
 .gruppe + .gruppe { margin-top: 10px; }
 /* Afsnittet og dets knap i toppen har samme farve */
+[data-gruppe="jul"] { --ret-farve: var(--jul-lys); }
 [data-gruppe="aftensmad"] { --ret-farve: var(--urt-lys); }
 [data-gruppe="bagning"] { --ret-farve: var(--sennep-lys); }
 [data-gruppe="soede-sager"] { --ret-farve: var(--tomat-lys); }
@@ -1003,20 +1005,32 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .trin, .ret { --bund: calc(110px + max(22px, env(safe-area-inset-bottom))); }
   .ret:has(.fortsaet) { --bund: calc(190px + max(22px, env(safe-area-inset-bottom))); }
   /* Forsidens top står i én række som på iPad på langs, med mindre luft og knapper på 64 px: på to rækker blev toppen
-     80 px højere på 768×1024. Rækken er ca. 710 px bred på 768 px og 700 px på 744 px (iPad mini) */
+     80 px højere på 768×1024. Med fem afsnit var rækken med Rosa og Bo 773 px på 768 px og 768 px på 744 px (iPad mini),
+     og dyrene stak ud over skærmens kanter (review A1, målt i WebKit 01-11-2026; på 810-834 px stod de kun 12-19 px fra
+     kanterne, og enhedens skrift kan være bredere). Dyrene skjules, og rækken (titlen og knapperne) er 600-640 px.
+     Luften, knapperne og titlens skrift står i reglen nedenfor (701-1099 px) */
+  .forside-top > .forside-dyr { display: none; }
+  /* «Tumbi Køkken» brydes aldrig: på 744×1133 (iPad mini) manglede 0,3 px i WebKit (e2e 29-10), og hvor bred teksten
+     bliver, afhænger af enhedens skrift */
+  .forside-titel h1 { white-space: nowrap; }
+}
+
+/* Forsidens top fra 701 til 1099 px (iPad på højkant, og på langs 1024×768 og 1080×810): mindre luft, knapper på 64 px og
+   lidt mindre skrift og luft i titlen, så «Tumbi Køkken» står på én linje ved siden af knapperne. På 820×1180 stod
+   «Køkken» på en linje for sig (UI-review 27-10). Med fem afsnit (5 × 72 + 4 × 12 = 408 px) stod titlen på to linjer fra
+   901 til 1099 px, fx på 1024×800, hvor den kun fik 330 px (e2e 01-11-2026). Nu er der ca. 28 px til overs på 901 px og
+   mere på de bredere skærme (regnet ud fra titlens bredde på 900 px i WebKit) */
+@media (min-width: 701px) and (max-width: 1099px) and (min-height: 521px) {
   .forside-top { gap: 12px; }
   .forside-hop { gap: 8px; }
   .knap.hop { width: var(--tryk); min-height: var(--tryk); }
-  /* «Tumbi Køkken» på én linje: på 820×1180 stod «Køkken» på en linje for sig (UI-review 27-10). Lidt mindre skrift og
-     luft i titlen, så den har plads mellem dyrene og knapperne. Den brydes aldrig: på 744×1133 (iPad mini) manglede
-     0,3 px i WebKit (e2e 29-10), og hvor bred teksten bliver, afhænger af enhedens skrift */
   .forside-titel { padding: 10px 18px 12px; }
-  .forside-titel h1 { font-size: clamp(30px, 4vw, 52px); white-space: nowrap; }
+  .forside-titel h1 { font-size: clamp(30px, 4vw, 52px); }
 }
 
 /* Forsidens top på iPhone på højkant: titlen, afsnittenes knapper og dyrene kan ikke stå i én række. Titlen står øverst
    og har hele bredden (på 390 px før to linjer mellem dyrene), og knapperne står mellem Rosa og Bo nedenunder.
-   Dyrene bliver smallere, når der ikke er plads (360 px) */
+   Dyrene bliver smallere, når der ikke er plads, og skjules under 452 px (reglen nedenfor) */
 @media (max-width: 700px) and (min-height: 521px), (max-width: 700px) and (orientation: portrait) {
   .forside-top {
     display: grid;
@@ -1031,10 +1045,20 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .forside-top > .forside-dyr:last-child { grid-area: bo; justify-self: start; }
   .forside-hop { grid-area: hop; align-self: end; }
 }
-/* Under 380 px blev Rosa og Bo kun 22 px brede ved siden af afsnittenes knapper (360 px, UI-review 27-10). Dér skjules
-   de som på de lave skærme, og knapperne står alene i midten */
-@media (max-width: 379px) and (min-height: 521px), (max-width: 379px) and (orientation: portrait) {
+/* Under 452 px er der ikke plads til Rosa og Bo ved siden af afsnittenes fem knapper (5 × 64 + 4 × 8 = 352 px): på
+   390×844 blev de 1 px brede (review K1, 01-11-2026; før, med fire knapper, 22 px på 360 px, UI-review 27-10). Hvert dyr
+   skal have mindst 32 px: 352 + 2 × 8 + 2 × 32 = 432 px indhold, altså 452 px skærm. Dyrene skjules som på de lave
+   skærme, og knapperne står alene i midten i én kolonne (uden de to mellemrum til dyrene) */
+@media (max-width: 451px) and (min-height: 521px), (max-width: 451px) and (orientation: portrait) {
+  .forside-top { grid-template-columns: minmax(0, 1fr); grid-template-areas: "titel" "hop"; }
   .forside-top > .forside-dyr { display: none; }
+  .forside-hop { justify-self: center; }
+}
+/* Under 380 px er knaprækken (352 px) bredere end dugens indhold (340 px på 360 px): Jul og Halloween stod 4 px fra
+   skærmkanten, og fokusringen blev skåret af (UI-review 02-11-2026). Med 4 px mellemrum er rækken 336 px, ca. 12 px
+   fra kanten som kortene */
+@media (max-width: 379px) and (min-height: 521px), (max-width: 379px) and (orientation: portrait) {
+  .forside-hop { gap: 4px; }
 }
 
 /* Under 400 px er der kun plads til «Start forfra» ved siden af print, når print-knappen er uden ikon (teksten siger det) */
@@ -1079,6 +1103,10 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
      og med 22svh (83 px) lå den anden linje 18 px under bunden. Med 60 px er der 5 px luft */
   .ret-hoved { gap: 6px; }
   .ret-billede { width: min(100%, 16svh); }
+  /* Navnet højst 3 linjer på 667×375: med 30 px fik «Marcipan­konfekt med dadler og valnødder» 4 linjer i 220 px
+     («Marcipan-» alene), og personer og tid lå 24 px under bunden (e2e 02-11-2026). 27 px giver højst 3 linjer
+     for alle retter (målt i WebKit). 736×414 får 28 px, og fra 790 px er 3,8vw over 30 px som før (812-932 px uændret) */
+  .ret-titel h1 { font-size: clamp(27px, 3.8vw, 46px); }
   .forside-dyr { display: none; }
   /* Højst 26 % af højden: med 30 % kiggede næste række kun 17 px frem på 667×375 og 812×375, så intet viste, at siden
      kan rulles. Nu ca. 32 px (på 812×375 blev den første række før skåret 1 px af, da titlen er højere end på 667 px) */
@@ -1088,11 +1116,14 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
      (på 667×375 lå «Kødsovs med spaghetti» på to linjer 10 px under kanten) */
   .kort { padding: 10px 10px 10px; }
   .kort-navn { font-size: 22px; }
-  .forside-top { padding-top: 10px; }
+  /* Med fem afsnit (5 × 64 + 4 × 10 = 360 px) manglede der 3 px på 667×375 (244 + 18 + 360 = 622 px på 619 px), så
+     titlen stod på to linjer, og næste række kort kiggede 0 px frem (e2e 01-11-2026). Med 12 og 8 px luft er rækken
+     608 px (målt i WebKit) */
+  .forside-top { padding-top: 10px; gap: 12px; }
   .forside-titel { margin-bottom: 10px; padding: 6px 22px 8px; }
   .forside-titel h1 { font-size: 30px; }
   .forside-titel p { margin-top: 2px; font-size: 17px; }
-  .forside-hop { gap: 10px; margin-bottom: 10px; }
+  .forside-hop { gap: 8px; margin-bottom: 10px; }
   .knap.hop { width: var(--tryk); min-height: var(--tryk); }
   .gruppe { padding-top: 12px; }
   .gruppe-navn { gap: 10px; margin-bottom: 8px; font-size: 26px; }

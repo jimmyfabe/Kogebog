@@ -1642,13 +1642,15 @@ async function timerFaerdig(browser) {
 
 // Forsidens top: «Tumbi Køkken» står på én linje, og Rosa og Bo er enten skjult eller mindst halvt så store som
 // afsnittenes knapper (32 px). Før stod «Køkken» på en linje for sig på 820×1180, og dyrene var 22 px på 360 px
-// (UI-review 27-10). 820×1180 er ikke i FORMER, så toppen måles her på én side, der skifter størrelse
+// (UI-review 27-10). 820×1180 er ikke i FORMER, så toppen måles her på én side, der skifter størrelse. Med fem afsnit
+// stod titlen på to linjer på 1024×800 og 667×375 (e2e 01-11-2026). 901, 1100 og 1112 px er de trange steder ved
+// grænserne for reglen 701-1099 px (code-review 02-11-2026)
 async function forsideTop(browser) {
   console.log('[forside] titlen på én linje og dyrenes størrelse');
   const { ctx, side } = await nySide(browser, { viewport: { width: 820, height: 1180 }, hasTouch: true });
   await side.goto(BASE + '/index.html');
   await side.waitForSelector('.kort[data-ret]');
-  for (const [b, h] of [[820, 1180], [768, 1024], [744, 1133], [1024, 800], [1180, 820], [1280, 800], [390, 844], [375, 667], [360, 780], [844, 390]]) {
+  for (const [b, h] of [[820, 1180], [768, 1024], [744, 1133], [901, 800], [1024, 800], [1100, 800], [1112, 834], [1180, 820], [1280, 800], [390, 844], [375, 667], [360, 780], [844, 390], [667, 375]]) {
     await side.setViewportSize({ width: b, height: h });
     await vent(150);
     const t = await side.evaluate(() => {
