@@ -766,12 +766,13 @@ function katalogFiltre(alle) {
       Object.keys(MAERKER).map((k) => filterChip(k, alle.filter((p) => p.noegler.includes(k)).length, v.maerker, 'katalog'))));
 }
 
-// En ret i kataloget: «Med» (kun retter til ugeplanen) først, så hjertet og «Åbn» altid står samme sted
+// En ret i kataloget: «Med» (kun retter til ugeplanen) først, så hjertet og «Åbn» altid står samme sted. Med «Med» får
+// knapperne en linje for sig på telefonen (.med-udvalg i familie.css); uden står de ved navnet
 function katalogRaekke(p, f, ids, fuldt) {
   const m = p.m;
   return raekke(m, {
     under: maerkeLinje(p.noegler, p.gruppe),
-    knap: el('div', { class: 'voksen-raekke-knapper' },
+    knap: el('div', { class: 'voksen-raekke-knapper' + (m.uge ? ' med-udvalg' : '') },
       m.uge ? medKnap(m, ids, fuldt, { lang: true }) : null,
       hjerteKnap(m, f),
       medFokus(K.knap('Åbn', { klasse: 'lille', label: 'Åbn ' + m.navn, onclick: () => K.naviger('#/ret/' + m.id) }), 'aabn-' + m.id)),

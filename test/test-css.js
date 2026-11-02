@@ -186,3 +186,14 @@ test('søgeteksten i «Ingen retter passer til …» kan brydes, også uden mell
   const regler = blokke(FAM).regler.filter((b) => b.hoved.split(',').map((s) => s.trim()).includes('.voksen-tom p')).map((b) => b.deklarationer).join(';');
   assert.match(regler, /overflow-wrap\s*:\s*anywhere/, '.voksen-tom p skal have overflow-wrap: anywhere');
 });
+
+// Review-fund 9 (02-11): på telefonen får kun katalogets rækker med «Med» (.med-udvalg) knapperne på en linje for sig.
+// Uden «Med» står hjertet og «Åbn» ved siden af navnet, så «jul» (24 retter uden «Med») ikke giver en side på 4.322 px.
+// Rækkerne og klassen tjekkes i test-voksen-del.js, og e2e måler, at hjertet står ved billedet
+test('katalogets knapper får kun deres egen linje på telefonen i rækker med «Med» (familie.css)', () => {
+  const FAM = fs.readFileSync(path.join(ROD, 'familie.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+  const telefon = blokke(FAM).regler.filter((b) => /^@media\s*\(max-width:\s*700px\)$/.test(b.hoved)).flatMap((b) => b.regler);
+  const helLinje = telefon.filter((r) => /grid-column\s*:\s*1\s*\/\s*-1/.test(r.deklarationer)).flatMap((r) => r.hoved.split(',').map((s) => s.trim()));
+  assert.ok(helLinje.includes('.voksen-raekke-knapper.med-udvalg'), 'forventede grid-column: 1 / -1 på .voksen-raekke-knapper.med-udvalg (' + helLinje.join(', ') + ')');
+  assert.ok(!helLinje.includes('.voksen-raekke-knapper'), '.voksen-raekke-knapper uden .med-udvalg må ikke få en linje for sig');
+});

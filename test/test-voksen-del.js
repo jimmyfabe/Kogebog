@@ -466,3 +466,17 @@ test('katalogets hjælpetekst siger, at det første «Med» gør børnenes valg 
   assert.match(hjaelp(), /Børnene vælger kun mellem de retter, der er med\.$/, hjaelp());
   assert.doesNotMatch(hjaelp(), /alle \d+ retter/);
 });
+
+// Review-fund 9 (02-11): på telefonen stod hjertet og «Åbn» altid på deres egen linje, også i rækker uden «Med» («jul» gav
+// en side på 4.322 px). Kun rækker med «Med» får klassen .med-udvalg, der giver knapperne en linje for sig (familie.css,
+// test-css.js)
+test('kataloget: kun rækker med «Med» har knapperne med .med-udvalg', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  const skaerm = aabnSide('katalog', { b: 390, h: 844 });
+  const raekker = find(skaerm, (e) => e.tag === 'li' && e.attr['data-ret']);
+  assert.equal(raekker.length, S.ids.length);
+  const forkert = raekker.filter((li) => harKlasse(medKlasse(li, 'voksen-raekke-knapper')[0], 'med-udvalg') !== Boolean(medFokusNavn(li, 'ret-' + li.attr['data-ret'])));
+  assert.deepEqual(forkert.map((li) => li.attr['data-ret']), [], 'rækker, hvor .med-udvalg ikke følger «Med»');
+  assert.ok(raekker.some((li) => !medFokusNavn(li, 'ret-' + li.attr['data-ret'])), 'der er rækker uden «Med» (juleretterne)');
+});

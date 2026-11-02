@@ -464,6 +464,19 @@ async function katalog(browser, H, skaerm) {
   const start = await side.evaluate(() => ({ open: document.querySelector('.filtre').open,
     top: Math.round(document.querySelector('.voksen-liste .voksen-raekke').getBoundingClientRect().top), H: innerHeight }));
   tjek(start.open === !kompakt && start.top < start.H - 120, n + ': grupper og mærker er ' + (kompakt ? 'foldet sammen' : 'foldet ud') + ', og den første ret ses (' + JSON.stringify(start) + ')');
+  // Review-fund 9 (02-11): på telefonen får knapperne kun deres egen linje i rækker med «Med». Uden «Med» står hjertet og
+  // «Åbn» ved billedet, og navnet har stadig plads (ikke ét bogstav pr. linje)
+  const telefon = skaerm.viewport.width <= 700;
+  const linjer = await side.evaluate(() => [...document.querySelectorAll('.voksen-katalog .voksen-raekke')].map((r) => {
+    const knapper = r.querySelector('.voksen-raekke-knapper');
+    return { id: r.dataset.ret, med: knapper.classList.contains('med-udvalg'), egenLinje: knapper.getBoundingClientRect().top >= r.querySelector('.voksen-raekke-billede').getBoundingClientRect().bottom - 1,
+      navn: Math.round(r.querySelector('.voksen-raekke-navn').getBoundingClientRect().width) };
+  }));
+  const forkert = linjer.filter((l) => l.egenLinje !== (telefon && l.med)).map((l) => l.id);
+  const smal = linjer.filter((l) => l.navn < 80).map((l) => l.id + ' ' + l.navn + ' px');
+  tjek(forkert.length === 0 && smal.length === 0 && linjer.some((l) => l.med) && linjer.some((l) => !l.med),
+    n + ': knapperne har ' + (telefon ? 'kun deres egen linje i rækker med «Med»' : 'aldrig deres egen linje') + ', og navnene er mindst 80 px brede ('
+    + JSON.stringify({ forkert: forkert.slice(0, 5), smal: smal.slice(0, 5), med: linjer.filter((l) => l.med).length, i_alt: linjer.length }) + ')');
   await tjekLayout(side, n + ' katalog');
   await foto(side, n + '-voksen-katalog');
 
