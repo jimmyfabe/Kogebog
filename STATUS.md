@@ -1,5 +1,15 @@
 # STATUS – Tumbi Køkken
 
+## 02-11-2026 kl. 15:01: «Mere grønt i maden» på pause (Jimmy sætter en disk i)
+
+- Gren `groent-0211` (22 commits fra e4c0ec9, rent arbejdstræ): kerne, 8 retter med halvt røde linser, review med Fable som dommer og rettelserne er færdige. Workflowet `wf_14045647-16a` blev stoppet under det sidste trin, ui-review.
+- **Næste:**
+  1. Genoptag med `Workflow({scriptPath: <sessionens scripts>/kogebog-mere-groent-wf_14045647-16a.js, resumeFromRunId: "wf_14045647-16a"})`. Kun ui-review kører igen.
+  2. Tjek diffen selv.
+  3. Lav Røst-lyd til de nye `groen-*`-replikker.
+  4. Udgiv som v6.
+- Jimmy svarede «ja, til den» 02-11 kl. 15. Det er læst som ja til at udgive v6, når alt er grønt. Fortolkningen er ikke bekræftet endnu.
+
 ## 02-11-2026 kl. 11:38: v5 · 02-11-2026 er live på Pages efter Jimmys «Ja, udgiv v5» (Saga)
 
 Jimmy 02-11 (talebesked): mere julemad, nytår (kransekage, isdesserter), et katalog med søgning i voksendelen, og «computerstemmen» på forsiden. Han svarede «Ja, du kører bare det hele ind, fuld fart».
