@@ -9,6 +9,8 @@
 // 10. kog-familie-v1 fra en nyere udgave (oversigten står, siderne og hjertet er låst), 11. loftet på 12 portioner og
 // 12. holdet først, når opskrifterne er hentet. 13. Kataloget og søgefeltet (også på udvalget og favoritterne) på hver
 // skærm: feltet tegnes ikke om, mens der skrives, «jul» giver juleretterne, grupperne, ingen træf, hjertet og «Med».
+// 14. «Mere grønt i maden» på iPad'en og telefonen: kontakten, retten, trinnet og printet (strengt groen=1), ugeplanens
+// pris, linket (plankode v2) og listen på telefonen, og at kontakten ikke rører den gemte plan
 import fs from 'node:fs';
 import path from 'node:path';
 import { portionerFraHusstand, faktorFor, skaleretIngrediens, voksenNoter } from '../js/skaler.js';
@@ -20,6 +22,7 @@ import { tilTale } from '../js/tekst.js';
 import { soeg } from '../js/soeg.js';
 import { GRUPPER } from '../js/katalog.js';
 import { MAERKER, maerkerFor } from '../js/maerker.js';
+import { medMereGroent, GROENT_TEKST } from '../js/groent.js';
 
 const FAMILIE = 'kog-familie-v1';
 const UGE = 'kog-uge-v1';
@@ -43,6 +46,7 @@ export async function voksen(browser, H) {
   await nyereFamilie(browser, H);
   await husstandLoft(browser, H);
   await henterFoerHoldet(browser, H);
+  for (const skaerm of H.VALGTE.filter((s) => s.navn !== 'desktop')) await mereGroent(browser, H, skaerm);
 }
 
 const ugeplanRetter = (RETTER) => Object.keys(RETTER).filter((id) => RETTER[id].tumbi.ugeplan === true);
@@ -820,6 +824,11 @@ async function nyereFamilie(browser, H) {
     .map((b) => [b.dataset.fokus, (b.disabled ? 'låst: ' : '') + (b.querySelector('.voksen-punkt-status')?.textContent || '').replace(/\s+/g, ' ')])));
   tjek(['husstand', 'udvalg', 'favoritter'].every((k) => punkter[k] === 'låst: Lavet med en nyere udgave') && !/låst/.test(punkter.ugeplan + punkter.indkoeb),
     n + ': husstand, udvalg og favoritter er låst, ugeplanen og listen ikke (' + JSON.stringify(punkter) + ')');
+  const groen = await side.evaluate(() => {
+    const b = document.querySelector('[data-fokus="groent"]');
+    return b ? (b.disabled ? 'låst: ' : '') + (document.getElementById('groent-status')?.textContent || '') : null;
+  });
+  tjek(groen === 'låst: Lavet med en nyere udgave', n + ': «Mere grønt i maden» er låst med en nyere familie (' + groen + ')');
   await tryk(side, '[data-fokus="ugeplan"]');
   await venterPaa(side, () => location.hash === '#/uge' && document.querySelector('.uge-dage'), null, n + ': ugeplanen kan nås fra oversigten');
   await gaaTil(side, '#/voksen/husstand');
@@ -883,5 +892,150 @@ async function henterFoerHoldet(browser, H) {
   await holdHer(H, side, '.voksen-vagt');
   await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('main.voksen-hub'), null, n + ': holdet åbner oversigten');
   tjek(side.fejl.length === 0, n + ' (henter før holdet): ' + side.fejl.join(' | '));
+  await ctx.close();
+}
+
+// 14. «Mere grønt i maden» (js/groent.js). Det forventede regnes af appens egen kode (lavModel(...).groen, medMereGroent,
+// kod, saml). På iPad'en hele vejen: kontakten, retten, ingrediensen med iPad-stemmen (Røst har ikke de nye linjer endnu),
+// det nye trin, printet og dets strenge groen=1, ugeplanens pris, «Send til telefon» med et v2-link og listen på
+// telefonen, og at kontakten ikke rører den gemte plan. På telefonen: kontakten og retten med layout og foto
+const GROEN_RET = 'koedsovs';
+const GROEN_TRIN = 'Hæld linser og vand i gryden.';
+const groenKontakt = (side) => side.evaluate(() => {
+  const b = document.querySelector('[data-fokus="groent"]');
+  return b ? {
+    rolle: b.getAttribute('role'), til: b.getAttribute('aria-checked'), laast: b.disabled,
+    status: (document.getElementById('groent-status')?.textContent || '').replace(/\s+/g, ' '),
+    hoejde: Math.round(b.getBoundingClientRect().height), fokus: document.activeElement === b,
+  } : null;
+});
+const retVist = (side) => side.evaluate(() => ({
+  ingr: [...document.querySelectorAll('.ingr')].map((b) => b.getAttribute('aria-label')),
+  linjer: [...document.querySelectorAll('.ret .voksen-linje')].map((e) => e.textContent),
+}));
+
+async function skiftGroent(H, side, til, hvor) {
+  await aabnVoksen(H, side, '', hvor + ': oversigten');
+  await H.tryk(side, '[data-fokus="groent"]');
+  await H.venterPaa(side, (x) => document.querySelector('[data-fokus="groent"]')?.getAttribute('aria-checked') === x, String(til), hvor + ': kontakten slås ' + (til ? 'til' : 'fra'));
+  return groenKontakt(side);
+}
+
+async function mereGroent(browser, H, skaerm) {
+  const { BASE, RETTER, SKAERME, nySide, tjek, tjekLayout, foto, tryk, venterPaa, h1 } = H;
+  const n = skaerm.navn;
+  const ipad = n === 'ipad';
+  console.log('[' + n + '] voksendelen: «Mere grønt i maden»');
+  const grund = lavModel(RETTER[GROEN_RET]);
+  const groen = grund.groen;
+  tjek(Boolean(groen), GROEN_RET + ' har en udgave med mere grønt');
+  if (!groen) return;
+  const antal = Object.values(RETTER).filter((j) => j.tumbi && 'mere_groent' in j.tumbi).length;
+  const { ctx, side } = await nySide(browser, skaerm, { serviceWorkers: 'block' });
+  await ctx.addInitScript(fakeDeling);
+  await side.goto(BASE + '/index.html');
+  await side.waitForSelector('.kort[data-ret]');
+  await side.evaluate(() => localStorage.clear());
+
+  // Kontakten: slået fra som standard, og slået til gemmes i familien
+  await aabnVoksen(H, side, '', n + ' oversigten');
+  let k = await groenKontakt(side);
+  tjek(k && k.rolle === 'switch' && k.til === 'false' && !k.laast && k.status === 'Slået fra' && k.hoejde >= 48,
+    n + ': kontakten står slået fra, er mindst 48 px og har role="switch" (' + JSON.stringify(k) + ')');
+  k = await skiftGroent(H, side, true, n);
+  tjek(k.status === 'Halvt kød og halvt røde linser i ' + antal + (antal === 1 ? ' ret' : ' retter') && k.fokus,
+    n + ': slået til siger antallet af retter, og fokus bliver på kontakten (' + JSON.stringify(k) + ')');
+  tjek((await laesLager(side, FAMILIE) || {}).mereGroent === true, n + ': valget er gemt i familien');
+  await tjekLayout(side, n + ' oversigten med «Mere grønt i maden»');
+  await foto(side, n + '-voksen-groent');
+
+  // Retten: halvt kød, linser og vand, og linjen til den voksne
+  await gaaTil(side, '#/ret/' + GROEN_RET);
+  await venterPaa(side, (id) => location.hash === '#/ret/' + id && document.querySelector('.ret h1'), GROEN_RET, n + ': retten med mere grønt');
+  let ret = await retVist(side);
+  tjek(JSON.stringify(ret.ingr) === JSON.stringify(groen.ingredienser.map((x) => x.tekst)),
+    n + ': retten viser ingredienserne med mere grønt (' + ret.ingr.slice(0, 3).join(' | ') + ' …)');
+  tjek(JSON.stringify(ret.linjer) === JSON.stringify([GROENT_TEKST]), n + ': linjen til den voksne (' + JSON.stringify(ret.linjer) + ')');
+  await tjekLayout(side, n + ' retten med mere grønt', { knapperSes: n !== 'iphone' });
+  await foto(side, n + '-voksen-groent-ret');
+  if (ipad) {
+    // Modellens ingredienser har ikke varen, så linjen findes på ikonet «linser» (kødsovsens linje med røde linser)
+    const linser = groen.ingredienser.findIndex((x) => x.ikon === 'linser');
+    tjek(linser >= 0, n + ': retten med mere grønt har en linje med ikonet «linser»');
+    if (linser >= 0) await tryk(side, '.ingr >> nth=' + linser);
+    const sagt = await sidsteTale(side);
+    tjek(linser >= 0 && sagt && (sagt.fil ? sagt.fil === GROEN_RET + '/' + groen.ingredienser[linser].lyd + '.mp3' : sagt.tekst === tilTale(groen.ingredienser[linser].tekst)),
+      n + ': de røde linser læses op med deres egen fil eller iPad-stemmen (' + JSON.stringify(sagt) + ')');
+    const nr = groen.trin.findIndex((x) => x.tekst === GROEN_TRIN) + 1;
+    await gaaTil(side, '#/ret/' + GROEN_RET + '/trin/' + nr);
+    await venterPaa(side, () => document.querySelector('.trin h1'), null, n + ': trin ' + nr);
+    tjek(nr > 0 && await h1(side) === GROEN_TRIN, n + ': trin ' + nr + ' er det nye trin med linserne (' + await h1(side) + ')');
+    await gaaTil(side, '#/ret/' + GROEN_RET);
+    await venterPaa(side, () => document.querySelector('.ret h1'), null, n + ': tilbage til retten');
+
+    // Printet fra retten får groen=1 med. Alt andet end præcis ét groen=1 giver grundretten
+    await holdHer(H, side, '.print-knap');
+    await venterPaa(side, (id) => location.pathname.endsWith('/print.html') && location.search === '?ret=' + id + '&groen=1' && document.querySelector('.tjek li'), GROEN_RET, n + ': «Print» skal åbne print.html?ret=' + GROEN_RET + '&groen=1');
+    const print = () => side.evaluate(() => ({
+      linjer: [...document.querySelectorAll('.tjek li')].map((li) => li.textContent),
+      meta: [...document.querySelectorAll('.hoved .meta')].map((p) => p.textContent),
+    }));
+    let pr = await print();
+    tjek(JSON.stringify(pr.linjer) === JSON.stringify(groen.ingredienser.map((x) => x.tekst)) && pr.meta.includes(GROENT_TEKST),
+      n + ': printet viser retten med mere grønt og linjen (' + JSON.stringify(pr.meta) + ')');
+    for (const daarlig of ['groen=1&groen=1', 'groen=true', 'groen=0', 'groen=', 'groen=01']) {
+      await side.goto(BASE + '/print.html?ret=' + GROEN_RET + '&' + daarlig);
+      await venterPaa(side, () => !document.getElementById('print').disabled, null, n + ' print ' + daarlig);
+      pr = await print();
+      tjek(JSON.stringify(pr.linjer) === JSON.stringify(RETTER[GROEN_RET].recipeIngredient) && !pr.meta.includes(GROENT_TEKST),
+        n + ': «' + daarlig + '» giver grundretten på printet');
+    }
+    await side.goto(BASE + '/index.html');
+    await side.waitForSelector('.kort[data-ret]');
+
+    // Ugeplanen: prisen er rettens med mere grønt, og linket til telefonen er v2 med g
+    const uge = planMandag(new Date());
+    const dage = [{ ret: GROEN_RET, af: 'bo', n: 4 }, null, null, null, null, null, null];
+    await saetLager(side, UGE, { v: 1, uge, dage, n: 4, prBarn: 1, rettet: null });
+    await gaaTil(side, '#/uge');
+    await venterPaa(side, () => document.querySelector('.uge-dage'), null, n + ': ugeplanen');
+    const kr = Math.round((groen.uge.prisKr * 4) / groen.uge.portioner);
+    const meta = await tekstAf(side, '.dag-meta');
+    tjek(meta.includes('ca. ' + kr + ' kr.') && kr < Math.round((grund.uge.prisKr * 4) / grund.uge.portioner), n + ': ugeplanen regner med prisen med mere grønt (' + meta + ')');
+    tjek((await tekstAf(side, '.uge-sum')).startsWith('Ca. ' + Math.round(kr / 10) * 10 + ' kr.'), n + ': summen (' + await tekstAf(side, '.uge-sum') + ')');
+    await tryk(side, 'button:has-text("Send til telefon")');
+    await venterPaa(side, () => window.__delt.length === 1, null, n + ': «Send til telefon» skal åbne delearket');
+    const delt = await side.evaluate(() => window.__delt[0] || {});
+    const kode = kod(uge, dage.map((d) => (d ? { ret: d.ret, n: d.n } : null)), { mereGroent: true });
+    tjek(kode.startsWith('v2.') && delt.url === BASE + '/index.html#/hent/' + kode, n + ': linket er v2 med mere grønt (' + delt.url + ')');
+
+    // Kontakten slås fra: retten er som før, og planen er urørt
+    const foer = await raatLager(side);
+    k = await skiftGroent(H, side, false, n);
+    tjek(k.status === 'Slået fra' && (await laesLager(side, FAMILIE)).mereGroent === false, n + ': slået fra igen (' + JSON.stringify(k) + ')');
+    tjek(JSON.stringify((await raatLager(side)).slice(1)) === JSON.stringify(foer.slice(1)), n + ': kontakten rører ikke den gemte plan og liste');
+    await gaaTil(side, '#/ret/' + GROEN_RET);
+    await venterPaa(side, (id) => location.hash === '#/ret/' + id && document.querySelector('.ret h1'), GROEN_RET, n + ': grundretten');
+    ret = await retVist(side);
+    tjek(JSON.stringify(ret.ingr) === JSON.stringify(grund.ingredienser.map((x) => x.tekst)) && !ret.linjer.length,
+      n + ': slået fra viser retten som før og uden linjen (' + ret.ingr.slice(0, 3).join(' | ') + ' …)');
+    tjek(side.fejl.length === 0, n + ' (mere grønt): ' + side.fejl.join(' | '));
+    await ctx.close();
+
+    // Telefonen har sin egen familie (slået fra), men listen følger linket: linser og halvt kød
+    const tlf = await nySide(browser, SKAERME[1], { serviceWorkers: 'block' });
+    await tlf.side.goto(delt.url || BASE + '/index.html#/hent/' + kode);
+    await venterPaa(tlf.side, () => location.hash === '#/indkoeb' && document.querySelector('.liste-tal'), null, 'iphone: v2-linket skal åbne listen');
+    const forventet = grupper(saml([{ ret: medMereGroent(RETTER[GROEN_RET]), n: 4 }])).filter((g) => g.afd !== 'basis')
+      .flatMap((g) => g.varer.map((v) => [v.id, (v.maengde || '').replace(/\s+/g, ' ')]));
+    const vist = await tlf.side.evaluate(() => [...document.querySelectorAll('.liste-krop .afd:not(.har-vi-afd) li[data-vare]')]
+      .map((li) => [li.dataset.vare, (li.querySelector('.vare-maengde')?.textContent || '').replace(/\s+/g, ' ')]));
+    tjek(vist.some(([id]) => id === 'roede-linser') && JSON.stringify(vist) === JSON.stringify(forventet),
+      'iphone: listen fra v2-linket har linserne og halvt kød (' + JSON.stringify(vist.slice(0, 4)) + ')');
+    tjek(tlf.side.fejl.length === 0, 'iphone (listen med mere grønt): ' + tlf.side.fejl.join(' | '));
+    await tlf.ctx.close();
+    return;
+  }
+  tjek(side.fejl.length === 0, n + ' (mere grønt): ' + side.fejl.join(' | '));
   await ctx.close();
 }

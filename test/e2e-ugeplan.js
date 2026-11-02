@@ -291,7 +291,9 @@ async function telefon(browser, H) {
     ['<img src=x onerror=alert(1)>MARKa', 'Linket kan ikke læses'],
     ['%3Cscript%3Ealert(1)%3C/script%3EMARKb', 'Linket kan ikke læses'],
     ['"><svg onload=alert(1)>MARKc', 'Linket kan ikke læses'],
-    ['v2.20261026.markd_4~~~~~~.0000', 'Lavet med en nyere udgave. Opdatér appen'],
+    // v2 er linket med «Mere grønt i maden» (js/plankode.js, 02-11): en nyere udgave er nu v3 og op, og v2 uden «.g» er ødelagt
+    ['v3.20261026.markd_4~~~~~~.0000', 'Lavet med en nyere udgave. Opdatér appen'],
+    ['v2.20261026.markg_4~~~~~~.0000', 'Linket kan ikke læses'],
     ['__proto__marke', 'Linket kan ikke læses'],
     ['constructor', 'Linket kan ikke læses'],
     [kode.slice(0, -4) + 'ffff', 'Linket kan ikke læses'], // forkert kontrolsum
