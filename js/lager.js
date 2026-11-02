@@ -196,7 +196,10 @@ export function vedListeAendring(fn) {
 
 // ---------- Familien til voksendelen (docs/foraeldredel.md, afsnit 3) ----------
 //   kog-familie-v1 (iPad'en): { v: 1, voksne, boern, barnAndel, udvalg: { ids, rettet } | null, favoritter: [id],
-//                              lavet: { id: { gange, sidst } } }
+//                              lavet: { id: { gange, sidst } }, mereGroent }
+// mereGroent: «Mere grønt i maden» (js/groent.js), kun true slår den til. Feltet kom til 02-11-2026 uden et nyt v: det er
+// valgfrit med false som standard, så gemte data uden feltet læses som før (slået fra), og en ældre udgave, der ikke
+// kender feltet, taber det bare ved næste skrivning (knappen er så slået fra igen). Intet andet gemt felt ændres.
 // Kun ANTAL voksne og børn (0-8, null = ikke sat: appen opfører sig som før), aldrig navn, alder eller fødselsdag.
 // Samme versionsvagt og samme regel for «retter» som kog-uge-v1: et id, der allerede er gemt, bevares ved en skrivning,
 // selvom det ikke står i «retter», og et felt sat til undefined er ingen ændring.
@@ -213,7 +216,7 @@ const MAKS_GANGE = 999;
 const erAntal = (n) => Number.isInteger(n) && n >= 0 && n <= MAKS_PERSONER;
 const nyestFoerst = ([, a], [, b]) => (a.sidst < b.sidst) - (a.sidst > b.sidst);
 
-export const tomFamilie = () => ({ v: FAMILIE_V, voksne: null, boern: null, barnAndel: BARN_ANDEL, udvalg: null, favoritter: [], lavet: {} });
+export const tomFamilie = () => ({ v: FAMILIE_V, voksne: null, boern: null, barnAndel: BARN_ANDEL, udvalg: null, favoritter: [], lavet: {}, mereGroent: false });
 
 // 0,4-1,0 i trin af 0,1, gemt med én decimal (0,1 + 0,6 bliver 0,7); alt andet giver standarden
 function rensAndel(x) {
@@ -253,6 +256,7 @@ function rensFamilie(j, erKendt) {
   if (ids.length) ud.udvalg = { ids, rettet: erDato(j.udvalg.rettet) ? j.udvalg.rettet : null };
   ud.favoritter = rensIds(j.favoritter, erKendt, MAKS_FAVORITTER);
   ud.lavet = rensLavet(j.lavet, erKendt);
+  ud.mereGroent = j.mereGroent === true;
   return ud;
 }
 

@@ -37,12 +37,13 @@ const RETTER = ['koedsovs', 'tunfrikadeller', 'chorizo-pasta', 'pandekager', ...
 // i dage efter 01-01-2025 som 'ÅÅÅÅ-MM-DD'
 const dag = (i) => new Date(Date.UTC(2025, 0, 1) + i * 86400000).toISOString().slice(0, 10);
 
-const TOM = { v: 1, voksne: null, boern: null, barnAndel: 0.7, udvalg: null, favoritter: [], lavet: {} };
+const TOM = { v: 1, voksne: null, boern: null, barnAndel: 0.7, udvalg: null, favoritter: [], lavet: {}, mereGroent: false };
 const FAMILIE = {
   voksne: 2, boern: 2, barnAndel: 0.5,
   udvalg: { ids: ['koedsovs', 'tunfrikadeller', 'chorizo-pasta'], rettet: '2026-10-31' },
   favoritter: ['pandekager', 'koedsovs'],
   lavet: { koedsovs: { gange: 3, sidst: '2026-10-28' }, pandekager: { gange: 1, sidst: '2026-10-04' } },
+  mereGroent: true,
 };
 
 test('standardværdier: tomt lager giver den tomme familie, og tomFamilie giver et nyt objekt hver gang', () => {
@@ -77,6 +78,31 @@ test('gem og hent giver det samme', () => {
   assert.deepEqual(lager.gemFamilie({ udvalg: null, voksne: null, v: 7, laast: true }, RETTER), { v: 1, ...FAMILIE, udvalg: null, voksne: null });
   assert.deepEqual(uden(lager.hentFamilie(RETTER)), { v: 1, ...FAMILIE, udvalg: null, voksne: null });
   assert.equal(l.skrevet.every((k) => k === NOEGLE), true);
+});
+
+// «Mere grønt i maden» (js/groent.js) kom til uden et nyt v: gemte data uden feltet er slået fra, og intet andet ændres
+test('mereGroent: kun true slår den til; gemte data uden feltet og forkerte værdier giver false, og resten er uændret', () => {
+  const { mereGroent, ...gammel } = FAMILIE; // gemt af en udgave fra før feltet
+  assert.equal(mereGroent, true);
+  const l = medLager({ [NOEGLE]: { v: 1, ...gammel } });
+  assert.deepEqual(lager.hentFamilie(RETTER), { v: 1, ...gammel, mereGroent: false, laast: false });
+  assert.deepEqual(l.skrevet, []);
+  // Slå til og fra: de andre felter røres ikke
+  assert.deepEqual(lager.gemFamilie({ mereGroent: true }, RETTER), { v: 1, ...gammel, mereGroent: true });
+  assert.deepEqual(gemt(l), { v: 1, ...gammel, mereGroent: true });
+  assert.deepEqual(lager.hentFamilie(RETTER), { v: 1, ...gammel, mereGroent: true, laast: false });
+  assert.deepEqual(lager.gemFamilie({ mereGroent: false }, RETTER), { v: 1, ...gammel, mereGroent: false });
+  assert.deepEqual(gemt(l), { v: 1, ...gammel, mereGroent: false });
+  // Forkerte værdier, gemt eller i en ændring, giver false
+  for (const v of ['true', 1, 'ja', null, {}, [true]]) {
+    medLager({ [NOEGLE]: { v: 1, ...gammel, mereGroent: v } });
+    assert.deepEqual(lager.hentFamilie(RETTER), { v: 1, ...gammel, mereGroent: false, laast: false }, JSON.stringify(v));
+    assert.deepEqual(lager.gemFamilie({ mereGroent: v }, RETTER), { v: 1, ...gammel, mereGroent: false }, JSON.stringify(v));
+  }
+  // skiftFavorit og markerLavet beholder indstillingen
+  medLager({ [NOEGLE]: { v: 1, ...gammel, mereGroent: true } });
+  assert.equal(lager.skiftFavorit('tunfrikadeller', RETTER).mereGroent, true);
+  assert.equal(lager.markerLavet('koedsovs', '2026-11-02', RETTER).mereGroent, true);
 });
 
 test('voksne og børn: null eller et heltal 0-8, og ingen at lave mad til (0 eller ikke sat) er det samme som ikke sat', () => {
@@ -190,7 +216,7 @@ test('ukendte id\'er fjernes fra det, der vises, men et id, der allerede er gemt
   const kort = ['koedsovs'];
   const vist = {
     v: 1, voksne: 2, boern: 2, barnAndel: 0.5, udvalg: { ids: ['koedsovs'], rettet: '2026-10-31' }, favoritter: ['koedsovs'],
-    lavet: { koedsovs: { gange: 3, sidst: '2026-10-28' } },
+    lavet: { koedsovs: { gange: 3, sidst: '2026-10-28' } }, mereGroent: true,
   };
   assert.deepEqual(uden(lager.hentFamilie(kort)), vist);
   assert.deepEqual(lager.gemFamilie({ voksne: 2 }, kort), vist);
