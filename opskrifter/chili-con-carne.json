@@ -51,7 +51,7 @@
     "pris_kr": 72,
     "pris_dato": "2026-10",
     "groent_g": 1185,
-    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Grønt er også et skøn (ikke målt) og er uden bælgfrugter og kartofler.",
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: Rema 1000's hyldepriser 22-10-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Grønt er også et skøn (ikke målt) og er uden bælgfrugter og kartofler. Med mere grønt er der 125 g oksekød mindre og 50 g røde linser mere (Rema 1000's hyldepriser 31-10-2026: hakket oksekød 8-12 % 39,95 kr. for 400 g og røde linser 16,95 kr. for 400 g, ganget med 1,09), og linserne tælles ikke som grønt.",
     "ingredienser": [
       { "ikon": "loeg", "maengde": "1", "vare": "loeg", "antal": 1, "enhed": "stk" },
       { "ikon": "olie", "maengde": "1 spsk", "vare": "olie" },
@@ -65,6 +65,20 @@
       { "ikon": "salt", "maengde": "½ tsk", "vare": "salt" },
       { "ikon": "ris", "maengde": "250 g", "vare": "ris", "antal": 250, "enhed": "g" },
       { "ikon": "vand", "maengde": "2 l", "vare": "vand" }
-    ]
+    ],
+    "mere_groent": {
+      "ingredienser": [
+        { "i": 2, "tekst": "125 g hakket oksekød", "antal": 125 }
+      ],
+      "nye_ingredienser": [
+        { "efter": 7, "tekst": "50 g røde linser", "ikon": "linser", "maengde": "50 g", "vare": "roede-linser", "antal": 50, "enhed": "g" },
+        { "efter": 7, "tekst": "1½ dl vand", "ikon": "vand", "maengde": "1½ dl", "vare": "vand", "antal": 1.5, "enhed": "dl" }
+      ],
+      "nye_trin": [
+        { "efter": 9, "@type": "HowToStep", "text": "Hæld linser og vand i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["linser", "vand"], "note": "Gryden er varm. Hold barnets hænder væk fra kanten. 1½ dl vand. Rør godt rundt, så linserne ikke sætter sig." } }
+      ],
+      "pris_kr": 61,
+      "groent_g": 1185
+    }
   }
 }
