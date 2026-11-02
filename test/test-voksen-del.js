@@ -432,3 +432,21 @@ test('på en stor skærm bliver filtrene foldet ud efter et valg og et tegn, og 
   assert.equal(filtreI(vist.at(-1)).open, true);
   assert.equal(fokus, medFokusNavn(vist.at(-1), 'gruppe-jul'));
 });
+
+// Review-fund 8 (02-11): på 1180×820 (iPad på langs) og 1280×800 (desktop) stod grupper og mærker foldet ud fra start,
+// så den første ret startede ved y≈757. En lav skærm (højst 900 px) behandles nu som telefonen: filtrene starter foldet
+// sammen og foldes sammen efter et valg. En høj skærm (iPad på højkant, en stor skærm) har dem foldet ud
+test('filtrene starter foldet sammen på en lav skærm (iPad på langs, desktop) og foldet ud på en høj', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  for (const [b, h, aaben] of [[1180, 820, false], [1280, 800, false], [844, 390, false], [820, 1180, true], [1280, 1000, true]]) {
+    for (const side of ['katalog', 'udvalg']) {
+      assert.equal(filtreI(aabnSide(side, { b, h })).open, aaben, side + ' på ' + b + '×' + h);
+      V.rute('#/');
+    }
+  }
+  foldUd(aabnSide('katalog', { b: 1180, h: 820 }));
+  send(medFokusNavn(vist.at(-1), 'gruppe-jul'), 'click');
+  assert.equal(filtreI(vist.at(-1)).open, false, 'et valg folder dem sammen på iPad på langs');
+  assert.equal(fokus, medFokusNavn(vist.at(-1), 'filtre-katalog'));
+});

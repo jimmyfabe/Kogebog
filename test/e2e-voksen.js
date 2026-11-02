@@ -419,6 +419,9 @@ async function skrivTegnForTegn(H, side, sel, tekst, hvor, forventet) {
 async function katalog(browser, H, skaerm) {
   const { BASE, RETTER, ROD, nySide, tjek, tjekLayout, foto, tryk, vent, venterPaa, h1 } = H;
   const n = skaerm.navn;
+  // Smal eller lav skærm (KOMPAKT i js/voksen-del.js): filtrene starter foldet sammen og foldes sammen efter et valg.
+  // Det gælder alle tre skærme i testen (iPad og desktop er lavere end 900 px)
+  const kompakt = skaerm.viewport.width <= 700 || skaerm.viewport.height <= 900;
   console.log('[' + n + '] voksendelen: kataloget og søgefeltet (også på udvalget og favoritterne)');
   const POSTER = katalogPoster(RETTER, ROD);
   const ALLE = POSTER.map((p) => p.id);
@@ -457,8 +460,10 @@ async function katalog(browser, H, skaerm) {
   tjek(ens(medVed, UGEPLAN.map((p) => p.id)), n + ': «Med i udvalget» står kun ved de ' + UGEPLAN.length + ' retter til ugeplanen (' + medVed.length + ')');
   tjek(await side.locator('.voksen-katalog [data-fokus^="fav-"]').count() === ALLE.length && await side.locator('.voksen-katalog [data-fokus^="aabn-"]').count() === ALLE.length,
     n + ': hver ret i kataloget har et hjerte og «Åbn»');
-  let aabne = await side.evaluate(() => document.querySelector('.filtre').open);
-  tjek(aabne === (n !== 'iphone'), n + ': grupper og mærker er ' + (n === 'iphone' ? 'foldet sammen på telefonen' : 'foldet ud') + ' (open: ' + aabne + ')');
+  // Review-fund 8 (02-11): på en lav skærm starter filtrene foldet sammen, så den første ret ses (før: y≈757 på 820 px)
+  const start = await side.evaluate(() => ({ open: document.querySelector('.filtre').open,
+    top: Math.round(document.querySelector('.voksen-liste .voksen-raekke').getBoundingClientRect().top), H: innerHeight }));
+  tjek(start.open === !kompakt && start.top < start.H - 120, n + ': grupper og mærker er ' + (kompakt ? 'foldet sammen' : 'foldet ud') + ', og den første ret ses (' + JSON.stringify(start) + ')');
   await tjekLayout(side, n + ' katalog');
   await foto(side, n + '-voksen-katalog');
 
@@ -491,9 +496,9 @@ async function katalog(browser, H, skaerm) {
   let nu = await feltNu(side, 'soeg-katalog');
   tjek(nu.vaerdi === '' && nu.fokus && nu.ryd === true && ens(await raekker(side), ALLE), n + ': × tømmer søgefeltet, giver det fokus og viser alle retter (' + JSON.stringify(nu) + ')');
 
-  // Grupperne (med antal): «Aftensmad» viser kun aftensmad, og linjen over chipsene siger, hvad der er valgt. På
-  // telefonen foldes de ud først
-  if (n === 'iphone') {
+  // Grupperne (med antal): «Aftensmad» viser kun aftensmad, og linjen over chipsene siger, hvad der er valgt. På en
+  // kompakt skærm foldes de ud først
+  if (kompakt) {
     await tryk(side, '.filtre > summary');
     tjek(await side.evaluate(() => document.querySelector('.filtre').open), n + ': et tryk på «Grupper og mærker» folder filtrene ud');
   }
@@ -510,20 +515,20 @@ async function katalog(browser, H, skaerm) {
     top: Math.round(document.querySelector('.voksen-liste .voksen-raekke').getBoundingClientRect().top), H: innerHeight,
   }));
   tjek(ens(await raekker(side), AFTENSMAD.map((p) => p.id)) && gruppe.trykket === 'true' && gruppe.alle === 'false' && gruppe.valgt === 'Aftensmad'
-    && gruppe.fokus === (n === 'iphone' ? 'filtre-katalog' : 'gruppe-aftensmad'),
+    && gruppe.fokus === (kompakt ? 'filtre-katalog' : 'gruppe-aftensmad'),
     n + ': «Aftensmad» viser kun de ' + AFTENSMAD.length + ' retter til aftensmad (' + JSON.stringify(gruppe) + ')');
-  // Review-fund 3 (02-11): på telefonen folder valget filtrene sammen, så tallet og den første ret ses, og fokus står på
-  // linjen, der siger, hvad der er valgt. Ellers bliver filtrene stående
-  tjek(gruppe.open === (n !== 'iphone') && (n !== 'iphone' || gruppe.top < gruppe.H - 60),
-    n + ': ' + (n === 'iphone' ? 'valget folder filtrene sammen, og den første ret ses over kanten' : 'filtrene bliver foldet ud efter valget') + ' (' + JSON.stringify(gruppe) + ')');
+  // Review-fund 3 (02-11): på en kompakt skærm folder valget filtrene sammen, så tallet og den første ret ses, og fokus
+  // står på linjen, der siger, hvad der er valgt. Ellers bliver filtrene stående
+  tjek(gruppe.open === !kompakt && (!kompakt || gruppe.top < gruppe.H - 60),
+    n + ': ' + (kompakt ? 'valget folder filtrene sammen, og den første ret ses over kanten' : 'filtrene bliver foldet ud efter valget') + ' (' + JSON.stringify(gruppe) + ')');
   tjek(await tekstAf(side, '.soeg-tal') === 'Viser ' + AFTENSMAD.length + ' af ' + retter(ALLE.length), n + ': tallet følger gruppen (' + await tekstAf(side, '.soeg-tal') + ')');
   await tjekLayout(side, n + ' katalog: aftensmad');
 
-  // … og søgningen inden for gruppen. På telefonen folder det første tegn de udfoldede filtre sammen (review-fund 3)
-  if (n === 'iphone') await tryk(side, '.filtre > summary');
+  // … og søgningen inden for gruppen. På en kompakt skærm folder det første tegn de udfoldede filtre sammen (review-fund 3)
+  if (kompakt) await tryk(side, '.filtre > summary');
   await tryk(side, '#soeg-katalog');
   await skrivTegnForTegn(H, side, '#soeg-katalog', 'kylling', n + ' katalog, aftensmad', (t) => ids(AFTENSMAD, t));
-  if (n === 'iphone') tjek(!await side.evaluate(() => document.querySelector('.filtre').open), n + ': søgningen folder filtrene sammen på telefonen');
+  if (kompakt) tjek(!await side.evaluate(() => document.querySelector('.filtre').open), n + ': søgningen folder filtrene sammen');
   const kylling = ids(AFTENSMAD, 'kylling');
   const kyllingUge = UGEPLAN.map((p) => p.id).filter((id) => kylling.includes(id));
   tjek(kyllingUge.length >= 2, n + ': mindst to retter til ugeplanen med kylling (' + kyllingUge.join(', ') + ')');
@@ -581,7 +586,7 @@ async function katalog(browser, H, skaerm) {
   await venterPaa(side, (id) => location.hash === '#/ret/' + id && document.querySelector('.ret h1'), julRet, n + ': «Åbn» åbner ' + julRet);
   await aabnVoksen(H, side, '/katalog', n + ' kataloget efter låsen');
   const glemt = await side.evaluate(() => ({ soegning: document.getElementById('soeg-katalog').value, alle: document.querySelector('[data-fokus="gruppe-alle"]').getAttribute('aria-pressed'), open: document.querySelector('.filtre').open }));
-  tjek(glemt.soegning === '' && glemt.alle === 'true' && glemt.open === (n !== 'iphone') && ens(await raekker(side), ALLE),
+  tjek(glemt.soegning === '' && glemt.alle === 'true' && glemt.open === !kompakt && ens(await raekker(side), ALLE),
     n + ': efter låsen er søgningen og gruppen glemt (' + JSON.stringify(glemt) + ')');
 
   // Søgefeltet på favoritterne og udvalget: samme felt, der heller ikke tegnes om, mens der skrives
@@ -597,8 +602,8 @@ async function katalog(browser, H, skaerm) {
   await skrivTegnForTegn(H, side, '#soeg-udvalg', 'kyl', n + ' udvalg', (t) => ids(UGEPLAN, t));
   tjek(await tekstAf(side, '.soeg-tal') === 'Viser ' + ids(UGEPLAN, 'kyl').length + ' af ' + retter(UGEPLAN.length) && await tekstAf(side, '.udvalg-tal') === '24 af 24 valgt',
     n + ': udvalget viser søgningens tal og stadig «24 af 24 valgt» (' + await tekstAf(side, '.soeg-tal') + ' · ' + await tekstAf(side, '.udvalg-tal') + ')');
-  // Review-fund 2 (02-11): på telefonen står mærkerne foldet sammen, så den første ret ses lige under søgefeltet og tallene
-  if (n === 'iphone') {
+  // Review-fund 2 (02-11): på en kompakt skærm står mærkerne foldet sammen, så den første ret ses lige under søgefeltet
+  if (kompakt) {
     const u = await side.evaluate(() => ({ open: document.querySelector('.voksen-udvalg .filtre').open,
       top: Math.round(document.querySelector('.voksen-liste .voksen-raekke').getBoundingClientRect().top), H: innerHeight }));
     tjek(!u.open && u.top < u.H - 60, n + ': udvalgets mærker er foldet sammen, og den første ret ses over kanten efter «kyl» (' + JSON.stringify(u) + ')');

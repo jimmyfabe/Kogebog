@@ -185,7 +185,7 @@ const filtre = new Set(); // udvalgets filterchips (nøgler fra MAERKER): huskes
 const soegning = new Map();
 const katalogValg = { gruppe: null, maerker: new Set() };
 // Om filtrene er foldet ud ('udvalg', 'katalog'; ingen værdi = efter skærmen). Glemt, når man går til en anden side, så
-// telefonen altid starter med listen lige under søgefeltet
+// en kompakt skærm (KOMPAKT) altid starter med listen lige under søgefeltet
 const filterAaben = new Map();
 function glemSoegning() {
   soegning.clear();
@@ -619,12 +619,13 @@ function filterChip(k, antal, valgte = filtre, side = 'udvalg') {
 }
 
 // Filtrene (udvalgets mærker, katalogets grupper og mærker) under én linje, der kan foldes sammen og siger, hvad der er
-// valgt. Foldet ud på iPad og desktop, sammen på telefonen, så listen står lige under søgefeltet, mens tastaturet er
-// fremme. Hvad den voksne har foldet ud, huskes, mens siden står (filterAaben). side: 'udvalg' eller 'katalog'
-const SMAL = '(max-width: 700px)';
-const smal = () => matchMedia(SMAL).matches;
+// valgt. Foldet sammen på en smal eller lav skærm (telefonen, iPad på langs og en bærbar: KOMPAKT), så listen står lige
+// under søgefeltet, også mens tastaturet er fremme. Foldet ud på en stor skærm (iPad på højkant). Hvad den voksne har
+// foldet ud, huskes, mens siden står (filterAaben). side: 'udvalg' eller 'katalog'
+const KOMPAKT = '(max-width: 700px), (max-height: 900px)';
+const kompakt = () => matchMedia(KOMPAKT).matches;
 function filterBoks(side, navn, valgte, ...chips) {
-  const boks = el('details', { class: 'filtre', open: filterAaben.get(side) ?? !smal() },
+  const boks = el('details', { class: 'filtre', open: filterAaben.get(side) ?? !kompakt() },
     medFokus(el('summary', {},
       el('span', { class: 'filtre-navn', tekst: navn }),
       valgte.length ? el('span', { class: 'filtre-valgt', tekst: valgte.join(', ') }) : null), 'filtre-' + side),
@@ -633,18 +634,18 @@ function filterBoks(side, navn, valgte, ...chips) {
   return boks;
 }
 
-// Et valg i filtrene. På telefonen fylder de udfoldede filtre skærmen, så de foldes sammen, og tallet og listen står lige
-// under linjen, der siger, hvad der er valgt (den får fokus). Ellers bliver filtrene stående, og fokus bliver på chippen
+// Et valg i filtrene. På en kompakt skærm fylder de udfoldede filtre det meste, så de foldes sammen, og tallet og listen
+// står lige under linjen, der siger, hvad der er valgt (den får fokus). Ellers bliver de stående, og fokus bliver på chippen
 function efterFilterValg(side, fokus) {
-  const fold = smal();
+  const fold = kompakt();
   if (fold) filterAaben.set(side, false);
   tegnIgen(fold ? 'filtre-' + side : fokus);
 }
 
-// Et tegn i søgefeltet på telefonen folder filtrene sammen, så træffene står lige under feltet. Skærmen tegnes ikke om
-// (tastaturet bliver fremme)
+// Et tegn i søgefeltet på en kompakt skærm folder filtrene sammen, så træffene står lige under feltet. Skærmen tegnes ikke
+// om (tastaturet bliver fremme)
 function foldVedSoegning(side, boks) {
-  if (!boks.open || !smal()) return;
+  if (!boks.open || !kompakt()) return;
   boks.open = false;
   filterAaben.set(side, false);
 }
