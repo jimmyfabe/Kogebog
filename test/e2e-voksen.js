@@ -901,6 +901,8 @@ async function henterFoerHoldet(browser, H) {
 // telefonen, og at kontakten ikke rører den gemte plan. På telefonen: kontakten og retten med layout og foto
 const GROEN_RET = 'koedsovs';
 const GROEN_TRIN = 'Hæld linser og vand i gryden.';
+// Printets fod med mere grønt: kilden gælder grundretten, kød, linser og vand er appens egne mængder
+const EGNE_MAENGDER = 'egne mængder';
 const groenKontakt = (side) => side.evaluate(() => {
   const b = document.querySelector('[data-fokus="groent"]');
   return b ? {
@@ -988,15 +990,18 @@ async function mereGroent(browser, H, skaerm) {
     const print = () => side.evaluate(() => ({
       linjer: [...document.querySelectorAll('.tjek li')].map((li) => li.textContent),
       meta: [...document.querySelectorAll('.hoved .meta')].map((p) => p.textContent),
+      fod: document.querySelector('.fod')?.textContent || '',
     }));
     let pr = await print();
     tjek(JSON.stringify(pr.linjer) === JSON.stringify(groen.ingredienser.map((x) => x.tekst)) && pr.meta.includes(GROENT_TEKST),
       n + ': printet viser retten med mere grønt og linjen (' + JSON.stringify(pr.meta) + ')');
+    // Kilden i foden gælder grundretten: kød, linser og vand med mere grønt er appens egne mængder (code review opskrifter-3)
+    tjek(pr.fod.includes(EGNE_MAENGDER), n + ': printets fod siger, at mængderne med mere grønt er egne (' + pr.fod + ')');
     for (const daarlig of ['groen=1&groen=1', 'groen=true', 'groen=0', 'groen=', 'groen=01']) {
       await side.goto(BASE + '/print.html?ret=' + GROEN_RET + '&' + daarlig);
       await venterPaa(side, () => !document.getElementById('print').disabled, null, n + ' print ' + daarlig);
       pr = await print();
-      tjek(JSON.stringify(pr.linjer) === JSON.stringify(RETTER[GROEN_RET].recipeIngredient) && !pr.meta.includes(GROENT_TEKST),
+      tjek(JSON.stringify(pr.linjer) === JSON.stringify(RETTER[GROEN_RET].recipeIngredient) && !pr.meta.includes(GROENT_TEKST) && !pr.fod.includes(EGNE_MAENGDER),
         n + ': «' + daarlig + '» giver grundretten på printet');
     }
     await side.goto(BASE + '/index.html');

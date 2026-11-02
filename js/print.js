@@ -85,6 +85,8 @@ function tegn(m) {
           el('footer', { class: 'fod' },
             el('p', { tekst: 'Tjek selv pakkerne for allergener.' }),
             el('p', {}, 'Tumbi Køkken · ', medDatoer(m.kilde || 'Egen tekst')),
+            // Kilden gælder grundretten: mængderne med mere grønt (js/groent.js) er appens egne (code review opskrifter-3)
+            m.erGroen ? el('p', { tekst: 'Kød, røde linser og vand i udgaven med mere grønt er egne mængder.' }) : null,
             el('p', { tekst: 'Stemmen er en computerstemme (Røst fra Alexandra Instituttet).' }),
             el('p', { tekst: 'Version ' + UDGAVE }))))));
   printKnap.disabled = false;
