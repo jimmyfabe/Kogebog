@@ -1097,6 +1097,10 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
      og med 22svh (83 px) lå den anden linje 18 px under bunden. Med 60 px er der 5 px luft */
   .ret-hoved { gap: 6px; }
   .ret-billede { width: min(100%, 16svh); }
+  /* Navnet højst 3 linjer på 667×375: med 30 px fik «Marcipan­konfekt med dadler og valnødder» 4 linjer i 220 px
+     («Marcipan-» alene), og personer og tid lå 24 px under bunden (e2e 02-11-2026). 27 px giver højst 3 linjer
+     for alle retter (målt i WebKit). 736×414 får 28 px, og fra 790 px er 3,8vw over 30 px som før (812-932 px uændret) */
+  .ret-titel h1 { font-size: clamp(27px, 3.8vw, 46px); }
   .forside-dyr { display: none; }
   /* Højst 26 % af højden: med 30 % kiggede næste række kun 17 px frem på 667×375 og 812×375, så intet viste, at siden
      kan rulles. Nu ca. 32 px (på 812×375 blev den første række før skåret 1 px af, da titlen er højere end på 667 px) */
