@@ -9,7 +9,7 @@
    Svarer nettet ikke inden for HENT_MS (4 s), kommer en opskrift (også index.json) fra cachen, og nettets svar gemmes
    til næste gang. De næste LANGSOM_MS (30 s) tager opskrifterne cachen med det samme (code review U3 og F2, 23-10). */
 const PRAEFIKS = 'kog-';
-const INDHOLD = '32efe5388f09d417'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = '8b2bd6ece5542cbb'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '1ebe76e54ae410e7'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
@@ -199,6 +199,8 @@ const FILER = [
   'grafik/ing-champignon.svg', 'grafik/ing-baer.svg',
   'grafik/ing-marcipan.svg', 'grafik/ing-mandler.svg', 'grafik/ing-krydderi.svg', 'grafik/ing-sirup.svg', 'grafik/ing-appelsin.svg',
   'grafik/ing-rosiner.svg', 'grafik/ing-krymmel.svg', 'grafik/ing-pebernoedder.svg', 'grafik/ing-noedder.svg', 'grafik/ing-eddike.svg',
+  'grafik/ing-is.svg', 'grafik/ing-banan.svg', 'grafik/ing-smaakager.svg', 'grafik/ing-selleri.svg', 'grafik/ing-asparges.svg',
+  'grafik/ing-sennep.svg',
   'grafik/ret-boller.webp', 'grafik/ret-chorizo-pasta.webp', 'grafik/ret-frikadeller.webp', 'grafik/ret-koedsovs.webp', 'grafik/ret-pandekager.webp',
   'grafik/ret-kartoffelmos.webp', 'grafik/ret-hvidloegsflutes.webp', 'grafik/ret-brownie.webp', 'grafik/ret-blondie.webp',
   'grafik/ret-hytteostboller.webp', 'grafik/ret-havregrynskugler.webp', 'grafik/ret-tunfrikadeller.webp',
