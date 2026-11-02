@@ -480,3 +480,20 @@ test('kataloget: kun rækker med «Med» har knapperne med .med-udvalg', (t) => 
   assert.deepEqual(forkert.map((li) => li.attr['data-ret']), [], 'rækker, hvor .med-udvalg ikke følger «Med»');
   assert.ok(raekker.some((li) => !medFokusNavn(li, 'ret-' + li.attr['data-ret'])), 'der er rækker uden «Med» (juleretterne)');
 });
+
+// Review 02-11 (fund 3): på en kompakt skærm står «Alle» i den lukkede boks, så «Fjern filtrene» gav fokus til
+// overskriften. Nu står fokus på linjen over filtrene, og på en stor skærm stadig på «Alle»
+test('«Fjern filtrene» i kataloget giver fokus til linjen over filtrene på en kompakt skærm og til «Alle» på en stor', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  for (const [maal, navn] of [[{ b: 390, h: 844 }, 'filtre-katalog'], [{ b: 1280, h: 800 }, 'filtre-katalog'], [{ b: 1024, h: 1366 }, 'gruppe-alle']]) {
+    const hvor = maal.b + '×' + maal.h;
+    if (!filtreI(aabnSide('katalog', maal)).open) foldUd(vist.at(-1));
+    send(medFokusNavn(vist.at(-1), 'gruppe-halloween'), 'click');
+    skriv(vist.at(-1), 'xyzzy');
+    send(medFokusNavn(vist.at(-1), 'fjern-filtre'), 'click');
+    assert.equal(fokus, medFokusNavn(vist.at(-1), navn), hvor + ': fokus står på ' + navn);
+    assert.ok(!filtreI(vist.at(-1)).open || navn === 'gruppe-alle', hvor + ': fokus står på noget, der kan ses');
+    V.rute('#/');
+  }
+});

@@ -788,7 +788,7 @@ function katalogSkaerm(f) {
   const fjernFiltre = () => {
     v.gruppe = null;
     v.maerker.clear();
-    tegnIgen('gruppe-alle');
+    tegnIgen(kompakt() ? 'filtre-katalog' : 'gruppe-alle'); // på en kompakt skærm står «Alle» i den lukkede boks
   };
   const filtreEl = katalogFiltre(alle);
   const s = soegeListe('katalog', alle, {
