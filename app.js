@@ -13,6 +13,7 @@ import { portionerFraHusstand, faktorFor, skaleretIngrediens, voksenNoter, porti
 import { holdKnap } from './js/hold.js';
 import { trekant, voksenNaeste } from './js/voksen.js';
 import { voksenFarer, erLynhurtig, harTid, LYN_MIN } from './js/model.js';
+import { valgt, GROENT_TEKST } from './js/groent.js';
 import { VERBER, INGREDIENSER, GRUPPER, grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, grafikGruppe, GRAFIK_FAERDIG } from './js/katalog.js';
 import { formaterTid, varighed, varighedTale, idag } from './js/tid.js';
 import { minutterTekst, utenBloede } from './js/tekst.js';
@@ -269,7 +270,7 @@ function hopKnap(id, navn) {
 }
 
 function kortTryk(id, b) {
-  const m = S.retter.get(id);
+  const m = udgave(S.retter.get(id));
   if (S.valgtKort === id) {
     S.valgtKort = null;
     // Navnet, og har retten voksen-trin, bagefter én gang, at den laves sammen med en voksen (null: kun navnet)
@@ -300,6 +301,11 @@ function startAdvarsel(m) {
 // null), vises en ret, der allerede er hentet, stadig, og så kender lageret kun den
 const kendte = (m) => S.ids || [m.id];
 
+// Den udgave af retten, børnene laver, og den voksne ser og printer: med halvt kød og halvt røde linser, når voksendelens
+// «Mere grønt i maden» er slået til, og retten har en (js/groent.js). Ellers grundretten. Valget læses, hver gang en
+// skærm tegnes, så kontakten gælder fra næste skærm
+const udgave = (m) => valgt(m, Lager.hentFamilie(kendte(m)).mereGroent);
+
 // Portionerne (docs/foraeldredel.md, afsnit 4): { n, faktor }, eller null, når der hverken er en dag i ugeplanen eller
 // en husstand, retten ikke har talportioner (bage- og søde retter), eller faktoren er 1. Med null vises retten som før.
 // Dagens n før husstandens: står retten i ugeplanen, gælder dagens antal (i dag, hvis retten står dér, ellers den første
@@ -322,6 +328,8 @@ function retSkaerm(m) {
     ? el('p', { class: 'meta' }, el('span', { class: 'skaleret', tekst: 'Til ' + portionerTekst(sk.n) }), tid ? ' · ' + tid : null)
     : (m.portioner || tid ? el('p', { class: 'meta', tekst: [m.portioner, tid].filter(Boolean).join(' · ') }) : null);
   const linjer = m.ingredienser.map((x, i) => (sk ? skaleretIngrediens(m, i, sk.faktor) : { maengde: x.maengde, navn: x.navn, tekst: x.tekst, skaleret: false }));
+  // Linjerne til den voksne under titlen: at retten er med mere grønt, og hvad mængderne er regnet om til
+  const noter = [...(m.erGroen ? [GROENT_TEKST] : []), ...(sk ? voksenNoter(m, sk.faktor, linjer) : [])];
   const ingr = m.ingredienser.map((x, i) => {
     const l = linjer[i];
     const b = el('button', { type: 'button', class: 'ingr', 'aria-label': l.tekst },
@@ -353,7 +361,7 @@ function retSkaerm(m) {
     klasse: 'lille print-knap',
     label: 'Print opskriften til den voksne. Hold knappen inde i 2 sekunder.',
     indhold: [ikon('print'), el('span', { tekst: 'Print: hold' })],
-    naarFaerdig: () => { location.href = 'print.html?ret=' + encodeURIComponent(m.id) + (sk ? '&n=' + sk.n : ''); },
+    naarFaerdig: () => { location.href = 'print.html?ret=' + encodeURIComponent(m.id) + (sk ? '&n=' + sk.n : '') + (m.erGroen ? '&groen=1' : ''); },
     naarKort: () => Tale.sig(R.PRINT_HOLD),
   });
 
@@ -371,7 +379,7 @@ function retSkaerm(m) {
           el('h1', { tabindex: '-1', tekst: m.navn }),
           hoejttaler),
         meta,
-        sk ? el('div', { class: 'voksen-linjer' }, voksenNoter(m, sk.faktor, linjer).map((t) => el('p', { class: 'voksen-linje', tekst: t }))) : null),
+        noter.length ? el('div', { class: 'voksen-linjer' }, noter.map((t) => el('p', { class: 'voksen-linje', tekst: t }))) : null),
       el('section', { class: 'ret-ingredienser', 'aria-labelledby': 'ingr-titel' },
         el('h2', { id: 'ingr-titel', tekst: 'Det skal I bruge' }),
         el('ul', { class: 'ingr-gitter' }, ingr))),
@@ -424,10 +432,10 @@ function timerBlok(m, t) {
     const a = Timer.aktuel();
     return a && !a.faerdig && !(a.ret === m.id && a.nr === t.nr) ? a : null;
   };
-  // Rettens model, hvis den er hentet (ellers siger teksten kun «trin 8»)
+  // Rettens model, hvis den er hentet (ellers siger teksten kun «trin 8»), i den udgave, trinnumrene hører til
   const timerRet = (a) => {
     const r = S.retter.get(a.ret);
-    return r && !(r instanceof Error) ? r : null;
+    return r && !(r instanceof Error) ? udgave(r) : null;
   };
   const hvor = (a) => R.timerHvor(timerRet(a), a.nr, a.ret === m.id);
   startKnap.addEventListener('click', klik(() => {
@@ -626,13 +634,18 @@ function vis() {
     if (!m && (!S.ids || S.ids.includes(r.id)) && !S.indexFejl) skaerm = henterSkaerm();
     else if (!m) skaerm = fejlSkaermRet(r.id, S.indexFejl || { findesIkke: true });
     else if (m instanceof Error) skaerm = fejlSkaermRet(r.id, m);
-    else if (r.side === 'ret') skaerm = retSkaerm(m);
-    else if (r.side === 'faerdig') skaerm = faerdigSkaerm(m);
-    else if (Number.isInteger(r.nr) && r.nr >= 1 && r.nr <= m.trin.length) skaerm = trinSkaerm(m, r.nr);
-    else skaerm = fejlSkaermRet(r.id, { findesIkke: true });
+    else skaerm = retternesSkaerm(r, udgave(m));
   }
   if (r.side !== 'forside') S.valgtKort = null;
   visSkaerm(skaerm);
+}
+
+// Retten, et trin eller færdig-skærmen for udgaven u (med eller uden mere grønt). Et trinnummer, udgaven ikke har, er en fejl
+function retternesSkaerm(r, u) {
+  if (r.side === 'ret') return retSkaerm(u);
+  if (r.side === 'faerdig') return faerdigSkaerm(u);
+  if (Number.isInteger(r.nr) && r.nr >= 1 && r.nr <= u.trin.length) return trinSkaerm(u, r.nr);
+  return fejlSkaermRet(r.id, { findesIkke: true });
 }
 
 // Viser en færdig skærm. Ved en ny adresse rulles op, og fokus går til overskriften. js/voksen-del.js bruger den også

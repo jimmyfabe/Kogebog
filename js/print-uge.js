@@ -1,7 +1,8 @@
 // print-uge.js — ugeplanen på papir: print.html?uge (docs/ugeplan-plan.md, afsnit 3: vej (c), når telefonen ikke kan
 // bruges). Side 1 er ugen med syv rækker (dagen, rettens billede, navn, tid, personer og dyret, der valgte), side 2 er
 // indkøbslisten med □ efter afdeling. Planen læses af lageret (kog-uge-v1 gennem js/lager.js), ikke af adressen, og
-// listen regnes af js/indkoeb.js som på skærmen. Al tekst sættes som tekst (js/dom.js)
+// listen regnes af js/indkoeb.js som på skærmen. Med «Mere grønt i maden» (familien i js/lager.js) er retterne og listen
+// dem med mere grønt (js/groent.js), som i ugeplanen. Al tekst sættes som tekst (js/dom.js)
 import { el, sideTitel } from './dom.js';
 import { hentIndex, hentRet } from './data.js';
 import * as Lager from './lager.js';
@@ -10,6 +11,7 @@ import { DYR, grafikRet, grafikDyr } from './katalog.js';
 import { DAGE, ugeNr, dagDato, planMandag } from './tid.js';
 import { minutterTekst } from './tekst.js';
 import { UDGAVE } from './version.js';
+import { valgt } from './groent.js';
 
 const dyrNavn = (af) => DYR[af].split(',')[0];
 
@@ -38,7 +40,8 @@ export async function printUge({ ark, printKnap, tilbage, besked }) {
   }
   // Hver ret hentes én gang. En ret, der ikke kan hentes, står som en fejl på sin dag og mangler på listen (det står der)
   const unikke = [...new Set(p.dage.filter(Boolean).map((d) => d.ret))];
-  const hentet = new Map(await Promise.all(unikke.map((id) => hentRet(id).then((m) => [id, m], () => [id, null]))));
+  const mereGroent = Lager.hentFamilie(ids).mereGroent;
+  const hentet = new Map(await Promise.all(unikke.map((id) => hentRet(id).then((m) => [id, valgt(m, mereGroent)], () => [id, null]))));
   tegn(ark, p, hentet);
   printKnap.disabled = false;
 }
@@ -57,7 +60,7 @@ function tegn(ark, p, hentet) {
       m ? el('img', { class: 'uge-billede', src: grafikRet(m.id), alt: '' }) : el('span', { class: 'uge-billede tom', 'aria-hidden': 'true' }),
       el('div', { class: 'uge-ret' },
         el('p', { class: 'uge-ret-navn', tekst: navn }),
-        m ? el('p', { class: 'meta', tekst: [m.minutter ? minutterTekst(m.minutter) : '', d.n + ' pers.'].filter(Boolean).join(' · ') }) : null),
+        m ? el('p', { class: 'meta', tekst: [m.minutter ? minutterTekst(m.minutter) : '', d.n + ' pers.', m.erGroen ? 'mere grønt' : ''].filter(Boolean).join(' · ') }) : null),
       d && Object.hasOwn(DYR, d.af)
         ? el('p', { class: 'uge-af' }, el('img', { src: grafikDyr(d.af), alt: '' }), el('span', { tekst: 'Valgt af ' + dyrNavn(d.af) }))
         : null);

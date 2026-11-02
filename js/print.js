@@ -1,5 +1,6 @@
 // print.js — A4-printet til den voksne: print.html?ret=<id>. Samme JSON som skærmene.
 // print.html?ret=<id>&n=<1-12> regner mængderne om til n portioner (retten på skærmen, når husstanden er sat).
+// print.html?ret=<id>&groen=1 er retten med mere grønt (js/groent.js), som retten på skærmen, når kontakten er slået til.
 // print.html?uge er ugeplanen og indkøbslisten (js/print-uge.js).
 import { el, ikon, sideTitel } from './dom.js';
 import { hentRet, ID_RE } from './data.js';
@@ -8,6 +9,7 @@ import { varighedKort } from './tid.js';
 import { minutterTekst } from './tekst.js';
 import { faktorFor, skaleretIngrediens, voksenNoter, portionerTekst } from './skaler.js';
 import { printUge } from './print-uge.js';
+import { valgt, GROENT_TEKST } from './groent.js';
 import { UDGAVE } from './version.js';
 
 const ark = document.getElementById('ark');
@@ -19,6 +21,9 @@ const id = params.get('ret') || '';
 const N_RE = /^(?:[1-9]|1[0-2])$/;
 const nAlle = params.getAll('n');
 const n = nAlle.length === 1 && N_RE.test(nAlle[0]) ? Number(nAlle[0]) : null;
+// Mere grønt kun med præcis ét groen=1. Alt andet, eller en ret uden en udgave med mere grønt, giver grundretten
+const groenAlle = params.getAll('groen');
+const groen = groenAlle.length === 1 && groenAlle[0] === '1';
 
 function besked(titel, tekst) {
   ark.replaceChildren(el('h1', { tekst: titel }), el('p', { class: 'besked', tekst }));
@@ -62,6 +67,7 @@ function tegn(m) {
       el('div', {},
         el('h1', { tekst: m.navn }),
         meta ? el('p', { class: 'meta', tekst: meta }) : null,
+        m.erGroen ? el('p', { class: 'meta', tekst: GROENT_TEKST }) : null,
         m.beskrivelse ? el('p', { class: 'beskrivelse', tekst: m.beskrivelse }) : null),
       m.afproevet ? null : el('p', { class: 'ikke-afproevet', tekst: 'Ikke afprøvet' })),
     el('div', { class: 'spalter' },
@@ -93,7 +99,7 @@ async function start() {
   }
   tilbage.href = 'index.html#/ret/' + id;
   try {
-    tegn(await hentRet(id));
+    tegn(valgt(await hentRet(id), groen));
   } catch (e) {
     if (e.findesIkke) besked('Den opskrift findes ikke', 'Gå tilbage, og vælg retten igen på forsiden.');
     else besked('Opskriften kunne ikke hentes', 'Tjek, at enheden er på nettet, og genindlæs siden.');

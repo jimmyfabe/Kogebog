@@ -19,6 +19,7 @@ import { minutterTekst, utenBloede } from './tekst.js';
 import { holdKnap } from './hold.js';
 import { maerkerFor, MAERKER } from './maerker.js';
 import { knivtrin } from './model.js';
+import { valgt as udgaveAf } from './groent.js';
 import * as Tale from './tale.js';
 import * as R from './replikker.js';
 
@@ -66,9 +67,14 @@ export function skaerm(r) {
 
 // Opskrifterne er hentet (også dem, der fejlede): først da kan et link læses og en liste regnes ud
 const klar = () => Boolean(K.S.ids) && K.S.ids.every((id) => K.S.retter.has(id));
-const model = (id) => {
+// «Mere grønt i maden» fra voksendelen (js/groent.js): er den slået til på denne enhed, viser og regner ugeplanen med
+// retten med halvt kød og halvt røde linser (navnet er det samme, prisen, grønt og varerne er dens egne), og linket til
+// telefonen siger det. Telefonen bruger linkets valg, ikke sit eget (hentSkaerm)
+const mereGroent = () => Boolean(K.S.ids) && Lager.hentFamilie(K.S.ids).mereGroent === true;
+// Retten i den udgave, groen siger (som standard denne enheds valg), eller null, når den ikke er hentet
+const model = (id, groen = mereGroent()) => {
   const m = K.S.retter.get(id);
-  return m && !(m instanceof Error) ? m : null;
+  return m && !(m instanceof Error) ? udgaveAf(m, groen) : null;
 };
 
 const henter = (titel) => K.statusSkaerm({ titel, laeser: true });
@@ -174,7 +180,7 @@ function hentSkaerm(kode) {
   for (const d of r.dage) {
     if (!d) continue;
     if (K.S.retter.get(d.ret) instanceof Error) return hentFejl();
-    const m = model(d.ret);
+    const m = model(d.ret, r.mereGroent);
     if (!m || !m.uge) { ukendte++; continue; }
     valg.push({ ret: { tumbi: m.uge.tumbi }, n: d.n });
   }
@@ -370,7 +376,7 @@ function listeSkaerm(liste) {
     const r = afkod(liste.kode, { retter: K.S.ids, idag: new Date() });
     if (!r.ok) return null;
     const links = r.dage.map((d, i) => {
-      const m = d && model(d.ret);
+      const m = d && model(d.ret, r.mereGroent);
       if (!m || !m.uge) return null;
       return el('li', {}, el('a', { class: 'ret-link', href: '#/ret/' + m.id },
         K.billede(grafikRet(m.id), '', 'ret-link-billede'),
@@ -416,7 +422,10 @@ function listeSkaerm(liste) {
 
 const DAG_MS = 86400000;
 const dyrNavn = (af) => (Object.hasOwn(DYR, af) ? DYR[af].split(',')[0] : '');
-const iPlanen = () => K.S.ids.map(model).filter((m) => m && m.uge);
+const iPlanen = () => {
+  const groen = mereGroent();
+  return K.S.ids.map((id) => model(id, groen)).filter((m) => m && m.uge);
+};
 // Prisen for de valgte portioner (opskriftens pris er for hele retten)
 const prisFor = (m, n) => (m.uge.prisKr * n) / m.uge.portioner;
 // «2 knivtrin» eller «ingen kniv»: tælles af knivtrin i js/model.js, som mærket «ingen kniv» (js/maerker.js) og filteret
@@ -484,12 +493,13 @@ const ugenErGaaet = (uge) => Boolean(uge) && Date.parse(uge + 'T00:00:00Z') + 7 
 // ellers er retten ikke længere i ugeplanen)
 function ugensData(p) {
   const uge = p.uge || planMandag();
+  const groen = mereGroent();
   const dage = p.dage.map((d) => (d ? { ret: d.ret, n: d.n } : null));
-  const valg = p.dage.filter(Boolean).map((d) => ({ m: model(d.ret), n: d.n })).filter((x) => x.m && x.m.uge)
+  const valg = p.dage.filter(Boolean).map((d) => ({ m: model(d.ret, groen), n: d.n })).filter((x) => x.m && x.m.uge)
     .map((x) => ({ ret: { tumbi: x.m.uge.tumbi }, n: x.n }));
-  const udenfor = p.dage.filter((d) => d && !(model(d.ret) && model(d.ret).uge));
+  const udenfor = p.dage.filter((d) => d && !(model(d.ret, groen) && model(d.ret, groen).uge));
   const ikkeHentet = udenfor.filter((d) => K.S.retter.get(d.ret) instanceof Error).length;
-  return { uge, kode: kod(uge, dage), varer: saml(valg), antal: valg.length, mangler: manglerTekst(ikkeHentet, udenfor.length - ikkeHentet) };
+  return { uge, kode: kod(uge, dage, { mereGroent: groen }), varer: saml(valg), antal: valg.length, mangler: manglerTekst(ikkeHentet, udenfor.length - ikkeHentet) };
 }
 
 // ---------- #/uge: den voksnes oversigt ----------
@@ -517,7 +527,7 @@ function dagRaekke(p, d, i) {
       el('div', { class: 'dag-knapper' },
         medFokus(K.knap('Vælg ret', { klasse: 'lille', ikonNavn: 'plus', label: 'Vælg ret til ' + lille, onclick: () => K.naviger('#/uge/dag/' + (i + 1)) }), 'dag-' + i + '-vaelg')));
   }
-  const m = K.S.retter.get(d.ret);
+  const m = udgaveAf(K.S.retter.get(d.ret), mereGroent());
   const fjern = medFokus(K.knap('Fjern', { klasse: 'lille', ikonNavn: 'kryds', label: 'Fjern retten fra ' + lille, onclick: () => {
     if (gemPlan((q) => { q.dage[i] = null; return { dage: q.dage }; })) K.annoncer(navn + ' er en fri aften.');
     tegnIgen('dag-' + i + '-vaelg');
