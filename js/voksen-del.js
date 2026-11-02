@@ -796,7 +796,10 @@ function katalogSkaerm(f) {
     liste: (vist) => el('ul', { class: 'voksen-liste', 'aria-label': 'Retter' }, vist.map((p) => katalogRaekke(p, f, ids, fuldt))),
   });
   return voksenSkaerm('voksen-katalog', 'Katalog', 'Ugens udvalg: ' + (f.udvalg ? ids.length + ' af ' + UDVALG_MAKS : 'ingen valgt'),
-    el('p', { class: 'voksen-hjaelp', tekst: 'Hjertet gør en ret til favorit. «Med» sætter den i ugens udvalg til børnene og står kun ved retter til ugeplanen.' }),
+    // Uden et udvalg gør det første «Med» børnenes valg mindre: fra alle ugeplanens retter til én (review-fund 5)
+    el('p', { class: 'voksen-hjaelp', tekst: 'Hjertet gør en ret til favorit. «Med» sætter en ret til ugeplanen i ugens udvalg. ' + (f.udvalg
+      ? 'Børnene vælger kun mellem de retter, der er med.'
+      : 'Nu vælger børnene mellem alle ' + iPlanen().length + ' retter. Efter det første «Med» vælger de kun mellem dem, der er med.') }),
     el('div', { class: 'voksen-knapper' }, tilbage()),
     s.form,
     filtreEl,

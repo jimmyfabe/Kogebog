@@ -450,3 +450,19 @@ test('filtrene starter foldet sammen på en lav skærm (iPad på langs, desktop)
   assert.equal(filtreI(vist.at(-1)).open, false, 'et valg folder dem sammen på iPad på langs');
   assert.equal(fokus, medFokusNavn(vist.at(-1), 'filtre-katalog'));
 });
+
+// Review-fund 5 (02-11): kataloget sagde ikke, at det første «Med» uden et udvalg gør børnenes valg mindre (fra alle
+// ugeplanens retter til én). Hjælpeteksten siger det nu, så længe der ikke er et udvalg, og ellers, at børnene kun vælger
+// mellem dem, der er med
+test('katalogets hjælpetekst siger, at det første «Med» gør børnenes valg mindre, og hvad der gælder med et udvalg', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  const uge = S.ids.filter((id) => S.retter.get(id).uge);
+  const hjaelp = () => tekstAf(medKlasse(vist.at(-1), 'voksen-hjaelp')[0]);
+  aabnSide('katalog');
+  assert.match(hjaelp(), new RegExp('Nu vælger børnene mellem alle ' + uge.length + ' retter\. Efter det første «Med» vælger de kun mellem dem, der er med\.'), hjaelp());
+  send(medFokusNavn(vist.at(-1), 'ret-' + uge[0]), 'click');
+  assert.equal(JSON.parse(lageret.get('kog-familie-v1')).udvalg.ids.length, 1, '«Med» har lavet et udvalg med én ret');
+  assert.match(hjaelp(), /Børnene vælger kun mellem de retter, der er med\.$/, hjaelp());
+  assert.doesNotMatch(hjaelp(), /alle \d+ retter/);
+});
