@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { saml, visMaengde, vareTekst, grupper, tekst, manglerTekst, holdSammen, MAKS_M } from '../js/indkoeb.js';
-import { kod, afkod, fnv1a, kontrolsum, ukendtTekst, kodeFraTekst, BESKED_NYERE, BESKED_UGYLDIG, BESKED_GAMMEL } from '../js/plankode.js';
+import { kod, afkod, fnv1a, kontrolsum, ukendtTekst, kodeFraTekst, BESKED_NYERE, BESKED_UGYLDIG, BESKED_GAMMEL, MAKS_LAENGDE } from '../js/plankode.js';
 import * as lager from '../js/lager.js';
 import { VARER } from '../js/katalog.js';
 import { el } from '../js/dom.js';
@@ -306,11 +306,11 @@ test('ugeplanen er aftensretterne med ugeplan-felter (de fem første, de billige
 test('en plan kodes og afkodes tilbage til det samme', () => {
   const kode = kod('2026-10-26', PLAN);
   assert.equal(kode, medSum('v1.20261026.koedsovs_4~~bolognese-one-pot_6~~~tunfrikadeller_12~'));
-  assert.deepEqual(af(kode), { ok: true, uge: '2026-10-26', dage: PLAN, ukendte: 0, kode });
+  assert.deepEqual(af(kode), { ok: true, uge: '2026-10-26', dage: PLAN, ukendte: 0, mereGroent: false, kode });
   // En uge med kun fri aftener er også en plan
   const tom = kod('2026-10-26', Array(7).fill(null));
   assert.equal(tom, medSum('v1.20261026.~~~~~~'));
-  assert.deepEqual(af(tom), { ok: true, uge: '2026-10-26', dage: Array(7).fill(null), ukendte: 0, kode: tom });
+  assert.deepEqual(af(tom), { ok: true, uge: '2026-10-26', dage: Array(7).fill(null), ukendte: 0, mereGroent: false, kode: tom });
   // 8 uger før og efter i dag er grænsen (52 og 53 dage er med; 59 og 60 er ikke)
   for (const uge of ['2026-08-31', '2026-12-14']) assert.equal(af(kod(uge, PLAN)).ok, true, uge);
   // Mere end 8 uger tilbage er en gammel plan, ikke et afskåret link (code review U4, 23-10); mere end 8 uger frem kan
@@ -370,8 +370,8 @@ const FJENDTLIGE = [
   ['linjeskift sidst', GOD + '\n'],
   ['v0', medSum('v0.20261026.koedsovs_4~~~~~~')],
   ['v01', medSum('v01.20261026.koedsovs_4~~~~~~')],
-  ['v2 for lang (længden tjekkes før udgaven)', 'v2.' + 'a'.repeat(500)],
-  ['v2 med % (tegnene tjekkes før udgaven)', 'v2.20261026.%3Cscript%3E'],
+  ['v3 for lang (længden tjekkes før udgaven)', 'v3.' + 'a'.repeat(500)],
+  ['v3 med % (tegnene tjekkes før udgaven)', 'v3.20261026.%3Cscript%3E'],
   ['tom', ''],
   ['ikke en tekst', null],
   ['et tal', 20261026],
@@ -388,12 +388,67 @@ test('fjendtlige koder giver «Linket kan ikke læses», og intet fra adressen k
   }
 });
 
-test('en nyere udgave giver «Opdatér appen», men kun når koden ellers er ren', () => {
-  for (const kode of ['v2.20261026.koedsovs_4~~~~~~.abcd', 'v2.', 'v9.x', 'v10.20261026.noget-nyt', 'v123.a.b.c']) {
+// v2 er mere grønt (02-11-2026), så en nyere udgave er v3 og op. En v5-telefon (fra før v2) siger «Opdatér appen» til v2
+test('en nyere udgave (v3 og op) giver «Opdatér appen», men kun når koden ellers er ren', () => {
+  for (const kode of ['v3.20261026.koedsovs_4~~~~~~.abcd', 'v3.', 'v9.x', 'v10.20261026.noget-nyt', 'v123.a.b.c']) {
     assert.deepEqual(af(kode), NYERE, kode);
   }
-  assert.deepEqual(af(GOD.replace(/^v1/, 'v2')), NYERE);
-  assert.deepEqual(af('v2'), UGYLDIG); // uden punktum er det ikke en udgave
+  assert.deepEqual(af(GOD.replace(/^v1/, 'v3')), NYERE);
+  assert.deepEqual(af('v3'), UGYLDIG); // uden punktum er det ikke en udgave
+  // v2 kender appen: en v2-kode, der ikke passer præcis, kan ikke læses
+  for (const kode of ['v2.20261026.koedsovs_4~~~~~~.abcd', 'v2.', 'v2', GOD.replace(/^v1/, 'v2')]) assert.deepEqual(af(kode), UGYLDIG, kode);
+});
+
+// «Mere grønt i maden» (js/groent.js): telefonen kender ikke iPad'ens indstilling, så den står i koden
+test('mere grønt: slået fra er koden byte for byte den samme v1 som før, og v2 har «g» og kommer tilbage med mereGroent', () => {
+  // Koderne fra før mere grønt (lavet med plankode.js fra v5, 02-11-2026)
+  assert.equal(GOD, 'v1.20261026.koedsovs_4~~bolognese-one-pot_6~~~tunfrikadeller_12~.f70f');
+  assert.equal(kod('2026-10-26', PLAN, { mereGroent: false }), GOD);
+  assert.equal(kod('2026-10-26', PLAN, {}), GOD);
+  assert.equal(kod('2026-10-26', Array(7).fill(null)), 'v1.20261026.~~~~~~.9408');
+  assert.equal(af(GOD).mereGroent, false);
+  const kode = kod('2026-10-26', PLAN, { mereGroent: true });
+  assert.equal(kode, medSum('v2.20261026.koedsovs_4~~bolognese-one-pot_6~~~tunfrikadeller_12~.g'));
+  assert.deepEqual(af(kode), { ok: true, uge: '2026-10-26', dage: PLAN, ukendte: 0, mereGroent: true, kode });
+  for (const v of ['ja', 'true', 1, null]) assert.throws(() => kod('2026-10-26', PLAN, { mereGroent: v }), RangeError, String(v));
+  // Ukendte retter i en v2-kode: koden gemmes genskrevet, stadig som v2
+  const r = af(kode, ['koedsovs']);
+  assert.equal(r.ukendte, 2);
+  assert.equal(r.mereGroent, true);
+  assert.equal(r.kode, kod('2026-10-26', [PLAN[0], null, null, null, null, null, null], { mereGroent: true }));
+  // Den længste kode (syv retter med et id på 40 tegn og 12 portioner) er under MAKS_LAENGDE og kan læses
+  const lang = Array(7).fill({ ret: 'a'.repeat(40), n: 12 });
+  const langKode = kod('2026-10-26', lang, { mereGroent: true });
+  assert.equal(langKode.length, 326);
+  assert.ok(langKode.length <= MAKS_LAENGDE);
+  assert.deepEqual(af(langKode, ['a'.repeat(40)]).dage, lang);
+});
+
+test('en ødelagt v2-kode afvises, og kontrolsummen dækker «g»', () => {
+  const krop = 'v2.20261026.koedsovs_4~~bolognese-one-pot_6~~~tunfrikadeller_12~';
+  const V2 = kod('2026-10-26', PLAN, { mereGroent: true });
+  assert.equal(V2, medSum(krop + '.g'));
+  assert.notEqual(kontrolsum(krop + '.g'), kontrolsum(krop));
+  for (const [navn, kode] of [
+    ['uden «g»', medSum(krop)],
+    ['«G»', medSum(krop + '.G')],
+    ['«gg»', medSum(krop + '.gg')],
+    ['«x»', medSum(krop + '.x')],
+    ['to felter', medSum(krop + '.g.g')],
+    ['tomt felt', medSum(krop + '.')],
+    ['«g» på en v1-kode', medSum(krop.replace(/^v2/, 'v1') + '.g')],
+    ['«g» fjernet, samme kontrolsum', V2.replace('.g.', '.')],
+    ['v2 skiftet til v1, samme kontrolsum', V2.replace(/^v2/, 'v1')],
+    ['afskåret i kontrolsummen', V2.slice(0, -2)],
+    ['afskåret i «g»', V2.slice(0, -6)],
+    ['afskåret i dagene', V2.slice(0, -12)],
+    ['forkert kontrolsum', V2.slice(0, -1) + (V2.endsWith('0') ? '1' : '0')],
+    ['8 dage', medSum('v2.20261026.koedsovs_4~~~~~~~.g')],
+    ['ikke en mandag', medSum('v2.20261027.koedsovs_4~~~~~~.g')],
+    ['<script>', medSum('v2.20261026.<script>_4~~~~~~.g')],
+  ]) assert.deepEqual(af(kode), UGYLDIG, navn);
+  // Mere end 8 uger tilbage er også for v2 en gammel plan
+  assert.deepEqual(af(kod('2026-08-24', PLAN, { mereGroent: true })), GAMMEL);
 });
 
 test('constructor_4 og andre ukendte retter giver en tom dag og kun et tal', () => {

@@ -2,11 +2,15 @@
 // intet lager. Koden er v1.<mandag ÅÅÅÅMMDD>.<syv dage adskilt af ~>.<kontrolsum>, hvor en dag er tom (fri aften) eller
 // <id>_<portioner>, fx v1.20261026.koedsovs_4~~bolognese-one-pot_6~~~~.a3f9. Den har kun tegn uden URL-kodning, så
 // Beskeder ikke skærer linket over. Kontrolsummen (FNV-1a, 4 hex) fanger et afskåret link; den er ikke sikkerhed.
+// v2 (02-11-2026) er v1 med feltet «g» før kontrolsummen: «Mere grønt i maden» (js/groent.js) var slået til på iPad'en,
+// så telefonen regner listen med halvt kød og røde linser uden at kende iPad'ens indstilling, fx
+// v2.20261026.koedsovs_4~~~~~~.g.7529. Er den slået fra, er koden præcis den samme v1 som før (ældre telefoner kan læse
+// den); en v2-kode giver «Opdatér appen» på en telefon fra før v2. Kontrolsummen dækker også «g».
 // afkod() er streng: en kode, der ikke passer præcis, afvises helt (ingen delvis indlæsning). Fra adressen kommer kun
 // id'er, der står i «retter», og tal, der er tjekket, videre, og fejlbeskederne er faste (intet fra adressen vises)
 import { ID_RE } from './data.js';
 
-export const MAKS_LAENGDE = 400; // tjekkes, før noget andet sker: en gyldig kode er højst ca. 325 tegn
+export const MAKS_LAENGDE = 400; // tjekkes, før noget andet sker: en gyldig kode er højst 324 tegn (v2: 326)
 export const MAKS_ID = 40;
 export const MAKS_DAGE_VAEK = 56; // ugens mandag højst 8 uger før eller efter i dag
 export const BESKED_NYERE = 'Lavet med en nyere udgave. Opdatér appen.';
@@ -16,8 +20,10 @@ export const BESKED_GAMMEL = 'Linket er for gammelt.';
 const TEGN_RE = /^[a-z0-9._~-]*$/;
 // En dag: tom eller id_portioner med portioner 1-12 uden foranstillet nul. Hele koden er præcis syv dage
 const DAG = '(?:[a-z0-9]+(?:-[a-z0-9]+)*_(?:[1-9]|1[0-2]))?';
-const KODE_RE = new RegExp('^v1\\.([0-9]{8})\\.(' + DAG + '(?:~' + DAG + '){6})\\.([0-9a-f]{4})$');
-const NYERE_RE = /^v(?:[2-9]|[1-9][0-9]+)\./;
+const DAGE = '(' + DAG + '(?:~' + DAG + '){6})';
+const KODE_RE = new RegExp('^v1\\.([0-9]{8})\\.' + DAGE + '\\.([0-9a-f]{4})$');
+const KODE2_RE = new RegExp('^v2\\.([0-9]{8})\\.' + DAGE + '\\.g\\.([0-9a-f]{4})$');
+const NYERE_RE = /^v(?:[3-9]|[1-9][0-9]+)\./;
 const DAG_MS = 86400000;
 
 const erPortioner = (n) => Number.isInteger(n) && n >= 1 && n <= 12;
@@ -54,22 +60,25 @@ export function erMandag(uge) {
   return Boolean(m) && mandag(Number(m[1]), Number(m[2]), Number(m[3])) !== null;
 }
 
-// uge: mandagen som ÅÅÅÅ-MM-DD; dage: syv dage, hver null (fri aften) eller { ret, n }. Kaster ved forkerte data
-export function kod(uge, dage) {
+// uge: mandagen som ÅÅÅÅ-MM-DD; dage: syv dage, hver null (fri aften) eller { ret, n }; mereGroent: true giver v2.
+// Kaster ved forkerte data
+export function kod(uge, dage, { mereGroent = false } = {}) {
   const m = /^([0-9]{4})-([0-9]{2})-([0-9]{2})$/.exec(typeof uge === 'string' ? uge : '');
   if (!m || mandag(Number(m[1]), Number(m[2]), Number(m[3])) === null) throw new RangeError('kod: uge skal være en mandag (ÅÅÅÅ-MM-DD)');
   if (!Array.isArray(dage) || dage.length !== 7) throw new RangeError('kod: der skal være 7 dage');
+  if (typeof mereGroent !== 'boolean') throw new RangeError('kod: mereGroent skal være true eller false');
   const felter = dage.map((d) => {
     if (d === null) return '';
     if (!d || !erId(d.ret) || !erPortioner(d.n)) throw new RangeError('kod: en dag er null eller { ret, n } med n fra 1 til 12');
     return d.ret + '_' + d.n;
   });
-  const krop = 'v1.' + m[1] + m[2] + m[3] + '.' + felter.join('~');
+  const krop = (mereGroent ? 'v2.' : 'v1.') + m[1] + m[2] + m[3] + '.' + felter.join('~') + (mereGroent ? '.g' : '');
   return krop + '.' + kontrolsum(krop);
 }
 
 // retter: id'erne på retterne i ugeplanen (fra index.json og med «tumbi.ugeplan»: true); idag: en Date.
-// Svar: { ok: true, uge, dage, ukendte, kode } eller { ok: false, fejl: 'nyere' | 'gammel' | 'ugyldig', besked }. Et gyldigt id,
+// Svar: { ok: true, uge, dage, ukendte, mereGroent, kode } eller { ok: false, fejl: 'nyere' | 'gammel' | 'ugyldig', besked }.
+// mereGroent er true for en v2-kode (listen regnes med retterne med mere grønt). Et gyldigt id,
 // der ikke står i «retter», giver en tom dag og tæller i «ukendte». «kode» er genskrevet fra det godkendte og er den,
 // der gemmes
 export function afkod(kode, { retter, idag = new Date() } = {}) {
@@ -78,9 +87,10 @@ export function afkod(kode, { retter, idag = new Date() } = {}) {
   const nej = (fejl) => ({ ok: false, fejl, besked: fejl === 'nyere' ? BESKED_NYERE : fejl === 'gammel' ? BESKED_GAMMEL : BESKED_UGYLDIG });
   // 1. Længden og tegnene, før noget deles op
   if (typeof kode !== 'string' || kode.length > MAKS_LAENGDE || !TEGN_RE.test(kode)) return nej('ugyldig');
-  // 2. Hele koden i ét udtryk; en nyere udgave genkendes kun på begyndelsen
-  const m = KODE_RE.exec(kode);
+  // 2. Hele koden i ét udtryk (v1 eller v2); en nyere udgave genkendes kun på begyndelsen
+  const m = KODE_RE.exec(kode) || KODE2_RE.exec(kode);
   if (!m) return nej(NYERE_RE.test(kode) ? 'nyere' : 'ugyldig');
+  const mereGroent = kode.startsWith('v2.');
   const [, dato, felter, sum] = m;
   if (kontrolsum(kode.slice(0, -5)) !== sum) return nej('ugyldig');
   // 3. En rigtig mandag tæt på i dag, og id'erne
@@ -109,7 +119,7 @@ export function afkod(kode, { retter, idag = new Date() } = {}) {
     dage.push({ ret: id, n: Number(n) });
   }
   const uge = dato.slice(0, 4) + '-' + dato.slice(4, 6) + '-' + dato.slice(6);
-  return { ok: true, uge, dage, ukendte, kode: kod(uge, dage) };
+  return { ok: true, uge, dage, ukendte, mereGroent, kode: kod(uge, dage, { mereGroent }) };
 }
 
 // Linket i feltet «Sæt linket ind» (eller kun koden): det, der står efter «#/hent/», til første mellemrum («… Hilsen
