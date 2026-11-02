@@ -90,6 +90,42 @@
 .voksen-raekke-navn { font-size: 20px; font-weight: 800; line-height: 1.2; overflow-wrap: anywhere; -webkit-hyphens: auto; hyphens: auto; }
 .voksen-raekke-maerker { display: flex; flex-wrap: wrap; gap: 0 12px; font-size: 16px; color: var(--kakao-blid); overflow-wrap: anywhere; }
 
+/* Søgefeltet (kataloget, udvalget og favoritterne): et hvidt felt med lupen i venstre side og «Ryd søgningen» (×) i
+   højre, som kun står der, når der er skrevet noget. 20 px: under 16 px zoomer iPhonen ind på feltet. Safaris egen ryd-knap
+   skjules: den er under 48 px, og vores står samme sted. Fokusringen er den fælles fra app.css */
+.soeg { display: flex; flex-direction: column; gap: 6px; max-width: 36em; }
+.soeg-navn { font-size: 20px; font-weight: 800; }
+.soeg-raekke { position: relative; }
+.soeg-raekke > .ikon { position: absolute; left: 18px; top: 50%; width: 26px; height: 26px; margin-top: -13px; color: var(--kakao-blid); pointer-events: none; }
+.soeg-felt { display: block; width: 100%; min-height: 60px; padding: 0 64px 0 56px; border: var(--kant); border-radius: 999px; background: var(--hvid); color: var(--kakao); font: inherit; font-size: 20px; font-weight: 700; -webkit-appearance: none; appearance: none; }
+.soeg-felt::placeholder { color: var(--kakao-blid); opacity: 1; font-weight: 600; }
+.soeg-felt::-webkit-search-cancel-button, .soeg-felt::-webkit-search-decoration { display: none; -webkit-appearance: none; appearance: none; }
+.knap.soeg-ryd { position: absolute; right: 6px; top: 50%; width: 48px; min-width: 48px; height: 48px; min-height: 48px; margin-top: -24px; border-width: 2px; box-shadow: none; }
+.knap.soeg-ryd:active { transform: none; box-shadow: none; background: var(--creme-moerk); }
+.soeg-ryd .ikon { width: 22px; height: 22px; }
+.soeg-tal { font-size: 18px; font-weight: 750; color: var(--kakao-blid); }
+.soeg-tal:empty { display: none; }
+
+/* Katalogets filtre: grupperne (én ad gangen, «Alle» = ingen) og mærkerne under én linje, der kan foldes sammen. Linjen
+   siger, hvad der er valgt, også når den er foldet sammen. Pilen er en vinkel, der peger ned, når filtrene er fremme */
+.katalog-filtre { border-top: 2px solid var(--creme-moerk); border-bottom: 2px solid var(--creme-moerk); }
+.katalog-filtre > summary { min-height: 52px; padding: 12px 0; list-style: none; cursor: pointer; }
+.katalog-filtre > summary::-webkit-details-marker { display: none; }
+.katalog-filtre > summary::before { content: ''; display: inline-block; width: 10px; height: 10px; margin: 0 14px 3px 4px; border-right: 3px solid currentColor; border-bottom: 3px solid currentColor; transform: rotate(-45deg); transition: transform .15s ease-out; }
+.katalog-filtre[open] > summary::before { transform: rotate(45deg); }
+.katalog-filtre-navn { font-size: 20px; font-weight: 800; }
+.katalog-filtre-valgt { margin-left: 12px; font-size: 17px; font-weight: 750; color: var(--kakao-blid); }
+.katalog-filtre > .filter-chips { padding-bottom: 14px; }
+.filter-chip-billede { width: 28px; height: 28px; object-fit: contain; }
+
+/* Katalogets række: «Med» (kun retter til ugeplanen), hjertet og «Åbn» til højre for navnet. «Med» står først, så hjertet
+   og «Åbn» står samme sted i alle rækker */
+.voksen-raekke-knapper { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 10px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .katalog-filtre > summary::before { transition: none; }
+}
+
 /* Telefonen: mindre luft og billeder, så navnet har plads ved siden af knappen på 360-390 px */
 @media (max-width: 700px) {
   .voksen-indhold { padding: 4px 12px 32px; gap: 14px; }
@@ -100,6 +136,9 @@
   .voksen-raekke { grid-template-columns: 56px minmax(0, 1fr) auto; gap: 0 10px; padding: 8px 10px; }
   .voksen-raekke-billede { width: 56px; height: 56px; }
   .knap.voksen-punkt { min-height: 84px; padding: 12px 18px; }
+  /* Kataloget: knapperne får deres egen linje under billedet og navnet, og «Med i udvalget» bliver til «Med» */
+  .voksen-raekke-knapper { grid-column: 1 / -1; padding-bottom: 8px; }
+  .kun-bred { display: none; }
 }
 
 /* Telefonen: lige så små og tæt på hjørnet som dyret (.kort-dyr i app.css) */

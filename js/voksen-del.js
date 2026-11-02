@@ -3,6 +3,9 @@
 //   #/voksen/husstand    antal voksne og børn → portioner til nye retter i ugeplanen (eller til hele ugen)
 //   #/voksen/udvalg      ugens udvalg: de retter, børnene vælger imellem i ugeplanen (højst 24; intet udvalg = alle)
 //   #/voksen/favoritter  hjerterne
+//   #/voksen/katalog     alle retter med søgning, grupper og mærker: hjertet, «Med» i udvalget og «Åbn»
+// Udvalget, favoritterne og kataloget har samme søgefelt (js/soeg.js). Det tegnes aldrig om, mens der skrives: kun listen
+// og tallet under det (et nyt input-element lukker tastaturet i Safari på iPad og iPhone).
 // Låsen er en børnelås, ikke sikkerhed. Den ligger kun i hukommelsen (en modulvariabel, ingen sessionStorage) og lukker,
 // når man forlader #/voksen…, efter 10 minutter uden tryk og med «Luk». Åbnes en adresse herinde uden låsen (et
 // bogmærke), kommer holdet først. Kun ANTAL voksne og børn gemmes, aldrig hvem (regel 6). Lageret røres kun gennem
@@ -14,15 +17,18 @@ import { holdKnap } from './hold.js';
 import { portionerFraHusstand } from './skaler.js';
 import { MAERKER, maerkerFor } from './maerker.js';
 import { kod, afkod } from './plankode.js';
-import { grafikRet } from './katalog.js';
+import { grafikRet, grafikGruppe, GRUPPER } from './katalog.js';
 import { planMandag, idag } from './tid.js';
+import { soeg } from './soeg.js';
 
 export const LUK_MS = 10 * 60 * 1000;   // voksendelen lukker efter 10 minutter uden tryk
 export { MAKS_PERSONER, UDVALG_MAKS };   // voksne og børn hver, og retter i udvalget: grænserne fra js/lager.js
 export const BARN_VALG = [0.5, 0.7, 1];  // et barn spiser som … voksen (standarden BARN_ANDEL står i js/lager.js)
 export const UDVALG_STANDARD = 8;        // «Fyld op med nye» uden et udvalg: 8 retter (to sider i børnenes valg)
 export const FYLD_OP = 4;                // «Fyld op med nye» med et udvalg: 4 retter mere
-const SIDER = ['husstand', 'udvalg', 'favoritter'];
+const SIDER = ['husstand', 'udvalg', 'favoritter', 'katalog'];
+export const SOEG_MAKS = 60;             // tegn i søgefeltet
+const SOEG_EKSEMPEL = 'fx kylling eller jul';
 const LAGER_FEJL = 'Måske er privat browsing slået til, eller lageret er fuldt.';
 const NYERE = 'Lavet med en nyere udgave';
 
@@ -87,6 +93,30 @@ export function husstandSum(voksne, boern, barnAndel) {
 // «12 portioner (højst 12 — lav retten to gange til flere)»
 const sumTekst = ({ n, loft }) => portionerTekst(n) + (loft ? ' (højst ' + MAKS_PORTIONER + ' — lav retten to gange til flere)' : '');
 
+// En ret, som søgningen og filtrene ser den: modellen, gruppen (id fra index.json og navnet fra GRUPPER) og mærkerne
+// (nøglerne fra maerkerFor og deres navne). soeg() i js/soeg.js søger i navn, ingredienser, gruppe og maerker
+export function soegePost(m, gruppeId, noegler) {
+  return {
+    m, gruppeId, noegler,
+    navn: m.navn,
+    ingredienser: m.ingredienser,
+    gruppe: typeof gruppeId === 'string' && Object.hasOwn(GRUPPER, gruppeId) ? GRUPPER[gruppeId] : null,
+    maerker: noegler.map((k) => MAERKER[k].navn),
+  };
+}
+
+// Listen efter filtrene: gruppen (null = alle), alle de valgte mærker og søgeteksten, i postenes rækkefølge
+export function filtrer(poster, { gruppe = null, maerker = [], tekst = '' } = {}) {
+  return soeg(medMaerker(poster.filter((p) => !gruppe || p.gruppeId === gruppe), maerker, (p) => p.noegler), tekst);
+}
+
+// Linjen over listen: «Viser alle 125 retter» eller «Viser 12 af 125 retter» (hårdt mellemrum før «retter», som flertal)
+export function visTekst(n, iAlt) {
+  const retter = flertal(iAlt, 'ret', 'retter');
+  if (n === iAlt) return iAlt === 1 ? 'Viser ' + retter : 'Viser alle ' + retter;
+  return 'Viser ' + n + ' af ' + retter;
+}
+
 // ---------- Låsen ----------
 
 let aaben = false;
@@ -109,6 +139,7 @@ function laasOp() {
 function laas() {
   aaben = false;
   clearTimeout(lukTid);
+  glemSoegning();
 }
 
 // Er tiden gået, lukker voksendelen, og står den fremme, bliver skærmen til holdet
@@ -149,6 +180,16 @@ let sidsteSide = null;
 let besked = null;  // { tekst, fejl?, ret? } under knapperne (ret: i rækken med den ret)
 let kladde = null;  // husstanden, til den gemmes: { voksne, boern, barnAndel } (kun i hukommelsen)
 const filtre = new Set(); // udvalgets filterchips (nøgler fra MAERKER): huskes, til siden lukkes
+// Søgefeltets tekst pr. side ('udvalg', 'favoritter', 'katalog') og katalogets valg: gruppen (null = alle), mærkerne og
+// om filtrene er foldet ud (null = efter skærmen). Kun i hukommelsen, og glemt, når voksendelen låses
+const soegning = new Map();
+const katalogValg = { gruppe: null, maerker: new Set(), aabne: null };
+function glemSoegning() {
+  soegning.clear();
+  katalogValg.gruppe = null;
+  katalogValg.maerker.clear();
+  katalogValg.aabne = null;
+}
 
 // Viser voksendelens skærm og svarer true, når adressen er voksendelens. Ellers lukker låsen, og svaret er false
 export function rute(hash) {
@@ -176,6 +217,7 @@ function skaerm(side) {
   if (side === 'husstand') return husstandSkaerm(f);
   if (side === 'udvalg') return udvalgSkaerm(f);
   if (side === 'favoritter') return favoritSkaerm(f);
+  if (side === 'katalog') return katalogSkaerm(f);
   return hubSkaerm(f);
 }
 
@@ -196,10 +238,15 @@ function medFokus(b, noegle) {
   return b;
 }
 
-// Tegner skærmen igen uden at skifte adresse, og giver fokus tilbage til knappen med data-fokus
+// Tegner skærmen igen uden at skifte adresse, og giver fokus tilbage til knappen med data-fokus. Kan knappen ikke få
+// fokus (et hjerte, der ikke er favorit længere, under filteret «Favorit», eller en chip i katalogets sammenfoldede
+// filtre), får overskriften det, så fokus ikke forsvinder
 function tegnIgen(fokus) {
   K.vis();
-  if (fokus) document.querySelector('[data-fokus="' + fokus + '"]')?.focus({ preventScroll: true });
+  if (!fokus) return;
+  const maal = document.querySelector('[data-fokus="' + fokus + '"]');
+  maal?.focus({ preventScroll: true });
+  if (!maal || document.activeElement !== maal) document.querySelector('main h1')?.focus({ preventScroll: true });
 }
 
 const gemFejl = (hvad, ret) => ({ fejl: true, ret, tekst: hvad + ' kunne ikke gemmes på denne enhed. ' + LAGER_FEJL });
@@ -243,6 +290,102 @@ function raekke(m, { valgt = false, under = null, knap }) {
     el('div', { class: 'voksen-raekke-tekst' }, el('span', { class: 'voksen-raekke-navn', tekst: m.navn }), under),
     knap,
     besked && besked.ret === m.id ? beskedEl(besked) : null);
+}
+
+// ---------- Søgningen (udvalget, favoritterne og kataloget) ----------
+
+// Retterne som søgeposter (soegePost) med gruppen fra forsidens afsnit og mærkerne med familiens egne (ny, favorit)
+function poster(retter, f) {
+  const gruppe = new Map(K.S.grupper.flatMap((g) => g.retter.map((id) => [id, g.id])));
+  return retter.map((m) => soegePost(m, gruppe.get(m.id) ?? null, maerkerFor(m, { familie: f })));
+}
+const soegeTekstFor = (side) => soegning.get(side) || '';
+
+const LUP = ['M10.5 17.5a7 7 0 1 0 0-14 7 7 0 0 0 0 14z', 'M15.6 15.6l4.9 4.9'];
+
+// Søgefeltet med lupen og «Ryd søgningen» (×). Ved hvert tegn huskes teksten (kun i hukommelsen), og opdater() tegner
+// listen og tallet om. Selve feltet tegnes ikke om, så fokus, markøren og tastaturet bliver, hvor de er. Svar: formen og
+// ryd(), der tømmer feltet og giver det fokus (også knappen «Ryd søgningen», når intet passer)
+function soegeFelt(side, opdater) {
+  const id = 'soeg-' + side;
+  const felt = el('input', {
+    id, class: 'soeg-felt', type: 'search', placeholder: SOEG_EKSEMPEL, maxlength: String(SOEG_MAKS), autocomplete: 'off',
+    autocapitalize: 'none', autocorrect: 'off', spellcheck: 'false', enterkeyhint: 'search', 'aria-describedby': id + '-tal',
+  });
+  felt.value = soegeTekstFor(side);
+  const kryds = K.knap('', { klasse: 'rund soeg-ryd', ikonNavn: 'kryds', label: 'Ryd søgningen', onclick: () => ryd() });
+  kryds.hidden = !felt.value;
+  function saet(tekst) {
+    if (tekst) soegning.set(side, tekst);
+    else soegning.delete(side);
+    kryds.hidden = !tekst;
+    opdater();
+  }
+  function ryd() {
+    felt.value = '';
+    saet('');
+    felt.focus();
+  }
+  felt.addEventListener('input', () => saet(felt.value));
+  const form = el('form', { class: 'soeg', role: 'search', novalidate: true, onsubmit: (e) => {
+    e.preventDefault();
+    // «Søg» på skærmtastaturet lukker tastaturet, så listen kan ses. Med mus og tastatur bliver fokus i feltet
+    if (matchMedia('(pointer: coarse)').matches) felt.blur();
+  } },
+  el('label', { for: id, class: 'soeg-navn', tekst: 'Søg i retterne' }),
+  el('div', { class: 'soeg-raekke' }, stregIkon(LUP), felt, kryds));
+  return { form, ryd };
+}
+
+// «Viser 12 af 125 retter» under søgefeltet og filtrene. En statuslinje, så skærmlæseren siger tallet, når listen skifter
+const soegeTal = (side) => el('p', { id: 'soeg-' + side + '-tal', class: 'soeg-tal', role: 'status' });
+
+// Intet passer: hvad der blev søgt efter, og vejen tilbage (søgningen og/eller filtrene)
+function ingenTraef(tekst, { ryd, fjernFiltre = null, filterTekst = 'Ingen retter passer til de valgte filtre.' }) {
+  const t = tekst.trim();
+  return el('div', { class: 'voksen-tom' },
+    el('p', { tekst: t ? 'Ingen retter passer til «' + t + '»' + (fjernFiltre ? ' med de valgte filtre.' : '.') : filterTekst }),
+    el('div', { class: 'voksen-knapper' },
+      t ? medFokus(K.knap('Ryd søgningen', { klasse: 'lille', ikonNavn: 'kryds', onclick: ryd }), 'ryd-soegning') : null,
+      fjernFiltre ? medFokus(K.knap('Fjern filtrene', { klasse: 'lille', onclick: fjernFiltre }), 'fjern-filtre') : null));
+}
+
+// ---------- Rækkernes knapper (udvalget, favoritterne og kataloget) ----------
+
+function skiftFavorit(m) {
+  const ny = Lager.skiftFavorit(m.id, K.S.ids);
+  besked = ny ? null : gemFejl('Favoritten', m.id);
+  tegnIgen('fav-' + m.id);
+  if (ny) K.annoncer((ny.favoritter.includes(m.id) ? 'Favorit: ' : 'Ikke favorit: ') + m.navn + '.');
+}
+
+function hjerteKnap(m, f) {
+  const b = medFokus(K.knap('', { klasse: 'rund hjerte-knap', label: 'Favorit: ' + m.navn, onclick: () => skiftFavorit(m) }), 'fav-' + m.id);
+  b.append(hjerteIkon());
+  b.setAttribute('aria-pressed', String(f.favoritter.includes(m.id)));
+  return b;
+}
+
+// Retten ind i eller ud af udvalget. Er det fuldt, siges grænsen i rækken med retten
+function skiftUdvalg(m, ids) {
+  const ny = skiftIUdvalg(ids, m.id);
+  if (!ny) {
+    besked = { fejl: true, ret: m.id, tekst: 'Udvalget er fuldt: højst ' + UDVALG_MAKS + ' retter. Fjern en ret først.' };
+    tegnIgen('ret-' + m.id);
+    return;
+  }
+  gemUdvalg(ny, (ny.length > ids.length ? 'Med i udvalget: ' : 'Ikke med: ') + m.navn + '. ' + valgtTekst(ny.length) + '.', 'ret-' + m.id, m.id);
+}
+
+// «Med» i udvalget. Fuldt: aria-disabled, ikke disabled, så fokus bliver, og et tryk siger grænsen. lang: «Med i udvalget»
+// i kataloget, hvor «Med» alene ikke siger hvad (på telefonen står kun «Med», .kun-bred i familie.css)
+function medKnap(m, ids, fuldt, { lang = false } = {}) {
+  const valgt = ids.includes(m.id);
+  const b = medFokus(K.knap(lang ? '' : 'Med', { klasse: 'lille valg', ikonNavn: valgt ? 'tjek' : 'plus', label: 'Med i udvalget: ' + m.navn, onclick: () => skiftUdvalg(m, ids) }), 'ret-' + m.id);
+  if (lang) b.append(el('span', {}, 'Med', el('span', { class: 'kun-bred', tekst: ' i udvalget' })));
+  b.setAttribute('aria-pressed', String(valgt));
+  if (!valgt && fuldt) b.setAttribute('aria-disabled', 'true');
+  return b;
 }
 
 // ---------- Vagten og fejlene ----------
@@ -323,6 +466,8 @@ function hubSkaerm(f) {
       status: f.udvalg ? flertal(valgt, 'ret', 'retter') + ' at vælge mellem' : 'Alle ' + alle.length + ' retter', ...nyere },
     { navn: 'Favoritter', ikonEl: hjerteIkon(), til: '#/voksen/favoritter', fokus: 'favoritter',
       status: f.favoritter.length ? flertal(f.favoritter.length, 'ret', 'retter') : 'Ingen endnu', ...nyere },
+    { navn: 'Katalog', ikonEl: stregIkon(LUP), til: '#/voksen/katalog', fokus: 'katalog',
+      status: 'Søg i alle ' + flertal(alleRetter().length, 'ret', 'retter'), ...nyere },
     { navn: 'Ugeplan', ikonEl: ikon('kalender'), til: '#/uge', fokus: 'ugeplan',
       status: p.laast ? NYERE : p.dage.filter(Boolean).length + ' af 7 dage har en ret' },
     { navn: 'Indkøbsliste', ikonEl: ikon('kurv'), til: listeHash, fokus: 'indkoeb', status: 'Listen til butikken og telefonen' },
@@ -438,49 +583,41 @@ function gemUdvalg(ids, tekst, fokus, ret) {
   if (f) K.annoncer(tekst);
 }
 
-function filterChip(k, antal) {
+// En mærke-chip (udvalget og kataloget): valgte er sættet, den slår mærket til og fra i
+function filterChip(k, antal, valgte = filtre) {
   const b = medFokus(K.knap(MAERKER[k].navn + ' (' + antal + ')', { klasse: 'filter-chip', onclick: () => {
-    if (filtre.has(k)) filtre.delete(k);
-    else filtre.add(k);
+    if (valgte.has(k)) valgte.delete(k);
+    else valgte.add(k);
     tegnIgen('filter-' + k);
   } }), 'filter-' + k);
   b.prepend(el('span', { 'aria-hidden': 'true', tekst: MAERKER[k].ikon }));
-  b.setAttribute('aria-pressed', String(filtre.has(k)));
+  b.setAttribute('aria-pressed', String(valgte.has(k)));
   return b;
 }
 
-function maerkeLinje(noegler) {
-  if (!noegler.length) return null;
-  return el('span', { class: 'voksen-raekke-maerker' }, noegler.map((k) => el('span', { class: 'voksen-maerke' },
-    el('span', { 'aria-hidden': 'true', tekst: MAERKER[k].ikon + ' ' }), MAERKER[k].navn)));
+// Linjen under navnet: gruppen (kun i kataloget) og mærkerne
+function maerkeLinje(noegler, gruppe = null) {
+  if (!noegler.length && !gruppe) return null;
+  return el('span', { class: 'voksen-raekke-maerker' },
+    gruppe ? el('span', { class: 'voksen-maerke', tekst: gruppe }) : null,
+    noegler.map((k) => el('span', { class: 'voksen-maerke' }, el('span', { 'aria-hidden': 'true', tekst: MAERKER[k].ikon + ' ' }), MAERKER[k].navn)));
 }
 
 function udvalgSkaerm(f) {
-  const alle = iPlanen();
-  const maerker = new Map(alle.map((m) => [m.id, maerkerFor(m, { familie: f })]));
-  const maerkerAf = (m) => maerker.get(m.id);
-  const vist = medMaerker(alle, [...filtre], maerkerAf);
+  const alle = poster(iPlanen(), f);
   const ids = f.udvalg ? f.udvalg.ids : [];
   const fuldt = ids.length >= UDVALG_MAKS;
+  // Læses ved hvert tryk og hvert tegn: søgefeltet tegner kun listen om, ikke skærmen
+  const vistNu = () => filtrer(alle, { maerker: [...filtre], tekst: soegeTekstFor('udvalg') });
 
-  const skift = (m) => {
-    const ny = skiftIUdvalg(ids, m.id);
-    if (!ny) {
-      besked = { fejl: true, ret: m.id, tekst: 'Udvalget er fuldt: højst ' + UDVALG_MAKS + ' retter. Fjern en ret først.' };
-      tegnIgen('ret-' + m.id);
-      return;
-    }
-    gemUdvalg(ny, (ny.length > ids.length ? 'Med i udvalget: ' : 'Ikke med: ') + m.navn + '. ' + valgtTekst(ny.length) + '.', 'ret-' + m.id, m.id);
-  };
-
-  // Kun blandt de viste retter, så filtrene også gælder her (fx kun nye vegetarretter)
+  // Kun blandt de viste retter, så filtrene og søgningen også gælder her (fx kun nye vegetarretter)
   const fyld = () => {
-    const ny = fyldOp(ids, vist.map((m) => m.id), f.lavet, { antal: f.udvalg ? FYLD_OP : UDVALG_STANDARD });
+    const ny = fyldOp(ids, vistNu().map((p) => p.m.id), f.lavet, { antal: f.udvalg ? FYLD_OP : UDVALG_STANDARD });
     const flere = ny.length - ids.length;
     if (!flere) {
       besked = { tekst: fuldt
         ? 'Udvalget er fuldt: højst ' + UDVALG_MAKS + ' retter.'
-        : 'Der er ingen nye retter at fylde op med' + (filtre.size ? ' blandt de viste' : '') + ': de er lavet før eller allerede valgt.' };
+        : 'Der er ingen nye retter at fylde op med' + (filtre.size || soegeTekstFor('udvalg').trim() ? ' blandt de viste' : '') + ': de er lavet før eller allerede valgt.' };
       tegnIgen('fyld-op');
       return;
     }
@@ -495,24 +632,28 @@ function udvalgSkaerm(f) {
   }), 'alle-retter') : null;
 
   const chips = el('div', { class: 'filter-chips', role: 'group', 'aria-label': 'Filtre' },
-    Object.keys(MAERKER).map((k) => filterChip(k, alle.filter((m) => maerkerAf(m).includes(k)).length)));
+    Object.keys(MAERKER).map((k) => filterChip(k, alle.filter((p) => p.noegler.includes(k)).length)));
 
-  let liste;
-  if (!alle.length) {
-    liste = el('p', { class: 'voksen-tom', tekst: 'Der er ingen retter i ugeplanen endnu.' });
-  } else if (!vist.length) {
-    liste = el('div', { class: 'voksen-tom' },
-      el('p', { tekst: 'Ingen retter har alle de valgte mærker.' }),
-      medFokus(K.knap('Fjern filtrene', { klasse: 'lille', onclick: () => { filtre.clear(); tegnIgen('fyld-op'); } }), 'fjern-filtre'));
-  } else {
-    liste = el('ul', { class: 'voksen-liste', 'aria-label': 'Retter i ugeplanen' }, vist.map((m) => {
-      const valgt = ids.includes(m.id);
-      const b = medFokus(K.knap('Med', { klasse: 'lille valg', ikonNavn: valgt ? 'tjek' : 'plus', label: 'Med i udvalget: ' + m.navn, onclick: () => skift(m) }), 'ret-' + m.id);
-      b.setAttribute('aria-pressed', String(valgt));
-      if (!valgt && fuldt) b.setAttribute('aria-disabled', 'true');
-      return raekke(m, { valgt, under: maerkeLinje(maerkerAf(m)), knap: b });
-    }));
+  const tal = soegeTal('udvalg');
+  const boks = el('div', { class: 'soeg-resultat' });
+  const soegefelt = soegeFelt('udvalg', tegn);
+  function tegn() {
+    const vist = vistNu();
+    tal.textContent = alle.length ? visTekst(vist.length, alle.length) : '';
+    if (!alle.length) {
+      boks.replaceChildren(el('p', { class: 'voksen-tom', tekst: 'Der er ingen retter i ugeplanen endnu.' }));
+    } else if (!vist.length) {
+      boks.replaceChildren(ingenTraef(soegeTekstFor('udvalg'), {
+        ryd: soegefelt.ryd,
+        fjernFiltre: filtre.size ? () => { filtre.clear(); tegnIgen('fyld-op'); } : null,
+        filterTekst: 'Ingen retter har alle de valgte mærker.',
+      }));
+    } else {
+      boks.replaceChildren(el('ul', { class: 'voksen-liste', 'aria-label': 'Retter i ugeplanen' },
+        vist.map((p) => raekke(p.m, { valgt: ids.includes(p.m.id), under: maerkeLinje(p.noegler), knap: medKnap(p.m, ids, fuldt) }))));
+    }
   }
+  tegn();
 
   return voksenSkaerm('voksen-udvalg', 'Ugens udvalg', null,
     el('p', { class: 'voksen-hjaelp', tekst: 'Når børnene vælger ugens mad, ser de kun retterne i udvalget. Uden et udvalg ser de alle ' + alle.length + ' retter.' }),
@@ -521,32 +662,117 @@ function udvalgSkaerm(f) {
       medFokus(K.knap('Fyld op med nye', { klasse: 'lille', ikonNavn: 'plus', onclick: fyld }), 'fyld-op'),
       alleKnap),
     besked && !besked.ret ? beskedEl(besked) : null,
+    soegefelt.form,
     chips,
+    tal,
     el('p', { class: 'udvalg-tal', tekst: f.udvalg ? valgtTekst(ids.length) : 'Intet udvalg: børnene ser alle retter' }),
-    liste,
+    boks,
     fejlLinje());
 }
 
 // ---------- #/voksen/favoritter ----------
 
 function favoritSkaerm(f) {
-  const skift = (m) => {
-    const ny = Lager.skiftFavorit(m.id, K.S.ids);
-    besked = ny ? null : gemFejl('Favoritten', m.id);
-    tegnIgen('fav-' + m.id);
-    if (ny) K.annoncer((ny.favoritter.includes(m.id) ? 'Favorit: ' : 'Ikke favorit: ') + m.navn + '.');
-  };
-  const liste = el('ul', { class: 'voksen-liste', 'aria-label': 'Retter' }, alleRetter().map((m) => {
-    const valgt = f.favoritter.includes(m.id);
-    const b = medFokus(K.knap('', { klasse: 'rund hjerte-knap', label: 'Favorit: ' + m.navn, onclick: () => skift(m) }), 'fav-' + m.id);
-    b.append(hjerteIkon());
-    b.setAttribute('aria-pressed', String(valgt));
-    return raekke(m, { valgt, knap: b });
-  }));
+  const alle = poster(alleRetter(), f);
+  const tal = soegeTal('favoritter');
+  const boks = el('div', { class: 'soeg-resultat' });
+  const soegefelt = soegeFelt('favoritter', tegn);
+  function tegn() {
+    const tekst = soegeTekstFor('favoritter');
+    const vist = filtrer(alle, { tekst });
+    tal.textContent = alle.length ? visTekst(vist.length, alle.length) : '';
+    if (!alle.length) boks.replaceChildren(el('p', { class: 'voksen-tom', tekst: 'Der er ingen retter at vise.' }));
+    else if (!vist.length) boks.replaceChildren(ingenTraef(tekst, { ryd: soegefelt.ryd }));
+    else {
+      boks.replaceChildren(el('ul', { class: 'voksen-liste', 'aria-label': 'Retter' },
+        vist.map((p) => raekke(p.m, { valgt: f.favoritter.includes(p.m.id), knap: hjerteKnap(p.m, f) }))));
+    }
+  }
+  tegn();
   return voksenSkaerm('voksen-favoritter', 'Favoritter',
     f.favoritter.length ? flertal(f.favoritter.length, 'favorit', 'favoritter') : 'Ingen endnu',
     el('p', { class: 'voksen-hjaelp', tekst: 'Tryk på hjertet ved de retter, familien er glad for. Favoritterne får et ' + MAERKER.favorit.ikon + ', når børnene vælger ugens mad.' }),
     el('div', { class: 'voksen-knapper' }, tilbage()),
-    liste,
+    soegefelt.form,
+    tal,
+    boks,
+    fejlLinje());
+}
+
+// ---------- #/voksen/katalog ----------
+
+// En gruppe-chip i kataloget: én gruppe ad gangen, og «Alle» (id null) er ingen gruppe. Et tryk på den valgte gruppe
+// viser alle igen. Gruppens billede fra forsiden står foran navnet
+function gruppeChip(id, navn, antal) {
+  const valgt = katalogValg.gruppe === id;
+  const fokus = 'gruppe-' + (id || 'alle');
+  const b = medFokus(K.knap(navn + ' (' + antal + ')', { klasse: 'filter-chip', onclick: () => {
+    katalogValg.gruppe = valgt ? null : id;
+    tegnIgen(fokus);
+  } }), fokus);
+  if (id) b.prepend(K.billede(grafikGruppe(id), '', 'filter-chip-billede'));
+  b.setAttribute('aria-pressed', String(valgt));
+  return b;
+}
+
+// Grupper og mærker, foldet sammen under én linje, der siger, hvad der er valgt. Foldet ud på iPad og desktop, sammen på
+// telefonen, så listen står lige under søgefeltet, mens tastaturet er fremme. Den voksnes valg huskes, til låsen lukker
+function katalogFiltre(alle) {
+  const v = katalogValg;
+  const valgte = [v.gruppe ? GRUPPER[v.gruppe] : null, ...[...v.maerker].map((k) => MAERKER[k].navn)].filter(Boolean);
+  const boks = el('details', { class: 'katalog-filtre', open: v.aabne ?? !matchMedia('(max-width: 700px)').matches },
+    el('summary', {},
+      el('span', { class: 'katalog-filtre-navn', tekst: 'Grupper og mærker' }),
+      valgte.length ? el('span', { class: 'katalog-filtre-valgt', tekst: valgte.join(', ') }) : null),
+    el('div', { class: 'filter-chips', role: 'group', 'aria-label': 'Grupper' },
+      gruppeChip(null, 'Alle', alle.length),
+      K.S.grupper.filter((g) => Object.hasOwn(GRUPPER, g.id)).map((g) => gruppeChip(g.id, GRUPPER[g.id], alle.filter((p) => p.gruppeId === g.id).length))),
+    el('div', { class: 'filter-chips', role: 'group', 'aria-label': 'Mærker' },
+      Object.keys(MAERKER).map((k) => filterChip(k, alle.filter((p) => p.noegler.includes(k)).length, v.maerker))));
+  boks.addEventListener('toggle', () => { v.aabne = boks.open; });
+  return boks;
+}
+
+// En ret i kataloget: «Med» (kun retter til ugeplanen) først, så hjertet og «Åbn» altid står samme sted
+function katalogRaekke(p, f, ids, fuldt) {
+  const m = p.m;
+  return raekke(m, {
+    under: maerkeLinje(p.noegler, p.gruppe),
+    knap: el('div', { class: 'voksen-raekke-knapper' },
+      m.uge ? medKnap(m, ids, fuldt, { lang: true }) : null,
+      hjerteKnap(m, f),
+      medFokus(K.knap('Åbn', { klasse: 'lille', label: 'Åbn ' + m.navn, onclick: () => K.naviger('#/ret/' + m.id) }), 'aabn-' + m.id)),
+  });
+}
+
+function katalogSkaerm(f) {
+  const alle = poster(alleRetter(), f);
+  const ids = f.udvalg ? f.udvalg.ids : [];
+  const fuldt = ids.length >= UDVALG_MAKS;
+  const v = katalogValg;
+  const fjernFiltre = () => {
+    v.gruppe = null;
+    v.maerker.clear();
+    tegnIgen('gruppe-alle');
+  };
+  const tal = soegeTal('katalog');
+  const boks = el('div', { class: 'soeg-resultat' });
+  const soegefelt = soegeFelt('katalog', tegn);
+  function tegn() {
+    const tekst = soegeTekstFor('katalog');
+    const vist = filtrer(alle, { gruppe: v.gruppe, maerker: [...v.maerker], tekst });
+    tal.textContent = alle.length ? visTekst(vist.length, alle.length) : '';
+    if (!alle.length) boks.replaceChildren(el('p', { class: 'voksen-tom', tekst: 'Der er ingen retter at vise.' }));
+    else if (!vist.length) boks.replaceChildren(ingenTraef(tekst, { ryd: soegefelt.ryd, fjernFiltre: v.gruppe || v.maerker.size ? fjernFiltre : null }));
+    else boks.replaceChildren(el('ul', { class: 'voksen-liste', 'aria-label': 'Retter' }, vist.map((p) => katalogRaekke(p, f, ids, fuldt))));
+  }
+  tegn();
+  return voksenSkaerm('voksen-katalog', 'Katalog', 'Ugens udvalg: ' + (f.udvalg ? ids.length + ' af ' + UDVALG_MAKS : 'ingen valgt'),
+    el('p', { class: 'voksen-hjaelp', tekst: 'Hjertet gør en ret til favorit. «Med» sætter den i ugens udvalg til børnene og står kun ved retter til ugeplanen.' }),
+    el('div', { class: 'voksen-knapper' }, tilbage()),
+    soegefelt.form,
+    katalogFiltre(alle),
+    tal,
+    boks,
     fejlLinje());
 }

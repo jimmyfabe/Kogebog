@@ -44,7 +44,8 @@ const MIN = 60 * 1000;
 test('adresserne: kun #/voksen og #/voksen/… er voksendelens, og en ukendt side er oversigten', () => {
   const tabel = [
     ['#/voksen', 'hub'], ['#voksen', 'hub'], ['#/voksen/', 'hub'], ['#/voksen/husstand', 'husstand'],
-    ['#/voksen/udvalg', 'udvalg'], ['#/voksen/favoritter', 'favoritter'], ['#/voksen/ukendt', 'hub'],
+    ['#/voksen/udvalg', 'udvalg'], ['#/voksen/favoritter', 'favoritter'], ['#/voksen/katalog', 'katalog'], ['#/voksen/ukendt', 'hub'],
+    ['#/voksen/katalog/x', 'hub'],
     ['#/voksenx', null], ['#/uge', null], ['#/', null], ['', null], ['#/ret/voksen', null], ['#/uge/voksen', null],
   ];
   for (const [hash, side] of tabel) assert.equal(V.voksenSide(hash), side, hash);
@@ -148,6 +149,52 @@ test('filtrene: en ret skal have alle de valgte mærker, og ingen filtre viser a
   assert.deepEqual(ids(['hurtig']), ['a', 'b']);
   assert.deepEqual(ids(['hurtig', 'vegetar']), ['a']);
   assert.deepEqual(ids(['fisk']), []);
+});
+
+// Søgeposter som i kataloget: { m, gruppeId, noegler } med navnene, soeg() i js/soeg.js søger i
+const model = (id, navn, ingredienser = []) => ({ id, navn, ingredienser: ingredienser.map((n) => ({ navn: n })) });
+const POSTER = [
+  V.soegePost(model('gloegg', 'Børnegløgg', ['æblemost']), 'jul', ['ingenKniv']),
+  V.soegePost(model('kylling', 'Kylling i karry', ['kyllingebryst', 'ris']), 'aftensmad', ['hurtig', 'groent']),
+  V.soegePost(model('laks', 'Laks med ris', ['laksefilet', 'ris']), 'aftensmad', ['fisk', 'hurtig']),
+  V.soegePost(model('boller', 'Boller', ['hvedemel']), 'bagning', []),
+  V.soegePost(model('risalamande', 'Risalamande', ['grødris']), 'jul', ['favorit']),
+];
+
+test('soegePost: gruppens og mærkernes navne kommer fra GRUPPER og MAERKER, og en ukendt gruppe har intet navn', () => {
+  const p = POSTER[1];
+  assert.equal(p.gruppe, 'Aftensmad');
+  assert.deepEqual(p.maerker, ['Hurtig', 'Masser af grønt']);
+  assert.equal(p.navn, 'Kylling i karry');
+  assert.equal(p.m.id, 'kylling');
+  assert.deepEqual(p.noegler, ['hurtig', 'groent']);
+  assert.equal(V.soegePost(model('x', 'X'), 'ukendt', []).gruppe, null);
+  assert.equal(V.soegePost(model('x', 'X'), 'constructor', []).gruppe, null, 'Object.hasOwn: «constructor» er ikke en gruppe');
+  assert.equal(V.soegePost(model('x', 'X'), null, []).gruppe, null);
+});
+
+test('filtrer: gruppen, alle de valgte mærker og søgeteksten gælder sammen, og intet valgt viser alle', () => {
+  const ids = (valg) => V.filtrer(POSTER, valg).map((p) => p.m.id);
+  assert.deepEqual(ids(), ['gloegg', 'kylling', 'laks', 'boller', 'risalamande']);
+  assert.deepEqual(ids({ gruppe: 'jul' }), ['gloegg', 'risalamande']);
+  assert.deepEqual(ids({ gruppe: null, tekst: '' }), ['gloegg', 'kylling', 'laks', 'boller', 'risalamande']);
+  assert.deepEqual(ids({ maerker: ['hurtig'] }), ['kylling', 'laks']);
+  assert.deepEqual(ids({ maerker: ['hurtig', 'fisk'] }), ['laks']);
+  assert.deepEqual(ids({ tekst: 'ris' }), ['kylling', 'laks', 'risalamande'], 'ingrediensen «ris» og navnet «Risalamande»');
+  assert.deepEqual(ids({ gruppe: 'aftensmad', tekst: 'ris' }), ['kylling', 'laks']);
+  assert.deepEqual(ids({ gruppe: 'aftensmad', maerker: ['fisk'], tekst: 'ris' }), ['laks']);
+  assert.deepEqual(ids({ tekst: 'jul' }), ['gloegg', 'risalamande'], 'gruppens navn «Jul»');
+  assert.deepEqual(ids({ tekst: 'Favorit' }), ['risalamande'], 'mærkets navn');
+  assert.deepEqual(ids({ gruppe: 'bagning', tekst: 'ris' }), [], 'ingen træf');
+  assert.deepEqual(ids({ gruppe: 'halloween' }), []);
+});
+
+test('linjen over listen: «Viser alle N retter» uden filter, ellers «Viser n af N retter» (hårdt mellemrum før «retter»)', () => {
+  assert.equal(V.visTekst(125, 125), 'Viser alle 125 retter');
+  assert.equal(V.visTekst(24, 125), 'Viser 24 af 125 retter');
+  assert.equal(V.visTekst(0, 125), 'Viser 0 af 125 retter');
+  assert.equal(V.visTekst(1, 1), 'Viser 1 ret');
+  assert.equal(V.visTekst(0, 1), 'Viser 0 af 1 ret');
 });
 
 test('husstanden i ord: ental og flertal, og et tomt antal står ikke med', () => {
