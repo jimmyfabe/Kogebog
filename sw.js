@@ -28,6 +28,7 @@ const FILER = [
   'js/tid.js',
   'js/tekst.js',
   'js/model.js',
+  'js/groent.js',
   'js/dom.js',
   'js/lager.js',
   'js/replikker.js',

@@ -19,19 +19,24 @@ export function alleRetter() {
   return ids.map((id) => lavModel(laesJson('opskrifter/' + id + '.json')));
 }
 
+// Retten og dens udgave med mere grønt (m.groen, js/groent.js), når den har en: de nye og skiftede linjer og trin har
+// deres egne filer, de uændrede grundrettens (samme fil, samme tekst)
+const medGroen = (retter) => retter.flatMap((m) => (m.groen ? [m, m.groen] : [m]));
+
 // Alle replikker ({ tekst, fil }), som de står på skærmen (før tilTale). Samme fil kan stå flere gange
 export function alleReplikker(retter = alleRetter()) {
+  const udgaver = medGroen(retter);
   // Alle tre udgaver af R.voksenStart, også dem ingen ret bruger endnu (i dag har ingen ret kun kniv)
   const replikker = [R.FAERDIG, R.PRINT_HOLD, ...Object.values(R.VOKSEN_START), ...Object.keys(GRUPPER).map(R.gruppe)];
-  for (const m of retter) {
+  for (const m of udgaver) {
     replikker.push(R.retValgt(m), R.retAaben(m));
     if (R.voksenStart(m)) replikker.push(R.voksenStart(m));
     m.ingredienser.forEach((_, i) => replikker.push(R.ingrediens(m, i)));
     for (const t of m.trin) replikker.push(R.trin(m, t));
   }
   // «Der kører allerede en timer på …»: en timer kan køre på hvert trin med timer, set fra samme ret («trin 8») eller
-  // fra en anden ret («Kødsovs, trin 8»)
-  for (const m of retter) {
+  // fra en anden ret («Kødsovs, trin 8»). Med mere grønt kan trinnet med timeren have et andet nummer
+  for (const m of udgaver) {
     for (const t of m.trin) if (t.timerSek) replikker.push(R.timerOptaget(m, t.nr, false), R.timerOptaget(m, t.nr, true));
   }
   // Børnenes valg af ugens mad (js/ugeplan.js): alle tre dyr kan vælge og blive færdige (Bo, når de frie dage skal gå til

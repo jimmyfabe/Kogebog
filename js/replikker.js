@@ -30,8 +30,9 @@ export const voksenStart = (m) => {
   return f.length ? VOKSEN_START[f.length > 1 ? 'begge' : f[0]] : null;
 };
 
-// i tæller fra 0 (som m.ingredienser), filen fra 1
-export const ingrediens = (m, i) => r(m.ingredienser[i].tekst, m.id + '/ingrediens-' + (i + 1) + '.mp3');
+// i tæller fra 0 (som m.ingredienser), filen fra 1. En ret med mere grønt (js/groent.js) har «lyd» på hver linje og hvert
+// trin: filen, der siger netop den tekst (et uændret punkt har grundrettens fil, et nyt eller skiftet sin egen)
+export const ingrediens = (m, i) => r(m.ingredienser[i].tekst, m.id + '/' + (m.ingredienser[i].lyd || 'ingrediens-' + (i + 1)) + '.mp3');
 
 // Replikker uden lydfil: teksten afhænger af husstanden i voksendelen, så Røst kan ikke lave lyden på forhånd. fil er null,
 // og tale.js lader iPad-stemmen sige teksten. Kun replikkerne i UDEN_LYD må mangle på talelisten (test/test-lyd.js)
@@ -40,7 +41,7 @@ export const UDEN_LYD = ['ingrediensSkaleret'];
 export const ingrediensSkaleret = (tekst) => r(tekst, null);
 
 // Også et voksen-trin siger kun trinnet: at en voksen hjælper, siger trekanten på skærmen (og voksenStart)
-export const trin = (m, t) => r(t.tekst, m.id + '/' + t.nr + '.mp3');
+export const trin = (m, t) => r(t.tekst, m.id + '/' + (t.lyd || t.nr) + '.mp3');
 
 // Hvor den anden timer kører: «trin 8» i samme ret (eller når retten ikke er hentet), ellers «Kødsovs, trin 8».
 // timerRet er rettens model eller null. Bruges både til teksten på skærmen og til oplæsningen

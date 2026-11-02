@@ -1,12 +1,13 @@
 // model.js — gør en opskrift (schema.org/Recipe + «tumbi») til det, skærmene og printet bruger. Ingen DOM.
 import { isoTilMinutter, delIngrediens } from './tekst.js';
+import { medMereGroent } from './groent.js';
 
 export function lavModel(json) {
   const t = json.tumbi || {};
   const ingredienser = (json.recipeIngredient || []).map((tekst, i) => {
     const ekstra = (t.ingredienser || [])[i] || {};
     const { maengde, navn } = delIngrediens(tekst, ekstra.maengde);
-    return { tekst, maengde, navn, ikon: ekstra.ikon || null };
+    return { tekst, maengde, navn, ikon: ekstra.ikon || null, lyd: ekstra.lyd || null };
   });
   const trin = (json.recipeInstructions || []).map((s, i) => {
     const st = s.tumbi || {};
@@ -20,8 +21,10 @@ export function lavModel(json) {
       timerSek: Number.isInteger(st.timer_sek) && st.timer_sek > 0 ? st.timer_sek : null,
       note: st.note || '',
       ikoner: st.ikoner || [],
+      lyd: st.lyd || null,
     };
   });
+  const groen = medMereGroent(json);
   return {
     id: t.id,
     navn: json.name,
@@ -37,6 +40,11 @@ export function lavModel(json) {
     // Ugeplanen (docs/ugeplan-plan.md): kun når «tumbi.ugeplan» er true, ellers null. «tumbi» er opskriftens egne felter,
     // som saml() i js/indkoeb.js læser dem ({ ret: { tumbi }, n }). Validatoren kræver felterne, når ugeplan er true
     uge: t.ugeplan === true ? { tumbi: t, portioner: t.portioner, prisKr: t.pris_kr, groentG: t.groent_g } : null,
+    // «Mere grønt i maden» (js/groent.js): samme ret med halvt kød og halvt røde linser, eller null, når opskriften ingen
+    // «tumbi.mere_groent» har. Dens ingredienser og trin har «lyd» (filen, stemmen siger dem med: js/replikker.js), og
+    // erGroen er true. Hvilken af de to der vises, vælger valgt() i js/groent.js
+    groen: groen ? { ...lavModel(groen), erGroen: true } : null,
+    erGroen: false,
   };
 }
 

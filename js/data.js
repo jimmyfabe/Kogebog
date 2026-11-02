@@ -48,7 +48,13 @@ export async function hentIndex() {
 
 export async function hentRet(id) {
   if (!ID_RE.test(id)) throw new HentFejl('ugyldigt navn', { findesIkke: true });
-  const m = lavModel(await hentJson('opskrifter/' + id + '.json'));
+  const json = await hentJson('opskrifter/' + id + '.json');
+  let m;
+  try {
+    m = lavModel(json);
+  } catch (e) {
+    throw new HentFejl('opskriften kan ikke læses (' + e.message + ')'); // fx en forkert «tumbi.mere_groent» (js/groent.js)
+  }
   if (!m.navn || !m.trin.length || m.id !== id) throw new HentFejl('opskriften er ufuldstændig');
   return m;
 }
