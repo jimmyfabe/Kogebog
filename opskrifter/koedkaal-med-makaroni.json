@@ -50,7 +50,7 @@
     "pris_kr": 67,
     "pris_dato": "2026-10",
     "groent_g": 1300,
-    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's priser på shop.rema1000.dk 31-10-2026 for den brugte mængde (hakket oksekød 8-12 % 400 g 39,95 kr.; løg 1 kg 12 kr.; hvidkål 8 kr. pr. kg (prisen gjaldt til 31-10); gulerødder 1 kg 12 kr.; hakkede tomater 400 g 6,37 kr.; makaroni 500 g 9,95 kr.), i alt 58,70 kr., ganget med 1,09 plus 3 kr. til olie, karry, bouillon, salt og peber. Grønt er også et skøn (ikke vejet): løg 100 g, hvidkål 600 g, gulerødder 200 g og hakkede tomater 400 g.",
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, okt. 2026: REMA 1000's priser på shop.rema1000.dk 31-10-2026 for den brugte mængde (hakket oksekød 8-12 % 400 g 39,95 kr.; løg 1 kg 12 kr.; hvidkål 8 kr. pr. kg (prisen gjaldt til 31-10); gulerødder 1 kg 12 kr.; hakkede tomater 400 g 6,37 kr.; makaroni 500 g 9,95 kr.), i alt 58,70 kr., ganget med 1,09 plus 3 kr. til olie, karry, bouillon, salt og peber. Grønt er også et skøn (ikke vejet): løg 100 g, hvidkål 600 g, gulerødder 200 g og hakkede tomater 400 g. Med mere grønt er der 200 g oksekød mindre og 80 g røde linser mere (røde linser 400 g 16,95 kr. samme dag), i alt 42,12 kr., ganget med 1,09 plus 3 kr., og linserne tælles ikke som grønt.",
     "ingredienser": [
       { "ikon": "olie", "maengde": "1 spsk", "vare": "olie" },
       { "ikon": "koed", "maengde": "400 g", "vare": "hakket-oksekoed", "antal": 400, "enhed": "g" },
@@ -64,6 +64,20 @@
       { "ikon": "spaghetti", "maengde": "200 g", "vare": "makaroni", "antal": 200, "enhed": "g" },
       { "ikon": "salt", "maengde": "1 knivspids", "vare": "salt" },
       { "ikon": "peber", "maengde": "1 knivspids", "vare": "peber" }
-    ]
+    ],
+    "mere_groent": {
+      "ingredienser": [
+        { "i": 1, "tekst": "200 g hakket oksekød", "antal": 200 }
+      ],
+      "nye_ingredienser": [
+        { "efter": 8, "tekst": "80 g røde linser", "ikon": "linser", "maengde": "80 g", "vare": "roede-linser", "antal": 80, "enhed": "g" },
+        { "efter": 8, "tekst": "2 dl vand", "ikon": "vand", "maengde": "2 dl", "vare": "vand", "antal": 2, "enhed": "dl" }
+      ],
+      "nye_trin": [
+        { "efter": 10, "@type": "HowToStep", "text": "Kom linser og vand i gryden.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "ikoner": ["linser", "vand"], "note": "Barnet måler 2 dl vand i kanden. Den voksne hælder linser og vand i, når det bobler: gryden er varm. Låg på. Linserne koger 5 min, før makaronien kommer i." } }
+      ],
+      "pris_kr": 49,
+      "groent_g": 1300
+    }
   }
 }
