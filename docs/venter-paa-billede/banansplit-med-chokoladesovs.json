@@ -1,0 +1,51 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Banansplit med chokoladesovs",
+  "description": "Banan delt på langs med vaniljeis, hjemmelavet chokoladesovs, flødeskum og krymmel. Den voksne laver den varme sovs og skærer bananerne; barnet bygger, pisker og pynter selv. Allergener: mælk, og chokoladen kan have spor af nødder.",
+  "image": "grafik/ret-banansplit-med-chokoladesovs.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT20M",
+  "cookTime": "PT5M",
+  "totalTime": "PT30M",
+  "recipeIngredient": [
+    "100 g chokolade, fx mørk eller lys",
+    "2 dl piskefløde",
+    "4 bananer",
+    "½ l vaniljeis",
+    "2 spsk krymmel"
+  ],
+  "tool": ["skål, der kan tåle varme", "lille gryde", "grydeske", "elpisker", "skål", "skærebræt", "kniv", "isske", "4 aflange skåle"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk. Chokolade kan have spor af nødder: læs på pakken." } },
+    { "@type": "HowToStep", "text": "Bræk chokoladen i små stykker i en skål.", "tumbi": { "verbum": "smuldre", "ikoner": ["chokolade"], "note": "100 g. En skål, der kan tåle varme." } },
+    { "@type": "HowToStep", "text": "Hæld 1 dl fløde i en lille gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["flode"], "note": "Gryden er kold endnu, så barnet kan selv. Resten af fløden skal piskes til skum." } },
+    { "@type": "HowToStep", "text": "Varm fløden, til den lige begynder at boble.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "note": "Ved middel varme. Tag gryden af varmen med det samme." } },
+    { "@type": "HowToStep", "text": "Hæld den varme fløde over chokoladen.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne hælder: fløden er meget varm." } },
+    { "@type": "HowToStep", "text": "Rør, til sovsen er blank.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "note": "Et minut eller to, til al chokoladen er væk. Den voksne holder skålen: den er varm." } },
+    { "@type": "HowToStep", "text": "Lad sovsen køle lidt af i 5 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 300, "note": "Imens: tag isen ud af fryseren, så den er lettere at øse." } },
+    { "@type": "HowToStep", "text": "Pisk resten af fløden til skum.", "tumbi": { "verbum": "piske", "ikoner": ["flode"], "note": "1 dl. Med elpisker, til skummet kan stå." } },
+    { "@type": "HowToStep", "text": "Pil bananerne.", "tumbi": { "verbum": "pille", "ikoner": ["banan"], "note": "4 bananer." } },
+    { "@type": "HowToStep", "text": "Skær bananerne over på langs.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["banan"], "note": "Den voksne skærer, på et skærebræt." } },
+    { "@type": "HowToStep", "text": "Læg to bananhalvdele i hver skål.", "tumbi": { "verbum": "pynte", "ikoner": ["banan"] } },
+    { "@type": "HowToStep", "text": "Kom to kugler is mellem bananerne.", "tumbi": { "verbum": "maale", "ikoner": ["is"], "note": "Med en isske eller en stor ske." } },
+    { "@type": "HowToStep", "text": "Hæld chokoladesovs over isen.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne mærker efter først: sovsen skal være lun, ikke varm." } },
+    { "@type": "HowToStep", "text": "Kom en klat flødeskum på.", "tumbi": { "verbum": "pynte", "ikoner": ["flode"] } },
+    { "@type": "HowToStep", "text": "Drys krymmel over.", "tumbi": { "verbum": "drysse", "ikoner": ["krymmel"] } },
+    { "@type": "HowToStep", "text": "Smag banansplitten!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "banansplit-med-chokoladesovs",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Madens Verden: «Banana split» (https://madensverden.dk/banana-split/), bananer, vaniljeis, flødeskum og chokoladesovs til 4, her med krymmel i stedet for hasselnøddeflager. Chokoladesovsen (chokolade smeltet i varm fløde) er som i Arla, «Chokoladesauce» (https://www.arla.dk/opskrifter/chokoladesauce/), her uden smør, med lidt mindre fløde (1 dl til 100 g chokolade; Arla har 2½ dl til 200 g) og fløden hældt over chokoladen i en skål. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "chokolade", "maengde": "100 g" },
+      { "ikon": "flode", "maengde": "2 dl" },
+      { "ikon": "banan", "maengde": "4" },
+      { "ikon": "is", "maengde": "½ l" },
+      { "ikon": "krymmel", "maengde": "2 spsk" }
+    ]
+  }
+}

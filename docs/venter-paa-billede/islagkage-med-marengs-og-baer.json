@@ -1,0 +1,62 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Islagkage med marengs og bær",
+  "description": "Islagkage i en brødform med sprøde stykker hjemmebagt marengs og et lag kogte bær, lavet med købt vaniljeis og uden ismaskine. Barnet pisker marengsen, smuldrer, lægger lag og pynter selv. Start dagen før: kagen skal fryse natten over. Allergener: æg og mælk.",
+  "image": "grafik/ret-islagkage-med-marengs-og-baer.webp",
+  "inLanguage": "da",
+  "recipeYield": "8 skiver",
+  "prepTime": "PT45M",
+  "cookTime": "PT1H",
+  "totalTime": "PT9H",
+  "recipeIngredient": [
+    "250 g frosne bær, fx hindbær",
+    "2 spsk sukker til bærrene",
+    "70 g æggehvide (ca. 2 hvider), fx fra en bøtte",
+    "100 g sukker til marengsen",
+    "1 l vaniljeis",
+    "50 g friske bær til pynt, fx blåbær"
+  ],
+  "tool": ["lille gryde", "grydeske", "kop", "ren skål", "elpisker", "dejskraber", "bageplade", "bagepapir", "stor skål", "ske", "brødform (ca. 2 l)", "film", "fad", "si", "stor kniv"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder æg og mælk. Start dagen før: kagen skal stå i fryseren natten over." } },
+    { "@type": "HowToStep", "text": "Hæld bær og sukker i en lille gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["baer", "sukker"], "note": "250 g frosne bær og 2 spsk sukker. Gryden er kold endnu, så barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Kog bærrene i 1 minut.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 60, "ikoner": ["baer"], "note": "Varm dem op ved middel varme, og rør. Start timeren, når det bobler: frosne bær fra butikken skal boble i mindst 1 minut. Tag så gryden af varmen, og lad bærrene køle af i gryden." } },
+    { "@type": "HowToStep", "text": "Mål 100 g sukker op i en kop.", "tumbi": { "verbum": "maale", "ikoner": ["sukker"], "note": "Tænd ovnen på 100 °C varmluft, og læg bagepapir på en bageplade. Sukkeret skal stå klar, før I rører ved æggehviden." } },
+    { "@type": "HowToStep", "text": "Mål 70 g æggehvide i en ren skål.", "tumbi": { "verbum": "maale", "ikoner": ["aeg"], "note": "Fra en bøtte æggehvider, eller den voksne skiller 2 æg. Skålen skal være helt ren og tør, ellers bliver skummet ikke fast." } },
+    { "@type": "HowToStep", "text": "Pisk hviderne til et fast, hvidt skum.", "tumbi": { "verbum": "piske", "note": "Med elpisker. Det tager et par minutter. Skummet er fast nok, når det bliver stående i toppe." } },
+    { "@type": "HowToStep", "text": "Pisk sukkeret i, en skefuld ad gangen.", "tumbi": { "verbum": "piske", "note": "Pisk videre, til marengsen er blank og stiv. Smag ikke på den: æggehviden er rå." } },
+    { "@type": "HowToStep", "text": "Smør marengsen ud på bagepapiret.", "tumbi": { "verbum": "smoere", "note": "Med en dejskraber, ca. 1 cm tykt. Rør ikke marengsen med fingrene." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Æggehviden var rå: vask hænderne, før I rører ved andet." } },
+    { "@type": "HowToStep", "text": "Bag marengsen i 1 time.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 3600, "note": "Midt i ovnen ved 100 °C varmluft. Den skal være tør og sprød, men ikke brun." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme", "note": "Pladen er varm. Sæt den på en rist eller et bræt." } },
+    { "@type": "HowToStep", "text": "Lad marengsen køle af i 30 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "Så bliver den helt sprød. Den voksne mærker efter, at bærrene i gryden også er kolde." } },
+    { "@type": "HowToStep", "text": "Lad isen stå på bordet i 10 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Så bliver den blød nok til at røre i. Imens: læg film ind i brødformen, så den hænger ud over kanten." } },
+    { "@type": "HowToStep", "text": "Smuldr marengsen i store stykker.", "tumbi": { "verbum": "smuldre", "note": "Med hænderne, ned i en stor skål. Gem en håndfuld stykker til pynt i en tør kop." } },
+    { "@type": "HowToStep", "text": "Rør isen sammen med marengsen.", "tumbi": { "verbum": "roere", "ikoner": ["is"], "note": "1 l is. Rør kun lidt, så stykkerne bliver hele." } },
+    { "@type": "HowToStep", "text": "Kom halvdelen i brødformen.", "tumbi": { "verbum": "haelde", "note": "Tryk den let ned med en ske." } },
+    { "@type": "HowToStep", "text": "Hæld de kolde bær over isen.", "tumbi": { "verbum": "haelde", "ikoner": ["baer"], "note": "Fordel dem jævnt. De skal være helt kolde, ellers smelter isen." } },
+    { "@type": "HowToStep", "text": "Kom resten af isen ovenpå.", "tumbi": { "verbum": "haelde", "note": "Glat toppen ud med skeen, og fold filmen hen over." } },
+    { "@type": "HowToStep", "text": "Sæt formen i fryseren natten over.", "tumbi": { "verbum": "vente", "note": "Mindst 6 timer, så kagen er helt fast. Der er ingen timer: kagen står bare til i morgen." } },
+    { "@type": "HowToStep", "text": "Vend formen om på et fad.", "tumbi": { "verbum": "haelde", "note": "Fold filmen til side, læg fadet over formen, og vend det hele om. Den voksne hjælper: formen er tung. Træk forsigtigt i filmen, så glider kagen ud." } },
+    { "@type": "HowToStep", "text": "Pil filmen af kagen.", "tumbi": { "verbum": "pille", "note": "Langsomt, så kagen bliver hel." } },
+    { "@type": "HowToStep", "text": "Pynt med marengs og friske bær.", "tumbi": { "verbum": "pynte", "ikoner": ["baer"], "note": "Skyl bærrene i en si under koldt vand først, og lad dem dryppe af." } },
+    { "@type": "HowToStep", "text": "Lad kagen stå i 10 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "På bordet. Så er den lettere at skære." } },
+    { "@type": "HowToStep", "text": "Skær kagen i skiver.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne skærer med en stor kniv dyppet i varmt vand fra hanen." } },
+    { "@type": "HowToStep", "text": "Smag islagkagen!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "islagkage-med-marengs-og-baer",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift: mængderne og trinene er egen tekst. Marengsen (1 time ved 100 °C varmluft) er som i Arla, «Kyskager» (https://www.arla.dk/opskrifter/kyskager/), her kun med sukker (Arla har også flormelis) og smurt ud i et lag i stedet for små toppe. Idéen med smuldret marengs og bær er som i Arla, «Eton mess» (https://www.arla.dk/opskrifter/eton-mess/). Natten i fryseren og 10 minutter på bordet før serveringen er som i Arla, «Daim islagkage» (https://www.arla.dk/opskrifter/daim-islagkage/), der bruger lagkageplast; her film, så kagen glider ud af formen. Marengsen er hjemmebagt, fordi vi ikke kunne finde færdig marengs hos Rema 1000. De frosne bær koges i 1 minut efter Fødevarestyrelsens råd om færdigpakkede frosne bær. Tiden i fryseren og i ovnen er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "baer", "maengde": "250 g" },
+      { "ikon": "sukker", "maengde": "2 spsk" },
+      { "ikon": "aeg", "maengde": "70 g" },
+      { "ikon": "sukker", "maengde": "100 g" },
+      { "ikon": "is", "maengde": "1 l" },
+      { "ikon": "baer", "maengde": "50 g" }
+    ]
+  }
+}

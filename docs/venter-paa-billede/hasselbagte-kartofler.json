@@ -1,0 +1,45 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Hasselbagte kartofler",
+  "description": "Kartofler skåret i tynde skiver, men ikke helt igennem, og bagt sprøde i ovnen med smør og rasp. Barnet stiller kartoflerne i fadet og drysser. Allergener: mælk (smør) og gluten (rasp).",
+  "image": "grafik/ret-hasselbagte-kartofler.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT20M",
+  "cookTime": "PT50M",
+  "totalTime": "PT1H15M",
+  "recipeIngredient": [
+    "1 kg kartofler (ca. 10 mellemstore)",
+    "40 g smør",
+    "1 tsk salt",
+    "2 spsk rasp"
+  ],
+  "tool": ["grøntsagsbørste", "si", "skærebræt", "skarp kniv", "2 grydeskeer", "ovnfast fad", "lille gryde", "pensel", "teske", "spiseske"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Tænd ovnen på 225 °C (varmluft 200 °C). Retten indeholder mælk (smør) og gluten (rasp)." } },
+    { "@type": "HowToStep", "text": "Skyl kartoflerne i en si.", "tumbi": { "verbum": "haelde", "ikoner": ["kartoffel"], "note": "Skrub dem med en grøntsagsbørste. Skrællen må gerne sidde på." } },
+    { "@type": "HowToStep", "text": "Læg en kartoffel mellem to grydeskeer.", "tumbi": { "verbum": "pynte", "ikoner": ["kartoffel"], "note": "Skeernes skafter stopper kniven, så skiverne ikke skæres helt igennem." } },
+    { "@type": "HowToStep", "text": "Skær tynde skiver, men ikke helt igennem.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kartoffel"], "note": "Ca. 3 mm imellem. Triller kartoflen, så skær først en tynd skive af bunden. Den voksne skærer, og barnet lægger den næste kartoffel klar." } },
+    { "@type": "HowToStep", "text": "Stil kartoflerne i et fad med snittene opad.", "tumbi": { "verbum": "pynte", "ikoner": ["kartoffel"], "note": "Tæt sammen, så de støtter hinanden." } },
+    { "@type": "HowToStep", "text": "Smelt smørret i en lille gryde.", "tumbi": { "verbum": "smelte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["smoer"], "note": "Ved svag varme, til det lige er smeltet." } },
+    { "@type": "HowToStep", "text": "Pensl smørret ned mellem skiverne.", "tumbi": { "verbum": "pensle", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["smoer"], "note": "Smørret er varmt. Barnet kan pensle, når det har stået lidt, med den voksne ved siden af." } },
+    { "@type": "HowToStep", "text": "Drys salt og rasp over kartoflerne.", "tumbi": { "verbum": "drysse", "ikoner": ["salt", "rasp"] } },
+    { "@type": "HowToStep", "text": "Bag kartoflerne i 50 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 3000, "ikoner": ["kartoffel"], "note": "Til de er gyldne og sprøde i kanten, og en gaffel glider let ind (45-60 min efter størrelsen). Bliver raspen for mørk, så læg et stykke bagepapir løst over." } },
+    { "@type": "HowToStep", "text": "Tag fadet ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Lad kartoflerne køle af i 5 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 300 } },
+    { "@type": "HowToStep", "text": "Smag på en sprød kartoffel.", "tumbi": { "verbum": "smage", "ikoner": ["kartoffel"], "note": "Pust først. Kanterne er sprøde, men indeni er de meget varme." } }
+  ],
+  "tumbi": {
+    "id": "hasselbagte-kartofler",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne bygger på Arla: «Hasselback potatoes» (arlafoods.co.uk) og Valdemarsro: «Hasselback kartofler» (valdemarsro.dk); tricket med to skeer, der stopper kniven, er fra Valdemarsro. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "kartoffel", "maengde": "1 kg" },
+      { "ikon": "smoer", "maengde": "40 g" },
+      { "ikon": "salt", "maengde": "1 tsk" },
+      { "ikon": "rasp", "maengde": "2 spsk" }
+    ]
+  }
+}

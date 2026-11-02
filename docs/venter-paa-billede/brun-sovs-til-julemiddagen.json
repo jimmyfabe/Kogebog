@@ -1,0 +1,53 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Brun sovs til julemiddagen",
+  "description": "Brun sovs af fond og fløde med lidt ribsgelé, til flæskesteg, and og kartofler. Barnet måler og ryster jævningen, og den voksne står ved gryden. Allergener: gluten (hvedemel) og mælk (fløde); tjek fonden for selleri.",
+  "image": "grafik/ret-brun-sovs-til-julemiddagen.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT10M",
+  "totalTime": "PT15M",
+  "recipeIngredient": [
+    "4 dl vand eller sky fra stegen",
+    "2 spsk oksefond eller andefond",
+    "3 spsk hvedemel",
+    "1½ dl madlavningsfløde",
+    "1 spsk ribsgelé",
+    "½ tsk madkulør",
+    "1 knivspids salt",
+    "1 knivspids peber"
+  ],
+  "tool": ["gryde", "målebæger", "spiseske", "glas med låg", "piskeris", "teske", "sovseskål"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Sovsen laves, mens stegen hviler, og tager ca. 15 min. Retten indeholder gluten (hvedemel) og mælk (fløde). Nogle fonde indeholder selleri: tjek pakken." } },
+    { "@type": "HowToStep", "text": "Mål 4 dl vand i en gryde.", "tumbi": { "verbum": "maale", "ikoner": ["vand"], "note": "Har I sky fra stegen, hælder den voksne den gennem en si og skummer fedtet af. Brug skyen i stedet for noget af vandet." } },
+    { "@type": "HowToStep", "text": "Mål fonden i gryden.", "tumbi": { "verbum": "maale", "ikoner": ["bouillon"], "note": "Se på pakken, hvor meget fond der skal til 4 dl. Med sky fra stegen er 1 spsk tit nok." } },
+    { "@type": "HowToStep", "text": "Ryst mel og fløde sammen i et glas.", "tumbi": { "verbum": "roere", "ikoner": ["mel", "flode"], "note": "Skru låget godt på, og ryst, til der ingen klumper er. Det er jævningen." } },
+    { "@type": "HowToStep", "text": "Varm fonden, til den koger.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["bouillon"] } },
+    { "@type": "HowToStep", "text": "Pisk jævningen i gryden.", "tumbi": { "verbum": "piske", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["mel", "flode"], "note": "Hæld i en tynd stråle, og pisk hele tiden, så der ikke kommer klumper. Barnet kan holde glasset, mens den voksne pisker." } },
+    { "@type": "HowToStep", "text": "Lad sovsen småkoge i 5 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Ved svag varme. Melet skal koge med, så sovsen ikke smager af mel. Rør af og til, så den ikke brænder på." } },
+    { "@type": "HowToStep", "text": "Rør ribsgeléen i sovsen.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["syltetoej"], "note": "Den smelter i den varme sovs og gør den rund i smagen." } },
+    { "@type": "HowToStep", "text": "Dryp kulør i, til sovsen er brun.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["soja"], "note": "Lidt ad gangen: ½ tsk er tit nok. Kulør giver farve, ikke smag." } },
+    { "@type": "HowToStep", "text": "Drys salt og peber i sovsen.", "tumbi": { "verbum": "drysse", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt", "peber"], "note": "Barnet drysser fra oven og holder hånden væk fra dampen." } },
+    { "@type": "HowToStep", "text": "Hæld sovsen i en varm sovseskål.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "note": "Skyl skålen i varmt vand først, så holder sovsen varmen ved bordet." } },
+    { "@type": "HowToStep", "text": "Smag på sovsen.", "tumbi": { "verbum": "smage", "note": "Med en teske, og pust først: sovsen er meget varm. Mangler den salt, så drys lidt mere i." } }
+  ],
+  "tumbi": {
+    "id": "brun-sovs-til-julemiddagen",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne bygger på Arla: «Brun sovs» (arla.dk), Madens Verden: «Skysovs» (madensverden.dk) og Bømsen: «Flæskestegssovs» (boemsen.com). Fløden er madlavningsfløde som hos Arla, men rystet med mel i stedet for Arlas saucejævner (36 % piskefløde kan blive tyk, når den rystes). Hvor meget fond der skal til en dl, står på pakken og er ikke tjekket. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "vand", "maengde": "4 dl" },
+      { "ikon": "bouillon", "maengde": "2 spsk" },
+      { "ikon": "mel", "maengde": "3 spsk" },
+      { "ikon": "flode", "maengde": "1½ dl" },
+      { "ikon": "syltetoej", "maengde": "1 spsk" },
+      { "ikon": "soja", "maengde": "½ tsk" },
+      { "ikon": "salt", "maengde": "1 knivspids" },
+      { "ikon": "peber", "maengde": "1 knivspids" }
+    ]
+  }
+}

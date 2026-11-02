@@ -1,0 +1,49 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Raket-frugtspyd",
+  "description": "Frugtspyd, der ligner små nytårsraketter: clementinbåde som ild, ananas og blåbær på midten og en æbletrekant som spids. Dyp dem i vaniljeyoghurt med krymmel.",
+  "image": "grafik/ret-raket-frugtspyd.webp",
+  "inLanguage": "da",
+  "recipeYield": "8 raketter",
+  "prepTime": "PT20M",
+  "totalTime": "PT20M",
+  "recipeIngredient": [
+    "3 clementiner",
+    "2 dåser ananasstykker (à ca. 140 g)",
+    "125 g blåbær",
+    "1 æble (gerne rødt)",
+    "2 dl græsk yoghurt",
+    "2 tsk vaniljesukker",
+    "1 spsk krymmel"
+  ],
+  "tool": ["8 grillspyd af træ", "dåseåbner", "si", "kniv", "skærebræt", "lille skål", "ske", "fad"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Skyl æblet og blåbærrene. Grillspyd er spidse: den voksne holder øje, og de mindste søskende får frugten uden spyd. Dyppen indeholder mælk (yoghurten)." } },
+    { "@type": "HowToStep", "text": "Pil clementinerne, og del dem i både.", "tumbi": { "verbum": "pille", "ikoner": ["appelsin"], "note": "Med fingrene: bådene skilles let fra hinanden." } },
+    { "@type": "HowToStep", "text": "Hæld ananassen i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["ananas"], "note": "Den voksne åbner dåserne: kanten er skarp. Lad saften løbe fra." } },
+    { "@type": "HowToStep", "text": "Skær æblet i små trekanter.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["aeble"], "note": "Skær kernehuset væk først. Der skal være 8 trekanter, én til hver raket." } },
+    { "@type": "HowToStep", "text": "Stik to clementinbåde på spyddet som flammer.", "tumbi": { "verbum": "pynte", "ikoner": ["appelsin"], "note": "Start forneden: det er rakettens ild." } },
+    { "@type": "HowToStep", "text": "Stik ananas og blåbær på, hver anden gang.", "tumbi": { "verbum": "pynte", "ikoner": ["ananas", "baer"], "note": "Lad der være plads til spidsen øverst." } },
+    { "@type": "HowToStep", "text": "Sæt en æbletrekant øverst som raketspids.", "tumbi": { "verbum": "pynte", "ikoner": ["aeble"], "note": "Spidsen af spyddet skal gemmes inde i æblet. Lav alle 8 raketter." } },
+    { "@type": "HowToStep", "text": "Rør yoghurt og vaniljesukker i en lille skål.", "tumbi": { "verbum": "roere", "ikoner": ["yoghurt", "sukker"] } },
+    { "@type": "HowToStep", "text": "Drys krymmel over yoghurten som fyrværkeri.", "tumbi": { "verbum": "drysse", "ikoner": ["krymmel"] } },
+    { "@type": "HowToStep", "text": "Læg raketterne på et fad.", "tumbi": { "verbum": "pynte", "note": "Læg dem i en stjerne rundt om skålen med dyppen." } },
+    { "@type": "HowToStep", "text": "Dyp en raket, og smag!", "tumbi": { "verbum": "smage", "note": "Spis frugten af spyddet, og læg spyddet væk bagefter." } }
+  ],
+  "tumbi": {
+    "id": "raket-frugtspyd",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift: frugtspyd med en yoghurtdyp er kendt fra mange børnefester, men der er ingen bestemt kilde til raketterne. Mængderne er et skøn (ikke afprøvet). Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "appelsin", "maengde": "3" },
+      { "ikon": "ananas", "maengde": "2 dåser" },
+      { "ikon": "baer", "maengde": "125 g" },
+      { "ikon": "aeble", "maengde": "1" },
+      { "ikon": "yoghurt", "maengde": "2 dl" },
+      { "ikon": "sukker", "maengde": "2 tsk" },
+      { "ikon": "krymmel", "maengde": "1 spsk" }
+    ]
+  }
+}

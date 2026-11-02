@@ -151,6 +151,15 @@ export const INGREDIENSER = {
   'pebernoedder': 'pebernødder',
   'noedder': 'nødder',
   'eddike': 'eddike',
+  // Isdesserterne (02-11-2026): «is» er købt is i bøtte (vanilje og chokolade), «smaakager» købte cookies og småkager
+  'is': 'is',
+  'banan': 'banan',
+  'smaakager': 'småkager',
+  // Julemiddag og julefrokost (02-11-2026): «selleri» er bladselleri, «asparges» hvide asparges (også snitter på dåse)
+  'selleri': 'bladselleri',
+  'asparges': 'asparges',
+  // Nytår (02-11-2026): «sennep» er sennep i glas (fx sød fransk sennep)
+  'sennep': 'sennep',
 };
 
 // Ikoner for råt kød og råt æg: efter dem skal der komme et trin med «vaske-haender».

@@ -713,7 +713,7 @@ test('indkøbsvarerne har en kendt afdeling, en grundenhed, et ikon og en gyldig
   for (const a of ['slik', 'constructor']) forvent((v) => { v['hakkede-tomater'].afd = a; }, 'VARER «hakkede-tomater»: ukendt afdeling "' + a + '"');
   forvent((v) => { v['hakkede-tomater'].enhed = 'kg'; }, '«enhed» skal være en grundenhed (faktor 1), fandt «kg»');
   forvent((v) => { v['hakkede-tomater'].enhed = 'dåse'; }, 'ukendt enhed "dåse"');
-  forvent((v) => { v['hakkede-tomater'].ikon = 'banan'; }, 'ukendt ikon "banan"');
+  forvent((v) => { v['hakkede-tomater'].ikon = 'rumraket'; }, 'ukendt ikon "rumraket"'); // «banan» er et ikon siden isdesserterne (02-11-2026)
   for (const p of [[0, 'dåse', 'dåser'], [400, 'dåse'], [12.5, 'dåse', 'dåser'], ['400', 'dåse', 'dåser'], [400, '', 'dåser'], 400]) {
     forvent((v) => { v['hakkede-tomater'].pakke = p; }, '«pakke» skal være [indhold i varens enhed (heltal over 0), ental, flertal]');
   }

@@ -25,6 +25,34 @@ denne rækkefølge (efter `bagte-juleaebler-med-marcipan`). Ingen af dem har `ug
 
 Codex-prompterne (engelsk) står i `retter.txt` i kladdemappen `jul-billeder` fra 01-11-2026.
 
+## Venter nu: 15 retter til julemiddag, nytår og is (02-11-2026)
+
+De 10 første skal stå i gruppen `jul` efter `andebryst-med-aebler-og-svesker` i denne rækkefølge, og de 5 isdesserter
+sidst i `soede-sager`. Ingen af dem har `ugeplan`. Gruppen `jul` skal hedde «Jul og nytår», når de kommer ind (ny
+replik `faelles/gruppe-jul`, så det kræver Røst).
+
+| id | Gruppe | Billedet viser |
+|---|---|---|
+| `brun-sovs-til-julemiddagen` | jul | Sovseskål med blank, mellembrun sovs og en lille hvirvel af fløde |
+| `waldorfsalat` | jul | Skål med æbletern, halve grønne vindruer og bladselleri i cremet dressing (ingen nødder) |
+| `tarteletter-med-hoens-i-asparges` | jul | 3 tarteletter med cremet fyld, kylling og hvide asparges |
+| `aebleskiver-med-hindbaersauce` | jul | 5 æbleskiver med lidt flormelis og en lille skål hindbærsauce |
+| `hasselbagte-kartofler` | jul | 4 hasselbagte kartofler med viftede skiver og gylden rasp |
+| `lille-kransekagetaarn` | jul | Kransekagetårn oppefra: 8 ringe som cirkler, hvide glasurzigzag, to røde flag uden tekst |
+| `boernebobler` | jul | 2 glas lysegul boblende drik med isterninger med frosne bær |
+| `nytaarstorsk-med-sennepssovs` | jul | Bagte torskestykker, små kartofler, skål sennepssovs og rødbedeskiver |
+| `raket-frugtspyd` | jul | 4 frugtspyd som raketter ved en lille skål yoghurt med krymmel |
+| `fyrvaerkeri-muffins` | jul | 3 muffins med hvid glasur og farvet krymmel som fyrværkeri |
+| `islagkage-med-marengs-og-baer` | soede-sager | Aflang islagkage i skiver: vanilje, rødt bærlag, marengs og blåbær |
+| `is-sandwich-med-smaakager` | soede-sager | 3 is-sandwiches: cookie øverst, ring af vaniljeis og krymmel |
+| `floedeis-uden-ismaskine` | soede-sager | 3 kugler vaniljeflødeis med chokoladestykker i en skål |
+| `banansplit-med-chokoladesovs` | soede-sager | Aflang skål med 2 bananhalvdele, 2 kugler is, chokoladesovs og flødeskum |
+| `isbombe-til-nytaar` | soede-sager | Rund isbombe med flødeskum og krymmel, et stykke skåret ud (vanilje udenpå, chokolade inden i) |
+
+Codex-prompterne står sidst i samme `retter.txt` (`koer-codex.sh` springer færdige billeder over). Åbne valg fra
+reviewet: tarteletternes antal stk. i Remas pakke er ikke bekræftet, og navnene med lange ord (fx «Æbleskiver med
+hindbærsauce») tjekkes i e2e (punkt 7).
+
 Sådan kommer de tilbage (Git Bash i Kogebog). Det kan gøres for de retter, der har fået et billede, resten bliver her:
 
 1. Lav PNG'erne med Codex (faldgruben om Codex i `CLAUDE.md`: prompten på stdin), og kør

@@ -1,0 +1,63 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Fyrværkeri-muffins",
+  "description": "Bløde vaniljemuffins med hvid glasur og farvet krymmel, der ligner fyrværkeri på nattehimlen. Barnet pisker, fylder formene og pynter.",
+  "image": "grafik/ret-fyrvaerkeri-muffins.webp",
+  "inLanguage": "da",
+  "recipeYield": "12 muffins",
+  "prepTime": "PT25M",
+  "cookTime": "PT18M",
+  "totalTime": "PT1H25M",
+  "recipeIngredient": [
+    "150 g blødt smør",
+    "150 g sukker",
+    "2 æg",
+    "125 g hvedemel",
+    "2 tsk bagepulver",
+    "2 tsk vaniljesukker",
+    "½ dl mælk",
+    "150 g flormelis",
+    "1½ spsk vand",
+    "3 spsk farvet krymmel"
+  ],
+  "tool": ["muffinplade", "12 papirforme", "køkkenvægt", "stor skål", "elpisker eller grydeske", "teske", "spiseske", "målebæger", "to skeer", "lille skål", "grydelapper", "rist"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Tag smørret ud af køleskabet i god tid, så det er blødt. Tænd ovnen på 200 °C (alm. ovn). Muffinsene indeholder gluten, æg og mælk." } },
+    { "@type": "HowToStep", "text": "Sæt 12 papirforme i en muffinplade.", "tumbi": { "verbum": "pynte", "note": "Én papirform i hvert hul." } },
+    { "@type": "HowToStep", "text": "Mål smør og sukker i en stor skål.", "tumbi": { "verbum": "maale", "ikoner": ["smoer", "sukker"], "note": "150 g af hver." } },
+    { "@type": "HowToStep", "text": "Pisk smør og sukker luftigt i 2 minutter.", "tumbi": { "verbum": "piske", "timer_sek": 120, "ikoner": ["smoer", "sukker"], "note": "Med elpisker eller en grydeske, til det er lyst og blødt." } },
+    { "@type": "HowToStep", "text": "Pisk æggene i, ét ad gangen.", "tumbi": { "verbum": "piske", "ikoner": ["aeg"], "note": "Slå æggene ud i en kop først, så der ikke kommer skal i dejen." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter rå æg." } },
+    { "@type": "HowToStep", "text": "Hæld mel, bagepulver og vaniljesukker i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["mel", "bagepulver", "sukker"], "note": "125 g mel, 2 tsk bagepulver og 2 tsk vaniljesukker." } },
+    { "@type": "HowToStep", "text": "Hæld mælken i.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk"], "note": "En halv deciliter." } },
+    { "@type": "HowToStep", "text": "Rør forsigtigt, til melet er væk.", "tumbi": { "verbum": "roere", "note": "Rør kun lige, til dejen er samlet: så bliver muffinsene bløde." } },
+    { "@type": "HowToStep", "text": "Fyld dejen i formene med to skeer.", "tumbi": { "verbum": "haelde", "note": "Fyld dem lidt over halvt op: de hæver i ovnen." } },
+    { "@type": "HowToStep", "text": "Vask hænderne igen.", "tumbi": { "verbum": "vaske-haender", "note": "Dejen har råt æg i: smag ikke på den." } },
+    { "@type": "HowToStep", "text": "Bag muffinsene i 16 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 960, "note": "Midt i ovnen ved 200 °C (eller ca. 20 minutter ved 175 °C varmluft). De er færdige, når en tandstik kommer tør op." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme", "note": "Med grydelapper. Løft muffinsene over på en rist." } },
+    { "@type": "HowToStep", "text": "Lad muffinsene køle helt af.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "Ellers løber glasuren af." } },
+    { "@type": "HowToStep", "text": "Rør flormelis og vand til tyk glasur.", "tumbi": { "verbum": "roere", "ikoner": ["sukker", "vand"], "note": "150 g flormelis og 1½ spsk vand. Kom vandet i lidt ad gangen: glasuren skal være tyk." } },
+    { "@type": "HowToStep", "text": "Smør glasur på muffinsene med en ske.", "tumbi": { "verbum": "smoere", "ikoner": ["sukker"], "note": "En teskefuld på hver, bredt ud med bagsiden af skeen." } },
+    { "@type": "HowToStep", "text": "Drys krymmel over som fyrværkeri.", "tumbi": { "verbum": "drysse", "ikoner": ["krymmel"], "note": "Mens glasuren er våd, så sidder krymlen fast." } },
+    { "@type": "HowToStep", "text": "Smag en fyrværkeri-muffin!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "fyrvaerkeri-muffins",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Dejen er fra Arla: «Muffins med chokoladestykker» (arla.dk) med 150 g smør, 150 g sukker, 2 æg, 125 g mel, 2 tsk bagepulver og en halv deciliter mælk til 12 muffins ved 200 °C i ca. 16 minutter, men med vaniljesukker i stedet for chokolade. Valdemarsro: «Muffins» (valdemarsro.dk) bager tilsvarende muffins ved 175 °C varmluft i ca. 20 minutter. Glasuren og krymlen er egen pynt. Trinene er egen tekst, og tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "smoer", "maengde": "150 g" },
+      { "ikon": "sukker", "maengde": "150 g" },
+      { "ikon": "aeg", "maengde": "2" },
+      { "ikon": "mel", "maengde": "125 g" },
+      { "ikon": "bagepulver", "maengde": "2 tsk" },
+      { "ikon": "sukker", "maengde": "2 tsk" },
+      { "ikon": "maelk", "maengde": "½ dl" },
+      { "ikon": "sukker", "maengde": "150 g" },
+      { "ikon": "vand", "maengde": "1½ spsk" },
+      { "ikon": "krymmel", "maengde": "3 spsk" }
+    ]
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Lille kransekage­tårn",
+  "description": "Et lille tårn til nytårsaften med 8 ringe, som barnet ruller og former med hænderne. Der skal ingen kransekageforme til: ringene lægges på cirkler, der er tegnet på bagepapiret.",
+  "image": "grafik/ret-lille-kransekagetaarn.webp",
+  "inLanguage": "da",
+  "recipeYield": "8 ringe (et lille tårn)",
+  "prepTime": "PT45M",
+  "cookTime": "PT20M",
+  "totalTime": "PT1H50M",
+  "recipeIngredient": [
+    "1 spsk flormelis (til bordet)",
+    "400 g ren rå marcipan (2 pakker)",
+    "120 g flormelis (til dejen)",
+    "3 spsk pasteuriseret æggehvide (fra karton)",
+    "100 g flormelis (til glasuren)",
+    "2 tsk vand"
+  ],
+  "tool": ["blyant", "glas, kopper og skåle i forskellige størrelser (eller en passer)", "lineal", "2 ark bagepapir", "2 bageplader", "køkkenvægt", "stor skål", "spiseske", "teske", "lille skål", "lille frysepose", "saks", "fad"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Den voksne tegner 8 cirkler med blyant på 2 ark bagepapir: de 4 største på det ene ark og de 4 mindste på det andet, med mindst 3 cm imellem. Den mindste er 5 cm bred, og hver ny cirkel er 1 cm bredere, så den største er 12 cm. Vend papiret om på pladerne, så stregen er nedad. Tænd ovnen på 200 °C (alm. ovn). Kransekagen indeholder mandler (marcipanen) og æg." } },
+    { "@type": "HowToStep", "text": "Drys lidt flormelis på bordet.", "tumbi": { "verbum": "drysse", "ikoner": ["sukker"], "note": "Så klistrer dejen ikke, når I ruller." } },
+    { "@type": "HowToStep", "text": "Smuldr marcipanen i en stor skål.", "tumbi": { "verbum": "smuldre", "ikoner": ["marcipan"], "note": "Bræk den i små stykker med fingrene." } },
+    { "@type": "HowToStep", "text": "Hæld 120 g flormelis i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["sukker"] } },
+    { "@type": "HowToStep", "text": "Hæld 3 spsk æggehvide i.", "tumbi": { "verbum": "haelde", "ikoner": ["aeg"], "note": "Pasteuriseret æggehvide fra en karton i køledisken." } },
+    { "@type": "HowToStep", "text": "Ælt dejen i 3 minutter.", "tumbi": { "verbum": "aelte", "timer_sek": 180, "note": "Til den er glat og samlet. Smuldrer den, så kom en halv spiseske æggehvide mere i." } },
+    { "@type": "HowToStep", "text": "Rul dejen til pølser, tykke som en finger.", "tumbi": { "verbum": "rulle", "note": "Ca. 1½ cm tykke. Rul med flade hænder på bordet." } },
+    { "@type": "HowToStep", "text": "Læg en pølse oven på hver cirkel.", "tumbi": { "verbum": "forme", "note": "Start med den største. Knib det overskydende af, og tryk enderne godt sammen, så ringen er lukket." } },
+    { "@type": "HowToStep", "text": "Klem ringene, så toppen bliver spids.", "tumbi": { "verbum": "forme", "note": "Klem forsigtigt med to fingre fra hver side hele vejen rundt." } },
+    { "@type": "HowToStep", "text": "Rul resten af dejen til en lille kugle.", "tumbi": { "verbum": "forme", "note": "Den skal sidde øverst på tårnet. Læg den på pladen med de små ringe." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Dejen har rå æggehvide i: smag ikke på den." } },
+    { "@type": "HowToStep", "text": "Bag den første plade i 10 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "note": "Midt i ovnen ved 200 °C. Ringene skal være lyse gyldne. Er de stadig blege, så giv dem 2-5 minutter mere. En tom plade under giver mindre brun bund." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme", "note": "Lad ringene ligge på papiret: de er bløde, mens de er varme." } },
+    { "@type": "HowToStep", "text": "Bag den anden plade i 10 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "note": "De små ringe bliver hurtigere færdige end de store: kig efter 8 minutter." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Lad ringene køle helt af.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "Først når de er kolde, kan de flyttes uden at knække." } },
+    { "@type": "HowToStep", "text": "Rør flormelis og vand til tyk glasur.", "tumbi": { "verbum": "roere", "ikoner": ["sukker", "vand"], "note": "100 g flormelis og 2 tsk vand. Kom vandet i lidt ad gangen. Glasuren er uden æggehvide, fordi den ikke bliver bagt." } },
+    { "@type": "HowToStep", "text": "Sprøjt glasur i zigzag på hver ring.", "tumbi": { "verbum": "sproejte", "ikoner": ["sukker"], "note": "Kom glasuren i en lille frysepose. Den voksne klipper et meget lille hul i det ene hjørne." } },
+    { "@type": "HowToStep", "text": "Stabl ringene med den største nederst.", "tumbi": { "verbum": "pynte", "note": "Mens glasuren er blød, så limer den ringene sammen. Sæt kuglen øverst. Små flag på tandstikker er pænt." } },
+    { "@type": "HowToStep", "text": "Bræk et stykke af, og smag!", "tumbi": { "verbum": "smage", "note": "Kransekage spises ved midnat: brækket af fra toppen og ned." } }
+  ],
+  "tumbi": {
+    "id": "lille-kransekagetaarn",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Dejen er fra Arla: «Kransekage» (arla.dk) med 500 g marcipan, 150 g flormelis og 75 g æggehvide, regnet om til 400 g marcipan og lidt mindre æggehvide, så dejen er let at rulle. Ringene formes uden forme som hos Skandibaking: «Kransekage» (skandibaking.com), pølser på 1-1½ cm lagt på en tegnet skabelon under bagepapiret og bagt ved 200 °C i ca. 10 minutter. Glasuren er flormelis og vand. Cirklernes størrelse og tiden er et skøn (ikke målt). Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "sukker", "maengde": "1 spsk" },
+      { "ikon": "marcipan", "maengde": "400 g" },
+      { "ikon": "sukker", "maengde": "120 g" },
+      { "ikon": "aeg", "maengde": "3 spsk" },
+      { "ikon": "sukker", "maengde": "100 g" },
+      { "ikon": "vand", "maengde": "2 tsk" }
+    ]
+  }
+}
