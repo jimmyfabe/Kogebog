@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="asparagus" transform="translate(112 126) rotate(-28) scale(0.86)">
+    <g id="spear-left" transform="rotate(-12 0 100)">
+      <path fill="#FFF4E2" d="M-11 -78 L-11 98 C-11 104 11 104 11 98 L11 -78 Z"/>
+      <path fill="#EEDDBF" stroke="none" d="M4 -78 L11 -78 L11 98 C11 101 8 103 4 103 Z"/>
+      <path fill="none" d="M-11 -78 L-11 98 C-11 104 11 104 11 98 L11 -78 Z"/>
+      <path fill="none" stroke-width="2.5" d="M-11 -34 L-3 -27 M11 6 L3 13 M-11 46 L-3 53"/>
+      <path id="tip-left" fill="#ECDFA4" d="M-11 -76 C-13 -96 -7 -112 0 -120 C7 -112 13 -96 11 -76 Z"/>
+      <path fill="none" stroke-width="2.5" d="M-8 -90 L0 -84 L8 -90 M-5 -104 L0 -100 L5 -104"/>
+    </g>
+    <g id="spear-right" transform="rotate(12 0 100)">
+      <path fill="#FFF4E2" d="M-11 -78 L-11 98 C-11 104 11 104 11 98 L11 -78 Z"/>
+      <path fill="#EEDDBF" stroke="none" d="M4 -78 L11 -78 L11 98 C11 101 8 103 4 103 Z"/>
+      <path fill="none" d="M-11 -78 L-11 98 C-11 104 11 104 11 98 L11 -78 Z"/>
+      <path fill="none" stroke-width="2.5" d="M11 -40 L3 -33 M-11 0 L-3 7 M11 40 L3 47"/>
+      <path id="tip-right" fill="#ECDFA4" d="M-11 -76 C-13 -96 -7 -112 0 -120 C7 -112 13 -96 11 -76 Z"/>
+      <path fill="none" stroke-width="2.5" d="M-8 -90 L0 -84 L8 -90 M-5 -104 L0 -100 L5 -104"/>
+    </g>
+    <g id="spear-mid">
+      <path fill="#FFF4E2" d="M-12 -86 L-12 104 C-12 110 12 110 12 104 L12 -86 Z"/>
+      <path fill="#EEDDBF" stroke="none" d="M5 -86 L12 -86 L12 104 C12 107 9 109 5 109 Z"/>
+      <path fill="none" stroke="#FFFFFF" stroke-width="5" d="M-5 -60 L-5 94"/>
+      <path fill="none" d="M-12 -86 L-12 104 C-12 110 12 110 12 104 L12 -86 Z"/>
+      <path fill="none" stroke-width="2.5" d="M-12 -40 L-4 -33 M12 0 L4 7 M-12 40 L-4 47 M12 76 L4 83"/>
+      <path id="tip-mid" fill="#ECDFA4" d="M-12 -84 C-14 -106 -8 -122 0 -130 C8 -122 14 -106 12 -84 Z"/>
+      <path fill="none" stroke-width="2.5" d="M-9 -98 L0 -92 L9 -98 M-6 -113 L0 -108 L6 -113"/>
+    </g>
+  </g>
+  <g id="pieces">
+    <g transform="translate(184 208) rotate(16)">
+      <path fill="#FFF4E2" d="M-20 -10 L20 -10 C25 -10 25 10 20 10 L-20 10 C-25 10 -25 -10 -20 -10 Z"/>
+      <path fill="#EEDDBF" stroke="none" d="M-20 4 L20 4 C23 4 24 8 20 8 L-20 8 Z"/>
+      <path fill="none" stroke-width="2.5" d="M-4 -10 L2 -3"/>
+      <path fill="none" d="M-20 -10 L20 -10 C25 -10 25 10 20 10 L-20 10 C-25 10 -25 -10 -20 -10 Z"/>
+    </g>
+    <g transform="translate(224 176) rotate(-30)">
+      <path fill="#FFF4E2" d="M-16 -9 L16 -9 C20 -9 20 9 16 9 L-16 9 C-20 9 -20 -9 -16 -9 Z"/>
+      <path fill="#EEDDBF" stroke="none" d="M-16 3 L16 3 C19 3 19 7 16 7 L-16 7 Z"/>
+      <path fill="none" d="M-16 -9 L16 -9 C20 -9 20 9 16 9 L-16 9 C-20 9 -20 -9 -16 -9 Z"/>
+    </g>
+  </g>
+</g>
+</svg>

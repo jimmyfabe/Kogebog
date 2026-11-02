@@ -1,0 +1,54 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Waldorfsalat",
+  "description": "Sprød julesalat med æble, bladselleri og vindruer i en let dressing af flødeskum og creme fraiche. Barnet piller druerne og vender salaten. Valnødderne er kun pynt. Allergener: mælk; nødder (valnødder), hvis de kommer på.",
+  "image": "grafik/ret-waldorfsalat.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT20M",
+  "totalTime": "PT50M",
+  "recipeIngredient": [
+    "150 g grønne vindruer uden kerner",
+    "3 stilke bladselleri",
+    "2 æbler",
+    "½ citron",
+    "1 dl piskefløde",
+    "1 dl creme fraiche (18 %)",
+    "1 tsk sukker",
+    "1 knivspids salt",
+    "50 g valnødder (kun til pynt)"
+  ],
+  "tool": ["skærebræt", "lille kniv", "skål", "stor skål", "piskeris", "dejskraber", "teske"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk (fløde og creme fraiche). Valnødderne er kun pynt og kan udelades: nødder er et almindeligt allergen, og hele nødder gives ikke til børn under ca. 3 år." } },
+    { "@type": "HowToStep", "text": "Pil druerne af stilkene.", "tumbi": { "verbum": "pille", "ikoner": ["baer"], "note": "Skyl dem i koldt vand først." } },
+    { "@type": "HowToStep", "text": "Skær druerne i halve.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["baer"], "note": "Hele druer kan sætte sig fast i halsen på små børn, så de skæres over. Barnet kan selv med en butter kniv, mens den voksne ser til." } },
+    { "@type": "HowToStep", "text": "Skær selleri i tynde skiver.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["selleri"], "note": "Skyl stilkene, og skær den nederste ende og bladene fra først." } },
+    { "@type": "HowToStep", "text": "Skær æblerne i små tern.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["aeble"], "note": "Skrællen må gerne sidde på. Skær kernehuset fra, og skær også citronen over." } },
+    { "@type": "HowToStep", "text": "Klem citronsaften ud over æblerne.", "tumbi": { "verbum": "haelde", "ikoner": ["citron"], "note": "Så bliver æblerne ikke brune. Hold en hånd under, så kernerne ikke falder i." } },
+    { "@type": "HowToStep", "text": "Pisk fløden til let skum.", "tumbi": { "verbum": "piske", "ikoner": ["flode"], "note": "I den store skål. Stop, mens skummet stadig er blødt." } },
+    { "@type": "HowToStep", "text": "Rør creme fraiche, sukker og salt i.", "tumbi": { "verbum": "roere", "ikoner": ["yoghurt", "sukker", "salt"] } },
+    { "@type": "HowToStep", "text": "Vend frugt og selleri forsigtigt i dressingen.", "tumbi": { "verbum": "roere", "ikoner": ["baer", "aeble", "selleri"], "note": "Med en dejskraber, nedefra og op, så skummet ikke falder sammen." } },
+    { "@type": "HowToStep", "text": "Lad salaten stå koldt i 30 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "I køleskabet. Salaten kan laves et par timer før." } },
+    { "@type": "HowToStep", "text": "Drys valnødder over, hvis I vil.", "tumbi": { "verbum": "drysse", "ikoner": ["noedder"], "note": "Kun hvis ingen ved bordet er allergisk over for nødder. Barnet brækker dem i mindre stykker med fingrene, og børn under ca. 3 år får ingen nødder." } },
+    { "@type": "HowToStep", "text": "Smag på salaten.", "tumbi": { "verbum": "smage", "note": "Mangler den lidt sødme, så rør en knivspids sukker mere i." } }
+  ],
+  "tumbi": {
+    "id": "waldorfsalat",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne bygger på Arla: «Waldorfsalat» (arla.dk) og Valdemarsro: «Waldorfsalat» (valdemarsro.dk), sat til 4 personer. Valnødderne er gjort til pynt, så salaten kan laves uden nødder. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "baer", "maengde": "150 g" },
+      { "ikon": "selleri", "maengde": "3" },
+      { "ikon": "aeble", "maengde": "2" },
+      { "ikon": "citron", "maengde": "½" },
+      { "ikon": "flode", "maengde": "1 dl" },
+      { "ikon": "yoghurt", "maengde": "1 dl" },
+      { "ikon": "sukker", "maengde": "1 tsk" },
+      { "ikon": "salt", "maengde": "1 knivspids" },
+      { "ikon": "noedder", "maengde": "50 g" }
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<defs>
+  <clipPath id="cone-clip">
+    <path d="M84 126 L172 126 L132 236 Q128 242 124 236 Z"/>
+  </clipPath>
+</defs>
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="cone">
+    <path fill="#E8B26A" d="M84 126 L172 126 L132 236 Q128 242 124 236 Z"/>
+    <path fill="#CF9550" stroke="none" d="M152 126 L172 126 L132 236 Q130 239 128 238 Z"/>
+    <g id="waffle" fill="none" stroke="#B87A3A" stroke-width="3" clip-path="url(#cone-clip)">
+      <path d="M70 140 L150 250 M90 126 L170 236 M114 126 L194 236 M138 126 L218 236"/>
+      <path d="M186 140 L106 250 M166 126 L86 236 M142 126 L62 236 M118 126 L38 236"/>
+    </g>
+    <path fill="none" d="M84 126 L172 126 L132 236 Q128 242 124 236 Z"/>
+  </g>
+  <g id="vanilla-scoop">
+    <path fill="#FFF1CF" d="M80 128 C70 92 96 66 128 66 C160 66 186 92 176 128 C170 136 164 130 158 136 C152 142 146 132 138 138 C130 144 124 134 116 140 C108 146 102 132 96 136 C90 140 84 136 80 128 Z"/>
+    <path fill="#EED9A8" stroke="none" d="M160 76 C176 88 182 108 176 128 C170 136 164 130 158 136 C152 142 146 132 140 136 C160 122 168 100 160 76 Z"/>
+    <path fill="none" stroke="#FFFFFF" stroke-width="6" d="M94 106 C96 92 106 82 120 78"/>
+    <path fill="none" d="M80 128 C70 92 96 66 128 66 C160 66 186 92 176 128 C170 136 164 130 158 136 C152 142 146 132 138 138 C130 144 124 134 116 140 C108 146 102 132 96 136 C90 140 84 136 80 128 Z"/>
+  </g>
+  <g id="chocolate-scoop">
+    <path fill="#8A5A3B" d="M94 76 C86 48 104 24 128 24 C152 24 170 48 162 76 C154 84 146 76 138 82 C130 88 122 78 114 82 C106 86 98 82 94 76 Z"/>
+    <path fill="#6E4429" stroke="none" d="M150 32 C164 42 168 60 162 76 C154 84 146 76 140 80 C154 68 158 50 150 32 Z"/>
+    <path fill="none" stroke="#B07C58" stroke-width="6" d="M106 56 C108 46 114 38 124 34"/>
+    <path fill="none" d="M94 76 C86 48 104 24 128 24 C152 24 170 48 162 76 C154 84 146 76 138 82 C130 88 122 78 114 82 C106 86 98 82 94 76 Z"/>
+  </g>
+</g>
+</svg>

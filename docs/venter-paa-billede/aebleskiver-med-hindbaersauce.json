@@ -1,0 +1,46 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Æbleskiver med hindbærsauce",
+  "description": "Købte frosne æbleskiver, lunet i ovnen, med flormelis og en hjemmelavet hindbærsauce at dyppe i. Barnet hælder og måler til saucen og drysser flormelis. Allergener: æbleskiverne indeholder typisk gluten, mælk og æg (tjek posen).",
+  "image": "grafik/ret-aebleskiver-med-hindbaersauce.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT10M",
+  "cookTime": "PT15M",
+  "totalTime": "PT30M",
+  "recipeIngredient": [
+    "250 g frosne hindbær",
+    "50 g sukker",
+    "2 spsk vand",
+    "1 pose frosne æbleskiver (ca. 20 stk.)",
+    "2 spsk flormelis"
+  ],
+  "tool": ["lille gryde", "køkkenvægt", "spiseske", "grydeske", "lille skål", "plade med bagepapir", "lille si"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Æbleskiverne indeholder typisk hvedemel, mælk og æg: tjek posen. Tænd ovnen, som der står på posen." } },
+    { "@type": "HowToStep", "text": "Hæld de frosne hindbær i en lille gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["baer"] } },
+    { "@type": "HowToStep", "text": "Mål sukker og vand i gryden.", "tumbi": { "verbum": "maale", "ikoner": ["sukker", "vand"], "note": "50 g sukker og 2 spsk vand." } },
+    { "@type": "HowToStep", "text": "Kog saucen i 3 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "ikoner": ["baer"], "note": "Ved middel varme. Start timeren, når det bobler, og rør af og til. Frosne bær fra butikken skal koge mindst 1 minut, før de spises." } },
+    { "@type": "HowToStep", "text": "Hæld saucen i en lille skål.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "note": "Lad den køle af, mens æbleskiverne er i ovnen. Den bliver tykkere, når den er kold." } },
+    { "@type": "HowToStep", "text": "Læg æbleskiverne på en plade med bagepapir.", "tumbi": { "verbum": "pynte", "ikoner": ["broed"], "note": "De må gerne være frosne. Læg dem med lidt luft imellem." } },
+    { "@type": "HowToStep", "text": "Bag æbleskiverne i 10 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "ikoner": ["broed"], "note": "Eller så længe, der står på posen. De er klar, når de er varme helt ind." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Lad æbleskiverne køle af i 3 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 180 } },
+    { "@type": "HowToStep", "text": "Drys flormelis over æbleskiverne.", "tumbi": { "verbum": "drysse", "ikoner": ["sukker"], "note": "Gennem en lille si, så det ligner sne." } },
+    { "@type": "HowToStep", "text": "Dyp en æbleskive i saucen, og smag.", "tumbi": { "verbum": "smage", "ikoner": ["broed", "baer"], "note": "Mærk efter først: æbleskiverne kan stadig være varme inden i." } }
+  ],
+  "tumbi": {
+    "id": "aebleskiver-med-hindbaersauce",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Æbleskiverne er købt frost (ca. 20 stk. i en pose); ovntiden står på posen og er ikke tjekket (tit ca. 200 °C i ca. 10 min). Saucen bygger på Gourministeriet: «Hindbærcoulis» (gourministeriet.dk), her 250 g bær til 50 g sukker. Fødevarestyrelsen anbefaler at koge frosne bær mindst 1 minut, før de spises (foedevarestyrelsen.dk). Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "baer", "maengde": "250 g" },
+      { "ikon": "sukker", "maengde": "50 g" },
+      { "ikon": "vand", "maengde": "2 spsk" },
+      { "ikon": "broed", "maengde": "1 pose" },
+      { "ikon": "sukker", "maengde": "2 spsk" }
+    ]
+  }
+}

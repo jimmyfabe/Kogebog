@@ -1,0 +1,63 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Nytårstorsk med sennepssovs",
+  "description": "Torsk bagt i ovnen med smør og groft salt, som barnet drysser og pynter. Til den hører kartofler, en mild sennepssovs og rødbeder, som det er tradition nytårsaften.",
+  "image": "grafik/ret-nytaarstorsk-med-sennepssovs.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT20M",
+  "cookTime": "PT30M",
+  "totalTime": "PT50M",
+  "recipeIngredient": [
+    "1 kg små kartofler",
+    "2 spsk smør (til sovsen)",
+    "2 spsk hvedemel",
+    "5 dl mælk",
+    "½ tsk salt (til sovsen)",
+    "600 g torskefilet",
+    "½ tsk groft salt",
+    "25 g smør (i klatter)",
+    "1½ spsk sennep (fx sød fransk sennep)",
+    "1 glas syltede rødbeder"
+  ],
+  "tool": ["gryde med låg", "lille gryde", "piskeris", "køkkenvægt", "målebæger", "spiseske", "teske", "ovnfast fad", "køkkenrulle", "lille skål", "grydelapper"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Tænd ovnen på 200 °C (alm. ovn). Frossen torsk skal tø op i køleskabet natten over. Retten indeholder fisk, mælk, gluten (melet) og sennep." } },
+    { "@type": "HowToStep", "text": "Kom kartoflerne i en gryde med koldt vand.", "tumbi": { "verbum": "haelde", "ikoner": ["kartoffel"], "note": "Skyl dem først. Vandet skal lige dække kartoflerne." } },
+    { "@type": "HowToStep", "text": "Kog kartoflerne under låg.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["kartoffel"], "note": "Ca. 20 minutter, efter at vandet koger, til de er møre. De passer sig selv, mens I laver resten." } },
+    { "@type": "HowToStep", "text": "Mål smør, mel og mælk til sovsen.", "tumbi": { "verbum": "maale", "ikoner": ["smoer", "mel", "maelk"], "note": "2 spsk smør, 2 spsk mel og 5 dl mælk." } },
+    { "@type": "HowToStep", "text": "Smelt smørret i en lille gryde.", "tumbi": { "verbum": "smelte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["smoer"], "note": "Ved middel varme." } },
+    { "@type": "HowToStep", "text": "Pisk melet i smørret.", "tumbi": { "verbum": "piske", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["mel"], "note": "Barnet hælder melet i, den voksne pisker." } },
+    { "@type": "HowToStep", "text": "Pisk mælken i, lidt ad gangen.", "tumbi": { "verbum": "piske", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["maelk"], "note": "Pisk hele tiden, så sovsen ikke klumper." } },
+    { "@type": "HowToStep", "text": "Rør salt i, og lad sovsen småkoge.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "ikoner": ["salt"], "note": "En halv teske salt. Lad den småkoge i 5 minutter, og rør en gang imellem. Sluk så for varmen, og læg låg på: sovsen venter, til torsken er færdig." } },
+    { "@type": "HowToStep", "text": "Læg torsken i et fad.", "tumbi": { "verbum": "pynte", "ikoner": ["koed"], "note": "Et fad, der kan tåle ovnen. Dup fisken tør med køkkenrulle først, og læg stykkerne ved siden af hinanden." } },
+    { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Efter rå fisk." } },
+    { "@type": "HowToStep", "text": "Drys groft salt over torsken.", "tumbi": { "verbum": "drysse", "ikoner": ["salt"], "note": "En halv teske, fra oven." } },
+    { "@type": "HowToStep", "text": "Sæt små klatter smør på torsken med en teske.", "tumbi": { "verbum": "pynte", "ikoner": ["smoer"], "note": "25 g smør i små klatter. Rører fingrene fisken, så vask hænderne igen." } },
+    { "@type": "HowToStep", "text": "Hæld rødbederne i en lille skål.", "tumbi": { "verbum": "haelde", "ikoner": ["roedbede"], "note": "Lad lagen blive i glasset." } },
+    { "@type": "HowToStep", "text": "Bag torsken i ovnen i 12 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 720, "note": "Midt i ovnen ved 200 °C. Den er færdig, når den er hvid helt ind og falder fra hinanden i flager. Tynde fileter kan være færdige efter 8 minutter, så kig efter." } },
+    { "@type": "HowToStep", "text": "Tag fadet ud af ovnen.", "tumbi": { "verbum": "tage-ud-form","voksen": true, "voksen_hjaelp": "varme", "note": "Med grydelapper. Fadet er meget varmt." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra kartoflerne.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["kartoffel"], "note": "Dampen er meget varm: barnet står et godt stykke væk fra vasken." } },
+    { "@type": "HowToStep", "text": "Varm sovsen, og rør sennep i.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["sennep"], "note": "1½ spsk sennep, eller mere efter smag. Sovsen må ikke koge, når sennepen er i, for så bliver den bitter." } },
+    { "@type": "HowToStep", "text": "Smag torsken med kartofler, sovs og rødbeder.", "tumbi": { "verbum": "smage", "note": "Den voksne kigger efter ben i fisken først." } }
+  ],
+  "tumbi": {
+    "id": "nytaarstorsk-med-sennepssovs",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Torsken er fra Arla: «Nytårstorsk - bagt torsk med sennepssauce» (arla.dk) med 600 g torsk, 25 g smør, en halv teske groft salt, 200 °C i 12 minutter og 1 kg kartofler. Skagenfood bager også nytårstorsken i 12-14 minutter. Sennepssovsen er fra Madens Verden: «Sennepssovs» (madensverden.dk) med 2 spsk smør, 2 spsk mel og 5 dl mælk, der småkoger i 5 minutter, og sennepen kommer i til sidst. Sød fransk sennep er valgt, fordi den er mild for børn. Trinene er egen tekst, og tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "kartoffel", "maengde": "1 kg" },
+      { "ikon": "smoer", "maengde": "2 spsk" },
+      { "ikon": "mel", "maengde": "2 spsk" },
+      { "ikon": "maelk", "maengde": "5 dl" },
+      { "ikon": "salt", "maengde": "½ tsk" },
+      { "ikon": "koed", "maengde": "600 g" },
+      { "ikon": "salt", "maengde": "½ tsk" },
+      { "ikon": "smoer", "maengde": "25 g" },
+      { "ikon": "sennep", "maengde": "1½ spsk" },
+      { "ikon": "roedbede", "maengde": "1 glas" }
+    ]
+  }
+}

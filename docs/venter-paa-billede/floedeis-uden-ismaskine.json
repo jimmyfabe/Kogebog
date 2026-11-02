@@ -1,0 +1,46 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Flødeis uden ismaskine",
+  "description": "Blød vanilje-flødeis med knuste chokoladestykker, lavet af piskefløde og sødet kondenseret mælk. Uden ismaskine og uden råt æg, og isen skal ikke røres i undervejs. Barnet knuser chokoladen, pisker og vender selv. Start om morgenen eller dagen før. Allergener: mælk.",
+  "image": "grafik/ret-floedeis-uden-ismaskine.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 1¼ liter (8 skåle)",
+  "prepTime": "PT20M",
+  "totalTime": "PT6H30M",
+  "recipeIngredient": [
+    "5 dl piskefløde",
+    "1 dåse sødet kondenseret mælk (397 g)",
+    "2 tsk vaniljesukker",
+    "100 g chokolade, fx mørk"
+  ],
+  "tool": ["frysepose", "kagerulle", "2 skåle", "elpisker", "dåseåbner", "dejskraber", "bøtte med låg (ca. 1½ l)", "isske", "8 skåle"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk. Start om morgenen eller dagen før: isen skal fryse mindst 6 timer." } },
+    { "@type": "HowToStep", "text": "Bræk chokoladen i stykker i en frysepose.", "tumbi": { "verbum": "smuldre", "ikoner": ["chokolade"], "note": "100 g. Luk posen godt." } },
+    { "@type": "HowToStep", "text": "Knus chokoladen med kagerullen.", "tumbi": { "verbum": "kagerulle", "ikoner": ["chokolade"], "note": "Bank forsigtigt på posen, til stykkerne er små som ærter." } },
+    { "@type": "HowToStep", "text": "Pisk fløden til let skum i en stor skål.", "tumbi": { "verbum": "piske", "ikoner": ["flode"], "note": "5 dl. Med elpisker. Stop, når skummet lige kan stå: for stift skum bliver til smør." } },
+    { "@type": "HowToStep", "text": "Hæld den kondenserede mælk i en anden skål.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["maelk"], "note": "Den voksne åbner dåsen: kanten er skarp. Den voksne skraber også dåsen ren med en dejskraber." } },
+    { "@type": "HowToStep", "text": "Rør vaniljesukkeret i mælken.", "tumbi": { "verbum": "roere", "ikoner": ["sukker"], "note": "2 tsk." } },
+    { "@type": "HowToStep", "text": "Vend flødeskummet forsigtigt i mælken.", "tumbi": { "verbum": "roere", "ikoner": ["flode"], "note": "Lidt ad gangen, med en dejskraber. Rør ikke for meget: luften i skummet gør isen blød." } },
+    { "@type": "HowToStep", "text": "Rør det meste af chokoladen i.", "tumbi": { "verbum": "roere", "ikoner": ["chokolade"], "note": "Gem en håndfuld til toppen." } },
+    { "@type": "HowToStep", "text": "Hæld isen i en bøtte med låg.", "tumbi": { "verbum": "haelde", "note": "En bøtte på ca. 1½ liter, der kan tåle frost, fx en tom isbøtte. Er den mindre, så brug to." } },
+    { "@type": "HowToStep", "text": "Drys resten af chokoladen over.", "tumbi": { "verbum": "drysse", "ikoner": ["chokolade"] } },
+    { "@type": "HowToStep", "text": "Sæt bøtten i fryseren i mindst 6 timer.", "tumbi": { "verbum": "vente", "note": "Med låg på, fx fra morgen til aften eller natten over. Der er ingen timer, og isen skal ikke røres i undervejs." } },
+    { "@type": "HowToStep", "text": "Lad bøtten stå på bordet i 10 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Så bliver den let at øse." } },
+    { "@type": "HowToStep", "text": "Øs kugler op i skålene.", "tumbi": { "verbum": "maale", "note": "Med en isske eller en stor ske. Dyp skeen i varmt vand fra hanen, så glider det lettere. Resten kan stå i fryseren med låg på." } },
+    { "@type": "HowToStep", "text": "Smag flødeisen!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "floedeis-uden-ismaskine",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Arla: «Hjemmelavet vaniljeis med kondenseret mælk» (https://www.arla.dk/opskrifter/hjemmelavet-is-med-kondenseret-malk/), 5 dl piskefløde og 1 dåse kondenseret mælk. DR Mad: «Brombæris uden ismaskine» (https://www.dr.dk/mad/opskrift/uden-ismaskine), samme metode og 10 minutter på bordet før serveringen. Vaniljesukker og knust chokolade i stedet for vanilje og bær er vores valg. Den kondenserede mælk skal være sødet (Rema 1000s dåse på 397 g er det: mælk og sukker). Trinene er egen tekst. Tiden i fryseren (mindst 6 timer) er som hos DR; Arla skriver ca. 7 timer. Mængden af is (ca. 1¼ liter: flødeskummet og mælken) er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "flode", "maengde": "5 dl" },
+      { "ikon": "maelk", "maengde": "1 dåse" },
+      { "ikon": "sukker", "maengde": "2 tsk" },
+      { "ikon": "chokolade", "maengde": "100 g" }
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Børnebobler",
+  "description": "Børnenes egen champagne til nytårsaften: æblemost, hyldeblomstsaft og danskvand med blåbær frosset ind i isterningerne. Der er ingen alkohol i.",
+  "image": "grafik/ret-boernebobler.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 8 glas",
+  "prepTime": "PT15M",
+  "totalTime": "PT4H15M",
+  "recipeIngredient": [
+    "125 g friske blåbær",
+    "2 dl vand (til isterningerne)",
+    "5 dl æblemost",
+    "1 dl hyldeblomstsaft (koncentrat)",
+    "1 l danskvand (kold)"
+  ],
+  "tool": ["isterningbakke", "målebæger", "stor kande", "lang ske", "glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Isterningerne skal fryse i mindst 4 timer: lav dem dagen før eller om morgenen. Hyldeblomstsaften er koncentrat, som skal blandes op. Sæt æblemosten og danskvanden på køl. Skyl blåbærrene." } },
+    { "@type": "HowToStep", "text": "Læg et bær i hvert hul i isterningbakken.", "tumbi": { "verbum": "pynte", "ikoner": ["baer"], "note": "Friske blåbær passer i hullerne. Brug ikke frosne bær: de skal koges, før de spises kolde." } },
+    { "@type": "HowToStep", "text": "Hæld vand i bakken.", "tumbi": { "verbum": "haelde", "ikoner": ["vand"], "note": "Lige til kanten af hullerne, så bærrene er dækket." } },
+    { "@type": "HowToStep", "text": "Sæt bakken i fryseren i mindst 4 timer.", "tumbi": { "verbum": "vente", "note": "Gerne til næste dag. Resten laves lige før I skal skåle." } },
+    { "@type": "HowToStep", "text": "Hæld æblemost i en stor kande.", "tumbi": { "verbum": "haelde", "ikoner": ["aeble"], "note": "5 dl." } },
+    { "@type": "HowToStep", "text": "Hæld hyldeblomstsaften i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["sirup"], "note": "1 dl. Smag til med lidt mere, hvis det skal være sødere." } },
+    { "@type": "HowToStep", "text": "Rør det sammen med en lang ske.", "tumbi": { "verbum": "roere" } },
+    { "@type": "HowToStep", "text": "Hæld danskvanden langsomt i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["vand"], "note": "Kold danskvand og lige før I skåler, så boblerne ikke forsvinder. Rør ikke bagefter." } },
+    { "@type": "HowToStep", "text": "Kom to isterninger med bær i hvert glas.", "tumbi": { "verbum": "pynte", "ikoner": ["baer"] } },
+    { "@type": "HowToStep", "text": "Hæld boblerne i glassene.", "tumbi": { "verbum": "haelde", "note": "Hæld langsomt ned ad siden af glasset, så det ikke skummer over." } },
+    { "@type": "HowToStep", "text": "Skål, og sig godt nytår!", "tumbi": { "verbum": "smage", "note": "Bærrene kommer frem, når isen smelter." } }
+  ],
+  "tumbi": {
+    "id": "boernebobler",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Idéen er fra Arla: «Hyldeblomstsaft» (arla.dk), der blander saften op med 4 dele vand, også med danskvand som bobler, og fryser saften i isterningbakker. Blandingen med æblemost og bær i isterningerne er egen opskrift, og forholdet er et skøn (ikke smagt til). Bærrene er friske, fordi Fødevarestyrelsen råder til at koge frosne bær, før de spises kolde. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "baer", "maengde": "125 g" },
+      { "ikon": "vand", "maengde": "2 dl" },
+      { "ikon": "aeble", "maengde": "5 dl" },
+      { "ikon": "sirup", "maengde": "1 dl" },
+      { "ikon": "vand", "maengde": "1 l" }
+    ]
+  }
+}

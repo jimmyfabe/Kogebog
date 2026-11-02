@@ -1,0 +1,48 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Isbombe til nytår",
+  "description": "En rund isbombe med vaniljeis udenpå og chokoladeis inden i, dækket af flødeskum og krymmel. Lavet med købt is i en skål med film: barnet smører, fylder og pynter selv. Start dagen før: bomben skal fryse natten over. Allergener: mælk.",
+  "image": "grafik/ret-isbombe-til-nytaar.webp",
+  "inLanguage": "da",
+  "recipeYield": "8 personer",
+  "prepTime": "PT30M",
+  "totalTime": "PT10H",
+  "recipeIngredient": [
+    "1 l vaniljeis",
+    "¾ l chokoladeis",
+    "2½ dl piskefløde",
+    "3 spsk krymmel"
+  ],
+  "tool": ["skål på ca. 2 l, der kan tåle frost", "film", "ske", "elpisker", "skål", "fad", "dejskraber", "stor kniv"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk. Læs på isens pakke, om den kan have spor af nødder. Start dagen før: bomben skal fryse natten over." } },
+    { "@type": "HowToStep", "text": "Læg film ind i en skål.", "tumbi": { "verbum": "pakke-ind", "note": "En skål på ca. 2 liter, der kan tåle frost. Lad filmen hænge ud over kanten, så bomben er let at få ud." } },
+    { "@type": "HowToStep", "text": "Lad vaniljeisen stå på bordet i 10 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Så bliver den blød nok til at smøre ud." } },
+    { "@type": "HowToStep", "text": "Smør vaniljeisen ud langs skålens sider.", "tumbi": { "verbum": "smoere", "ikoner": ["is"], "note": "Med bagsiden af en ske, ca. 2 cm tykt, hele vejen rundt og i bunden. Der skal være et hul i midten. Glider isen ned ad siderne, så sæt skålen 10 minutter i fryseren, og smør den op igen." } },
+    { "@type": "HowToStep", "text": "Sæt skålen i fryseren i 1 time.", "tumbi": { "verbum": "vente", "timer_sek": 3600, "note": "Så bliver skallen fast." } },
+    { "@type": "HowToStep", "text": "Lad chokoladeisen stå på bordet i 10 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 600 } },
+    { "@type": "HowToStep", "text": "Fyld hullet med chokoladeisen.", "tumbi": { "verbum": "haelde", "ikoner": ["is"], "note": "Tryk den godt ned, og glat toppen ud. Fold filmen hen over." } },
+    { "@type": "HowToStep", "text": "Sæt skålen i fryseren natten over.", "tumbi": { "verbum": "vente", "note": "Mindst 8 timer, så bomben er helt fast. Der er ingen timer: den står bare til i morgen." } },
+    { "@type": "HowToStep", "text": "Pisk fløden til skum.", "tumbi": { "verbum": "piske", "ikoner": ["flode"], "note": "2½ dl. Med elpisker, til skummet kan stå." } },
+    { "@type": "HowToStep", "text": "Vend skålen om på et fad.", "tumbi": { "verbum": "haelde", "note": "Fold filmen til side, læg fadet over skålen, og vend det hele om. Den voksne hjælper: skålen er tung. Træk i filmen, så glider bomben ud." } },
+    { "@type": "HowToStep", "text": "Pil filmen af isbomben.", "tumbi": { "verbum": "pille", "note": "Langsomt, så bomben bliver hel." } },
+    { "@type": "HowToStep", "text": "Smør flødeskum over hele bomben.", "tumbi": { "verbum": "smoere", "ikoner": ["flode"], "note": "Med en dejskraber eller en ske." } },
+    { "@type": "HowToStep", "text": "Drys krymmel over.", "tumbi": { "verbum": "drysse", "ikoner": ["krymmel"] } },
+    { "@type": "HowToStep", "text": "Lad bomben stå i 10 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "På bordet. Så er den lettere at skære." } },
+    { "@type": "HowToStep", "text": "Skær bomben i både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne skærer med en stor kniv dyppet i varmt vand fra hanen. Så ses de to lag." } },
+    { "@type": "HowToStep", "text": "Smag isbomben!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "isbombe-til-nytaar",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift: mængderne og trinene er egen tekst. Idé og frysetid (mindst 8 timer, lavet dagen før) fra Madens Verden, «Isbombe: Kæmpe eskimo» (https://madensverden.dk/isbombe-kaempe-eskimo-solbaer-sirup/), her med købt is i lag i stedet for hjemmelavet is i chokoladeskaller. 10 minutter på bordet før serveringen er som i Arla, «Daim islagkage» (https://www.arla.dk/opskrifter/daim-islagkage/); film i skålen er vores valg (Arla bruger lagkageplast i en springform). Uden stjernekastere: de hører ikke til ved bordet med børn. Tiden i fryseren er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "is", "maengde": "1 l" },
+      { "ikon": "is", "maengde": "¾ l" },
+      { "ikon": "flode", "maengde": "2½ dl" },
+      { "ikon": "krymmel", "maengde": "3 spsk" }
+    ]
+  }
+}

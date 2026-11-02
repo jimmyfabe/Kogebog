@@ -81,6 +81,12 @@ export const KOEN = Object.freeze({
   'mozzarellakugle': 'n', 'oliven': 'n', 'pære': 'n',
   // Julens retter (01-11-2026): «½ appelsin», «1 kanelstang», «1 laurbærblad»
   'appelsin': 'n', 'kanelstang': 'n', 'laurbærblad': 't', 'nellike': 'n', 'sveske': 'n',
+  // Isdesserterne (02-11-2026): «1 banan», «1 småkage»
+  'banan': 'n', 'småkage': 'n',
+  // Julemiddag og julefrokost (02-11-2026): «1 stilk bladselleri», «1 tartelet»
+  'stilk': 'n', 'tartelet': 'n',
+  // Nytår (02-11-2026): «1 clementin» (raket-frugtspyd ved færre portioner)
+  'clementin': 'n',
   // Enhederne i flertal, som skaler.js giver med et halvt («2,5 dåser» er «to og en halv»)
   'dåser': 'n', 'poser': 'n', 'pakker': 'n', 'blad': 't', // «1 blad icebergsalat» ved 1 portion
   'lille': null, 'sort': null, 'orange': null,
@@ -91,12 +97,14 @@ export const KOEN = Object.freeze({
 // ikke. Kønnet står kun i KOEN. Står et ord efter et antal uden enhed i en opskrift, men ikke her, fejler test-skaler.js
 // og nævner ordet: skriv det her med begge former og dets køn i KOEN
 export const NAVNEORD = Object.freeze({
-  'agurk': 'agurker', 'appelsin': 'appelsiner', 'bouillonterning': 'bouillonterninger', 'citron': 'citroner', 'flute': 'flutes',
+  'agurk': 'agurker', 'appelsin': 'appelsiner', 'banan': 'bananer', 'bouillonterning': 'bouillonterninger', 'citron': 'citroner',
+  'clementin': 'clementiner', 'flute': 'flutes',
   'fuldkornsburgerbolle': 'fuldkornsburgerboller', 'fuldkornstortilla': 'fuldkornstortillas',
   'grøntsagsbouillonterning': 'grøntsagsbouillonterninger', 'gulerod': 'gulerødder', 'icebergsalat': 'icebergsalater',
   'kanelstang': 'kanelstænger', 'kartoffel': 'kartofler', 'laksefilet': 'laksefileter', 'laurbærblad': 'laurbærblade',
   'mozzarellakugle': 'mozzarellakugler', 'nellike': 'nelliker', 'peberfrugt': 'peberfrugter',
-  'porre': 'porrer', 'pølse': 'pølser', 'pære': 'pærer', 'sveske': 'svesker', 'tomat': 'tomater', 'tortilla': 'tortillas',
+  'porre': 'porrer', 'pølse': 'pølser', 'pære': 'pærer', 'småkage': 'småkager', 'stilk': 'stilke', 'sveske': 'svesker',
+  'tartelet': 'tarteletter', 'tomat': 'tomater', 'tortilla': 'tortillas',
   'æble': 'æbler',
   // Uændret i flertal
   'løg': 'løg', 'oliven': 'oliven', 'æg': 'æg',
@@ -196,7 +204,7 @@ const UDEN_NAVNEORD = /^(?:\s+(?:til|og|eller)(?!\p{L})|(?!\s+\p{L}))/iu;
 
 function talTilOrd(tekst, ukendte) {
   // Kønnet på det sidst talte navneord: «3 æg (2 til dejen og 1 til pensling)» → «et til pensling». Kun når intet
-  // navneord følger efter tallet: i «1 æg og 1 banan» er «banan» ukendt og meldes, ikke «et banan»
+  // navneord følger efter tallet: i «1 æg og 1 blomkål» er «blomkål» ukendt og meldes, ikke «et blomkål»
   let sidste = null;
   return tekst.replace(MAENGDE, (hele, a, b, enhed, pos, alt) => {
     let koen;

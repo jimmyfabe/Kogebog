@@ -1,0 +1,39 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Is-sandwich med småkager",
+  "description": "En kugle vaniljeis klemt mellem to købte småkager og rullet i krymmel. Ingen kniv og ingen varme: barnet kan næsten det hele selv. Allergener: mælk og hvede, og småkagerne kan have spor af nødder.",
+  "image": "grafik/ret-is-sandwich-med-smaakager.webp",
+  "inLanguage": "da",
+  "recipeYield": "8 stykker",
+  "prepTime": "PT20M",
+  "totalTime": "PT1H30M",
+  "recipeIngredient": [
+    "16 småkager, fx chokoladecookies",
+    "½ l vaniljeis",
+    "3 spsk krymmel"
+  ],
+  "tool": ["fad eller bakke, der kan tåle frost", "bagepapir", "isske eller stor ske", "lille tallerken"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk og hvede. Småkagerne kan have spor af nødder: læs på pakken." } },
+    { "@type": "HowToStep", "text": "Lad isen stå på bordet i 10 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Så er den til at øse. Imens: læg bagepapir på et fad eller en bakke, der kan stå i fryseren." } },
+    { "@type": "HowToStep", "text": "Læg 8 småkager på bagepapiret.", "tumbi": { "verbum": "pynte", "ikoner": ["smaakager"], "note": "Med bunden opad." } },
+    { "@type": "HowToStep", "text": "Kom en kugle is på hver småkage.", "tumbi": { "verbum": "maale", "ikoner": ["is"], "note": "Med en isske eller en stor ske. Dyp skeen i varmt vand fra hanen, så glider isen lettere af." } },
+    { "@type": "HowToStep", "text": "Læg en småkage ovenpå, og tryk let.", "tumbi": { "verbum": "pynte", "ikoner": ["smaakager"], "note": "Tryk, til isen når ud til kanten." } },
+    { "@type": "HowToStep", "text": "Hæld krymmel på en lille tallerken.", "tumbi": { "verbum": "haelde", "ikoner": ["krymmel"] } },
+    { "@type": "HowToStep", "text": "Rul kanten af isen i krymmel.", "tumbi": { "verbum": "rulle", "ikoner": ["krymmel"], "note": "Hold sandwichen på højkant, og trill den rundt i krymmel. Læg den tilbage på bagepapiret." } },
+    { "@type": "HowToStep", "text": "Sæt dem i fryseren i 1 time.", "tumbi": { "verbum": "vente", "timer_sek": 3600, "note": "På fadet. Så bliver isen fast igen." } },
+    { "@type": "HowToStep", "text": "Smag en is-sandwich!", "tumbi": { "verbum": "smage", "note": "Er de meget hårde, så lad dem stå 5 minutter på bordet først." } }
+  ],
+  "tumbi": {
+    "id": "is-sandwich-med-smaakager",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift: mængderne og trinene er egen tekst. Is-sandwich med cookies er en kendt dessert; her med købte cookies, købt vaniljeis og krymmel, så der hverken skal bruges kniv eller varme. Tiden i fryseren er et skøn (ikke målt).",
+    "ingredienser": [
+      { "ikon": "smaakager", "maengde": "16" },
+      { "ikon": "is", "maengde": "½ l" },
+      { "ikon": "krymmel", "maengde": "3 spsk" }
+    ]
+  }
+}
