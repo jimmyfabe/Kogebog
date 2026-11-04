@@ -14,6 +14,9 @@
 - **Set med den rigtige klient kl. 11:14-11:18:** Codex' sessionsfil siger `plan_type: free` (02-11: `plus`). `gpt-6-astra` fra `config.toml` afvises (400). `gpt-6-luna` prøvede en Adobe-forbindelse (`Mcp error -32603`, 0 af 6 billeder), og `gpt-5.6-terra` svarede, at den indbyggede generator ikke findes i sessionen (0 af 1). Forsøgene kostede 14 % af gratisplanens 30-dages kvote, og jeg stoppede dér. `config.toml` er ikke rørt.
 - **Mangler stadig:** 26 retbilleder og 4 pladsholdere (`retter.txt` og `koer-codex2.sh` i kladdemappen `jul-billeder`). 20 er færdige.
 - **Ud af huset:** intet pushet, intet udgivet. `main` er uændret.
+- **Forarbejde uden billeder:** grenen `v7-0411` (arbejdskopi `D:\Claude\.claude\worktrees\kogebog-v7`, commit f7a05a3) har de 26 retter i `opskrifter/`, `index.json`, `FILER` i `sw.js` og gruppen «Jul og nytår». `test-soeg.js` er rettet: tarteletterne er den første juleret med kylling.
+- **Målt på grenen:** `test-opskrifter` melder kun de 26 manglende billeder. Med midlertidige billeder (fjernet igen, ikke committet): «OK: 151 retter», `test-validator` 52 bestået, 0 fejlet. Uden billeder fejler også `test-validator`, `test-sw`, `test-lyd` og `test-version`, så grenen flettes først, når billederne findes. `UDGAVE`, `INDHOLD` og `LYD` er ikke sat. Hele e2e er ikke kørt.
+- **Stemmen:** talelisten er 650 nye og 1 ændret replik (`gruppe-jul`), 0 fjernet. Røst kører i baggrunden fra 04-11 ca. kl. 11:45 (trin 2 i «Stemmen»); trin 3-5 mangler, og forrige liste er gemt som `D:\Stemmer\kogebog-500m\taleliste-v6-02-11.json`.
 
 ## 02-11-2026 kl. 23:34: v6 · 02-11-2026 «Mere grønt i maden» er færdig og grøn, men IKKE pushet (Saga)
 
