@@ -8,6 +8,13 @@
 - (20-10) Godkend Halloween-tegningerne (`halloween-tegninger-22-10.png` på Drev; græskarret kan skaleres til ca. 85 %). Stod senest som «(23-10) Halloween-tegningerne» i listen 31-10.
 - (18-10) Domænet tumbi.dk: skal det købes? Et eget domæne skifter origin, så gemte data på iPad'erne forsvinder, hvis det ikke planlægges.
 
+## 04-11-2026 kl. 19:08: undersøgelse af forsiden, intet bygget (Saga)
+
+- **Afventer Jimmy (04-11):** ja til forsiden, Jul som egen knap, og om alle opskrifter må nås gennem knapperne. Beslutningen står i `docs/forside-undersoegelse-04-11-2026.md` på grenen `v7-0411` (72daa60).
+- **Anbefaling:** del efter slags mad med otte billedknapper; tid på kortet; genre kun i søgningen; lup til den voksne; ugeplanen findes og skal være lettere at finde.
+- **Talt af kommando:** gruppernes størrelse, tiden (67 af 85 aftensretter i 21-45 min), 82 retter kan planlægges. **Skøn eller ikke efterprøvet:** genre- og slags-fordelingen, søgetræffene, pixeltal. **Ikke testet:** om børnene forstår billederne.
+- **Ud af huset:** intet pushet, intet udgivet.
+
 ## 04-11-2026 kl. 11:24: billederne til v7 kunne ikke laves, Codex står som gratis (Saga)
 
 - **Afventer Jimmy (04-11):** vælg billedvej (`D:\Claude\STATUS.md`). Jimmy 04-11: «Den er gratis chatgpt», så Codex-vejen er lukket.
