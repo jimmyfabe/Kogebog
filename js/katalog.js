@@ -177,7 +177,7 @@ export const DYR = {
 // Halloween er sit eget afsnit fra 22-10-2026. Jul står først i index.json fra 01-11-2026, og Halloween er flyttet sidst.
 // Skal retterne tilbage i Bagning, flyttes de i index.json, og 'halloween' kan blive stående her
 export const GRUPPER = {
-  'jul': 'Jul',
+  'jul': 'Jul og nytår',
   'aftensmad': 'Aftensmad',
   'bagning': 'Bagning',
   'soede-sager': 'Søde sager',

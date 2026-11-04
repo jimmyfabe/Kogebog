@@ -107,5 +107,7 @@ test('de rigtige opskrifter: «jul» finder præcis juleretterne, og «Kylling»
   const kylling = soeg(poster, 'kylling').map((p) => p.id);
   assert.ok(kylling.length > 0);
   assert.deepEqual(soeg(poster, 'Kylling').map((p) => p.id), kylling);
-  assert.deepEqual(soeg(poster, 'jul kylling'), []);
+  // Begge ord skal passe: det er de juleretter, der også har kylling (tarteletterne, fra v7).
+  assert.deepEqual(soeg(poster, 'jul kylling').map((p) => p.id), jul.filter((id) => kylling.includes(id)));
+  assert.ok(soeg(poster, 'jul kylling').length < kylling.length);
 });
