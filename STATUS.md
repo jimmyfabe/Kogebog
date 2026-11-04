@@ -10,7 +10,7 @@
 
 ## 04-11-2026 kl. 11:24: billederne til v7 kunne ikke laves, Codex står som gratis (Saga)
 
-- **Afventer Jimmy (04-11):** tjek ChatGPT-abonnementet (punktet står i `D:\Claude\STATUS.md`). Uden Plus kommer der ingen billeder ad den vej.
+- **Afventer Jimmy (04-11):** vælg billedvej (`D:\Claude\STATUS.md`). Jimmy 04-11: «Den er gratis chatgpt», så Codex-vejen er lukket.
 - **Set med den rigtige klient kl. 11:14-11:18:** Codex' sessionsfil siger `plan_type: free` (02-11: `plus`). `gpt-6-astra` fra `config.toml` afvises (400). `gpt-6-luna` prøvede en Adobe-forbindelse (`Mcp error -32603`, 0 af 6 billeder), og `gpt-5.6-terra` svarede, at den indbyggede generator ikke findes i sessionen (0 af 1). Forsøgene kostede 14 % af gratisplanens 30-dages kvote, og jeg stoppede dér. `config.toml` er ikke rørt.
 - **Mangler stadig:** 26 retbilleder og 4 pladsholdere (`retter.txt` og `koer-codex2.sh` i kladdemappen `jul-billeder`). 20 er færdige.
 - **Ud af huset:** intet pushet, intet udgivet. `main` er uændret.
