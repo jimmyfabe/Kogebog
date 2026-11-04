@@ -16,7 +16,7 @@
 - **Ud af huset:** intet pushet, intet udgivet. `main` er uændret.
 - **Forarbejde uden billeder:** grenen `v7-0411` (arbejdskopi `D:\Claude\.claude\worktrees\kogebog-v7`, commit f7a05a3) har de 26 retter i `opskrifter/`, `index.json`, `FILER` i `sw.js` og gruppen «Jul og nytår». `test-soeg.js` er rettet: tarteletterne er den første juleret med kylling.
 - **Målt på grenen:** `test-opskrifter` melder kun de 26 manglende billeder. Med midlertidige billeder (fjernet igen, ikke committet): «OK: 151 retter», `test-validator` 52 bestået, 0 fejlet. Uden billeder fejler også `test-validator`, `test-sw`, `test-lyd` og `test-version`, så grenen flettes først, når billederne findes. `UDGAVE`, `INDHOLD` og `LYD` er ikke sat. Hele e2e er ikke kørt.
-- **Stemmen:** talelisten er 650 nye og 1 ændret replik (`gruppe-jul`), 0 fjernet. Røst kører i baggrunden fra 04-11 ca. kl. 11:45 (trin 2 i «Stemmen»); trin 3-5 mangler, og forrige liste er gemt som `D:\Stemmer\kogebog-500m\taleliste-v6-02-11.json`.
+- **Stemmen:** talelisten er 650 nye og 1 ændret replik (`gruppe-jul`), 0 fjernet. Røst er startet i baggrunden 04-11 inden kl. 11:32 (trin 2 i «Stemmen»); trin 3-5 mangler, og forrige liste er gemt som `D:\Stemmer\kogebog-500m\taleliste-v6-02-11.json`.
 
 ## 02-11-2026 kl. 23:34: v6 · 02-11-2026 «Mere grønt i maden» er færdig og grøn, men IKKE pushet (Saga)
 
