@@ -1195,6 +1195,14 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .ret .handlinger .start { min-width: 0; }
   /* Bunden er én række på 85 px, også med «Fortsæt», plus samme safe-area som bundens padding (21 px på en iPhone på langs) */
   .trin, .ret { --bund: calc(88px + max(8px, env(safe-area-inset-bottom))); }
+  /* Statusskærmene (henter, tom, fejl): figuren på 140 px og knapperne under hinanden skar «Genindlæs siden» (bund 400 af
+     375) og lagde «Til forsiden» under folden på 667×375 (e2e 05-11-2026). Mindre figur, og knapperne står side om side */
+  .status-skaerm { padding: 8px 24px; }
+  .status-boks { max-width: 640px; margin: 0 auto; gap: 8px; }
+  .status-boks h1 { font-size: 26px; }
+  .status-dyr { width: 72px; }
+  .status-boks .status-knapper { margin-top: 4px; }
+  .status-boks .status-knapper .knap.primaer { min-height: 68px; font-size: 24px; padding: 0 26px; }
   /* Færdig: «Læs op» og «Til forsiden» skal kunne ses uden at rulle (på 844×390 lå de 101 px under kanten).
      Mindre billede og overskrift, tættere afstande og knapper på 68 px som bunden på trinene */
   .faerdig-indhold { gap: 6px; padding-bottom: 10px; }
