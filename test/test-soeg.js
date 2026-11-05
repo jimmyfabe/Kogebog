@@ -87,10 +87,19 @@ test('et madord på 3 bogstaver (SLUTORD) står først eller sidst i et ord, ikk
   ];
   const fundet = (t) => soeg(liste, t).map((r) => r.id);
   assert.deepEqual(fundet('mos'), ['a', 'b']);
-  assert.deepEqual(fundet('kål'), ['d']);
+  assert.deepEqual(fundet('kål'), ['d', 'e'], '«Blomkålssuppe» har «kål» foran et s');
   assert.deepEqual(fundet('mel'), ['f']);
   assert.deepEqual(ids('flø'), ['is'], 'begyndelsen af «Flødeis»');
   assert.deepEqual(ids('æbl'), ['gloegg'], 'æ er et bogstav');
+});
+
+test('et madord findes også foran et s midt i et ord, men et andet kort ord gør ikke', () => {
+  for (const [o, d] of [['bær', 'kirsebærsauce'], ['bær', 'hindbærsyltetøj'], ['bær', 'solbærsaft'], ['løg', 'hvidløgspulver'], ['kål', 'blomkålssuppe'], ['kød', 'oksekødsovs']]) {
+    assert.equal(soeg([ret('x', 'Noget', [d], null)], o).length, 1, o + ' i ' + d);
+  }
+  for (const [o, d] of [['and', 'vandskål'], ['rød', 'brødskive'], ['alt', 'saltsten'], ['ing', 'kyllingsbryst']]) {
+    assert.equal(soeg([ret('x', 'Noget', [d], null)], o).length, 0, o + ' i ' + d);
+  }
 });
 
 test('alle madord i SLUTORD findes sidst i et ord', () => {
