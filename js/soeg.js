@@ -4,7 +4,7 @@
 // («Vegetar»). Et ord på mindst 4 bogstaver må stå inde i et andet ord, så «kage» finder «julekage». Et ord på højst 3
 // bogstaver skal stå først i et ord, så «æg» finder «æggekage», men ikke «spejlæg», og «and» ikke finder «vand». Kun
 // madordene i SLUTORD må også stå sidst eller foran et s, så «mos» finder «kartoffelmos» og «bær» finder «kirsebærsauce», med
-// undtagelserne i UNDTAGELSER. Store og små bogstaver er ens, æ, ø og å er ens, uanset hvordan tastaturet har skrevet dem (NFC), og den
+// undtagelserne i UNDTAGELSER. Store og små bogstaver er ens, accenter tæller ikke, æ, ø og å er ens, uanset hvordan tastaturet har skrevet dem (NFC), og den
 // bløde bindestreg i retternes navne (U+00AD, fx «Kyllinge|tærte») tæller ikke.
 
 const KORT_ORD = 3; // højst så mange bogstaver: først i et ord. Flere: hvor som helst

@@ -1,6 +1,6 @@
 // test-soeg.js — søgningen i voksendelens lister og bag lupen på forsiden (js/soeg.js): normaliseringen og soeg(retter,
 // tekst), hvor hvert ord skal findes i navnet, en ingrediens, gruppen, gruppens ekstra søgeord eller et mærke. Ord på højst
-// 3 bogstaver matcher kun ordets begyndelse, og kun madordene i SLUTORD også slutningen, med undtagelser for fem korte ord.
+// 3 bogstaver matcher kun ordets begyndelse, og kun madordene i SLUTORD også slutningen og foran et s, med undtagelser for seks korte ord.
 // Til sidst de rigtige opskrifter: «jul» finder præcis juleretterne, og «and» finder ikke vand.
 // Kør:  node test/test-soeg.js
 import { test } from 'node:test';

@@ -29,7 +29,7 @@ De 89 retter fra de gamle grupper Aftensmad (85) og Bagning (4) er fordelt på d
 
 ## Søgereglen for korte ord
 
-Et ord på mindst 4 bogstaver må stå inde i et ord. Et ord på højst 3 bogstaver skal stå først i et ord. Kun madordene kål, bær, mos, mel, ost, ris, kød, løg og dej (`SLUTORD` i `js/soeg.js`) må også stå sidst. Undtagelser: «is» finder også ord, der slutter på «eis» (vaniljeis, flødeis), men ikke flormelis, gris eller ris. «ris» tæller ikke «gris» og «pris», «mel» ikke «krymmel» og «julekrymmel», «kål» ikke «skål» og «risskål», og «ost» ikke «frost» og «æblemost».
+Et ord på mindst 4 bogstaver må stå inde i et ord. Et ord på højst 3 bogstaver skal stå først i et ord. Kun madordene kål, bær, mos, mel, ost, ris, kød, løg, dej, dip og fad (`SLUTORD` i `js/soeg.js`) må også stå sidst eller foran et s midt i ordet («kirsebærsauce», «hvidløgspulver»). «nød» må stå hvor som helst (muskatnød, valnødder, pebernødder). Accenter tæller ikke («tomatpure» finder «tomatpuré»), men å og a er to bogstaver. Punktum, semikolon og kolon skiller ord ligesom komma. Undtagelser: «is» finder også ord, der slutter på «eis» (vaniljeis, flødeis), men ikke flormelis, gris eller ris. «ris» tæller ikke «gris» og «pris», «mel» ikke «krymmel» og «julekrymmel», «kål» ikke «skål» og «risskål», og «ost» ikke «frost» og «æblemost».
 
 Listen er over det tilladte, fordi en regel om, at alle ord på 3 bogstaver måtte stå sidst, gav for mange falske træf: «and» 75 retter (vand), «rød» 37 (brød, sprød, risengrød), «alt» 87 (salt), «mad» 84 (aftensmad) og «ing» 61 (kylling, honning). En liste over forbudte ord vokser uden ende.
 
@@ -39,12 +39,12 @@ Træf på de 151 retter, med navn, ingredienser og gruppe som lupen (uden famili
 |---|---:|---:|---|
 | is | 5 | 6 | vaniljeis, flødeis, chokoladeis |
 | kål | 5 | 12 | blomkål, kødkål, hvidkål, rosenkål, spidskål, rødkål |
-| bær | 2 | 9 | hindbær, blåbær, tranebær, kirsebær |
+| bær | 2 | 12 | hindbær, blåbær, tranebær, kirsebær, kirsebærsauce, hindbærsyltetøj, solbærsaft |
 | mos | 0 | 1 | kartoffelmos |
 | ost | 29 | 31 | flødeost, hytteost |
 | ris | 18 | 21 | gryderis, jasminris, ostris, grødris |
 | kød | 17 | 21 | oksekød, grisekød, svinekød, kalvekød |
-| løg | 23 | 24 | hvidløg |
+| løg | 23 | 32 | hvidløg, hvidløgspulver |
 | mel | 3 | 41 | hvedemel, grahamsmel, fuldkornshvedemel, durummel, kokosmel |
 | and | 2 | 2 | intet: ikke vand og danskvand |
 | rød | 15 | 15 | intet: ikke brød, sprød og risengrød |
@@ -52,6 +52,12 @@ Træf på de 151 retter, med navn, ingredienser og gruppe som lupen (uden famili
 | mad | 11 | 11 | intet: ikke aftensmad |
 | ing | 2 | 2 | intet: ikke kylling og honning |
 | dej | 4 | 12 | butterdej, pizzadej |
+| nød | 0 | 8 | muskatnød, valnødder, hasselnødder, pebernødder |
+| dip | 1 | 2 | skyrdip |
+| fad | 2 | 3 | tomatfad |
+| tomatpure | 0 | 9 | tomatpuré, uden accent |
+| ribsgele | 0 | 4 | ribsgelé, uden accent |
+| rosti | 0 | 1 | rösti, uden prikker |
 
 Ingen af de nye træf er falske. De falske træf, der er tilbage, stod der også før, for ordet begynder med søgeordet: «mel» finder «melede kartofler» og «mellemstore», «rød» finder «rødspætte», «mad» finder «madlavningsfløde» og «madkulør», og «alt» finder «i alt». Det er kun nogle retter for meget på listen. Rammer et ord forbi, står det som en undtagelse i `UNDTAGELSER` i `js/soeg.js`.
 
