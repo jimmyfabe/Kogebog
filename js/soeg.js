@@ -12,7 +12,7 @@ const KORT_ORD = 3; // højst så mange bogstaver: først i et ord. Flere: hvor 
 // Ordene på 3 bogstaver, der også må stå sidst i et ord. Listen er over det tilladte, ikke over det forbudte: en regel om,
 // at alle ord på 3 bogstaver måtte stå sidst, gav for mange falske træf («and» i vand, «rød» i brød, «alt» i salt), og en
 // liste over dem vokser uden ende
-const SLUTORD = new Set(['kål', 'bær', 'mos', 'mel', 'ost', 'ris', 'kød', 'løg', 'dej']);
+const SLUTORD = new Set(['kål', 'bær', 'mos', 'mel', 'ost', 'ris', 'kød', 'løg', 'dej', 'dip', 'fad']);
 
 // Søgeordene, hvor reglen rammer forbi. «slutning»: den slutning, ordet også må findes på, i stedet for ordet selv.
 // «ikke»: hele ord, der ikke tæller. «inde»: ordet må stå hvor som helst, ligesom et langt ord

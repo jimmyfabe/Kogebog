@@ -93,8 +93,8 @@ test('et madord på 3 bogstaver (SLUTORD) står først eller sidst i et ord, ikk
   assert.deepEqual(ids('æbl'), ['gloegg'], 'æ er et bogstav');
 });
 
-test('alle ni madord i SLUTORD findes sidst i et ord', () => {
-  for (const [o, d] of [['kål', 'blomkål'], ['bær', 'blåbær'], ['mos', 'kartoffelmos'], ['mel', 'hvedemel'], ['ost', 'hytteost'], ['ris', 'jasminris'], ['kød', 'oksekød'], ['løg', 'hvidløg'], ['dej', 'butterdej']]) {
+test('alle madord i SLUTORD findes sidst i et ord', () => {
+  for (const [o, d] of [['kål', 'blomkål'], ['bær', 'blåbær'], ['mos', 'kartoffelmos'], ['mel', 'hvedemel'], ['ost', 'hytteost'], ['ris', 'jasminris'], ['kød', 'oksekød'], ['løg', 'hvidløg'], ['dej', 'butterdej'], ['dip', 'skyrdip'], ['fad', 'tomatfad']]) {
     assert.equal(soeg([ret('x', 'Noget', [d], null)], o).length, 1, o + ' i ' + d);
     assert.equal(soeg([ret('x', 'Noget', [d + 'e'], null)], o).length, 0, o + ' inde i ' + d + 'e');
   }
