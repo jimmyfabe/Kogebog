@@ -125,6 +125,18 @@ test('undtagelserne: «mel», «kål» og «ost» tæller ikke krymmel, skål og
   assert.deepEqual(fundet('krymmel'), ['krymmel', 'jul'], 'ordet selv findes stadig');
 });
 
+// «Ingen retter passer til «nød»» må en voksen, der tjekker for nødder, ikke få, når 8 af 151 retter har nødder
+test('undtagelsen: «nød» må stå hvor som helst i et ord', () => {
+  const liste = [
+    ret('muskat', 'Kartoffelmos', ['muskatnød'], null), ret('val', 'Småkager', ['valnødder'], null), ret('peber', 'Pebernødder', [], null),
+    ret('hassel', 'Kage', ['hasselnødder'], null), ret('nodde', 'Nøddekage', [], null), ret('boller', 'Boller', ['hvedemel'], null),
+  ];
+  const fundet = (t) => soeg(liste, t).map((r) => r.id);
+  assert.deepEqual(fundet('nød'), ['muskat', 'val', 'peber', 'hassel', 'nodde']);
+  assert.deepEqual(fundet('NØD'), fundet('nød'));
+  assert.deepEqual(fundet('nødder'), ['val', 'peber', 'hassel']);
+});
+
 test('flere ord: hvert ord skal findes (OG), i hvert sit felt eller samme', () => {
   assert.deepEqual(ids('jul vegetar'), ['ris']);
   assert.deepEqual(ids('kylling butterdej'), ['taerte']);

@@ -15,13 +15,14 @@ const KORT_ORD = 3; // højst så mange bogstaver: først i et ord. Flere: hvor 
 const SLUTORD = new Set(['kål', 'bær', 'mos', 'mel', 'ost', 'ris', 'kød', 'løg', 'dej']);
 
 // Søgeordene, hvor reglen rammer forbi. «slutning»: den slutning, ordet også må findes på, i stedet for ordet selv.
-// «ikke»: hele ord, der ikke tæller
+// «ikke»: hele ord, der ikke tæller. «inde»: ordet må stå hvor som helst, ligesom et langt ord
 const UNDTAGELSER = new Map([
   ['is', { slutning: 'eis' }], // vaniljeis og flødeis, men ikke flormelis, gris eller ris
   ['ris', { ikke: ['gris', 'pris'] }], // grødris og jasminris, men ikke gris og pris
   ['mel', { ikke: ['krymmel', 'julekrymmel'] }], // hvedemel, men ikke krymmel på kager
   ['kål', { ikke: ['skål', 'risskål'] }], // blomkål, men ikke en sushi-skål
   ['ost', { ikke: ['frost', 'æblemost'] }], // hytteost, men ikke bær på frost
+  ['nød', { inde: true }], // muskatnød, valnødder, pebernødder: en voksen, der tjekker for nødder, må ikke få «ingen retter»
 ]);
 
 // Teksten, som der søges i og med: uden blød bindestreg, små bogstaver, NFC og ét mellemrum mellem ordene. NFC efter
@@ -50,8 +51,8 @@ export function soegeTekst(ret) {
 // Findes ordet i teksten? [...ord]: et bogstav uden for BMP tæller som ét. Søgeordet bruges aldrig som et regulært udtryk,
 // så «(» og «.*» bare ikke findes. \p{L}: \b kender kun a-z i WebKit, og «æg» står også først i et ord
 function ordFindes(o, t) {
-  if ([...o].length > KORT_ORD) return t.includes(o);
   const undtagelse = UNDTAGELSER.get(o) ?? {};
+  if ([...o].length > KORT_ORD || undtagelse.inde) return t.includes(o);
   const slutning = undtagelse.slutning ?? (SLUTORD.has(o) ? o : null);
   const ikke = undtagelse.ikke ?? [];
   return t.split(/[^\p{L}\p{N}]+/u).some((d) => !ikke.includes(d) && (d.startsWith(o) || (slutning !== null && d.endsWith(slutning))));
