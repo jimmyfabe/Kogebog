@@ -759,7 +759,8 @@ async function migrering(browser, H) {
   const { BASE, RETTER, SKAERME, nySide, tjek, venterPaa, tryk } = H;
   const n = SKAERME[0].navn;
   console.log('[' + n + '] voksendelen: data fra v3 indlæses uden tab');
-  const IPLAN = ugeplanRetter(RETTER);
+  // RET må ikke stå i ugeplanen: dagens antal gælder før husstanden, og testen nedenfor ser retten «uden husstand»
+  const IPLAN = ugeplanRetter(RETTER).filter((id) => id !== RET);
   const uge = planMandag(new Date());
   const dage = [{ ret: IPLAN[2], af: 'rosa', n: 5 }, null, null, { ret: IPLAN[4], af: 'pip', n: 2 }, null, null, null];
   const kode = kod(uge, dage.map((d) => (d ? { ret: d.ret, n: d.n } : null)));
