@@ -742,6 +742,28 @@ test('favoritterne med en låst familie: skærmen siger, at de ikke kan vises, o
   assert.equal(lageret.get('kog-familie-v1'), gemt, 'en nyere udgaves data er urørt');
 });
 
+// En app på hjemmeskærmen har ingen genindlæs-knap, så teksten «Genindlæs siden» var en blindgyde uden knappen her
+test('favoritterne med en låst familie: «Genindlæs siden» genindlæser, og adressen og data er urørt', async () => {
+  const gemt = JSON.stringify({ v: 999, favoritter: ['koedsovs'] });
+  let genindlaest = 0;
+  lokation.reload = () => { genindlaest++; };
+  try {
+    await start('#/gruppe/' + FAVORITTER, { foer: () => { lageret.set('kog-familie-v1', gemt); } });
+    const b = knapMedTekst('Genindlæs siden');
+    assert.ok(b, 'knappen findes');
+    assert.ok(b.classList.contains('primaer'), 'mindst 48 px: test-css.js måler .knap.primaer');
+    assert.equal(genindlaest, 0, 'først, når der trykkes');
+    tryk(b);
+    assert.equal(genindlaest, 1);
+    assert.equal(location.hash, '#/gruppe/' + FAVORITTER);
+    assert.deepEqual(skrivninger, []);
+    assert.equal(lageret.get('kog-familie-v1'), gemt, 'en nyere udgaves data er urørt');
+    assert.ok(knapMedTekst('Til forsiden'), 'vejen til forsiden er der stadig');
+  } finally {
+    delete lokation.reload;
+  }
+});
+
 // ---------- Blandingen: det, der vælges og vises først ----------
 // index.json står efter gruppe, og de 23 pastaretter står først. Uden blandingen var de 20 første retter i planen pasta
 

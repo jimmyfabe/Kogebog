@@ -201,6 +201,13 @@ test('lupen er mindst 48 px på alle skærme, og Rosa og Bo giver plads til den 
   for (let b = 360; b <= 559; b++) assert.equal(gaeldende(rod, '.forside-top > .forside-dyr', b, 1000).display, 'none', b + ' px');
 });
 
+test('hovedknappen på statusskærmene (.knap.primaer) er mindst 48 px på alle skærme (regel 9)', () => {
+  const rod = blokke(CSS);
+  for (const [b, h] of [[1180, 820], [820, 1180], [390, 844], [360, 640], [844, 390], [667, 375]]) {
+    assert.ok(pxTal(gaeldende(rod, '.knap.primaer', b, h)['min-height']) >= 48, b + '×' + h);
+  }
+});
+
 test('gruppeskærmen har luft under sidste række på alle skærme', () => {
   const rod = blokke(CSS);
   const bund = (padding) => {
