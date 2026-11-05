@@ -2,7 +2,7 @@
 // Ruterne står i adressen (#/gruppe/<id>, #/ret/<id>/trin/<nr>), så tilbage-knappen og en genindlæsning virker. Retten med
 // mere grønt (js/groent.js) har «/groen» efter id'et (#/ret/<id>/groen/trin/<nr>).
 // Al tekst fra opskrifterne sættes som tekst (textContent), aldrig som HTML.
-import { el, attr, ikon, svgEl } from './js/dom.js';
+import { el, attr, ikon, svgEl, ledLinje } from './js/dom.js';
 import { hentIndex, hentRet } from './js/data.js';
 import * as Tale from './js/tale.js';
 import * as R from './js/replikker.js';
@@ -443,8 +443,8 @@ function retSkaerm(m) {
   const tid = m.minutter ? minutterTekst(m.minutter) : '';
   // Regnet om: «Til 6 portioner» i stedet for opskriftens «4 personer», markeret som de skalerede mængder
   const meta = sk
-    ? el('p', { class: 'meta' }, el('span', { class: 'skaleret', tekst: 'Til ' + portionerTekst(sk.n) }), tid ? ' · ' + tid : null)
-    : (m.portioner || tid ? el('p', { class: 'meta', tekst: [m.portioner, tid].filter(Boolean).join(' · ') }) : null);
+    ? ledLinje('p', { class: 'meta' }, [el('span', { class: 'skaleret', tekst: 'Til ' + portionerTekst(sk.n) }), tid])
+    : (m.portioner || tid ? ledLinje('p', { class: 'meta' }, [m.portioner, tid]) : null);
   const linjer = m.ingredienser.map((x, i) => (sk ? skaleretIngrediens(m, i, sk.faktor) : { maengde: x.maengde, navn: x.navn, tekst: x.tekst, skaleret: false }));
   // Linjerne til den voksne under titlen: at retten er med mere grønt, og hvad mængderne er regnet om til
   const noter = [...(m.erGroen ? [GROENT_TEKST] : []), ...(sk ? voksenNoter(m, sk.faktor, linjer) : [])];

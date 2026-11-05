@@ -9,7 +9,7 @@
 // Koden i linket kommer udefra. Den går kun gennem afkod() i js/plankode.js, og intet fra adressen kommer i DOM'en: fejlene
 // er faste tekster, og listen gemmes med den genskrevne kode. Lageret røres kun gennem js/lager.js, og al tekst sættes
 // som tekst (js/dom.js). app.js ejer ruterne og tilstanden (S) og giver sine hjælpere med init().
-import { el, ikon } from './dom.js';
+import { el, ikon, ledLinje } from './dom.js';
 import * as Lager from './lager.js';
 import { afkod, kod, kodeFraTekst, ukendtTekst, BESKED_UGYLDIG, BESKED_NYERE, BESKED_GAMMEL } from './plankode.js';
 import { saml, grupper, tekst as listeTekst, manglerTekst, holdSammen } from './indkoeb.js';
@@ -385,7 +385,7 @@ function listeSkaerm(liste) {
         K.billede(grafikRet(m.id), '', 'ret-link-billede'),
         el('span', { class: 'vare-tekst' },
           el('span', { class: 'vare-navn', tekst: m.navn }),
-          el('span', { class: 'vare-maengde', tekst: DAGE[i] + ' ' + dagDato(r.uge, i) + ' · ' + d.n + ' pers.' }))));
+          ledLinje('span', { class: 'vare-maengde' }, [DAGE[i] + ' ' + dagDato(r.uge, i), d.n + ' pers.']))));
     }).filter(Boolean);
     if (!links.length) return null;
     return el('section', { class: 'afd', 'aria-labelledby': 'afd-retter' },
@@ -446,16 +446,17 @@ export function sorterValg(retter, { kniv = false, billig = false } = {}) {
 }
 
 // Tid, pris, grønt, kniv og «mere grønt» (derfor er prisen lavere) i én linje, som oversigten og valget viser dem. Hvert led
-// holdes sammen med hårde mellemrum, og prikken står sidst på linjen, så linjen kun brydes mellem leddene: før stod der
-// «268 g grønt pr. | person» og «· 2 knivtrin» alene (UI-review V5, 23-10)
-function metaTekst(m, n) {
-  return [
+// holdes sammen med hårde mellemrum, så linjen kun brydes mellem leddene: før stod der «268 g grønt pr. | person» og
+// «· 2 knivtrin» alene (UI-review V5, 23-10). Prikken skjules, hvor linjen brydes (ledLinje i js/dom.js)
+const SKILLE_HEL = '\u00a0· ';
+function metaLinje(m, n) {
+  return ledLinje('span', { class: 'dag-meta' }, [
     m.minutter ? minutterTekst(m.minutter) : '',
     'ca. ' + Math.round(prisFor(m, n)) + ' kr.',
     Math.round(m.uge.groentG / m.uge.portioner) + ' g grønt pr. person',
     knivTekst(m),
     m.erGroen ? 'mere grønt' : '',
-  ].filter(Boolean).map((led) => led.replace(/ /g, '\u00a0')).join('\u00a0· ');
+  ].filter(Boolean).map((led) => led.replace(/ /g, '\u00a0')), SKILLE_HEL);
 }
 
 // Planen, som skærmen viser den. Den læses med alle id'erne fra index.json, så en dag, hvis opskrift ikke kunne hentes,
@@ -551,7 +552,7 @@ function dagRaekke(p, d, i) {
     K.billede(grafikRet(m.id), '', 'dag-billede'),
     el('div', { class: 'dag-ret' },
       el('span', { class: 'dag-ret-navn', tekst: m.navn }),
-      el('span', { class: 'dag-meta', tekst: metaTekst(m, d.n) }),
+      metaLinje(m, d.n),
       el('span', { class: 'dag-af' }, K.billede(grafikDyr(d.af), '', 'dag-dyr'), el('span', { tekst: 'Valgt af ' + dyrNavn(d.af) }))),
     el('div', { class: 'dag-knapper' }, portioner, byt, fjern));
 }
@@ -636,7 +637,7 @@ function oversigtSkaerm() {
     if (m.uge.groentG > 0) groent++;
   }
   // Hårde mellemrum i begge led: på 360 px stod «dage» alene på næste linje (UI-review V6, 23-10)
-  const sum = harRetter ? 'Ca.\u00a0' + Math.round(kr / 10) * 10 + '\u00a0kr.\u00a0· grønt\u00a0' + groent + '\u00a0af\u00a07\u00a0dage' : 'Ingen retter endnu';
+  const sum = harRetter ? ['Ca.\u00a0' + Math.round(kr / 10) * 10 + '\u00a0kr.', 'grønt\u00a0' + groent + '\u00a0af\u00a07\u00a0dage'] : ['Ingen retter endnu'];
   // Et link til en uge mere end 8 uger fra i dag afviser afkod (på telefonen og på #/hent/ her). Så er «Indkøbsliste» og
   // «Send til telefon» væk, og advarslen siger, hvad den voksne gør; «Del som tekst» og «Print» virker stadig (U4, 23-10)
   const kanSendes = !harRetter || afkod(data.kode, { retter: K.S.ids, idag: new Date() }).ok;
@@ -695,12 +696,12 @@ function oversigtSkaerm() {
     el('div', { class: 'uge' },
       el('header', { class: 'uge-hoved' },
         el('h1', { tabindex: '-1', tekst: 'Ugeplan' }),
-        el('p', { class: 'uge-nr', tekst: 'Uge ' + ugeNr(uge) + ' · ' + dagDato(uge, 0) + '–' + dagDato(uge, 6) })),
+        ledLinje('p', { class: 'uge-nr' }, ['Uge ' + ugeNr(uge), dagDato(uge, 0) + '–' + dagDato(uge, 6)])),
       advarsel ? el('p', { class: 'uge-advarsel', role: 'status', tekst: advarsel }) : null,
       indstillinger,
       el('ol', { class: 'uge-dage', role: 'list', 'aria-label': 'Ugens dage' }, p.dage.map((d, i) => dagRaekke(p, d, i))),
       el('div', { class: 'uge-bund' },
-        el('p', { class: 'uge-sum', tekst: sum }),
+        ledLinje('p', { class: 'uge-sum' }, sum, SKILLE_HEL),
         harRetter ? null : el('p', { class: 'uge-tom', tekst: 'Vælg mindst én ret, så kan listen sendes til telefonen.' })),
       hoved.length ? el('div', { class: 'uge-knapper uge-handlinger' }, hoved) : null,
       andre.length ? el('div', { class: 'uge-knapper' }, andre) : null,
@@ -785,7 +786,7 @@ function dagSkaerm(i) {
         el('div', { class: 'dag-ret' },
           el('span', { class: 'dag-ret-navn', tekst: m.navn }),
           K.lynTekst(m),
-          el('span', { class: 'dag-meta', tekst: metaTekst(m, n) }),
+          metaLinje(m, n),
           valgt ? el('span', { class: 'dag-af', tekst: 'Står på ' + navn + ' nu' }) : null),
         medFokus(K.knap(valgt ? 'Behold' : 'Vælg', { klasse: 'lille vaelg-ret', ikonNavn: 'tjek', label: (valgt ? 'Behold ' : 'Vælg ') + m.navn + ' til ' + navn,
           onclick: () => vaelg(m) }), 'vaelg-' + m.id),
@@ -798,7 +799,7 @@ function dagSkaerm(i) {
     el('div', { class: 'uge' },
       el('header', { class: 'uge-hoved' },
         el('h1', { tabindex: '-1', tekst: 'Vælg ret til ' + navn }),
-        el('p', { class: 'uge-nr', tekst: DAGE[i] + ' ' + dagDato(p.uge || planMandag(), i) + ' · ' + n + ' pers.' })),
+        ledLinje('p', { class: 'uge-nr' }, [DAGE[i] + ' ' + dagDato(p.uge || planMandag(), i), n + ' pers.'])),
       el('div', { class: 'dag-vaerktoej' },
         K.knap('Tilbage til ugeplanen', { klasse: 'lille', ikonNavn: 'tilbage', onclick: () => K.naviger('#/uge') }),
         chips),

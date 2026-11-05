@@ -34,6 +34,42 @@ export function sideTitel(tekst) {
   document.title = utenBloede(tekst);
 }
 
+// En linje med led adskilt af « · » (personer · tid). Brydes linjen mellem to led, skal prikken ikke stå alene for enden
+// af linjen («1 t · ca. 98 kr. ·»). Hvor linjen brydes, kan CSS ikke vide: det måles efter layoutet og igen, når bredden
+// ændrer sig. textContent er den samme, uanset hvor linjen brydes. skille: teksten mellem leddene
+export function ledLinje(tag, attrs, leder, skille = ' · ') {
+  const vist = leder.filter(Boolean);
+  const e = el(tag, attrs, vist.map((led, i) => [
+    i ? el('span', { class: 'led-skille', tekst: skille }) : null,
+    el('span', { class: 'led' }, led),
+  ]).flat());
+  if (vist.length > 1) foelgBrud(e);
+  return e;
+}
+
+let brudVagt = null;
+function foelgBrud(e) {
+  if (typeof ResizeObserver !== 'function') return; // ældre browsere beholder prikken
+  brudVagt ??= new ResizeObserver((poster) => { for (const p of poster) saetBrud(p.target); });
+  brudVagt.observe(e);
+}
+
+// Først måles alle med prikkerne på plads, så skjules de. En skjult prik bryder linjen samme sted (.led-skille.brudt
+// i app.css), så teksten ikke flytter sig, og det samme mål giver det samme hver gang
+function saetBrud(e) {
+  if (!e.isConnected) { brudVagt.unobserve(e); return; }
+  const skillere = e.querySelectorAll(':scope > .led-skille');
+  for (const s of skillere) s.classList.remove('brudt');
+  const brudte = [...skillere].filter((s) => {
+    const foer = s.previousElementSibling.getClientRects();
+    const efter = s.nextElementSibling.getClientRects();
+    if (!foer.length || !efter.length) return false;
+    const sidst = foer[foer.length - 1];
+    return efter[0].top > (sidst.top + sidst.bottom) / 2;
+  });
+  for (const s of brudte) s.classList.add('brudt');
+}
+
 // Faste streg-ikoner (24 × 24). Stierne står her i koden og kommer aldrig fra data.
 const IKONER = {
   hjem: ['M3.5 11.5 12 4.5l8.5 7', 'M6 10v9.5h12V10', 'M10 19.5v-5h4v5'],
