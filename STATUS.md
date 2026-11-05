@@ -8,6 +8,15 @@
 - (20-10) Godkend Halloween-tegningerne (`halloween-tegninger-22-10.png` på Drev; græskarret kan skaleres til ca. 85 %). Stod senest som «(23-10) Halloween-tegningerne» i listen 31-10.
 - (18-10) Domænet tumbi.dk: skal det købes? Et eget domæne skifter origin, så gemte data på iPad'erne forsvinder, hvis det ikke planlægges.
 
+## 05-11-2026 kl. 04:33: stemmen til v7 er færdig på grenen, billederne mangler stadig (Saga)
+
+- **Afventer Jimmy (04-11):** vælg billedvej (30 billeder) · ja til forsiden, Jul som egen knap, og om alle opskrifter må nås gennem knapperne.
+- **Lavet:** seed 43 og 44 lavede de 474 mistænkelige (474 + 474 i `koersel-log.txt`, intet lavet om efter genstarten). Trin 4: 4303 mp3. ASR-valget er lagt oven på (49 + 3 andre udgaver, 27 fra appen, 0 stop på ændret tekst). Trin 5: 4303 lydfiler, 87,89 MB. 276 mp3 med uændret tekst er gendannet fra HEAD, tilbage er 650 nye og `gruppe-jul`. `LYD` er sat. Commit febe44b på `v7-0411`.
+- **Målt:** `test-lyd` 11 bestået, 0 fejlet. `test-sw` 11 bestået, 2 fejlet (`FILER` og `INDHOLD`). `test-version` fejler også. Alle tre fejl skyldes de manglende billeder. `test-opskrifter` melder de samme 26 billeder.
+- **Ikke gjort:** ingen har lyttet, og talegenkenderen er ikke kørt på de 650 nye. 77 af dem er mærket «lyt» i `kvalitet.json` (74 lang hale, 3 for lang). `UDGAVE`, `UDGAVE_INDHOLD` og `INDHOLD` venter på billederne. Hele e2e er ikke kørt.
+- **Kopi:** den forrige `mp3/` og `kvalitet.json` ligger i `D:/Stemmer/kogebog-500m/foer-trin4-0511/` (83 MB).
+- **Ud af huset:** intet pushet, intet udgivet.
+
 ## 04-11-2026 kl. 19:08: undersøgelse af forsiden, intet bygget (Saga)
 
 - **Afventer Jimmy (04-11):** ja til forsiden, Jul som egen knap, og om alle opskrifter må nås gennem knapperne. Beslutningen står i `docs/forside-undersoegelse-04-11-2026.md` på grenen `v7-0411` (72daa60).
