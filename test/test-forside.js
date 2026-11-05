@@ -908,3 +908,132 @@ test('pilen til Katalog og så «Til forsiden» fra holdet: næste gang starter 
     gaaTil('#/');
   }
 });
+
+// ---------- Vejen rundt, låsen og søgningens kanter ----------
+// Fra en kodegennemgang: de er grønne, og de passer på det, 5 ændringer af forsiden slap forbi uden en test
+
+test('tilbage fra en ret gendanner rullepladsen kun første gang', async () => {
+  await start('#/gruppe/kylling');
+  const b = rod.querySelectorAll('.kort[data-ret]')[0];
+  const id = b.dataset.ret;
+  tryk(b);
+  window.scrollY = 222;
+  tryk(rod.querySelector('.kort.valgt'));
+  assert.equal(location.hash, '#/ret/' + id);
+  gaaTil('#/gruppe/kylling');
+  assert.equal(window.scrollY, 222);
+  gaaTil('#/gruppe/fisk');
+  gaaTil('#/gruppe/kylling');
+  assert.equal(window.scrollY, 0, 'anden visning starter øverst');
+});
+
+test('et valgt kort er glemt, når man har været på forsiden', async () => {
+  await start('#/gruppe/fisk');
+  const id = kort()[0];
+  const k = () => rod.querySelector('.kort[data-ret="' + id + '"]');
+  tryk(k());
+  tryk(knapMed('Til forsiden'));
+  tryk(knapper().find((b) => b.dataset.gruppe === 'fisk'));
+  tryk(k());
+  assert.equal(location.hash, '#/gruppe/fisk', 'første tryk efter hjemturen må kun sige navnet');
+});
+
+test('hjertet på forsiden forsvinder, når den sidste favorit fjernes', async () => {
+  const a = retterI('fisk')[0];
+  await start('#/', { foer: () => { Lager.skiftFavorit(a, FILER); } });
+  assert.ok(rod.querySelector('.forside-favoritter'));
+  Lager.skiftFavorit(a, FILER);
+  gaaTil('#/gruppe/fisk');
+  gaaTil('#/');
+  assert.equal(rod.querySelector('.forside-favoritter'), null);
+});
+
+test('lupen nævner en ret, der ikke kunne læses', async () => {
+  const d = retterI('fisk')[0];
+  await start('#/soeg', { hent: (sti) => (sti === 'opskrifter/' + d + '.json' ? new Error('net') : undefined) });
+  assert.match(rod.querySelector('.fejl-linje')?.textContent ?? '', new RegExp(d));
+});
+
+test('lupen virker med en låst familie, og favoritterne siger, at de ikke kan vises', async () => {
+  const gemt = JSON.stringify({ v: 999, favoritter: ['koedsovs'] });
+  await start('#/soeg', { foer: () => { lageret.set('kog-familie-v1', gemt); } });
+  skriv(rod.querySelector('.soeg-felt'), 'kylling');
+  assert.ok(kort().length > 0);
+  gaaTil('#/gruppe/' + FAVORITTER);
+  assert.equal(overskrift(), 'Favoritterne kan ikke vises');
+  assert.equal(lageret.get('kog-familie-v1'), gemt);
+});
+
+test('en favorit, der ikke kunne hentes: intet kort, og fejllinjen nævner den', async () => {
+  const a = retterI('fisk')[0];
+  await start('#/gruppe/' + FAVORITTER, { foer: () => { Lager.skiftFavorit(a, FILER); }, hent: (sti) => (sti === 'opskrifter/' + a + '.json' ? new Error('net') : undefined) });
+  assert.equal(overskrift(), 'Favoritter');
+  assert.equal(kort().length, 0);
+  assert.match(rod.querySelector('.fejl-linje').textContent, new RegExp(a));
+});
+
+test('mærkelige adresser til en gruppe: den rigtige skærm, og intet fra adressen i teksten', async () => {
+  await start();
+  const findesIkke = 'Den gruppe findes ikke';
+  for (const [h, forventet] of [
+    ['#/gruppe/fisk/x/y', GRUPPER.fisk], ['#gruppe/fisk', GRUPPER.fisk], ['#/gruppe//fisk', GRUPPER.fisk],
+    ['#/gruppe/FISK', findesIkke], ['#/gruppe/%66isk', findesIkke], ['#/gruppe/<img>', findesIkke], ['#/gruppe/..', findesIkke],
+    ['#/gruppe/constructor', findesIkke], ['#/gruppe/__proto__', findesIkke],
+  ]) {
+    gaaTil(h);
+    assert.equal(overskrift(), forventet, h);
+    assert.ok(!rod.textContent.includes('<img>'), 'intet fra adressen i teksten: ' + h);
+  }
+  gaaTil('#/soeg/x');
+  assert.ok(rod.querySelector('.soeg-felt'), '#/soeg/x er lupen');
+});
+
+test('trin og tilbage bevarer vejen til gruppen og rullepladsen', async () => {
+  await start('#/gruppe/fisk');
+  const id = kort()[2];
+  const k = () => rod.querySelector('.kort[data-ret="' + id + '"]');
+  tryk(k());
+  window.scrollY = 300;
+  tryk(k());
+  gaaTil('#/ret/' + id + '/trin/1');
+  gaaTil('#/ret/' + id);
+  tryk(knapMed('Tilbage'));
+  assert.equal(location.hash, '#/gruppe/fisk');
+  assert.equal(window.scrollY, 300);
+});
+
+test('forsiden glemmer, hvor retten blev åbnet', async () => {
+  await start('#/soeg');
+  skriv(rod.querySelector('.soeg-felt'), 'kylling');
+  const id = kort()[0];
+  const k = () => rod.querySelector('.kort[data-ret="' + id + '"]');
+  tryk(k());
+  tryk(k());
+  gaaTil('#/');
+  gaaTil('#/ret/' + id);
+  tryk(knapMed('Tilbage'));
+  assert.equal(location.hash, '#/gruppe/' + gruppeAf(id, INDEX.grupper));
+});
+
+test('et bogstav uden for BMP tæller som ét, når søgeordets længde tælles', () => {
+  const b = String.fromCodePoint(0x1D4B6) + String.fromCodePoint(0x1D4B7);
+  assert.deepEqual(soeg([{ navn: 'x' + b, ingredienser: [], maerker: [] }], b), []);
+  assert.equal(soeg([{ navn: b + 'x', ingredienser: [], maerker: [] }], b).length, 1);
+  const tre = b + String.fromCodePoint(0x1D4B8);
+  assert.equal(soeg([{ navn: 'x' + tre, ingredienser: [], maerker: [] }], tre).length, 1, 'tre bogstaver må stå sidst i et ord');
+  assert.equal(soeg([{ navn: 'x' + tre + 'x', ingredienser: [], maerker: [] }], tre).length, 0, 'men ikke inde i det');
+});
+
+test('korte ord med blød bindestreg og tomme input', () => {
+  const sh = String.fromCharCode(0xAD);
+  const r = (navn) => ({ navn, ingredienser: [], maerker: [] });
+  assert.equal(soeg([r('Is' + sh + 'bombe')], 'isb').length, 1);
+  assert.equal(soeg([r('R' + sh + 'is')], 'is').length, 0);
+  assert.equal(soeg([r('Is' + sh + 'bombe')], 'i' + sh + 's').length, 1);
+  assert.equal(soeg([r('a')], sh).length, 1, 'kun en blød bindestreg er en tom søgning');
+  assert.equal(soeg([r('a')], ' , ,').length, 1);
+  assert.equal(soeg([r('a')], null).length, 1);
+  assert.equal(soeg([r('a')], undefined).length, 1);
+  assert.equal(soeg([], 'is').length, 0);
+  assert.equal(soeg([r('Æggekage')], 'A\u030A').length, 0);
+});
