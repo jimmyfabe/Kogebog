@@ -8,7 +8,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { GRUPPER, AFTENSMAD_GRUPPER, gruppeSoegeord } from '../js/katalog.js';
+import { GRUPPER, AFTENSMAD_GRUPPER, VARER, gruppeSoegeord } from '../js/katalog.js';
+import { kod } from '../js/plankode.js';
+import { planMandag } from '../js/tid.js';
 import { soeg, soegeTekst } from '../js/soeg.js';
 import { FAVORITTER, gruppeRute, forsideGrupper, gruppeAf, gruppeRetter, tilbageFraRet, rulleplads, blandet } from '../js/grupper.js';
 import { lavModel, erLynhurtig, harTid } from '../js/model.js';
@@ -818,4 +820,76 @@ test('fyldOp med den blandede liste: de 8 første har mindst 3 grupper, og kun r
   assert.equal(ny.length, V.UDVALG_STANDARD);
   assert.ok(new Set(gruppeNavne(ny)).size >= 3, 'kun: ' + gruppeNavne(ny).join(', '));
   assert.ok(ny.every((id) => UGE.includes(id)));
+});
+
+// ---------- Pilen «Tilbage» fra en ret, der ikke er åbnet fra børnenes grupper ----------
+// tryk() kører linkets onclick, og gaaTil() er det, browseren gør bagefter, når den følger href
+
+const listeMed = (id, valg) => () => Lager.gemListe({
+  kode: kod(planMandag(), [{ ret: id, n: 4 }, null, null, null, null, null, null], valg),
+  uge: planMandag(),
+  varer: [{ id: Object.keys(VARER)[0], m: 1 }],
+});
+
+for (const [hvad, valg, slutning] of [['retten', undefined, ''], ['retten med mere grønt', { mereGroent: true }, '/groen']]) {
+  test('indkøbslisten: pilen fra ' + hvad + ' fører tilbage til listen på samme rulleplads', async () => {
+    const id = valg ? UGE.find((x) => lavModel(JSONER.get(x)).groen) : retterI('koed').find((x) => UGE.includes(x));
+    assert.ok(id, 'testen skal have en ret at åbne');
+    await start('#/indkoeb', { foer: listeMed(id, valg) });
+    const link = rod.querySelector('.ret-link');
+    assert.equal(link.getAttribute('href'), '#/ret/' + id + slutning);
+    window.scrollY = 420;
+    tryk(link);
+    gaaTil(link.getAttribute('href'));
+    assert.equal(location.hash, '#/ret/' + id + slutning);
+    assert.equal(window.scrollY, 0, 'retten starter øverst');
+    tryk(knapMed('Tilbage'));
+    assert.equal(location.hash, '#/indkoeb');
+    assert.equal(window.scrollY, 420);
+    assert.ok(rod.querySelector('.ret-link'), 'listen er tegnet');
+  });
+}
+
+test('«Åbn» i Katalog: pilen fører til voksendelens hold og derfra til Katalog på samme rulleplads', async () => {
+  const V = await import('../js/voksen-del.js');
+  const id = retterI('jul')[0];
+  const aabn = () => rod.querySelector('[data-fokus="aabn-' + id + '"]');
+  await start('#/voksen/katalog');
+  try {
+    holdInde(rod.querySelector('.voksen-vagt'));
+    assert.ok(aabn(), 'Katalog er åbent');
+    window.scrollY = 900;
+    tryk(aabn());
+    assert.equal(location.hash, '#/ret/' + id);
+    assert.equal(window.scrollY, 0, 'retten starter øverst');
+    assert.equal(V.erLaastOp(), false, 'låsen lukker, når voksendelen forlades');
+    tryk(knapMed('Tilbage'));
+    assert.equal(location.hash, '#/voksen/katalog');
+    assert.ok(rod.querySelector('.voksen-vagt'), 'voksendelens hold, ikke Katalog');
+    assert.equal(aabn(), null);
+    assert.equal(window.scrollY, 0, 'holdet står øverst');
+    holdInde(rod.querySelector('.voksen-vagt'));
+    assert.ok(aabn(), 'Katalog efter holdet');
+    assert.equal(window.scrollY, 900);
+  } finally {
+    gaaTil('#/');
+  }
+});
+
+test('pilen til Katalog og så «Til forsiden» fra holdet: næste gang starter Katalog øverst', async () => {
+  const id = retterI('jul')[0];
+  await start('#/voksen/katalog');
+  try {
+    holdInde(rod.querySelector('.voksen-vagt'));
+    window.scrollY = 900;
+    tryk(rod.querySelector('[data-fokus="aabn-' + id + '"]'));
+    tryk(knapMed('Tilbage'));
+    tryk(knapMedTekst('Til forsiden'));
+    assert.equal(location.hash, '#/');
+    gaaTil('#/voksen/katalog');
+    holdInde(rod.querySelector('.voksen-vagt'));
+    assert.equal(window.scrollY, 0);
+  } finally {
+    gaaTil('#/');
+  }
 });

@@ -380,8 +380,8 @@ function listeSkaerm(liste) {
       const m = d && model(d.ret, r.mereGroent);
       if (!m || !m.uge) return null;
       // Retten åbnes i linkets udgave (med «/groen»), ikke telefonens egen: ellers viste retten alt kødet og ingen linser,
-      // mens listen havde linserne (code review kode-2)
-      return el('li', {}, el('a', { class: 'ret-link', href: '#/ret/' + m.id + (m.erGroen ? '/groen' : '') },
+      // mens listen havde linserne (code review kode-2). Rettens pil fører tilbage til listen
+      return el('li', {}, el('a', { class: 'ret-link', href: '#/ret/' + m.id + (m.erGroen ? '/groen' : ''), onclick: () => K.huskFra(m.id) },
         K.billede(grafikRet(m.id), '', 'ret-link-billede'),
         el('span', { class: 'vare-tekst' },
           el('span', { class: 'vare-navn', tekst: m.navn }),

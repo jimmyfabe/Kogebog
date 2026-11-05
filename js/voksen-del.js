@@ -35,7 +35,7 @@ const SOEG_EKSEMPEL = 'fx kylling eller jul';
 const LAGER_FEJL = 'Måske er privat browsing slået til, eller lageret er fuldt.';
 const NYERE = 'Lavet med en nyere udgave';
 
-// app.js: { S, knap, klik, billede, topbar, statusSkaerm, naviger, annoncer, indlaes, vis, visSkaerm }.
+// app.js: { S, knap, klik, billede, topbar, statusSkaerm, naviger, annoncer, indlaes, vis, visSkaerm, huskFra }.
 // vis() kalder rute(location.hash) først og stopper, når den svarer true. visSkaerm(skaerm) viser en færdig skærm, som
 // vis() selv gør det (vistHash, tastatur, spærretid, rul op og fokus på h1 ved en ny adresse)
 let K = null;
@@ -845,7 +845,7 @@ function katalogRaekke(p, f, ids, fuldt) {
     knap: el('div', { class: 'voksen-raekke-knapper' + (m.uge ? ' med-udvalg' : '') },
       m.uge ? medKnap(m, ids, fuldt, { lang: true }) : null,
       hjerteKnap(m, f),
-      medFokus(K.knap('Åbn', { klasse: 'lille', label: 'Åbn ' + m.navn, onclick: () => K.naviger('#/ret/' + m.id) }), 'aabn-' + m.id)),
+      medFokus(K.knap('Åbn', { klasse: 'lille', label: 'Åbn ' + m.navn, onclick: () => { K.huskFra(m.id); K.naviger('#/ret/' + m.id); } }), 'aabn-' + m.id)),
   });
 }
 

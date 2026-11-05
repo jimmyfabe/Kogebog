@@ -214,11 +214,16 @@ function kortTil(id, gruppe, fejlede) {
   return el('li', { class: 'kort-plads', 'data-gruppe': kendtGruppe ? gruppe : null }, b);
 }
 
+// Retten åbnes herfra: dens pil fører tilbage hertil, og skærmen står, hvor den stod (tilbageFraRet og gendanPlads)
+function huskFra(ret) {
+  S.fra = { hash: location.hash, ret, y: window.scrollY };
+}
+
 function kortTryk(id, b) {
   const m = udgave(S.retter.get(id));
   if (S.valgtKort === id) {
     S.valgtKort = null;
-    S.fra = { hash: location.hash, ret: id, y: window.scrollY };
+    huskFra(id);
     // Navnet, og har retten voksen-trin, bagefter én gang, at den laves sammen med en voksen (null: kun navnet)
     naviger(hashFor.ret(id), () => Tale.sig(R.retAaben(m), { derefter: R.voksenStart(m) }));
     return;
@@ -723,8 +728,13 @@ function faerdigSkaerm(m) {
 
 function vis() {
   for (const fn of S.oprydning.splice(0)) fn();
-  // Voksendelen (#/voksen…) viser selv sin skærm gennem visSkaerm. En anden adresse lukker dens lås
-  if (VoksenDel.rute(location.hash)) { S.valgtKort = null; return; }
+  // Voksendelen (#/voksen…) viser selv sin skærm gennem visSkaerm. En anden adresse lukker dens lås, så pilen fra en ret
+  // ender på holdet, og rullepladsen venter, til holdet er klaret: først da står skærmen, retten blev åbnet fra, der
+  if (VoksenDel.rute(location.hash)) {
+    S.valgtKort = null;
+    if (VoksenDel.erLaastOp()) gendanPlads();
+    return;
+  }
   const r = rute();
   let skaerm;
   if (r.side === 'forside') {
@@ -816,8 +826,8 @@ async function indlaes() {
   vis();
 }
 
-Ugeplan.init({ S, knap, klik, billede, lynMaerke, lynTekst, topbar, statusSkaerm, naviger, annoncer, indlaes, vis });
-VoksenDel.init({ S, knap, klik, billede, topbar, statusSkaerm, naviger, annoncer, indlaes, vis, visSkaerm });
+Ugeplan.init({ S, knap, klik, billede, lynMaerke, lynTekst, topbar, statusSkaerm, naviger, annoncer, indlaes, vis, huskFra });
+VoksenDel.init({ S, knap, klik, billede, topbar, statusSkaerm, naviger, annoncer, indlaes, vis, visSkaerm, huskFra });
 Timer.gendan();
 Tale.hentLydListe();
 indlaes();
