@@ -27,6 +27,26 @@ De 89 retter fra de gamle grupper Aftensmad (85) og Bagning (4) er fordelt på d
 
 «aftensmad» og chippen «Aftensmad» i voksendelen finder de fem grupper Pasta og nudler, Kylling, Fisk, Kød og Grønt: 81 retter. De 4 retter, der kom fra Aftensmad og nu står i Brød og pizza (Pladepizza med spinat og broccoli, Rugbrød med æg og makrel, Hvidløgsflutes, Foldet fladbrød med ost), findes af «bagning», ikke af «aftensmad». Står en af dem bedre i en af de fem grupper, så flyt den, og søgeordet følger med.
 
+## Søgereglen for korte ord
+
+Et ord på mindst 4 bogstaver må stå inde i et ord. Et ord på 3 bogstaver skal stå først eller sidst i et ord. Et ord på 1-2 bogstaver skal stå først. To undtagelser: «is» finder også ord, der slutter på «eis» (vaniljeis, flødeis), men ikke flormelis, gris eller ris, og «ris» tæller ikke ordene «gris» og «pris».
+
+Træf på de 151 retter, med navn, ingredienser og gruppe som lupen (uden familiens egne mærker). Ingen ret er faldet fra.
+
+| Søgeord | Før | Nu | Det nye |
+|---|---:|---:|---|
+| is | 5 | 6 | vaniljeis |
+| kål | 5 | 14 | blomkål, rødkål, rosenkål, hvidkål, kødkål; skål og risskål er falske |
+| bær | 2 | 9 | tranebær, blåbær, kirsebær, hindbær |
+| mos | 0 | 1 | kartoffelmos |
+| ost | 29 | 33 | hytteost; frost og æblemost er falske |
+| ris | 18 | 21 | jasminris, ostris, grødris |
+| kød | 17 | 21 | grisekød, oksekød, svinekød |
+| løg | 23 | 24 | hvidløg |
+| mel | 3 | 48 | hvedemel, kokosmel, durummel; krymmel og julekrymmel er falske |
+
+De falske træf er prisen for reglen: det er kun en ret for meget på listen, mens den gamle regel skjulte rigtige retter.
+
 ## «Fyld op med nye» og børnenes bladren
 
 `index.json` står efter gruppe, så de 23 pastaretter står først. To steder afgør rækkefølgen, hvad der bliver valgt eller vist først, og dér blander `blandet` i `js/grupper.js` grupperne: skiftevis én fra hver gruppe, i fast rækkefølge og uden tilfældighed. De lister, der med vilje står efter gruppe (udvalget, kataloget), og den voksnes «Vælg ret» med filtrene er urørte. Gemte planer, favoritter og udvalg ændres ikke.

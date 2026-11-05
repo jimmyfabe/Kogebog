@@ -1,6 +1,7 @@
 // test-soeg.js — søgningen i voksendelens lister og bag lupen på forsiden (js/soeg.js): normaliseringen og soeg(retter,
-// tekst), hvor hvert ord skal findes i navnet, en ingrediens, gruppen, gruppens ekstra søgeord eller et mærke. Ord op til 3
-// bogstaver matcher kun ordets begyndelse. Til sidst de rigtige opskrifter: «jul» finder præcis juleretterne.
+// tekst), hvor hvert ord skal findes i navnet, en ingrediens, gruppen, gruppens ekstra søgeord eller et mærke. Ord på 1-2
+// bogstaver matcher kun ordets begyndelse, ord på 3 også slutningen, med to undtagelser for «is» og «ris». Til sidst de
+// rigtige opskrifter: «jul» finder præcis juleretterne.
 // Kør:  node test/test-soeg.js
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -59,14 +60,39 @@ test('ét ord findes i navnet, en ingrediens, gruppen eller et mærke; et langt 
   assert.deepEqual(ids('mande'), ['ris'], 'fire bogstaver eller flere må stå inde i et ord');
 });
 
-// «is» gav 62 træf på de rigtige retter, fordi det står inde i «ris» og «fisk». Ingen ord i fixturerne begynder med «is»
-test('et ord op til 3 bogstaver matcher kun ordets begyndelse', () => {
-  assert.deepEqual(ids('is'), [], '«Flødeis» og «grødris» begynder ikke med «is»');
-  assert.deepEqual(ids('flø'), ['is'], 'begyndelsen af «Flødeis»');
-  assert.deepEqual(ids('ris'), ['ris'], '«Risalamande» begynder med «ris», «grødris» tæller ikke');
-  assert.deepEqual(ids('æbl'), ['gloegg'], 'æ er et bogstav');
-  assert.deepEqual(soeg([ret('m', 'Æg og is', [], null), ret('n', 'Pandekager', ['æg-hvide'], null)], 'æg').map((r) => r.id), ['m', 'n'], 'bindestregen skiller ordene ad');
+// «is» gav 62 træf på de rigtige retter, fordi det står inde i «ris» og «fisk»
+test('et ord på 1-2 bogstaver matcher kun ordets begyndelse', () => {
+  const liste = [ret('m', 'Æg og is', [], null), ret('n', 'Pandekager', ['æg-hvide'], null), ret('o', 'Spejlæg', [], null), ret('p', 'Fisk', [], null)];
+  const fundet = (t) => soeg(liste, t).map((r) => r.id);
+  assert.deepEqual(fundet('æg'), ['m', 'n'], 'bindestregen skiller ordene ad, og «Spejlæg» slutter kun på «æg»');
+  assert.deepEqual(fundet('is'), ['m'], '«Fisk» har «is» inde i ordet');
   assert.deepEqual(soeg([ret('k', 'Bær', ['a', 'is'], null)], 'IS').map((r) => r.id), ['k'], 'også en ingrediens, uanset store bogstaver');
+});
+
+test('et ord på 3 bogstaver står først eller sidst i et ord, ikke inde i det', () => {
+  const liste = [
+    ret('a', 'Kartoffelmos', [], null), ret('b', 'Mosaikkage', [], null), ret('c', 'Kartoffelmosen', [], null),
+    ret('d', 'Blomkål', [], null), ret('e', 'Blomkålssuppe', [], null), ret('f', 'Boller', ['hvedemel'], null),
+  ];
+  const fundet = (t) => soeg(liste, t).map((r) => r.id);
+  assert.deepEqual(fundet('mos'), ['a', 'b']);
+  assert.deepEqual(fundet('kål'), ['d']);
+  assert.deepEqual(fundet('mel'), ['f']);
+  assert.deepEqual(ids('flø'), ['is'], 'begyndelsen af «Flødeis»');
+  assert.deepEqual(ids('æbl'), ['gloegg'], 'æ er et bogstav');
+});
+
+test('undtagelserne: «is» finder også ord på «eis», og «ris» tæller ikke ordene «gris» og «pris»', () => {
+  const liste = [
+    ret('vanilje', 'Banansplit', ['vaniljeis'], null), ret('floede', 'Flødeis', [], null), ret('bombe', 'Isbombe', [], null),
+    ret('flormel', 'Glasur', ['flormelis'], null), ret('fisk', 'Fisk', [], null), ret('ris', 'Ris', [], null), ret('groed', 'Grød', ['grødris'], null),
+    ret('gris', 'Hakket gris', [], null), ret('hoisin', 'Hoisin-gris', [], null), ret('pris', 'God pris', [], null),
+  ];
+  const fundet = (t) => soeg(liste, t).map((r) => r.id);
+  assert.deepEqual(fundet('is'), ['vanilje', 'floede', 'bombe'], 'ikke flormelis, fisk, ris eller gris');
+  assert.deepEqual(fundet('ris'), ['ris', 'groed'], 'ikke gris og pris');
+  assert.deepEqual(ids('is'), ['is'], '«Flødeis» slutter på «eis», og «grødris» gør ikke');
+  assert.deepEqual(ids('ris'), ['ris'], '«Risalamande» og «grødris» er samme ret');
 });
 
 test('flere ord: hvert ord skal findes (OG), i hvert sit felt eller samme', () => {

@@ -146,24 +146,49 @@ const POSTER = FILER.map((id) => {
 });
 const ordI = (p) => soegeTekst(p).split(/[^\p{L}\p{N}]+/u);
 
-test('«is» rammer kun ord, der begynder med «is», ikke «ris» og «fisk»', () => {
+const erIsOrd = (o) => o.startsWith('is') || o.endsWith('eis');
+
+test('«is» rammer ord, der begynder med «is» eller slutter på «eis», ikke «ris», «fisk» og «flormelis»', () => {
   const traef = soeg(POSTER, 'is');
-  for (const p of traef) assert.ok(ordI(p).some((o) => o.startsWith('is')), p.m.id);
-  const risRetter = POSTER.filter((p) => ordI(p).includes('ris') && !ordI(p).some((o) => o.startsWith('is')));
+  for (const p of traef) assert.ok(ordI(p).some(erIsOrd), p.m.id);
+  const risRetter = POSTER.filter((p) => ordI(p).includes('ris') && !ordI(p).some(erIsOrd));
   assert.ok(risRetter.length > 0, 'testen skal have retter med ris at prøve på');
   for (const p of risRetter) assert.ok(!traef.includes(p), p.m.id + ' har ris, ikke is');
+  const flormelis = POSTER.filter((p) => ordI(p).includes('flormelis') && !ordI(p).some(erIsOrd));
+  assert.ok(flormelis.length > 0, 'testen skal have retter alene med flormelis at prøve på');
+  for (const p of flormelis) assert.ok(!traef.includes(p), p.m.id + ' har flormelis, ikke is');
+  assert.ok(traef.some((p) => p.m.id === 'banansplit-med-chokoladesovs'), 'Banansplit har vaniljeis');
 });
 
-test('korte ord op til 3 bogstaver matcher kun ordets begyndelse, længere ord også inde i ordet', () => {
+test('«mos», «kål» og «mel» finder ordets slutning: Kartoffelmos, Blomkål og hvedemel', () => {
+  const navn = (t) => soeg(POSTER, t).map((p) => p.m.id);
+  assert.ok(navn('mos').includes('kartoffelmos'), 'mos');
+  assert.ok(navn('kål').includes('ovnbagt-blomkaal'), 'kål');
+  const hvedemel = POSTER.filter((p) => ordI(p).includes('hvedemel'));
+  assert.ok(hvedemel.length > 0, 'testen skal have retter med hvedemel at prøve på');
+  for (const p of hvedemel) assert.ok(navn('mel').includes(p.m.id), p.m.id);
+});
+
+test('«ris» finder ikke en ret alene på «gris»', () => {
+  const traef = soeg(POSTER, 'ris');
+  const erRisOrd = (o) => o !== 'gris' && o !== 'pris' && (o.startsWith('ris') || o.endsWith('ris'));
+  const grise = POSTER.filter((p) => ordI(p).includes('gris') && !ordI(p).some(erRisOrd));
+  assert.ok(grise.length > 0, 'testen skal have retter alene med gris at prøve på');
+  for (const p of grise) assert.ok(!traef.includes(p), p.m.id + ' har gris, ikke ris');
+  for (const p of traef) assert.ok(ordI(p).some(erRisOrd), p.m.id);
+});
+
+test('korte ord: 1-2 bogstaver kun ordets begyndelse, 3 også slutningen, og længere ord også inde i ordet', () => {
   const r = (navn) => ({ id: navn, navn, ingredienser: [], maerker: [] });
   const liste = [r('Flødeis'), r('Is med bær'), r('Risengrød'), r('Fiskefrikadeller'), r('Kartoffelmos'), r('Æggekage')];
   const ids = (t) => soeg(liste, t).map((x) => x.id);
-  assert.deepEqual(ids('is'), ['Is med bær']);
+  assert.deepEqual(ids('is'), ['Flødeis', 'Is med bær']);
   assert.deepEqual(ids('ris'), ['Risengrød']);
   assert.deepEqual(ids('fis'), ['Fiskefrikadeller']);
   assert.deepEqual(ids('æg'), ['Æggekage'], 'æ er et bogstav: \\b kender kun a-z i WebKit');
   assert.deepEqual(ids('deis'), ['Flødeis'], 'fire bogstaver må stå inde i ordet');
-  assert.deepEqual(ids('mos'), [], '«mos» er kort, og ordet begynder ikke med det');
+  assert.deepEqual(ids('mos'), ['Kartoffelmos'], '«mos» slutter ordet');
+  assert.deepEqual(ids('tof'), [], '«tof» står inde i ordet');
   assert.deepEqual(ids('lmos'), ['Kartoffelmos']);
 });
 
@@ -550,7 +575,7 @@ test('lupen: «is» og «aftensmad» på den rigtige skærm, og feltet tegnes ik
   skriv(felt, 'is');
   const is = kort();
   assert.ok(is.length > 0 && is.length < 62, 'var 62 træf før: ' + is.length);
-  for (const id of is) assert.ok(ordI(POSTER.find((p) => p.m.id === id)).some((o) => o.startsWith('is')), id);
+  for (const id of is) assert.ok(ordI(POSTER.find((p) => p.m.id === id)).some(erIsOrd), id);
   assert.equal(rod.querySelector('.soeg-felt'), felt, 'Safari lukker tastaturet, hvis feltet tegnes om');
   skriv(felt, 'aftensmad');
   assert.deepEqual(kort().sort(), AFTENSMAD_GRUPPER.flatMap(retterI).sort());

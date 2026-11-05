@@ -1,12 +1,20 @@
 // soeg.js — søgningen i voksendelens lister (Katalog, Ugens udvalg og Favoritter i js/voksen-del.js) og bag lupen på
 // forsiden. Ren logik: ingen DOM og intet lager. Hvert ord i søgningen skal findes et sted i retten (OG): i navnet, i en
 // ingrediens' navn, i gruppens navn («Jul»), i gruppens gamle navn («Aftensmad», gruppeOrd) eller i et mærkes navn
-// («Vegetar»). Et ord på mindst 4 bogstaver må stå inde i et andet ord, så «kage» finder «julekage». Et ord på højst 3
-// bogstaver skal stå først i et ord, så «is» finder «isbombe», men hverken «ris» eller «fisk». Store og små bogstaver er
-// ens, æ, ø og å er ens, uanset hvordan tastaturet har skrevet dem (NFC), og den bløde bindestreg i retternes navne
-// (U+00AD, fx «Kyllinge|tærte») tæller ikke.
+// («Vegetar»). Et ord på mindst 4 bogstaver må stå inde i et andet ord, så «kage» finder «julekage». Et ord på 3 bogstaver
+// skal stå først eller sidst i et ord, så «mos» finder «kartoffelmos» og «kål» finder «blomkål». Et ord på 1-2 bogstaver
+// skal stå først i et ord, så «æg» finder «æggekage», men ikke «spejlæg», med undtagelserne i UNDTAGELSER. Store og små
+// bogstaver er ens, æ, ø og å er ens, uanset hvordan tastaturet har skrevet dem (NFC), og den bløde bindestreg i retternes
+// navne (U+00AD, fx «Kyllinge|tærte») tæller ikke.
 
-const KORT_ORD = 3; // højst så mange bogstaver: kun ordets begyndelse
+const KORT_ORD = 3; // så mange bogstaver: først eller sidst i et ord. Færre: kun først. Flere: hvor som helst
+
+// De to søgeord, hvor reglen rammer forbi. «slutning»: den slutning, ordet også må findes på, i stedet for ordet selv.
+// «ikke»: hele ord, der ikke tæller
+const UNDTAGELSER = new Map([
+  ['is', { slutning: 'eis' }], // vaniljeis og flødeis, men ikke flormelis, gris eller ris
+  ['ris', { ikke: ['gris', 'pris'] }], // grødris og jasminris, men ikke gris og pris
+]);
 
 // Teksten, som der søges i og med: uden blød bindestreg, små bogstaver, NFC og ét mellemrum mellem ordene. NFC efter
 // toLowerCase, for et stort bogstav kan blive til to tegn, når det gøres lille
@@ -33,7 +41,14 @@ export function soegeTekst(ret) {
 
 // Findes ordet i teksten? [...ord]: et bogstav uden for BMP tæller som ét. Søgeordet bruges aldrig som et regulært udtryk,
 // så «(» og «.*» bare ikke findes. \p{L}: \b kender kun a-z i WebKit, og «æg» står også først i et ord
-const ordFindes = (o, t) => ([...o].length > KORT_ORD ? t.includes(o) : t.split(/[^\p{L}\p{N}]+/u).some((d) => d.startsWith(o)));
+function ordFindes(o, t) {
+  const bogstaver = [...o].length;
+  if (bogstaver > KORT_ORD) return t.includes(o);
+  const undtagelse = UNDTAGELSER.get(o) ?? {};
+  const slutning = undtagelse.slutning ?? (bogstaver === KORT_ORD ? o : null);
+  const ikke = undtagelse.ikke ?? [];
+  return t.split(/[^\p{L}\p{N}]+/u).some((d) => !ikke.includes(d) && (d.startsWith(o) || (slutning !== null && d.endsWith(slutning))));
+}
 
 // Retterne (i deres rækkefølge), hvor hvert ord i tekst findes. En tom søgning giver alle (en ny liste)
 export function soeg(retter, tekst) {
