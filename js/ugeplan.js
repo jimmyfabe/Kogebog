@@ -525,9 +525,9 @@ function dagRaekke(p, d, i) {
   const lille = navn.toLowerCase();
   const hoved = el('div', { class: 'dag-hoved' }, el('span', { class: 'dag-navn', tekst: navn }),
     el('span', { class: 'dag-dato', tekst: dagDato(p.uge || planMandag(), i) }));
-  const li = (...born) => el('li', { class: 'dag' + (d ? '' : ' fri'), 'data-dag': String(i) }, hoved, ...born);
+  const li = (klasse, ...born) => el('li', { class: 'dag' + klasse, 'data-dag': String(i) }, hoved, ...born);
   if (!d) {
-    return li(el('div', { class: 'dag-ret' }, el('span', { class: 'dag-ret-navn', tekst: 'Fri aften' })),
+    return li(' fri', el('div', { class: 'dag-ret' }, el('span', { class: 'dag-ret-navn', tekst: 'Fri aften' })),
       el('div', { class: 'dag-knapper' },
         medFokus(K.knap('Vælg ret', { klasse: 'lille', ikonNavn: 'plus', label: 'Vælg ret til ' + lille, onclick: () => K.naviger('#/uge/dag/' + (i + 1)) }), 'dag-' + i + '-vaelg')));
   }
@@ -539,7 +539,7 @@ function dagRaekke(p, d, i) {
   const byt = medFokus(K.knap('Byt ret', { klasse: 'lille', label: 'Byt retten ' + lille, onclick: () => K.naviger('#/uge/dag/' + (i + 1)) }), 'dag-' + i + '-byt');
   if (!m || m instanceof Error || !m.uge) {
     const tekst = m instanceof Error ? 'Opskriften kunne ikke hentes. Tjek internetforbindelsen.' : 'Retten er ikke længere i ugeplanen.';
-    return li(el('div', { class: 'dag-ret' }, el('span', { class: 'dag-ret-navn', tekst: m && !(m instanceof Error) ? m.navn : 'Ukendt ret' }),
+    return li(' uden-billede', el('div', { class: 'dag-ret' }, el('span', { class: 'dag-ret-navn', tekst: m && !(m instanceof Error) ? m.navn : 'Ukendt ret' }),
       el('span', { class: 'dag-meta', tekst })), el('div', { class: 'dag-knapper' }, byt, fjern));
   }
   const portioner = stepper({ vaerdi: d.n, navn: 'portioner ' + lille, enhed: 'pers.', fokus: 'dag-' + i, saet: (n, fokus) => {
@@ -547,7 +547,7 @@ function dagRaekke(p, d, i) {
     if (gemPlan((q) => { if (q.dage[i]) q.dage[i] = { ...q.dage[i], n }; return { dage: q.dage }; })) K.annoncer(navn + ': ' + n + ' personer.');
     tegnIgen(fokus);
   } });
-  return li(
+  return li('',
     K.billede(grafikRet(m.id), '', 'dag-billede'),
     el('div', { class: 'dag-ret' },
       el('span', { class: 'dag-ret-navn', tekst: m.navn }),

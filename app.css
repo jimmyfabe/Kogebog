@@ -761,6 +761,9 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .uge-dage { margin: 0; padding: 0; list-style: none; border: var(--kant); border-radius: 22px; background: var(--hvid); overflow: hidden; }
 .dag { display: grid; grid-template-columns: 128px 84px minmax(0, 1fr) auto; align-items: center; gap: 0 16px; min-height: 104px; padding-right: 16px; }
 .dag.fri { grid-template-columns: 128px minmax(0, 1fr) auto; min-height: 76px; }
+/* Uden billede (retten er ikke længere i ugeplanen, eller opskriften kunne ikke hentes) bruger teksten også billedets
+   kolonne. I den kolonne alene (64-84 px) blev «Ukendt ret» delt midt i et ord, og «internetforbindelsen.» løb ud */
+.dag.uden-billede .dag-ret { grid-column: 2 / span 2; }
 .dag + .dag { border-top: 2px solid var(--creme-moerk); }
 .dag-hoved { align-self: stretch; display: flex; flex-direction: column; justify-content: center; padding: 10px 16px; background: var(--dag, var(--creme)); border-right: 2px solid var(--creme-moerk); }
 .dag-navn { font-size: 21px; font-weight: 800; }
@@ -806,6 +809,7 @@ textarea.kopi-felt { resize: vertical; }
   .dag-hoved { grid-row: span 2; }
   .dag-billede { width: 72px; height: 72px; }
   .dag:not(.fri) .dag-knapper { grid-column: 2 / -1; justify-content: flex-start; padding-top: 0; }
+  .dag.uden-billede .dag-ret { grid-column: 2 / -1; }
   .dag.fri { grid-template-columns: 112px minmax(0, 1fr) auto; }
   .dag.fri .dag-hoved { grid-row: auto; }
 }
@@ -819,6 +823,7 @@ textarea.kopi-felt { resize: vertical; }
   .dag-hoved, .dag.fri .dag-hoved { grid-column: 1 / -1; grid-row: auto; flex-direction: row; align-items: baseline; gap: 10px; margin: 0 -12px; padding: 8px 12px; border-right: 0; border-bottom: 2px solid var(--creme-moerk); }
   .dag-billede { width: 64px; height: 64px; }
   .dag:not(.fri) .dag-knapper { grid-column: 1 / -1; padding: 0 0 12px; }
+  .dag.uden-billede .dag-ret { grid-column: 1 / -1; }
   /* Portionerne har deres egen linje, og «Byt ret» og «Fjern» står sammen under dem: før brød «Fjern» alene ned på en
      linje for sig i hver række (390 og 360 px, UI-review 27-10) */
   .dag:not(.fri) .dag-knapper .stepper { flex-basis: 100%; }
