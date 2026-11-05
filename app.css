@@ -1019,13 +1019,15 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
     margin: 4px 8px;
     padding: 10px 12px;
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "maerke" "billede" "tekst";
-    grid-template-rows: auto auto 1fr;
+    grid-template-areas: "billede" "tekst";
+    grid-template-rows: auto 1fr;
     gap: 12px;
     align-items: start;
     border-radius: 28px;
   }
-  .voksen-trekant { justify-self: center; --trekant: 72px; }
+  /* Trekanten sidder som et mærkat på billedets frie hjørne. På sin egen række (84 px) skubbede den «Start timer» op til
+     26 px ind under bunden på 60 af 373 trin med timer (e2e 05-11-2026) */
+  .voksen-trekant { grid-area: billede; align-self: start; justify-self: start; position: relative; z-index: 1; --trekant: 72px; }
   /* Retten: advarslen har en række for sig under hjem (og pillen), så teksten kan stå på én linje ned til 360 px */
   .ret .topbar { grid-template-columns: max-content minmax(0, 1fr); row-gap: 8px; }
   .ret .topbar > .topbar-midte { grid-column: 1 / -1; grid-row: 2; }
@@ -1038,6 +1040,11 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .trin-tekst { gap: 14px; }
   .trin-tekst h1 { font-size: 30px; }
   .trin-ikoner img { width: 56px; height: 56px; }
+  /* Trin med timer: «Læs op» er en rund højttaler ved siden af timeren, som på lave skærme. Under hinanden skubbede de
+     «Start timer» ind under bunden på 360×780 (34 px), og en iPhones safe-area gør bunden 18 px højere end i testen.
+     Teksten er skjult, men er stadig knappens navn. Uden :has står de under hinanden som før */
+  .laes-op:has(+ .timer) { flex: none; width: var(--tryk); padding: 0; border-radius: 50%; }
+  .laes-op:has(+ .timer) > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   /* «Næste» og rettens «Start» skal kunne nås uden at rulle: bunden står fast, og et langt trin
      eller en lang ingrediensliste ruller ind under den. Også børnenes valg: på 360×740 lå «Vælg» næsten helt under
      kanten, når retternes navne er lange. Pilene rulles frem over bunden (UI-review 2, 23-10) */
@@ -1121,19 +1128,26 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
    rettens knapper kan ses uden at rulle (før lå de under kanten på 844×390). 667×375 og 736×414 fik før iPhone-layoutet
    på højkant, med en bund på op til 48 % af skærmen */
 @media (max-height: 520px) and (orientation: landscape) {
-  /* Billedet skal kunne ses helt mellem topbaren og bunden: mærket står over teksten i stedet for over begge kolonner.
-     Billedets kolonne er kun så bred som billedet, så teksten og voksen-trekanten har plads ned til 667 px */
-  .scene { grid-template-columns: min(44svh, 40%) minmax(0, 1fr); grid-template-areas: "billede maerke" "billede tekst"; column-gap: 28px; margin: 4px 24px; padding: 8px 20px; }
+  /* Billedet skal kunne ses helt mellem topbaren og bunden. Billedets kolonne er kun så bred som billedet, så teksten har
+     plads ned til 667 px. Trekanten sidder som et mærkat på billedets frie hjørne: på sin egen række over teksten skubbede
+     den «Start timer» ind under bunden (294 af 373 trin med timer på 667×375, værst 140 px, e2e 05-11-2026) */
+  .scene { grid-template-columns: min(44svh, 40%) minmax(0, 1fr); grid-template-areas: "billede tekst"; grid-template-rows: 1fr; column-gap: 28px; margin: 4px 24px; padding: 8px 20px; }
+  .voksen-trekant { grid-area: billede; align-self: start; justify-self: start; position: relative; z-index: 1; margin: -4px 0 0 -14px; }
   /* Billedet står øverst: midt i en høj tekstkolonne (voksen-trin med timer og note) lå det under bunden */
   .verbum-ramme { width: min(100%, 44svh); align-self: start; }
   /* «Læs op» står som rund højttaler ved siden af trinteksten, som på retten: under ikonerne lå den under bunden
-     (844×390). Børnene kan ikke læse trinnet selv. Teksten «Læs op» er skjult, men er stadig knappens navn */
-  .trin-tekst { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 12px 14px; align-items: center; justify-items: start; }
-  .trin-tekst h1 { grid-column: 1; grid-row: 1; }
+     (844×390). Børnene kan ikke læse trinnet selv. Teksten «Læs op» er skjult, men er stadig knappens navn.
+     Ikonerne og timeren står på samme række, så «Start timer» kan ses uden at rulle. Første kolonne er kun så bred som
+     ikonerne (tre pr. række) og har ingen bredde uden ikoner. Samme skrift som rettens navn: tre linjer tekst er højden */
+  .trin-tekst { display: grid; grid-template-columns: fit-content(172px) minmax(0, 1fr) auto; gap: 12px 14px; align-items: center; justify-items: start; }
+  .trin-tekst h1 { grid-column: 1 / span 2; grid-row: 1; font-size: clamp(27px, 3.8vw, 54px); }
   .trin-knapper { display: contents; }
-  .trin-tekst .laes-op { grid-column: 2; grid-row: 1; align-self: start; width: var(--tryk); padding: 0; border-radius: 50%; }
+  .trin-tekst .laes-op { grid-column: 3; grid-row: 1; align-self: start; width: var(--tryk); padding: 0; border-radius: 50%; }
   .trin-tekst .laes-op > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  .trin-ikoner, .trin-tekst .timer, .note { grid-column: 1 / -1; }
+  .trin-ikoner { grid-column: 1; align-self: start; gap: 8px; }
+  .trin-ikoner img { width: 52px; height: 52px; padding: 4px; border-radius: 14px; }
+  .trin-tekst .timer, .note { grid-column: 1 / -1; }
+  .trin-ikoner + .trin-knapper .timer { grid-column: 2 / -1; align-self: start; }
   /* Retten: billede og navn øverst (før stod navnet midt i den lange række og blev dækket af bunden).
      To lige brede kolonner: på 667 px fik navnet ellers tre linjer i den smalle venstre kolonne */
   .ret-indhold { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px 24px; padding: 6px 24px 10px; align-items: start; align-content: normal; }
