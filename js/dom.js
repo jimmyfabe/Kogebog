@@ -47,10 +47,16 @@ export function ledLinje(tag, attrs, leder, skille = ' · ') {
   return e;
 }
 
+// Brudene sættes i næste billede, ikke i observerens eget kald: en skjult prik kan ændre linjens højde, og en ændring
+// inde i kaldet giver «ResizeObserver loop completed with undelivered notifications» (e2e 05-11-2026)
 let brudVagt = null;
+const venter = new Set();
 function foelgBrud(e) {
   if (typeof ResizeObserver !== 'function') return; // ældre browsere beholder prikken
-  brudVagt ??= new ResizeObserver((poster) => { for (const p of poster) saetBrud(p.target); });
+  brudVagt ??= new ResizeObserver((poster) => {
+    if (!venter.size) requestAnimationFrame(() => { const nu = [...venter]; venter.clear(); nu.forEach(saetBrud); });
+    for (const p of poster) venter.add(p.target);
+  });
   brudVagt.observe(e);
 }
 
