@@ -19,7 +19,7 @@ const SLUTORD = new Set(['kål', 'bær', 'mos', 'mel', 'ost', 'ris', 'kød', 'l�
 const UNDTAGELSER = new Map([
   ['is', { slutning: 'eis' }], // vaniljeis og flødeis, men ikke flormelis, gris eller ris
   ['ris', { ikke: ['gris', 'pris'] }], // grødris og jasminris, men ikke gris og pris
-  ['mel', { ikke: ['krymmel', 'julekrymmel'] }], // hvedemel, men ikke krymmel på kager
+  ['mel', { ikke: ['krymmel', 'julekrymmel', 'mellemstore', 'melede'] }], // hvedemel, men ikke krymmel på kager og mellemstore kartofler
   ['kål', { ikke: ['skål', 'risskål'] }], // blomkål, men ikke en sushi-skål
   ['ost', { ikke: ['frost', 'æblemost'] }], // hytteost, men ikke bær på frost
   ['nød', { inde: true }], // muskatnød, valnødder, pebernødder: en voksen, der tjekker for nødder, må ikke få «ingen retter»
