@@ -1087,5 +1087,5 @@ test('korte ord med blød bindestreg og tomme input', () => {
   assert.equal(soeg([r('a')], null).length, 1);
   assert.equal(soeg([r('a')], undefined).length, 1);
   assert.equal(soeg([], 'is').length, 0);
-  assert.equal(soeg([r('Æggekage')], 'A\u030A').length, 0);
+  assert.equal(soeg([r('Åben')], String.fromCharCode(0x41, 0x30A)).length, 1, 'Å skrevet som to tegn (A + ring) finder Å');
 });
