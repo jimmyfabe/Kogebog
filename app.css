@@ -1218,13 +1218,20 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
 /* iPhones på langs: rettens tre knapper skal stå på én række. Fortsæt, Start forfra og print fyldte 787 px, så bunden
    brød på to rækker på 667 og 736 px (44 % af skærmen). Print står uden ikon, som under 400 px. Gælder også de bredere
    (812-932 px): på 812×375 var der kun 11 px luft med de store knapper, og iPhonens ui-rounded kan være bredere end
-   Trebuchet MS, som WebKit på Windows tegner med */
+   Trebuchet MS, som WebKit på Windows tegner med. Kanten er 24 px som topbaren og indholdet: mindre mellemrum og
+   mindre luft i «Fortsæt» giver stadig 18 px luft på 667 px med «Fortsæt ved trin 23» */
 @media (max-height: 520px) and (orientation: landscape) {
-  .ret .handlinger { gap: 12px; padding-left: 16px; padding-right: 16px; }
+  .ret .handlinger { gap: 8px; }
   .ret .handlinger .knap { white-space: nowrap; }
   .ret .handlinger .print-knap { padding: 0 14px; }
   .ret .handlinger .print-knap .ikon { display: none; }
   .ret .handlinger .forfra { font-size: 19px; padding: 0 16px; gap: 8px; }
   .ret .handlinger .forfra .ikon { width: 24px; height: 24px; }
-  .ret .handlinger .fortsaet { font-size: 22px; padding: 0 20px; }
+  .ret .handlinger .fortsaet { font-size: 22px; padding: 0 16px; }
+}
+
+/* 667×375: ugeplanen arver telefonens 12 px fra (max-width: 700px), mens topbaren har de lave skærmes 24 px, så
+   hus-knappen stod 12 px til højre for overskriften og indholdet (familie.css: det samme for voksendelen) */
+@media (max-width: 700px) and (max-height: 520px) and (orientation: landscape) {
+  .uge { padding-left: 24px; padding-right: 24px; }
 }
