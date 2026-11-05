@@ -726,6 +726,17 @@ test('en lås på familien (nyere udgave) giver hverken fejl på forsiden eller 
   assert.equal(lageret.get('kog-familie-v1'), gemt, 'en nyere udgaves data er urørt');
 });
 
+test('favoritterne med en låst familie: skærmen siger, at de ikke kan vises, og data er urørt', async () => {
+  const gemt = JSON.stringify({ v: 999, favoritter: ['koedsovs'] });
+  await start('#/gruppe/' + FAVORITTER, { foer: () => { lageret.set('kog-familie-v1', gemt); } });
+  assert.equal(overskrift(), 'Favoritterne kan ikke vises');
+  assert.equal(rod.querySelector('.status-boks p').textContent, 'De er gemt af en nyere udgave. Genindlæs siden.');
+  assert.deepEqual(skrivninger, []);
+  tryk(knapMedTekst('Til forsiden'));
+  assert.equal(location.hash, '#/');
+  assert.equal(lageret.get('kog-familie-v1'), gemt, 'en nyere udgaves data er urørt');
+});
+
 // ---------- Blandingen: det, der vælges og vises først ----------
 // index.json står efter gruppe, og de 23 pastaretter står først. Uden blandingen var de 20 første retter i planen pasta
 

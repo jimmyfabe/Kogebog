@@ -330,7 +330,10 @@ function gruppeSkaerm(id) {
   if (S.indexFejl) return listeFejlSkaerm();
   if (!S.ids) return henterSkaerm();
   const erFavoritter = id === FAVORITTER;
-  const retter = gruppeRetter(id, S.grupper, erFavoritter ? Lager.hentFamilie(S.ids).favoritter : []);
+  const familie = erFavoritter ? Lager.hentFamilie(S.ids) : null;
+  // En nyere udgave har gemt familien: favoritterne findes, men de kan ikke læses, så «ingen favoritter endnu» ville være forkert
+  if (familie?.laast) return statusSkaerm({ titel: 'Favoritterne kan ikke vises', tekst: 'De er gemt af en nyere udgave. Genindlæs siden.', handling: tilForsiden() });
+  const retter = gruppeRetter(id, S.grupper, familie ? familie.favoritter : []);
   if (!retter) return statusSkaerm({ titel: 'Den gruppe findes ikke', tekst: 'Måske er den blevet omdøbt. Vælg en gruppe på forsiden.', handling: tilForsiden() });
   if (!retter.length) return statusSkaerm({ titel: 'Der er ingen favoritter endnu', tekst: 'Når en ret er færdig, kan I trykke på hjertet. Så står den her.', handling: tilForsiden() });
   const fejlede = [];
