@@ -20,6 +20,7 @@ import { holdKnap } from './hold.js';
 import { maerkerFor, MAERKER } from './maerker.js';
 import { knivtrin } from './model.js';
 import { valgt as udgaveAf } from './groent.js';
+import { blandet } from './grupper.js';
 import * as Tale from './tale.js';
 import * as R from './replikker.js';
 
@@ -947,10 +948,11 @@ function fuldSkaerm(p) {
     tilUgeplanen());
 }
 
-// Trin 2: fire retter pr. side. Første tryk siger navnet og markerer retten, fluebenet («Vælg») går videre til dagene
+// Trin 2: fire retter pr. side. Første tryk siger navnet og markerer retten, fluebenet («Vælg») går videre til dagene.
+// Blandet, så første side ikke kun er pasta. Den voksnes «Vælg ret» (dagSkaerm) har filtre og står som i planen
 function retValgSkaerm(p, dyr) {
   const familie = Lager.hentFamilie(K.S.ids);
-  const alle = retterTilBoern(iPlanen(), familie.udvalg);
+  const alle = retterTilBoern(blandet(iPlanen(), K.S.grupper, (m) => m.id), familie.udvalg);
   const sider = sideAntal(alle);
   barn.side = Math.min(Math.max(barn.side, 0), sider - 1);
   const vist = alle.slice(barn.side * PR_SIDE, (barn.side + 1) * PR_SIDE);

@@ -27,6 +27,17 @@ De 89 retter fra de gamle grupper Aftensmad (85) og Bagning (4) er fordelt på d
 
 «aftensmad» og chippen «Aftensmad» i voksendelen finder de fem grupper Pasta og nudler, Kylling, Fisk, Kød og Grønt: 81 retter. De 4 retter, der kom fra Aftensmad og nu står i Brød og pizza (Pladepizza med spinat og broccoli, Rugbrød med æg og makrel, Hvidløgsflutes, Foldet fladbrød med ost), findes af «bagning», ikke af «aftensmad». Står en af dem bedre i en af de fem grupper, så flyt den, og søgeordet følger med.
 
+## «Fyld op med nye» og børnenes bladren
+
+`index.json` står efter gruppe, så de 23 pastaretter står først. To steder afgør rækkefølgen, hvad der bliver valgt eller vist først, og dér blander `blandet` i `js/grupper.js` grupperne: skiftevis én fra hver gruppe, i fast rækkefølge og uden tilfældighed. De lister, der med vilje står efter gruppe (udvalget, kataloget), og den voksnes «Vælg ret» med filtrene er urørte. Gemte planer, favoritter og udvalg ændres ikke.
+
+Målt på de 82 retter til ugeplanen (pasta 23, kylling 12, fisk 11, kød 10, grønt 23, brød og pizza 3):
+
+| Første gang på børnenes sider | Pasta | Kylling | Fisk | Kød | Grønt | Brød og pizza |
+|---|---|---|---|---|---|---|
+| Før | 1 | 6 | 9 | 12 | 15 | 20 |
+| Nu | 1 | 1 | 1 | 1 | 2 | 2 |
+
 ## Tvivlsretter
 
 Det er her, Jimmy lettest kan være uenig. Begrundelsen er kort.

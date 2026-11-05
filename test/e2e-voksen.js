@@ -20,6 +20,7 @@ import { saml, grupper, holdSammen } from '../js/indkoeb.js';
 import { planMandag, varighedTale } from '../js/tid.js';
 import { tilTale, minutterTekst } from '../js/tekst.js';
 import { soeg } from '../js/soeg.js';
+import { blandet } from '../js/grupper.js';
 import { GRUPPER, VARER, AFTENSMAD_NAVN, AFTENSMAD_GRUPPER, gruppeSoegeord } from '../js/katalog.js';
 import { MAERKER, maerkerFor } from '../js/maerker.js';
 import { medMereGroent, GROENT_TEKST } from '../js/groent.js';
@@ -261,9 +262,11 @@ async function forloeb(browser, H, skaerm) {
   await aabnVoksen(H, side, '/udvalg', n + ' udvalg');
   tjek(await tekstAf(side, '.udvalg-tal') === 'Intet udvalg: børnene ser alle retter', n + ': intet udvalg i starten (' + await tekstAf(side, '.udvalg-tal') + ')');
   await tryk(side, '[data-fokus="fyld-op"]');
-  const otte = IPLAN.filter((id) => !Object.hasOwn(lavetFoer, id)).slice(0, 8);
+  // Blandet: skiftevis én fra hver gruppe (js/grupper.js), og børnenes valg viser dem i samme rækkefølge
+  const indexGrupper = JSON.parse(fs.readFileSync(path.join(H.ROD, 'opskrifter/index.json'), 'utf8')).grupper;
+  const otte = blandet(IPLAN, indexGrupper, (id) => id).filter((id) => !Object.hasOwn(lavetFoer, id)).slice(0, 8);
   f = await laesLager(side, FAMILIE);
-  tjek(f && f.udvalg && JSON.stringify(f.udvalg.ids) === JSON.stringify(otte), n + ': «Fyld op med nye» vælger de 8 første retter, der ikke er lavet (' + JSON.stringify(f && f.udvalg) + ')');
+  tjek(f && f.udvalg && JSON.stringify(f.udvalg.ids) === JSON.stringify(otte), n + ': «Fyld op med nye» vælger de 8 første retter i den blandede rækkefølge, der ikke er lavet (' + JSON.stringify(f && f.udvalg) + ')');
   tjek(await tekstAf(side, '.udvalg-tal') === '8 af 24 valgt', n + ': «8 af 24 valgt» (' + await tekstAf(side, '.udvalg-tal') + ')');
   const valgte = await side.evaluate(() => [...document.querySelectorAll('.voksen-raekke.valgt')].map((r) => r.dataset.ret));
   tjek(JSON.stringify([...valgte].sort()) === JSON.stringify([...otte].sort()), n + ': de 8 rækker er markeret (' + valgte.join(', ') + ')');

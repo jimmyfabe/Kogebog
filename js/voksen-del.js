@@ -22,6 +22,7 @@ import { grafikRet, grafikGruppe, GRUPPER, AFTENSMAD, AFTENSMAD_NAVN, AFTENSMAD_
 import { planMandag, idag } from './tid.js';
 import { soeg } from './soeg.js';
 import { valgt } from './groent.js';
+import { blandet } from './grupper.js';
 
 export const LUK_MS = 10 * 60 * 1000;   // voksendelen lukker efter 10 minutter uden tryk
 export { MAKS_PERSONER, UDVALG_MAKS };   // voksne og børn hver, og retter i udvalget: grænserne fra js/lager.js
@@ -729,9 +730,11 @@ function udvalgSkaerm(f) {
   // Læses ved hvert tryk og hvert tegn: søgefeltet tegner kun listen om, ikke skærmen
   const passer = (tekst) => filtrer(alle, { maerker: [...filtre], tekst });
 
-  // Kun blandt de viste retter, så filtrene og søgningen også gælder her (fx kun nye vegetarretter)
+  // Kun blandt de viste retter, så filtrene og søgningen også gælder her (fx kun nye vegetarretter). Blandet, så udvalget
+  // ikke kun bliver pasta: selve listen på skærmen står efter gruppe
   const fyld = () => {
-    const ny = fyldOp(ids, passer(soegeTekstFor('udvalg')).map((p) => p.m.id), f.lavet, { antal: f.udvalg ? FYLD_OP : UDVALG_STANDARD });
+    const kandidater = blandet(passer(soegeTekstFor('udvalg')), K.S.grupper, (p) => p.m.id).map((p) => p.m.id);
+    const ny = fyldOp(ids, kandidater, f.lavet, { antal: f.udvalg ? FYLD_OP : UDVALG_STANDARD });
     const flere = ny.length - ids.length;
     if (!flere) {
       besked = { tekst: fuldt

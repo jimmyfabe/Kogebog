@@ -57,3 +57,19 @@ export function tilbageFraRet(ret, grupper, fra) {
 export function rulleplads(fra, hash) {
   return fra && fra.hash === hash && Number.isFinite(fra.y) ? fra.y : null;
 }
+
+// Listen skiftevis med én fra hver gruppe: index.json står efter gruppe, så der, hvor rækkefølgen afgør, hvad der bliver
+// valgt eller vist først («Fyld op med nye» og børnenes bladren), var de første 20 retter pasta. Fast rækkefølge og ingen
+// tilfældighed: grupperne står som i grupper, og inden for en gruppe gælder listens rækkefølge, så samme liste altid giver
+// det samme. Svaret er præcis listens elementer: grupper tilføjer ingenting (en ret uden «uge» kommer ikke med gennem sin
+// gruppe), og en ret, der ikke står i en gruppe, får sin tur sidst. idAf(x): elementets ret-id
+export function blandet(liste, grupper, idAf) {
+  const gruppeNr = new Map(grupper.flatMap((g, nr) => g.retter.map((id) => [id, nr])));
+  const bunker = Array.from({ length: grupper.length + 1 }, () => []);
+  for (const x of liste) bunker[gruppeNr.get(idAf(x)) ?? grupper.length].push(x);
+  const ud = [];
+  for (let runde = 0; ud.length < liste.length; runde++) {
+    for (const bunke of bunker) if (runde < bunke.length) ud.push(bunke[runde]);
+  }
+  return ud;
+}

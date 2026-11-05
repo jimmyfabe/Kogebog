@@ -10,7 +10,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { GRUPPER, AFTENSMAD_GRUPPER, gruppeSoegeord } from '../js/katalog.js';
 import { soeg, soegeTekst } from '../js/soeg.js';
-import { FAVORITTER, gruppeRute, forsideGrupper, gruppeAf, gruppeRetter, tilbageFraRet, rulleplads } from '../js/grupper.js';
+import { FAVORITTER, gruppeRute, forsideGrupper, gruppeAf, gruppeRetter, tilbageFraRet, rulleplads, blandet } from '../js/grupper.js';
 import { lavModel, erLynhurtig, harTid } from '../js/model.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -23,6 +23,8 @@ const INDEX = laesJson('opskrifter/index.json');
 const FILER = fs.readdirSync(path.join(ROD, 'opskrifter')).filter((f) => f.endsWith('.json') && f !== 'index.json').map((f) => f.slice(0, -5));
 const retterI = (id) => INDEX.grupper.find((g) => g.id === id).retter;
 const JSONER = new Map(FILER.map((id) => [id, laesJson('opskrifter/' + id + '.json')]));
+// Retterne til ugeplanen i index.json's rækkefølge (efter gruppe)
+const UGE = INDEX.grupper.flatMap((g) => g.retter).filter((id) => JSONER.get(id).tumbi && JSONER.get(id).tumbi.ugeplan === true);
 
 // ---------- Sorteringen i opskrifter/index.json ----------
 
@@ -97,6 +99,42 @@ test('rulleplads: kun på den skærm, retten blev åbnet fra, og kun et rigtigt 
   assert.equal(rulleplads({ hash: '#/gruppe/fisk', ret: 'a', y: 300 }, '#/gruppe/kylling'), null);
   assert.equal(rulleplads(null, '#/gruppe/fisk'), null);
   assert.equal(rulleplads({ hash: '#/gruppe/fisk', ret: 'a', y: NaN }, '#/gruppe/fisk'), null);
+});
+
+test('blandet: skiftevis én fra hver gruppe i fast rækkefølge, som en ny liste', () => {
+  const g = [{ id: 'a', retter: ['a1', 'a2', 'a3'] }, { id: 'b', retter: ['b1'] }, { id: 'c', retter: ['c1', 'c2'] }];
+  const alle = ['a1', 'a2', 'a3', 'b1', 'c1', 'c2'];
+  const ventet = ['a1', 'b1', 'c1', 'a2', 'c2', 'a3'];
+  const selv = (x) => x;
+  assert.deepEqual(blandet(alle, g, selv), ventet);
+  assert.deepEqual(blandet(alle, g, selv), ventet, 'ingen tilfældighed: samme liste giver samme rækkefølge');
+  assert.deepEqual(alle, ['a1', 'a2', 'a3', 'b1', 'c1', 'c2'], 'listen selv er urørt');
+  const objekter = alle.map((id) => ({ id }));
+  const ud = blandet(objekter, g, (m) => m.id);
+  assert.deepEqual(ud.map((m) => m.id), ventet);
+  assert.equal(ud[0], objekter[0], 'de samme elementer, ikke kopier');
+  assert.deepEqual(blandet([], g, selv), []);
+  assert.deepEqual(blandet(['a2', 'a1'], [], selv), ['a2', 'a1'], 'uden grupper står listen, som den stod');
+});
+
+test('blandet: kun listens egne retter kommer ud, så en ret uden «uge» ikke kommer med gennem sin gruppe', () => {
+  const g = [{ id: 'a', retter: ['a1', 'uden-uge', 'a2'] }, { id: 'b', retter: ['uden-uge-2'] }, { id: 'c', retter: ['c1'] }];
+  assert.deepEqual(blandet(['a1', 'a2', 'c1'], g, (x) => x), ['a1', 'c1', 'a2']);
+  assert.deepEqual(blandet(['a2', 'a1', 'c1'], g, (x) => x), ['a2', 'c1', 'a1'], 'inden for gruppen gælder listens rækkefølge');
+});
+
+test('blandet: en ret i en ukendt gruppe eller uden for grupperne forsvinder ikke', () => {
+  const g = [{ id: 'fisk', retter: ['f1', 'f2'] }, { id: 'drikke-som-ikke-findes', retter: ['d1'] }];
+  const alle = ['f1', 'f2', 'd1', 'ny', 'constructor', '__proto__'];
+  assert.deepEqual(blandet(alle, g, (x) => x), ['f1', 'd1', 'ny', 'f2', 'constructor', '__proto__']);
+});
+
+test('blandet på de rigtige retter: alle retter til ugeplanen er med, og de første er én fra hver gruppe', () => {
+  const b = blandet(UGE, INDEX.grupper, (x) => x);
+  assert.deepEqual([...b].sort(), [...UGE].sort());
+  const medUge = INDEX.grupper.filter((g) => g.retter.some((id) => UGE.includes(id))).map((g) => g.id);
+  assert.ok(medUge.length >= 3, 'testen skal have flere grupper at blande');
+  assert.deepEqual(b.slice(0, medUge.length).map((id) => gruppeAf(id, INDEX.grupper)), medUge);
 });
 
 // ---------- Søgningen på de rigtige retter ----------
@@ -659,4 +697,100 @@ test('en lås på familien (nyere udgave) giver hverken fejl på forsiden eller 
   assert.equal(knapper().length, 9);
   assert.equal(rod.querySelector('.forside-favoritter'), null);
   assert.equal(lageret.get('kog-familie-v1'), gemt, 'en nyere udgaves data er urørt');
+});
+
+// ---------- Blandingen: det, der vælges og vises først ----------
+// index.json står efter gruppe, og de 23 pastaretter står først. Uden blandingen var de 20 første retter i planen pasta
+
+const gruppeNavne = (ids) => ids.map((id) => gruppeAf(id, INDEX.grupper));
+
+// Et hold på 2 s, som fingeren gør det: requestAnimationFrame kører kun, når testen siger til (holdet læser uret)
+const holdInde = (b) => {
+  assert.ok(b, 'holdknappen findes ikke');
+  const gammel = globalThis.requestAnimationFrame;
+  let tegn = null;
+  globalThis.requestAnimationFrame = (fn) => { tegn = fn; return 1; };
+  try {
+    for (const fn of b.lyt.pointerdown) fn({ pointerType: 'touch', button: 0 });
+    ur += 2500;
+    tegn();
+  } finally {
+    globalThis.requestAnimationFrame = gammel;
+  }
+};
+
+// Børnenes valg: alle sider, som barnet bladrer i dem
+const alleSider = () => {
+  const sider = [rod.querySelectorAll('.ret-kort').map((b) => b.dataset.ret)];
+  while (!knapMed('Flere retter').disabled) {
+    tryk(knapMed('Flere retter'));
+    sider.push(rod.querySelectorAll('.ret-kort').map((b) => b.dataset.ret));
+    assert.ok(sider.length <= UGE.length, 'børnenes valg bliver ved med at have flere sider');
+  }
+  return sider;
+};
+
+test('børnenes valg: første side blander grupperne, og man når alle retter til ugeplanen og ingen andre', async () => {
+  await start('#/uge/vaelg/rosa');
+  const sider = alleSider();
+  assert.equal(sider[0].length, 4);
+  assert.equal(new Set(gruppeNavne(sider[0])).size, 4, 'side 1 har: ' + gruppeNavne(sider[0]).join(', '));
+  assert.deepEqual(sider.flat().sort(), [...UGE].sort());
+  assert.deepEqual(skrivninger, [], 'at bladre gemmer intet');
+});
+
+test('børnenes valg med et udvalg: kun udvalgets retter, blandet, og det gemte udvalg er urørt', async () => {
+  const ids = [...retterI('pasta-og-nudler').filter((id) => UGE.includes(id)).slice(0, 3), ...retterI('fisk').filter((id) => UGE.includes(id)).slice(0, 2)];
+  let gemt = null;
+  // Pip: valget undervejs (barn i js/ugeplan.js) huskes i modulet, så Rosa ville starte på den side, testen før sluttede på
+  await start('#/uge/vaelg/pip', { foer: () => { Lager.gemFamilie({ udvalg: { ids, rettet: '2026-11-05' } }, FILER); gemt = lageret.get('kog-familie-v1'); } });
+  const vist = alleSider().flat();
+  assert.deepEqual([...vist].sort(), [...ids].sort());
+  assert.deepEqual(gruppeNavne(vist).slice(0, 4), ['pasta-og-nudler', 'fisk', 'pasta-og-nudler', 'fisk']);
+  assert.equal(lageret.get('kog-familie-v1'), gemt, 'det gemte udvalg har samme rækkefølge som før');
+  assert.deepEqual(skrivninger, []);
+});
+
+test('«Fyld op med nye» på den rigtige skærm: blander grupperne, kun retter til ugeplanen, og de gamle står først', async () => {
+  await start('#/voksen/udvalg');
+  try {
+    holdInde(rod.querySelector('.voksen-vagt'));
+    const fyld = () => {
+      tryk(rod.querySelector('[data-fokus="fyld-op"]'));
+      return JSON.parse(lageret.get('kog-familie-v1')).udvalg.ids;
+    };
+    const otte = fyld();
+    assert.equal(otte.length, 8);
+    assert.ok(new Set(gruppeNavne(otte)).size >= 3, 'fyld op gav: ' + gruppeNavne(otte).join(', '));
+    assert.ok(otte.every((id) => UGE.includes(id)), 'en ret uden «uge» kom med: ' + otte.join(', '));
+    const tolv = fyld();
+    assert.equal(tolv.length, 12);
+    assert.deepEqual(tolv.slice(0, 8), otte, 'det, der allerede er valgt, står, hvor det stod');
+    assert.ok(tolv.every((id) => UGE.includes(id)));
+  } finally {
+    gaaTil('#/');
+  }
+});
+
+test('«Fyld op med nye» springer retter over, der er lavet før, og blander stadig', async () => {
+  const lavet = [UGE[0], retterI('fisk').find((id) => UGE.includes(id))];
+  await start('#/voksen/udvalg', { foer: () => { for (const id of lavet) Lager.markerLavet(id, '2026-10-20', FILER); } });
+  try {
+    holdInde(rod.querySelector('.voksen-vagt'));
+    tryk(rod.querySelector('[data-fokus="fyld-op"]'));
+    const ids = JSON.parse(lageret.get('kog-familie-v1')).udvalg.ids;
+    assert.equal(ids.length, 8);
+    for (const id of lavet) assert.ok(!ids.includes(id), id + ' er lavet før');
+    assert.ok(new Set(gruppeNavne(ids)).size >= 3, 'fyld op gav: ' + gruppeNavne(ids).join(', '));
+  } finally {
+    gaaTil('#/');
+  }
+});
+
+test('fyldOp med den blandede liste: de 8 første har mindst 3 grupper, og kun retter til ugeplanen', async () => {
+  const V = await import('../js/voksen-del.js');
+  const ny = V.fyldOp([], blandet(UGE, INDEX.grupper, (x) => x), {}, { antal: V.UDVALG_STANDARD });
+  assert.equal(ny.length, V.UDVALG_STANDARD);
+  assert.ok(new Set(gruppeNavne(ny)).size >= 3, 'kun: ' + gruppeNavne(ny).join(', '));
+  assert.ok(ny.every((id) => UGE.includes(id)));
 });
