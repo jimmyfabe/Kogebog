@@ -83,13 +83,8 @@ test('printets fod holdes sammen med det sidste trin', () => {
   assert.doesNotMatch(regler('.fod'), /break-before/, '.fod må ikke bruge break-before: Safari kender ikke break-before: avoid, og blokken .slut holder foden sammen med det sidste trin');
 });
 
-// Forsidens top på iPhone på højkant: afsnittenes knapper står mellem Rosa og Bo i et grid (minmax(0, 1fr) auto
-// minmax(0, 1fr)). Dyrene skal være skjult eller mindst 32 px brede (som forsideTop i test-e2e.js), og knaprækken må ikke
-// være bredere end skærmen (den står i midten og må gerne gå ind i toppens margen: på 360 px står den 4 px fra kanterne,
-// målt i WebKit). Med jul blev knapperne fem (352 px), og på 390×844 blev dyrene 1 px brede (review K1, 01-11-2026).
-// Testen regner bredderne ud af app.css og antallet af afsnit for hver skærmbredde fra 360 til 700 px på højkant, så en
-// sjette knap eller en ny afstand fanges uden en browser
-const MIN_DYR = 32;
+// Forsidens gitter: gaeldende() regner ud af app.css, hvilke regler der gælder ved en skærmstørrelse, så gitterets variabler
+// kan prøves uden en browser. Selve målene på skærmen måles i WebKit (test-e2e.js)
 function mediaPasser(hoved, b, h) {
   const betingelser = hoved.replace(/^@media\s*/, '');
   return betingelser.split(',').some((alt) => alt.trim().split(/\s+and\s+/).every((del) => {
@@ -121,48 +116,97 @@ function gaeldende(rod, vaelger, b, h) {
   }
   return ud;
 }
-test('forsidens top på iPhone på højkant: Rosa og Bo er skjult eller mindst 32 px, og knaprækken er højst skærmens bredde', () => {
+const GITTER = '.gruppe-knapper';
+const MED_TI = '.gruppe-knapper:has(> li:nth-child(10))';
+const pxTal = (v) => {
+  assert.match(String(v), /^\d+(\.\d+)?px$/, 'forventede en værdi i px, fandt ' + v);
+  return parseFloat(v);
+};
+// Gitterets variabler ved n knapper: reglen for 10 knapper lægges oven på den almindelige, som i browseren
+function gitter(rod, n, b, h) {
+  const g = { ...gaeldende(rod, GITTER, b, h), ...(n >= 10 ? gaeldende(rod, MED_TI, b, h) : {}) };
+  return { kolonner: Number(g['--kolonner']), raekker: Number(g['--raekker']), rest: pxTal(g['--rest']), gab: pxTal(g['--raek-gab']), plade: g['--plade'] };
+}
+
+test('forsidens gitter: 3 × 3 på iPad, 2 kolonner på iPhone, og alle knapper har en plads', () => {
   const rod = blokke(CSS);
-  const rodVar = Object.fromEntries([...rod.regler.filter((r) => r.hoved === ':root').map((r) => r.deklarationer).join(';')
-    .matchAll(/(--[a-z-]+)\s*:\s*([^;]+)/g)].map((m) => [m[1], m[2].trim()]));
-  const px = (v) => {
-    const m = /^var\((--[a-z-]+)\)$/.exec(v);
-    const t = m ? rodVar[m[1]] : v;
-    assert.match(t, /^\d+(\.\d+)?px$|^0$/, 'forventede en værdi i px, fandt ' + v);
-    return parseFloat(t);
-  };
-  const vandret = (v) => { const d = v.split(/\s+/); return px(d.length === 1 ? d[0] : d[1]); }; // padding: højre/venstre
-  const kolonneGap = (v) => { const d = v.split(/\s+/); return px(d.length === 1 ? d[0] : d[1]); }; // gap: række kolonne
   const n = Object.keys(GRUPPER).length;
-  const smalle = [];
-  const ude = [];
-  let maalt = 0;
-  for (let b = 360; b <= 700; b++) {
-    const h = 1000; // højkant: også (min-height: 521px)
-    const top = gaeldende(rod, '.forside-top', b, h);
-    if (top.display !== 'grid') continue; // kun iPhone-layoutet på højkant
-    maalt++;
-    const indhold = b - 2 * vandret(top.padding);
-    const kolonner = (top['grid-template-columns'].match(/minmax\([^)]*\)|[^\s()]+/g) || []).length;
-    const gab = kolonner > 1 ? (kolonner - 1) * kolonneGap(top.gap) : 0;
-    const knapper = n * px(gaeldende(rod, '.knap.hop', b, h).width) + (n - 1) * px(gaeldende(rod, '.forside-hop', b, h).gap);
-    const skjult = gaeldende(rod, '.forside-top > .forside-dyr', b, h).display === 'none';
-    const dyr = skjult ? 0 : (indhold - gab - knapper) / 2;
-    if (!skjult && dyr < MIN_DYR) smalle.push(b + ' px: ' + dyr + ' px');
-    // Knaprækken skal være inden for dugens padding: på 360 px stod Jul og Halloween 4 px fra skærmkanten, og
-    // fokusringen på den yderste knap blev skåret af (UI-review 02-11-2026)
-    if (knapper > indhold) ude.push(b + ' px: ' + knapper + ' px i ' + indhold + ' px');
+  assert.equal(n, 9, 'v7 har 9 knapper: en 10. skal også passe (næste test)');
+  const ipad = gitter(rod, n, 1180, 820);
+  assert.deepEqual([ipad.kolonner, ipad.raekker], [3, 3]);
+  assert.deepEqual([gitter(rod, n, 390, 844).kolonner, gitter(rod, n, 390, 844).raekker], [2, 5]);
+  for (const [b, h] of [[1180, 820], [1024, 768], [820, 1180], [768, 1024], [390, 844], [360, 640], [844, 390], [667, 375]]) {
+    const g = gitter(rod, n, b, h);
+    assert.ok(g.kolonner * g.raekker >= n, b + '×' + h + ' har plads til ' + g.kolonner * g.raekker);
   }
-  const kort = (l) => (l.length > 2 ? l[0] + ' … ' + l.at(-1) : l.join(', '));
-  // Forstår gaeldende() ikke en @media-regel (fx range-syntaks), springes alle bredder over, og testen blev grøn uden at
-  // have målt noget (code-review 02-11-2026)
-  assert.equal(maalt, 700 - 360 + 1, 'kun ' + maalt + ' bredder fik iPhone-gridet: forstår gaeldende() stadig @media-reglen?');
-  assert.deepEqual(smalle, [], smalle.length + ' bredder giver Rosa og Bo under ' + MIN_DYR + ' px (' + kort(smalle) + '): skjul dem i reglen med .forside-top > .forside-dyr');
-  assert.deepEqual(ude, [], ude.length + ' bredder har ikke plads til knaprækken inden for dugens padding (' + kort(ude) + ')');
+  for (let b = 360; b <= 700; b++) assert.equal(gitter(rod, n, b, 1000).kolonner, 2, b + ' px');
 });
 
-// Hvert afsnit på forsiden (GRUPPER i js/katalog.js) har sin egen farve i [data-gruppe] (overskriften, kortenes cirkel og
-// knappen i toppen). Jul kom ind 01-11-2026 uden en regel, og så faldt kortene tilbage til sennep og knappen til ingenting
+test('forsidens gitter: en 10. knap giver 5 × 2 på iPad på langs og 2 kolonner på iPhone, uden ny kode', () => {
+  const rod = blokke(CSS);
+  const ipad = gitter(rod, 10, 1180, 820);
+  assert.deepEqual([ipad.kolonner, ipad.raekker], [5, 2]);
+  const hoej = gitter(rod, 10, 820, 1180);
+  assert.deepEqual([hoej.kolonner, hoej.raekker], [2, 5], 'iPad på højkant: ingen knap alene på en række');
+  for (const [b, h] of [[390, 844], [360, 640], [700, 1000]]) assert.equal(gitter(rod, 10, b, h).kolonner, 2, b + ' px');
+  for (const [b, h] of [[1180, 820], [1024, 768], [820, 1180], [768, 1024], [390, 844], [667, 375]]) {
+    const g = gitter(rod, 10, b, h);
+    assert.ok(g.kolonner * g.raekker >= 10, b + '×' + h + ' har plads til ' + g.kolonner * g.raekker);
+  }
+});
+
+// Rækkens højde regnes af skærmen og --rest (som i app.css). En knap skal mindst kunne rumme den mindste tallerken (72 px),
+// knappens luft og et navn: ellers presses gitteret ud over skærmen
+test('forsidens gitter: rækkerne er høje nok uden at rulle på iPad, med 9 og 10 knapper og med timeren fremme', () => {
+  const rod = blokke(CSS);
+  const hoejde = (g, h, rest = g.rest) => (h - rest - (g.raekker - 1) * g.gab) / g.raekker;
+  for (const n of [9, 10]) {
+    for (const [b, h] of [[1180, 820], [1024, 768]]) {
+      const g = gitter(rod, n, b, h);
+      assert.ok(hoejde(g, h) >= 92, n + ' knapper på ' + b + '×' + h + ': rækken er ' + hoejde(g, h) + ' px');
+    }
+  }
+  const pille = rod.regler.filter((r) => r.hoved.includes('.forside:has(.forside-timer .pille:not([hidden])) .gruppe-knapper')).map((r) => r.deklarationer).join(';');
+  const m = /--rest\s*:\s*(\d+px)/.exec(pille);
+  assert.ok(m, 'timeren skubber knapperne ned: reglen skal give et større --rest');
+  const g = gitter(rod, 9, 1180, 820);
+  assert.ok(pxTal(m[1]) > g.rest);
+  assert.ok(hoejde(g, 820, pxTal(m[1])) >= 92, 'med timeren: ' + hoejde(g, 820, pxTal(m[1])) + ' px');
+});
+
+test('knapperne er store nok til små fingre på iPhone, og navnene kan ikke knække midt i et ord', () => {
+  const rod = blokke(CSS);
+  for (let b = 360; b <= 700; b++) {
+    const luft = gaeldende(rod, GITTER, b, 1000);
+    const [, vandret] = luft.padding.split(/\s+/).map(parseFloat);
+    const [, kolonneGab] = luft.gap.replace(/var\(--raek-gab\)/, '0px').split(/\s+/).map(parseFloat);
+    const knap = (b - 2 * vandret - kolonneGab) / 2;
+    assert.ok(knap >= 140, b + ' px: knappen er ' + knap + ' px bred');
+    assert.ok(pxTal(luft['--plade']) >= 96, b + ' px');
+    assert.ok(pxTal(luft['--plade']) <= knap - 22, b + ' px: tallerkenen skal kunne være i knappen');
+  }
+  const navn = gaeldende(rod, '.gruppe-knap-navn', 1180, 820);
+  assert.equal(navn['overflow-wrap'], 'break-word', 'overflow-wrap: anywhere giver ét bogstav pr. linje i flex i WebKit');
+  assert.equal(navn.hyphens, 'auto');
+  assert.equal(navn['-webkit-hyphens'], 'auto');
+  assert.equal(navn['min-width'], '0');
+});
+
+test('lupen er mindst 48 px på alle skærme, og Rosa og Bo giver plads til den på smalle skærme', () => {
+  const rod = blokke(CSS);
+  for (const [b, h] of [[1180, 820], [820, 1180], [390, 844], [360, 640], [844, 390], [667, 375]]) {
+    const l = gaeldende(rod, '.knap.forside-lup', b, h);
+    assert.ok(pxTal(l.width) >= 48 && pxTal(l['min-height']) >= 48, b + '×' + h);
+  }
+  for (let b = 360; b <= 559; b++) assert.equal(gaeldende(rod, '.forside-top > .forside-dyr', b, 1000).display, 'none', b + ' px');
+});
+
+test('de gamle hop-knapper er væk fra stilarket', () => {
+  assert.doesNotMatch(CSS, /\.hop\b|forside-hop/);
+});
+
+// Hver gruppe (GRUPPER i js/katalog.js) har sin egen farve i [data-gruppe] (knappen på forsiden, overskriften og kortenes
+// cirkel). Jul kom ind 01-11-2026 uden en regel, og så faldt kortene tilbage til sennep og knappen til ingenting
 test('hvert afsnit har sin egen farve i [data-gruppe] fra en farve på :root', () => {
   const rod = blokke(CSS);
   const farver = new Set([...rod.regler.filter((b) => b.hoved === ':root').map((b) => b.deklarationer).join(';')

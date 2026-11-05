@@ -200,15 +200,18 @@ test('filtrene: en ret skal have alle de valgte mærker, og ingen filtre viser a
 const model = (id, navn, ingredienser = []) => ({ id, navn, ingredienser: ingredienser.map((n) => ({ navn: n })) });
 const POSTER = [
   V.soegePost(model('gloegg', 'Børnegløgg', ['æblemost']), 'jul', ['ingenKniv']),
-  V.soegePost(model('kylling', 'Kylling i karry', ['kyllingebryst', 'ris']), 'aftensmad', ['hurtig', 'groent']),
-  V.soegePost(model('laks', 'Laks med ris', ['laksefilet', 'ris']), 'aftensmad', ['fisk', 'hurtig']),
-  V.soegePost(model('boller', 'Boller', ['hvedemel']), 'bagning', []),
+  V.soegePost(model('kylling', 'Kylling i karry', ['kyllingebryst', 'ris']), 'kylling', ['hurtig', 'groent']),
+  V.soegePost(model('laks', 'Laks med ris', ['laksefilet', 'ris']), 'fisk', ['fisk', 'hurtig']),
+  V.soegePost(model('boller', 'Boller', ['hvedemel']), 'broed-og-pizza', []),
   V.soegePost(model('risalamande', 'Risalamande', ['grødris']), 'jul', ['favorit']),
 ];
 
 test('soegePost: gruppens og mærkernes navne kommer fra GRUPPER og MAERKER, og en ukendt gruppe har intet navn', () => {
   const p = POSTER[1];
-  assert.equal(p.gruppe, 'Aftensmad');
+  assert.equal(p.gruppe, 'Kylling');
+  assert.equal(p.gruppeOrd, 'Aftensmad', 'kylling kom fra Aftensmad, så ordet finder den stadig');
+  assert.equal(POSTER[3].gruppeOrd, 'Bagning');
+  assert.equal(POSTER[0].gruppeOrd, null);
   assert.deepEqual(p.maerker, ['Hurtig', 'Masser af grønt']);
   assert.equal(p.navn, 'Kylling i karry');
   assert.equal(p.m.id, 'kylling');
@@ -226,12 +229,22 @@ test('filtrer: gruppen, alle de valgte mærker og søgeteksten gælder sammen, o
   assert.deepEqual(ids({ maerker: ['hurtig'] }), ['kylling', 'laks']);
   assert.deepEqual(ids({ maerker: ['hurtig', 'fisk'] }), ['laks']);
   assert.deepEqual(ids({ tekst: 'ris' }), ['kylling', 'laks', 'risalamande'], 'ingrediensen «ris» og navnet «Risalamande»');
-  assert.deepEqual(ids({ gruppe: 'aftensmad', tekst: 'ris' }), ['kylling', 'laks']);
-  assert.deepEqual(ids({ gruppe: 'aftensmad', maerker: ['fisk'], tekst: 'ris' }), ['laks']);
+  assert.deepEqual(ids({ gruppe: 'fisk', tekst: 'ris' }), ['laks']);
+  assert.deepEqual(ids({ gruppe: 'fisk', maerker: ['fisk'], tekst: 'ris' }), ['laks']);
   assert.deepEqual(ids({ tekst: 'jul' }), ['gloegg', 'risalamande'], 'gruppens navn «Jul»');
   assert.deepEqual(ids({ tekst: 'Favorit' }), ['risalamande'], 'mærkets navn');
-  assert.deepEqual(ids({ gruppe: 'bagning', tekst: 'ris' }), [], 'ingen træf');
+  assert.deepEqual(ids({ gruppe: 'broed-og-pizza', tekst: 'ris' }), [], 'ingen træf');
   assert.deepEqual(ids({ gruppe: 'halloween' }), []);
+});
+
+// Aftensmad blev delt i fem grupper: chippen og søgeordet skal stadig samle dem (katalogFiltre og soegePost)
+test('filtrer: «Aftensmad» er de fem grupper, og søgeordene «aftensmad» og «bagning» finder dem', () => {
+  const ids = (valg) => V.filtrer(POSTER, valg).map((p) => p.m.id);
+  assert.deepEqual(ids({ gruppe: 'aftensmad' }), ['kylling', 'laks']);
+  assert.deepEqual(ids({ gruppe: 'aftensmad', tekst: 'karry' }), ['kylling']);
+  assert.deepEqual(ids({ tekst: 'aftensmad' }), ['kylling', 'laks']);
+  assert.deepEqual(ids({ tekst: 'bagning' }), ['boller']);
+  assert.deepEqual(ids({ gruppe: 'constructor' }), [], 'et id fra adressen er ikke en gruppe');
 });
 
 test('linjen over listen: «Viser alle N retter» uden filter, ellers «Viser n af N retter» (hårdt mellemrum før «retter»)', () => {

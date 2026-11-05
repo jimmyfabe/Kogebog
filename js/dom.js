@@ -37,6 +37,7 @@ export function sideTitel(tekst) {
 // Faste streg-ikoner (24 × 24). Stierne står her i koden og kommer aldrig fra data.
 const IKONER = {
   hjem: ['M3.5 11.5 12 4.5l8.5 7', 'M6 10v9.5h12V10', 'M10 19.5v-5h4v5'],
+  lup: ['M10.5 17.5a7 7 0 1 0 0-14 7 7 0 0 0 0 14z', 'M15.6 15.6l4.9 4.9'],
   tilbage: ['M19 12H5.5', 'M11 5.5 4.5 12l6.5 6.5'],
   naeste: ['M5 12h13.5', 'M13 5.5l6.5 6.5-6.5 6.5'],
   hoejttaler: ['M4 9.5h3.5L12 5.5v13l-4.5-4H4z', 'M15.5 9.2a4 4 0 0 1 0 5.6', 'M18.2 6.6a7.6 7.6 0 0 1 0 10.8'],

@@ -10,8 +10,9 @@ const r = (tekst, fil) => ({ tekst, fil });
 export const FAERDIG = r('Færdig! Godt gået. Velbekomme.', 'faelles/faerdig.mp3');
 export const PRINT_HOLD = r('Den voksne holder knappen inde for at printe.', 'faelles/print-hold.mp3');
 
-// Forsidens afsnit (hop-knapperne): «Aftensmad», «Bagning», «Søde sager»
+// Forsidens billedknapper: «Pasta og nudler», «Kylling», «Søde sager» … og hjertet
 export const gruppe = (id) => r(GRUPPER[id], 'faelles/gruppe-' + id + '.mp3');
+export const FAVORITTER = r('Favoritter', 'faelles/gruppe-favoritter.mp3');
 
 // Forsiden: første tryk på et kort. Retten: andet tryk og højttaleren
 export const retValgt = (m) => r(m.navn + '. Tryk igen for at starte.', m.id + '/valgt.mp3');

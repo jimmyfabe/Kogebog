@@ -18,7 +18,7 @@ import { holdKnap } from './hold.js';
 import { portionerFraHusstand } from './skaler.js';
 import { MAERKER, maerkerFor } from './maerker.js';
 import { kod, afkod } from './plankode.js';
-import { grafikRet, grafikGruppe, GRUPPER } from './katalog.js';
+import { grafikRet, grafikGruppe, GRUPPER, AFTENSMAD, AFTENSMAD_NAVN, AFTENSMAD_GRUPPER, gruppeSoegeord } from './katalog.js';
 import { planMandag, idag } from './tid.js';
 import { soeg } from './soeg.js';
 import { valgt } from './groent.js';
@@ -96,20 +96,25 @@ export function husstandSum(voksne, boern, barnAndel) {
 const sumTekst = ({ n, loft }) => portionerTekst(n) + (loft ? ' (højst ' + MAKS_PORTIONER + ' — lav retten to gange til flere)' : '');
 
 // En ret, som søgningen og filtrene ser den: modellen, gruppen (id fra index.json og navnet fra GRUPPER) og mærkerne
-// (nøglerne fra maerkerFor og deres navne). soeg() i js/soeg.js søger i navn, ingredienser, gruppe og maerker
+// (nøglerne fra maerkerFor og deres navne). soeg() i js/soeg.js søger i navn, ingredienser, gruppe, gruppens gamle navn
+// (gruppeOrd, fx «Aftensmad») og maerker. Posten findes kun i hukommelsen
 export function soegePost(m, gruppeId, noegler) {
   return {
     m, gruppeId, noegler,
     navn: m.navn,
     ingredienser: m.ingredienser,
     gruppe: typeof gruppeId === 'string' && Object.hasOwn(GRUPPER, gruppeId) ? GRUPPER[gruppeId] : null,
+    gruppeOrd: gruppeSoegeord(gruppeId),
     maerker: noegler.map((k) => MAERKER[k].navn),
   };
 }
 
+// Står posten i gruppen? Chippen «Aftensmad» (AFTENSMAD) er de fem grupper, Aftensmad blev delt i
+const iGruppe = (p, gruppe) => p.gruppeId === gruppe || (gruppe === AFTENSMAD && AFTENSMAD_GRUPPER.includes(p.gruppeId));
+
 // Listen efter filtrene: gruppen (null = alle), alle de valgte mærker og søgeteksten, i postenes rækkefølge
 export function filtrer(poster, { gruppe = null, maerker = [], tekst = '' } = {}) {
-  return soeg(medMaerker(poster.filter((p) => !gruppe || p.gruppeId === gruppe), maerker, (p) => p.noegler), tekst);
+  return soeg(medMaerker(poster.filter((p) => !gruppe || iGruppe(p, gruppe)), maerker, (p) => p.noegler), tekst);
 }
 
 // Linjen over listen: «Viser alle 125 retter» eller «Viser 12 af 125 retter» (hårdt mellemrum før «retter», som flertal)
@@ -313,25 +318,24 @@ function poster(retter, f) {
 }
 const soegeTekstFor = (side) => soegning.get(side) || '';
 
-const LUP = ['M10.5 17.5a7 7 0 1 0 0-14 7 7 0 0 0 0 14z', 'M15.6 15.6l4.9 4.9'];
+// Alle retter som søgeposter, til lupen på forsiden (app.js)
+export const soegePoster = () => poster(alleRetter(), Lager.hentFamilie(K.S.ids));
 
-// Søgefeltet med lupen og «Ryd søgningen» (×). Ved hvert tegn huskes teksten (kun i hukommelsen), og opdater() tegner
-// listen og tallet om. Selve feltet tegnes ikke om, så fokus, markøren og tastaturet bliver, hvor de er. Svar: formen og
-// ryd(), der tømmer feltet og giver det fokus (også knappen «Ryd søgningen», når intet passer)
-function soegeFelt(side, opdater) {
-  const id = 'soeg-' + side;
+// Søgefeltet med lupen og «Ryd søgningen» (×). Ved hvert tegn kaldes naarSkrevet(tekst), der husker teksten (kun i
+// hukommelsen) og tegner listen og tallet om. Selve feltet tegnes ikke om, så fokus, markøren og tastaturet bliver, hvor
+// de er. Svar: formen og ryd(), der tømmer feltet og giver det fokus (også knappen «Ryd søgningen», når intet passer).
+// Tallet under feltet skal have id'et id + '-tal' (aria-describedby)
+export function soegeForm({ id, vaerdi, naarSkrevet }) {
   const felt = el('input', {
     id, class: 'soeg-felt', type: 'search', placeholder: SOEG_EKSEMPEL, maxlength: String(SOEG_MAKS), autocomplete: 'off',
     autocapitalize: 'none', autocorrect: 'off', spellcheck: 'false', enterkeyhint: 'search', 'aria-describedby': id + '-tal',
   });
-  felt.value = soegeTekstFor(side);
+  felt.value = vaerdi;
   const kryds = K.knap('', { klasse: 'rund soeg-ryd', ikonNavn: 'kryds', label: 'Ryd søgningen', onclick: () => ryd() });
   kryds.hidden = !felt.value;
   function saet(tekst) {
-    if (tekst) soegning.set(side, tekst);
-    else soegning.delete(side);
     kryds.hidden = !tekst;
-    opdater();
+    naarSkrevet(tekst);
   }
   function ryd() {
     felt.value = '';
@@ -345,15 +349,24 @@ function soegeFelt(side, opdater) {
     if (matchMedia('(pointer: coarse)').matches) felt.blur();
   } },
   el('label', { for: id, class: 'soeg-navn', tekst: 'Søg i retterne' }),
-  el('div', { class: 'soeg-raekke' }, stregIkon(LUP), felt, kryds));
+  el('div', { class: 'soeg-raekke' }, ikon('lup'), felt, kryds));
   return { form, ryd };
+}
+
+// Søgefeltet i voksendelens lister: teksten huskes pr. side (soegning), til voksendelen lukker
+function soegeFelt(side, opdater) {
+  return soegeForm({ id: 'soeg-' + side, vaerdi: soegeTekstFor(side), naarSkrevet: (tekst) => {
+    if (tekst) soegning.set(side, tekst);
+    else soegning.delete(side);
+    opdater();
+  } });
 }
 
 // «Viser 12 af 125 retter» under søgefeltet og filtrene. En statuslinje, så skærmlæseren siger tallet, når listen skifter
 const soegeTal = (side) => el('p', { id: 'soeg-' + side + '-tal', class: 'soeg-tal', role: 'status' });
 
 // Intet passer: hvad der blev søgt efter, og vejen tilbage (søgningen og/eller filtrene)
-function ingenTraef(tekst, { ryd, fjernFiltre = null, filterTekst = 'Ingen retter passer til de valgte filtre.' }) {
+export function ingenTraef(tekst, { ryd, fjernFiltre = null, filterTekst = 'Ingen retter passer til de valgte filtre.' }) {
   const t = tekst.trim();
   return el('div', { class: 'voksen-tom' },
     el('p', { tekst: t ? 'Ingen retter passer til «' + t + '»' + (fjernFiltre ? ' med de valgte filtre.' : '.') : filterTekst }),
@@ -531,18 +544,19 @@ function hubSkaerm(f) {
   // Familien er gemt med en nyere udgave: husstand, udvalg, favoritter og kataloget kan ikke åbnes, ugeplanen og
   // listen kan
   const nyere = f.laast ? { status: NYERE, laast: true } : {};
+  // Ugeplanen står først: det er den, den voksne oftest kommer efter (forsiden blev ny 05-11-2026)
   const punkter = [
+    { navn: 'Ugeplan', ikonEl: ikon('kalender'), til: '#/uge', fokus: 'ugeplan',
+      status: p.laast ? NYERE : p.dage.filter(Boolean).length + ' af 7 dage har en ret' },
+    { navn: 'Indkøbsliste', ikonEl: ikon('kurv'), til: listeHash, fokus: 'indkoeb', status: 'Listen til butikken og telefonen' },
     { navn: 'Husstand', ikonEl: stregIkon(PERSONER), til: '#/voksen/husstand', fokus: 'husstand',
       status: sum.n ? husstandTekst(f.voksne, f.boern) + ' = ' + sumTekst(sum) : 'Ikke sat. Nye retter er til ' + portionerTekst(p.n), ...nyere },
     { navn: 'Ugens udvalg', ikonEl: ikon('liste'), til: '#/voksen/udvalg', fokus: 'udvalg',
       status: f.udvalg ? flertal(valgt, 'ret', 'retter') + ' at vælge mellem' : 'Alle ' + alle.length + ' retter', ...nyere },
     { navn: 'Favoritter', ikonEl: hjerteIkon(), til: '#/voksen/favoritter', fokus: 'favoritter',
       status: f.favoritter.length ? flertal(f.favoritter.length, 'ret', 'retter') : 'Ingen endnu', ...nyere },
-    { navn: 'Katalog', ikonEl: stregIkon(LUP), til: '#/voksen/katalog', fokus: 'katalog',
+    { navn: 'Katalog', ikonEl: ikon('lup'), til: '#/voksen/katalog', fokus: 'katalog',
       status: 'Søg i alle ' + flertal(alleRetter().length, 'ret', 'retter'), ...nyere },
-    { navn: 'Ugeplan', ikonEl: ikon('kalender'), til: '#/uge', fokus: 'ugeplan',
-      status: p.laast ? NYERE : p.dage.filter(Boolean).length + ' af 7 dage har en ret' },
-    { navn: 'Indkøbsliste', ikonEl: ikon('kurv'), til: listeHash, fokus: 'indkoeb', status: 'Listen til butikken og telefonen' },
   ];
   return voksenSkaerm('voksen-hub', 'Voksne', 'Lukker efter ' + LUK_MS / 60000 + ' minutter uden tryk',
     el('nav', { 'aria-label': 'Voksendelen' }, el('ul', { class: 'voksen-menu' }, punkter.map(punkt))),
@@ -804,13 +818,16 @@ function gruppeChip(id, navn, antal) {
   return b;
 }
 
-// Grupper og mærker i filterBoks
+// Grupper og mærker i filterBoks. «Aftensmad» samler de fem grupper, Aftensmad blev delt i, og står kun, når den har retter
 function katalogFiltre(alle) {
   const v = katalogValg;
-  const valgte = [v.gruppe ? GRUPPER[v.gruppe] : null, ...[...v.maerker].map((k) => MAERKER[k].navn)].filter(Boolean);
+  const gruppeNavn = v.gruppe === AFTENSMAD ? AFTENSMAD_NAVN : GRUPPER[v.gruppe];
+  const valgte = [v.gruppe ? gruppeNavn : null, ...[...v.maerker].map((k) => MAERKER[k].navn)].filter(Boolean);
+  const aftensmad = alle.filter((p) => iGruppe(p, AFTENSMAD)).length;
   return filterBoks('katalog', 'Grupper og mærker', valgte,
     el('div', { class: 'filter-chips', role: 'group', 'aria-label': 'Grupper' },
       gruppeChip(null, 'Alle', alle.length),
+      aftensmad ? gruppeChip(AFTENSMAD, AFTENSMAD_NAVN, aftensmad) : null,
       K.S.grupper.filter((g) => Object.hasOwn(GRUPPER, g.id)).map((g) => gruppeChip(g.id, GRUPPER[g.id], alle.filter((p) => p.gruppeId === g.id).length))),
     el('div', { class: 'filter-chips', role: 'group', 'aria-label': 'Mærker' },
       Object.keys(MAERKER).map((k) => filterChip(k, alle.filter((p) => p.noegler.includes(k)).length, v.maerker, 'katalog'))));
