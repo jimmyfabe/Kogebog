@@ -48,16 +48,38 @@ export function ledLinje(tag, attrs, leder, skille = ' · ') {
 }
 
 // Brudene sættes i næste billede, ikke i observerens eget kald: en skjult prik kan ændre linjens højde, og en ændring
-// inde i kaldet giver «ResizeObserver loop completed with undelivered notifications» (e2e 05-11-2026)
+// inde i kaldet giver «ResizeObserver loop completed with undelivered notifications» (e2e 05-11-2026).
+// Sidens bredde følges også. En brudt linje i en beholder, der krymper til indholdet (.meta i .ret-hoved, .uge-nr ved
+// siden af overskriften, .vare-maengde i .vare-tekst), er kun så bred som sin bredeste del, og den ændrer ikke størrelse,
+// når der bliver mere plads: blev skærmen bredere (en iPad, der drejes, Split View), stod linjen stadig i to (code review
+// 05-11-2026)
 let brudVagt = null;
+let sideBredde = null;
+let planlagt = false;
 const venter = new Set();
 function foelgBrud(e) {
   if (typeof ResizeObserver !== 'function') return; // ældre browsere beholder prikken
-  brudVagt ??= new ResizeObserver((poster) => {
-    if (!venter.size) requestAnimationFrame(() => { const nu = [...venter]; venter.clear(); nu.forEach(saetBrud); });
-    for (const p of poster) venter.add(p.target);
-  });
+  if (!brudVagt) {
+    brudVagt = new ResizeObserver((poster) => {
+      for (const p of poster) {
+        if (p.target !== document.documentElement) venter.add(p.target);
+        else if (p.contentRect.width !== sideBredde) {
+          sideBredde = p.contentRect.width;
+          for (const s of document.querySelectorAll('.led-skille')) venter.add(s.parentElement);
+        }
+      }
+      if (!planlagt) { planlagt = true; requestAnimationFrame(maalBrud); }
+    });
+    brudVagt.observe(document.documentElement);
+  }
   brudVagt.observe(e);
+}
+
+function maalBrud() {
+  planlagt = false;
+  const nu = [...venter];
+  venter.clear();
+  nu.forEach(saetBrud);
 }
 
 // Først måles alle med prikkerne på plads, så skjules de. En skjult prik bryder linjen samme sted (.led-skille.brudt

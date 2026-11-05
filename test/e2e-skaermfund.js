@@ -1,6 +1,7 @@
 // e2e-skaermfund.js — de visuelle fund fra UI-gennemgangen af næste udgave (05-11-2026), målt på de skærme, de blev set på:
 // 1 ugeplanens række uden billede, 2 børnenes sideprikker, 3 «Start timer» over den faste bund, 4 statusskærme på lave
-// skærme, 5 rettens højttaler, 6 venstrekanten på 667×375, 7 adskilleren « · » ved linjens kant, 8 gruppens kolonner og
+// skærme, 5 rettens højttaler, 6 venstrekanten på 667×375, 7 adskilleren « · » ved linjens kant (også efter en drejning
+// fra 667×375 til 932×430), 8 gruppens kolonner og
 // 9 «Vælg ret» på lave skærme.
 // Del af test-e2e.js: E2E_DELE=skaermfund. E2E_FUND=1,3 begrænser til nogle af fundene, E2E_FUND_SKAERME=se-land,iphone til nogle af skærmene.
 import { planMandag } from '../js/tid.js';
@@ -343,6 +344,7 @@ async function adskiller(browser, H) {
     const { ctx, side } = await aabn(browser, H, n, { lager: { 'kog-uge-v1': uge } });
     await side.waitForSelector('.gruppe-knap');
     const fund = [];
+    const brudte = []; // retter, hvis personer og tid står i to linjer her (til drejningen nedenfor)
     const se = async (hvor) => { await tegnet(side); for (const t of await vedKant(side)) fund.push(hvor + ': «' + t + '»'); };
     // Alle retter, uden og med skalerede portioner (husstanden gemt: «Til 5 portioner · 40 min»)
     for (const medHusstand of [false, true]) {
@@ -351,6 +353,7 @@ async function adskiller(browser, H) {
         if (i && i % 150 === 0) await frisk(side);
         await gaa(side, '#/ret/' + ids[i], '.ret-titel', vent);
         await se('ret ' + ids[i] + (medHusstand ? ' (husstand)' : ''));
+        if (!medHusstand && await brudtePrikker(side)) brudte.push(ids[i]);
       }
     }
     await side.evaluate(() => localStorage.removeItem('kog-familie-v1'));
@@ -367,7 +370,48 @@ async function adskiller(browser, H) {
     tjek(!fund.length, n + ': ' + fund.length + ' linjer starter eller slutter med adskilleren, fx ' + fund.slice(0, 4).join(' | '));
     maal.push(n + ' adskilleren ved kanten: ' + fund.length + ' linjer');
     await ctx.close();
+    if (n === 'se-land') await drejet(browser, H, brudte);
   }
+}
+
+const brudtePrikker = (side) => side.evaluate((s) => document.querySelectorAll(s).length, nuSkaerm + '.meta .led-skille.brudt');
+
+// Skærmen bliver bredere, fra 667×375 til 932×430, som når en iPad drejes eller Split View ændres (code review 05-11-2026):
+// personer og tid skal brydes som efter en frisk indlæsning i 932×430. .meta krymper til sin bredeste linje, så den
+// ændrede ikke selv størrelse, og linjen blev stående i to
+async function drejet(browser, H, brudte) {
+  const { tjek, vent, maal } = H;
+  const lav = skaerm(H, 'se-land').viewport;
+  const bred = skaerm(H, 'max-land').viewport;
+  console.log('[se-land → max-land] fund 7: drejet skærm på ' + brudte.length + ' retter');
+  tjek(brudte.length > 0, 'se-land: mindst én ret har personer og tid i to linjer (ellers tester drejningen intet)');
+  const f = await aabn(browser, H, 'max-land');
+  await f.side.waitForSelector('.gruppe-knap');
+  const frisk = {};
+  for (const id of brudte) {
+    await gaa(f.side, '#/ret/' + id, '.ret-titel', vent);
+    await tegnet(f.side);
+    frisk[id] = await brudtePrikker(f.side);
+  }
+  await f.ctx.close();
+  const { ctx, side } = await aabn(browser, H, 'se-land');
+  await side.waitForSelector('.gruppe-knap');
+  const forkert = [];
+  for (const id of brudte) {
+    await side.setViewportSize(lav);
+    await gaa(side, '#/ret/' + id, '.ret-titel', vent);
+    await tegnet(side);
+    const foer = await brudtePrikker(side);
+    await side.setViewportSize(bred);
+    await tegnet(side);
+    await vent(100);
+    await tegnet(side);
+    const efter = await brudtePrikker(side);
+    if (efter !== frisk[id]) forkert.push(id + ' ' + foer + ' → ' + efter + ' (frisk ' + frisk[id] + ')');
+  }
+  tjek(!forkert.length, 'se-land → max-land: ' + forkert.length + ' af ' + brudte.length + ' retter har andre brud end efter en frisk indlæsning: ' + forkert.slice(0, 4).join(' | '));
+  maal.push('se-land → max-land: ' + brudte.length + ' retter drejet, ' + forkert.length + ' med andre brud end en frisk indlæsning');
+  await ctx.close();
 }
 
 // ---------- 8. Gruppens kolonner på lave skærme ----------
