@@ -57,8 +57,8 @@ let brudVagt = null;
 let sideBredde = null;
 let planlagt = false;
 const venter = new Set();
-// Alle linjer, observeren følger. En linje, der fjernes, før den er målt, får aldrig et kald (den har aldrig haft en
-// størrelse), så den afmeldes ved næste måling, når den ikke er på siden (code review 05-11-2026). Derfor skal en linje
+// Alle linjer, observeren følger. En linje i en skjult beholder er 0 × 0 og får intet kald, når den fjernes (størrelsen
+// ændrer sig ikke), så hver måling afmelder de linjer, der ikke er på siden (code review 05-11-2026). Derfor skal en linje
 // sættes på siden i samme opgave, som den bygges i, som skærmene gør
 const fulgte = new Set();
 function foelgBrud(e) {

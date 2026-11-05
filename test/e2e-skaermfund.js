@@ -439,7 +439,27 @@ async function afmeldes(browser, H, uge) {
   tjek(efterTryk.observe - foer.observe >= 50, 'se-land 50 tryk på steppers: oversigten skal tegnes igen hver gang (' + JSON.stringify([foer, efterTryk]) + ')');
   tjek(efterTryk.vaek === 0, 'se-land 50 tryk på steppers: ' + efterTryk.vaek + ' linjer, der er væk fra siden, følges stadig ' + JSON.stringify(efterTryk));
   tjek(efterTrin.vaek === 0, 'se-land trin uden linjer: ' + efterTrin.vaek + ' linjer, der er væk fra siden, følges stadig ' + JSON.stringify(efterTrin));
-  maal.push('se-land linjerne afmeldes: ' + JSON.stringify({ foer, efterTryk, efterTrin }));
+  // En linje i en skjult beholder er 0 × 0. Fjernes den, ændrer størrelsen sig ikke, så observeren melder den ikke (de 50
+  // tryk er grønne også mod den gamle kode, fordi WebKit melder en synlig linje, der fjernes). Den skal afmeldes, når den
+  // næste linje måles
+  const dom = 'js/dom.js';
+  await side.evaluate(async (sti) => {
+    const { ledLinje } = await import(new URL(sti, document.baseURI).href);
+    const skjult = document.createElement('div');
+    skjult.style.display = 'none';
+    skjult.append(ledLinje('p', {}, ['a', 'b']));
+    document.body.append(skjult);
+    window.__skjult = skjult;
+  }, dom);
+  await status();
+  await side.evaluate(async (sti) => {
+    const { ledLinje } = await import(new URL(sti, document.baseURI).href);
+    window.__skjult.remove();
+    document.body.append(ledLinje('p', {}, ['c', 'd']));
+  }, dom);
+  const efterFjernet = await status();
+  tjek(efterFjernet.vaek === 0, 'se-land skjult linje fjernet: ' + efterFjernet.vaek + ' linjer, der er væk fra siden, følges stadig ' + JSON.stringify(efterFjernet));
+  maal.push('se-land linjerne afmeldes: ' + JSON.stringify({ foer, efterTryk, efterTrin, efterFjernet }));
   await ctx.close();
 }
 
