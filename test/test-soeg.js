@@ -1,6 +1,6 @@
 // test-soeg.js — søgningen i voksendelens lister og bag lupen på forsiden (js/soeg.js): normaliseringen og soeg(retter,
 // tekst), hvor hvert ord skal findes i navnet, en ingrediens, gruppen, gruppens ekstra søgeord eller et mærke. Ord på 1-2
-// bogstaver matcher kun ordets begyndelse, ord på 3 også slutningen, med to undtagelser for «is» og «ris». Til sidst de
+// bogstaver matcher kun ordets begyndelse, ord på 3 også slutningen, med undtagelser for fem korte ord. Til sidst de
 // rigtige opskrifter: «jul» finder præcis juleretterne.
 // Kør:  node test/test-soeg.js
 import { test } from 'node:test';
@@ -93,6 +93,19 @@ test('undtagelserne: «is» finder også ord på «eis», og «ris» tæller ikk
   assert.deepEqual(fundet('ris'), ['ris', 'groed'], 'ikke gris og pris');
   assert.deepEqual(ids('is'), ['is'], '«Flødeis» slutter på «eis», og «grødris» gør ikke');
   assert.deepEqual(ids('ris'), ['ris'], '«Risalamande» og «grødris» er samme ret');
+});
+
+test('undtagelserne: «mel», «kål» og «ost» tæller ikke krymmel, skål og frost', () => {
+  const liste = [
+    ret('krymmel', 'Muffins', ['krymmel'], null), ret('jul', 'Småkager', ['julekrymmel'], null), ret('boller', 'Boller', ['hvedemel'], null),
+    ret('skaal', 'Sushi-skål', [], null), ret('risskaal', 'Koreansk risskål', [], null), ret('blomkaal', 'Blomkål', [], null),
+    ret('frost', 'Bær på frost', [], null), ret('most', 'Punch', ['æblemost'], null), ret('hytteost', 'Toast', ['hytteost'], null),
+  ];
+  const fundet = (t) => soeg(liste, t).map((r) => r.id);
+  assert.deepEqual(fundet('mel'), ['boller']);
+  assert.deepEqual(fundet('kål'), ['blomkaal']);
+  assert.deepEqual(fundet('ost'), ['hytteost']);
+  assert.deepEqual(fundet('krymmel'), ['krymmel', 'jul'], 'ordet selv findes stadig');
 });
 
 test('flere ord: hvert ord skal findes (OG), i hvert sit felt eller samme', () => {

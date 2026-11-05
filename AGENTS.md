@@ -28,7 +28,7 @@ Kør i Git Bash i `D:/Claude/Kogebog`.
 | Fil | Hvad |
 |---|---|
 | `index.html`, `app.js`, `app.css` | Skærmene. Ruter i adressen: `#/` (forsidens billedknapper), `#/gruppe/<id>` (gruppens retter), `#/gruppe/favoritter` (hjertet), `#/soeg` (den voksnes lup), `#/ret/<id>`, `#/ret/<id>/trin/<nr>`, `#/ret/<id>/faerdig`. Ugeplanens ruter står i `js/ugeplan.js` |
-| `js/grupper.js` | Ren: adresserne til grupperne og lupen, forsidens knapper, gruppens retter og vejen tilbage fra en ret (`tilbageFraRet`, `rulleplads`). Forsiden husker intet valg: alt regnes ud fra adressen, `index.json` og favoritterne |
+| `js/grupper.js` | Ren: adresserne til grupperne og lupen, forsidens knapper, gruppens retter, vejen tilbage fra en ret (`tilbageFraRet`, `rulleplads`) og `blandet`, der blander grupperne i «Fyld op med nye» og børnenes bladren. Forsiden husker intet valg: alt regnes ud fra adressen, `index.json` og favoritterne |
 | `print.html`, `print.css`, `js/print.js` | A4 til den voksne: `print.html?ret=<id>` |
 | `js/print-uge.js` | Ugeplanen på papir: `print.html?uge`. Side 1 er ugen (læst af `kog-uge-v1` gennem `lager.js`), side 2 indkøbslisten med □ efter afdeling (regnet af `indkoeb.js`) |
 | `js/version.js` | Det synlige versionsnummer `UDGAVE` (fx `v2 · 24-10-2026`) og dets fingeraftryk `UDGAVE_INDHOLD`. Vises nederst på forsiden og i begge prints fod (regel 3) |

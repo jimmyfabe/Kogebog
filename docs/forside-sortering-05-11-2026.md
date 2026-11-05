@@ -29,9 +29,9 @@ De 89 retter fra de gamle grupper Aftensmad (85) og Bagning (4) er fordelt på d
 
 ## Søgereglen for korte ord
 
-Et ord på mindst 4 bogstaver må stå inde i et ord. Et ord på 3 bogstaver skal stå først eller sidst i et ord. Et ord på 1-2 bogstaver skal stå først. To undtagelser: «is» finder også ord, der slutter på «eis» (vaniljeis, flødeis), men ikke flormelis, gris eller ris, og «ris» tæller ikke ordene «gris» og «pris».
+Et ord på mindst 4 bogstaver må stå inde i et ord. Et ord på 3 bogstaver skal stå først eller sidst i et ord. Et ord på 1-2 bogstaver skal stå først. Undtagelser: «is» finder også ord, der slutter på «eis» (vaniljeis, flødeis), men ikke flormelis, gris eller ris. «ris» tæller ikke «gris» og «pris», «mel» ikke «krymmel» og «julekrymmel», «kål» ikke «skål» og «risskål», og «ost» ikke «frost» og «æblemost».
 
-Træf på de 151 retter, med navn, ingredienser og gruppe som lupen (uden familiens egne mærker). Ingen ret er faldet fra.
+Træf på de 151 retter, med navn, ingredienser og gruppe som lupen (uden familiens egne mærker). Ingen ret er faldet fra. Tallene i kolonnen «Nu» er målt, før de falske træf på krymmel, skål og frost blev taget fra.
 
 | Søgeord | Før | Nu | Det nye |
 |---|---:|---:|---|
@@ -45,7 +45,7 @@ Træf på de 151 retter, med navn, ingredienser og gruppe som lupen (uden famili
 | løg | 23 | 24 | hvidløg |
 | mel | 3 | 48 | hvedemel, kokosmel, durummel; krymmel og julekrymmel er falske |
 
-De falske træf er prisen for reglen: det er kun en ret for meget på listen, mens den gamle regel skjulte rigtige retter.
+Enkelte falske træf er prisen for reglen: det er kun en ret for meget på listen, mens den gamle regel skjulte rigtige retter. De mest synlige står som undtagelser i `UNDTAGELSER` i `js/soeg.js`.
 
 ## «Fyld op med nye» og børnenes bladren
 

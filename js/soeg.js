@@ -9,11 +9,14 @@
 
 const KORT_ORD = 3; // så mange bogstaver: først eller sidst i et ord. Færre: kun først. Flere: hvor som helst
 
-// De to søgeord, hvor reglen rammer forbi. «slutning»: den slutning, ordet også må findes på, i stedet for ordet selv.
+// Søgeordene, hvor reglen rammer forbi. «slutning»: den slutning, ordet også må findes på, i stedet for ordet selv.
 // «ikke»: hele ord, der ikke tæller
 const UNDTAGELSER = new Map([
   ['is', { slutning: 'eis' }], // vaniljeis og flødeis, men ikke flormelis, gris eller ris
   ['ris', { ikke: ['gris', 'pris'] }], // grødris og jasminris, men ikke gris og pris
+  ['mel', { ikke: ['krymmel', 'julekrymmel'] }], // hvedemel, men ikke krymmel på kager
+  ['kål', { ikke: ['skål', 'risskål'] }], // blomkål, men ikke en sushi-skål
+  ['ost', { ikke: ['frost', 'æblemost'] }], // hytteost, men ikke bær på frost
 ]);
 
 // Teksten, som der søges i og med: uden blød bindestreg, små bogstaver, NFC og ét mellemrum mellem ordene. NFC efter
