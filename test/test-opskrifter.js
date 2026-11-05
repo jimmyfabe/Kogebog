@@ -31,7 +31,7 @@ const INGR_NOEGLER = new Set(['ikon', 'maengde', 'vare', 'antal', 'enhed']);
 const UGEPLAN_FELTER = ['portioner', 'pris_kr', 'pris_dato', 'groent_g', 'ugeplan_kilde'];
 const UGEPLAN_MAKS_MIN = 60;
 const UGEPLAN_MAKS_KNIV = 2;
-const KNIV_VERBER = Object.keys(VOKSEN_KRAV).filter((v) => VOKSEN_KRAV[v] === 'kniv'); // skaere og rive
+const KNIV_VERBER = Object.keys(VOKSEN_KRAV).filter((v) => VOKSEN_KRAV[v] === 'kniv'); // skaere, rive og blende
 const PRIS_DATO_RE = /^20\d\d-(?:0[1-9]|1[0-2])$/; // ÅÅÅÅ-MM
 const VARE_NOEGLER = new Set(['navn', 'afd', 'enhed', 'ikon', 'pakke', 'basis', 'skjul', 'slags']);
 // Kød eller fisk i en vare («slags», mærkerne vegetar og fisk i js/maerker.js). En vare med et af disse ikoner skal have
@@ -55,8 +55,14 @@ const VENTER = 'docs/venter-paa-billede'; // færdige retter uden retbillede (do
 // alle bøjninger («smelte», «skære», «æggeblommer»). En liste over tilladte former mangler altid en form, og så slipper
 // den igennem i stilhed. De få ord, der ikke er kniv, varme eller råt, står som hele ord i UNDTAGELSER. Mangler et ord
 // dér, giver det et falsk fund, som man ser og retter: skriv ordet i UNDTAGELSER med grunden.
-// Kniv og rivejern i trinteksten. «kniv» også inde i ord (brødkniven, køkkenkniven)
-const KNIV_ORD = /(?<!\p{L})(?:riv|hak|skær|skræl)\p{L}*|\p{L}*kniv\p{L}*/giu;
+// Kniv, rivejern og blender i trinteksten. «kniv» og «blend» også inde i ord (brødkniven, køkkenkniven, stavblenderen)
+const KNIV_ORD = /(?<!\p{L})(?:riv|hak|skær|skræl)\p{L}*|\p{L}*(?:kniv|blend)\p{L}*/giu;
+// To ældre trin, hvor den voksne kører stavblenderen i en kogende gryde. Den største fare er varmen, så de beholder «mose»
+// med "varme" (billedet og mærket passer, og «mose» kan kun have varme-hjælp). Alle andre blender-trin skal have "kniv"
+const VARM_STAVBLENDER = new Set([
+  'groen-porre-kartoffelsuppe-med-bacondrys: Blend suppen glat med stavblenderen.',
+  'orange-pasta-med-hemmelig-groentsagssovs: Blend sovsen helt glat.',
+]);
 // Varme i trinteksten. «kog» dækker også «kogeplade». «steg», «kog», «smelt», «komfur» og «ovn» også inde i ord
 // (småkoge, gennemstegt, gaskomfur, bageovnen), «bag» kun forrest (ikke «tilbage»). Ikke «varm» og «brun»: de står i
 // «en varm skive» og «brun farin»
@@ -494,7 +500,7 @@ export function valider(rod = ROD) {
         if (farlig && st.voksen !== true) f(hvor + ': teksten nævner «' + farlig[0] + '» (kniv, rivejern eller varme), så trinnet skal have "voksen": true og «voksen_hjaelp»: «' + s.text + '»');
         else if (kniv && varme) f(hvor + ': teksten nævner både «' + kniv[0] + '» (kniv) og «' + varme[0] + '» (varme), men «voksen_hjaelp» kan kun være én af dem: del trinnet i to: «' + s.text + '»');
         else if (farlig && Object.hasOwn(VOKSEN_HJAELP, st.voksen_hjaelp)) {
-          const skal = kniv ? 'kniv' : 'varme';
+          const skal = kniv && !VARM_STAVBLENDER.has(filId + ': ' + s.text) ? 'kniv' : 'varme';
           if (st.voksen_hjaelp !== skal) f(hvor + ': teksten nævner «' + farlig[0] + '» (' + (kniv ? 'kniv eller rivejern' : 'varme') + '), så «voksen_hjaelp» skal være "' + skal + '", fandt ' + JSON.stringify(st.voksen_hjaelp) + ': «' + s.text + '»');
         }
         if (st.voksen === true) taelt.voksentrin++;

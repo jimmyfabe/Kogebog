@@ -18,6 +18,7 @@
   --tomat-lys: #F9DCD6;
   --lilla-lys: #EADFF4;     /* Halloween-afsnittet (græskarret står på lilla) */
   --jul-lys: #F2B8B5;       /* Jul-afsnittet: det grønne juletræ står på julerødt (kakao 8,0:1; tydeligt mørkere end tomat-lys) */
+  --drikke-lys: #B5E3DC;    /* Drikke-afsnittet: det orange glas står på havgrønt (kakao 9,7:1) */
   --dej-lys: #F6E7D0;
   --blaa: #3E8FB0;
   --blaa-moerk: #2E6A83;   /* fokusring */
@@ -287,6 +288,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 [data-gruppe="bagning"] { --ret-farve: var(--sennep-lys); }
 [data-gruppe="soede-sager"] { --ret-farve: var(--tomat-lys); }
 [data-gruppe="halloween"] { --ret-farve: var(--lilla-lys); }
+[data-gruppe="drikke"] { --ret-farve: var(--drikke-lys); }
 .gruppe-navn { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; font-size: 34px; font-weight: 800; line-height: 1.1; }
 /* En streg ud til højre skiller afsnittene ad */
 .gruppe-navn::after { content: ''; flex: 1; min-width: 24px; height: var(--streg); border-radius: 2px; background: var(--creme-moerk); }

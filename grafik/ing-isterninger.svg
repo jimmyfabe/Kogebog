@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<g transform="translate(128 86) rotate(6)">
+    <path fill="#BFDDE9" d="M-46 -24 L0 0 L0 52 L-46 28 Z"/>
+    <path fill="#8FC3D8" d="M0 0 L46 -24 L46 28 L0 52 Z"/>
+    <path fill="#E6F3F8" d="M-46 -24 L0 -48 L46 -24 L0 0 Z"/>
+    <path fill="none" stroke="#FFFFFF" stroke-width="5" d="M-36 -12 L-36 12 M-26 -24 L-6 -34"/>
+    <path fill="none" stroke="#D9EBF2" stroke-width="4" d="M14 -2 L32 -12 M16 14 L24 10"/>
+  </g>
+  <g transform="translate(76 170) rotate(-6)">
+    <path fill="#BFDDE9" d="M-46 -24 L0 0 L0 52 L-46 28 Z"/>
+    <path fill="#8FC3D8" d="M0 0 L46 -24 L46 28 L0 52 Z"/>
+    <path fill="#E6F3F8" d="M-46 -24 L0 -48 L46 -24 L0 0 Z"/>
+    <path fill="none" stroke="#FFFFFF" stroke-width="5" d="M-36 -12 L-36 12 M-26 -24 L-6 -34"/>
+    <path fill="none" stroke="#D9EBF2" stroke-width="4" d="M14 -2 L32 -12 M16 14 L24 10"/>
+  </g>
+  <g transform="translate(180 178) rotate(8)">
+    <path fill="#BFDDE9" d="M-46 -24 L0 0 L0 52 L-46 28 Z"/>
+    <path fill="#8FC3D8" d="M0 0 L46 -24 L46 28 L0 52 Z"/>
+    <path fill="#E6F3F8" d="M-46 -24 L0 -48 L46 -24 L0 0 Z"/>
+    <path fill="none" stroke="#FFFFFF" stroke-width="5" d="M-36 -12 L-36 12 M-26 -24 L-6 -34"/>
+    <path fill="none" stroke="#D9EBF2" stroke-width="4" d="M14 -2 L32 -12 M16 14 L24 10"/>
+  </g>
+</g>
+</svg>

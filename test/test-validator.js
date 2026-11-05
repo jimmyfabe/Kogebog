@@ -207,6 +207,39 @@ test('smelte kræver en voksen for varmens skyld; stikke-ud, forme og pille kan 
   }
 });
 
+// «blende» (05-11-2026): blenderen har knive, så trinnet er altid den voksnes, også når alt i kanden er koldt
+test('blende kræver en voksen for knivens skyld', () => {
+  const krav = 'trin 3: verbet «blende» skal have "voksen": true og "voksen_hjaelp": "kniv"';
+  forventFejl('opskrifter/koedsovs.json', (d) => { const st = d.recipeInstructions[2].tumbi; st.verbum = 'blende'; delete st.voksen; delete st.voksen_hjaelp; }, krav);
+  forventFejl('opskrifter/koedsovs.json', (d) => { Object.assign(d.recipeInstructions[2].tumbi, { verbum: 'blende', voksen: true, voksen_hjaelp: 'varme' }); }, krav);
+  forventGyldig('opskrifter/koedsovs.json', (d) => { Object.assign(d.recipeInstructions[2].tumbi, { verbum: 'blende', voksen: true, voksen_hjaelp: 'kniv' }); });
+});
+
+// Ordvagten ser blenderen i alle bøjninger og inde i ord, uanset hvilket verbum trinnet har
+test('trinteksten om blenderen kræver et voksen-trin med kniv-hjælp', () => {
+  const tekst = (t) => (d) => { d.recipeInstructions[2].text = t; };
+  forventFejl('opskrifter/pandekager.json', tekst('Tænd blenderen.'), 'trin 3: teksten nævner «blenderen»');
+  forventFejl('opskrifter/pandekager.json', tekst('Blend det hele.'), 'trin 3: teksten nævner «Blend»');
+  forventFejl('opskrifter/pandekager.json', tekst('Lad den voksne blende.'), 'trin 3: teksten nævner «blende»');
+  forventFejl('opskrifter/pandekager.json', tekst('Brug stavblenderen.'), 'trin 3: teksten nævner «stavblenderen»');
+  forventFejl('opskrifter/pandekager.json', (d) => {
+    d.recipeInstructions[2].text = 'Tænd blenderen.';
+    Object.assign(d.recipeInstructions[2].tumbi, { voksen: true, voksen_hjaelp: 'varme' });
+  }, 'trin 3: teksten nævner «blenderen» (kniv eller rivejern), så «voksen_hjaelp» skal være "kniv", fandt "varme"');
+  forventGyldig('opskrifter/pandekager.json', (d) => {
+    d.recipeInstructions[2].text = 'Tænd blenderen.';
+    Object.assign(d.recipeInstructions[2].tumbi, { voksen: true, voksen_hjaelp: 'kniv' });
+  });
+  // De to ældre trin i en kogende gryde (VARM_STAVBLENDER) beholder "varme", men de er stadig den voksnes, og undtagelsen
+  // gælder kun i de to retter
+  forventFejl('opskrifter/groen-porre-kartoffelsuppe-med-bacondrys.json', (d) => { const st = d.recipeInstructions[12].tumbi; delete st.voksen; delete st.voksen_hjaelp; },
+    'trin 13: teksten nævner «Blend»');
+  forventFejl('opskrifter/pandekager.json', (d) => {
+    d.recipeInstructions[2].text = 'Blend suppen glat med stavblenderen.';
+    Object.assign(d.recipeInstructions[2].tumbi, { voksen: true, voksen_hjaelp: 'varme' });
+  }, 'trin 3: teksten nævner «Blend» (kniv eller rivejern), så «voksen_hjaelp» skal være "kniv", fandt "varme"');
+});
+
 // Trinene, der fik de nye verber. Tunfrikadellernes «Hæld vandet fra tunen.» beholder «haelde»: si-billedet viser
 // en varm gryde over dørslaget, og tunen er kold og står i en dåse
 test('trinene med de nye verber', () => {

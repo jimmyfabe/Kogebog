@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<g id="lime" transform="translate(106 108) rotate(-24)">
+    <path id="leaf" fill="#5BAA6A" d="M72 -8 C84 -34 112 -44 132 -36 C120 -14 96 -6 72 -8 Z"/>
+    <path fill="none" d="M76 -10 C92 -24 108 -32 124 -35"/>
+    <path id="peel" fill="#8FC25A" d="M-78 0 C-72 -6 -70 -10 -66 -16 C-54 -50 -22 -62 0 -62 C22 -62 54 -50 66 -16 C70 -10 72 -6 78 0 C72 6 70 10 66 16 C54 50 22 62 0 62 C-22 62 -54 50 -66 16 C-70 10 -72 6 -78 0 Z"/>
+    <path fill="#6FA23E" stroke="none" d="M-66 16 C-54 50 -22 62 0 62 C22 62 54 50 66 16 C70 10 72 6 78 0 C58 28 24 44 -14 46 C-36 46 -52 34 -66 16 Z"/>
+    <path fill="none" stroke="#C6E29B" stroke-width="7" d="M-48 -28 C-34 -42 -16 -48 4 -48"/>
+    <g fill="#6FA23E" stroke="none">
+      <circle cx="-30" cy="-6" r="2.5"/>
+      <circle cx="10" cy="-24" r="2.5"/>
+      <circle cx="34" cy="4" r="2.5"/>
+      <circle cx="-4" cy="18" r="2.5"/>
+    </g>
+    <path fill="none" d="M-78 0 C-72 -6 -70 -10 -66 -16 C-54 -50 -22 -62 0 -62 C22 -62 54 -50 66 -16 C70 -10 72 -6 78 0 C72 6 70 10 66 16 C54 50 22 62 0 62 C-22 62 -54 50 -66 16 C-70 10 -72 6 -78 0 Z"/>
+  </g>
+  <g id="lime-slice" transform="translate(180 186)">
+    <circle r="50" fill="#8FC25A"/>
+    <circle r="41" fill="#DCEBA8" stroke="none"/>
+    <path fill="none" stroke="#F4F8DC" stroke-width="5" d="M0 -37 L0 37 M-37 0 L37 0 M-26 -26 L26 26 M-26 26 L26 -26"/>
+    <circle r="7" fill="#F4F8DC" stroke="none"/>
+    <circle r="41" fill="none" stroke="#F4F8DC" stroke-width="4"/>
+    <circle r="50" fill="none"/>
+  </g>
+</g>
+</svg>

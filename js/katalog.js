@@ -37,13 +37,16 @@ export const VERBER = {
   'forme': 'forme',
   'pille': 'pille',
   'smelte': 'smelte',
+  // Smoothies og milkshakes (05-11-2026): altid den voksne, også når alt i kanden er koldt, for blenderen har knive
+  'blende': 'blende',
 };
 
-// Verber, der altid kræver en voksen, og hvilken slags hjælp. Rivejernet skærer, «bage» og «tage-ud» er altid ovnen
+// Verber, der altid kræver en voksen, og hvilken slags hjælp. Rivejernet skærer, blenderen har knive, «bage» og «tage-ud» er altid ovnen
 // («tage-ud» er en flad plade, «tage-ud-form» en dyb form), «si» er kogende vand gennem dørslaget, og «smelte» er varmt.
 export const VOKSEN_KRAV = {
   'skaere': 'kniv',
   'rive': 'kniv',
+  'blende': 'kniv',
   'stege': 'varme',
   'koge': 'varme',
   'vende': 'varme',
@@ -128,7 +131,7 @@ export const INGREDIENSER = {
   'bulgur': 'bulgur',
   // De sunde hverdagsretter (31-10-2026): æbler i kikærteboller og muffins, syltede rødbeder til vegetarbiksen
   'aeble': 'æble',
-  'roedbede': 'syltede rødbeder',
+  'roedbede': 'rødbeder',
   // De hurtige hverdagsretter, runde 2 (31-10-2026): porrer i suppen, frosne gyoza, mayonnaise, citron til laksen og ananas
   'porre': 'porre',
   'gyoza': 'gyoza',
@@ -160,6 +163,35 @@ export const INGREDIENSER = {
   'asparges': 'asparges',
   // Nytår (02-11-2026): «sennep» er sennep i glas (fx sød fransk sennep)
   'sennep': 'sennep',
+  // Drikke, cupcakes og kager (05-11-2026, docs/drikke-plan-05-11-2026.md). Te kun som rooibos og frugt-te: uden koffein, så
+  // sort og grøn te slet ikke kan vælges. «isterninger» er frosset vand («is» er flødeis), «slik» er pynten på cupcakes
+  'mango': 'mango',
+  'kiwi': 'kiwi',
+  'vandmelon': 'vandmelon',
+  'avocado': 'avocado',
+  'ingefaer': 'ingefær',
+  'groenkaal': 'grønkål',
+  'lime': 'lime',
+  'mynte': 'mynte',
+  'fersken': 'fersken',
+  'blomme': 'blomme',
+  'paere': 'pære',
+  'jordbaer': 'jordbær',
+  'danskvand': 'danskvand',
+  'hyldeblomst': 'hyldeblomst',
+  'rooibos': 'rooibos-te',
+  'frugt-te': 'frugt-te',
+  'kokosmaelk': 'kokosmælk',
+  'isterninger': 'isterninger',
+  'karamelsauce': 'karamelsauce',
+  'hvid-chokolade': 'hvid chokolade',
+  'chokoladeknapper': 'chokoladeknapper',
+  'skumfiduser': 'skumfiduser',
+  'isvaffel': 'isvaffel',
+  'muffinforme': 'muffinforme',
+  'flormelis': 'flormelis',
+  'konditorfarve': 'konditorfarve',
+  'slik': 'slik',
 };
 
 // Ikoner for råt kød og råt æg: efter dem skal der komme et trin med «vaske-haender».
@@ -173,7 +205,7 @@ export const DYR = {
 };
 
 // Forsidens afsnit (opskrifter/index.json). Navnet er overskriften; billedet er grafik/gruppe-<id>.svg
-// (et juletræ, en gryde, en ovn, en kage og et græskar), og farven på kortenes cirkel står i app.css under [data-gruppe].
+// (et juletræ, en gryde, en ovn, en kage, et græskar og et glas), og farven på kortenes cirkel står i app.css under [data-gruppe].
 // Halloween er sit eget afsnit fra 22-10-2026. Jul står først i index.json fra 01-11-2026, og Halloween er flyttet sidst.
 // Skal retterne tilbage i Bagning, flyttes de i index.json, og 'halloween' kan blive stående her
 export const GRUPPER = {
@@ -182,6 +214,7 @@ export const GRUPPER = {
   'bagning': 'Bagning',
   'soede-sager': 'Søde sager',
   'halloween': 'Halloween',
+  'drikke': 'Drikke',
 };
 
 // Grafikken. Pladsholderne er SVG; skiftes de til PNG i fase 2, rettes det kun her.

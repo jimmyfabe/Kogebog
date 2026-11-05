@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<g id="top">
+    <path id="stalk" fill="#704D31" d="M120 60 C120 46 118 34 112 24 L124 20 C130 32 132 46 132 60 Z"/>
+    <path id="leaf" fill="#5BAA6A" d="M128 42 C142 20 172 14 194 24 C182 48 152 56 128 42 Z"/>
+    <path fill="none" d="M138 42 C154 32 170 26 186 25"/>
+  </g>
+  <g id="pear">
+    <path fill="#CFD15A" d="M124 56 C142 52 156 66 156 88 C156 112 198 130 198 178 C198 214 164 236 124 236 C84 236 50 214 50 178 C50 130 92 112 92 88 C92 68 106 58 124 56 Z"/>
+    <path fill="#A9AB3C" stroke="none" d="M148 64 C154 70 156 78 156 88 C156 112 198 130 198 178 C198 214 164 236 124 236 C108 236 94 232 82 226 C138 228 180 196 172 158 C166 130 138 112 148 64 Z"/>
+    <path fill="none" stroke="#EEF0A6" stroke-width="8" d="M72 170 C74 146 90 128 104 112"/>
+    <g fill="#8A8C2E" stroke="none">
+      <circle cx="104" cy="160" r="2.8"/>
+      <circle cx="132" cy="136" r="2.8"/>
+      <circle cx="146" cy="178" r="2.8"/>
+      <circle cx="112" cy="198" r="2.8"/>
+      <circle cx="170" cy="204" r="2.8"/>
+      <circle cx="82" cy="196" r="2.8"/>
+    </g>
+    <path fill="none" d="M124 56 C142 52 156 66 156 88 C156 112 198 130 198 178 C198 214 164 236 124 236 C84 236 50 214 50 178 C50 130 92 112 92 88 C92 68 106 58 124 56 Z"/>
+  </g>
+</g>
+</svg>

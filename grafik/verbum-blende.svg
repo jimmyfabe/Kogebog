@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="blend" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="blender-base">
+      <path d="M64 188 L176 188 L194 238 Q196 246 188 246 L52 246 Q44 246 46 238 Z" fill="#E2513B"/>
+      <path d="M160 190 L176 190 L192 238 Q194 244 188 244 L172 244 Z" fill="#C3331D" stroke="none"/>
+      <path d="M64 188 L176 188 L194 238 Q196 246 188 246 L52 246 Q44 246 46 238 Z" fill="none"/>
+      <circle cx="120" cy="218" r="15" fill="#FFF4E2"/>
+      <path d="M120 218 L120 207" fill="none"/>
+    </g>
+    <g id="jug-handle">
+      <path d="M170 92 C212 84 216 150 166 158 L168 142 C194 138 194 108 172 108 Z" fill="#FFFFFF"/>
+    </g>
+    <g id="jug-glass">
+      <path d="M60 62 L180 62 L162 190 L78 190 Z" fill="#FFFFFF"/>
+    </g>
+    <g id="smoothie">
+      <path d="M66 104 L174 104 L162 190 L78 190 Z" fill="#F2A0A0"/>
+      <path d="M152 106 L172 106 L160 188 L142 188 Z" fill="#E98585" stroke="none"/>
+      <path d="M66 104 C82 94 92 112 108 102 C124 92 136 112 150 102 C158 96 168 98 174 104 L173 112 L67 112 Z" fill="#F9C6CF"/>
+      <path d="M88 128 C104 114 128 116 142 128 M84 152 C102 138 136 138 152 152" fill="none" stroke="#FFFFFF" stroke-width="5"/>
+      <circle cx="98" cy="134" r="11" fill="#FBE38A"/>
+      <circle cx="98" cy="134" r="4" fill="#F2C14E" stroke="none"/>
+      <circle cx="140" cy="148" r="10" fill="#E2513B"/>
+    </g>
+    <g id="blade">
+      <path d="M120 176 L90 168 Q84 170 90 174 L120 182 L150 174 Q156 170 150 168 Z" fill="#8E9AA6"/>
+      <circle cx="120" cy="178" r="5" fill="#6D7B8A"/>
+    </g>
+    <g id="jug-outline">
+      <path d="M60 62 L180 62 L162 190 L78 190 Z" fill="none"/>
+      <path d="M76 76 L84 170" fill="none" stroke="#EDE8E0" stroke-width="6"/>
+    </g>
+    <g id="lid">
+      <path d="M58 46 L182 46 Q190 46 190 54 L190 62 Q190 68 182 68 L58 68 Q50 68 50 62 L50 54 Q50 46 58 46 Z" fill="#8E9AA6"/>
+      <path d="M170 48 L182 48 Q188 48 188 54 L188 62 Q188 66 182 66 L170 66 Z" fill="#6D7B8A" stroke="none"/>
+      <path d="M100 26 L140 26 L146 46 L94 46 Z" fill="#6D7B8A"/>
+    </g>
+    <g id="bo-forearm">
+      <path d="M256 0 L256 34 C232 40 202 44 172 46 L164 16 C192 14 226 8 246 0 Z" fill="#9A6A44"/>
+    </g>
+    <g id="bo-holding-paw" transform="translate(-66 -60)">
+      <path d="M238 74 C232 67 224 64 219 68 C212 65 205 70 208 77 C199 76 196 84 203 89 C197 95 202 102 209 101 C209 109 219 113 225 106 Q237 104 241 92" fill="#9A6A44"/>
+      <path d="M210 79 L217 84 M207 90 L215 95 M216 101 L222 104" fill="none"/>
+    </g>
+    <g id="spinning-motion">
+      <path fill="none" stroke-width="15" d="M40 176 A62 62 0 0 1 28 92"/>
+      <path fill="none" stroke="#3E8FB0" stroke-width="8" d="M40 176 A62 62 0 0 1 28 92"/>
+      <path fill="#3E8FB0" d="M12 96 L33 72 L44 102 Z"/>
+    </g>
+  </g>
+</svg>

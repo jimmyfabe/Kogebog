@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+<g id="glas-bag">
+    <path fill="#FFFFFF" d="M50 58 L206 58 L184 226 Q182 242 166 242 L90 242 Q74 242 72 226 Z"/>
+  </g>
+  <g id="drik">
+    <path fill="#F08A3C" d="M56 102 L200 102 L184 226 Q182 242 166 242 L90 242 Q74 242 72 226 Z"/>
+    <path fill="#D9702A" stroke="none" d="M172 106 L197 106 L181 226 Q179 239 166 239 L152 239 Q164 236 166 224 Z"/>
+    <path fill="none" stroke="#FBD08A" stroke-width="9" d="M80 128 L90 208"/>
+  </g>
+  <g id="glas-kant">
+    <path fill="none" d="M50 58 L206 58 L184 226 Q182 242 166 242 L90 242 Q74 242 72 226 Z"/>
+  </g>
+  <g id="sugeroer">
+    <path fill="none" stroke-width="26" d="M148 100 L170 44 L214 26"/>
+    <path fill="none" stroke="#E2513B" stroke-width="16" d="M148 100 L170 44 L214 26"/>
+  </g>
+  <g id="overflade">
+    <ellipse cx="128" cy="102" rx="72" ry="12" fill="#F6A95B"/>
+  </g>
+  <g id="citron" transform="translate(58 58)">
+    <circle r="36" fill="#F2C14E"/>
+    <circle r="26" fill="#FBE6A6" stroke="none"/>
+    <path fill="none" stroke="#3B2A20" stroke-width="4" d="M0 -22 L0 22 M-22 0 L22 0"/>
+    <circle r="36" fill="none"/>
+  </g>
+</g>
+</svg>
