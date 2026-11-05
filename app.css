@@ -983,7 +983,7 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .forside-top { gap: 8px; padding: 12px 10px 0; }
   .forside-titel { padding: 8px 16px 10px; }
   .kort-gruppe { top: 7px; left: 7px; width: 32px; }
-  .gruppe { padding: 16px 12px 0; }
+  .gruppe { padding: 16px 12px 28px; }
   .gruppe-navn { gap: 10px; margin-bottom: 12px; font-size: 26px; }
   .gruppe-ikon { width: 56px; height: 56px; }
   .kort-gitter { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 14px; }

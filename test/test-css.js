@@ -201,6 +201,18 @@ test('lupen er mindst 48 px på alle skærme, og Rosa og Bo giver plads til den 
   for (let b = 360; b <= 559; b++) assert.equal(gaeldende(rod, '.forside-top > .forside-dyr', b, 1000).display, 'none', b + ' px');
 });
 
+test('gruppeskærmen har luft under sidste række på alle skærme', () => {
+  const rod = blokke(CSS);
+  const bund = (padding) => {
+    const v = padding.split(/\s+/);
+    return parseFloat(v[2] ?? v[0]);
+  };
+  for (const [b, h] of [[1180, 820], [820, 1180], [700, 900], [390, 844], [360, 640], [844, 390], [667, 375]]) {
+    const { padding } = gaeldende(rod, '.gruppe', b, h);
+    assert.ok(bund(padding) >= 28, b + '×' + h + ' har padding: ' + padding);
+  }
+});
+
 test('de gamle hop-knapper er væk fra stilarket', () => {
   assert.doesNotMatch(CSS, /\.hop\b|forside-hop/);
 });
