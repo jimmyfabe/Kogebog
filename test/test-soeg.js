@@ -43,6 +43,17 @@ test('søgeordene: mellemrum og komma skiller, og en tom søgning har ingen ord'
   assert.deepEqual(soegeord('   '), []);
 });
 
+// To mellemrum på iPhone skriver et punktum: «kylling. » må ikke give «ingen retter»
+test('søgeordene: punktum, semikolon og kolon skiller også', () => {
+  assert.deepEqual(soegeord('kylling.'), ['kylling']);
+  assert.deepEqual(soegeord('kylling. ris'), ['kylling', 'ris']);
+  assert.deepEqual(soegeord('kylling;ris:fisk'), ['kylling', 'ris', 'fisk']);
+  assert.deepEqual(soegeord(' . '), []);
+  assert.deepEqual(ids('kylling.'), ['taerte']);
+  assert.deepEqual(ids('kylling. butterdej'), ['taerte']);
+  assert.deepEqual(ids('.'), RETTER.map((r) => r.id), 'kun et punktum er en tom søgning');
+});
+
 test('tom søgning: alle retter i deres rækkefølge, som en ny liste', () => {
   for (const tom of ['', '   ', '\u00ad', null, undefined]) {
     const r = soeg(RETTER, tom);

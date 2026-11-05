@@ -31,9 +31,10 @@ export function normaliser(tekst) {
   return String(tekst ?? '').replace(/\u00ad/g, '').toLowerCase().normalize('NFC').replace(/\s+/g, ' ').trim();
 }
 
-// Søgningens ord. Komma skiller også ord («kylling, ris»). En tom søgning giver []
+// Søgningens ord. Komma, punktum, semikolon og kolon skiller også ord («kylling, ris»), for to mellemrum på iPhone skriver et
+// punktum. En tom søgning giver []
 export function soegeord(tekst) {
-  return normaliser(tekst).split(/[ ,]+/).filter(Boolean);
+  return normaliser(tekst).split(/[ ,.;:]+/).filter(Boolean);
 }
 
 // Alt, der kan søges i, for en ret: { navn, ingredienser: [{ navn }], gruppe, gruppeOrd, maerker: [navn] }. Felterne står
