@@ -214,9 +214,10 @@ function kortTil(id, gruppe, fejlede) {
   return el('li', { class: 'kort-plads', 'data-gruppe': kendtGruppe ? gruppe : null }, b);
 }
 
-// Retten åbnes herfra: dens pil fører tilbage hertil, og skærmen står, hvor den stod (tilbageFraRet og gendanPlads)
-function huskFra(ret) {
-  S.fra = { hash: location.hash, ret, y: window.scrollY };
+// Retten åbnes herfra: dens pil fører tilbage hertil, og skærmen står, hvor den stod (tilbageFraRet og gendanPlads).
+// y: pladsen bagefter, hvis den ikke er den samme som nu (Katalog giver 0, når listen er filtreret)
+function huskFra(ret, y = window.scrollY) {
+  S.fra = { hash: location.hash, ret, y };
 }
 
 function kortTryk(id, b) {

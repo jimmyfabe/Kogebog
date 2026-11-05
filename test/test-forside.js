@@ -894,6 +894,53 @@ test('«Åbn» i Katalog: pilen fører til voksendelens hold og derfra til Katal
   }
 });
 
+// Låsen glemmer søgning og filtre, når en ret åbnes. Med søgningen «kylling» er listen 20 rækker, når pladsen måles, og 151
+// efter holdet, så pladsen ville lande et tilfældigt sted
+for (const [navn, filtrer] of [
+  ['søgetekst', () => skriv(rod.querySelector('.soeg-felt'), 'kylling')],
+  ['gruppe-chip', () => tryk(rod.querySelector('[data-fokus="gruppe-kylling"]'))],
+  ['gruppen Aftensmad', () => tryk(rod.querySelector('[data-fokus="gruppe-' + AFTENSMAD + '"]'))],
+  ['mærke', () => tryk(rod.querySelector('[data-fokus="filter-vegetar"]'))],
+]) {
+  test('«Åbn» i Katalog med ' + navn + ': efter holdet er listen hel igen og starter øverst', async () => {
+    const raekker = () => rod.querySelectorAll('.voksen-raekke');
+    await start('#/voksen/katalog');
+    try {
+      holdInde(rod.querySelector('.voksen-vagt'));
+      const alle = raekker().length;
+      filtrer();
+      assert.ok(raekker().length > 0 && raekker().length < alle, 'listen er filtreret: ' + raekker().length + ' af ' + alle);
+      const id = raekker()[0].dataset.ret;
+      window.scrollY = 900;
+      tryk(rod.querySelector('[data-fokus="aabn-' + id + '"]'));
+      assert.equal(location.hash, '#/ret/' + id);
+      tryk(knapMed('Tilbage'));
+      assert.equal(location.hash, '#/voksen/katalog');
+      holdInde(rod.querySelector('.voksen-vagt'));
+      assert.equal(raekker().length, alle, 'låsen har glemt søgning og filtre');
+      assert.equal(window.scrollY, 0);
+    } finally {
+      gaaTil('#/');
+    }
+  });
+}
+
+test('«Åbn» i Katalog med kun mellemrum i søgefeltet: listen er den samme, så pladsen gendannes', async () => {
+  const id = retterI('jul')[0];
+  await start('#/voksen/katalog');
+  try {
+    holdInde(rod.querySelector('.voksen-vagt'));
+    skriv(rod.querySelector('.soeg-felt'), '   ');
+    window.scrollY = 900;
+    tryk(rod.querySelector('[data-fokus="aabn-' + id + '"]'));
+    tryk(knapMed('Tilbage'));
+    holdInde(rod.querySelector('.voksen-vagt'));
+    assert.equal(window.scrollY, 900);
+  } finally {
+    gaaTil('#/');
+  }
+});
+
 test('pilen til Katalog og så «Til forsiden» fra holdet: næste gang starter Katalog øverst', async () => {
   const id = retterI('jul')[0];
   await start('#/voksen/katalog');

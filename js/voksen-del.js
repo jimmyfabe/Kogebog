@@ -20,7 +20,7 @@ import { MAERKER, maerkerFor } from './maerker.js';
 import { kod, afkod } from './plankode.js';
 import { grafikRet, grafikGruppe, GRUPPER, AFTENSMAD, AFTENSMAD_NAVN, AFTENSMAD_GRUPPER, gruppeSoegeord } from './katalog.js';
 import { planMandag, idag } from './tid.js';
-import { soeg } from './soeg.js';
+import { soeg, soegeord } from './soeg.js';
 import { valgt } from './groent.js';
 import { blandet } from './grupper.js';
 
@@ -836,6 +836,10 @@ function katalogFiltre(alle) {
       Object.keys(MAERKER).map((k) => filterChip(k, alle.filter((p) => p.noegler.includes(k)).length, v.maerker, 'katalog'))));
 }
 
+// Viser kataloget kun en del af retterne? Låsen glemmer søgning og filtre, når en ret åbnes (laas), så listen efter holdet
+// er en anden, og pladsen i den filtrerede liste passer ikke længere. Kun mellemrum i feltet er ingen søgning
+const katalogFiltreret = () => soegeord(soegeTekstFor('katalog')).length > 0 || katalogValg.gruppe !== null || katalogValg.maerker.size > 0;
+
 // En ret i kataloget: «Med» (kun retter til ugeplanen) først, så hjertet og «Åbn» altid står samme sted. Med «Med» får
 // knapperne en linje for sig på telefonen (.med-udvalg i familie.css); uden står de ved navnet
 function katalogRaekke(p, f, ids, fuldt) {
@@ -845,7 +849,7 @@ function katalogRaekke(p, f, ids, fuldt) {
     knap: el('div', { class: 'voksen-raekke-knapper' + (m.uge ? ' med-udvalg' : '') },
       m.uge ? medKnap(m, ids, fuldt, { lang: true }) : null,
       hjerteKnap(m, f),
-      medFokus(K.knap('Åbn', { klasse: 'lille', label: 'Åbn ' + m.navn, onclick: () => { K.huskFra(m.id); K.naviger('#/ret/' + m.id); } }), 'aabn-' + m.id)),
+      medFokus(K.knap('Åbn', { klasse: 'lille', label: 'Åbn ' + m.navn, onclick: () => { K.huskFra(m.id, katalogFiltreret() ? 0 : undefined); K.naviger('#/ret/' + m.id); } }), 'aabn-' + m.id)),
   });
 }
 
