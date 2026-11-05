@@ -25,10 +25,11 @@ const UNDTAGELSER = new Map([
   ['nød', { inde: true }], // muskatnød, valnødder, pebernødder: en voksen, der tjekker for nødder, må ikke få «ingen retter»
 ]);
 
-// Teksten, som der søges i og med: uden blød bindestreg, små bogstaver, NFC og ét mellemrum mellem ordene. NFC efter
-// toLowerCase, for et stort bogstav kan blive til to tegn, når det gøres lille
+// Teksten, som der søges i og med: uden blød bindestreg, små bogstaver, uden accenter, NFC og ét mellemrum mellem ordene.
+// Accent, tilde og prikker fjernes, så «tomatpure» finder «tomatpuré» og «rosti» finder «rösti». Ringen i å (U+030A) er ikke
+// med, for å er sit eget bogstav. NFC efter toLowerCase, for et stort bogstav kan blive til to tegn, når det gøres lille
 export function normaliser(tekst) {
-  return String(tekst ?? '').replace(/\u00ad/g, '').toLowerCase().normalize('NFC').replace(/\s+/g, ' ').trim();
+  return String(tekst ?? '').replace(/\u00ad/g, '').toLowerCase().normalize('NFD').replace(/[\u0300-\u0303\u0308]/g, '').normalize('NFC').replace(/\s+/g, ' ').trim();
 }
 
 // Søgningens ord. Komma, punktum, semikolon og kolon skiller også ord («kylling, ris»), for to mellemrum på iPhone skriver et

@@ -36,6 +36,20 @@ test('normaliser: små bogstaver, NFC, uden blød bindestreg og ét mellemrum me
   assert.equal(normaliser(undefined), '');
 });
 
+test('accenter tæller ikke: «tomatpure» finder «tomatpuré», men å og a er stadig to bogstaver', () => {
+  const liste = [ret('p', 'Pasta', ['tomatpuré'], null), ret('g', 'Kage', ['ribsgelé'], null), ret('r', 'Rösti', [], null), ret('c', 'Dip', ['crème fraîche'], null), ret('a', 'Blåbær', [], null), ret('b', 'Blabla', [], null)];
+  const fundet = (t) => soeg(liste, t).map((r) => r.id);
+  assert.deepEqual(fundet('tomatpure'), ['p']);
+  assert.deepEqual(fundet('tomatpuré'), ['p'], 'også med accenten skrevet');
+  assert.deepEqual(fundet('tomatpur' + String.fromCharCode(0x65, 0x301)), ['p'], 'også e + accent (NFD)');
+  assert.deepEqual(fundet('ribsgele'), ['g']);
+  assert.deepEqual(fundet('rosti'), ['r']);
+  assert.deepEqual(fundet('creme fraiche'), ['c']);
+  assert.deepEqual(fundet('blå'), ['a'], 'å er ikke a med en accent');
+  assert.deepEqual(fundet('blab'), ['b'], 'og a finder ikke å');
+  assert.equal(normaliser('tomatpuré ÆØÅ'), 'tomatpure æøå');
+});
+
 test('søgeordene: mellemrum og komma skiller, og en tom søgning har ingen ord', () => {
   assert.deepEqual(soegeord('Kylling,  RIS '), ['kylling', 'ris']);
   assert.deepEqual(soegeord(' , '), []);
