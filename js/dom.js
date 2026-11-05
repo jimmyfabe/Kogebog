@@ -57,6 +57,10 @@ let brudVagt = null;
 let sideBredde = null;
 let planlagt = false;
 const venter = new Set();
+// Alle linjer, observeren følger. En linje, der fjernes, før den er målt, får aldrig et kald (den har aldrig haft en
+// størrelse), så den afmeldes ved næste måling, når den ikke er på siden (code review 05-11-2026). Derfor skal en linje
+// sættes på siden i samme opgave, som den bygges i, som skærmene gør
+const fulgte = new Set();
 function foelgBrud(e) {
   if (typeof ResizeObserver !== 'function') return; // ældre browsere beholder prikken
   if (!brudVagt) {
@@ -72,6 +76,7 @@ function foelgBrud(e) {
     });
     brudVagt.observe(document.documentElement);
   }
+  fulgte.add(e);
   brudVagt.observe(e);
 }
 
@@ -80,10 +85,10 @@ function foelgBrud(e) {
 // (.led-skille.brudt i app.css), så teksten ikke flytter sig, og det samme mål giver det samme hver gang
 function maalBrud() {
   planlagt = false;
-  const linjer = [...venter];
+  for (const e of fulgte) if (!e.isConnected) { brudVagt.unobserve(e); fulgte.delete(e); }
+  const linjer = [...venter].filter((e) => e.isConnected);
   venter.clear();
-  for (const e of linjer) if (!e.isConnected) brudVagt.unobserve(e);
-  const skillere = linjer.filter((e) => e.isConnected).flatMap((e) => [...e.querySelectorAll(':scope > .led-skille')]);
+  const skillere = linjer.flatMap((e) => [...e.querySelectorAll(':scope > .led-skille')]);
   for (const s of skillere) s.classList.remove('brudt');
   const brudte = skillere.filter(brydes);
   for (const s of brudte) s.classList.add('brudt');

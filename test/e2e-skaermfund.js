@@ -370,8 +370,51 @@ async function adskiller(browser, H) {
     tjek(!fund.length, n + ': ' + fund.length + ' linjer starter eller slutter med adskilleren, fx ' + fund.slice(0, 4).join(' | '));
     maal.push(n + ' adskilleren ved kanten: ' + fund.length + ' linjer');
     await ctx.close();
-    if (n === 'se-land') await drejet(browser, H, brudte);
+    if (n === 'se-land') {
+      await drejet(browser, H, brudte);
+      await afmeldes(browser, H, uge);
+    }
   }
+}
+
+// Observeren afmelder linjerne, når de er væk fra siden, også dem, der aldrig blev målt (code review 05-11-2026).
+// 50 tryk på en stepper på #/uge tegner oversigten 50 gange, og bagefter vises et trin uden linjer. Testen følger
+// ResizeObservers observe og unobserve
+async function afmeldes(browser, H, uge) {
+  const { tjek, tryk, vent, maal } = H;
+  console.log('[se-land] fund 7: linjerne afmeldes');
+  const spor = (c) => c.addInitScript(() => {
+    const fulgt = new Set();
+    const P = ResizeObserver.prototype;
+    const observe = P.observe;
+    const unobserve = P.unobserve;
+    window.__brudSpor = { fulgt, observe: 0 };
+    P.observe = function (t, ...r) { window.__brudSpor.observe++; fulgt.add(t); return observe.call(this, t, ...r); };
+    P.unobserve = function (t, ...r) { fulgt.delete(t); return unobserve.call(this, t, ...r); };
+  });
+  const { ctx, side } = await aabn(browser, H, 'se-land', { lager: { 'kog-uge-v1': uge }, foer: spor });
+  await side.waitForSelector('.gruppe-knap');
+  await gaa(side, '#/uge', '.uge-dage', vent);
+  await side.waitForFunction((a) => document.querySelectorAll('.dag:not(.fri) .dag-meta').length === a, 7, { timeout: 20000 });
+  const status = async () => {
+    await tegnet(side);
+    await vent(100);
+    await tegnet(side);
+    return side.evaluate(() => {
+      const s = window.__brudSpor;
+      return { observe: s.observe, fulgt: s.fulgt.size, vaek: [...s.fulgt].filter((t) => !t.isConnected).length };
+    });
+  };
+  const foer = await status();
+  for (let k = 0; k < 50; k++) await tryk(side, nuSkaerm + '[data-fokus="dag-0-' + (k % 2 ? 'minus' : 'plus') + '"]');
+  const efterTryk = await status();
+  await gaa(side, '#/ret/koedsovs/trin/1', '.scene', vent);
+  const efterTrin = await status();
+  tjek(efterTryk.observe - foer.observe >= 50, 'se-land 50 tryk på steppers: oversigten skal tegnes igen hver gang (' + JSON.stringify([foer, efterTryk]) + ')');
+  tjek(efterTryk.vaek === 0, 'se-land 50 tryk på steppers: ' + efterTryk.vaek + ' linjer, der er væk fra siden, følges stadig ' + JSON.stringify(efterTryk));
+  tjek(efterTrin.vaek === 0, 'se-land trin uden linjer: ' + efterTrin.vaek + ' linjer, der er væk fra siden, følges stadig ' + JSON.stringify(efterTrin));
+  maal.push('se-land linjerne afmeldes: ' + JSON.stringify({ foer, efterTryk, efterTrin }));
+  await ctx.close();
 }
 
 const brudtePrikker = (side) => side.evaluate((s) => document.querySelectorAll(s).length, nuSkaerm + '.meta .led-skille.brudt');
