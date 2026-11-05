@@ -439,7 +439,7 @@ async function tjekForsideKnapper(side, hvor, { udenRul = false } = {}) {
     tjek(k.img && k.img.ok && k.img.alt === '' && k.img.B >= 48, hvor + ': «' + k.label + '» skal vise sit billede ' + JSON.stringify(k.img));
     tjek(k.B >= FORSIDE_MIN_BRED && k.H >= FORSIDE_MIN_HOEJ, hvor + ': «' + k.label + '» skal være mindst ' + FORSIDE_MIN_BRED + '×' + FORSIDE_MIN_HOEJ + ' px (' + k.B + '×' + k.H + ')');
     tjek(!k.ude, hvor + ': navnet «' + k.label + '» stikker ud af knappen');
-    tjek(k.linjer <= 3 && k.bredeste >= 40, hvor + ': navnet «' + k.label + '» må ikke stå i ét bogstav pr. linje (' + k.linjer + ' linjer, bredest ' + k.bredeste + ' px)');
+    tjek(k.linjer === 1 || (k.linjer <= 3 && k.bredeste >= 40), hvor + ': navnet «' + k.label + '» må ikke stå i ét bogstav pr. linje (' + k.linjer + ' linjer, bredest ' + k.bredeste + ' px)');
   }
   const farver = f.knapper.map((k) => k.farve);
   tjek(new Set(farver).size === farver.length, hvor + ': hver knap skal have sin egen farve (' + farver.join(', ') + ')');
