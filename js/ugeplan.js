@@ -844,6 +844,19 @@ export function retterTilBoern(alle, udvalg) {
 // Antal sider med PR_SIDE retter, mindst én (også uden retter)
 export const sideAntal = (retter) => Math.max(1, Math.ceil(retter.length / PR_SIDE));
 
+// Sideprikkerne: højst maks prikker i et vindue, der følger siden. Prikken ved kanten er lille, når der er flere sider
+// den vej. 21 prikker på 198 px blev klemt til 4×16 px på en iPhone. Hvilken side det er, siger aria-label
+export function prikVindue(side, sider, maks = 7) {
+  const antal = Math.min(maks, sider);
+  if (!(antal > 0)) return [];
+  const nu = Math.min(Math.max(0, side), sider - 1);
+  const fra = Math.min(Math.max(0, nu - Math.floor(antal / 2)), sider - antal);
+  return Array.from({ length: antal }, (_, k) => ({
+    nu: fra + k === nu,
+    lille: (k === 0 && fra > 0) || (k === antal - 1 && fra + antal < sider),
+  }));
+}
+
 // ✨ ny for os og ❤️ favorit på børnenes kort (maerkerFor i js/maerker.js): kun ikonet, med mærkets navn til skærmlæseren.
 // De står efter rettens navn, som dyret i hjørnet, så navnet siges først
 const BOERNE_MAERKER = { ny: 'maerke-ny', favorit: 'maerke-fav' };
@@ -1005,7 +1018,7 @@ function retValgSkaerm(p, dyr) {
   };
   const prikker = sider > 1
     ? el('div', { class: 'side-prikker', role: 'img', 'aria-label': 'Side ' + (barn.side + 1) + ' af ' + sider },
-      Array.from({ length: sider }, (_, k) => el('span', { class: k === barn.side ? 'nu' : null })))
+      prikVindue(barn.side, sider).map((p) => el('span', { class: [p.nu && 'nu', p.lille && 'lille'].filter(Boolean).join(' ') || null })))
     : null;
 
   const valgt = barn.ret && model(barn.ret);

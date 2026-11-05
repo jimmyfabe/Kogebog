@@ -902,9 +902,11 @@ textarea.kopi-felt { resize: vertical; }
 .ret-kort .kort-navn { font-size: 24px; }
 .kort-dyr { position: absolute; top: 10px; right: 10px; display: grid; place-items: center; width: 48px; aspect-ratio: 1; border: var(--kant); border-radius: 50%; background: var(--hvid); }
 .kort-dyr img { width: 86%; }
-.side-prikker { grid-area: prikker; display: flex; justify-content: center; gap: 10px; }
-.side-prikker span { width: 16px; height: 16px; border: 2px solid var(--kakao); border-radius: 50%; background: var(--hvid); }
+.side-prikker { grid-area: prikker; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.side-prikker span { flex: none; width: 16px; height: 16px; border: 2px solid var(--kakao); border-radius: 50%; background: var(--hvid); }
 .side-prikker .nu { background: var(--kakao); }
+/* Der er flere sider den vej (prikVindue i js/ugeplan.js) */
+.side-prikker .lille { width: 10px; height: 10px; }
 
 /* Trin 3: syv dagbrikker i dagenes faste farver (de samme som i oversigten). En fri dag har en tom, stiplet tallerken;
    den, barnet har trykket på, viser retten på tallerkenen og en gul ring, og en optaget dag viser retten og dyret */
@@ -962,6 +964,8 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .dyr-tjek .ikon { width: 26px; height: 26px; }
   .ret-blad { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "gitter gitter gitter" "forrige prikker naeste"; gap: 14px 12px; }
   .ret-gitter { --mellem: 12px; }
+  /* Syv prikker fylder 160 px af de 168 px mellem pilene på 360 px */
+  .side-prikker { gap: 8px; }
   .ret-kort .kort-navn { font-size: 20px; }
   .kort-dyr { top: 6px; right: 6px; width: 36px; }
   .dag-brikker { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
