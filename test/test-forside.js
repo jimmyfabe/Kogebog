@@ -17,7 +17,7 @@ import { lavModel, erLynhurtig, harTid } from '../js/model.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const TI = ['pasta-og-nudler', 'kylling', 'fisk', 'koed', 'groent', 'broed-og-pizza', 'soede-sager', 'drikke', 'jul', 'halloween'];
-const ANTAL_RETTER = 220;
+const ANTAL_RETTER = 222;
 const ANTAL_PLANLAGTE = 82;
 
 const laesJson = (sti) => JSON.parse(fs.readFileSync(path.join(ROD, sti), 'utf8'));
@@ -30,7 +30,7 @@ const UGE = INDEX.grupper.flatMap((g) => g.retter).filter((id) => JSONER.get(id)
 
 // ---------- Sorteringen i opskrifter/index.json ----------
 
-test('alle 220 retter står i præcis én af de 10 grupper, og alle opskriftsfiler har en plads', () => {
+test('alle 222 retter står i præcis én af de 10 grupper, og alle opskriftsfiler har en plads', () => {
   const alle = INDEX.grupper.flatMap((g) => g.retter);
   assert.equal(alle.length, ANTAL_RETTER);
   assert.equal(new Set(alle).size, alle.length, 'en ret står to steder');
@@ -407,7 +407,7 @@ const knapMed = (label) => rod.querySelectorAll('button').find((b) => b.getAttri
 const knapMedTekst = (tekst) => rod.querySelectorAll('button').find((b) => b.textContent === tekst);
 const overskrift = () => rod.querySelector('h1').textContent;
 
-test('forsiden: 10 rigtige knapper med navn til skærmlæseren, billede og navn og ingen af de 220 kort', async () => {
+test('forsiden: 10 rigtige knapper med navn til skærmlæseren, billede og navn og ingen af de 222 kort', async () => {
   await start();
   const b = knapper();
   assert.deepEqual(b.map((x) => x.dataset.gruppe), TI);
@@ -586,7 +586,7 @@ test('lupen: «is» og «aftensmad» på den rigtige skærm, og feltet tegnes ik
   assert.equal(rod.querySelector('.soeg-felt'), felt, 'Safari lukker tastaturet, hvis feltet tegnes om');
   skriv(felt, 'aftensmad');
   assert.deepEqual(kort().sort(), AFTENSMAD_GRUPPER.flatMap(retterI).sort());
-  assert.match(rod.querySelector('.soeg-tal').textContent, /81/);
+  assert.match(rod.querySelector('.soeg-tal').textContent, /82/);
 });
 
 test('lupen: mærkelige tegn giver «ingen træf» med en vej videre, ikke en fejl', async () => {
@@ -917,7 +917,7 @@ test('«Åbn» i Katalog: pilen fører til voksendelens hold og derfra til Katal
   }
 });
 
-// Låsen glemmer søgning og filtre, når en ret åbnes. Med søgningen «kylling» er listen 20 rækker, når pladsen måles, og 220
+// Låsen glemmer søgning og filtre, når en ret åbnes. Med søgningen «kylling» er listen 20 rækker, når pladsen måles, og 222
 // efter holdet, så pladsen ville lande et tilfældigt sted
 for (const [navn, filtrer] of [
   ['søgetekst', () => skriv(rod.querySelector('.soeg-felt'), 'kylling')],
