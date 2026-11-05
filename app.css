@@ -1174,6 +1174,8 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .forside-dyr { display: none; }
   /* Højst 26 % af højden: med 30 % kiggede næste række kun 17 px frem på 667×375 og 812×375, så intet viste, at siden
      kan rulles. Nu ca. 32 px (på 812×375 blev den første række før skåret 1 px af, da titlen er højere end på 667 px) */
+  /* Gruppen har tre kolonner fra 736 px som forsiden: 250 px gav to kolonner op til 868 px. 667 px har stadig to */
+  .kort-gitter { grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr)); }
   .kort-billede { width: min(100%, 120px, 26svh); }
   .kort-tid { padding: 0 6px; font-size: 13px; }
   /* Dugen, gruppens overskrift og kortene er lavere, så den første række kort ses under overskriften
