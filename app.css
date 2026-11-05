@@ -953,8 +953,12 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
      stadig knappens navn */
   .valg-hoved { flex-wrap: nowrap; gap: 12px; }
   .valg-hoved h1 { min-width: 0; }
-  .valg-hoved .laes-op { flex: none; width: var(--tryk); padding: 0; border-radius: 50%; }
-  .valg-hoved .laes-op > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  /* Den runde højttaler, her og på trin med timer (.ved-timer fra trinSkaerm i app.js; en klasse, ikke :has, så det også
+     virker under iOS 15.4). På trinnet stod «Læs op» og timeren under hinanden og skubbede «Start timer» ind under bunden
+     på 360×780 (34 px), og en iPhones safe-area gør bunden 18 px højere end i testen. Lave skærme på langs har deres egen
+     regel (.trin-tekst .laes-op), som også placerer knappen */
+  .valg-hoved .laes-op, .laes-op.ved-timer { flex: none; width: var(--tryk); padding: 0; border-radius: 50%; }
+  .valg-hoved .laes-op > span, .laes-op.ved-timer > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .valg-dyr { width: 64px; height: 64px; }
   .valg-ret { width: 72px; height: 72px; }
   .dyr-gitter { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
@@ -1043,11 +1047,7 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .trin-tekst { gap: 14px; }
   .trin-tekst h1 { font-size: 30px; }
   .trin-ikoner img { width: 56px; height: 56px; }
-  /* Trin med timer: «Læs op» er en rund højttaler ved siden af timeren, som på lave skærme. Under hinanden skubbede de
-     «Start timer» ind under bunden på 360×780 (34 px), og en iPhones safe-area gør bunden 18 px højere end i testen.
-     Teksten er skjult, men er stadig knappens navn. Uden :has står de under hinanden som før */
-  .laes-op:has(+ .timer) { flex: none; width: var(--tryk); padding: 0; border-radius: 50%; }
-  .laes-op:has(+ .timer) > span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  /* Trin med timer: «Læs op» er en rund højttaler ved siden af timeren (.laes-op.ved-timer under (max-width: 700px)) */
   /* «Næste» og rettens «Start» skal kunne nås uden at rulle: bunden står fast, og et langt trin
      eller en lang ingrediensliste ruller ind under den. Også børnenes valg: på 360×740 lå «Vælg» næsten helt under
      kanten, når retternes navne er lange. Pilene rulles frem over bunden (UI-review 2, 23-10) */

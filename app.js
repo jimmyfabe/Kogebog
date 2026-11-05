@@ -643,7 +643,8 @@ function trinSkaerm(m, nr) {
   const sidst = nr === m.trin.length;
   Lager.gem({ sidste: { ret: m.id, nr, tid: Date.now(), groen: m.erGroen === true } });
 
-  const laesOp = knap('Læs op', { klasse: 'laes-op', ikonNavn: 'hoejttaler' });
+  // ved-timer: rund højttaler ved siden af timeren på telefonen (app.css)
+  const laesOp = knap('Læs op', { klasse: 'laes-op' + (t.timerSek ? ' ved-timer' : ''), ikonNavn: 'hoejttaler' });
   laesOp.addEventListener('click', klik(() => sigTrin(m, t, laesOp)));
 
   // Voksen-trin: en gul advarselstrekant med kniven eller flammen, uden tekst (børnene kan ikke læse)
