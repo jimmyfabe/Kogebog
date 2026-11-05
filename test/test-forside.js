@@ -180,7 +180,7 @@ test('«ris» finder ikke en ret alene på «gris»', () => {
   for (const p of traef) assert.ok(ordI(p).some(erRisOrd), p.m.id);
 });
 
-test('korte ord: 1-2 bogstaver kun ordets begyndelse, 3 også slutningen, og længere ord også inde i ordet', () => {
+test('korte ord: højst 3 bogstaver kun ordets begyndelse, madord også slutningen, og længere ord også inde i ordet', () => {
   const r = (navn) => ({ id: navn, navn, ingredienser: [], maerker: [] });
   const liste = [r('Flødeis'), r('Is med bær'), r('Risengrød'), r('Fiskefrikadeller'), r('Kartoffelmos'), r('Æggekage')];
   const ids = (t) => soeg(liste, t).map((x) => x.id);
@@ -191,6 +191,7 @@ test('korte ord: 1-2 bogstaver kun ordets begyndelse, 3 også slutningen, og læ
   assert.deepEqual(ids('deis'), ['Flødeis'], 'fire bogstaver må stå inde i ordet');
   assert.deepEqual(ids('mos'), ['Kartoffelmos'], '«mos» slutter ordet');
   assert.deepEqual(ids('tof'), [], '«tof» står inde i ordet');
+  assert.deepEqual(ids('age'), [], '«age» slutter «Æggekage», men er ikke et madord');
   assert.deepEqual(ids('lmos'), ['Kartoffelmos']);
 });
 
@@ -1070,8 +1071,9 @@ test('et bogstav uden for BMP tæller som ét, når søgeordets længde tælles'
   assert.deepEqual(soeg([{ navn: 'x' + b, ingredienser: [], maerker: [] }], b), []);
   assert.equal(soeg([{ navn: b + 'x', ingredienser: [], maerker: [] }], b).length, 1);
   const tre = b + String.fromCodePoint(0x1D4B8);
-  assert.equal(soeg([{ navn: 'x' + tre, ingredienser: [], maerker: [] }], tre).length, 1, 'tre bogstaver må stå sidst i et ord');
-  assert.equal(soeg([{ navn: 'x' + tre + 'x', ingredienser: [], maerker: [] }], tre).length, 0, 'men ikke inde i det');
+  assert.equal(soeg([{ navn: tre + 'x', ingredienser: [], maerker: [] }], tre).length, 1, 'tre bogstaver må stå først i et ord');
+  assert.equal(soeg([{ navn: 'x' + tre, ingredienser: [], maerker: [] }], tre).length, 0, 'men ikke sidst, når det ikke er et madord');
+  assert.equal(soeg([{ navn: 'x' + tre + 'x', ingredienser: [], maerker: [] }], tre).length, 0, 'og ikke inde i det');
 });
 
 test('korte ord med blød bindestreg og tomme input', () => {

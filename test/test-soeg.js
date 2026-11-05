@@ -1,7 +1,7 @@
 // test-soeg.js — søgningen i voksendelens lister og bag lupen på forsiden (js/soeg.js): normaliseringen og soeg(retter,
-// tekst), hvor hvert ord skal findes i navnet, en ingrediens, gruppen, gruppens ekstra søgeord eller et mærke. Ord på 1-2
-// bogstaver matcher kun ordets begyndelse, ord på 3 også slutningen, med undtagelser for fem korte ord. Til sidst de
-// rigtige opskrifter: «jul» finder præcis juleretterne.
+// tekst), hvor hvert ord skal findes i navnet, en ingrediens, gruppen, gruppens ekstra søgeord eller et mærke. Ord på højst
+// 3 bogstaver matcher kun ordets begyndelse, og kun madordene i SLUTORD også slutningen, med undtagelser for fem korte ord.
+// Til sidst de rigtige opskrifter: «jul» finder præcis juleretterne, og «and» finder ikke vand.
 // Kør:  node test/test-soeg.js
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -69,7 +69,7 @@ test('et ord på 1-2 bogstaver matcher kun ordets begyndelse', () => {
   assert.deepEqual(soeg([ret('k', 'Bær', ['a', 'is'], null)], 'IS').map((r) => r.id), ['k'], 'også en ingrediens, uanset store bogstaver');
 });
 
-test('et ord på 3 bogstaver står først eller sidst i et ord, ikke inde i det', () => {
+test('et madord på 3 bogstaver (SLUTORD) står først eller sidst i et ord, ikke inde i det', () => {
   const liste = [
     ret('a', 'Kartoffelmos', [], null), ret('b', 'Mosaikkage', [], null), ret('c', 'Kartoffelmosen', [], null),
     ret('d', 'Blomkål', [], null), ret('e', 'Blomkålssuppe', [], null), ret('f', 'Boller', ['hvedemel'], null),
@@ -80,6 +80,23 @@ test('et ord på 3 bogstaver står først eller sidst i et ord, ikke inde i det'
   assert.deepEqual(fundet('mel'), ['f']);
   assert.deepEqual(ids('flø'), ['is'], 'begyndelsen af «Flødeis»');
   assert.deepEqual(ids('æbl'), ['gloegg'], 'æ er et bogstav');
+});
+
+test('alle ni madord i SLUTORD findes sidst i et ord', () => {
+  for (const [o, d] of [['kål', 'blomkål'], ['bær', 'blåbær'], ['mos', 'kartoffelmos'], ['mel', 'hvedemel'], ['ost', 'hytteost'], ['ris', 'jasminris'], ['kød', 'oksekød'], ['løg', 'hvidløg'], ['dej', 'butterdej']]) {
+    assert.equal(soeg([ret('x', 'Noget', [d], null)], o).length, 1, o + ' i ' + d);
+    assert.equal(soeg([ret('x', 'Noget', [d + 'e'], null)], o).length, 0, o + ' inde i ' + d + 'e');
+  }
+  assert.equal(soeg([ret('x', 'Blomkål', [], null)], 'k' + String.fromCharCode(0x61, 0x30A) + 'l').length, 1, 'også «kål» skrevet som a + ring');
+});
+
+test('et andet ord på 3 bogstaver står kun først i et ord: «and» finder ikke vand, og «rød» ikke brød', () => {
+  for (const [o, d] of [['and', 'vand'], ['and', 'danskvand'], ['rød', 'brød'], ['rød', 'sprød'], ['rød', 'risengrød'], ['alt', 'salt'], ['mad', 'aftensmad'], ['ing', 'kylling'], ['ing', 'honning']]) {
+    assert.equal(soeg([ret('x', 'Noget', [d], null)], o).length, 0, o + ' i ' + d);
+  }
+  for (const [o, d] of [['and', 'andesteg'], ['rød', 'rødkål'], ['rød', 'røde'], ['alt', 'altid'], ['mad', 'madpakke'], ['ing', 'ingefær']]) {
+    assert.equal(soeg([ret('x', 'Noget', [d], null)], o).length, 1, o + ' først i ' + d);
+  }
 });
 
 test('undtagelserne: «is» finder også ord på «eis», og «ris» tæller ikke ordene «gris» og «pris»', () => {
@@ -160,4 +177,12 @@ test('de rigtige opskrifter: «jul» finder præcis juleretterne, og «Kylling»
   // Begge ord skal passe: det er de juleretter, der også har kylling (tarteletterne, fra v7).
   assert.deepEqual(soeg(poster, 'jul kylling').map((p) => p.id), jul.filter((id) => kylling.includes(id)));
   assert.ok(soeg(poster, 'jul kylling').length < kylling.length);
+  // Vand, brød, salt og kylling står i mange af de rigtige retter: de ord giver ikke længere træf
+  const ord = (p) => soegeTekst(p).split(/[^\p{L}\p{N}]+/u);
+  for (const o of ['and', 'rød', 'alt', 'ing']) {
+    const traef = soeg(poster, o);
+    assert.ok(traef.length > 0, o);
+    for (const p of traef) assert.ok(ord(p).some((d) => d.startsWith(o)), o + ' i ' + p.id);
+  }
+  assert.ok(soeg(poster, 'rød').some((p) => ord(p).includes('rødkål')), '«rød» finder stadig rødkål');
 });

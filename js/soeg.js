@@ -1,13 +1,18 @@
 // soeg.js — søgningen i voksendelens lister (Katalog, Ugens udvalg og Favoritter i js/voksen-del.js) og bag lupen på
 // forsiden. Ren logik: ingen DOM og intet lager. Hvert ord i søgningen skal findes et sted i retten (OG): i navnet, i en
 // ingrediens' navn, i gruppens navn («Jul»), i gruppens gamle navn («Aftensmad», gruppeOrd) eller i et mærkes navn
-// («Vegetar»). Et ord på mindst 4 bogstaver må stå inde i et andet ord, så «kage» finder «julekage». Et ord på 3 bogstaver
-// skal stå først eller sidst i et ord, så «mos» finder «kartoffelmos» og «kål» finder «blomkål». Et ord på 1-2 bogstaver
-// skal stå først i et ord, så «æg» finder «æggekage», men ikke «spejlæg», med undtagelserne i UNDTAGELSER. Store og små
-// bogstaver er ens, æ, ø og å er ens, uanset hvordan tastaturet har skrevet dem (NFC), og den bløde bindestreg i retternes
-// navne (U+00AD, fx «Kyllinge|tærte») tæller ikke.
+// («Vegetar»). Et ord på mindst 4 bogstaver må stå inde i et andet ord, så «kage» finder «julekage». Et ord på højst 3
+// bogstaver skal stå først i et ord, så «æg» finder «æggekage», men ikke «spejlæg», og «and» ikke finder «vand». Kun
+// madordene i SLUTORD må også stå sidst, så «mos» finder «kartoffelmos» og «kål» finder «blomkål», med undtagelserne i
+// UNDTAGELSER. Store og små bogstaver er ens, æ, ø og å er ens, uanset hvordan tastaturet har skrevet dem (NFC), og den
+// bløde bindestreg i retternes navne (U+00AD, fx «Kyllinge|tærte») tæller ikke.
 
-const KORT_ORD = 3; // så mange bogstaver: først eller sidst i et ord. Færre: kun først. Flere: hvor som helst
+const KORT_ORD = 3; // højst så mange bogstaver: først i et ord. Flere: hvor som helst
+
+// Ordene på 3 bogstaver, der også må stå sidst i et ord. Listen er over det tilladte, ikke over det forbudte: en regel om,
+// at alle ord på 3 bogstaver måtte stå sidst, gav for mange falske træf («and» i vand, «rød» i brød, «alt» i salt), og en
+// liste over dem vokser uden ende
+const SLUTORD = new Set(['kål', 'bær', 'mos', 'mel', 'ost', 'ris', 'kød', 'løg', 'dej']);
 
 // Søgeordene, hvor reglen rammer forbi. «slutning»: den slutning, ordet også må findes på, i stedet for ordet selv.
 // «ikke»: hele ord, der ikke tæller
@@ -45,10 +50,9 @@ export function soegeTekst(ret) {
 // Findes ordet i teksten? [...ord]: et bogstav uden for BMP tæller som ét. Søgeordet bruges aldrig som et regulært udtryk,
 // så «(» og «.*» bare ikke findes. \p{L}: \b kender kun a-z i WebKit, og «æg» står også først i et ord
 function ordFindes(o, t) {
-  const bogstaver = [...o].length;
-  if (bogstaver > KORT_ORD) return t.includes(o);
+  if ([...o].length > KORT_ORD) return t.includes(o);
   const undtagelse = UNDTAGELSER.get(o) ?? {};
-  const slutning = undtagelse.slutning ?? (bogstaver === KORT_ORD ? o : null);
+  const slutning = undtagelse.slutning ?? (SLUTORD.has(o) ? o : null);
   const ikke = undtagelse.ikke ?? [];
   return t.split(/[^\p{L}\p{N}]+/u).some((d) => !ikke.includes(d) && (d.startsWith(o) || (slutning !== null && d.endsWith(slutning))));
 }
