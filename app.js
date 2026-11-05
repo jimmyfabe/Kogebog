@@ -1,6 +1,6 @@
-// app.js — Tumbi Køkken: forside → ret → ét trin pr. skærm → færdig.
-// Ruterne står i adressen (#/ret/<id>/trin/<nr>), så tilbage-knappen og en genindlæsning virker. Retten med mere grønt
-// (js/groent.js) har «/groen» efter id'et (#/ret/<id>/groen/trin/<nr>).
+// app.js — Tumbi Køkken: forside → gruppe → ret → ét trin pr. skærm → færdig.
+// Ruterne står i adressen (#/gruppe/<id>, #/ret/<id>/trin/<nr>), så tilbage-knappen og en genindlæsning virker. Retten med
+// mere grønt (js/groent.js) har «/groen» efter id'et (#/ret/<id>/groen/trin/<nr>).
 // Al tekst fra opskrifterne sættes som tekst (textContent), aldrig som HTML.
 import { el, attr, ikon, svgEl } from './js/dom.js';
 import { hentIndex, hentRet } from './js/data.js';
@@ -19,6 +19,8 @@ import { VERBER, INGREDIENSER, GRUPPER, grafikVerbum, grafikIngrediens, grafikDy
 import { formaterTid, varighed, varighedTale, idag } from './js/tid.js';
 import { minutterTekst, utenBloede } from './js/tekst.js';
 import { UDGAVE } from './js/version.js';
+import { soeg, soegeord } from './js/soeg.js';
+import { FAVORITTER, HASH_SOEG, hashGruppe, gruppeRute, forsideGrupper, gruppeRetter, tilbageFraRet, rulleplads } from './js/grupper.js';
 
 // ?hurtig=1 (kun til test): alle timere varer 2 sekunder
 const HURTIG = new URLSearchParams(location.search).get('hurtig') === '1';
@@ -31,10 +33,12 @@ const meddelelse = document.getElementById('meddelelse');
 
 const S = {
   ids: null,          // rækkefølgen fra index.json
-  grupper: [],        // forsidens afsnit fra index.json: [{ id, retter }]
+  grupper: [],        // forsidens grupper fra index.json: [{ id, retter }]
   indexFejl: null,
   retter: new Map(),  // id → model eller HentFejl
-  valgtKort: null,    // forsiden: første tryk siger navnet, andet åbner
+  valgtKort: null,    // gruppeskærmen og søgningen: første tryk siger navnet, andet åbner
+  fra: null,          // hvor retten blev åbnet: { hash, ret, y }. Rettens tilbage-pil og rullepladsen bagefter (js/grupper.js)
+  soegTekst: '',      // lupens søgetekst, kun i hukommelsen, til forsiden vises igen
   spaerTil: 0,
   vistHash: null,
   oprydning: [],
@@ -88,6 +92,7 @@ function annoncer(tekst) {
 // groen: retten med mere grønt. Den står i adressen, så Start, trinene og Tilbage bliver i den udgave, retten blev åbnet i
 const hashFor = {
   forside: () => '#/',
+  gruppe: hashGruppe,
   ret: (id, groen) => '#/ret/' + id + (groen ? '/groen' : ''),
   trin: (id, nr, groen) => hashFor.ret(id, groen) + '/trin/' + nr,
   faerdig: (id, groen) => hashFor.ret(id, groen) + '/faerdig',
@@ -96,6 +101,8 @@ const hashFor = {
 function rute() {
   const u = Ugeplan.rute(location.hash);
   if (u) return u;
+  const g = gruppeRute(location.hash);
+  if (g) return g;
   const d = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
   if (d[0] === 'ret' && d[1]) {
     // «/groen» efter id'et: retten med mere grønt, uanset kontakten på denne enhed (fx fra «Ugens retter» på telefonen)
@@ -147,9 +154,13 @@ function timerPille() {
   return b;
 }
 
-function topbar(midte) {
+// Huset fører til forsiden. Med tilbage (en adresse, kun retten) står en pil i stedet: to knapper til venstre gav
+// advarslen «Sammen med en voksen» for lidt plads på iPhone
+function topbar(midte, tilbage = null) {
   return el('header', { class: 'topbar' },
-    knap('', { klasse: 'rund', ikonNavn: 'hjem', label: 'Til forsiden', onclick: () => { Tale.stop(); naviger(hashFor.forside()); } }),
+    tilbage
+      ? knap('', { klasse: 'rund', ikonNavn: 'tilbage', label: 'Tilbage', onclick: () => { Tale.stop(); naviger(tilbage); } })
+      : knap('', { klasse: 'rund', ikonNavn: 'hjem', label: 'Til forsiden', onclick: () => { Tale.stop(); naviger(hashFor.forside()); } }),
     el('div', { class: 'topbar-midte' }, midte || null),
     timerPille());
 }
@@ -180,11 +191,90 @@ function fejlSkaermRet(id, fejl) {
   });
 }
 
+// ---------- Kortene (gruppeskærmen og søgningen) ----------
+
+// Gruppens billede står i kortets hjørne: den grønne og den røde cirkel kan ikke skelnes ved farveblindhed (UI-review 5).
+// Pynt for skærmlæseren: kortets navn er rettens navn. data-gruppe står på kortet, så en blandet liste (favoritter og
+// søgning) får rigtig farve. En ret, der ikke kunne hentes, får intet kort, men kommer på listen fejlede
+function kortTil(id, gruppe, fejlede) {
+  const m = S.retter.get(id);
+  if (!m) return el('li', { class: 'kort-plads' }, el('div', { class: 'kort tomt', 'aria-hidden': 'true' }));
+  if (m instanceof Error) { fejlede.push(id); return null; }
+  // Tiden er den udgave, retten viser, når den åbnes: med kontakten stod hyrdetærten til 50 min her og 1 t på retten (UI-review 02-11)
+  const u = udgave(m);
+  const kendtGruppe = typeof gruppe === 'string' && Object.hasOwn(GRUPPER, gruppe);
+  const b = el('button', { type: 'button', class: 'kort' + (S.valgtKort === id ? ' valgt' : ''), 'data-ret': id },
+    kendtGruppe ? el('span', { class: 'kort-gruppe', 'aria-hidden': 'true' }, billede(grafikGruppe(gruppe), '')) : null,
+    el('span', { class: 'kort-billede' }, billede(grafikRet(id), ''), tidMaerke(u), lynMaerke(u)),
+    el('span', { class: 'kort-navn', tekst: m.navn }),
+    el('span', { class: 'kort-aabn', 'aria-hidden': 'true' }, ikon('naeste'), el('span', { tekst: 'Tryk igen' })),
+    tidTekst(u),
+    lynTekst(u));
+  b.addEventListener('click', klik(() => kortTryk(id, b)));
+  return el('li', { class: 'kort-plads', 'data-gruppe': kendtGruppe ? gruppe : null }, b);
+}
+
+// Retten åbnes herfra: dens pil fører tilbage hertil, og skærmen står, hvor den stod (tilbageFraRet og gendanPlads).
+// y: pladsen bagefter, hvis den ikke er den samme som nu (Katalog giver 0, når listen er filtreret)
+function huskFra(ret, y = window.scrollY) {
+  S.fra = { hash: location.hash, ret, y };
+}
+
+function kortTryk(id, b) {
+  const m = udgave(S.retter.get(id));
+  if (S.valgtKort === id) {
+    S.valgtKort = null;
+    huskFra(id);
+    // Navnet, og har retten voksen-trin, bagefter én gang, at den laves sammen med en voksen (null: kun navnet)
+    naviger(hashFor.ret(id), () => Tale.sig(R.retAaben(m), { derefter: R.voksenStart(m) }));
+    return;
+  }
+  S.valgtKort = id;
+  for (const k of rod.querySelectorAll('.kort.valgt')) k.classList.remove('valgt');
+  b.classList.add('valgt');
+  S.spaerTil = performance.now() + SPAERRE_MS;
+  Tale.sig(R.retValgt(m));
+}
+
+// «Én opskrift kunne ikke læses (…)»: til den voksne, så en ret ikke forsvinder i stilhed. Ingen fejl: null
+function hentFejlLinje(fejlede) {
+  return fejlede.length ? el('p', { class: 'fejl-linje', role: 'status', tekst: (fejlede.length === 1 ? 'Én opskrift' : fejlede.length + ' opskrifter') + ' kunne ikke læses (' + fejlede.join(', ') + '). Prøv at genindlæse siden.' }) : null;
+}
+
+const tilForsiden = () => knap('Til forsiden', { ikonNavn: 'hjem', onclick: () => naviger(hashFor.forside()) });
+
+function listeFejlSkaerm() {
+  return statusSkaerm({
+    titel: 'Opskrifterne kunne ikke hentes',
+    tekst: 'Tjek internetforbindelsen, og prøv igen.',
+    handling: el('div', { class: 'status-knapper' },
+      knap('Prøv igen', { klasse: 'primaer', ikonNavn: 'igen', onclick: () => indlaes() }), tilForsiden()),
+  });
+}
+
 // ---------- Forsiden ----------
 
+// En billedknap: et tryk åbner gruppen og siger navnet. Skærmen skifter først, så en stemme, der ikke kommer, ikke kan
+// holde navigationen tilbage. Tallerkenen er hvid på gruppens farve; billedet er pynt, for knappens navn står på den
+function gruppeKnap(id) {
+  const navn = GRUPPER[id];
+  const b = knap('', { klasse: 'gruppe-knap', label: navn, onclick: () => naviger(hashFor.gruppe(id), () => Tale.sig(R.gruppe(id))) });
+  b.setAttribute('data-gruppe', id);
+  b.append(el('span', { class: 'gruppe-knap-plade' }, billede(grafikGruppe(id), '')), el('span', { class: 'gruppe-knap-navn', tekst: navn }));
+  return b;
+}
+
+// Hjertet ud over billedknapperne: kun når der findes en favorit
+function favoritKnap() {
+  const b = knap('', { klasse: 'rund forside-favoritter', label: 'Favoritter', onclick: () => naviger(hashFor.gruppe(FAVORITTER), () => Tale.sig(R.FAVORITTER)) });
+  b.append(VoksenDel.hjerteIkon());
+  return b;
+}
+
 function forside() {
+  S.fra = null;
+  S.soegTekst = '';
   let indhold;
-  let hop = null;
   if (S.indexFejl) {
     indhold = el('div', { class: 'status-boks' },
       billede(grafikDyr('bo'), '', 'status-dyr'),
@@ -202,95 +292,106 @@ function forside() {
       // S.ids = null, så skærmen viser «Henter opskrifterne …», mens listen hentes (en tom liste er ikke null)
       knap('Hent opskrifterne igen', { klasse: 'primaer', ikonNavn: 'igen', onclick: () => { S.ids = null; indlaes(); } }));
   } else {
-    const fejlede = [];
-    // Afsnittets billede (gryden, ovnen, kagen, græskarret) står også i kortets hjørne: den grønne og den røde cirkel kan ikke skelnes
-    // ved farveblindhed (UI-review 5). Pynt for skærmlæseren: kortets navn er rettens navn
-    const kortTil = (id, gruppe) => {
-      const m = S.retter.get(id);
-      if (!m) return el('li', { class: 'kort-plads' }, el('div', { class: 'kort tomt', 'aria-hidden': 'true' }));
-      if (m instanceof Error) { fejlede.push(id); return null; }
-      // Tiden er den udgave, retten viser, når den åbnes: med kontakten stod hyrdetærten til 50 min her og 1 t på retten (UI-review 02-11)
-      const u = udgave(m);
-      const b = el('button', { type: 'button', class: 'kort' + (S.valgtKort === id ? ' valgt' : ''), 'data-ret': id },
-        Object.hasOwn(GRUPPER, gruppe) ? el('span', { class: 'kort-gruppe', 'aria-hidden': 'true' }, billede(grafikGruppe(gruppe), '')) : null,
-        el('span', { class: 'kort-billede' }, billede(grafikRet(id), ''), tidMaerke(u), lynMaerke(u)),
-        el('span', { class: 'kort-navn', tekst: m.navn }),
-        el('span', { class: 'kort-aabn', 'aria-hidden': 'true' }, ikon('naeste'), el('span', { tekst: 'Tryk igen' })),
-        tidTekst(u),
-        lynTekst(u));
-      b.addEventListener('click', klik(() => kortTryk(id, b)));
-      return el('li', { class: 'kort-plads' }, b);
-    };
-    // Et afsnit pr. gruppe: gryden, ovnen, kagen og græskarret står i overskriften og har samme farve som kortenes cirkel.
-    // Et afsnit uden kort (alle dets opskrifter fejlede) vises ikke
-    const hopKnapper = [];
-    const afsnit = S.grupper.map((g) => {
-      const kort = g.retter.map((id) => kortTil(id, g.id)).filter(Boolean);
-      if (!kort.length) return null;
-      const navn = Object.hasOwn(GRUPPER, g.id) ? GRUPPER[g.id] : null;
-      if (navn) hopKnapper.push(hopKnap(g.id, navn));
-      return el('section', { class: 'gruppe', 'data-gruppe': g.id, 'aria-labelledby': navn ? 'gruppe-' + g.id : null },
-        navn ? el('h2', { class: 'gruppe-navn', id: 'gruppe-' + g.id, tabindex: '-1' },
-          el('span', { class: 'gruppe-ikon' }, billede(grafikGruppe(g.id), '')), el('span', { tekst: navn })) : null,
-        el('ul', { class: 'kort-gitter' }, kort));
-    });
-    // Ved første visning ses kun det første afsnit: en knap pr. afsnit i toppen viser, at der er mere, og hopper dertil
-    if (hopKnapper.length > 1) hop = el('nav', { class: 'forside-hop', 'aria-label': 'Gå til et afsnit' }, hopKnapper);
+    const { knapper, ukendte } = forsideGrupper(S.grupper);
     indhold = el('div', { class: 'forside-indhold' },
-      afsnit,
-      fejlede.length ? el('p', { class: 'fejl-linje', role: 'status', tekst: (fejlede.length === 1 ? 'Én opskrift' : fejlede.length + ' opskrifter') + ' kunne ikke læses (' + fejlede.join(', ') + '). Prøv at genindlæse siden.' }) : null);
+      el('nav', { 'aria-label': 'Vælg slags mad' }, el('ul', { class: 'gruppe-knapper', role: 'list' }, knapper.map((id) => el('li', {}, gruppeKnap(id))))),
+      hentFejlLinje(S.ids.filter((id) => S.retter.get(id) instanceof Error)),
+      ukendte.length ? el('p', { class: 'fejl-linje', role: 'status', tekst: 'Listen har grupper, denne udgave ikke kender (' + ukendte.join(', ') + '). Genindlæs siden, så hentes den nye udgave.' }) : null);
   }
+  const harRetter = Boolean(S.ids && S.ids.length);
   const top = el('header', { class: 'forside-top' },
     billede(grafikDyr('rosa'), '', 'forside-dyr'),
     el('div', { class: 'forside-titel' },
       el('h1', { tabindex: '-1', tekst: 'Tumbi Køkken' }),
       // Hårdt mellemrum: «dag?» stod alene på sidste linje på 390 px
       el('p', { tekst: 'Hvad skal vi lave i\u00a0dag?' })),
-    hop,
+    // Lupen er den voksnes: børnene kan næsten ikke læse, så den er mindre end deres knapper og står i dugens hjørne
+    harRetter ? knap('', { klasse: 'rund forside-lup', ikonNavn: 'lup', label: 'Søg efter en ret', onclick: () => naviger(HASH_SOEG, () => rod.querySelector('.soeg-felt')?.focus()) }) : null,
     billede(grafikDyr('bo'), '', 'forside-dyr'));
   // Voksendelen (js/voksen-del.js: husstand, ugens udvalg, favoritter, ugeplan og indkøbsliste): bag et hold på 2 s som
   // print, så et barn ikke kommer derind ved et tilfælde
-  const voksne = S.ids && S.ids.length ? el('div', { class: 'forside-voksen' }, holdKnap({
+  const voksne = holdKnap({
     klasse: 'lille voksen-hold voksen-knap',
     label: 'Til de voksne. Hold knappen inde i 2 sekunder.',
     indhold: [ikon('kalender'), el('span', { tekst: 'Voksne: hold' })],
     naarFaerdig: () => VoksenDel.aabn(),
-  })) : null;
+  });
+  const bund = harRetter ? el('div', { class: 'forside-voksen' }, Lager.hentFamilie(S.ids).favoritter.length ? favoritKnap() : null, voksne) : null;
   // Røsts licens kræver, at man får at vide, at stemmen er en computerstemme, før den taler (sikkerhedsreview 20-10).
   // Før stod det kun på printet. Versionsnummeret står under, så den voksne kan se, om iPad'en har den nye udgave (js/version.js)
-  return el('main', { class: 'skaerm forside' }, top, el('div', { class: 'forside-timer' }, timerPille()), indhold, voksne,
+  return el('main', { class: 'skaerm forside' }, top, el('div', { class: 'forside-timer' }, timerPille()), indhold, bund,
     el('p', { class: 'forside-fod', tekst: 'Stemmen er en computerstemme (Røst\u00a0fra\u00a0Alexandra\u00a0Instituttet).' }),
     el('p', { class: 'forside-fod forside-version', tekst: 'Version ' + UDGAVE }));
 }
 
-// En rund knap med afsnittets billede og farve (som overskriften). Tryk: rul til afsnittet, sig navnet, og flyt fokus
-// til overskriften, så Tab fortsætter derfra. Uden animation ved «mindre bevægelse»
-function hopKnap(id, navn) {
-  const b = knap('', { klasse: 'rund hop', label: navn, onclick: () => {
-    const h = document.getElementById('gruppe-' + id);
-    if (!h) return;
-    h.closest('.gruppe').scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-    h.focus({ preventScroll: true });
-    Tale.sig(R.gruppe(id));
-  } });
-  b.dataset.gruppe = id;
-  b.append(billede(grafikGruppe(id), ''));
-  return b;
+// ---------- Gruppeskærmen ----------
+
+// Kun den gruppes retter, med kortene fra før. Huset i topbaren fører tilbage til forsiden
+function gruppeSkaerm(id) {
+  if (S.indexFejl) return listeFejlSkaerm();
+  if (!S.ids) return henterSkaerm();
+  const erFavoritter = id === FAVORITTER;
+  const familie = erFavoritter ? Lager.hentFamilie(S.ids) : null;
+  // En nyere udgave har gemt familien: favoritterne findes, men de kan ikke læses, så «ingen favoritter endnu» ville være
+  // forkert. En app på hjemmeskærmen har ingen genindlæs-knap, så skærmen har sin egen
+  if (familie?.laast) {
+    return statusSkaerm({
+      titel: 'Favoritterne kan ikke vises',
+      tekst: 'De er gemt af en nyere udgave. Genindlæs siden.',
+      handling: el('div', { class: 'status-knapper' },
+        knap('Genindlæs siden', { klasse: 'primaer', ikonNavn: 'igen', onclick: () => location.reload() }), tilForsiden()),
+    });
+  }
+  const retter = gruppeRetter(id, S.grupper, familie ? familie.favoritter : []);
+  if (!retter) return statusSkaerm({ titel: 'Den gruppe findes ikke', tekst: 'Måske er den blevet omdøbt. Vælg en gruppe på forsiden.', handling: tilForsiden() });
+  if (!retter.length) return statusSkaerm({ titel: 'Der er ingen favoritter endnu', tekst: 'Når en ret er færdig, kan I trykke på hjertet. Så står den her.', handling: tilForsiden() });
+  const fejlede = [];
+  const kort = retter.map((r) => kortTil(r.id, r.gruppe, fejlede)).filter(Boolean);
+  return el('main', { class: 'skaerm gruppe-skaerm' },
+    topbar(),
+    el('section', { class: 'gruppe', 'data-gruppe': id },
+      el('h1', { class: 'gruppe-navn', tabindex: '-1' },
+        el('span', { class: 'gruppe-ikon' }, erFavoritter ? VoksenDel.hjerteIkon() : billede(grafikGruppe(id), '')),
+        el('span', { tekst: erFavoritter ? 'Favoritter' : GRUPPER[id] })),
+      el('ul', { class: 'kort-gitter' }, kort)),
+    hentFejlLinje(fejlede));
 }
 
-function kortTryk(id, b) {
-  const m = udgave(S.retter.get(id));
-  if (S.valgtKort === id) {
-    S.valgtKort = null;
-    // Navnet, og har retten voksen-trin, bagefter én gang, at den laves sammen med en voksen (null: kun navnet)
-    naviger(hashFor.ret(id), () => Tale.sig(R.retAaben(m), { derefter: R.voksenStart(m) }));
-    return;
+// ---------- Lupen (#/soeg) ----------
+
+// Til den voksne, derfor ét felt og en liste og ingen stemme. Kortene er de samme som på gruppeskærmen. En tom søgning viser
+// ikke alle retter, men hvad man kan skrive. Kun listen og tallet tegnes om (Safari lukker tastaturet, hvis feltet tegnes om)
+function soegSkaerm() {
+  if (S.indexFejl) return listeFejlSkaerm();
+  if (!S.ids) return henterSkaerm();
+  const alle = VoksenDel.soegePoster();
+  const id = 'soeg-forside';
+  const tal = el('p', { id: id + '-tal', class: 'soeg-tal', role: 'status' });
+  const boks = el('div', { class: 'soeg-resultat' });
+  const form = VoksenDel.soegeForm({ id, vaerdi: S.soegTekst, naarSkrevet: (tekst) => { S.soegTekst = tekst; tegn(); } });
+  function tegn() {
+    if (!soegeord(S.soegTekst).length) {
+      tal.textContent = '';
+      boks.replaceChildren(el('p', { class: 'soeg-vejledning', tekst: 'Skriv navnet på en ret, en ingrediens eller et ord som «jul» eller «aftensmad».' }));
+      return;
+    }
+    const vist = soeg(alle, S.soegTekst);
+    tal.textContent = VoksenDel.visTekst(vist.length, alle.length);
+    boks.replaceChildren(vist.length
+      ? el('ul', { class: 'kort-gitter' }, vist.map((p) => kortTil(p.m.id, p.gruppeId, [])))
+      : VoksenDel.ingenTraef(S.soegTekst, { ryd: form.ryd }));
   }
-  S.valgtKort = id;
-  for (const k of rod.querySelectorAll('.kort.valgt')) k.classList.remove('valgt');
-  b.classList.add('valgt');
-  S.spaerTil = performance.now() + SPAERRE_MS;
-  Tale.sig(R.retValgt(m));
+  tegn();
+  return el('main', { class: 'skaerm soeg-skaerm' },
+    topbar(),
+    el('section', { class: 'gruppe' },
+      el('h1', { class: 'gruppe-navn', tabindex: '-1' },
+        el('span', { class: 'gruppe-ikon' }, ikon('lup')),
+        el('span', { tekst: 'Find en ret' })),
+      form.form,
+      tal,
+      boks),
+    hentFejlLinje(S.ids.filter((x) => S.retter.get(x) instanceof Error)));
 }
 
 // ---------- Retten ----------
@@ -389,7 +490,7 @@ function retSkaerm(m) {
   hoejttaler.addEventListener('click', klik(() => Tale.sig(R.retAaben(m), { knap: hoejttaler, derefter: R.voksenStart(m) })));
 
   return el('main', { class: 'skaerm ret' },
-    topbar(startAdvarsel(m)),
+    topbar(startAdvarsel(m), tilbageFraRet(m.id, S.grupper, S.fra)),
     el('div', { class: 'ret-indhold' },
       el('section', { class: 'ret-hoved' },
         el('div', { class: 'ret-billede' }, billede(grafikRet(m.id), '')),
@@ -639,12 +740,21 @@ function faerdigSkaerm(m) {
 
 function vis() {
   for (const fn of S.oprydning.splice(0)) fn();
-  // Voksendelen (#/voksen…) viser selv sin skærm gennem visSkaerm. En anden adresse lukker dens lås
-  if (VoksenDel.rute(location.hash)) { S.valgtKort = null; return; }
+  // Voksendelen (#/voksen…) viser selv sin skærm gennem visSkaerm. En anden adresse lukker dens lås, så pilen fra en ret
+  // ender på holdet, og rullepladsen venter, til holdet er klaret: først da står skærmen, retten blev åbnet fra, der
+  if (VoksenDel.rute(location.hash)) {
+    S.valgtKort = null;
+    if (VoksenDel.erLaastOp()) gendanPlads();
+    return;
+  }
   const r = rute();
   let skaerm;
   if (r.side === 'forside') {
     skaerm = forside();
+  } else if (r.side === 'gruppe') {
+    skaerm = gruppeSkaerm(r.id);
+  } else if (r.side === 'soeg') {
+    skaerm = soegSkaerm();
   } else if (r.uge) {
     skaerm = Ugeplan.skaerm(r);
   } else {
@@ -655,8 +765,22 @@ function vis() {
     // «/groen» i adressen vælger retten med mere grønt; ellers kontakten eller en timer på retten (udgave())
     else skaerm = retternesSkaerm(r, r.groen ? valgt(m, true) : udgave(m));
   }
-  if (r.side !== 'forside') S.valgtKort = null;
+  if (r.side !== 'gruppe' && r.side !== 'soeg') S.valgtKort = null;
   visSkaerm(skaerm);
+  gendanPlads();
+}
+
+// Tilbage fra en ret: skærmen, retten blev åbnet fra, står, hvor den stod, og fokus er på kortet. Én gang: bagefter gælder
+// det igen, at en ny adresse starter øverst (visSkaerm)
+function gendanPlads() {
+  const y = rulleplads(S.fra, location.hash);
+  if (y === null) return;
+  const { ret } = S.fra;
+  S.fra = null;
+  window.scrollTo(0, y);
+  for (const k of rod.querySelectorAll('.kort[data-ret]')) {
+    if (k.dataset.ret === ret) k.focus({ preventScroll: true });
+  }
 }
 
 // Retten, et trin eller færdig-skærmen for udgaven u (med eller uden mere grønt). Et trinnummer, udgaven ikke har, er en fejl
@@ -714,8 +838,8 @@ async function indlaes() {
   vis();
 }
 
-Ugeplan.init({ S, knap, klik, billede, lynMaerke, lynTekst, topbar, statusSkaerm, naviger, annoncer, indlaes, vis });
-VoksenDel.init({ S, knap, klik, billede, topbar, statusSkaerm, naviger, annoncer, indlaes, vis, visSkaerm });
+Ugeplan.init({ S, knap, klik, billede, lynMaerke, lynTekst, topbar, statusSkaerm, naviger, annoncer, indlaes, vis, huskFra });
+VoksenDel.init({ S, knap, klik, billede, topbar, statusSkaerm, naviger, annoncer, indlaes, vis, visSkaerm, huskFra });
 Timer.gendan();
 Tale.hentLydListe();
 indlaes();

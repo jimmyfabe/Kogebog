@@ -20,7 +20,7 @@ import { hentPlaywright } from '../vaerktoej/lav-ikoner.js';
 import { tilTale, isoTilMinutter, minutterTekst, utenBloede } from '../js/tekst.js';
 import { erLynhurtig, LYN_MIN } from '../js/model.js';
 import { formaterTid, varighedTale, HURTIG_SEK } from '../js/tid.js';
-import { GRUPPER } from '../js/katalog.js';
+import { GRUPPER, AFTENSMAD_GRUPPER } from '../js/katalog.js';
 import { UDGAVE } from '../js/version.js';
 import { ugeplan } from './e2e-ugeplan.js';
 import { voksen } from './e2e-voksen.js';
@@ -39,9 +39,10 @@ const SKAERME = [
   { navn: 'desktop', viewport: { width: 1280, height: 800 }, hasTouch: false },
 ];
 
-// Forsiden har et afsnit pr. gruppe (aftensmad, bagning, søde sager); index er alle retter i forsidens rækkefølge
+// Forsiden har en billedknap pr. gruppe, og gruppen har sin egen skærm; index er alle retter i grupperækkefølge
 const INDEX_GRUPPER = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter/index.json'), 'utf8')).grupper;
 const index = INDEX_GRUPPER.flatMap((g) => g.retter);
+const GRUPPE_AF = Object.fromEntries(INDEX_GRUPPER.flatMap((g) => g.retter.map((id) => [id, g.id])));
 const RETTER = Object.fromEntries(index.map((id) => [id, JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8'))]));
 
 const vent = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -193,7 +194,7 @@ async function foto(side, navn, ekstra = {}) {
 }
 
 // Børnenes egne knapper skal være mindst 64 px (de voksnes, fx print og stop, mindst 48 px)
-const BOERNEKNAPPER = '.kort, .ingr, .start, .naeste, .tilbage, .laes-op, .timer-start, .stor-rund, .knap.primaer, .hop, .dag-brik';
+const BOERNEKNAPPER = '.kort, .ingr, .start, .naeste, .tilbage, .laes-op, .timer-start, .stor-rund, .knap.primaer, .gruppe-knap, .forside-favoritter, .dag-brik';
 const SKAERMKNAPPER = '.handlinger .knap'; // skal kunne ses uden at rulle på iPad og desktop
 
 // Ingen vandret rulning (heller ikke indhold, som body's overflow-x skjuler), knapper mindst 48/64 px, alle billeder indlæst
@@ -334,15 +335,15 @@ async function hold(side, sel, ms = 2300) {
   await side.mouse.up();
 }
 
-// Forsiden med mange retter ruller: den første række kort skal ses uden at rulle, og det sidste kort skal kunne
-// rulles helt frem (kortenes kant på 6 px regnes med). Før skulle alle 5 kort ses på én skærm.
+// Gruppeskærmen og forsiden på små skærme ruller: den første række kort eller knapper skal ses uden at rulle, og den
+// sidste skal kunne rulles helt frem (kanten på 6 px regnes med).
 const KIG_MIN = 24;
 async function forsideRulning(side) {
   return side.evaluate(async () => {
     const billede = () => new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok)));
     window.scrollTo({ top: 0, behavior: 'instant' });
     await billede();
-    const kort = [...document.querySelectorAll('.kort[data-ret]')];
+    const kort = [...document.querySelectorAll('.kort[data-ret], .gruppe-knap')];
     const top = Math.min(...kort.map((k) => k.getBoundingClientRect().top));
     const foersteRaekke = kort.filter((k) => Math.abs(k.getBoundingClientRect().top - top) < 2);
     const foersteUnder = Math.round(Math.max(...foersteRaekke.map((k) => k.getBoundingClientRect().bottom + 6)) - innerHeight);
@@ -352,11 +353,11 @@ async function forsideRulning(side) {
     // Navnet skal blive inde i kortet («Havregrynskugler» stak ud på 360 px, hvor browseren ikke kunne dele ordet)
     const navnUd = kort.filter((k) => {
       const r = document.createRange();
-      r.selectNodeContents(k.querySelector('.kort-navn'));
+      r.selectNodeContents(k.querySelector('.kort-navn, .gruppe-knap-navn'));
       const t = r.getBoundingClientRect();
       const b = k.getBoundingClientRect();
       return t.left < b.left - 0.5 || t.right > b.right + 0.5;
-    }).map((k) => k.dataset.ret);
+    }).map((k) => k.dataset.ret || k.dataset.gruppe);
     window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' });
     await billede();
     const b = kort[kort.length - 1].getBoundingClientRect();
@@ -368,9 +369,6 @@ async function forsideRulning(side) {
   });
 }
 
-// Forsiden har et afsnit pr. gruppe med en stor overskrift (ikon + ord), og kortene i et afsnit har samme farve på
-// cirklen. Før stod alle 13 kort i ét gitter, og grupperne kunne ikke ses: med to kort pr. række delte pizzasnegle
-// (bagning) og pandekager (søde sager) række. Rækkerne regnes efter index.json, så blandingen også kan måles uden afsnit
 // Underteksten «Hvad skal vi lave i dag?» må ikke ende med ét ord alene på sidste linje (før «dag?» alene på 390×844)
 async function tjekUndertekst(side, hvor) {
   const ord = await side.evaluate(() => {
@@ -390,100 +388,137 @@ async function tjekUndertekst(side, hvor) {
   tjek(ord.length >= 2, hvor + ': underteksten ender med ét ord alene på sidste linje («' + ord.join(' ') + '»)');
 }
 
-async function tjekGrupper(side, hvor) {
-  const gruppeAf = Object.fromEntries(INDEX_GRUPPER.flatMap((g) => g.retter.map((id) => [id, g.id])));
-  const g = await side.evaluate((gruppeAf) => {
-    const afsnit = [...document.querySelectorAll('.forside .gruppe')].map((s) => {
-      const h = s.querySelector('h2');
-      const img = h && h.querySelector('img');
-      const kort = [...s.querySelectorAll('.kort[data-ret]')];
-      return {
-        id: s.dataset.gruppe,
-        navn: h ? h.textContent.trim() : null,
-        navnPx: h ? parseFloat(getComputedStyle(h).fontSize) : 0,
-        ikon: img ? { alt: img.getAttribute('alt'), b: Math.round(img.getBoundingClientRect().width), ok: img.complete && img.naturalWidth > 0 } : null,
-        hBund: h ? Math.round(h.getBoundingClientRect().bottom) : null,
-        retter: kort.map((k) => k.dataset.ret),
-        farver: [...new Set(kort.map((k) => getComputedStyle(k.querySelector('.kort-billede')).backgroundColor))],
-        kortTop: kort.length ? Math.round(Math.min(...kort.map((k) => k.getBoundingClientRect().top))) : null,
-        kortPx: kort.length ? parseFloat(getComputedStyle(kort[0].querySelector('.kort-navn')).fontSize) : 0,
-      };
+// En gruppe på dens egen skærm: adressen skiftes (uden stemme), og testen venter, til kortene står der
+async function tilGruppe(side, gruppe) {
+  await side.evaluate((h) => { location.hash = h; }, '#/gruppe/' + gruppe);
+  await side.waitForSelector('section.gruppe[data-gruppe="' + gruppe + '"] .kort[data-ret]');
+}
+// fn på alle grupper efter hinanden, og svarene samlet (kortene stod før alle på forsiden)
+async function overAlleGrupper(side, fn) {
+  const ud = [];
+  for (const g of INDEX_GRUPPER) {
+    await tilGruppe(side, g.id);
+    ud.push(...await fn(g.id));
+  }
+  return ud;
+}
+
+// Forsidens knapper: rigtige knapper med navn og billede, store nok, og navnet inde i knappen uden at knække midt i et ord.
+// Hele gitteret og «Voksne: hold» skal kunne ses uden at rulle på iPad og desktop. Lupen må ikke ramme titlen
+const FORSIDE_MIN_BRED = 140;
+const FORSIDE_MIN_HOEJ = 88;
+async function tjekForsideKnapper(side, hvor, { udenRul = false } = {}) {
+  const f = await side.evaluate(() => {
+    const kasse = (e) => { const r = e.getBoundingClientRect(); return { l: r.left, r: r.right, t: r.top, b: r.bottom, B: Math.round(r.width), H: Math.round(r.height) }; };
+    const knapper = [...document.querySelectorAll('.gruppe-knap')].map((b) => {
+      const img = b.querySelector('img');
+      const navn = b.querySelector('.gruppe-knap-navn');
+      const r = document.createRange();
+      r.selectNodeContents(navn);
+      const t = r.getBoundingClientRect();
+      const k = b.getBoundingClientRect();
+      const linjer = new Set([...r.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top))).size;
+      const bredeste = Math.max(...[...r.getClientRects()].map((x) => x.width));
+      return { id: b.dataset.gruppe, tag: b.tagName, label: b.getAttribute('aria-label'), tekst: b.textContent, B: Math.round(k.width), H: Math.round(k.height), linjer, bredeste: Math.round(bredeste),
+        ude: t.left < k.left - 0.5 || t.right > k.right + 0.5 || t.top < k.top - 0.5 || t.bottom > k.bottom + 0.5,
+        img: img && { alt: img.getAttribute('alt'), ok: img.complete && img.naturalWidth > 0, B: Math.round(img.getBoundingClientRect().width) },
+        farve: getComputedStyle(b).backgroundColor };
     });
-    const raekker = {};
-    for (const k of document.querySelectorAll('.forside .kort[data-ret]')) {
-      const top = Math.round(k.getBoundingClientRect().top + scrollY);
-      (raekker[top] = raekker[top] || []).push(k.dataset.ret);
-    }
-    const r = Object.values(raekker);
-    return {
-      afsnit,
-      blandet: r.filter((ids) => new Set(ids.map((id) => gruppeAf[id])).size > 1).map((ids) => ids.join('+')),
-      iRaekke: Math.max(...r.map((ids) => ids.length)),
-    };
-  }, gruppeAf);
-  tjek(g.afsnit.length === INDEX_GRUPPER.length, hvor + ': forsiden skal have ' + INDEX_GRUPPER.length + ' afsnit med hver sin overskrift (fandt ' + g.afsnit.length + ')');
-  INDEX_GRUPPER.forEach((ig, i) => {
-    const a = g.afsnit[i];
-    if (!a) return;
-    const navn = GRUPPER[ig.id];
-    tjek(a.id === ig.id && a.navn === navn, hvor + ': afsnit ' + (i + 1) + ' skal hedde «' + navn + '» (fandt ' + a.id + ' «' + a.navn + '»)');
-    tjek(a.ikon && a.ikon.ok && a.ikon.alt === '' && a.ikon.b >= 32, hvor + ': overskriften «' + navn + '» skal have et ikon på mindst 32 px ' + JSON.stringify(a.ikon));
-    tjek(a.navnPx >= Math.max(24, a.kortPx), hvor + ': overskriften «' + navn + '» skal være mindst 24 px og ikke mindre end kortenes navne (' + a.navnPx + ' mod ' + a.kortPx + ' px)');
-    tjek(a.retter.join() === ig.retter.join(), hvor + ': afsnittet «' + navn + '» skal have ' + ig.retter.join(', ') + ' (fandt ' + a.retter.join(', ') + ')');
-    tjek(a.farver.length === 1, hvor + ': kortene i «' + navn + '» skal have samme farve på cirklen (fandt ' + a.farver.join(', ') + ')');
-    tjek(a.hBund !== null && a.kortTop !== null && a.hBund <= a.kortTop, hvor + ': overskriften «' + navn + '» skal stå over sine kort (bund ' + a.hBund + ', kort ' + a.kortTop + ')');
+    const lup = document.querySelector('.forside-lup');
+    const titel = document.querySelector('.forside-titel');
+    const hold = document.querySelector('.forside-voksen .voksen-hold');
+    const sidste = [...document.querySelectorAll('.gruppe-knap')].at(-1);
+    return { knapper, lup: lup && kasse(lup), titel: kasse(titel), hold: hold && kasse(hold), sidste: sidste && kasse(sidste), kort: document.querySelectorAll('.kort').length,
+      hoejde: document.documentElement.scrollHeight, H: innerHeight, plade: Math.round(document.querySelector('.gruppe-knap-plade').getBoundingClientRect().width) };
   });
-  const farver = g.afsnit.map((a) => a.farver[0]);
-  tjek(new Set(farver).size === farver.length, hvor + ': hvert afsnit skal have sin egen farve på cirklen (fandt ' + farver.join(', ') + ')');
-  tjek(g.blandet.length === 0, hvor + ': en række må kun have kort fra én gruppe (blandet: ' + g.blandet.join(' | ') + ')');
-  return g;
-}
-
-// Toppen (dugen) har en stor knap pr. afsnit med afsnittets billede og farve (UI-review 5: ved første visning sås kun
-// Aftensmad). Et tryk ruller til afsnittets overskrift og flytter fokus dertil. Med «mindre bevægelse» står siden det rette
-// sted med det samme (behavior: 'auto'). Toppens højde skrives ud som måling
-async function tjekHop(side, hvor) {
-  const knapper = await side.evaluate(() => [...document.querySelectorAll('.forside-top button')].map((b) => {
-    const k = b.getBoundingClientRect();
-    const img = b.querySelector('img');
-    return { navn: b.getAttribute('aria-label'), gruppe: b.dataset.gruppe, b: Math.round(k.width), h: Math.round(k.height), farve: getComputedStyle(b).backgroundColor, img: img ? { src: img.getAttribute('src'), alt: img.getAttribute('alt'), ok: img.complete && img.naturalWidth > 0 } : null };
-  }));
   const forventet = INDEX_GRUPPER.map((g) => GRUPPER[g.id]);
-  tjek(knapper.map((k) => k.navn).join() === forventet.join(), hvor + ': toppen skal have knapperne ' + forventet.join(', ') + ' (fandt ' + knapper.map((k) => k.navn).join(', ') + ')');
-  const cirkler = await side.evaluate(() => Object.fromEntries([...document.querySelectorAll('.forside .gruppe')].map((s) => [s.dataset.gruppe, getComputedStyle(s.querySelector('.kort-billede')).backgroundColor])));
-  for (const k of knapper) {
-    tjek(k.img && k.img.ok && k.img.alt === '' && k.img.src === 'grafik/gruppe-' + k.gruppe + '.svg', hvor + ': knappen «' + k.navn + '» skal vise afsnittets billede ' + JSON.stringify(k.img));
-    tjek(k.farve === cirkler[k.gruppe], hvor + ': knappen «' + k.navn + '» skal have afsnittets farve (' + k.farve + ' mod ' + cirkler[k.gruppe] + ')');
-    tjek(Math.abs(k.b - k.h) <= 1 && k.b >= 64, hvor + ': knappen «' + k.navn + '» skal være rund og mindst 64 px (' + k.b + '×' + k.h + ')');
+  tjek(f.knapper.map((k) => k.label).join() === forventet.join(), hvor + ': forsiden skal have knapperne ' + forventet.join(', ') + ' (fandt ' + f.knapper.map((k) => k.label).join(', ') + ')');
+  tjek(f.kort === 0, hvor + ': forsiden skal ikke vise retternes kort (fandt ' + f.kort + ')');
+  for (const k of f.knapper) {
+    tjek(k.tag === 'BUTTON' && k.tekst === k.label, hvor + ': «' + k.label + '» skal være en knap med kun navnet (' + JSON.stringify(k) + ')');
+    tjek(k.img && k.img.ok && k.img.alt === '' && k.img.B >= 48, hvor + ': «' + k.label + '» skal vise sit billede ' + JSON.stringify(k.img));
+    tjek(k.B >= FORSIDE_MIN_BRED && k.H >= FORSIDE_MIN_HOEJ, hvor + ': «' + k.label + '» skal være mindst ' + FORSIDE_MIN_BRED + '×' + FORSIDE_MIN_HOEJ + ' px (' + k.B + '×' + k.H + ')');
+    tjek(!k.ude, hvor + ': navnet «' + k.label + '» stikker ud af knappen');
+    tjek(k.linjer === 1 || (k.linjer <= 3 && k.bredeste >= 40), hvor + ': navnet «' + k.label + '» må ikke stå i ét bogstav pr. linje (' + k.linjer + ' linjer, bredest ' + k.bredeste + ' px)');
   }
-  maal.push(hvor + ': toppen er ' + await side.evaluate(() => Math.round(document.querySelector('.forside-top').getBoundingClientRect().height)) + ' px høj');
-  await side.emulateMedia({ reducedMotion: 'reduce' });
-  for (const k of knapper) {
-    await side.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
-    await tryk(side, '.forside-top button[data-gruppe="' + k.gruppe + '"]');
-    const straks = await side.evaluate(() => Math.round(scrollY));
-    const til = await stille(side);
-    const r = await side.evaluate((id) => {
-      const h = document.getElementById('gruppe-' + id).getBoundingClientRect();
-      const bund = document.documentElement.scrollHeight - innerHeight - scrollY < 1;
-      return { top: Math.round(h.top), bund: Math.round(h.bottom), H: innerHeight, nederst: bund, fokus: document.activeElement && document.activeElement.id };
-    }, k.gruppe);
-    tjek(r.top >= 0 && r.bund <= r.H && (r.top <= 40 || r.nederst), hvor + ': knappen «' + k.navn + '» skal rulle til afsnittets overskrift ' + JSON.stringify(r));
-    tjek(r.fokus === 'gruppe-' + k.gruppe, hvor + ': efter knappen «' + k.navn + '» skal fokus stå på afsnittets overskrift (står på ' + r.fokus + ')');
-    tjek(straks === til, hvor + ': med «mindre bevægelse» skal knappen «' + k.navn + '» rulle uden animation (straks ' + straks + ', til sidst ' + til + ')');
-  }
-  await side.emulateMedia({ reducedMotion: null });
-  await side.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  const farver = f.knapper.map((k) => k.farve);
+  tjek(new Set(farver).size === farver.length, hvor + ': hver knap skal have sin egen farve (' + farver.join(', ') + ')');
+  tjek(f.lup && f.lup.B >= 48 && f.lup.H >= 48, hvor + ': lupen skal være mindst 48 px ' + JSON.stringify(f.lup));
+  tjek(f.lup && (f.lup.l >= f.titel.r || f.lup.r <= f.titel.l || f.lup.b <= f.titel.t || f.lup.t >= f.titel.b), hvor + ': lupen må ikke ramme titlen ' + JSON.stringify([f.lup, f.titel]));
+  tjek(f.hold && f.sidste && f.hold.t >= f.sidste.b - 1, hvor + ': «Voksne: hold» skal stå under knapperne ' + JSON.stringify([f.hold, f.sidste]));
+  if (udenRul) tjek(f.hold && f.hold.b <= f.H && f.sidste.b <= f.H, hvor + ': knapperne og «Voksne: hold» skal kunne ses uden at rulle (bund ' + (f.hold && Math.round(f.hold.b)) + ' på ' + f.H + ' px)');
+  maal.push(hvor + ': knapperne er ' + f.knapper[0].B + '×' + f.knapper[0].H + ' px med tallerken på ' + f.plade + ' px, siden er ' + f.hoejde + ' px høj på ' + f.H + ' px');
 }
 
-// Hvert kort har afsnittets billede i hjørnet (aria-hidden): grøn og rød cirkel kan ikke skelnes ved farveblindhed
+// Et tryk på hver knap: stemmen siger navnet, gruppen åbner med kun sine retter, overskriften har fokus, og kortene har
+// knappens farve og gruppens billede i hjørnet. Huset fører tilbage til forsiden
+async function tjekGruppeTryk(side, hvor) {
+  for (const g of INDEX_GRUPPER) {
+    const navn = GRUPPER[g.id];
+    const farve = await side.evaluate((id) => getComputedStyle(document.querySelector('.gruppe-knap[data-gruppe="' + id + '"]')).backgroundColor, g.id);
+    await tryk(side, '.gruppe-knap[data-gruppe="' + g.id + '"]');
+    await side.waitForSelector('section.gruppe[data-gruppe="' + g.id + '"] .kort[data-ret]');
+    const s = await side.evaluate(() => ({
+      hash: location.hash,
+      retter: [...document.querySelectorAll('.kort[data-ret]')].map((k) => k.dataset.ret),
+      h1: document.querySelector('h1').textContent,
+      fokus: document.activeElement && document.activeElement.tagName,
+      farver: [...new Set([...document.querySelectorAll('.kort-billede')].map((k) => getComputedStyle(k).backgroundColor))],
+      tale: window.__tale.length ? window.__tale[window.__tale.length - 1].tekst : null,
+    }));
+    tjek(s.hash === '#/gruppe/' + g.id, hvor + ': «' + navn + '» skal åbne gruppen (' + s.hash + ')');
+    tjek(s.retter.join() === g.retter.join(), hvor + ': «' + navn + '» skal vise netop gruppens ' + g.retter.length + ' retter (fandt ' + s.retter.length + ')');
+    tjek(s.h1 === navn && s.fokus === 'H1', hvor + ': «' + navn + '»: overskriften skal have fokus (' + s.h1 + ', ' + s.fokus + ')');
+    tjek(s.farver.length === 1 && s.farver[0] === farve, hvor + ': kortene i «' + navn + '» skal have knappens farve (' + s.farver.join(', ') + ' mod ' + farve + ')');
+    tjek(s.tale === navn, hvor + ': «' + navn + '» skal siges, når knappen trykkes (sagde «' + s.tale + '»)');
+    const rul = await forsideRulning(side);
+    tjek(rul.foersteUnder <= 0, hvor + ' ' + g.id + ': den første række kort skæres ' + rul.foersteUnder + ' px af forneden');
+    tjek(rul.sidsteSes, hvor + ' ' + g.id + ': det sidste kort skal kunne rulles helt frem ' + JSON.stringify(rul));
+    tjek(rul.navnUd.length === 0, hvor + ' ' + g.id + ': navnet stikker ud af kortet på ' + rul.navnUd.join(', '));
+    await tjekKortMaerke(side, hvor + ' ' + g.id);
+    await tjekLayout(side, hvor + ' ' + g.id);
+    await tryk(side, 'button[aria-label="Til forsiden"]');
+    await side.waitForSelector('.gruppe-knap');
+  }
+}
+
+// Tilbage fra en ret: gruppen på samme rulleplads, med fokus på kortet. Lupen: «is» rammer ikke ris
+async function tjekTilbageOgLup(side, hvor) {
+  const g = INDEX_GRUPPER.find((x) => x.id === 'jul');
+  const ret = g.retter[g.retter.length - 1];
+  const kort = '.kort[data-ret="' + ret + '"]';
+  await tilGruppe(side, g.id);
+  await side.locator(kort).scrollIntoViewIfNeeded();
+  await tryk(side, kort);
+  await stille(side);
+  const y = await side.evaluate(() => Math.round(scrollY));
+  await tryk(side, kort);
+  await side.waitForSelector('.ret h1');
+  await tryk(side, 'button[aria-label="Tilbage"]');
+  await side.waitForSelector(kort);
+  const efter = await side.evaluate((s) => ({ y: Math.round(scrollY), fokus: document.activeElement === document.querySelector(s), hash: location.hash }), kort);
+  tjek(efter.hash === '#/gruppe/' + g.id && Math.abs(efter.y - y) <= 2 && efter.fokus, hvor + ': tilbage fra retten skal stå på samme plads med fokus på kortet (' + JSON.stringify(efter) + ', før ' + y + ')');
+  await tryk(side, 'button[aria-label="Til forsiden"]');
+  await side.waitForSelector('.gruppe-knap');
+  await tryk(side, '.forside-lup');
+  await side.waitForSelector('.soeg-felt');
+  tjek(await side.evaluate(() => document.activeElement === document.querySelector('.soeg-felt')), hvor + ': lupen skal give søgefeltet fokus');
+  await side.keyboard.type('aftensmad');
+  const aften = await side.locator('.soeg-skaerm .kort[data-ret]').count();
+  const ventet = INDEX_GRUPPER.filter((x) => AFTENSMAD_GRUPPER.includes(x.id)).flatMap((x) => x.retter).length;
+  tjek(aften === ventet, hvor + ': «aftensmad» skal finde ' + ventet + ' retter (fandt ' + aften + ')');
+  await tjekLayout(side, hvor + ' søgningen');
+  await tryk(side, 'button[aria-label="Til forsiden"]');
+  await side.waitForSelector('.gruppe-knap');
+}
+
+// Hvert kort har gruppens billede i hjørnet (aria-hidden): grøn og rød cirkel kan ikke skelnes ved farveblindhed
 // (UI-review 5). Mærket ligger inde i kortet og ikke oven på navnet
 async function tjekKortMaerke(side, hvor) {
-  const gruppeAf = Object.fromEntries(INDEX_GRUPPER.flatMap((g) => g.retter.map((id) => [id, g.id])));
-  const forkert = await side.evaluate((gruppeAf) => [...document.querySelectorAll('.forside .kort[data-ret]')].filter((k) => {
+  const forkert = await side.evaluate((gruppeAf) => [...document.querySelectorAll('.gruppe-skaerm .kort[data-ret]')].filter((k) => {
     const m = k.querySelector('.kort-gruppe');
     const img = m && m.querySelector('img');
-    if (!m || !img || m.getAttribute('aria-hidden') !== 'true' || img.getAttribute('src') !== 'grafik/gruppe-' + gruppeAf[k.dataset.ret] + '.svg' || !img.complete || !img.naturalWidth) return true;
+    if (!m || !img || m.getAttribute('aria-hidden') !== 'true' || !k.closest('[data-gruppe="' + gruppeAf[k.dataset.ret] + '"]') || !img.complete || !img.naturalWidth) return true;
     const a = m.getBoundingClientRect();
     const b = k.getBoundingClientRect();
     const r = document.createRange();
@@ -492,8 +527,8 @@ async function tjekKortMaerke(side, hvor) {
     const iKortet = a.left >= b.left && a.right <= b.right && a.top >= b.top && a.bottom <= b.bottom;
     const overNavn = a.left < t.right && t.left < a.right && a.top < t.bottom && t.top < a.bottom;
     return !iKortet || overNavn || a.width < 24;
-  }).map((k) => k.dataset.ret), gruppeAf);
-  tjek(!forkert.length, hvor + ': hvert kort skal have afsnittets billede i hjørnet (aria-hidden, mindst 24 px, inde i kortet, ikke over navnet): ' + forkert.join(', '));
+  }).map((k) => k.dataset.ret), GRUPPE_AF);
+  tjek(!forkert.length, hvor + ': hvert kort skal have gruppens billede i hjørnet (aria-hidden, mindst 24 px, inde i kortet, ikke over navnet): ' + forkert.join(', '));
 }
 
 async function venterPaa(side, fn, arg, hvor, ms = 6000) {
@@ -558,30 +593,13 @@ async function heleVejen(browser, skaerm) {
   console.log('[' + n + '] forside → pandekager → færdig');
   const { ctx, side } = await nySide(browser, skaerm);
   await side.goto(BASE + '/index.html?hurtig=1');
-  await side.waitForSelector('.kort[data-ret]');
-  // Første besøg: service workeren henter alle filer samtidig med siden, så billederne kan være på vej, når kortene står der
+  await side.waitForSelector('.gruppe-knap');
+  // Første besøg: service workeren henter alle filer samtidig med siden, så billederne kan være på vej, når knapperne står der
   // («ipad forside: billeder ikke indlæst» med alle forsidens billeder, 23-10-2026 kl. 15:17). Vent, til alle er færdige
   // (også de fejlede, så tjekLayout melder et billede, der mangler)
   await side.waitForFunction(() => [...document.images].every((i) => i.complete), null, { timeout: 5000 }).catch(() => {});
-  tjek(await side.locator('.kort[data-ret]').count() === index.length, n + ': forsiden skal have ' + index.length + ' kort');
   await tjekLayout(side, n + ' forside');
-  // Kortene i samme række er lige høje (før var «Kødsovs med spaghetti» højere end naboerne)
-  const raekker = await side.evaluate(() => {
-    const r = {};
-    for (const k of document.querySelectorAll('.kort[data-ret]')) {
-      const b = k.getBoundingClientRect();
-      (r[Math.round(b.top)] = r[Math.round(b.top)] || []).push(Math.round(b.height));
-    }
-    return Object.values(r);
-  });
-  tjek(raekker.every((h) => Math.max(...h) - Math.min(...h) <= 1), n + ': kortene i en række skal være lige høje: ' + JSON.stringify(raekker));
-  const rul = await forsideRulning(side);
-  tjek(rul.foersteUnder <= 0, n + ': den første række kort på forsiden skæres ' + rul.foersteUnder + ' px af forneden');
-  tjek(rul.kig == null || rul.kig >= KIG_MIN, n + ': næste række på forsiden kigger kun ' + rul.kig + ' px frem (mindst ' + KIG_MIN + ')');
-  tjek(rul.sidsteSes, n + ': det sidste kort på forsiden skal kunne rulles helt frem ' + JSON.stringify(rul));
-  maal.push(n + ' forside: ' + rul.kort + ' kort, ' + rul.iFoersteRaekke + ' i første række, rullet ' + rul.rullet + ' px for at nå det sidste');
-  const gr = await tjekGrupper(side, n + ' forside');
-  maal.push(n + ' forside: ' + gr.afsnit.length + ' afsnit, højst ' + gr.iRaekke + ' kort pr. række');
+  await tjekForsideKnapper(side, n + ' forside', { udenRul: n !== 'iphone' });
   await tjekUndertekst(side, n + ' forside');
   // Røsts licens: forsiden siger, at stemmen er en computerstemme (før stod det kun på printet, sikkerhedsreview 20-10)
   const fod = await side.evaluate(() => document.querySelector('.forside-fod')?.textContent || '');
@@ -603,20 +621,38 @@ async function heleVejen(browser, skaerm) {
     return p && { tekst: p.textContent, hoejde: Math.round(p.getBoundingClientRect().height), under: p.getBoundingClientRect().top >= fod.getBoundingClientRect().bottom - 1 };
   });
   tjek(udgave && udgave.tekst === 'Version ' + UDGAVE && udgave.hoejde > 0 && udgave.under, n + ': forsiden skal vise «Version ' + UDGAVE + '» under linjen om stemmen, fandt ' + JSON.stringify(udgave));
-  await tjekKortMaerke(side, n + ' forside');
-  await tjekHop(side, n + ' forside');
+  await foto(side, n + '-1-forside');
+  await tjekGruppeTryk(side, n + ' forside');
+  await tjekTilbageOgLup(side, n);
+
+  // Gruppen med pandekager: kortene i samme række er lige høje (før var «Kødsovs med spaghetti» højere end naboerne)
+  await tryk(side, '.gruppe-knap[data-gruppe="' + GRUPPE_AF[VEJ] + '"]');
+  await side.waitForSelector('.kort[data-ret="' + VEJ + '"]');
+  await side.waitForFunction(() => [...document.images].every((i) => i.complete), null, { timeout: 5000 }).catch(() => {});
+  const raekker = await side.evaluate(() => {
+    const r = {};
+    for (const k of document.querySelectorAll('.kort[data-ret]')) {
+      const b = k.getBoundingClientRect();
+      (r[Math.round(b.top)] = r[Math.round(b.top)] || []).push(Math.round(b.height));
+    }
+    return Object.values(r);
+  });
+  tjek(raekker.every((h) => Math.max(...h) - Math.min(...h) <= 1), n + ': kortene i en række skal være lige høje: ' + JSON.stringify(raekker));
+  const rul = await forsideRulning(side);
+  tjek(rul.kig == null || rul.kig >= KIG_MIN, n + ': næste række i gruppen kigger kun ' + rul.kig + ' px frem (mindst ' + KIG_MIN + ')');
+  maal.push(n + ' gruppen: ' + rul.kort + ' kort, ' + rul.iFoersteRaekke + ' i første række, rullet ' + rul.rullet + ' px for at nå det sidste');
   if (n === 'desktop') {
     // U16: med mus skal et kort ændre sig, når musen står over det
-    const skygge = () => side.evaluate(() => getComputedStyle(document.querySelector('.kort[data-ret="frikadeller"]')).boxShadow);
+    const skygge = () => side.evaluate((id) => getComputedStyle(document.querySelector('.kort[data-ret="' + id + '"]')).boxShadow, VEJ);
     const foer = await skygge();
-    await side.hover('.kort[data-ret="frikadeller"]');
+    await side.hover('.kort[data-ret="' + VEJ + '"]');
     await vent(200);
     const over = await skygge();
     await side.mouse.move(0, 0);
     await vent(200);
     tjek(foer !== over, n + ': et kort skal ændre sig, når musen står over det (skygge ' + foer + ')');
   }
-  await foto(side, n + '-1-forside');
+  await foto(side, n + '-1-gruppe');
 
   // Første tryk siger navnet, andet åbner
   await tryk(side, '.kort[data-ret="pandekager"]');
@@ -826,7 +862,7 @@ async function heleVejen(browser, skaerm) {
   tjek(afstand >= 16, n + ': konfettien skal holde mindst 16 px fra overskriften og teksten (nærmeste: ' + afstand + ' px)');
   await foto(side, n + '-7-faerdig');
   await tryk(side, '.faerdig .knap.primaer');
-  await side.waitForSelector('.forside .kort');
+  await side.waitForSelector('.gruppe-knap');
   tjek(side.fejl.length === 0, n + ' (hele vejen): ' + side.fejl.join(' | '));
 
   // Alle trin i alle retter (direkte adresse)
@@ -1030,17 +1066,26 @@ async function tastatur(browser, skaerm) {
   console.log('[' + skaerm.navn + '] tastatur');
   const { ctx, side } = await nySide(browser, skaerm);
   await side.goto(BASE + '/index.html?hurtig=1');
-  await side.waitForSelector('.kort[data-ret]');
+  await side.waitForSelector('.gruppe-knap');
   let fundet = false;
+  for (let i = 0; i < 6 && !fundet; i++) {
+    await side.keyboard.press('Tab');
+    fundet = await side.evaluate(() => document.activeElement && document.activeElement.classList.contains('gruppe-knap'));
+  }
+  tjek(fundet, 'tastatur: Tab skal nå den første billedknap');
+  await vent(SPAERRE);
+  await side.keyboard.press('Enter');
+  await side.waitForSelector('.gruppe-skaerm .kort[data-ret]', { timeout: 5000 }).catch(() => tjek(false, 'tastatur: Enter på billedknappen skal åbne gruppen'));
+  fundet = false;
   for (let i = 0; i < 6 && !fundet; i++) {
     await side.keyboard.press('Tab');
     fundet = await side.evaluate(() => document.activeElement && document.activeElement.classList.contains('kort'));
   }
-  tjek(fundet, 'tastatur: Tab skal nå det første kort');
+  tjek(fundet, 'tastatur: Tab skal nå det første kort i gruppen');
   const ring = await side.evaluate(() => { const s = getComputedStyle(document.activeElement); return { stil: s.outlineStyle, bredde: parseFloat(s.outlineWidth) }; });
   tjek(ring.stil !== 'none' && ring.bredde >= 3, 'tastatur: fokus skal kunne ses (outline ' + JSON.stringify(ring) + ')');
   await foto(side, 'desktop-tastatur-fokus');
-  // Forsiden tegnes igen, når opskrifterne er hentet, og appen sluger tryk i 350 ms efter hver tegning:
+  // Skærmen tegnes igen, når opskrifterne er hentet, og appen sluger tryk i 350 ms efter hver tegning:
   // uden pausen her blev første Enter slugt, og andet Enter markerede kun kortet
   await vent(SPAERRE);
   await side.keyboard.press('Enter');
@@ -1131,7 +1176,7 @@ async function timere(browser, skaerm) {
 
   // 2) Forsiden viser timeren, og pillen fører til trinnet
   await tryk(side, 'button[aria-label="Til forsiden"]');
-  await side.waitForSelector('.forside .kort');
+  await side.waitForSelector('.gruppe-knap');
   const pilleForside = await side.locator('.pille:not([hidden])').count();
   tjek(pilleForside === 1, n + ': forsiden skal vise timeren, der kører');
   await tjekLayout(side, n + ' forside med timer');
@@ -1148,7 +1193,7 @@ async function timere(browser, skaerm) {
   // Et tryk på pillens tal, der varer over et tik: tallet skrives hvert kvarte sekund, og WebKit sendte intet «click»,
   // når tekstnoden under musen var skiftet ud før mouseup (e2e 22-10-2026: Playwright var 64 ms om trykket under belastning)
   await tryk(side, 'button[aria-label="Til forsiden"]');
-  await side.waitForSelector('.forside .kort');
+  await side.waitForSelector('.gruppe-knap');
   if (await side.locator('.pille:not([hidden])').count() === 1) {
     await hold(side, '.pille .pille-tal', 600);
     if (!await venterPaa(side, () => location.hash === '#/ret/koedsovs/trin/8', null, n + ': et tryk på 600 ms på tallet i pillen skal føre til trin 8')) {
@@ -1166,12 +1211,13 @@ async function timere(browser, skaerm) {
   // trykket (fejlede 4 af 20 ved 16 travle processer). Navnet varer nu 4 s, så trykket stadig lander midt i det
   const NAVN_MS = 4000;
   await tryk(side, 'button[aria-label="Til forsiden"]');
-  await side.waitForSelector('.forside .kort');
+  await side.waitForSelector('.gruppe-knap');
   await side.evaluate((ms) => {
     window.__lydMs = ms;
     window.__pilleKlik = null;
     window.addEventListener('click', (e) => { if (e.target.closest('.pille')) window.__pilleKlik = performance.now(); }, true);
   }, NAVN_MS);
+  await tilGruppe(side, GRUPPE_AF.pandekager);
   await tryk(side, '.kort[data-ret="pandekager"]');
   await tryk(side, '.kort[data-ret="pandekager"]');
   await side.waitForSelector('.ret h1');
@@ -1193,15 +1239,16 @@ async function timere(browser, skaerm) {
   // 3) Timeren løb ud, mens fanen var væk (iOS smed den ud): efter genindlæsningen skal «Tiden er gået» stå på forsiden
   await gemTimer(side, { ret: 'koedsovs', nr: 8, sek: 1200, slutOm: -60000 });
   await side.reload();
-  await side.waitForSelector('.forside .kort');
+  await side.waitForSelector('.gruppe-knap');
   const udloebet = side.locator('.pille.faerdig:not([hidden])');
   const udloebetVist = await udloebet.count() === 1 && (await udloebet.textContent()).includes('Tiden er gået');
   tjek(udloebetVist, n + ': en timer, der løb ud under genindlæsningen, skal vise «Tiden er gået» på forsiden');
-  // Pillen skubber kortene ned. Før skulle alle 5 kort ses (de blev skåret af på iPad); med 13 retter ruller forsiden,
-  // så nu skal den første række stadig ses uden at rulle, og det sidste kort skal kunne rulles frem
+  // Pillen skubber knapperne ned (de blev skåret af på iPad med de gamle kort): tallerkenerne bliver mindre, så alle knapper
+  // stadig kan ses uden at rulle på iPad, og den sidste kan rulles frem på iPhone
   const rul = await forsideRulning(side);
-  tjek(rul.foersteUnder <= 0, n + ': den første række kort på forsiden med «Tiden er gået» skæres ' + rul.foersteUnder + ' px af forneden');
-  tjek(rul.sidsteSes, n + ': det sidste kort på forsiden med «Tiden er gået» skal kunne rulles frem ' + JSON.stringify(rul));
+  tjek(rul.foersteUnder <= 0, n + ': den første række knapper på forsiden med «Tiden er gået» skæres ' + rul.foersteUnder + ' px af forneden');
+  tjek(rul.sidsteSes, n + ': den sidste knap på forsiden med «Tiden er gået» skal kunne rulles frem ' + JSON.stringify(rul));
+  await tjekForsideKnapper(side, n + ' forside med timeren', { udenRul: n !== 'iphone' });
   await foto(side, n + '-forside-udloebet');
   if (udloebetVist) {
     await tryk(side, '.pille', PULSERER);
@@ -1213,7 +1260,7 @@ async function timere(browser, skaerm) {
   // 4) Lyden efter en genindlæsning: ét tryk med fingeren (pointerdown med finger tæller ikke som et tryk i Safari)
   await gemTimer(side, { ret: 'koedsovs', nr: 8, sek: 1200, slutOm: 5000 });
   await side.reload();
-  await side.waitForSelector('.forside .kort');
+  await side.waitForSelector('.gruppe-knap');
   await side.tap('.forside-titel h1');
   const bip = await venterPaa(side, () => window.__toner >= 3, null, n + ': efter genindlæsning og ét tryk med fingeren skal der komme tre toner, når tiden er gået', 12000);
   if (!bip) maal.push(n + ': hændelser ved trykket: ' + (await side.evaluate(() => window.__tryk.join(', '))));
@@ -1294,7 +1341,7 @@ async function fejltilstande(browser, skaerm) {
   await foto(side, skaerm.navn + '-fejl-forside');
   await side.unroute('**/opskrifter/index.json');
   await tryk(side, 'button:has-text("Prøv igen")');
-  await side.waitForSelector('.kort[data-ret]').catch(() => tjek(false, 'fejl: «Prøv igen» skal hente opskrifterne'));
+  await side.waitForSelector('.gruppe-knap').catch(() => tjek(false, 'fejl: «Prøv igen» skal hente opskrifterne'));
 
   // U18: en tom liste taler til forælderen, ikke til udvikleren
   await side.route('**/opskrifter/index.json', (r) => r.fulfill({ contentType: 'application/json', body: '{"version":2,"grupper":[]}' }));
@@ -1312,7 +1359,7 @@ async function fejltilstande(browser, skaerm) {
   await tryk(side, 'button:has-text("Hent opskrifterne igen")');
   await side.waitForSelector('text=Henter opskrifterne', { timeout: 1000 })
     .catch(() => tjek(false, 'tom: «Hent opskrifterne igen» skal vise «Henter opskrifterne …», mens listen hentes'));
-  await side.waitForSelector('.kort[data-ret]').catch(() => tjek(false, 'tom: «Hent opskrifterne igen» skal hente listen'));
+  await side.waitForSelector('.gruppe-knap').catch(() => tjek(false, 'tom: «Hent opskrifterne igen» skal hente listen'));
   await side.unroute('**/opskrifter/index.json');
 
   await side.evaluate(() => { location.hash = '#/ret/findes-ikke'; });
@@ -1525,7 +1572,7 @@ async function timerFrem(browser) {
     console.log('[' + n + '] timeren rulles frem på ' + timerTrin.length + ' timer-trin');
     const { ctx, side } = await nySide(browser, sk);
     await side.goto(BASE + '/index.html');
-    await side.waitForSelector('.kort[data-ret]');
+    await side.waitForSelector('.gruppe-knap');
     const gaa = async (id, nr) => {
       // Den gamle skærm mærkes som i «former»: adressen skifter med det samme, men skærmen først ved hashchange, og det
       // forrige trin har også «Start timer». Uden mærket målte knapFrem indimellem det forrige trin, og trykket (force)
@@ -1649,7 +1696,7 @@ async function forsideTop(browser) {
   console.log('[forside] titlen på én linje og dyrenes størrelse');
   const { ctx, side } = await nySide(browser, { viewport: { width: 820, height: 1180 }, hasTouch: true });
   await side.goto(BASE + '/index.html');
-  await side.waitForSelector('.kort[data-ret]');
+  await side.waitForSelector('.gruppe-knap');
   for (const [b, h] of [[820, 1180], [768, 1024], [744, 1133], [901, 800], [1024, 800], [1100, 800], [1112, 834], [1180, 820], [1280, 800], [390, 844], [375, 667], [360, 780], [844, 390], [667, 375]]) {
     await side.setViewportSize({ width: b, height: h });
     await vent(150);
@@ -1659,10 +1706,31 @@ async function forsideTop(browser) {
       r.selectNodeContents(h1);
       const linjer = new Set([...r.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top))).size;
       const dyr = [...document.querySelectorAll('.forside-top > .forside-dyr')].map((d) => Math.round(d.getBoundingClientRect().width));
-      return { linjer, dyr };
+      const lup = document.querySelector('.forside-lup').getBoundingClientRect();
+      const titel = document.querySelector('.forside-titel').getBoundingClientRect();
+      return { linjer, dyr, lupRammer: lup.left < titel.right && titel.left < lup.right && lup.top < titel.bottom && titel.top < lup.bottom, lup: Math.round(Math.min(lup.width, lup.height)) };
     });
+    tjek(!t.lupRammer && t.lup >= 48, 'forside ' + b + '×' + h + ': lupen er mindst 48 px og rammer ikke titlen (' + t.lup + ' px)');
     tjek(t.linjer === 1, 'forside ' + b + '×' + h + ': «Tumbi Køkken» står på én linje (' + t.linjer + ' linjer)');
     tjek(t.dyr.every((w) => w === 0 || w >= 32), 'forside ' + b + '×' + h + ': Rosa og Bo er skjult eller mindst 32 px brede (' + t.dyr.join(', ') + ' px)');
+  }
+  // Ti knapper (v8 får «Drikke»): gitteret skal klare det uden ny kode. Knappen lægges ind i siden, ikke i koden
+  for (const [b, h, kolonner, udenRul] of [[1180, 820, 5, true], [820, 1180, 2, true], [390, 844, 2, false], [360, 780, 2, false]]) {
+    await side.setViewportSize({ width: b, height: h });
+    const t = await side.evaluate(() => {
+      const ul = document.querySelector('.gruppe-knapper');
+      if (!ul.querySelector('[data-tiende]')) {
+        const li = ul.lastElementChild.cloneNode(true);
+        li.setAttribute('data-tiende', '');
+        ul.append(li);
+      }
+      const knapper = [...ul.querySelectorAll('.gruppe-knap')].map((x) => x.getBoundingClientRect());
+      return { antal: knapper.length, kolonner: new Set(knapper.map((k) => Math.round(k.left))).size, bund: Math.max(...knapper.map((k) => k.bottom)), hold: document.querySelector('.forside-voksen').getBoundingClientRect().bottom, H: innerHeight, mindst: [Math.round(Math.min(...knapper.map((k) => k.width))), Math.round(Math.min(...knapper.map((k) => k.height)))] };
+    });
+    tjek(t.antal === 10 && t.kolonner === kolonner, 'ti knapper på ' + b + '×' + h + ': ' + kolonner + ' kolonner (' + JSON.stringify(t) + ')');
+    tjek(t.mindst[0] >= FORSIDE_MIN_BRED && t.mindst[1] >= FORSIDE_MIN_HOEJ, 'ti knapper på ' + b + '×' + h + ': mindst ' + FORSIDE_MIN_BRED + '×' + FORSIDE_MIN_HOEJ + ' px (' + t.mindst.join('×') + ')');
+    if (udenRul) tjek(t.hold <= t.H && t.bund <= t.H, 'ti knapper på ' + b + '×' + h + ': alt kan ses uden at rulle (' + JSON.stringify(t) + ')');
+    maal.push('ti knapper på ' + b + '×' + h + ': ' + t.mindst.join('×') + ' px, bund ' + Math.round(t.hold) + ' på ' + t.H + ' px');
   }
   tjek(side.fejl.length === 0, 'forsidens top: ' + side.fejl.join(' | '));
   await ctx.close();
@@ -1682,24 +1750,25 @@ async function former(browser) {
     const fortsaetHoejre = lav || sk.viewport.width >= 901;
     const kolonner = (sel) => side.evaluate((s) => getComputedStyle(document.querySelector('#app > .skaerm:not([data-gammel]) ' + s)).gridTemplateColumns.split(' ').length, sel);
     await side.goto(BASE + '/index.html');
-    await side.waitForSelector('.kort[data-ret]');
+    await side.waitForSelector('.gruppe-knap');
     await side.waitForFunction(() => [...document.images].every((i) => i.complete && i.naturalWidth));
 
-    // Forsiden med alle retter: første række uden at rulle, det sidste kort kan rulles frem, navnene bliver i kortene, og intet vandret rul
+    // Forsiden: første række uden at rulle, den sidste knap kan rulles frem, navnene bliver i knapperne, og intet vandret rul.
+    // iPad-formerne på langs og på højkant skal kunne se alle knapper uden at rulle
     const rul = await forsideRulning(side);
-    tjek(rul.foersteUnder <= 0, n + ' forside: den første række kort skæres ' + rul.foersteUnder + ' px af forneden');
+    tjek(rul.foersteUnder <= 0, n + ' forside: den første række knapper skæres ' + rul.foersteUnder + ' px af forneden');
     tjek(rul.kig == null || rul.kig >= KIG_MIN, n + ' forside: næste række kigger kun ' + rul.kig + ' px frem (mindst ' + KIG_MIN + ', så man kan se, at siden kan rulles)');
-    tjek(rul.sidsteSes, n + ' forside: det sidste kort skal kunne rulles helt frem ' + JSON.stringify(rul));
-    tjek(rul.navnUd.length === 0, n + ' forside: navnet stikker ud af kortet på ' + rul.navnUd.join(', '));
-    maal.push(n + ' forside: ' + rul.iFoersteRaekke + ' kort i første række, rullet ' + rul.rullet + ' px for at nå det sidste');
-    const gr = await tjekGrupper(side, n + ' forside');
-    maal.push(n + ' forside: højst ' + gr.iRaekke + ' kort pr. række');
+    tjek(rul.sidsteSes, n + ' forside: den sidste knap skal kunne rulles helt frem ' + JSON.stringify(rul));
+    tjek(rul.navnUd.length === 0, n + ' forside: navnet stikker ud af knappen på ' + rul.navnUd.join(', '));
+    maal.push(n + ' forside: ' + rul.iFoersteRaekke + ' knapper i første række, rullet ' + rul.rullet + ' px for at nå den sidste');
+    await tjekForsideKnapper(side, n + ' forside', { udenRul: ipadKolonner });
     await tjekUndertekst(side, n + ' forside');
     await tjekLayout(side, n + ' forside');
     await foto(side, n + '-former-forside');
-    await tjekKortMaerke(side, n + ' forside');
-    await tjekMinuttal(side, n + ' forside');
-    await tjekHop(side, n + ' forside');
+    await tjekGruppeTryk(side, n + ' forside');
+    await tjekMinuttal(side, n + ' grupperne');
+    await side.evaluate(() => { location.hash = '#/'; });
+    await side.waitForSelector('.gruppe-knap');
 
     // Fremskridtet med timer-pillen: boller har 16 trin, og timeren fra trin 8 kører på trin 9 og er færdig på trin 13
     if (sk.viewport.width <= 760) {
@@ -1978,12 +2047,12 @@ const forventetNavn = (id, min) => {
 const tidTal = (side) => side.evaluate(() => document.querySelectorAll('.kort-tid').length);
 // Pr. kort: minuttallet, dets felt og billedets og ⚡'s felt, og navnet regnet af indholdet som af skærmlæseren
 // (tekst og alt, uden det, der er aria-hidden)
-const minuttalPaa = (side) => side.evaluate(() => {
+const minuttalPaa = (side) => overAlleGrupper(side, () => side.evaluate(() => {
   const felt = (e) => { const b = e.getBoundingClientRect(); return { l: b.left, t: b.top, r: b.right, b: b.bottom }; };
   const navnAf = (e) => [...e.childNodes].map((c) => (c.nodeType === 3 ? c.data
     : c.nodeType !== 1 || c.getAttribute('aria-hidden') === 'true' ? ''
       : c.tagName === 'IMG' ? c.getAttribute('alt') || '' : navnAf(c))).join('');
-  return [...document.querySelectorAll('.forside .kort[data-ret]')].map((k) => {
+  return [...document.querySelectorAll('.gruppe-skaerm .kort[data-ret]')].map((k) => {
     const alle = k.querySelectorAll('.kort-tid');
     const t = alle[0];
     const lyn = k.querySelector('.lyn');
@@ -1999,7 +2068,7 @@ const minuttalPaa = (side) => side.evaluate(() => {
       navn: navnAf(k).replace(/\u00ad/g, '').replace(/\s+/g, ' ').replace(/ \./g, '.').trim(),
     };
   });
-});
+}));
 async function tjekMinuttal(side, hvor, tider = TIDER) {
   const kort = await minuttalPaa(side);
   const forkert = [];
@@ -2050,18 +2119,21 @@ async function lynOgNavne(browser) {
 
   // 1. Forsiden
   await side.goto(BASE + '/index.html');
-  await side.waitForSelector('.forside .kort[data-ret]');
-  const forside = await lynPaa(side, '.forside .kort[data-ret]');
-  tjek(forside.length === index.length, n + ' ⚡ forsiden: alle ' + index.length + ' kort (' + forside.length + ')');
-  tjekLyn(forside, n + ' ⚡ forsiden', 'pandekager');
-  maal.push(n + ' ⚡ forsiden: ' + forside.length + ' kort, ⚡ på ' + forside.filter((k) => k.lyn).map((k) => k.id).join(', '));
-  await samlBloede(side);
-  await side.waitForFunction(() => [...document.images].every((i) => i.complete));
-  await tjekMinuttal(side, n + ' minuttal forsiden');
+  await side.waitForSelector('.gruppe-knap');
+  const forside = await overAlleGrupper(side, async () => {
+    await side.waitForFunction(() => [...document.images].every((i) => i.complete));
+    await samlBloede(side);
+    return lynPaa(side, '.gruppe-skaerm .kort[data-ret]');
+  });
+  tjek(forside.length === index.length, n + ' ⚡ grupperne: alle ' + index.length + ' kort (' + forside.length + ')');
+  tjekLyn(forside, n + ' ⚡ grupperne', 'pandekager');
+  maal.push(n + ' ⚡ grupperne: ' + forside.length + ' kort, ⚡ på ' + forside.filter((k) => k.lyn).map((k) => k.id).join(', '));
+  await tjekMinuttal(side, n + ' minuttal grupperne');
   // Skærmlæserens navn fra Playwright selv (ariaSnapshot), for en ret med og en uden ⚡. Playwright sætter et mellemrum
   // mellem kortets dele («Tynde pandekager . 35 minutter.»), som ikke siges
   for (const id of ['pandekager', 'wok-med-nudler']) {
-    const snap = (await side.locator('.forside .kort[data-ret="' + id + '"]').ariaSnapshot()).replace(/ \./g, '.');
+    await tilGruppe(side, GRUPPE_AF[id]);
+    const snap = (await side.locator('.gruppe-skaerm .kort[data-ret="' + id + '"]').ariaSnapshot()).replace(/ \./g, '.');
     const navn = forventetNavn(id, tidAf(id));
     tjek(snap.includes('"' + navn + '"'), n + ' minuttal forsiden: Playwrights navn for ' + id + ' er «' + navn + '», uden tallet på billedet (' + snap.trim() + ')');
   }
@@ -2077,9 +2149,8 @@ async function lynOgNavne(browser) {
   }
   await side.goto('about:blank');
   await side.goto(BASE + '/index.html');
-  await side.waitForSelector('.forside .kort[data-ret]');
-  await side.waitForFunction(() => [...document.images].every((i) => i.complete));
-  await tjekMinuttal(side, n + ' minuttal forsiden (pandekager uden tid, kødsovs 0 min)', { ...TIDER, pandekager: null, koedsovs: 0 });
+  await side.waitForSelector('.gruppe-knap');
+  await tjekMinuttal(side, n + ' minuttal grupperne (pandekager uden tid, kødsovs 0 min)', { ...TIDER, pandekager: null, koedsovs: 0 });
   await side.unrouteAll({ behavior: 'wait' });
 
   // 2. Børnenes valg: alle sider med fire retter (Rosa). Et nyt dokument, så retterne hentes uden ændringerne ovenfor
@@ -2150,7 +2221,7 @@ async function lynOgNavne(browser) {
     tjek(titel === navn + ' · Tumbi Køkken', n + ' print.html?ret=' + blod + ': titlen uden blød bindestreg (' + titel.replace(/\u00ad/g, '|') + ')');
     const nr = RETTER[blod].recipeInstructions.findIndex((t) => t.tumbi.timer_sek) + 1;
     await side.goto(BASE + '/index.html');
-    await side.waitForSelector('.forside .kort[data-ret]');
+    await side.waitForSelector('.gruppe-knap');
     await medGemt(side, { timer: { ret: blod, nr, sek: 600, slutOm: 300000 } }, '#/');
     // Pillen tegnes hvert sekund, og navnet kommer, når opskrifterne er hentet
     await venterPaa(side, (x) => document.querySelector('.forside-timer .pille:not([hidden])')?.getAttribute('aria-label')?.includes(x),

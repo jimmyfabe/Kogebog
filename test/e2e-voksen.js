@@ -20,7 +20,8 @@ import { saml, grupper, holdSammen } from '../js/indkoeb.js';
 import { planMandag, varighedTale } from '../js/tid.js';
 import { tilTale, minutterTekst } from '../js/tekst.js';
 import { soeg } from '../js/soeg.js';
-import { GRUPPER, VARER } from '../js/katalog.js';
+import { blandet } from '../js/grupper.js';
+import { GRUPPER, VARER, AFTENSMAD_NAVN, AFTENSMAD_GRUPPER, gruppeSoegeord } from '../js/katalog.js';
 import { MAERKER, maerkerFor } from '../js/maerker.js';
 import { medMereGroent, GROENT_TEKST } from '../js/groent.js';
 
@@ -121,7 +122,7 @@ async function forloeb(browser, H, skaerm) {
   const mandag = { ret: IPLAN[0], af: 'bo', n: 3 };
   const lavetFoer = { [IPLAN[1]]: { gange: 2, sidst: '2026-10-01' }, [IPLAN[3]]: { gange: 1, sidst: '2026-10-20' } };
   await side.goto(BASE + '/index.html');
-  await side.waitForSelector('.kort[data-ret]');
+  await side.waitForSelector('.gruppe-knap');
   await saetLager(side, UGE, { v: 1, uge, dage: [mandag, null, null, null, null, null, null], n: 4, prBarn: 1, rettet: null });
 
   // 1. Et dybt link til voksendelen viser holdet, ikke voksendelen
@@ -261,9 +262,11 @@ async function forloeb(browser, H, skaerm) {
   await aabnVoksen(H, side, '/udvalg', n + ' udvalg');
   tjek(await tekstAf(side, '.udvalg-tal') === 'Intet udvalg: børnene ser alle retter', n + ': intet udvalg i starten (' + await tekstAf(side, '.udvalg-tal') + ')');
   await tryk(side, '[data-fokus="fyld-op"]');
-  const otte = IPLAN.filter((id) => !Object.hasOwn(lavetFoer, id)).slice(0, 8);
+  // Blandet: skiftevis én fra hver gruppe (js/grupper.js), og børnenes valg viser dem i samme rækkefølge
+  const indexGrupper = JSON.parse(fs.readFileSync(path.join(H.ROD, 'opskrifter/index.json'), 'utf8')).grupper;
+  const otte = blandet(IPLAN, indexGrupper, (id) => id).filter((id) => !Object.hasOwn(lavetFoer, id)).slice(0, 8);
   f = await laesLager(side, FAMILIE);
-  tjek(f && f.udvalg && JSON.stringify(f.udvalg.ids) === JSON.stringify(otte), n + ': «Fyld op med nye» vælger de 8 første retter, der ikke er lavet (' + JSON.stringify(f && f.udvalg) + ')');
+  tjek(f && f.udvalg && JSON.stringify(f.udvalg.ids) === JSON.stringify(otte), n + ': «Fyld op med nye» vælger de 8 første retter i den blandede rækkefølge, der ikke er lavet (' + JSON.stringify(f && f.udvalg) + ')');
   tjek(await tekstAf(side, '.udvalg-tal') === '8 af 24 valgt', n + ': «8 af 24 valgt» (' + await tekstAf(side, '.udvalg-tal') + ')');
   const valgte = await side.evaluate(() => [...document.querySelectorAll('.voksen-raekke.valgt')].map((r) => r.dataset.ret));
   tjek(JSON.stringify([...valgte].sort()) === JSON.stringify([...otte].sort()), n + ': de 8 rækker er markeret (' + valgte.join(', ') + ')');
@@ -387,7 +390,7 @@ function katalogPoster(RETTER, ROD) {
   const familie = { favoritter: [], lavet: {} };
   return ix.flatMap((g) => g.retter.map((id) => {
     const m = lavModel(RETTER[id]);
-    return { id, gruppeId: g.id, uge: Boolean(m.uge), navn: m.navn, ingredienser: m.ingredienser, gruppe: GRUPPER[g.id],
+    return { id, gruppeId: g.id, uge: Boolean(m.uge), navn: m.navn, ingredienser: m.ingredienser, gruppe: GRUPPER[g.id], gruppeOrd: gruppeSoegeord(g.id),
       maerker: maerkerFor(m, { familie }).map((k) => MAERKER[k].navn) };
   }));
 }
@@ -430,7 +433,7 @@ async function katalog(browser, H, skaerm) {
   const POSTER = katalogPoster(RETTER, ROD);
   const ALLE = POSTER.map((p) => p.id);
   const UGEPLAN = POSTER.filter((p) => p.uge);
-  const AFTENSMAD = POSTER.filter((p) => p.gruppeId === 'aftensmad');
+  const AFTEN = POSTER.filter((p) => AFTENSMAD_GRUPPER.includes(p.gruppeId));
   const JUL = POSTER.filter((p) => p.gruppeId === 'jul').map((p) => p.id);
   const GRUPPE_IDS = [...new Set(POSTER.map((p) => p.gruppeId))];
   const ids = (liste, tekst) => soeg(liste, tekst).map((p) => p.id);
@@ -442,13 +445,14 @@ async function katalog(browser, H, skaerm) {
   };
   const { ctx, side } = await nySide(browser, skaerm, { serviceWorkers: 'block' });
   await side.goto(BASE + '/index.html');
-  await side.waitForSelector('.kort[data-ret]');
+  await side.waitForSelector('.gruppe-knap');
 
-  // Oversigten: «Katalog» er det fjerde punkt og siger, hvor mange retter der kan søges i
+  // Oversigten: «Ugeplan» og «Indkøbsliste» står øverst, så de er lette at finde. «Katalog» siger, hvor mange retter der kan
+  // søges i
   await aabnVoksen(H, side, '', n + ' katalog: oversigten');
   const punkter = await side.evaluate(() => [...document.querySelectorAll('.voksen-punkt')].map((b) => b.dataset.fokus));
   const status = await tekstAf(side, '[data-fokus="katalog"] .voksen-punkt-status');
-  tjek(punkter[3] === 'katalog' && status === 'Søg i alle ' + retter(ALLE.length), n + ': «Katalog» er det fjerde punkt på oversigten (' + punkter.join(', ') + ' · ' + status + ')');
+  tjek(punkter[0] === 'ugeplan' && punkter[1] === 'indkoeb' && punkter.at(-1) === 'katalog' && status === 'Søg i alle ' + retter(ALLE.length), n + ': «Ugeplan» og «Indkøbsliste» øverst og «Katalog» nederst på oversigten (' + punkter.join(', ') + ' · ' + status + ')');
   await tryk(side, '[data-fokus="katalog"]');
   await venterPaa(side, () => location.hash === '#/voksen/katalog' && document.querySelector('main.voksen-katalog'), null, n + ': «Katalog» åbner kataloget');
   tjek(await h1(side) === 'Katalog', n + ': katalogets overskrift (' + await h1(side) + ')');
@@ -528,7 +532,7 @@ async function katalog(browser, H, skaerm) {
   tjek(linje.display === 'block' && linje.linje >= linje.boks - 2, n + ': linjen over filtrene fylder hele bredden (' + JSON.stringify(linje) + ')');
   await tjekLayout(side, n + ' katalog med filtrene foldet ud');
   const chips = await side.evaluate(() => [...document.querySelectorAll('[data-fokus^="gruppe-"]')].map((b) => b.textContent.replace(/\s+/g, ' ').trim()));
-  const ventChips = ['Alle (' + ALLE.length + ')', ...GRUPPE_IDS.map((g) => GRUPPER[g] + ' (' + POSTER.filter((p) => p.gruppeId === g).length + ')')];
+  const ventChips = ['Alle (' + ALLE.length + ')', AFTENSMAD_NAVN + ' (' + AFTEN.length + ')', ...GRUPPE_IDS.map((g) => GRUPPER[g] + ' (' + POSTER.filter((p) => p.gruppeId === g).length + ')')];
   tjek(ens(chips, ventChips), n + ': gruppe-chipsene med antal (' + chips.join(', ') + ')');
   await tryk(side, '[data-fokus="gruppe-aftensmad"]');
   const gruppe = await side.evaluate(() => ({
@@ -539,22 +543,22 @@ async function katalog(browser, H, skaerm) {
     open: document.querySelector('.voksen-filtre').open,
     top: Math.round(document.querySelector('.voksen-liste .voksen-raekke').getBoundingClientRect().top), H: innerHeight,
   }));
-  tjek(ens(await raekker(side), AFTENSMAD.map((p) => p.id)) && gruppe.trykket === 'true' && gruppe.alle === 'false' && gruppe.valgt === 'Aftensmad'
+  tjek(ens(await raekker(side), AFTEN.map((p) => p.id)) && gruppe.trykket === 'true' && gruppe.alle === 'false' && gruppe.valgt === 'Aftensmad'
     && gruppe.fokus === (kompakt ? 'filtre-katalog' : 'gruppe-aftensmad'),
-    n + ': «Aftensmad» viser kun de ' + AFTENSMAD.length + ' retter til aftensmad (' + JSON.stringify(gruppe) + ')');
+    n + ': «Aftensmad» viser kun de ' + AFTEN.length + ' retter til aftensmad (' + JSON.stringify(gruppe) + ')');
   // Review-fund 3 (02-11): på en kompakt skærm folder valget filtrene sammen, så tallet og den første ret ses, og fokus
   // står på linjen, der siger, hvad der er valgt. Ellers bliver filtrene stående
   tjek(gruppe.open === !kompakt && (!kompakt || gruppe.top < gruppe.H - 60),
     n + ': ' + (kompakt ? 'valget folder filtrene sammen, og den første ret ses over kanten' : 'filtrene bliver foldet ud efter valget') + ' (' + JSON.stringify(gruppe) + ')');
-  tjek(await tekstAf(side, '.soeg-tal') === 'Viser ' + AFTENSMAD.length + ' af ' + retter(ALLE.length), n + ': tallet følger gruppen (' + await tekstAf(side, '.soeg-tal') + ')');
+  tjek(await tekstAf(side, '.soeg-tal') === 'Viser ' + AFTEN.length + ' af ' + retter(ALLE.length), n + ': tallet følger gruppen (' + await tekstAf(side, '.soeg-tal') + ')');
   await tjekLayout(side, n + ' katalog: aftensmad');
 
   // … og søgningen inden for gruppen. På en kompakt skærm folder det første tegn de udfoldede filtre sammen (review-fund 3)
   if (kompakt) await tryk(side, '.voksen-filtre > summary');
   await tryk(side, '#soeg-katalog');
-  await skrivTegnForTegn(H, side, '#soeg-katalog', 'kylling', n + ' katalog, aftensmad', (t) => ids(AFTENSMAD, t));
+  await skrivTegnForTegn(H, side, '#soeg-katalog', 'kylling', n + ' katalog, aftensmad', (t) => ids(AFTEN, t));
   if (kompakt) tjek(!await side.evaluate(() => document.querySelector('.voksen-filtre').open), n + ': søgningen folder filtrene sammen');
-  const kylling = ids(AFTENSMAD, 'kylling');
+  const kylling = ids(AFTEN, 'kylling');
   const kyllingUge = UGEPLAN.map((p) => p.id).filter((id) => kylling.includes(id));
   tjek(kyllingUge.length >= 2, n + ': mindst to retter til ugeplanen med kylling (' + kyllingUge.join(', ') + ')');
   await tjekLayout(side, n + ' katalog: aftensmad med «kylling»');
@@ -590,7 +594,7 @@ async function katalog(browser, H, skaerm) {
 
   // Ingen træf: en kort tekst med det, der er søgt efter, og «Ryd søgningen» og «Fjern filtrene»
   await tryk(side, '.soeg-ryd');
-  await skrivTegnForTegn(H, side, '#soeg-katalog', 'xyzzy', n + ' katalog, ingen træf', (t) => ids(AFTENSMAD, t));
+  await skrivTegnForTegn(H, side, '#soeg-katalog', 'xyzzy', n + ' katalog, ingen træf', (t) => ids(AFTEN, t));
   const tom = await side.evaluate(() => ({ tekst: document.querySelector('.voksen-tom p')?.textContent || '', knapper: [...document.querySelectorAll('.voksen-tom .knap')].map((b) => b.dataset.fokus) }));
   tjek(tom.tekst === 'Ingen retter passer til «xyzzy» med de valgte filtre.' && ens(tom.knapper, ['ryd-soegning', 'fjern-filtre']),
     n + ': ingen træf viser teksten og «Ryd søgningen» og «Fjern filtrene» (' + JSON.stringify(tom) + ')');
@@ -609,7 +613,7 @@ async function katalog(browser, H, skaerm) {
   await foto(side, n + '-voksen-katalog-lang');
   await tryk(side, '[data-fokus="ryd-soegning"]');
   nu = await feltNu(side, 'soeg-katalog');
-  tjek(nu.vaerdi === '' && nu.fokus && ens(await raekker(side), AFTENSMAD.map((p) => p.id)), n + ': «Ryd søgningen» tømmer feltet, giver det fokus og viser gruppen igen (' + JSON.stringify(nu) + ')');
+  tjek(nu.vaerdi === '' && nu.fokus && ens(await raekker(side), AFTEN.map((p) => p.id)), n + ': «Ryd søgningen» tømmer feltet, giver det fokus og viser gruppen igen (' + JSON.stringify(nu) + ')');
   await chip('gruppe-alle');
   tjek(ens(await raekker(side), ALLE), n + ': «Alle» viser alle retter igen');
 
@@ -724,7 +728,7 @@ async function telefon(browser, H) {
   const { ctx, side } = await nySide(browser, SKAERME[0], { serviceWorkers: 'block' });
   await ctx.addInitScript(fakeDeling);
   await side.goto(BASE + '/index.html');
-  await side.waitForSelector('.kort[data-ret]');
+  await side.waitForSelector('.gruppe-knap');
   await saetLager(side, FAMILIE, { v: 1, voksne: 6, boern: 0, barnAndel: 0.7, udvalg: null, favoritter: [], lavet: {} });
   await saetLager(side, UGE, { v: 1, uge, dage, n: 6, prBarn: 1, rettet: null });
   await gaaTil(side, '#/uge');
@@ -755,7 +759,8 @@ async function migrering(browser, H) {
   const { BASE, RETTER, SKAERME, nySide, tjek, venterPaa, tryk } = H;
   const n = SKAERME[0].navn;
   console.log('[' + n + '] voksendelen: data fra v3 indlæses uden tab');
-  const IPLAN = ugeplanRetter(RETTER);
+  // RET må ikke stå i ugeplanen: dagens antal gælder før husstanden, og testen nedenfor ser retten «uden husstand»
+  const IPLAN = ugeplanRetter(RETTER).filter((id) => id !== RET);
   const uge = planMandag(new Date());
   const dage = [{ ret: IPLAN[2], af: 'rosa', n: 5 }, null, null, { ret: IPLAN[4], af: 'pip', n: 2 }, null, null, null];
   const kode = kod(uge, dage.map((d) => (d ? { ret: d.ret, n: d.n } : null)));
@@ -764,12 +769,12 @@ async function migrering(browser, H) {
   const listeV3 = JSON.stringify({ v: 1, kode, uge, varer, koebt: [varer[0].id], harVi: [], hentet: 1761900000000 });
   const { ctx, side } = await nySide(browser, SKAERME[0], { serviceWorkers: 'block' });
   await side.goto(BASE + '/index.html');
-  await side.waitForSelector('.kort[data-ret]');
+  await side.waitForSelector('.gruppe-knap');
   await side.evaluate(() => localStorage.clear());
   await saetLager(side, UGE, ugeV3);
   await saetLager(side, LISTE, listeV3);
   await side.reload();
-  await side.waitForSelector('.kort[data-ret]');
+  await side.waitForSelector('.gruppe-knap');
   await gaaTil(side, '#/uge');
   await venterPaa(side, () => document.querySelector('.uge-dage'), null, n + ': ugeplanen fra v3');
   tjek(await side.locator('.uge-dage > .dag:not(.fri)').count() === 2, n + ': ugeplanen fra v3 har sine 2 retter');
@@ -814,11 +819,11 @@ async function nyereFamilie(browser, H) {
   const nyere = JSON.stringify({ v: 2, voksne: 3, boern: 1 });
   const { ctx, side } = await nySide(browser, SKAERME[0], { serviceWorkers: 'block' });
   await side.goto(BASE + '/index.html');
-  await side.waitForSelector('.kort[data-ret]');
+  await side.waitForSelector('.gruppe-knap');
   await side.evaluate(() => localStorage.clear());
   await saetLager(side, FAMILIE, nyere);
   await side.reload();
-  await side.waitForSelector('.kort[data-ret]');
+  await side.waitForSelector('.gruppe-knap');
   await aabnVoksen(H, side, '', n + ' voksendelen med en nyere familie');
   const punkter = await side.evaluate(() => Object.fromEntries([...document.querySelectorAll('.voksen-punkt')]
     .map((b) => [b.dataset.fokus, (b.disabled ? 'låst: ' : '') + (b.querySelector('.voksen-punkt-status')?.textContent || '').replace(/\s+/g, ' ')])));
@@ -857,7 +862,7 @@ async function husstandLoft(browser, H) {
   const LOFT = '12 portioner (højst 12 — lav retten to gange til flere)';
   const { ctx, side } = await nySide(browser, SKAERME[0], { serviceWorkers: 'block' });
   await side.goto(BASE + '/index.html');
-  await side.waitForSelector('.kort[data-ret]');
+  await side.waitForSelector('.gruppe-knap');
   await side.evaluate(() => localStorage.clear());
   await saetLager(side, FAMILIE, { v: 1, voksne: 8, boern: 8, barnAndel: 0.7, udvalg: null, favoritter: [], lavet: {} });
   await aabnVoksen(H, side, '', n + ' voksendelen med 8 + 8');
@@ -915,11 +920,11 @@ const retVist = (side) => side.evaluate(() => ({
   ingr: [...document.querySelectorAll('.ingr')].map((b) => b.getAttribute('aria-label')),
   linjer: [...document.querySelectorAll('.ret .voksen-linje')].map((e) => e.textContent),
 }));
-// Forsidens kort viser tiden på den udgave, retten viser. Hyrdetærten tager længere med mere grønt (ikke lynhurtig, så
+// Gruppens kort viser tiden på den udgave, retten viser. Hyrdetærten tager længere med mere grønt (ikke lynhurtig, så
 // skærmlæserens tekst slutter med punktum: tidTekst i app.js)
 const TID_RET = 'hyrdetaerte';
 const kortTid = (side) => side.evaluate((id) => {
-  const k = document.querySelector('.forside .kort[data-ret="' + id + '"]');
+  const k = document.querySelector('.gruppe-skaerm .kort[data-ret="' + id + '"]');
   return k ? { tal: k.querySelector('.kort-tid')?.textContent, tale: k.querySelector('.sr-kun')?.textContent } : null;
 }, TID_RET);
 const tidFor = (m) => ({ tal: minutterTekst(m.minutter), tale: '. ' + varighedTale(m.minutter * 60) + '.' });
@@ -932,7 +937,7 @@ async function skiftGroent(H, side, til, hvor) {
 }
 
 async function mereGroent(browser, H, skaerm) {
-  const { BASE, RETTER, SKAERME, nySide, tjek, tjekLayout, foto, tryk, venterPaa, h1 } = H;
+  const { BASE, RETTER, ROD, SKAERME, nySide, tjek, tjekLayout, foto, tryk, venterPaa, h1 } = H;
   const n = skaerm.navn;
   const ipad = n === 'ipad';
   console.log('[' + n + '] voksendelen: «Mere grønt i maden»');
@@ -950,12 +955,15 @@ async function mereGroent(browser, H, skaerm) {
   const { ctx, side } = await nySide(browser, skaerm, { serviceWorkers: 'block' });
   await ctx.addInitScript(fakeDeling);
   await side.goto(BASE + '/index.html');
-  await side.waitForSelector('.kort[data-ret]');
+  await side.waitForSelector('.gruppe-knap');
   await side.evaluate(() => localStorage.clear());
   // Gik man ud af grundretten på trin kogNr (gemt uden «groen», som før), er det ikke samme trin med mere grønt
   await side.evaluate(([ret, nr]) => localStorage.setItem('kog-v1', JSON.stringify({ v: 1, sidste: { ret, nr, tid: Date.now() }, timer: null })), [GROEN_RET, kogNr]);
   const tidRet = lavModel(RETTER[TID_RET]);
+  const tidGruppe = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter/index.json'), 'utf8')).grupper.find((g) => g.retter.includes(TID_RET)).id;
   const tjekKortTid = async (m, hvor) => {
+    await gaaTil(side, '#/gruppe/' + tidGruppe);
+    await venterPaa(side, (id) => document.querySelector('.gruppe-skaerm .kort[data-ret="' + id + '"]'), TID_RET, n + ': hyrdetærtens gruppe');
     const vist = await kortTid(side);
     tjek(tidRet.minutter !== tidRet.groen.minutter && JSON.stringify(vist) === JSON.stringify(tidFor(m)),
       n + ': ' + hvor + ': hyrdetærtens kort skal vise ' + JSON.stringify(tidFor(m)) + ' (' + JSON.stringify(vist) + ')');
@@ -977,11 +985,11 @@ async function mereGroent(browser, H, skaerm) {
   await tjekLayout(side, n + ' oversigten med «Mere grønt i maden»');
   await foto(side, n + '-voksen-groent');
 
-  // Forsidens kort: tallet følger kontakten begge veje, når man går tilbage med «Luk». Før stod hyrdetærten til 50 min på
+  // Gruppens kort: tallet følger kontakten begge veje, når man går tilbage med «Luk». Før stod hyrdetærten til 50 min på
   // kortet og 1 t på retten og i ugeplanen (UI-review 02-11)
   const tilForsiden = async () => {
     await tryk(side, '[data-fokus="luk"]');
-    await venterPaa(side, () => document.querySelector('.forside .kort[data-ret]'), null, n + ': «Luk» skal føre til forsiden');
+    await venterPaa(side, () => document.querySelector('.gruppe-knap'), null, n + ': «Luk» skal føre til forsiden');
   };
   await tilForsiden();
   await tjekKortTid(tidRet.groen, 'kontakten til');
@@ -1040,7 +1048,7 @@ async function mereGroent(browser, H, skaerm) {
       tjek((await tilbageTil()).endsWith('#/ret/' + GROEN_RET), n + ': «' + (daarlig || 'uden groen') + '»: «Tilbage til opskriften» fører til grundretten (' + await tilbageTil() + ')');
     }
     await side.goto(BASE + '/index.html');
-    await side.waitForSelector('.kort[data-ret]');
+    await side.waitForSelector('.gruppe-knap');
 
     // Ugeplanen: prisen er rettens med mere grønt, og linket til telefonen er v2 med g
     const uge = planMandag(new Date());
@@ -1071,7 +1079,7 @@ async function mereGroent(browser, H, skaerm) {
       n + ': ugeprintets liste har linserne og halvt kød (' + JSON.stringify(ugePrint.varer.slice(0, 4)) + ')');
     tjek(ugePrint.meta.includes('mere grønt'), n + ': ugeprintets række siger «mere grønt» (' + ugePrint.meta + ')');
     await side.goto(BASE + '/index.html');
-    await side.waitForSelector('.kort[data-ret]');
+    await side.waitForSelector('.gruppe-knap');
 
     // En timer på et trin med mere grønt, før kontakten slås fra
     await gaaTil(side, '#/ret/' + GROEN_RET + '/trin/' + kogNr);

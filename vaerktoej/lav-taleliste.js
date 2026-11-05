@@ -27,7 +27,7 @@ const medGroen = (retter) => retter.flatMap((m) => (m.groen ? [m, m.groen] : [m]
 export function alleReplikker(retter = alleRetter()) {
   const udgaver = medGroen(retter);
   // Alle tre udgaver af R.voksenStart, også dem ingen ret bruger endnu (i dag har ingen ret kun kniv)
-  const replikker = [R.FAERDIG, R.PRINT_HOLD, ...Object.values(R.VOKSEN_START), ...Object.keys(GRUPPER).map(R.gruppe)];
+  const replikker = [R.FAERDIG, R.PRINT_HOLD, ...Object.values(R.VOKSEN_START), ...Object.keys(GRUPPER).map(R.gruppe), R.FAVORITTER];
   for (const m of udgaver) {
     replikker.push(R.retValgt(m), R.retAaben(m));
     if (R.voksenStart(m)) replikker.push(R.voksenStart(m));

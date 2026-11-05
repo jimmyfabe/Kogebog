@@ -70,6 +70,7 @@ const { el } = await import('../js/dom.js');
 let visKald = 0;
 const annonceret = []; // det, skærmlæseren får at vide (K.annoncer)
 const S = { ids: [], retter: new Map(), grupper: [] };
+const huskede = []; // K.huskFra: den ret og den plads, «Åbn» vil vende tilbage til
 V.init({
   S,
   naviger: (hash) => { location.hash = hash; },
@@ -82,6 +83,7 @@ V.init({
   topbar: () => lavEl('header'),
   annoncer: (tekst) => { annonceret.push(tekst); },
   indlaes: () => {},
+  huskFra: (ret, y) => { huskede.push({ ret, y }); },
 });
 const tryk = () => { for (const fn of lyttere.pointerdown) fn(); };
 const MIN = 60 * 1000;
@@ -200,15 +202,18 @@ test('filtrene: en ret skal have alle de valgte mærker, og ingen filtre viser a
 const model = (id, navn, ingredienser = []) => ({ id, navn, ingredienser: ingredienser.map((n) => ({ navn: n })) });
 const POSTER = [
   V.soegePost(model('gloegg', 'Børnegløgg', ['æblemost']), 'jul', ['ingenKniv']),
-  V.soegePost(model('kylling', 'Kylling i karry', ['kyllingebryst', 'ris']), 'aftensmad', ['hurtig', 'groent']),
-  V.soegePost(model('laks', 'Laks med ris', ['laksefilet', 'ris']), 'aftensmad', ['fisk', 'hurtig']),
-  V.soegePost(model('boller', 'Boller', ['hvedemel']), 'bagning', []),
+  V.soegePost(model('kylling', 'Kylling i karry', ['kyllingebryst', 'ris']), 'kylling', ['hurtig', 'groent']),
+  V.soegePost(model('laks', 'Laks med ris', ['laksefilet', 'ris']), 'fisk', ['fisk', 'hurtig']),
+  V.soegePost(model('boller', 'Boller', ['hvedemel']), 'broed-og-pizza', []),
   V.soegePost(model('risalamande', 'Risalamande', ['grødris']), 'jul', ['favorit']),
 ];
 
 test('soegePost: gruppens og mærkernes navne kommer fra GRUPPER og MAERKER, og en ukendt gruppe har intet navn', () => {
   const p = POSTER[1];
-  assert.equal(p.gruppe, 'Aftensmad');
+  assert.equal(p.gruppe, 'Kylling');
+  assert.equal(p.gruppeOrd, 'Aftensmad', 'kylling kom fra Aftensmad, så ordet finder den stadig');
+  assert.equal(POSTER[3].gruppeOrd, 'Bagning');
+  assert.equal(POSTER[0].gruppeOrd, null);
   assert.deepEqual(p.maerker, ['Hurtig', 'Masser af grønt']);
   assert.equal(p.navn, 'Kylling i karry');
   assert.equal(p.m.id, 'kylling');
@@ -226,12 +231,22 @@ test('filtrer: gruppen, alle de valgte mærker og søgeteksten gælder sammen, o
   assert.deepEqual(ids({ maerker: ['hurtig'] }), ['kylling', 'laks']);
   assert.deepEqual(ids({ maerker: ['hurtig', 'fisk'] }), ['laks']);
   assert.deepEqual(ids({ tekst: 'ris' }), ['kylling', 'laks', 'risalamande'], 'ingrediensen «ris» og navnet «Risalamande»');
-  assert.deepEqual(ids({ gruppe: 'aftensmad', tekst: 'ris' }), ['kylling', 'laks']);
-  assert.deepEqual(ids({ gruppe: 'aftensmad', maerker: ['fisk'], tekst: 'ris' }), ['laks']);
+  assert.deepEqual(ids({ gruppe: 'fisk', tekst: 'ris' }), ['laks']);
+  assert.deepEqual(ids({ gruppe: 'fisk', maerker: ['fisk'], tekst: 'ris' }), ['laks']);
   assert.deepEqual(ids({ tekst: 'jul' }), ['gloegg', 'risalamande'], 'gruppens navn «Jul»');
   assert.deepEqual(ids({ tekst: 'Favorit' }), ['risalamande'], 'mærkets navn');
-  assert.deepEqual(ids({ gruppe: 'bagning', tekst: 'ris' }), [], 'ingen træf');
+  assert.deepEqual(ids({ gruppe: 'broed-og-pizza', tekst: 'ris' }), [], 'ingen træf');
   assert.deepEqual(ids({ gruppe: 'halloween' }), []);
+});
+
+// Aftensmad blev delt i fem grupper: chippen og søgeordet skal stadig samle dem (katalogFiltre og soegePost)
+test('filtrer: «Aftensmad» er de fem grupper, og søgeordene «aftensmad» og «bagning» finder dem', () => {
+  const ids = (valg) => V.filtrer(POSTER, valg).map((p) => p.m.id);
+  assert.deepEqual(ids({ gruppe: 'aftensmad' }), ['kylling', 'laks']);
+  assert.deepEqual(ids({ gruppe: 'aftensmad', tekst: 'karry' }), ['kylling']);
+  assert.deepEqual(ids({ tekst: 'aftensmad' }), ['kylling', 'laks']);
+  assert.deepEqual(ids({ tekst: 'bagning' }), ['boller']);
+  assert.deepEqual(ids({ gruppe: 'constructor' }), [], 'et id fra adressen er ikke en gruppe');
 });
 
 test('linjen over listen: «Viser alle N retter» uden filter, ellers «Viser n af N retter» (hårdt mellemrum før «retter»)', () => {
@@ -380,6 +395,36 @@ function foldUd(rod) {
   send(d, 'toggle');
   return d;
 }
+// Låsen glemmer, hvordan filtrene stod. Var de foldet anderledes, flytter listen sig efter holdet, og den gemte plads rammer
+// forbi, så listen starter øverst
+test('«Åbn» i Katalog: pladsen huskes kun, når filtrene står, som de står efter holdet', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  const aabnFoerste = () => {
+    const skaerm = vist.at(-1);
+    send(medFokusNavn(skaerm, 'aabn-' + raekkerI(skaerm)[0]), 'click');
+    V.rute('#/');
+    return huskede.at(-1).y;
+  };
+  const TELEFON = { b: 390, h: 844 };
+  const STOR = { b: 820, h: 1180 };
+  aabnSide('katalog', TELEFON);
+  assert.equal(aabnFoerste(), undefined, 'telefonen: foldet sammen, som efter holdet');
+  foldUd(aabnSide('katalog', TELEFON));
+  assert.equal(aabnFoerste(), 0, 'telefonen: foldet ud, så listen står lavere nu end efter holdet');
+  aabnSide('katalog', STOR);
+  assert.equal(aabnFoerste(), undefined, 'stor skærm: foldet ud, som efter holdet');
+  const d = filtreI(aabnSide('katalog', STOR));
+  d.open = false;
+  send(d, 'toggle');
+  assert.equal(aabnFoerste(), 0, 'stor skærm: foldet sammen, så listen står højere nu end efter holdet');
+  foldUd(aabnSide('katalog', TELEFON));
+  const f = filtreI(vist.at(-1));
+  f.open = false;
+  send(f, 'toggle');
+  assert.equal(aabnFoerste(), undefined, 'foldet ud og sammen igen: som efter holdet');
+});
+
 test('på telefonen folder et valg i filtrene dem sammen, og fokus står på linjen, der siger, hvad der er valgt', (t) => {
   t.after(() => V.rute('#/'));
   medOpskrifter();

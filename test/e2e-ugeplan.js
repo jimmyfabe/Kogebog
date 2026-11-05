@@ -796,7 +796,7 @@ async function mereGroentLinje(browser, H) {
   const ORD = 'mere grønt';
   const { ctx, side } = await nySide(browser, skaerm, { serviceWorkers: 'block' });
   await side.goto(BASE + '/index.html');
-  await side.waitForSelector('.kort[data-ret]');
+  await side.waitForSelector('.gruppe-knap');
   const dage = [medGroent[0], uden, null, null, null, null, null].map((ret) => (ret ? { ret, af: 'bo', n: 4 } : null));
   await side.evaluate(([uge, d]) => localStorage.setItem('kog-uge-v1', JSON.stringify({ v: 1, uge, dage: d, n: 4, prBarn: 1, rettet: null })), [planMandag(new Date()), dage]);
   for (const til of [true, false]) {

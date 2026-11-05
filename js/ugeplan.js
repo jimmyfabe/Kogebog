@@ -20,6 +20,7 @@ import { holdKnap } from './hold.js';
 import { maerkerFor, MAERKER } from './maerker.js';
 import { knivtrin } from './model.js';
 import { valgt as udgaveAf } from './groent.js';
+import { blandet } from './grupper.js';
 import * as Tale from './tale.js';
 import * as R from './replikker.js';
 
@@ -379,8 +380,8 @@ function listeSkaerm(liste) {
       const m = d && model(d.ret, r.mereGroent);
       if (!m || !m.uge) return null;
       // Retten åbnes i linkets udgave (med «/groen»), ikke telefonens egen: ellers viste retten alt kødet og ingen linser,
-      // mens listen havde linserne (code review kode-2)
-      return el('li', {}, el('a', { class: 'ret-link', href: '#/ret/' + m.id + (m.erGroen ? '/groen' : '') },
+      // mens listen havde linserne (code review kode-2). Rettens pil fører tilbage til listen
+      return el('li', {}, el('a', { class: 'ret-link', href: '#/ret/' + m.id + (m.erGroen ? '/groen' : ''), onclick: () => K.huskFra(m.id) },
         K.billede(grafikRet(m.id), '', 'ret-link-billede'),
         el('span', { class: 'vare-tekst' },
           el('span', { class: 'vare-navn', tekst: m.navn }),
@@ -947,10 +948,12 @@ function fuldSkaerm(p) {
     tilUgeplanen());
 }
 
-// Trin 2: fire retter pr. side. Første tryk siger navnet og markerer retten, fluebenet («Vælg») går videre til dagene
+// Trin 2: fire retter pr. side. Første tryk siger navnet og markerer retten, fluebenet («Vælg») går videre til dagene.
+// Blandet efter udvalget, så første side heller ikke med et udvalg kun er pasta. Den voksnes «Vælg ret» (dagSkaerm) har
+// filtre og står som i planen
 function retValgSkaerm(p, dyr) {
   const familie = Lager.hentFamilie(K.S.ids);
-  const alle = retterTilBoern(iPlanen(), familie.udvalg);
+  const alle = blandet(retterTilBoern(iPlanen(), familie.udvalg), K.S.grupper, (m) => m.id);
   const sider = sideAntal(alle);
   barn.side = Math.min(Math.max(barn.side, 0), sider - 1);
   const vist = alle.slice(barn.side * PR_SIDE, (barn.side + 1) * PR_SIDE);

@@ -211,18 +211,31 @@ export const DYR = {
   pip: 'Pip, det lille pindsvin',
 };
 
-// Forsidens afsnit (opskrifter/index.json). Navnet er overskriften; billedet er grafik/gruppe-<id>.svg
-// (et juletræ, en gryde, en ovn, en kage, et græskar og et glas), og farven på kortenes cirkel står i app.css under [data-gruppe].
-// Halloween er sit eget afsnit fra 22-10-2026. Jul står først i index.json fra 01-11-2026, og Halloween er flyttet sidst.
-// Skal retterne tilbage i Bagning, flyttes de i index.json, og 'halloween' kan blive stående her
+// Forsidens ti billedknapper (opskrifter/index.json bestemmer rækkefølgen, docs/forside-sortering-05-11-2026.md hvad der
+// står hvor). Navnet står på knappen og siges af stemmen (js/replikker.js); billedet er grafikGruppe nedenfor, og farven
+// står i app.css under [data-gruppe]. Fra 05-11-2026 afløser de Aftensmad og Bagning
 export const GRUPPER = {
-  'jul': 'Jul og nytår',
-  'aftensmad': 'Aftensmad',
-  'bagning': 'Bagning',
+  'pasta-og-nudler': 'Pasta og nudler',
+  'kylling': 'Kylling',
+  'fisk': 'Fisk',
+  'koed': 'Kød',
+  'groent': 'Grønt',
+  'broed-og-pizza': 'Brød og pizza',
   'soede-sager': 'Søde sager',
-  'halloween': 'Halloween',
   'drikke': 'Drikke',
+  'jul': 'Jul og nytår',
+  'halloween': 'Halloween',
 };
+
+// De gamle navne lever videre, så den voksne stadig kan finde retterne: «aftensmad» i søgningen og som chip i kataloget
+// finder de fem grupper, Aftensmad blev delt i, og «bagning» finder Brød og pizza. Kun søgeord, ingen knapper og ingen lyd
+export const AFTENSMAD = 'aftensmad';
+export const AFTENSMAD_NAVN = 'Aftensmad';
+export const AFTENSMAD_GRUPPER = ['pasta-og-nudler', 'kylling', 'fisk', 'koed', 'groent'];
+export function gruppeSoegeord(id) {
+  if (AFTENSMAD_GRUPPER.includes(id)) return AFTENSMAD_NAVN;
+  return id === 'broed-og-pizza' ? 'Bagning' : null;
+}
 
 // Grafikken. Pladsholderne er SVG; skiftes de til PNG i fase 2, rettes det kun her.
 export const GRAFIK_MAPPE = 'grafik/';
@@ -233,7 +246,9 @@ export const grafikVerbum = (id) => GRAFIK_MAPPE + 'verbum-' + id + GRAFIK_ENDEL
 export const grafikIngrediens = (id) => GRAFIK_MAPPE + 'ing-' + id + GRAFIK_ENDELSE;
 export const grafikDyr = (navn) => GRAFIK_MAPPE + 'dyr-' + navn + GRAFIK_ENDELSE;
 export const grafikRet = (id) => GRAFIK_MAPPE + 'ret-' + id + GRAFIK_RET_ENDELSE;
-export const grafikGruppe = (id) => GRAFIK_MAPPE + 'gruppe-' + id + GRAFIK_ENDELSE;
+// Fire af knapperne genbruger ingrediensernes tegning. De andre har grafik/gruppe-<id>.svg (også chippen «Aftensmad»)
+const GRUPPE_BILLEDE = { 'pasta-og-nudler': 'ing-spaghetti', 'koed': 'ing-koed', 'groent': 'ing-broccoli', 'broed-og-pizza': 'ing-broed' };
+export const grafikGruppe = (id) => GRAFIK_MAPPE + (Object.hasOwn(GRUPPE_BILLEDE, id) ? GRUPPE_BILLEDE[id] : 'gruppe-' + id) + GRAFIK_ENDELSE;
 export const GRAFIK_FAERDIG = GRAFIK_MAPPE + 'faerdig' + GRAFIK_ENDELSE;
 
 // Højst så mange ord i en trin-tekst («højst ca. 8 ord»; 9 giver plads til «ca.»).

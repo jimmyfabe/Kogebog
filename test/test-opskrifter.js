@@ -118,7 +118,7 @@ const LYD_RE = /^([a-z0-9]+(?:-[a-z0-9]+)*)\/(\d+|navn|valgt|ingrediens-\d+|time
 // Børnenes valg af ugens mad (js/ugeplan.js): de samme fælles replikker som i vaerktoej/lav-taleliste.js
 const UGE_FAELLES = [R.UGE_HVEM, R.HVILKEN_DAG, R.DAG_OPTAGET, R.UGE_TAK, R.ALLE_VALGT, R.UGE_FULD, R.GEM_FEJL, R.SIDE_FLERE,
   R.SIDE_FORRIGE, ...Object.keys(DYR).map(R.dyrVaelger), ...Object.keys(DYR).map(R.dyrFaerdig), ...[0, 1, 2, 3, 4, 5, 6].map(R.dag)];
-const LYD_FAELLES = new Set(['faerdig', 'print-hold', 'voksen-start-begge', 'voksen-start-varme', 'voksen-start-kniv', ...Object.keys(GRUPPER).map((g) => 'gruppe-' + g),
+const LYD_FAELLES = new Set(['faerdig', 'print-hold', 'voksen-start-begge', 'voksen-start-varme', 'voksen-start-kniv', 'gruppe-favoritter', ...Object.keys(GRUPPER).map((g) => 'gruppe-' + g),
   ...UGE_FAELLES.map((x) => /^faelles\/(.+)\.mp3$/.exec(x.fil)[1])]);
 
 const erTekst = (v) => typeof v === 'string' && v.trim().length > 0;
