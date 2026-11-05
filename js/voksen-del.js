@@ -839,6 +839,8 @@ function katalogFiltre(alle) {
 // Viser kataloget kun en del af retterne? Låsen glemmer søgning og filtre, når en ret åbnes (laas), så listen efter holdet
 // er en anden, og pladsen i den filtrerede liste passer ikke længere. Kun mellemrum i feltet er ingen søgning
 const katalogFiltreret = () => soegeord(soegeTekstFor('katalog')).length > 0 || katalogValg.gruppe !== null || katalogValg.maerker.size > 0;
+// Efter holdet står filtrene, som de står fra start. Står de anderledes nu, flytter listen sig, og en gemt plads rammer forbi
+const filtreFlytterListen = () => (filterAaben.get('katalog') ?? !kompakt()) !== !kompakt();
 
 // En ret i kataloget: «Med» (kun retter til ugeplanen) først, så hjertet og «Åbn» altid står samme sted. Med «Med» får
 // knapperne en linje for sig på telefonen (.med-udvalg i familie.css); uden står de ved navnet
@@ -849,7 +851,7 @@ function katalogRaekke(p, f, ids, fuldt) {
     knap: el('div', { class: 'voksen-raekke-knapper' + (m.uge ? ' med-udvalg' : '') },
       m.uge ? medKnap(m, ids, fuldt, { lang: true }) : null,
       hjerteKnap(m, f),
-      medFokus(K.knap('Åbn', { klasse: 'lille', label: 'Åbn ' + m.navn, onclick: () => { K.huskFra(m.id, katalogFiltreret() ? 0 : undefined); K.naviger('#/ret/' + m.id); } }), 'aabn-' + m.id)),
+      medFokus(K.knap('Åbn', { klasse: 'lille', label: 'Åbn ' + m.navn, onclick: () => { K.huskFra(m.id, katalogFiltreret() || filtreFlytterListen() ? 0 : undefined); K.naviger('#/ret/' + m.id); } }), 'aabn-' + m.id)),
   });
 }
 

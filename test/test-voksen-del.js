@@ -70,6 +70,7 @@ const { el } = await import('../js/dom.js');
 let visKald = 0;
 const annonceret = []; // det, skærmlæseren får at vide (K.annoncer)
 const S = { ids: [], retter: new Map(), grupper: [] };
+const huskede = []; // K.huskFra: den ret og den plads, «Åbn» vil vende tilbage til
 V.init({
   S,
   naviger: (hash) => { location.hash = hash; },
@@ -82,6 +83,7 @@ V.init({
   topbar: () => lavEl('header'),
   annoncer: (tekst) => { annonceret.push(tekst); },
   indlaes: () => {},
+  huskFra: (ret, y) => { huskede.push({ ret, y }); },
 });
 const tryk = () => { for (const fn of lyttere.pointerdown) fn(); };
 const MIN = 60 * 1000;
@@ -393,6 +395,36 @@ function foldUd(rod) {
   send(d, 'toggle');
   return d;
 }
+// Låsen glemmer, hvordan filtrene stod. Var de foldet anderledes, flytter listen sig efter holdet, og den gemte plads rammer
+// forbi, så listen starter øverst
+test('«Åbn» i Katalog: pladsen huskes kun, når filtrene står, som de står efter holdet', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  const aabnFoerste = () => {
+    const skaerm = vist.at(-1);
+    send(medFokusNavn(skaerm, 'aabn-' + raekkerI(skaerm)[0]), 'click');
+    V.rute('#/');
+    return huskede.at(-1).y;
+  };
+  const TELEFON = { b: 390, h: 844 };
+  const STOR = { b: 820, h: 1180 };
+  aabnSide('katalog', TELEFON);
+  assert.equal(aabnFoerste(), undefined, 'telefonen: foldet sammen, som efter holdet');
+  foldUd(aabnSide('katalog', TELEFON));
+  assert.equal(aabnFoerste(), 0, 'telefonen: foldet ud, så listen står lavere nu end efter holdet');
+  aabnSide('katalog', STOR);
+  assert.equal(aabnFoerste(), undefined, 'stor skærm: foldet ud, som efter holdet');
+  const d = filtreI(aabnSide('katalog', STOR));
+  d.open = false;
+  send(d, 'toggle');
+  assert.equal(aabnFoerste(), 0, 'stor skærm: foldet sammen, så listen står højere nu end efter holdet');
+  foldUd(aabnSide('katalog', TELEFON));
+  const f = filtreI(vist.at(-1));
+  f.open = false;
+  send(f, 'toggle');
+  assert.equal(aabnFoerste(), undefined, 'foldet ud og sammen igen: som efter holdet');
+});
+
 test('på telefonen folder et valg i filtrene dem sammen, og fokus står på linjen, der siger, hvad der er valgt', (t) => {
   t.after(() => V.rute('#/'));
   medOpskrifter();
