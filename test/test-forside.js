@@ -8,7 +8,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { GRUPPER, AFTENSMAD_GRUPPER, VARER, gruppeSoegeord } from '../js/katalog.js';
+import { GRUPPER, AFTENSMAD, AFTENSMAD_GRUPPER, VARER, gruppeSoegeord, grafikGruppe } from '../js/katalog.js';
 import { kod } from '../js/plankode.js';
 import { planMandag } from '../js/tid.js';
 import { soeg, soegeTekst } from '../js/soeg.js';
@@ -428,6 +428,10 @@ test('billederne på forsiden findes alle på disken', async () => {
     const src = b.querySelector('img').getAttribute('src');
     assert.ok(fs.existsSync(path.join(ROD, src)), src);
   }
+});
+
+test('billedet til chippen «Aftensmad» i voksendelen findes på disken', () => {
+  assert.ok(fs.existsSync(path.join(ROD, grafikGruppe(AFTENSMAD))), grafikGruppe(AFTENSMAD));
 });
 
 test('et tryk åbner gruppen og siger navnet, og skærmen skifter først', async () => {
