@@ -326,10 +326,11 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .gruppe-knapper { --kolonner: 2; --raekker: 5; --raek-gab: 14px; --plade: 112px; gap: var(--raek-gab) 12px; padding: 12px 12px 8px; }
   .knap.gruppe-knap { font-size: 22px; padding: 10px 8px 12px; border-radius: 24px; }
 }
-/* Lave skærme på langs (iPhone på tværs): tallerkenen ved siden af navnet, så flere knapper kan ses ad gangen */
+/* Lave skærme på langs (iPhone på tværs): tallerkenen ved siden af navnet, så flere knapper kan ses ad gangen.
+   Knappen er 88 px høj, mindstemålet for små fingre: tallerken 64 + padding 18 + kant 6 (e2e måler det; med 6 px padding 82) */
 @media (max-height: 520px) and (orientation: landscape) {
   .gruppe-knapper { --plade: 64px; padding-top: 10px; }
-  .knap.gruppe-knap { flex-direction: row; justify-content: flex-start; gap: 10px; padding: 6px 12px; font-size: 20px; border-radius: 24px; }
+  .knap.gruppe-knap { flex-direction: row; justify-content: flex-start; gap: 10px; padding: 9px 12px; font-size: 20px; border-radius: 24px; }
   .gruppe-knap-navn { text-align: left; }
   .gruppe-knapper:has(> li:nth-child(10)) { --plade: 64px; }
 }
@@ -1129,9 +1130,15 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .ret-indhold { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px 24px; padding: 6px 24px 10px; align-items: start; align-content: normal; }
   /* Mindre billede og tættere afstande: personer og tid lå halvt under bunden (844×390 og 667×375).
      Højst 16 % af højden: på 667×375 brydes «personer og tid» på to linjer for pizzasnegle, brownie og blondie,
-     og med 22svh (83 px) lå den anden linje 18 px under bunden. Med 60 px er der 5 px luft */
+     og med 22svh (83 px) lå den anden linje 18 px under bunden. Med 60 px var der 5 px luft */
   .ret-hoved { gap: 6px; }
   .ret-billede { width: min(100%, 16svh); }
+  /* Tre linjer navn og to linjer personer og tid på samme ret (julemedisterboller på 667×375) fyldte 136 px af de 128 px
+     over bunden, så linjen lå 8 px under den (e2e 05-11-2026). Topbaren 6 px lavere og tættere linjer giver 5 px luft med
+     netop den kombination, så billedet kan blive. Topbaren gælder alle skærme, så knappen ikke hopper mellem retten og trinene.
+     8 px er præcis plads til fokusringen (4 + 4 px) */
+  .topbar { padding-top: 8px; }
+  .meta { line-height: 1.15; }
   /* Navnet højst 3 linjer på 667×375: med 30 px fik «Marcipan­konfekt med dadler og valnødder» 4 linjer i 220 px
      («Marcipan-» alene), og personer og tid lå 24 px under bunden (e2e 02-11-2026). 27 px giver højst 3 linjer
      for alle retter (målt i WebKit). 736×414 får 28 px, og fra 790 px er 3,8vw over 30 px som før (812-932 px uændret) */
