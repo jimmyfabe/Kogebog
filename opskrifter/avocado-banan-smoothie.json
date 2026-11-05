@@ -1,0 +1,42 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Avocado-banan-smoothie",
+  "description": "Lysegrøn og blød som en sky. Avocado gør den cremet, og banan og honning gør den sød.",
+  "image": "grafik/ret-avocado-banan-smoothie.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 3 glas",
+  "prepTime": "PT10M",
+  "totalTime": "PT10M",
+  "recipeIngredient": [
+    "1 moden avocado",
+    "2 modne bananer",
+    "3 dl mælk (kold)",
+    "1 spsk honning"
+  ],
+  "tool": ["kniv og skærebræt", "ske", "målebæger", "spiseske", "blender", "3 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk. Avocadoen er moden, når den giver lidt efter, når man trykker. Stil mælken på køl i forvejen. Honning er ikke til børn under 1 år, så små søskende skal have noget andet." } },
+    { "@type": "HowToStep", "text": "Skær avocadoen i to.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["avocado"], "note": "Tag stenen ud. Pas på: den er glat, og kniven kan smutte." } },
+    { "@type": "HowToStep", "text": "Skrab avocadoen ned i kanden med en ske.", "tumbi": { "verbum": "maale", "ikoner": ["avocado"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
+    { "@type": "HowToStep", "text": "Pil bananerne, og knæk dem i stykker.", "tumbi": { "verbum": "pille", "ikoner": ["banan"] } },
+    { "@type": "HowToStep", "text": "Kom bananerne i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["banan"] } },
+    { "@type": "HowToStep", "text": "Hæld 3 dl mælk i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk"] } },
+    { "@type": "HowToStep", "text": "Kom 1 spsk honning i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["honning"] } },
+    { "@type": "HowToStep", "text": "Blend, til det hele er glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["avocado", "banan"], "note": "Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Hæld smoothien i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Smag den bløde smoothie!", "tumbi": { "verbum": "smage", "note": "Drik den med det samme: avocado bliver brun, når den står." } }
+  ],
+  "tumbi": {
+    "id": "avocado-banan-smoothie",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdene og tiden er et skøn (ikke målt). Rådet om honning til børn under 1 år er ikke slået efter i en kilde. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "avocado", "maengde": "1" },
+      { "ikon": "banan", "maengde": "2" },
+      { "ikon": "maelk", "maengde": "3 dl" },
+      { "ikon": "honning", "maengde": "1 spsk" }
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Dinosaurens grønne sump",
+  "description": "En grøn drik med stykker af kiwi, æblemost og bobler. De små sorte kerner svømmer rundt som haletudser i dinosaurens sump.",
+  "image": "grafik/ret-dino-sump-drik.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 glas",
+  "prepTime": "PT15M",
+  "totalTime": "PT15M",
+  "recipeIngredient": [
+    "4 modne kiwier",
+    "½ lime",
+    "2 spsk sukker",
+    "4 dl æblemost (kold)",
+    "3 dl danskvand (kold)"
+  ],
+  "tool": ["skærebræt", "kniv", "spiseske", "teske", "skål", "gaffel", "stor kande", "målebæger", "lang ske", "ske eller bredt sugerør", "4 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Sæt æblemost og danskvand på køl i god tid. Kiwierne skal være bløde, når man trykker på dem. Skyl limen." } },
+    { "@type": "HowToStep", "text": "Skær kiwierne og limen over.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kiwi", "lime"], "note": "Over på midten. Kun den ene halvdel af limen skal bruges." } },
+    { "@type": "HowToStep", "text": "Skrab kiwierne ud i en skål med en teske.", "tumbi": { "verbum": "haelde", "ikoner": ["kiwi"], "note": "Det grønne skal i skålen, skrællen skal ud." } },
+    { "@type": "HowToStep", "text": "Mos kiwierne med en gaffel.", "tumbi": { "verbum": "mose", "ikoner": ["kiwi"], "note": "Små stykker er fine: det er en sump." } },
+    { "@type": "HowToStep", "text": "Rør sukkeret i mosen.", "tumbi": { "verbum": "roere", "ikoner": ["sukker"], "note": "2 spsk." } },
+    { "@type": "HowToStep", "text": "Klem limen ud over mosen.", "tumbi": { "verbum": "klemme", "ikoner": ["lime"], "note": "Den halve lime. Fisk kernerne op." } },
+    { "@type": "HowToStep", "text": "Hæld mosen og æblemosten i en stor kande.", "tumbi": { "verbum": "haelde", "ikoner": ["kiwi", "aeble"], "note": "4 dl æblemost." } },
+    { "@type": "HowToStep", "text": "Rør sumpen godt rundt.", "tumbi": { "verbum": "roere" } },
+    { "@type": "HowToStep", "text": "Hæld danskvanden langsomt i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["danskvand"], "note": "3 dl, og lige før I skal drikke, så boblerne ikke forsvinder. Rør kun en enkelt gang." } },
+    { "@type": "HowToStep", "text": "Hæld sumpen i glassene.", "tumbi": { "verbum": "haelde", "note": "Lad lidt af de grønne stykker følge med i hvert glas." } },
+    { "@type": "HowToStep", "text": "Smag dinosaurens sump!", "tumbi": { "verbum": "smage", "note": "En ske eller et bredt sugerør gør det let at få stykkerne med." } }
+  ],
+  "tumbi": {
+    "id": "dino-sump-drik",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til: mængder og tider er et skøn. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "kiwi", "maengde": "4" },
+      { "ikon": "lime", "maengde": "½" },
+      { "ikon": "sukker", "maengde": "2 spsk" },
+      { "ikon": "aeble", "maengde": "4 dl" },
+      { "ikon": "danskvand", "maengde": "3 dl" }
+    ]
+  }
+}

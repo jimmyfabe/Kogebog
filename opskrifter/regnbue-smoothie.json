@@ -1,0 +1,47 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Regnbue-smoothie",
+  "description": "To smoothies i ét glas: gul mango i bunden og lyserøde jordbær ovenpå. Lagene ligner en regnbue i glasset.",
+  "image": "grafik/ret-regnbue-smoothie.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 4 små glas",
+  "prepTime": "PT20M",
+  "totalTime": "PT20M",
+  "recipeIngredient": [
+    "1 moden mango",
+    "2 dl yoghurt naturel (kold)",
+    "150 g friske jordbær",
+    "1 moden banan"
+  ],
+  "tool": ["kniv og skærebræt", "målebæger", "si", "ske", "blender", "4 små glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk. Stil frugten og yoghurten på køl i forvejen. Begge smoothies skal være tykke, ellers blander lagene sig. Brug friske bær: frosne bær skal koges først." } },
+    { "@type": "HowToStep", "text": "Skær mangoen i stykker.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["mango"], "note": "Skræl den, og skær frugten fra den store, flade sten. Den er glat, så hold godt fast." } },
+    { "@type": "HowToStep", "text": "Kom mangoen i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["mango"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
+    { "@type": "HowToStep", "text": "Hæld 1 dl yoghurt i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["yoghurt"] } },
+    { "@type": "HowToStep", "text": "Blend den gule smoothie helt glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["mango", "yoghurt"], "note": "Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Hæld den gule i glassene til halvt op.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Skyl kanden under hanen.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne skyller: knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Skyl jordbærrene i en si.", "tumbi": { "verbum": "haelde", "ikoner": ["jordbaer"] } },
+    { "@type": "HowToStep", "text": "Pil de grønne blade af jordbærrene.", "tumbi": { "verbum": "pille", "ikoner": ["jordbaer"] } },
+    { "@type": "HowToStep", "text": "Pil bananen, og knæk den i stykker.", "tumbi": { "verbum": "pille", "ikoner": ["banan"] } },
+    { "@type": "HowToStep", "text": "Kom jordbær og banan i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["jordbaer", "banan"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
+    { "@type": "HowToStep", "text": "Hæld 1 dl yoghurt i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["yoghurt"] } },
+    { "@type": "HowToStep", "text": "Blend den lyserøde smoothie helt glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["jordbaer", "banan"], "note": "Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Hæld den lyserøde langsomt over en ske.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden. Hold en ske lige over det gule, og hæld ned på bagsiden af skeen, så lagene holder sig hver for sig." } },
+    { "@type": "HowToStep", "text": "Smag begge lag i regnbuen!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "regnbue-smoothie",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdene og tiden er et skøn (ikke målt). Bærrene er friske, fordi Fødevarestyrelsen råder til at koge frosne bær, før de spises kolde. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "mango", "maengde": "1" },
+      { "ikon": "yoghurt", "maengde": "2 dl" },
+      { "ikon": "jordbaer", "maengde": "150 g" },
+      { "ikon": "banan", "maengde": "1" }
+    ]
+  }
+}

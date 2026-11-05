@@ -1,0 +1,42 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Grøn agurk-smoothie",
+  "description": "Frisk og lysegrøn med agurk, æbler og et skvæt lime. Den smager allerbedst helt kold.",
+  "image": "grafik/ret-groen-agurk-smoothie.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 3 glas",
+  "prepTime": "PT15M",
+  "totalTime": "PT15M",
+  "recipeIngredient": [
+    "½ agurk",
+    "2 æbler",
+    "½ lime",
+    "1 dl æblemost (kold)"
+  ],
+  "tool": ["kniv og skærebræt", "målebæger", "blender", "3 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Stil agurken, æblerne og æblemosten på køl i forvejen, så smoothien bliver kold." } },
+    { "@type": "HowToStep", "text": "Skær agurken i stykker.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["agurk"], "note": "Kun en halv agurk, og det er med vilje: æblerne skal smage mest. Skrællen må gerne blive på: den giver den grønne farve." } },
+    { "@type": "HowToStep", "text": "Skær æblerne i både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["aeble"], "note": "Skær kernehuset væk. Skrællen må gerne blive på." } },
+    { "@type": "HowToStep", "text": "Skær limen over.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["lime"], "note": "Der skal kun bruges den ene halvdel." } },
+    { "@type": "HowToStep", "text": "Kom agurk og æble i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["agurk", "aeble"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
+    { "@type": "HowToStep", "text": "Klem saften fra limen ned i kanden.", "tumbi": { "verbum": "klemme", "ikoner": ["lime"], "note": "Hold en hånd under, så kernerne ikke falder i. Saften svier i små rifter." } },
+    { "@type": "HowToStep", "text": "Hæld 1 dl æblemost i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["aeble"] } },
+    { "@type": "HowToStep", "text": "Blend, til smoothien er grøn og glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["agurk", "aeble"], "note": "Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Hæld smoothien i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Smag den kolde, grønne smoothie!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "groen-agurk-smoothie",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdene og tiden er et skøn (ikke målt). Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "agurk", "maengde": "½" },
+      { "ikon": "aeble", "maengde": "2" },
+      { "ikon": "lime", "maengde": "½" },
+      { "ikon": "aeble", "maengde": "1 dl" }
+    ]
+  }
+}

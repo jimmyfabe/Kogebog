@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Grønkål-ananas-smoothie",
+  "description": "Grøn og sød som en tur i junglen. Ananas og banan smager mest, og der er kun lidt grønkål i.",
+  "image": "grafik/ret-groenkaal-ananas-smoothie.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 3 glas",
+  "prepTime": "PT10M",
+  "totalTime": "PT10M",
+  "recipeIngredient": [
+    "1 lille håndfuld grønkål (ca. 15 g)",
+    "1 dåse ananasringe i juice (ca. 340 g uden saft)",
+    "1 moden banan"
+  ],
+  "tool": ["si", "dåseåbner", "blender", "3 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Stil ananasdåsen på køl i forvejen, så smoothien bliver kold." } },
+    { "@type": "HowToStep", "text": "Pil bladene af grønkålens stilke.", "tumbi": { "verbum": "pille", "ikoner": ["groenkaal"], "note": "Skyl bladene i en si. Stilkene er hårde, så de skal ikke med. Kun en lille håndfuld, og det er med vilje: der skal kun lidt rå grønkål i, så ananas og banan smager mest." } },
+    { "@type": "HowToStep", "text": "Hæld ananas og juice i kanden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["ananas"], "note": "Den voksne åbner dåsen: kanten er skarp. Kanden står på bordet, og blenderens stik er ude." } },
+    { "@type": "HowToStep", "text": "Pil bananen, og knæk den i stykker.", "tumbi": { "verbum": "pille", "ikoner": ["banan"] } },
+    { "@type": "HowToStep", "text": "Kom grønkål og banan i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["groenkaal", "banan"], "note": "Ingen fingre i kanden: knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Blend, til smoothien er grøn og glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["groenkaal", "ananas"], "note": "Grønkål er sejt, så det skal blendes lidt længere. Sæt låget på, og hold hånden på det. Blend ca. 1½ minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Hæld smoothien i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Smag den grønne jungle-smoothie!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "groenkaal-ananas-smoothie",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdene og tiden er et skøn (ikke målt). Den lille mængde er vores eget forsigtige valg. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "groenkaal", "maengde": "1" },
+      { "ikon": "ananas", "maengde": "1 dåse" },
+      { "ikon": "banan", "maengde": "1" }
+    ]
+  }
+}

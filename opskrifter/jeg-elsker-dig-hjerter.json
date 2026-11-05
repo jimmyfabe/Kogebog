@@ -1,0 +1,59 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Jeg elsker dig-hjerter",
+  "description": "Sprøde småkager stukket ud som hjerter, med lyserød glasur og krymmel. Der er ingen æg i dejen, så barnet kan rulle, stikke ud og pynte selv.",
+  "image": "grafik/ret-jeg-elsker-dig-hjerter.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 24 hjerter",
+  "prepTime": "PT40M",
+  "cookTime": "PT20M",
+  "totalTime": "PT1H45M",
+  "recipeIngredient": [
+    "125 g blødt smør",
+    "1 dl flormelis til dejen",
+    "3 dl hvedemel",
+    "2 tsk vaniljesukker",
+    "2 dl flormelis til glasuren",
+    "1 spsk vand",
+    "2 dråber rød konditorfarve",
+    "2 spsk farvet krymmel"
+  ],
+  "tool": ["stor skål", "dl-mål", "grydeske", "teske", "spiseske", "husholdningsfilm", "kagerulle", "hjerteudstikker", "bagepapir", "2 bageplader", "grydelapper", "rist", "lille skål"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Tag smørret ud af køleskabet i god tid, så det er blødt. Hjerterne indeholder gluten og mælk. Tjek allergener på pakken med krymmel." } },
+    { "@type": "HowToStep", "text": "Mål smør og flormelis i en stor skål.", "tumbi": { "verbum": "maale", "ikoner": ["smoer", "flormelis"], "note": "125 g smør, det er en halv pakke, og 1 dl flormelis." } },
+    { "@type": "HowToStep", "text": "Rør smør og flormelis sammen.", "tumbi": { "verbum": "roere", "ikoner": ["smoer", "flormelis"] } },
+    { "@type": "HowToStep", "text": "Hæld mel og vaniljesukker i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["mel", "sukker"], "note": "3 dl mel og 2 tsk vaniljesukker." } },
+    { "@type": "HowToStep", "text": "Ælt det hele til en fast dej.", "tumbi": { "verbum": "aelte", "note": "Smag ikke på dejen: rå mel skal bages først." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Der er rå dej på fingrene." } },
+    { "@type": "HowToStep", "text": "Stil dejen i køleskabet i 30 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "Pakket ind i film. Tænd ovnen på 180 °C (alm. ovn), lidt før tiden er gået." } },
+    { "@type": "HowToStep", "text": "Rul dejen ud med en kagerulle.", "tumbi": { "verbum": "kagerulle", "note": "Ca. ½ cm tyk på et bord med lidt mel." } },
+    { "@type": "HowToStep", "text": "Stik hjerter ud af dejen.", "tumbi": { "verbum": "stikke-ud", "note": "Læg hjerterne på en bageplade med bagepapir. Saml resterne, og rul dem ud igen." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Der er rå dej på fingrene." } },
+    { "@type": "HowToStep", "text": "Bag hjerterne i 10 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "note": "Midt i ovnen ved 180 °C, én plade ad gangen. De skal kun lige blive gyldne i kanten." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme", "note": "Med grydelapper. Er der flere plader, bager I dem på samme måde. Løft hjerterne over på en rist." } },
+    { "@type": "HowToStep", "text": "Lad hjerterne køle helt af.", "tumbi": { "verbum": "vente", "timer_sek": 900, "note": "Ellers løber glasuren af." } },
+    { "@type": "HowToStep", "text": "Rør flormelis og vand til tyk glasur.", "tumbi": { "verbum": "roere", "ikoner": ["flormelis", "vand"], "note": "2 dl flormelis og 1 spsk vand. Kom vandet i lidt ad gangen: glasuren skal være tyk. Der er ingen æg i." } },
+    { "@type": "HowToStep", "text": "Dryp rød farve i, og rør.", "tumbi": { "verbum": "roere", "ikoner": ["konditorfarve"], "note": "Ca. 2 dråber giver en lyserød glasur. Farven smitter af: pas på tøjet." } },
+    { "@type": "HowToStep", "text": "Smør lidt glasur på hvert hjerte.", "tumbi": { "verbum": "smoere", "ikoner": ["flormelis"], "note": "Med bagsiden af en teske." } },
+    { "@type": "HowToStep", "text": "Drys krymmel over.", "tumbi": { "verbum": "drysse", "ikoner": ["krymmel"], "note": "Mens glasuren er våd, så krymlen sidder fast." } },
+    { "@type": "HowToStep", "text": "Giv et hjerte til en, du elsker!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "jeg-elsker-dig-hjerter",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Mængder og tider er et skøn (ikke målt). Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "smoer", "maengde": "125 g" },
+      { "ikon": "flormelis", "maengde": "1 dl" },
+      { "ikon": "mel", "maengde": "3 dl" },
+      { "ikon": "sukker", "maengde": "2 tsk" },
+      { "ikon": "flormelis", "maengde": "2 dl" },
+      { "ikon": "vand", "maengde": "1 spsk" },
+      { "ikon": "konditorfarve", "maengde": "2" },
+      { "ikon": "krymmel", "maengde": "2 spsk" }
+    ]
+  }
+}

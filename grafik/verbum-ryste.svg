@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="shake" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="can" transform="rotate(-12 116 132)">
+      <path d="M66 70 L166 70 L166 196 C166 208 144 214 116 214 C88 214 66 208 66 196 Z" fill="#8E9AA6"/>
+      <path d="M150 74 L166 72 L166 196 C166 204 156 209 146 211 C150 206 150 200 150 194 Z" fill="#6D7B8A" stroke="none"/>
+      <path d="M66 104 C66 112 88 118 116 118 C144 118 166 112 166 104 L166 174 C166 182 144 188 116 188 C88 188 66 182 66 174 Z" fill="#FFF4E2"/>
+      <path d="M150 112 L166 104 L166 174 C166 180 158 184 150 185 Z" fill="#EEDDBF" stroke="none"/>
+      <path d="M66 104 C66 112 88 118 116 118 C144 118 166 112 166 104 M66 174 C66 182 88 188 116 188 C144 188 166 182 166 174" fill="none"/>
+      <path d="M66 70 L66 196 C66 208 88 214 116 214 C144 214 166 208 166 196 L166 70" fill="none"/>
+      <ellipse cx="116" cy="70" rx="50" ry="15" fill="#8E9AA6"/>
+      <ellipse cx="116" cy="70" rx="39" ry="9" fill="#6D7B8A"/>
+      <path d="M104 134 Q116 124 128 134 Q138 146 128 158 Q116 168 104 158 Q94 146 104 134 Z" fill="#FFFFFF"/>
+      <path d="M116 132 Q124 144 116 158" fill="none" stroke="#3E8FB0" stroke-width="5"/>
+    </g>
+    <g id="rosa-forearm">
+      <path d="M256 108 C229 108 208 113 186 120 L181 142 C203 151 229 148 256 141" fill="#F08A3C"/>
+    </g>
+    <g id="rosa-holding-paw">
+      <path d="M170 113 Q158 115 163 127 C155 136 162 147 172 143 C180 152 191 145 187 137 C197 132 190 120 181 124 Q182 112 170 113 Z" fill="#F08A3C"/>
+      <path d="M169 126 Q176 121 183 130 Q188 139 178 141 Q166 140 169 126 Z" fill="#FFF4E2"/>
+    </g>
+    <g id="shaking-motion-top">
+      <path fill="none" stroke-width="15" d="M78 38 Q116 16 154 26"/>
+      <path fill="none" stroke="#3E8FB0" stroke-width="8" d="M78 38 Q116 16 154 26"/>
+      <path fill="#3E8FB0" d="M152 10 L176 34 L144 42 Z"/>
+      <path fill="#3E8FB0" d="M60 28 L72 58 L90 32 Z"/>
+    </g>
+    <g id="shaking-motion-bottom">
+      <path fill="none" stroke-width="15" d="M62 236 Q104 252 146 234"/>
+      <path fill="none" stroke="#3E8FB0" stroke-width="8" d="M62 236 Q104 252 146 234"/>
+      <path fill="#3E8FB0" d="M64 218 L40 232 L66 250 Z"/>
+      <path fill="#3E8FB0" d="M144 218 L168 228 L148 250 Z"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,34 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Fersken-smoothie",
+  "description": "Blød og sød med ferskner fra en dåse og kold yoghurt. Kun to ting og en blender, og så er den klar.",
+  "image": "grafik/ret-fersken-yoghurt-smoothie.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 3 glas",
+  "prepTime": "PT5M",
+  "totalTime": "PT5M",
+  "recipeIngredient": [
+    "1 dåse ferskner i juice (ca. 400 g)",
+    "2 dl yoghurt naturel (kold)"
+  ],
+  "tool": ["dåseåbner", "målebæger", "blender", "3 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk. Stil dåsen og yoghurten på køl i forvejen, så smoothien bliver kold. Findes ferskner i juice ikke, så går de også i let sirup: så bliver den bare sødere." } },
+    { "@type": "HowToStep", "text": "Hæld ferskner og juice i kanden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["fersken"], "note": "Den voksne åbner dåsen: kanten er skarp. Kanden står på bordet, og blenderens stik er ude." } },
+    { "@type": "HowToStep", "text": "Hæld 2 dl yoghurt i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["yoghurt"], "note": "Ingen fingre i kanden: knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Blend, til det hele er glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["fersken", "yoghurt"], "note": "Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Hæld smoothien i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Smag, og sig mmm!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "fersken-yoghurt-smoothie",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdene og tiden er et skøn (ikke målt). Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "fersken", "maengde": "1 dåse" },
+      { "ikon": "yoghurt", "maengde": "2 dl" }
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="squeeze" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="bowl" transform="translate(16 0)">
+      <path d="M28 177 L199 177 Q190 225 115 231 Q42 226 28 177 Z" fill="#FFF4E2"/>
+      <ellipse cx="113.5" cy="177" rx="85.5" ry="23" fill="#EEDDBF"/>
+      <ellipse cx="113.5" cy="181" rx="69" ry="14" fill="#FBE38A"/>
+    </g>
+    <g id="drops" fill="#F2C14E">
+      <path d="M112 136 C107 146 104 151 104 156 C104 161 108 165 112 165 C116 165 120 161 120 156 C120 151 117 146 112 136 Z"/>
+      <path d="M134 150 C130 159 127 163 127 167 C127 172 131 175 134 175 C137 175 141 172 141 167 C141 163 138 159 134 150 Z"/>
+      <path d="M154 136 C149 146 146 151 146 156 C146 161 150 165 154 165 C158 165 162 161 162 156 C162 151 159 146 154 136 Z"/>
+    </g>
+    <g id="citrus-half">
+      <path d="M80 118 C80 76 106 54 132 54 C158 54 184 76 184 118 Z" fill="#F2C14E"/>
+      <path d="M160 66 C176 78 182 96 182 118 L166 118 C168 100 166 82 160 66 Z" fill="#E3A44E" stroke="none"/>
+      <ellipse cx="132" cy="118" rx="52" ry="13" fill="#FBE38A"/>
+      <ellipse cx="132" cy="118" rx="42" ry="9" fill="#FFF4E2"/>
+      <path d="M132 109 L132 127 M100 113 L164 123 M100 123 L164 113" fill="none" stroke="#F2C14E" stroke-width="3"/>
+    </g>
+    <g id="squeezing-motion">
+      <path d="M42 76 C36 86 36 99 42 109 L49 104 L47 127 Q47 130 44 128 L27 114 L34 113 C26 99 27 83 33 72 Q39 67 42 76 Z" fill="#3E8FB0"/>
+    </g>
+    <g id="rosa-forearm">
+      <path d="M205 0 L246 0 C230 30 206 48 177 65 L153 45 C171 29 186 15 205 0 Z" fill="#F08A3C"/>
+    </g>
+    <g id="rosa-pinching-paw">
+      <path d="M166 39 C154 33 139 35 127 44 L115 54 C108 59 112 66 120 64 L132 58 L125 68 C122 75 130 79 135 72 C141 77 148 74 150 67 C158 73 167 67 165 59 C174 57 174 46 166 39 Z" fill="#F08A3C"/>
+      <path d="M145 43 Q135 41 126 50 L122 56 Q132 52 140 58 Q147 64 156 58 Q160 48 145 43 Z" fill="#FFF4E2"/>
+      <path d="M140 62 L138 68 M151 59 L150 64" fill="none"/>
+    </g>
+  </g>
+</svg>

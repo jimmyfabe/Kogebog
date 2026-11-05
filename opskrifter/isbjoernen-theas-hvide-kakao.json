@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Isbjørnen Theas hvide kakao",
+  "description": "Isbjørnen Thea elsker noget, der er hvidt og varmt, når hun kommer ind fra isen. Hendes kakao er lavet af mælk og hvid chokolade.",
+  "image": "grafik/ret-isbjoernen-theas-hvide-kakao.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 kopper",
+  "prepTime": "PT5M",
+  "cookTime": "PT10M",
+  "totalTime": "PT25M",
+  "recipeIngredient": [
+    "100 g hvid chokolade",
+    "8 dl mælk"
+  ],
+  "tool": ["lille skål", "gryde", "målebæger", "grydeske", "4 kopper med hank"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk, og hvid chokolade kan have spor af nødder: læs på pakken." } },
+    { "@type": "HowToStep", "text": "Bræk chokoladen i små stykker.", "tumbi": { "verbum": "smuldre", "ikoner": ["hvid-chokolade"], "note": "100 g, det er en hel plade. Kom stykkerne i en lille skål." } },
+    { "@type": "HowToStep", "text": "Hæld mælken i gryden.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk"], "note": "8 dl. Gryden er kold endnu, så barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Varm mælken, til den damper.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["maelk"], "note": "Ved middel varme, og rør i bunden med en grydeske. Den må ikke koge: tag gryden af varmen, når den damper." } },
+    { "@type": "HowToStep", "text": "Kom chokoladen i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["hvid-chokolade"], "note": "Den voksne kommer den i: gryden er varm. Gryden står af varmen, for hvid chokolade brænder let på." } },
+    { "@type": "HowToStep", "text": "Rør, til chokoladen er smeltet.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["hvid-chokolade"], "note": "Ca. 2 minutter, til der ikke er flere stykker." } },
+    { "@type": "HowToStep", "text": "Hæld kakaoen i kopperne.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne hælder: kakaoen er varm." } },
+    { "@type": "HowToStep", "text": "Vent, til kakaoen er lun.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Kopperne bliver hos den voksne. Barnet får først kakaoen, når den er lun. Mærk efter først, vent lidt længere, hvis den stadig er varm, og rør rundt, hvis der er kommet en hinde på toppen." } },
+    { "@type": "HowToStep", "text": "Smag isbjørnen Theas hvide kakao!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "isbjoernen-theas-hvide-kakao",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdet mellem mælk og chokolade er et skøn, og tiden er ikke målt. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "hvid-chokolade", "maengde": "100 g" },
+      { "ikon": "maelk", "maengde": "8 dl" }
+    ]
+  }
+}

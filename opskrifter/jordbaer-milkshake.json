@@ -1,0 +1,39 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Jordbær-milkshake",
+  "description": "Friske jordbær og vaniljeis bliver til en lyserød milkshake, der smager af sommer. Barnet piller selv toppene af bærrene.",
+  "image": "grafik/ret-jordbaer-milkshake.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 små glas",
+  "prepTime": "PT10M",
+  "totalTime": "PT15M",
+  "recipeIngredient": [
+    "½ l vaniljeis",
+    "1½ dl mælk",
+    "250 g friske jordbær"
+  ],
+  "tool": ["blender med kande", "isske eller stor ske", "målebæger", "4 små glas", "sugerør"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk. Skyl jordbærrene. Tag kanden af blenderen, og træk stikket ud, mens barnet fylder den: knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Stil isen frem, og vent 5 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 300, "ikoner": ["is"], "note": "Så bliver isen blød nok til blenderen." } },
+    { "@type": "HowToStep", "text": "Pil toppene af jordbærrene.", "tumbi": { "verbum": "pille", "ikoner": ["jordbaer"], "note": "250 g, det er ca. 15 mellemstore jordbær. Brug friske jordbær: frosne bær skal koges, før de spises kolde." } },
+    { "@type": "HowToStep", "text": "Hæld mælken i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk"], "note": "1½ dl." } },
+    { "@type": "HowToStep", "text": "Kom jordbærrene i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["jordbaer"] } },
+    { "@type": "HowToStep", "text": "Kom isen i kanden med en stor ske.", "tumbi": { "verbum": "maale", "ikoner": ["is"], "note": "½ l, det er ca. 8 kugler." } },
+    { "@type": "HowToStep", "text": "Blend, til det er lyserødt og glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["is", "jordbaer"], "note": "Den voksne sætter kanden på, lægger låget på og blender i ca. 30 sekunder. Stop blenderen, før låget tages af. Noget varmt kommer aldrig i blenderen." } },
+    { "@type": "HowToStep", "text": "Hæld milkshaken i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Smag jordbær-milkshaken!", "tumbi": { "verbum": "smage", "note": "Drik den med det samme: så er den tykkest." } }
+  ],
+  "tumbi": {
+    "id": "jordbaer-milkshake",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdet mellem is, mælk og bær er et skøn. Bærrene er friske, fordi Fødevarestyrelsen råder til at koge frosne bær, før de spises kolde. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "is", "maengde": "½ l" },
+      { "ikon": "maelk", "maengde": "1½ dl" },
+      { "ikon": "jordbaer", "maengde": "250 g" }
+    ]
+  }
+}

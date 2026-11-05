@@ -1,0 +1,42 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Sommer-ispinde",
+  "description": "Kolde ispinde af yoghurt og friske bær. Barnet moser, rører og fylder formene, og fryseren klarer resten.",
+  "image": "grafik/ret-sommer-ispinde.webp",
+  "inLanguage": "da",
+  "recipeYield": "8 ispinde",
+  "prepTime": "PT15M",
+  "totalTime": "PT4H20M",
+  "recipeIngredient": [
+    "250 g friske bær, fx hindbær og jordbær",
+    "5 dl yoghurt naturel",
+    "4 spsk honning"
+  ],
+  "tool": ["si", "gaffel", "stor skål", "dl-mål", "spiseske", "lille kande", "8 ispindeforme, eller små krus og træpinde", "husholdningsfilm til små krus"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Ispindene skal fryse i mindst 4 timer: lav dem om formiddagen eller dagen før. De indeholder mælk. Brug kun friske bær: frosne bær skal koges, før de spises kolde. Honning er ikke til børn under 1 år, så små søskende skal have noget andet." } },
+    { "@type": "HowToStep", "text": "Skyl bærrene i en si.", "tumbi": { "verbum": "haelde", "ikoner": ["baer"], "note": "Under koldt vand. Lad dem dryppe af. Pil bladene af jordbærrene." } },
+    { "@type": "HowToStep", "text": "Mos bærrene med en gaffel.", "tumbi": { "verbum": "mose", "ikoner": ["baer"], "note": "Små stykker må gerne blive tilbage." } },
+    { "@type": "HowToStep", "text": "Hæld yoghurten i en stor skål.", "tumbi": { "verbum": "haelde", "ikoner": ["yoghurt"], "note": "5 dl." } },
+    { "@type": "HowToStep", "text": "Rør bærmos og honning i yoghurten.", "tumbi": { "verbum": "roere", "ikoner": ["baer", "honning"], "note": "4 spsk honning." } },
+    { "@type": "HowToStep", "text": "Smag på blandingen med en ren ske.", "tumbi": { "verbum": "smage", "note": "Den må gerne smage lidt for sødt: kulden tager noget af sødmen. Kom lidt mere honning i, hvis den er for sur." } },
+    { "@type": "HowToStep", "text": "Hæld blandingen i formene.", "tumbi": { "verbum": "haelde", "note": "Fra en lille kande. Fyld dem næsten til kanten. Har I ingen ispindeforme, så brug små krus." } },
+    { "@type": "HowToStep", "text": "Sæt en pind i hver form.", "tumbi": { "verbum": "pynte", "note": "I små krus: Sæt film over, og stik pinden igennem, så den står lige." } },
+    { "@type": "HowToStep", "text": "Sæt formene i fryseren i 4 timer.", "tumbi": { "verbum": "vente", "timer_sek": 14400, "note": "Gerne til næste dag." } },
+    { "@type": "HowToStep", "text": "Hold formen under lunkent vand.", "tumbi": { "verbum": "haelde", "note": "I 10-20 sekunder, så slipper ispinden." } },
+    { "@type": "HowToStep", "text": "Træk ispinden forsigtigt ud af formen.", "tumbi": { "verbum": "pille" } },
+    { "@type": "HowToStep", "text": "Smag en sommer-ispind!", "tumbi": { "verbum": "smage", "note": "Sid ned, mens I spiser: løb ikke rundt med pinden i munden." } }
+  ],
+  "tumbi": {
+    "id": "sommer-ispinde",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Mængder og tider er et skøn (ikke målt). Rådet om honning til børn under 1 år er ikke slået efter i en kilde. Trinene er egen tekst. Bærrene er friske, fordi Fødevarestyrelsen råder til at koge frosne bær, før de spises kolde.",
+    "ingredienser": [
+      { "ikon": "baer", "maengde": "250 g" },
+      { "ikon": "yoghurt", "maengde": "5 dl" },
+      { "ikon": "honning", "maengde": "4 spsk" }
+    ]
+  }
+}

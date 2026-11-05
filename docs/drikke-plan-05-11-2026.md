@@ -21,16 +21,16 @@ Tallet i parentes er rækkefølgen for billeder og lyd: (1) laves først, for de
 | `enhjoerning-drik` (1) | Enhjørningens lyserøde drik | hindbær, vanilje, danskvand, krymmel på kanten af glasset |
 | `dino-sump-drik` (1) | Dinosaurens grønne sump | kiwi, æblemost, lime, danskvand |
 | `jordbaer-boble` | Jordbær-boble | friske jordbær, citron, danskvand |
-| `hyldeblomst-lemonade` | Hyldeblomst-lemonade | hyldeblomstsaft, citron, danskvand |
+| `hyldeblomst-lemonade` | Hyldeblomst-limonade | hyldeblomstsaft, citron, danskvand |
 | `lyseroed-limonade` | Lyserød limonade | citron, sukkerlage uden varme, hindbær |
-| `solopgang` | Solopgang | appelsinjuice, hindbærsaft i bunden |
+| `solopgang` | Solopgang | appelsinjuice, rød saft i bunden |
 | `mynte-lime-boble` | Mynte-lime-boble | lime, mynte, æblemost, danskvand |
 | `strand-drik` | Strand-drik | ananasjuice, kokosmælk, is |
 | `vandmelon-koeler` | Vandmelon-køler | vandmelon, lime, is (sommer) |
 | `aeble-ingefaer-boble` | Æble-ingefær-boble | æblemost, lidt revet ingefær, danskvand |
 | `trolde-drik` | Troldens blå drik | blåbær, citron, danskvand |
 | `regnbue-drik` | Regnbue-drik | saft og juice i lag |
-| `is-te-med-fersken` | Is-te med fersken | kold rooibos, fersken på dåse |
+| `is-te-med-fersken` | Iste med fersken | kold rooibos eller frugt-te, fersken på dåse |
 | `agurk-lime-vand` | Agurk-lime-vand | agurk, lime, koldt vand |
 | `appelsin-gulerod-boble` | Appelsin-gulerod-boble | gulerodsjuice eller revet gulerod, appelsin, danskvand |
 
@@ -49,7 +49,7 @@ Tallet i parentes er rækkefølgen for billeder og lyd: (1) laves først, for de
 | `hindbaer-havre-smoothie` | Hindbær-havre-smoothie | friske hindbær, havregryn, mælk |
 | `paere-vanilje-smoothie` | Pære-vanilje-smoothie | pære, yoghurt, vanilje |
 | `groen-agurk-smoothie` | Grøn agurk-smoothie | agurk, æble, lime |
-| `troldesaft-smoothie` | Troldesaft | kogt rødbede fra pakke, æble, friske bær |
+| `troldesaft-smoothie` | Troldesaft | kogt, kold rødbede, æble, friske bær |
 | `tomat-gulerod-smoothie` | Tomat-gulerod-smoothie | tomat, gulerod, æble |
 | `groenkaal-ananas-smoothie` | Grønkål-ananas-smoothie | lidt grønkål, ananas, banan |
 | `avocado-banan-smoothie` | Avocado-banan-smoothie | avocado, banan, mælk |
@@ -70,7 +70,7 @@ Tallet i parentes er rækkefølgen for billeder og lyd: (1) laves først, for de
 | `vanilje-milkshake` | Vanilje-milkshake | vaniljeis, mælk |
 | `chokolade-milkshake` | Chokolade-milkshake | vaniljeis, kakao, mælk |
 | `jordbaer-milkshake` | Jordbær-milkshake | vaniljeis, friske jordbær |
-| `banan-karamel-milkshake` | Banan-karamel-milkshake | vaniljeis, banan, karamelsauce |
+| `banan-chokolade-milkshake` | Banan-chokolade-milkshake | vaniljeis, banan, chokoladesauce |
 | `smaakage-milkshake` | Småkage-milkshake | vaniljeis, chokoladekiks |
 
 ### Drikke: varme drikke (6)
@@ -80,7 +80,7 @@ Tallet i parentes er rækkefølgen for billeder og lyd: (1) laves først, for de
 | `yndlingskakao` (1) | Yndlingskakao | mælk, kakao, sukker |
 | `kakao-med-skumfiduser` (1) | Kakao med skumfiduser | kakao, skumfiduser |
 | `isbjoernen-theas-hvide-kakao` | Isbjørnen Theas hvide kakao | mælk, hvid chokolade |
-| `aeble-kanel-te` | Æble-kanel-te | rooibos, æble, lidt kanel |
+| `aeble-kanel-te` | Æble-kanel-te | rooibos eller frugt-te, æble, lidt kanel |
 | `appelsin-frugt-te` | Appelsin-te | frugt-te, appelsin |
 | `citron-honning-drik` | Varm citron med honning | citron, honning, varmt vand |
 
@@ -126,7 +126,7 @@ I alt 69 retter. Der er allerede gulerodssuppe (`gulerodssuppe-med-linser`) og t
 | Varme drikke | Den voksne varmer og hælder op. Et `vente`-trin, til drikken er lun, før barnet får den |
 | Koffein | Rooibos eller frugt-te. Ingen sort eller grøn te. Kakao i almindelige mængder |
 | Kanel | Lidt: højst ¼ tsk pr. portion |
-| Rå spinat, grønkål, rødbede | Kun lidt: en lille håndfuld i hele opskriften, og noten siger det. Rødbede kogt og færdig fra pakke |
+| Rå spinat, grønkål, rødbede | Kun lidt: en lille håndfuld i hele opskriften, og noten siger det. Rødbede kogt og kold: færdigkogt fra pakke, eller kogt af den voksne dagen før |
 | Ingefær | Kun lidt |
 | Kniv | `skaere` og `rive` er altid voksen (se validatoren) |
 | Alt andet | Reglerne i `CLAUDE.md` under «Opskriftsformatet» og regel 11 (discount) |

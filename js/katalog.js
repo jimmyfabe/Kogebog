@@ -39,6 +39,11 @@ export const VERBER = {
   'smelte': 'smelte',
   // Smoothies og milkshakes (05-11-2026): altid den voksne, også når alt i kanden er koldt, for blenderen har knive
   'blende': 'blende',
+  // Drikkene (05-11-2026): «ryste» er en lukket dåse, «klemme» citrusfrugt, som den voksne har skåret over, og «dyppe» glassets
+  // kant i saft og krymmel. Barnet kan alle tre selv
+  'ryste': 'ryste',
+  'klemme': 'klemme',
+  'dyppe': 'dyppe',
 };
 
 // Verber, der altid kræver en voksen, og hvilken slags hjælp. Rivejernet skærer, blenderen har knive, «bage» og «tage-ud» er altid ovnen
@@ -58,10 +63,10 @@ export const VOKSEN_KRAV = {
 };
 
 // Verber, barnet kan selv, når der er koldt: piske dej, pensle boller, mose, drysse ost, pynte, sprøjte ketchup, stikke ud,
-// forme og pille. Er der varme med (varmt fedt, en varm gryde eller pande, et lunt æg), skal den voksne hjælpe, og så er det
-// for varmens skyld, aldrig kniven.
+// forme, pille, ryste, klemme og dyppe. Er der varme med (varmt fedt, en varm gryde eller pande, et lunt æg), skal den
+// voksne hjælpe, og så er det for varmens skyld, aldrig kniven.
 // Validatoren kan ikke se, om der er varme; det skriver opskriften med «voksen». Den tjekker, at hjælpen er «varme».
-export const KUN_VARME_HJAELP = ['piske', 'pensle', 'mose', 'drysse', 'pynte', 'sproejte', 'stikke-ud', 'forme', 'pille'];
+export const KUN_VARME_HJAELP = ['piske', 'pensle', 'mose', 'drysse', 'pynte', 'sproejte', 'stikke-ud', 'forme', 'pille', 'ryste', 'klemme', 'dyppe'];
 
 export const VOKSEN_HJAELP = {
   kniv: 'Kniv',
@@ -192,6 +197,8 @@ export const INGREDIENSER = {
   'flormelis': 'flormelis',
   'konditorfarve': 'konditorfarve',
   'slik': 'slik',
+  // Saft er koncentrat på flaske (hindbær og solbær). Hyldeblomstsaft bruger «hyldeblomst»
+  'saft': 'saft',
 };
 
 // Ikoner for råt kød og råt æg: efter dem skal der komme et trin med «vaske-haender».

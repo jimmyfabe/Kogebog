@@ -1,0 +1,39 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Jordbær-banan-smoothie",
+  "description": "Lyserød og sød med friske jordbær, banan og yoghurt. Barnet må selv pille de grønne blade af jordbærrene.",
+  "image": "grafik/ret-jordbaer-banan-smoothie.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 3 glas",
+  "prepTime": "PT10M",
+  "totalTime": "PT10M",
+  "recipeIngredient": [
+    "250 g friske jordbær",
+    "2 modne bananer",
+    "2 dl yoghurt naturel (kold)"
+  ],
+  "tool": ["si", "målebæger", "blender", "3 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk. 250 g jordbær er ca. en halv stor bakke. Brug friske bær: frosne bær skal koges først." } },
+    { "@type": "HowToStep", "text": "Skyl jordbærrene i en si.", "tumbi": { "verbum": "haelde", "ikoner": ["jordbaer"] } },
+    { "@type": "HowToStep", "text": "Pil de grønne blade af jordbærrene.", "tumbi": { "verbum": "pille", "ikoner": ["jordbaer"] } },
+    { "@type": "HowToStep", "text": "Pil bananerne, og knæk dem i stykker.", "tumbi": { "verbum": "pille", "ikoner": ["banan"] } },
+    { "@type": "HowToStep", "text": "Kom jordbær og banan i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["jordbaer", "banan"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
+    { "@type": "HowToStep", "text": "Hæld 2 dl yoghurt i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["yoghurt"] } },
+    { "@type": "HowToStep", "text": "Blend, til det er lyserødt og glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["jordbaer", "banan"], "note": "Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Hæld smoothien i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden. Er den for tyk, så rør lidt koldt vand i." } },
+    { "@type": "HowToStep", "text": "Smag, og skål med Rosa!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "jordbaer-banan-smoothie",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdene og tiden er et skøn (ikke målt). Bærrene er friske, fordi Fødevarestyrelsen råder til at koge frosne bær, før de spises kolde. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "jordbaer", "maengde": "250 g" },
+      { "ikon": "banan", "maengde": "2" },
+      { "ikon": "yoghurt", "maengde": "2 dl" }
+    ]
+  }
+}

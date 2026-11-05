@@ -1,0 +1,42 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Jordbær-boble",
+  "description": "Røde bobler med friske jordbær og en lille smule citron. Barnet moser bærrene og ser, hvordan det hele begynder at bruse.",
+  "image": "grafik/ret-jordbaer-boble.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 glas",
+  "prepTime": "PT15M",
+  "totalTime": "PT20M",
+  "recipeIngredient": [
+    "250 g friske jordbær",
+    "3 spsk sukker",
+    "½ citron",
+    "6 dl danskvand (kold)"
+  ],
+  "tool": ["skærebræt", "kniv", "skål", "gaffel", "spiseske", "stor kande", "målebæger", "si (kan undværes)", "4 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Sæt danskvanden på køl i god tid. Skyl jordbærrene og citronen. Brug friske bær: frosne bær skal koges, før de spises kolde." } },
+    { "@type": "HowToStep", "text": "Skær jordbærrene i stykker og citronen over.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["jordbaer", "citron"], "note": "250 g er cirka 12 store jordbær. Toppene skal af. Kun den ene halvdel af citronen skal bruges." } },
+    { "@type": "HowToStep", "text": "Mos jordbærrene i en skål med en gaffel.", "tumbi": { "verbum": "mose", "ikoner": ["jordbaer"] } },
+    { "@type": "HowToStep", "text": "Rør sukkeret i mosen.", "tumbi": { "verbum": "roere", "ikoner": ["sukker"], "note": "3 spsk." } },
+    { "@type": "HowToStep", "text": "Klem citronen ud over mosen.", "tumbi": { "verbum": "klemme", "ikoner": ["citron"], "note": "Den halve citron. Fisk kernerne op." } },
+    { "@type": "HowToStep", "text": "Lad mosen trække i 5 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 300, "note": "Så går sukkeret i opløsning, og bærrene giver saft." } },
+    { "@type": "HowToStep", "text": "Hæld mosen i en stor kande.", "tumbi": { "verbum": "haelde", "ikoner": ["jordbaer"], "note": "Vil I ikke have stykker i glasset, så hæld mosen gennem en si." } },
+    { "@type": "HowToStep", "text": "Hæld danskvanden langsomt i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["danskvand"], "note": "6 dl, og lige før I skal drikke, så boblerne ikke forsvinder. Rør kun en enkelt gang." } },
+    { "@type": "HowToStep", "text": "Hæld boblerne i glassene.", "tumbi": { "verbum": "haelde", "note": "Hæld langsomt ned ad siden af glasset, så det ikke skummer over." } },
+    { "@type": "HowToStep", "text": "Smag jordbær-boblen!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "jordbaer-boble",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til: mængder og tider er et skøn. Bærrene er friske, fordi Fødevarestyrelsen råder til at koge frosne bær, før de spises kolde. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "jordbaer", "maengde": "250 g" },
+      { "ikon": "sukker", "maengde": "3 spsk" },
+      { "ikon": "citron", "maengde": "½" },
+      { "ikon": "danskvand", "maengde": "6 dl" }
+    ]
+  }
+}

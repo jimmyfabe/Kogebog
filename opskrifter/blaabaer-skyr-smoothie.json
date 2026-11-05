@@ -1,0 +1,41 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Blåbær-smoothie med skyr",
+  "description": "Lilla og tyk med friske blåbær og skyr. Bananen gør den sød, og farven bliver helt vild.",
+  "image": "grafik/ret-blaabaer-skyr-smoothie.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 3 glas",
+  "prepTime": "PT10M",
+  "totalTime": "PT10M",
+  "recipeIngredient": [
+    "200 g friske blåbær",
+    "2 modne bananer",
+    "1½ dl skyr naturel (kold)",
+    "1 dl mælk (kold)"
+  ],
+  "tool": ["si", "målebæger", "blender", "3 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk. 200 g blåbær er ca. 3 dl. Brug friske bær: frosne bær skal koges først." } },
+    { "@type": "HowToStep", "text": "Skyl blåbærrene i en si.", "tumbi": { "verbum": "haelde", "ikoner": ["baer"] } },
+    { "@type": "HowToStep", "text": "Pil bananerne, og knæk dem i stykker.", "tumbi": { "verbum": "pille", "ikoner": ["banan"] } },
+    { "@type": "HowToStep", "text": "Kom blåbær og banan i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["baer", "banan"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
+    { "@type": "HowToStep", "text": "Hæld 1½ dl skyr i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["yoghurt"] } },
+    { "@type": "HowToStep", "text": "Hæld 1 dl mælk i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk"] } },
+    { "@type": "HowToStep", "text": "Blend, til det er lilla og glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["baer", "banan"], "note": "Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Hæld smoothien i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden. Er den for tyk, så rør lidt mælk i." } },
+    { "@type": "HowToStep", "text": "Smag, og vis din blå tunge!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "blaabaer-skyr-smoothie",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdene og tiden er et skøn (ikke målt). Bærrene er friske, fordi Fødevarestyrelsen råder til at koge frosne bær, før de spises kolde. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "baer", "maengde": "200 g" },
+      { "ikon": "banan", "maengde": "2" },
+      { "ikon": "yoghurt", "maengde": "1½ dl" },
+      { "ikon": "maelk", "maengde": "1 dl" }
+    ]
+  }
+}

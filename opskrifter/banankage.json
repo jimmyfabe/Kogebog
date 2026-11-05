@@ -1,0 +1,57 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Banankage",
+  "description": "Blød kage, der smager mest af modne bananer. Barnet moser bananerne selv.",
+  "image": "grafik/ret-banankage.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 12 skiver",
+  "prepTime": "PT25M",
+  "cookTime": "PT55M",
+  "totalTime": "PT2H20M",
+  "recipeIngredient": [
+    "125 g smør",
+    "3 modne bananer",
+    "2 dl sukker",
+    "2 æg",
+    "4 dl hvedemel",
+    "2 tsk bagepulver",
+    "2 tsk vaniljesukker"
+  ],
+  "tool": ["aflang form (ca. 1,5 l)", "bagepapir", "lille gryde", "stor skål", "gaffel", "dl-mål", "kop", "grydeske", "teske", "tandstik", "grydelapper", "rist", "kniv"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Tænd ovnen på 175 °C (alm. ovn), og læg bagepapir i formen. Kagen indeholder gluten, æg og mælk." } },
+    { "@type": "HowToStep", "text": "Smelt smørret i en lille gryde.", "tumbi": { "verbum": "smelte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["smoer"], "note": "125 g, det er en halv pakke. Ved lav varme." } },
+    { "@type": "HowToStep", "text": "Lad smørret køle af i 10 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Det skal være lunt, ikke varmt, før det kommer i dejen." } },
+    { "@type": "HowToStep", "text": "Mos bananerne med en gaffel i skålen.", "tumbi": { "verbum": "mose", "ikoner": ["banan"], "note": "Jo flere brune pletter, jo sødere bliver kagen." } },
+    { "@type": "HowToStep", "text": "Mål sukkeret i skålen.", "tumbi": { "verbum": "maale", "ikoner": ["sukker"], "note": "2 dl." } },
+    { "@type": "HowToStep", "text": "Rør det lune smør i bananerne.", "tumbi": { "verbum": "roere", "ikoner": ["smoer"], "note": "Den voksne hælder, og barnet rører." } },
+    { "@type": "HowToStep", "text": "Slå æggene i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["aeg"], "note": "Slå dem ud i en kop først, så der ikke kommer skal i dejen." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter rå æg." } },
+    { "@type": "HowToStep", "text": "Rør æggene godt i.", "tumbi": { "verbum": "roere", "note": "Dejen har råt æg i: smag ikke på den." } },
+    { "@type": "HowToStep", "text": "Hæld mel, bagepulver og vaniljesukker i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["mel", "bagepulver", "sukker"], "note": "4 dl mel, 2 tsk bagepulver og 2 tsk vaniljesukker." } },
+    { "@type": "HowToStep", "text": "Rør forsigtigt, til melet er væk.", "tumbi": { "verbum": "roere", "note": "Rør kun lige, til dejen er samlet: så bliver kagen blød." } },
+    { "@type": "HowToStep", "text": "Hæld dejen i formen.", "tumbi": { "verbum": "haelde" } },
+    { "@type": "HowToStep", "text": "Vask hænderne igen.", "tumbi": { "verbum": "vaske-haender", "note": "Dejen har råt æg i: smag ikke på den." } },
+    { "@type": "HowToStep", "text": "Bag kagen i 55 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 3300, "note": "Midt i ovnen ved 175 °C. Den er færdig, når en tandstik kommer tør op. Læg bagepapir over, hvis den bliver for mørk." } },
+    { "@type": "HowToStep", "text": "Tag formen ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Med grydelapper. Formen er meget varm." } },
+    { "@type": "HowToStep", "text": "Lad kagen køle helt af.", "tumbi": { "verbum": "vente", "timer_sek": 3600, "note": "Den voksne løfter den op af formen efter 10 minutter, med grydelapper." } },
+    { "@type": "HowToStep", "text": "Skær kagen i skiver.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv" } },
+    { "@type": "HowToStep", "text": "Smag banankagen!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "banankage",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Mængder og tider er et skøn (ikke målt). Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "smoer", "maengde": "125 g" },
+      { "ikon": "banan", "maengde": "3" },
+      { "ikon": "sukker", "maengde": "2 dl" },
+      { "ikon": "aeg", "maengde": "2" },
+      { "ikon": "mel", "maengde": "4 dl" },
+      { "ikon": "bagepulver", "maengde": "2 tsk" },
+      { "ikon": "sukker", "maengde": "2 tsk" }
+    ]
+  }
+}

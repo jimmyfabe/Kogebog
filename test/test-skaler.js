@@ -388,6 +388,25 @@ test('boejNavn: ental og flertal, tillægsordet efter kønnet, «eller», resten
   for (const f of [1, 'ja', undefined]) assert.throws(() => boejNavn('gulerod', f), TypeError, String(f));
 });
 
+// Ordene til drikke, cupcakes og kager (05-11-2026): et tillægsord, der bøjes med navneordet, og et intetkønsord i stemmen
+test('boejNavn og tilTale: ordene til drikke, cupcakes og kager', () => {
+  for (const [navn, flertal, ud] of [
+    ['modne bananer', false, 'moden banan'],
+    ['moden banan', true, 'modne bananer'],
+    ['hele citroner', false, 'hel citron'],
+    ['hel citron', true, 'hele citroner'],
+    ['frisk mynteblad', true, 'friske mynteblade'],
+    ['friske mynteblade', false, 'friskt mynteblad'],
+    ['ferskner', false, 'fersken'],
+    ['kiwier', false, 'kiwi'],
+    ['skumfiduser', false, 'skumfidus'],
+    ['tebrev', true, 'tebreve'],
+  ]) assert.equal(boejNavn(navn, flertal), ud, navn);
+  assert.equal(tilTale('1 tebrev'), 'et tebrev');
+  assert.equal(tilTale('2 tebreve'), 'to tebreve');
+  assert.equal(tilTale('1 moden banan'), 'en moden banan');
+});
+
 test('NAVNEORD og TILLAEGSORD passer til KOEN, og ingen form står to steder', () => {
   // Kønnet står kun i KOEN: hvert navneord skal have det, ellers kan tillægsordet («et stort løg») og stemmen ikke bøjes
   for (const e of Object.keys(NAVNEORD)) assert.ok(KOEN[e] === 'n' || KOEN[e] === 't', e + ': køn i KOEN');

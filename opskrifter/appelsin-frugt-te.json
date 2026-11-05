@@ -1,0 +1,48 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Appelsin-te",
+  "description": "Lun frugt-te med saft fra friske appelsiner og en skive appelsin i koppen. Den dufter af frugt og smager lidt sødt.",
+  "image": "grafik/ret-appelsin-frugt-te.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 kopper",
+  "prepTime": "PT5M",
+  "cookTime": "PT5M",
+  "totalTime": "PT20M",
+  "recipeIngredient": [
+    "2 appelsiner",
+    "3 teposer frugt-te",
+    "2 spsk sukker",
+    "6 dl vand",
+    "2 dl koldt vand"
+  ],
+  "tool": ["kniv og skærebræt", "citronpresser", "stor kande, der tåler kogende vand", "elkedel eller gryde", "målebæger", "spiseske", "4 kopper med hank"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Læs på pakken, at frugt-teen er uden sort og grøn te, så der ikke er koffein i. Skyl appelsinerne." } },
+    { "@type": "HowToStep", "text": "Skær appelsinerne i to, og én halvdel i skiver.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["appelsin"], "note": "2 appelsiner. Den ene halvdel skal give 4 skiver til kopperne." } },
+    { "@type": "HowToStep", "text": "Pres saften af de tre andre halvdele.", "tumbi": { "verbum": "klemme", "ikoner": ["appelsin"], "note": "Med hænderne eller en citronpresser. Fisk kernerne op. Det giver ca. 1 dl." } },
+    { "@type": "HowToStep", "text": "Læg teposer og sukker i en stor kande.", "tumbi": { "verbum": "haelde", "ikoner": ["frugt-te", "sukker"], "note": "3 teposer og 2 spsk sukker. Kanden skal kunne tåle kogende vand." } },
+    { "@type": "HowToStep", "text": "Kog vandet.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "6 dl, gerne i en elkedel." } },
+    { "@type": "HowToStep", "text": "Hæld det kogende vand i kanden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "Den voksne hælder. Rør rundt, så sukkeret bliver væk." } },
+    { "@type": "HowToStep", "text": "Lad teen trække i 5 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 300, "ikoner": ["frugt-te"], "note": "Stil kanden, hvor barnet ikke kan nå den." } },
+    { "@type": "HowToStep", "text": "Tag teposerne op, og hæld saften i.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["appelsin"], "note": "Den voksne gør det: kanden er varm. Klem ikke på teposerne." } },
+    { "@type": "HowToStep", "text": "Hæld det kolde vand i kanden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "2 dl koldt vand. Det køler teen ned." } },
+    { "@type": "HowToStep", "text": "Hæld teen i kopperne.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne hælder: teen er stadig varm." } },
+    { "@type": "HowToStep", "text": "Vent, til teen er lun.", "tumbi": { "verbum": "vente", "timer_sek": 300, "note": "Kopperne bliver hos den voksne. Barnet får først teen, når den er lun. Mærk efter først, og vent lidt længere, hvis den stadig er varm." } },
+    { "@type": "HowToStep", "text": "Læg en appelsinskive i hver kop.", "tumbi": { "verbum": "pynte", "ikoner": ["appelsin"] } },
+    { "@type": "HowToStep", "text": "Smag appelsin-teen!", "tumbi": { "verbum": "smage", "note": "Er den for sur, så rør lidt mere sukker i." } }
+  ],
+  "tumbi": {
+    "id": "appelsin-frugt-te",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdet mellem vand, te, saft og sukker er et skøn, og tiden er ikke målt. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "appelsin", "maengde": "2" },
+      { "ikon": "frugt-te", "maengde": "3" },
+      { "ikon": "sukker", "maengde": "2 spsk" },
+      { "ikon": "vand", "maengde": "6 dl" },
+      { "ikon": "vand", "maengde": "2 dl" }
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Regnbue-drik",
+  "description": "Tre farver i samme glas: rød i bunden, orange i midten og lilla på toppen. Barnet hælder langsomt og ser, om lagene bliver liggende.",
+  "image": "grafik/ret-regnbue-drik.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 glas",
+  "prepTime": "PT10M",
+  "totalTime": "PT10M",
+  "recipeIngredient": [
+    "4 spsk rød saft (koncentrat), fx hindbær",
+    "8 isterninger",
+    "4 dl appelsinjuice (kold)",
+    "2 spsk mørk saft (koncentrat), fx solbær",
+    "3 dl danskvand (kold)"
+  ],
+  "tool": ["spiseske", "målebæger", "kande", "ske", "4 høje glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Sæt appelsinjuice og danskvand på køl i god tid. Høje glas viser lagene bedst. Saften er koncentrat og skal ikke blandes op først. Farverne glider lidt sammen, og det er helt i orden. Isterningerne skal være lavet i forvejen, ellers springer I dem over." } },
+    { "@type": "HowToStep", "text": "Hæld 1 spsk rød saft i hvert glas.", "tumbi": { "verbum": "maale", "ikoner": ["saft"], "note": "Lige ned i bunden." } },
+    { "@type": "HowToStep", "text": "Læg to isterninger i hvert glas.", "tumbi": { "verbum": "pynte", "ikoner": ["isterninger"], "note": "Læg dem forsigtigt ned, så saften bliver i bunden." } },
+    { "@type": "HowToStep", "text": "Hæld juicen langsomt ned over isen.", "tumbi": { "verbum": "haelde", "ikoner": ["appelsin"], "note": "1 dl i hvert glas. Isen bremser juicen, så den lægger sig oven på saften." } },
+    { "@type": "HowToStep", "text": "Hæld den mørke saft i en kande.", "tumbi": { "verbum": "haelde", "ikoner": ["saft"], "note": "2 spsk." } },
+    { "@type": "HowToStep", "text": "Hæld danskvanden langsomt i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["danskvand"], "note": "3 dl, og lige før I skal drikke. Boblerne blander saften, så rør kun en enkelt gang." } },
+    { "@type": "HowToStep", "text": "Hæld det lilla langsomt ned over en ske.", "tumbi": { "verbum": "haelde", "note": "Hold en ske med bagsiden opad lige over juicen, så det lilla løber blødt ud til siderne. Cirka ¾ dl i hvert glas. Den voksne kan hjælpe med at holde skeen." } },
+    { "@type": "HowToStep", "text": "Se regnbuen i glasset.", "tumbi": { "verbum": "vente", "note": "Hold glasset op mod lyset." } },
+    { "@type": "HowToStep", "text": "Rør rundt, og smag regnbuen!", "tumbi": { "verbum": "smage", "note": "Rør først, så saften i bunden kommer med." } }
+  ],
+  "tumbi": {
+    "id": "regnbue-drik",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til: mængderne er et skøn, og lagene er ikke prøvet. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "saft", "maengde": "4 spsk" },
+      { "ikon": "isterninger", "maengde": "8" },
+      { "ikon": "appelsin", "maengde": "4 dl" },
+      { "ikon": "saft", "maengde": "2 spsk" },
+      { "ikon": "danskvand", "maengde": "3 dl" }
+    ]
+  }
+}

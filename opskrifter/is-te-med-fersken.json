@@ -1,0 +1,50 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Iste med fersken",
+  "description": "Kold te med fersken, der smager af sommerferie. Teen er uden koffein, den voksne tager sig af det kogende vand, og barnet moser fersknerne.",
+  "image": "grafik/ret-is-te-med-fersken.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 glas",
+  "prepTime": "PT20M",
+  "cookTime": "PT5M",
+  "totalTime": "PT2H45M",
+  "recipeIngredient": [
+    "4 teposer rooibos eller frugt-te uden sort og grøn te",
+    "5 dl vand",
+    "2 spsk sukker",
+    "1 dåse ferskner (ca. 400 g)",
+    "8 isterninger"
+  ],
+  "tool": ["stor kande, der tåler kogende vand", "elkedel eller gryde", "målebæger", "spiseske", "dåseåbner", "skål", "gaffel", "lang ske", "4 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Teen skal stå på køl i mindst 2 timer, så start i god tid. Kun rooibos eller frugt-te: ingen sort eller grøn te. Læs på pakken, at frugt-teen er uden sort og grøn te, så der ikke er koffein i. Isterningerne skal være lavet i forvejen, ellers springer I dem over." } },
+    { "@type": "HowToStep", "text": "Læg teposerne i en stor kande.", "tumbi": { "verbum": "haelde", "ikoner": ["rooibos"], "note": "4 teposer. Kanden er kold endnu, så barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Kog 5 dl vand.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "I en elkedel eller en gryde." } },
+    { "@type": "HowToStep", "text": "Hæld det kogende vand over teposerne.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "Den voksne hælder, og barnet står på afstand. Stil kanden langt inde på bordet." } },
+    { "@type": "HowToStep", "text": "Lad teen trække i 5 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 300, "note": "Kanden er varm: kun den voksne rører den." } },
+    { "@type": "HowToStep", "text": "Tag teposerne op af kanden.", "tumbi": { "verbum": "pille", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["rooibos"], "note": "Med en ske: de er meget varme." } },
+    { "@type": "HowToStep", "text": "Rør sukkeret i den varme te.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["sukker"], "note": "2 spsk. Den voksne rører, til sukkeret er væk." } },
+    { "@type": "HowToStep", "text": "Lad teen køle af i 15 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 900, "note": "På bordet: kanden er stadig varm." } },
+    { "@type": "HowToStep", "text": "Stil kanden i køleskabet i 2 timer.", "tumbi": { "verbum": "vente", "timer_sek": 7200, "note": "Den voksne flytter kanden. Teen må også gerne stå natten over." } },
+    { "@type": "HowToStep", "text": "Hæld fersknerne med lagen i en skål.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["fersken"], "note": "Den voksne åbner dåsen: kanten er skarp." } },
+    { "@type": "HowToStep", "text": "Mos fersknerne med en gaffel.", "tumbi": { "verbum": "mose", "ikoner": ["fersken"], "note": "Små stykker er fine." } },
+    { "@type": "HowToStep", "text": "Rør mosen i den kolde te.", "tumbi": { "verbum": "roere", "ikoner": ["fersken"], "note": "Med en lang ske." } },
+    { "@type": "HowToStep", "text": "Læg to isterninger i hvert glas.", "tumbi": { "verbum": "pynte", "ikoner": ["isterninger"] } },
+    { "@type": "HowToStep", "text": "Hæld isteen i glassene.", "tumbi": { "verbum": "haelde" } },
+    { "@type": "HowToStep", "text": "Smag isteen med fersken!", "tumbi": { "verbum": "smage", "note": "Fersknerne må gerne følge med: en ske gør det let at få dem op." } }
+  ],
+  "tumbi": {
+    "id": "is-te-med-fersken",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til: mængder og tider er et skøn. Teen er rooibos eller frugt-te, fordi de er uden koffein. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "rooibos", "maengde": "4" },
+      { "ikon": "vand", "maengde": "5 dl" },
+      { "ikon": "sukker", "maengde": "2 spsk" },
+      { "ikon": "fersken", "maengde": "1 dåse" },
+      { "ikon": "isterninger", "maengde": "8" }
+    ]
+  }
+}

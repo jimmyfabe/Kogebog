@@ -1,0 +1,41 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Småkage-milkshake",
+  "description": "Vaniljeis og chokoladekiks, som barnet selv smuldrer. Der er små stykker kiks i hver slurk.",
+  "image": "grafik/ret-smaakage-milkshake.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 små glas",
+  "prepTime": "PT10M",
+  "totalTime": "PT15M",
+  "recipeIngredient": [
+    "½ l vaniljeis",
+    "2 dl mælk",
+    "8 chokoladekiks"
+  ],
+  "tool": ["blender med kande", "isske eller stor ske", "målebæger", "2 små skåle", "4 små glas", "sugerør med stor åbning eller skeer"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder gluten og mælk. Vælg kiks uden nødder, og læs på pakken. Tag kanden af blenderen, og træk stikket ud, mens barnet fylder den: knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Stil isen frem, og vent 5 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 300, "ikoner": ["is"], "note": "Så bliver isen blød nok til blenderen." } },
+    { "@type": "HowToStep", "text": "Smuldr 2 kiks i en lille skål.", "tumbi": { "verbum": "smuldre", "ikoner": ["smaakager"], "note": "De skal drysses på toppen til sidst." } },
+    { "@type": "HowToStep", "text": "Hæld mælken i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk"], "note": "2 dl." } },
+    { "@type": "HowToStep", "text": "Smuldr 6 kiks i en anden skål.", "tumbi": { "verbum": "smuldre", "ikoner": ["smaakager"], "note": "Store stykker er fint: blenderen gør dem mindre." } },
+    { "@type": "HowToStep", "text": "Kom kiksene i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["smaakager"], "note": "Ingen fingre i kanden: knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Kom isen i kanden med en stor ske.", "tumbi": { "verbum": "maale", "ikoner": ["is"], "note": "½ l, det er ca. 8 kugler." } },
+    { "@type": "HowToStep", "text": "Blend, til der kun er små stykker.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["is", "smaakager"], "note": "Den voksne sætter kanden på, lægger låget på og blender i ca. 30 sekunder. Stop, mens der stadig er små stykker kiks, og før låget tages af. Noget varmt kommer aldrig i blenderen." } },
+    { "@type": "HowToStep", "text": "Hæld milkshaken i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Drys kikskrummerne på toppen.", "tumbi": { "verbum": "drysse", "ikoner": ["smaakager"], "note": "Krummerne fra den første skål, fordelt på 4 glas." } },
+    { "@type": "HowToStep", "text": "Smag småkage-milkshaken!", "tumbi": { "verbum": "smage", "note": "Drik den med det samme, og spis de sidste stykker med en ske." } }
+  ],
+  "tumbi": {
+    "id": "smaakage-milkshake",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdet mellem is, mælk og kiks er et skøn. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "is", "maengde": "½ l" },
+      { "ikon": "maelk", "maengde": "2 dl" },
+      { "ikon": "smaakager", "maengde": "8" }
+    ]
+  }
+}

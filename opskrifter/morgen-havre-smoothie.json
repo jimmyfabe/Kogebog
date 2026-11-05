@@ -1,0 +1,42 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Morgen-smoothie med havre",
+  "description": "En blød morgen-smoothie med banan, havregryn og en lille smule kanel. Den smager som kold havregrød med banan i et glas.",
+  "image": "grafik/ret-morgen-havre-smoothie.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 3 glas",
+  "prepTime": "PT15M",
+  "totalTime": "PT15M",
+  "recipeIngredient": [
+    "4 spsk havregryn",
+    "4 dl mælk (kold)",
+    "2 modne bananer",
+    "¼ tsk kanel"
+  ],
+  "tool": ["spiseske", "teske", "målebæger", "blender", "3 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk og havre. Stil mælken på køl i forvejen, så smoothien bliver kold." } },
+    { "@type": "HowToStep", "text": "Mål 4 spsk havregryn i kanden.", "tumbi": { "verbum": "maale", "ikoner": ["havregryn"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
+    { "@type": "HowToStep", "text": "Hæld 4 dl mælk i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk"] } },
+    { "@type": "HowToStep", "text": "Lad havren trække i 5 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 300, "note": "Så bliver havren blød, og smoothien bliver glat." } },
+    { "@type": "HowToStep", "text": "Pil bananerne, og knæk dem i stykker.", "tumbi": { "verbum": "pille", "ikoner": ["banan"] } },
+    { "@type": "HowToStep", "text": "Kom bananerne i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["banan"] } },
+    { "@type": "HowToStep", "text": "Drys lidt kanel i kanden.", "tumbi": { "verbum": "drysse", "ikoner": ["krydderi"], "note": "¼ tsk til hele kanden. Kanel smager kraftigt, så kun lidt." } },
+    { "@type": "HowToStep", "text": "Blend, til det hele er glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["havregryn", "banan"], "note": "Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Hæld smoothien i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Smag, og sig godmorgen til Bo!", "tumbi": { "verbum": "smage", "note": "Drik den med det samme: havren gør den tykkere, når den står." } }
+  ],
+  "tumbi": {
+    "id": "morgen-havre-smoothie",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdene og tiden er et skøn (ikke målt). Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "havregryn", "maengde": "4 spsk" },
+      { "ikon": "maelk", "maengde": "4 dl" },
+      { "ikon": "banan", "maengde": "2" },
+      { "ikon": "krydderi", "maengde": "¼ tsk" }
+    ]
+  }
+}

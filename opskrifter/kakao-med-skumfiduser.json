@@ -1,0 +1,43 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Kakao med skumfiduser",
+  "description": "Lun kakao med bløde skumfiduser, der flyder på toppen som små skyer. Barnet lægger selv skyerne i koppen.",
+  "image": "grafik/ret-kakao-med-skumfiduser.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 kopper",
+  "prepTime": "PT5M",
+  "cookTime": "PT10M",
+  "totalTime": "PT25M",
+  "recipeIngredient": [
+    "4 spsk ren kakao",
+    "4 spsk sukker",
+    "8 dl mælk",
+    "8 skumfiduser (marshmallows)"
+  ],
+  "tool": ["gryde", "målebæger", "spiseske", "grydeske", "4 kopper med hank"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk. Skumfiduser kan sætte sig fast i halsen: ikke til små søskende under ca. 3 år. Brug ren kakao fra bageafdelingen, ikke kakaopulver med sukker i. Tjek allergener på pakken med skumfiduser." } },
+    { "@type": "HowToStep", "text": "Mål kakao og sukker i gryden.", "tumbi": { "verbum": "maale", "ikoner": ["kakao", "sukker"], "note": "4 spsk af hver. Gryden er kold endnu, så barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Hæld lidt mælk i gryden.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk"], "note": "1 dl af mælken." } },
+    { "@type": "HowToStep", "text": "Rør, til der ikke er flere klumper.", "tumbi": { "verbum": "roere", "ikoner": ["kakao", "maelk"], "note": "Kakaoen skal røres ud i lidt mælk først, så bliver den glat." } },
+    { "@type": "HowToStep", "text": "Hæld resten af mælken i gryden.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk"], "note": "7 dl. Rør rundt." } },
+    { "@type": "HowToStep", "text": "Varm kakaoen, til den damper.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["maelk"], "note": "Ved middel varme, og rør i bunden med en grydeske. Den må ikke koge: tag gryden af varmen, når den damper." } },
+    { "@type": "HowToStep", "text": "Hæld kakaoen i kopperne.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne hælder: kakaoen er varm." } },
+    { "@type": "HowToStep", "text": "Vent, til kakaoen er lun.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Kopperne bliver hos den voksne. Barnet får først kakaoen, når den er lun. Mærk efter først, og vent lidt længere, hvis den stadig er varm." } },
+    { "@type": "HowToStep", "text": "Læg to skumfiduser i hver kop.", "tumbi": { "verbum": "pynte", "ikoner": ["skumfiduser"], "note": "Kakaoen er kun lun nu, så barnet kan selv, når den voksne har mærket efter. Skumfiduserne flyder og bliver bløde." } },
+    { "@type": "HowToStep", "text": "Smag kakaoen med skumfiduser!", "tumbi": { "verbum": "smage", "note": "Skumfiduserne kan spises med en ske." } }
+  ],
+  "tumbi": {
+    "id": "kakao-med-skumfiduser",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdet mellem mælk, kakao og sukker er et skøn, og tiden er ikke målt. Aldersgrænsen for skumfiduser er vores eget forsigtige valg. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "kakao", "maengde": "4 spsk" },
+      { "ikon": "sukker", "maengde": "4 spsk" },
+      { "ikon": "maelk", "maengde": "8 dl" },
+      { "ikon": "skumfiduser", "maengde": "8" }
+    ]
+  }
+}
