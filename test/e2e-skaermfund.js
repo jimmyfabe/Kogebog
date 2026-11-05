@@ -284,6 +284,8 @@ async function venstrekant(browser, H) {
   await side.locator('.voksen-knap').scrollIntoViewIfNeeded(); // under folden på en lav skærm
   await hold(side, '.voksen-knap');
   await side.waitForSelector('.voksen-menu');
+  // Indkøbslisten nås gennem linket (#/hent/<kode> gemmer listen og viser #/indkoeb)
+  const liste = '#/hent/' + kod(planMandag(new Date()), [{ ret: 'koedsovs', n: 4 }, null, null, null, null, null, null]);
   const SIDER = [
     ['#/voksen', '.voksen-menu', ['.voksen-hoved h1', '.voksen-menu']],
     ['#/voksen/husstand', '.husstand', ['h1', '.husstand']],
@@ -292,11 +294,12 @@ async function venstrekant(browser, H) {
     ['#/voksen/katalog', '.voksen-liste', ['h1', '.voksen-liste']],
     ['#/uge', '.uge-dage', ['h1', '.uge-dage']],
     ['#/uge/dag/1', '.ret-valg', ['h1', '.ret-valg']],
+    ['#/indkoeb', '.liste', ['h1'], liste],
     ['#/ret/koedsovs', '.start', ['.ret-hoved', '.handlinger > .knap']],
     ['#/ret/koedsovs/trin/2', '.scene', ['.scene', '.handlinger > .knap']],
   ];
-  for (const [hash, klar, indhold] of SIDER) {
-    await gaa(side, hash, klar, vent);
+  for (const [hash, klar, indhold, adresse = hash] of SIDER) {
+    await gaa(side, adresse, klar, vent);
     const r = await side.evaluate(({ indhold, s }) => {
       const v = (sel) => Math.round(document.querySelector(s + sel).getBoundingClientRect().left);
       return { top: v('.topbar > .knap'), indhold: indhold.map((x) => [x, v(x)]) };

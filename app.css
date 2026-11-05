@@ -1247,7 +1247,8 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
 }
 
 /* 667×375: ugeplanen arver telefonens 12 px fra (max-width: 700px), mens topbaren har de lave skærmes 24 px, så
-   hus-knappen stod 12 px til højre for overskriften og indholdet (familie.css: det samme for voksendelen) */
+   hus-knappen stod 12 px til højre for overskriften og indholdet (familie.css: det samme for voksendelen). Indkøbslisten
+   har 16 px og fylder hele bredden under 680 px: hus-knappen stod 8 px til højre for «Indkøbsliste» (code review 05-11) */
 @media (max-width: 700px) and (max-height: 520px) and (orientation: landscape) {
-  .uge { padding-left: 24px; padding-right: 24px; }
+  .uge, .liste { padding-left: 24px; padding-right: 24px; }
 }
