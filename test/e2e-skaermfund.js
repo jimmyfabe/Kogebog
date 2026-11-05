@@ -6,6 +6,8 @@
 // Del af test-e2e.js: E2E_DELE=skaermfund. E2E_FUND=1,3 begrænser til nogle af fundene, E2E_FUND_SKAERME=se-land,iphone til nogle af skærmene.
 import { planMandag } from '../js/tid.js';
 import { kod } from '../js/plankode.js';
+import { lavModel } from '../js/model.js';
+import { faktorFor, portionerFraHusstand, portionerTekst } from '../js/skaler.js';
 
 const FUND = process.env.E2E_FUND ? process.env.E2E_FUND.split(',').map((x) => x.trim()) : null;
 const VALGTE = process.env.E2E_FUND_SKAERME ? process.env.E2E_FUND_SKAERME.split(',').map((x) => x.trim()) : null;
@@ -343,12 +345,22 @@ async function adskiller(browser, H) {
   const længst = [...plan].sort((a, b) => RETTER[b].name.length - RETTER[a].name.length).slice(0, 7);
   const uge = JSON.stringify({ v: 1, uge: mandag, dage: længst.map((ret) => ({ ret, af: 'bo', n: 4 })), n: 4, prBarn: 1, rettet: Date.now() });
   const familie = JSON.stringify({ v: 1, voksne: 2, boern: 3, barnAndel: 0.7, udvalg: null, favoritter: [], lavet: {}, mereGroent: false });
+  // «Til N portioner» med husstanden (skalering i app.js): ugeplanens retter har dagens n, de andre husstandens. Ingen
+  // tekst, når faktoren er 1, eller når retten ikke har talportioner
+  const husstand = portionerFraHusstand(2, 3, 0.7);
+  const tilPortioner = Object.fromEntries(ids.map((id) => {
+    const antal = længst.includes(id) ? 4 : husstand;
+    const f = faktorFor(lavModel(RETTER[id]), antal);
+    return [id, f && f !== 1 ? 'Til ' + portionerTekst(antal) : null];
+  }));
+  const skaleres = ids.filter((id) => tilPortioner[id]).length;
   for (const n of paa(['se-land', 'land', 'x-land', 'iphone', 'w360', 'ipad', 'desktop'])) {
     console.log('[' + n + '] fund 7: adskilleren ved linjens kant');
     const { ctx, side } = await aabn(browser, H, n, { lager: { 'kog-uge-v1': uge } });
     await side.waitForSelector('.gruppe-knap');
     const fund = [];
     const brudte = []; // retter, hvis personer og tid står i to linjer her (til drejningen nedenfor)
+    const forkertSkaleret = [];
     const se = async (hvor) => { await tegnet(side); for (const t of await vedKant(side)) fund.push(hvor + ': «' + t + '»'); };
     // Alle retter, uden og med skalerede portioner (husstanden gemt: «Til 5 portioner · 40 min»)
     for (const medHusstand of [false, true]) {
@@ -358,8 +370,15 @@ async function adskiller(browser, H) {
         await gaa(side, '#/ret/' + ids[i], '.ret-titel', vent);
         await se('ret ' + ids[i] + (medHusstand ? ' (husstand)' : ''));
         if (!medHusstand && await brudtePrikker(side)) brudte.push(ids[i]);
+        if (medHusstand) {
+          const vist = await side.evaluate((s) => document.querySelector(s)?.textContent ?? null, nuSkaerm + '.meta .skaleret');
+          if (vist !== tilPortioner[ids[i]]) forkertSkaleret.push(ids[i] + ' «' + vist + '» i stedet for «' + tilPortioner[ids[i]] + '»');
+        }
       }
     }
+    tjek(skaleres > 0, n + ': husstanden skal skalere mindst én ret (ellers tester runden med husstand ingen «Til N portioner»)');
+    tjek(!forkertSkaleret.length, n + ' med husstand: ' + forkertSkaleret.length + ' retter viser ikke den rigtige «Til N portioner», fx ' + forkertSkaleret.slice(0, 4).join(' | '));
+    maal.push(n + ' med husstand: «Til N portioner» på ' + skaleres + ' af ' + ids.length + ' retter, ' + forkertSkaleret.length + ' forkerte');
     await side.evaluate(() => localStorage.removeItem('kog-familie-v1'));
     await gaa(side, '#/uge', '.uge-dage', vent);
     await side.waitForFunction((a) => document.querySelectorAll('.dag:not(.fri) .dag-meta').length === a, 7, { timeout: 20000 });
