@@ -1,6 +1,7 @@
 // e2e-skaermfund.js — de visuelle fund fra UI-gennemgangen af næste udgave (05-11-2026), målt på de skærme, de blev set på:
 // 1 ugeplanens række uden billede, 2 børnenes sideprikker, 3 «Start timer» over den faste bund, 4 statusskærme på lave
-// skærme, 5 rettens højttaler, 6 venstrekanten på 667×375, 7 adskilleren « · » ved linjens kant.
+// skærme, 5 rettens højttaler, 6 venstrekanten på 667×375, 7 adskilleren « · » ved linjens kant, 8 gruppens kolonner og
+// 9 «Vælg ret» på lave skærme.
 // Del af test-e2e.js: E2E_DELE=skaermfund. E2E_FUND=1,3 begrænser til nogle af fundene, E2E_FUND_SKAERME=se-land,iphone til nogle af skærmene.
 import { planMandag } from '../js/tid.js';
 import { kod } from '../js/plankode.js';
@@ -12,7 +13,7 @@ const nuSkaerm = '#app > .skaerm:not([data-gammel]) ';
 const IPLAN = (RETTER) => Object.keys(RETTER).filter((id) => RETTER[id].tumbi.ugeplan === true);
 
 export async function skaermfund(browser, H) {
-  const dele = { 1: raekkeUdenBillede, 2: sidePrikker, 3: timerOverBund, 4: statusLave, 5: hoejttaler, 6: venstrekant, 7: adskiller };
+  const dele = { 1: raekkeUdenBillede, 2: sidePrikker, 3: timerOverBund, 4: statusLave, 5: hoejttaler, 6: venstrekant, 7: adskiller, 8: gruppeKolonner, 9: vaelgRet };
   for (const [nr, del] of Object.entries(dele)) if (!FUND || FUND.includes(nr)) await del(browser, H);
 }
 
@@ -23,8 +24,9 @@ const skaerm = (H, navn) => {
 };
 
 // Forsiden i en ny side uden service worker. lager: { nøgle: værdi }, der ligger i localStorage, før appen tegner
-async function aabn(browser, H, navn, { lager = null, hash = '' } = {}) {
+async function aabn(browser, H, navn, { lager = null, hash = '', foer = null } = {}) {
   const { ctx, side } = await H.nySide(browser, skaerm(H, navn), { serviceWorkers: 'block' });
+  if (foer) await foer(ctx);
   if (lager) await ctx.addInitScript((l) => { for (const [k, v] of Object.entries(l)) if (localStorage.getItem(k) === null) localStorage.setItem(k, v); }, lager);
   await side.goto(H.BASE + '/index.html' + hash);
   await side.waitForSelector('#app > .skaerm');
@@ -183,6 +185,12 @@ async function timerOverBund(browser, H) {
     maal.push(n + ' «Start timer»: mindst ' + vaerst.luft + ' px luft over bunden (' + vaerst.id + ' trin ' + vaerst.nr + '), under på ' + under);
     await gaa(side, '#/ret/' + vaerst.id + '/trin/' + vaerst.nr, '.timer-start', vent);
     await side.waitForFunction(() => [...document.images].every((i) => i.complete));
+    const hoejt = await side.evaluate((sel) => {
+      const k = document.querySelector(sel);
+      const r = k.getBoundingClientRect();
+      return { b: Math.round(r.width), h: Math.round(r.height), navn: k.textContent.trim() };
+    }, nuSkaerm + '.laes-op');
+    tjek(hoejt.b === hoejt.h && hoejt.navn === 'Læs op', n + ': «Læs op» ved timeren er rund og hedder det stadig ' + JSON.stringify(hoejt));
     await foto(side, n + '-fund3-vaerst');
     await ctx.close();
   }
@@ -359,5 +367,57 @@ async function adskiller(browser, H) {
     tjek(!fund.length, n + ': ' + fund.length + ' linjer starter eller slutter med adskilleren, fx ' + fund.slice(0, 4).join(' | '));
     maal.push(n + ' adskilleren ved kanten: ' + fund.length + ' linjer');
     await ctx.close();
+  }
+}
+
+// ---------- 8. Gruppens kolonner på lave skærme ----------
+// Forsiden har tre kolonner fra 736 px på langs. Gruppen under den havde to, indtil der var 868 px
+async function gruppeKolonner(browser, H) {
+  const { tjek, foto, vent, maal } = H;
+  for (const [n, forventet] of [['se-land', 2], ['plus-land', 3], ['x-land', 3], ['land', 3], ['max-land', 3]]) {
+    if (!paa([n]).length) continue;
+    console.log('[' + n + '] fund 8: gruppens kolonner');
+    const { ctx, side } = await aabn(browser, H, n);
+    await side.waitForSelector('.gruppe-knap');
+    await gaa(side, '#/gruppe/pasta-og-nudler', '.kort-gitter', vent);
+    const k = await side.evaluate(() => getComputedStyle(document.querySelector('.kort-gitter')).gridTemplateColumns.split(' ').length);
+    tjek(k === forventet, n + ' gruppen: ' + forventet + ' kolonner (' + k + ')');
+    maal.push(n + ' gruppen: ' + k + ' kolonner');
+    await foto(side, n + '-fund8-gruppe');
+    await ctx.close();
+  }
+}
+
+// ---------- 9. «Vælg ret» på lave skærme ----------
+// Tilbage og filtrene fyldte tre rækker: den første ret stod ved y=338 af 375, og «Vis alle retter» ved et tomt filter lå
+// under kanten. Kun kødsovs i index.json giver det tomme filter («Vegetar»)
+async function vaelgRet(browser, H) {
+  const { tjek, foto, vent, maal } = H;
+  const enRet = async (c) => {
+    await c.route('**/opskrifter/index.json*', (r) => r.fulfill({ contentType: 'application/json', body: JSON.stringify({ version: 2, grupper: [{ id: 'koed', retter: ['koedsovs'] }] }) }));
+  };
+  for (const n of paa(['se-land', 'x-land', 'land'])) {
+    console.log('[' + n + '] fund 9: vælg ret');
+    const a = await aabn(browser, H, n);
+    await a.side.waitForSelector('.gruppe-knap');
+    await gaa(a.side, '#/uge/dag/1', '.ret-valg', vent);
+    const f = await a.side.evaluate(() => {
+      const r = document.querySelector('.ret-valg-raekke').getBoundingClientRect();
+      return { H: innerHeight, raekke: Math.round(r.top), billede: Math.round(document.querySelector('.ret-valg-raekke .dag-billede').getBoundingClientRect().bottom) };
+    });
+    tjek(f.billede <= f.H, n + ' vælg ret: billedet i den første række skal kunne ses ' + JSON.stringify(f));
+    maal.push(n + ' vælg ret: første ret ved y=' + f.raekke + ' af ' + f.H);
+    await foto(a.side, n + '-fund9-vaelg');
+    await a.ctx.close();
+    const b = await aabn(browser, H, n, { foer: enRet });
+    await b.side.waitForSelector('.gruppe-knap');
+    await gaa(b.side, '#/uge/dag/1', '.ret-valg', vent);
+    await b.side.locator('.filtre .filter', { hasText: 'Vegetar' }).click();
+    await b.side.waitForSelector('[data-fokus="vis-alle"]');
+    const t = await b.side.evaluate(() => ({ H: innerHeight, bund: Math.round(document.querySelector('[data-fokus="vis-alle"]').getBoundingClientRect().bottom + 5) }));
+    tjek(t.bund <= t.H, n + ' tomt filter: «Vis alle retter» skal ses helt uden at rulle ' + JSON.stringify(t));
+    maal.push(n + ' tomt filter: «Vis alle retter» slutter ved y=' + t.bund + ' af ' + t.H);
+    await foto(b.side, n + '-fund9-tom');
+    await b.ctx.close();
   }
 }
