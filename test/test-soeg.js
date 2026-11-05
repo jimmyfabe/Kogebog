@@ -151,6 +151,7 @@ test('undtagelserne: «mel», «kål» og «ost» tæller ikke krymmel, skål og
     ret('krymmel', 'Muffins', ['krymmel'], null), ret('jul', 'Småkager', ['julekrymmel'], null), ret('boller', 'Boller', ['hvedemel'], null),
     ret('skaal', 'Sushi-skål', [], null), ret('risskaal', 'Koreansk risskål', [], null), ret('blomkaal', 'Blomkål', [], null),
     ret('frost', 'Bær på frost', [], null), ret('most', 'Punch', ['æblemost'], null), ret('hytteost', 'Toast', ['hytteost'], null),
+    ret('hassel', 'Hasselbagte', ['1 kg kartofler (ca. 10 mellemstore)'], null), ret('kmos', 'Kartoffelmos', ['1,2 kg melede kartofler'], null),
   ];
   const fundet = (t) => soeg(liste, t).map((r) => r.id);
   assert.deepEqual(fundet('mel'), ['boller']);
