@@ -1110,6 +1110,13 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .forside-top { padding-right: 70px; }
 }
 
+/* Under 360 px (fx 320×568) er der kun ca. 128 px mellem børnenes sidepile: syv prikker på 16 px fyldte op til 160 px og
+   gik ind over pilene (code review 05-11-2026). Mindre prikker og mellemrum fylder højst 122 px */
+@media (max-width: 359px) {
+  .side-prikker { gap: 4px; }
+  .side-prikker span { width: 14px; height: 14px; }
+}
+
 /* Under 400 px er der kun plads til «Start forfra» ved siden af print, når print-knappen er uden ikon (teksten siger det) */
 @media (max-width: 399px) {
   .ret .handlinger .print-knap .ikon { display: none; }

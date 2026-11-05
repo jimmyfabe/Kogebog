@@ -18,8 +18,11 @@ export async function skaermfund(browser, H) {
   for (const [nr, del] of Object.entries(dele)) if (!FUND || FUND.includes(nr)) await del(browser, H);
 }
 
+// Kun her: den mindste iPhone-bredde (iPhone SE, 1. generation), hvor børnenes sideprikker havde mindst plads
+const EKSTRA = [{ navn: 'w320', viewport: { width: 320, height: 568 }, hasTouch: true }];
+
 const skaerm = (H, navn) => {
-  const s = [...H.SKAERME, ...H.FORMER].find((x) => x.navn === navn);
+  const s = [...H.SKAERME, ...H.FORMER, ...EKSTRA].find((x) => x.navn === navn);
   if (!s) throw new Error('Ukendt skærm: ' + navn);
   return s;
 };
@@ -116,11 +119,12 @@ async function raekkeUdenBillede(browser, H) {
 }
 
 // ---------- 2. Børnenes sideprikker ----------
-// 21 prikker i en række på 198 px blev 4×16 px. Prikkerne er pynt: siden siges i aria-label, og pilene er knapperne
+// 21 prikker i en række på 198 px blev 4×16 px. Prikkerne er pynt: siden siges i aria-label, og pilene er knapperne.
+// På 320 px gik syv prikker ind over pilene (code review 05-11-2026)
 async function sidePrikker(browser, H) {
   const { RETTER, tjek, foto, tryk, vent, maal } = H;
   const sider = Math.ceil(IPLAN(RETTER).length / 4);
-  for (const n of paa(['iphone', 'ipad', 'se-land', 'land', 'w360'])) {
+  for (const n of paa(['iphone', 'ipad', 'se-land', 'land', 'w360', 'w320'])) {
     console.log('[' + n + '] fund 2: børnenes sideprikker');
     const { ctx, side } = await aabn(browser, H, n);
     await gaa(side, '#/uge/vaelg/rosa', '.ret-gitter', vent);
@@ -139,8 +143,8 @@ async function sidePrikker(browser, H) {
         navn: p.getAttribute('aria-label'),
       };
     });
-    // Side 1, en side midt i og den sidste. På iPhone hele vejen; ellers kun de to første
-    const antalTryk = n === 'iphone' ? sider - 1 : 1;
+    // Side 1, en side midt i og den sidste. På iPhone og 320 px hele vejen; ellers kun de to første
+    const antalTryk = n === 'iphone' || n === 'w320' ? sider - 1 : 1;
     for (let nr = 1; nr <= antalTryk + 1; nr++) {
       const p = await prikker();
       const hvor = n + ' børnenes retter side ' + nr + ' af ' + sider;

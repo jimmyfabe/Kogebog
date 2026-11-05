@@ -1019,7 +1019,7 @@ function retValgSkaerm(p, dyr) {
   };
   const prikker = sider > 1
     ? el('div', { class: 'side-prikker', role: 'img', 'aria-label': 'Side ' + (barn.side + 1) + ' af ' + sider },
-      prikVindue(barn.side, sider).map((p) => el('span', { class: [p.nu && 'nu', p.lille && 'lille'].filter(Boolean).join(' ') || null })))
+      prikVindue(barn.side, sider).map((prik) => el('span', { class: [prik.nu && 'nu', prik.lille && 'lille'].filter(Boolean).join(' ') || null })))
     : null;
 
   const valgt = barn.ret && model(barn.ret);
