@@ -939,6 +939,7 @@ for (const [navn, filtrer] of [
       assert.equal(location.hash, '#/ret/' + id);
       tryk(knapMed('Tilbage'));
       assert.equal(location.hash, '#/voksen/katalog');
+      window.scrollY = 77; // så testen ser, at det er gendannelsen, der ruller op: en plads på 0 er også en plads
       holdInde(rod.querySelector('.voksen-vagt'));
       assert.equal(raekker().length, alle, 'låsen har glemt søgning og filtre');
       assert.equal(window.scrollY, 0);

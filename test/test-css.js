@@ -208,6 +208,20 @@ test('hovedknappen på statusskærmene (.knap.primaer) er mindst 48 px på alle 
   }
 });
 
+// gaeldende ser kun den præcise vælger, så en længere vælger som «.faerdig .status-knapper .knap» slap uden om testen ovenfor
+test('ingen regel gør en knap lavere end 48 px, heller ikke med en længere vælger (regel 9)', () => {
+  const alleRegler = (regler) => regler.flatMap((r) => (r.hoved.startsWith('@') ? alleRegler(r.regler ?? []) : [r]));
+  const forLave = [];
+  for (const r of alleRegler(blokke(CSS).regler)) {
+    const hoejde = /(?:^|;)\s*min-height:\s*(\d+(?:\.\d+)?)px/.exec(r.deklarationer);
+    if (!hoejde || parseFloat(hoejde[1]) >= 48) continue;
+    for (const v of r.hoved.split(',')) {
+      if (/\.knap(?:\.[\w-]+)*\s*$/.test(v)) forLave.push(v.trim() + ': ' + hoejde[1] + ' px');
+    }
+  }
+  assert.deepEqual(forLave, []);
+});
+
 test('gruppeskærmen har luft under sidste række på alle skærme', () => {
   const rod = blokke(CSS);
   const bund = (padding) => {
