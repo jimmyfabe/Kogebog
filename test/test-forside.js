@@ -782,13 +782,16 @@ test('børnenes valg: første side blander grupperne, og man når alle retter ti
 });
 
 test('børnenes valg med et udvalg: kun udvalgets retter, blandet, og det gemte udvalg er urørt', async () => {
-  const ids = [...retterI('pasta-og-nudler').filter((id) => UGE.includes(id)).slice(0, 3), ...retterI('fisk').filter((id) => UGE.includes(id)).slice(0, 2)];
+  // De 4 første pastaretter og de 4 sidste fiskeretter: blandes der før udvalgsfilteret, står hele pastaen før al fisken
+  const ids = [...retterI('pasta-og-nudler').filter((id) => UGE.includes(id)).slice(0, 4), ...retterI('fisk').filter((id) => UGE.includes(id)).slice(-4)];
   let gemt = null;
   // Pip: valget undervejs (barn i js/ugeplan.js) huskes i modulet, så Rosa ville starte på den side, testen før sluttede på
   await start('#/uge/vaelg/pip', { foer: () => { Lager.gemFamilie({ udvalg: { ids, rettet: '2026-11-05' } }, FILER); gemt = lageret.get('kog-familie-v1'); } });
-  const vist = alleSider().flat();
+  const sider = alleSider();
+  const vist = sider.flat();
   assert.deepEqual([...vist].sort(), [...ids].sort());
-  assert.deepEqual(gruppeNavne(vist).slice(0, 4), ['pasta-og-nudler', 'fisk', 'pasta-og-nudler', 'fisk']);
+  assert.equal(sider.length, 2);
+  for (const side of sider) assert.deepEqual(gruppeNavne(side), ['pasta-og-nudler', 'fisk', 'pasta-og-nudler', 'fisk']);
   assert.equal(lageret.get('kog-familie-v1'), gemt, 'det gemte udvalg har samme rækkefølge som før');
   assert.deepEqual(skrivninger, []);
 });

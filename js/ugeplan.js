@@ -949,10 +949,11 @@ function fuldSkaerm(p) {
 }
 
 // Trin 2: fire retter pr. side. Første tryk siger navnet og markerer retten, fluebenet («Vælg») går videre til dagene.
-// Blandet, så første side ikke kun er pasta. Den voksnes «Vælg ret» (dagSkaerm) har filtre og står som i planen
+// Blandet efter udvalget, så første side heller ikke med et udvalg kun er pasta. Den voksnes «Vælg ret» (dagSkaerm) har
+// filtre og står som i planen
 function retValgSkaerm(p, dyr) {
   const familie = Lager.hentFamilie(K.S.ids);
-  const alle = retterTilBoern(blandet(iPlanen(), K.S.grupper, (m) => m.id), familie.udvalg);
+  const alle = blandet(retterTilBoern(iPlanen(), familie.udvalg), K.S.grupper, (m) => m.id);
   const sider = sideAntal(alle);
   barn.side = Math.min(Math.max(barn.side, 0), sider - 1);
   const vist = alle.slice(barn.side * PR_SIDE, (barn.side + 1) * PR_SIDE);
