@@ -75,27 +75,27 @@ function foelgBrud(e) {
   brudVagt.observe(e);
 }
 
+// Først vises alle prikker, så måles alle linjer, og til sidst skjules de brudte: én opstilling for alle linjer, ikke én
+// pr. linje («Vælg ret» har en linje pr. ret, code review 05-11-2026). En skjult prik bryder linjen samme sted
+// (.led-skille.brudt i app.css), så teksten ikke flytter sig, og det samme mål giver det samme hver gang
 function maalBrud() {
   planlagt = false;
-  const nu = [...venter];
+  const linjer = [...venter];
   venter.clear();
-  nu.forEach(saetBrud);
+  for (const e of linjer) if (!e.isConnected) brudVagt.unobserve(e);
+  const skillere = linjer.filter((e) => e.isConnected).flatMap((e) => [...e.querySelectorAll(':scope > .led-skille')]);
+  for (const s of skillere) s.classList.remove('brudt');
+  const brudte = skillere.filter(brydes);
+  for (const s of brudte) s.classList.add('brudt');
 }
 
-// Først måles alle med prikkerne på plads, så skjules de. En skjult prik bryder linjen samme sted (.led-skille.brudt
-// i app.css), så teksten ikke flytter sig, og det samme mål giver det samme hver gang
-function saetBrud(e) {
-  if (!e.isConnected) { brudVagt.unobserve(e); return; }
-  const skillere = e.querySelectorAll(':scope > .led-skille');
-  for (const s of skillere) s.classList.remove('brudt');
-  const brudte = [...skillere].filter((s) => {
-    const foer = s.previousElementSibling.getClientRects();
-    const efter = s.nextElementSibling.getClientRects();
-    if (!foer.length || !efter.length) return false;
-    const sidst = foer[foer.length - 1];
-    return efter[0].top > (sidst.top + sidst.bottom) / 2;
-  });
-  for (const s of brudte) s.classList.add('brudt');
+// Står leddet efter prikken på en ny linje?
+function brydes(s) {
+  const foer = s.previousElementSibling.getClientRects();
+  const efter = s.nextElementSibling.getClientRects();
+  if (!foer.length || !efter.length) return false;
+  const sidst = foer[foer.length - 1];
+  return efter[0].top > (sidst.top + sidst.bottom) / 2;
 }
 
 // Faste streg-ikoner (24 × 24). Stierne står her i koden og kommer aldrig fra data.
