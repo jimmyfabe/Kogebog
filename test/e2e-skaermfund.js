@@ -392,7 +392,7 @@ async function gruppeKolonner(browser, H) {
 // Tilbage og filtrene fyldte tre rækker: den første ret stod ved y=338 af 375, og «Vis alle retter» ved et tomt filter lå
 // under kanten. Kun kødsovs i index.json giver det tomme filter («Vegetar»)
 async function vaelgRet(browser, H) {
-  const { tjek, foto, vent, maal } = H;
+  const { tjek, foto, tryk, vent, maal } = H;
   const enRet = async (c) => {
     await c.route('**/opskrifter/index.json*', (r) => r.fulfill({ contentType: 'application/json', body: JSON.stringify({ version: 2, grupper: [{ id: 'koed', retter: ['koedsovs'] }] }) }));
   };
@@ -412,7 +412,7 @@ async function vaelgRet(browser, H) {
     const b = await aabn(browser, H, n, { foer: enRet });
     await b.side.waitForSelector('.gruppe-knap');
     await gaa(b.side, '#/uge/dag/1', '.ret-valg', vent);
-    await b.side.locator('.filtre .filter', { hasText: 'Vegetar' }).click();
+    await tryk(b.side, nuSkaerm + '.filtre .filter:has-text("Vegetar")'); // tryk venter, til appen tager imod tryk efter skiftet
     await b.side.waitForSelector('[data-fokus="vis-alle"]');
     const t = await b.side.evaluate(() => ({ H: innerHeight, bund: Math.round(document.querySelector('[data-fokus="vis-alle"]').getBoundingClientRect().bottom + 5) }));
     tjek(t.bund <= t.H, n + ' tomt filter: «Vis alle retter» skal ses helt uden at rulle ' + JSON.stringify(t));
