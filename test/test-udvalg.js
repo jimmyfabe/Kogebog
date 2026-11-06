@@ -12,7 +12,7 @@ import * as lager from '../js/lager.js';
 // js/hold.js lytter på document, når det indlæses (js/ugeplan.js henter det). Node har intet document, og testen bruger
 // kun de rene funktioner, så ugeplan.js hentes først, når der er et
 globalThis.document ??= { addEventListener() {} };
-const { retterTilBoern, sideAntal } = await import('../js/ugeplan.js');
+const { retterTilBoern, sideAntal, prikVindue } = await import('../js/ugeplan.js');
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const json = (id) => JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8'));
@@ -77,4 +77,30 @@ test('udvalget fra kog-familie-v1 giver 2 sider i børnenes valg', () => {
   const vist = retterTilBoern(UGEPLAN, lager.hentFamilie(IDS).udvalg);
   assert.deepEqual(ids(vist), OTTE);
   assert.equal(sideAntal(vist), 2);
+});
+
+test('prikVindue: højst syv prikker, præcis én fyldt, og små prikker kun, hvor der er flere sider', () => {
+  for (const sider of [1, 2, 3, 7, 8, 21, 38]) {
+    for (let side = 0; side < sider; side++) {
+      const p = prikVindue(side, sider);
+      const hvor = 'side ' + side + ' af ' + sider;
+      assert.equal(p.length, Math.min(7, sider), hvor);
+      assert.equal(p.filter((x) => x.nu).length, 1, hvor);
+      assert.ok(!p.find((x) => x.nu).lille, hvor + ': den fyldte prik er aldrig lille');
+      assert.equal(p[0].lille, sider > 7 && side > 3, hvor + ': venstre kant');
+      assert.equal(p[p.length - 1].lille, sider > 7 && side < sider - 4, hvor + ': højre kant');
+    }
+  }
+});
+
+test('prikVindue: den fyldte prik flytter sig, mens man blader, og vinduet følger efter', () => {
+  const nuPaa = (side) => prikVindue(side, 21).findIndex((x) => x.nu);
+  assert.deepEqual([0, 1, 2, 3, 4, 10, 17, 18, 19, 20].map(nuPaa), [0, 1, 2, 3, 3, 3, 3, 4, 5, 6]);
+});
+
+test('prikVindue: forkerte input giver ingen prikker eller den nærmeste side', () => {
+  assert.deepEqual(prikVindue(0, 0), []);
+  assert.deepEqual(prikVindue(0, NaN), []);
+  assert.equal(prikVindue(99, 3).findIndex((x) => x.nu), 2);
+  assert.equal(prikVindue(-4, 3).findIndex((x) => x.nu), 0);
 });

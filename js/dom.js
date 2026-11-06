@@ -34,6 +34,75 @@ export function sideTitel(tekst) {
   document.title = utenBloede(tekst);
 }
 
+// En linje med led adskilt af « · » (personer · tid). Brydes linjen mellem to led, skal prikken ikke stå alene for enden
+// af linjen («1 t · ca. 98 kr. ·»). Hvor linjen brydes, kan CSS ikke vide: det måles efter layoutet og igen, når bredden
+// ændrer sig. textContent er den samme, uanset hvor linjen brydes. skille: teksten mellem leddene
+export function ledLinje(tag, attrs, leder, skille = ' · ') {
+  const vist = leder.filter(Boolean);
+  const e = el(tag, attrs, vist.map((led, i) => [
+    i ? el('span', { class: 'led-skille', tekst: skille }) : null,
+    el('span', { class: 'led' }, led),
+  ]).flat());
+  if (vist.length > 1) foelgBrud(e);
+  return e;
+}
+
+// Brudene sættes i næste billede, ikke i observerens eget kald: en skjult prik kan ændre linjens højde, og en ændring
+// inde i kaldet giver «ResizeObserver loop completed with undelivered notifications» (e2e 05-11-2026).
+// Sidens bredde følges også. En brudt linje i en beholder, der krymper til indholdet (.meta i .ret-hoved, .uge-nr ved
+// siden af overskriften, .vare-maengde i .vare-tekst), er kun så bred som sin bredeste del, og den ændrer ikke størrelse,
+// når der bliver mere plads: blev skærmen bredere (en iPad, der drejes, Split View), stod linjen stadig i to (code review
+// 05-11-2026)
+let brudVagt = null;
+let sideBredde = null;
+let planlagt = false;
+const venter = new Set();
+// Alle linjer, observeren følger. En linje i en skjult beholder er 0 × 0 og får intet kald, når den fjernes (størrelsen
+// ændrer sig ikke), så hver måling afmelder de linjer, der ikke er på siden (code review 05-11-2026). Derfor skal en linje
+// sættes på siden i samme opgave, som den bygges i, som skærmene gør
+const fulgte = new Set();
+function foelgBrud(e) {
+  if (typeof ResizeObserver !== 'function') return; // ældre browsere beholder prikken
+  if (!brudVagt) {
+    brudVagt = new ResizeObserver((poster) => {
+      for (const p of poster) {
+        if (p.target !== document.documentElement) venter.add(p.target);
+        else if (p.contentRect.width !== sideBredde) {
+          sideBredde = p.contentRect.width;
+          for (const s of document.querySelectorAll('.led-skille')) venter.add(s.parentElement);
+        }
+      }
+      if (!planlagt) { planlagt = true; requestAnimationFrame(maalBrud); }
+    });
+    brudVagt.observe(document.documentElement);
+  }
+  fulgte.add(e);
+  brudVagt.observe(e);
+}
+
+// Først vises alle prikker, så måles alle linjer, og til sidst skjules de brudte: én opstilling for alle linjer, ikke én
+// pr. linje («Vælg ret» har en linje pr. ret, code review 05-11-2026). En skjult prik bryder linjen samme sted
+// (.led-skille.brudt i app.css), så teksten ikke flytter sig, og det samme mål giver det samme hver gang
+function maalBrud() {
+  planlagt = false;
+  for (const e of fulgte) if (!e.isConnected) { brudVagt.unobserve(e); fulgte.delete(e); }
+  const linjer = [...venter].filter((e) => e.isConnected);
+  venter.clear();
+  const skillere = linjer.flatMap((e) => [...e.querySelectorAll(':scope > .led-skille')]);
+  for (const s of skillere) s.classList.remove('brudt');
+  const brudte = skillere.filter(brydes);
+  for (const s of brudte) s.classList.add('brudt');
+}
+
+// Står leddet efter prikken på en ny linje?
+function brydes(s) {
+  const foer = s.previousElementSibling.getClientRects();
+  const efter = s.nextElementSibling.getClientRects();
+  if (!foer.length || !efter.length) return false;
+  const sidst = foer[foer.length - 1];
+  return efter[0].top > (sidst.top + sidst.bottom) / 2;
+}
+
 // Faste streg-ikoner (24 × 24). Stierne står her i koden og kommer aldrig fra data.
 const IKONER = {
   hjem: ['M3.5 11.5 12 4.5l8.5 7', 'M6 10v9.5h12V10', 'M10 19.5v-5h4v5'],
