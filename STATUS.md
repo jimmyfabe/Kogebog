@@ -8,6 +8,35 @@
 - (20-10) Godkend Halloween-tegningerne (`halloween-tegninger-22-10.png` på Drev; græskarret kan skaleres til ca. 85 %). Stod senest som «(23-10) Halloween-tegningerne» i listen 31-10.
 - (18-10) Domænet tumbi.dk: skal det købes? Et eget domæne skifter origin, så gemte data på iPad'erne forsvinder, hvis det ikke planlægges.
 
+## 06-11-2026 kl. 03:38: v7 er bygget, reviewet og grøn på grenen, men ikke flettet og ikke udgivet (Saga)
+
+- **Afventer Jimmy (06-11):**
+  - Se v7 på iPad og iPhone, og sig ja til udgivelsen. Så flettes grenen ind i `main`, `UDGAVE` bliver v7 og `INDHOLD` sættes, og du pusher.
+  - Ja til at slette `grafik/gruppe-bagning.svg` og `lyd/faelles/gruppe-aftensmad.mp3` + `gruppe-bagning.mp3`. Ingen bruger dem længere.
+  - Skal luppen og «Ryd søgningen» være børneknapper?
+- **Grenen `v7-0411`** (arbejdskopi `D:\Claude\.claude\worktrees\kogebog-v7`, 54 commits fra febe44b til a977bb3):
+  - Ny forside med billedknapper efter slags mad, grupper og en lup til den voksne.
+  - De 26 jule- og nytårsretter har billeder, tegnet lokalt.
+  - Søgningen er rettet.
+  - Liggende telefon med 88 px knapper.
+  - Røst-lyd til de nye replikker.
+- **Review:**
+  - UI-gennemgang 05-11. Fundene er rettet og står som e2e-delen `skaermfund`.
+  - `code-reviewer`: 9 rettelser (2d1b62f til a093bc3).
+  - `ui-reviewer` på fotos og tal i WebKit: de 5 rettelser holder ved genmålingen.
+- **Test på a093bc3:**
+  - Hele e2e i WebKit, del for del gennem låsen: 110.410 tjek og 0 fejl i 11 dele (87 min, heraf timer-delen 48 min).
+  - Node: 15 af 17 filer grønne. `test-lyd` fejler på de to gamle gruppe-mp3'er, og `test-version` på det uændrede nummer v6. Begge venter på dit ja ovenfor.
+- **Ikke rettet (lave fund):**
+  - Trekanten stikker 14 px ud som et mærke (med vilje).
+  - «Til den voksne» ligger under den faste bund på lave skærme på langs (fandtes før v7).
+  - Reglen for liggende skærme under 700 px er ikke målt på 568×320, og 320×568 mangler i timer-gennemgangen.
+- **Ikke afprøvet:**
+  - Rigtig iPad og iPhone, VoiceOver, iOS før 15.4 og safe-area.
+  - Ingen har lyttet til de 650 nye replikker eller de 7 nye knapper. 77 af replikkerne er mærket «lyt».
+  - Ingen af de nye retter er lavet i et køkken.
+- **Ud af huset:** intet pushet, intet udgivet. `main` har kun dette STATUS-afsnit.
+
 ## 05-11-2026 kl. 04:33: stemmen til v7 er færdig på grenen, billederne mangler stadig (Saga)
 
 - **Afventer Jimmy (04-11):** vælg billedvej (30 billeder) · ja til forsiden, Jul som egen knap, og om alle opskrifter må nås gennem knapperne.
