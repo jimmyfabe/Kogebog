@@ -2,6 +2,25 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
+## 06-11-2026 kl. 14:07: v8 (drikke, smoothies, kager, cupcakes) har alle billeder, stemmen laves nu (Saga)
+
+Gren `v8-drikke` (worktree `D:/Claude/.claude/worktrees/kogebog-v8`). Plan: `docs/drikke-plan-05-11-2026.md`. Intet er pushet.
+
+**Afventer Jimmy:**
+- (06-11) v7 skal udgives før eller sammen med v8. Begge grene står stadig på nummeret v6, så nummeret sættes ved udgivelsen.
+- (05-11) Må `grafik/gruppe-bagning.svg`, `lyd/faelles/gruppe-aftensmad.mp3` og `lyd/faelles/gruppe-bagning.mp3` slettes? Ingen bruger dem, og `test-lyd` er rød, til de er væk.
+
+**Lavet 06-11:**
+- `66c30e3`: 71 billeder tegnet lokalt (FLUX.2 klein 4B) og tjekket på mørk bund. Fire blev tegnet om: sommerkagen, isbjørnens milkshake, regnbue-drikken og kanelkagen (to gange).
+- `4c88a1b`: v7 flettet ind igen, så juleretternes 18 billeder er med. `test-opskrifter` er grøn: 222 retter, 0 venter på billede.
+
+**Kører:** Røst seed 42 for 1539 nye replikker gennem låsen (`scratchpad/kogebog-v8/lyd/roest-loekke.sh`, ca. 8-9 timer). Den gamle taleliste er gemt ved siden af.
+
+**Næste:**
+1. Kør trin 3-5 i CLAUDE.md «Stemmen»: seed 43/44 på de mistænkelige, efterbehandling med `--mp3`, og `indsaet-lyd.js`. Gendan uændrede replikkers mp3 fra HEAD.
+2. Sæt `INDHOLD` og `LYD` i sw.js.
+3. Kør e2e og ui-reviewer.
+
 ## Stadig åbent (ført op fra arkivet 03-11-2026)
 
 - (29-10) Lyt til de 9 lydfiler, hvor ASR stadig hører noget forkert (listen står i arkivet under 29-10 kl. 06:11).
