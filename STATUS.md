@@ -14,7 +14,7 @@ Gren `v8-drikke` (worktree `D:/Claude/.claude/worktrees/kogebog-v8`). Plan: `doc
 - `66c30e3`: 71 billeder tegnet lokalt (FLUX.2 klein 4B) og tjekket på mørk bund. Fire blev tegnet om: sommerkagen, isbjørnens milkshake, regnbue-drikken og kanelkagen (to gange).
 - `4c88a1b`: v7 flettet ind igen, så juleretternes 18 billeder er med. `test-opskrifter` er grøn: 222 retter, 0 venter på billede.
 
-**Kører:** Røst seed 42 for 1539 nye replikker gennem låsen (`scratchpad/kogebog-v8/lyd/roest-loekke.sh`, ca. 8-9 timer). Den gamle taleliste er gemt ved siden af.
+**Stoppet 06-11 kl. 15:11** (pc'en skulle slukkes): Røst seed 42 nåede 97 af 1539 replikker (1442 tilbage). Løkken og Python-kørslen er stoppet, og låsen er fri. Fortsæt sådan: slet `scratchpad/kogebog-v8/lyd/roest-stop` og kør `bash scratchpad/kogebog-v8/lyd/roest-loekke.sh 42`. Replikker, der allerede er lavet, springes over. Ligger kladdemappen der ikke længere, så kør trin 2 i CLAUDE.md «Stemmen» direkte. Den gamle taleliste er gemt ved siden af.
 
 **Næste:**
 1. Kør trin 3-5 i CLAUDE.md «Stemmen»: seed 43/44 på de mistænkelige, efterbehandling med `--mp3`, og `indsaet-lyd.js`. Gendan uændrede replikkers mp3 fra HEAD.
