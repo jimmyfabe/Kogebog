@@ -2,6 +2,16 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
+## 08-11-2026 kl. 10:47: ny ret «Bedste venners kæmpesmåkager» i v8, stemmen kører igen (Saga)
+
+Jimmy 08-11: pigerne savnede de store småkager fra deres YouTube-favoritter (navnene står ikke i repoet, for det er offentligt). De må ikke lave dem, så Saga finder et alternativ.
+
+- `18b4401`: retten ligger i Søde sager med 21 trin, ovntrinnene er voksentrin, der er billede, og `afproevet: false`. Mængder og bagetid er et skøn og ikke smagt til. Validator, sw og 14 andre tests er grønne; `test-lyd` og `test-version` var røde i forvejen.
+- Rettens 35 replikker er lagt i Røsts aktive taleliste (`D:/Stemmer/kogebog-500m/taleliste.json`, nu 5882; den gamle er gemt som `taleliste-foer-smaakager-0811.json`). Løkken kører, og ved bid 6 kl. 10:29 manglede 223 + 35 replikker.
+- Ikke kørt: e2e, ui-reviewer og `koer-alle.js` gennem låsen. Det sker sammen med «Næste» nedenfor.
+
+**Afventer Jimmy:** smag og bagetid skal prøves i en rigtig ovn, før `afproevet` sættes til true.
+
 ## 06-11-2026 kl. 14:07: v8 (drikke, smoothies, kager, cupcakes) har alle billeder, stemmen laves nu (Saga)
 
 Gren `v8-drikke` (worktree `D:/Claude/.claude/worktrees/kogebog-v8`). Plan: `docs/drikke-plan-05-11-2026.md`. Intet er pushet.
