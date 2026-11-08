@@ -9,7 +9,7 @@
    Svarer nettet ikke inden for HENT_MS (4 s), kommer en opskrift (også index.json) fra cachen, og nettets svar gemmes
    til næste gang. De næste LANGSOM_MS (30 s) tager opskrifterne cachen med det samme (code review U3 og F2, 23-10). */
 const PRAEFIKS = 'kog-';
-const INDHOLD = '3055efacb3fef367'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = '7d99e860ed985aa6'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '9b43a0862f935e29'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
@@ -325,7 +325,7 @@ const FILER = [
   'opskrifter/aeblekage.json', 'opskrifter/agurk-lime-vand.json', 'opskrifter/ananas-kokos-smoothie.json',
   'opskrifter/appelsin-frugt-te.json', 'opskrifter/appelsin-gulerod-boble.json', 'opskrifter/avocado-banan-smoothie.json',
   'opskrifter/banan-chokolade-milkshake.json', 'opskrifter/banankage.json', 'opskrifter/blaabaer-skyr-smoothie.json',
-  'opskrifter/bedste-venners-pizza.json',
+  'opskrifter/bedste-venners-pizza.json', 'opskrifter/bedste-venners-kaempesmaakager.json',
   'opskrifter/blomme-banan-smoothie.json', 'opskrifter/chokolade-cupcakes.json', 'opskrifter/chokolade-milkshake.json',
   'opskrifter/chokoladekage-med-krymmel.json', 'opskrifter/citron-honning-drik.json', 'opskrifter/citronkage.json',
   'opskrifter/dino-cupcakes.json', 'opskrifter/dino-smoothie.json', 'opskrifter/dino-sump-drik.json',
@@ -382,7 +382,7 @@ const FILER = [
   'grafik/ret-aeble-kanel-te.webp', 'grafik/ret-appelsin-frugt-te.webp',
   'grafik/ret-citron-honning-drik.webp',
   'grafik/ret-dino-vulkan.webp',
-  'grafik/ret-bedste-venners-pizza.webp',
+  'grafik/ret-bedste-venners-pizza.webp', 'grafik/ret-bedste-venners-kaempesmaakager.webp',
   'grafik/gruppe-drikke.svg', 'grafik/ing-avocado.svg', 'grafik/ing-blomme.svg', 'grafik/ing-chokoladeknapper.svg',
   'grafik/ing-danskvand.svg', 'grafik/ing-fersken.svg', 'grafik/ing-flormelis.svg', 'grafik/ing-frugt-te.svg',
   'grafik/ing-groenkaal.svg', 'grafik/ing-hvid-chokolade.svg', 'grafik/ing-hyldeblomst.svg', 'grafik/ing-ingefaer.svg',

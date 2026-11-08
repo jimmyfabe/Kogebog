@@ -1,5 +1,9 @@
 # v8: Drikke, smoothies, kager og cupcakes (plan 05-11-2026)
 
+## Ændringer efter godkendelse (08-11-2026)
+
+- + Bedste venners kæmpesmåkager (et barns ønske 08-11)
+
 Ønsket kom fra familien 05-11-2026: mange lækre drikke uden alkohol, smoothies i alle slags, kakao og te, rigtig mange kager og masser af cupcakes. v7 (ny forside og de sidste 26 billeder) gøres færdig først. Denne plan kommer oven på som v8.
 
 ## Sådan er det besluttet
