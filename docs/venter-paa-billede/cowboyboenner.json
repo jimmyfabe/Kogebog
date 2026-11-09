@@ -1,0 +1,54 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Cowboybønner med pølser og majs",
+  "description": "Bønner i tomat med stegte pølser og majs. Spises af panden med en bolle, som cowboys gør.",
+  "image": "grafik/ret-cowboyboenner.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT10M",
+  "cookTime": "PT15M",
+  "totalTime": "PT25M",
+  "recipeIngredient": [
+    "1 løg",
+    "300 g partypølser",
+    "1 dåse majs",
+    "2 dåser hvide bønner i tomat",
+    "1 spsk olie",
+    "1 tsk mild paprika",
+    "4 fuldkornsburgerboller"
+  ],
+  "tool": ["kniv", "skærebræt", "dåseåbner", "dørslag", "stor pande", "grydeske", "bræt til bordet"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Hak løget fint.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["loeg"] } },
+    { "@type": "HowToStep", "text": "Skær pølserne i skiver.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["poelse"], "note": "Skiver er sikrere end hele pølser for de mindste: en hel lille pølse kan sætte sig fast i halsen." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra majsen.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner alle tre dåser: kanten er skarp. Barnet hælder majsen i dørslaget over vasken." } },
+    { "@type": "HowToStep", "text": "Steg løget i olien.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "ikoner": ["loeg", "olie"], "note": "1 spsk olie i en stor pande ved middel varme. Rør, til løget er blødt." } },
+    { "@type": "HowToStep", "text": "Kom pølserne på panden.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "ikoner": ["poelse"], "note": "Rør, til skiverne er lysebrune." } },
+    { "@type": "HowToStep", "text": "Hæld bønner, majs og paprika i panden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["boenner", "majs", "krydderurt"], "note": "Panden er varm, så den voksne hælder. 1 tsk mild paprika." } },
+    { "@type": "HowToStep", "text": "Rør rundt, og lad det simre.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Lav til middel varme. Rør af og til, så bønnerne ikke brænder fast. Pølserne skal være varme hele vejen igennem." } },
+    { "@type": "HowToStep", "text": "Smag på bønnerne med en bid bolle.", "tumbi": { "verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["broed"], "note": "Pust på skeen først. Der skal ikke mere salt i. Sæt panden på et bræt midt på bordet, og spis med ske og bolle." } }
+  ],
+  "tumbi": {
+    "id": "cowboyboenner",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Idé fra bønnerne i de gamle westernfilm og fra «pølser og bønner»-klassikeren. Egen tekst og egne mængder. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 70,
+    "pris_dato": "2026-11",
+    "groent_g": 385,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, nov. 2026: Rema 1000's hyldepriser 09-11-2026 (normalprisen for burgerbollerne, der var på tilbud) ganget med 1,09 plus 3 kr. til olie og krydderier. Grønt er også et skøn (ikke målt): majs 285 g og et løg, uden bælgfrugter og kartofler.",
+    "ingredienser": [
+      { "ikon": "loeg", "maengde": "1", "vare": "loeg", "antal": 1, "enhed": "stk" },
+      { "ikon": "poelse", "maengde": "300 g", "vare": "partypoelser", "antal": 300, "enhed": "g" },
+      { "ikon": "majs", "maengde": "1 dåse", "vare": "majs", "antal": 1, "enhed": "stk" },
+      { "ikon": "boenner", "maengde": "2 dåser", "vare": "hvide-boenner-tomat", "antal": 2, "enhed": "stk" },
+      { "ikon": "olie", "maengde": "1 spsk", "vare": "olie" },
+      { "ikon": "krydderurt", "maengde": "1 tsk", "vare": "paprika" },
+      { "ikon": "broed", "maengde": "4", "vare": "burgerboller", "antal": 4, "enhed": "stk" }
+    ]
+  }
+}

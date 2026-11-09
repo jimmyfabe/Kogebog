@@ -28,7 +28,8 @@ Den nye gruppe Madpakke (plan og princip: `docs/madpakke-plan-09-11-2026.md`). G
 | `rug-pitabroed` | 4 små ovale rug-pitabrød, ét med en åben lomme |
 | `skyrmuffins-med-abrikos` | 4 muffins i papirforme med orange abrikosstykker og grønne græskarkerner på toppen |
 
-Prompterne (engelsk) står i `retter-v9.txt` i kladdemappen `kogebog-0911/v9` fra 09-11-2026. Kontrollér hvert billede:
+Prompterne (engelsk) står i `D:/Stemmer/kogebog-v9-billeder/retter-v9.txt` (også Cowboybønnerne herunder), og
+`billed-loekke.sh` i samme mappe tegner dem ét ad gangen gennem låsen. Kontrollér hvert billede:
 der må ikke kunne ses mandler, nødder eller pinjekerner, og kernerne skal ligne solsikke- eller græskarkerner.
 
 Når billederne kommer, er der disse ekstra trin ud over de almindelige nedenfor:
@@ -41,6 +42,23 @@ Når billederne kommer, er der disse ekstra trin ud over de almindelige nedenfor
 - E2e: `E2E_DELE=former,hele`. Forsiden har så 11 knapper, og `former` måler gitteret til 11 knapper i 10 størrelser. Kør
   også `lyn` og `voksen`. «Rugbrødsmadpakke» og «fiskefrikadeller» har 16 bogstaver, lige så mange som
   «Gulerodssmoothie». Stikker de ud af kortet på 360 px, får de en blød bindestreg (se punkt 7).
+
+## Venter nu: Cowboybønner (09-11-2026), gruppe `koed`
+
+Jimmy bad om dem 09-11-2026 efter Trinity-bønnerne (PDF'en på Drev, opskrift 4). Den ligner `poelse-boennegryde`, men
+pølserne steges i skiver på panden, der er majs og løg i, og den spises af panden med en bolle i stedet for ris.
+
+| id | Billedet viser |
+|---|---|
+| `cowboyboenner` | Stor sort støbejernspande med hvide bønner i tomat, brunede pølseskiver og majs, en flækket fuldkornsbolle ved siden af |
+
+Retten er i ugeplanen (`ugeplan: true`, 70 kr., 385 g grønt). Ekstra trin, når billedet kommer:
+
+- Skriv `"cowboyboenner"` i gruppen `koed` i `opskrifter/index.json` lige efter `"poelse-boennegryde"`.
+- `ANTAL_RETTER` i `test/test-forside.js` hæves med 1 mere (238 + 1 = 239, når madpakkerne også er med).
+- Ugeplanen: skriv id'et i listen i `test/test-indkoeb.js` (alfabetisk, punkt 4 nedenfor), og stemmen skal også lave
+  `cowboyboenner/uge.mp3`.
+- Kontrollér billedet: ingen chili, ingen bestik, og pandens håndtag må ikke gå ud over billedets kant.
 
 Sådan kommer de tilbage (Git Bash i Kogebog). Det kan gøres for de retter, der har fået et billede, resten bliver her:
 
