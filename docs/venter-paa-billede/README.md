@@ -4,61 +4,7 @@ Validatoren kræver `grafik/ret-<id>.webp` for hver ret i `opskrifter/`, så en 
 her som `<id>.json` (med katalog, ikoner og varerne til indkøbslisten på plads), indtil billedet er tegnet. Skriv dens
 gruppe her, og hvad billedet skal vise.
 
-## Venter nu: 15 madpakke-retter (09-11-2026), gruppe `madpakke`
-
-Den nye gruppe Madpakke (plan og princip: `docs/madpakke-plan-09-11-2026.md`). Gruppen står i `GRUPPER` i
-`js/katalog.js`, og `grafik/gruppe-madpakke.svg` findes, men forsiden viser først knappen, når gruppen står i
-`opskrifter/index.json`. Ingen af retterne har `ugeplan`. Alle er nøddefri.
-
-| id | Billedet viser |
-|---|---|
-| `rugbroedsmadpakke` | Åben blå madkasse med rum: 2 rugbrødsmadder med ost og skinke, gulerods- og agurkestave, æblebåde og rosiner |
-| `bolle-med-spegepoelse-og-pesto` | 2 grove boller med grøn pesto, salatblad og spegepølse, strimler af rød peberfrugt ved siden af |
-| `tun-snurrer` | Ca. 9 tortillasnurrer set fra snitsiden (lys fyld, orange gulerod, grøn salat) og agurkestave |
-| `pandekage-wraps-med-skinke` | 3 rullede grove pandekager skåret på skrå, så skinke, salat, peberfrugt og agurk ses |
-| `tortilla-ruller-med-koedfyld` | 3 tortilla-ruller skåret over, med brunt kødfyld, majs, salat og agurk |
-| `kartoffelmad-med-spegepoelse` | 2 rugbrødsmadder med groft moste kartofler, spegepølse og purløg, halve cherrytomater ved siden af |
-| `pastasalat-med-squash` | Skål med fusilli, grønne squashtern, halve cherrytomater, majs og basilikumblade |
-| `fiskefrikadeller-med-dilddip` | Ca. 7 små gyldne fiskefrikadeller, en lille skål hvid dip med dild og agurkestave |
-| `spinattaerte` | Rund grøn spinattærte med gylden kant og halve cherrytomater, ét stykke skåret ud |
-| `avocadodip-med-groentstave` | Lille skål grøn avocadodip omgivet af gulerods-, agurke- og peberfrugtstave og æblebåde |
-| `farverig-raakost` | Skål med revet gulerod og æble, appelsinstykker, rosiner og grønne græskarkerner |
-| `grove-sandwichboller` | 6 flade, grove boller med solsikkekerner på toppen, én skåret over |
-| `havregroedsboller` | 6 runde, gyldne boller med solsikkekerner |
-| `rug-pitabroed` | 4 små ovale rug-pitabrød, ét med en åben lomme |
-| `skyrmuffins-med-abrikos` | 4 muffins i papirforme med orange abrikosstykker og grønne græskarkerner på toppen |
-
-Prompterne (engelsk) står i `D:/Stemmer/kogebog-v9-billeder/retter-v9.txt` (også Cowboybønnerne herunder), og
-`billed-loekke.sh` i samme mappe tegner dem ét ad gangen gennem låsen. Kontrollér hvert billede:
-der må ikke kunne ses mandler, nødder eller pinjekerner, og kernerne skal ligne solsikke- eller græskarkerner.
-
-Når billederne kommer, er der disse ekstra trin ud over de almindelige nedenfor:
-
-- Gruppen skrives i `opskrifter/index.json` efter `broed-og-pizza` (kun de retter, der har fået et billede):
-  `{ "id": "madpakke", "retter": ["rugbroedsmadpakke", "bolle-med-spegepoelse-og-pesto", "tun-snurrer", "pandekage-wraps-med-skinke", "tortilla-ruller-med-koedfyld", "kartoffelmad-med-spegepoelse", "pastasalat-med-squash", "fiskefrikadeller-med-dilddip", "spinattaerte", "avocadodip-med-groentstave", "farverig-raakost", "grove-sandwichboller", "havregroedsboller", "rug-pitabroed", "skyrmuffins-med-abrikos"] },`
-- I `test/test-forside.js` skal der stå `VENTER_PAA_BILLEDER = []`, og `ANTAL_RETTER` skal hæves med antallet af nye retter
-  (223 + 15 = 238).
-- Stemmen skal også lave `faelles/gruppe-madpakke.mp3` («Madpakke»).
-- E2e: `E2E_DELE=former,hele`. Forsiden har så 11 knapper, og `former` måler gitteret til 11 knapper i 10 størrelser. Kør
-  også `lyn` og `voksen`. «Rugbrødsmadpakke» og «fiskefrikadeller» har 16 bogstaver, lige så mange som
-  «Gulerodssmoothie». Stikker de ud af kortet på 360 px, får de en blød bindestreg (se punkt 7).
-
-## Venter nu: Cowboybønner (09-11-2026), gruppe `koed`
-
-Jimmy bad om dem 09-11-2026 efter Trinity-bønnerne (PDF'en på Drev, opskrift 4). Den ligner `poelse-boennegryde`, men
-pølserne steges i skiver på panden, der er majs og løg i, og den spises af panden med en bolle i stedet for ris.
-
-| id | Billedet viser |
-|---|---|
-| `cowboyboenner` | Stor sort støbejernspande med hvide bønner i tomat, brunede pølseskiver og majs, en flækket fuldkornsbolle ved siden af |
-
-Retten er i ugeplanen (`ugeplan: true`, 70 kr., 385 g grønt). Ekstra trin, når billedet kommer:
-
-- Skriv `"cowboyboenner"` i gruppen `koed` i `opskrifter/index.json` lige efter `"poelse-boennegryde"`.
-- `ANTAL_RETTER` i `test/test-forside.js` hæves med 1 mere (238 + 1 = 239, når madpakkerne også er med).
-- Ugeplanen: skriv id'et i listen i `test/test-indkoeb.js` (alfabetisk, punkt 4 nedenfor), og stemmen skal også lave
-  `cowboyboenner/uge.mp3`.
-- Kontrollér billedet: ingen chili, ingen bestik, og pandens håndtag må ikke gå ud over billedets kant.
+Der venter ingen retter nu (09-11-2026).
 
 Sådan kommer de tilbage (Git Bash i Kogebog). Det kan gøres for de retter, der har fået et billede, resten bliver her:
 

@@ -16,13 +16,13 @@ import { FAVORITTER, gruppeRute, forsideGrupper, gruppeAf, gruppeRetter, tilbage
 import { lavModel, erLynhurtig, harTid } from '../js/model.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-// Alle grupper i forsidens rækkefølge. Madpakke (v9) står i GRUPPER, men kommer først i index.json, når dens retter har
-// billeder (docs/venter-paa-billede/README.md). Så tømmes VENTER_PAA_BILLEDER, og forsiden har 11 knapper
+// Alle grupper i forsidens rækkefølge. En ny gruppe står i GRUPPER, men kommer først i index.json, når dens retter har
+// billeder (docs/venter-paa-billede/README.md). Indtil da står den i VENTER_PAA_BILLEDER. Madpakke (v9) er med: 11 knapper
 const GRUPPE_IDS = ['pasta-og-nudler', 'kylling', 'fisk', 'koed', 'groent', 'broed-og-pizza', 'madpakke', 'soede-sager', 'drikke', 'jul', 'halloween'];
-const VENTER_PAA_BILLEDER = ['madpakke'];
+const VENTER_PAA_BILLEDER = [];
 const KNAPPER = GRUPPE_IDS.filter((id) => !VENTER_PAA_BILLEDER.includes(id)); // forsidens knapper nu
-const ANTAL_RETTER = 223;
-const ANTAL_PLANLAGTE = 82;
+const ANTAL_RETTER = 239;
+const ANTAL_PLANLAGTE = 83;
 
 const laesJson = (sti) => JSON.parse(fs.readFileSync(path.join(ROD, sti), 'utf8'));
 const INDEX = laesJson('opskrifter/index.json');
@@ -34,7 +34,7 @@ const UGE = INDEX.grupper.flatMap((g) => g.retter).filter((id) => JSONER.get(id)
 
 // ---------- Sorteringen i opskrifter/index.json ----------
 
-test('alle 223 retter står i præcis én af forsidens grupper, og alle opskriftsfiler har en plads', () => {
+test('alle 239 retter står i præcis én af forsidens grupper, og alle opskriftsfiler har en plads', () => {
   const alle = INDEX.grupper.flatMap((g) => g.retter);
   assert.equal(alle.length, ANTAL_RETTER);
   assert.equal(new Set(alle).size, alle.length, 'en ret står to steder');
@@ -49,7 +49,7 @@ test('grupperne står i forsidens rækkefølge, ingen er tom, og koden kender de
   assert.deepEqual(forsideGrupper(INDEX.grupper), { knapper: KNAPPER, ukendte: [] });
 });
 
-test('de 82 retter, der kan planlægges, er stadig 82 og står alle i en af grupperne', () => {
+test('de 83 retter, der kan planlægges, er stadig 83 og står alle i en af grupperne', () => {
   const planlagte = FILER.filter((id) => JSONER.get(id).tumbi && JSONER.get(id).tumbi.ugeplan === true);
   assert.equal(planlagte.length, ANTAL_PLANLAGTE);
   assert.equal(FILER.map((id) => lavModel(JSONER.get(id))).filter((m) => m.uge).length, ANTAL_PLANLAGTE, 'også sådan, som modellen læser dem');
@@ -411,7 +411,7 @@ const knapMed = (label) => rod.querySelectorAll('button').find((b) => b.getAttri
 const knapMedTekst = (tekst) => rod.querySelectorAll('button').find((b) => b.textContent === tekst);
 const overskrift = () => rod.querySelector('h1').textContent;
 
-test('forsiden: en rigtig knap pr. gruppe med navn til skærmlæseren, billede og navn og ingen af de 223 kort', async () => {
+test('forsiden: en rigtig knap pr. gruppe med navn til skærmlæseren, billede og navn og ingen af de 239 kort', async () => {
   await start();
   const b = knapper();
   assert.deepEqual(b.map((x) => x.dataset.gruppe), KNAPPER);
@@ -424,7 +424,7 @@ test('forsiden: en rigtig knap pr. gruppe med navn til skærmlæseren, billede o
     assert.equal(x.querySelector('img').getAttribute('alt'), '', 'billedet er pynt: knappen har navnet');
   }
   assert.equal(rod.querySelectorAll('.kort').length, 0);
-  assert.equal(rod.querySelectorAll('nav ul li button').length, 10, 'en liste i en nav, så skærmlæseren kan sige antallet');
+  assert.equal(rod.querySelectorAll('nav ul li button').length, 11, 'en liste i en nav, så skærmlæseren kan sige antallet');
 });
 
 test('billederne på forsiden findes alle på disken', async () => {
@@ -535,7 +535,7 @@ test('tilbage fra gruppen fører til forsiden', async () => {
   await start('#/gruppe/jul');
   tryk(knapMed('Til forsiden'));
   assert.equal(location.hash, '#/');
-  assert.equal(knapper().length, 10);
+  assert.equal(knapper().length, 11);
 });
 
 test('gamle adresser til en ret virker og fører tilbage til rettens gruppe', async () => {
@@ -590,7 +590,7 @@ test('lupen: «is» og «aftensmad» på den rigtige skærm, og feltet tegnes ik
   assert.equal(rod.querySelector('.soeg-felt'), felt, 'Safari lukker tastaturet, hvis feltet tegnes om');
   skriv(felt, 'aftensmad');
   assert.deepEqual(kort().sort(), AFTENSMAD_GRUPPER.flatMap(retterI).sort());
-  assert.match(rod.querySelector('.soeg-tal').textContent, /82/);
+  assert.match(rod.querySelector('.soeg-tal').textContent, /83/);
 });
 
 test('lupen: mærkelige tegn giver «ingen træf» med en vej videre, ikke en fejl', async () => {
@@ -628,14 +628,14 @@ test('lupen: kortene åbner retten, og tilbage står søgningen, som den var', a
 test('hjertet: kun når der findes en favorit, og det åbner favoritterne', async () => {
   await start();
   assert.equal(rod.querySelector('.forside-favoritter'), null, 'ingen favorit, intet hjerte');
-  assert.equal(knapper().length, 10);
+  assert.equal(knapper().length, 11);
 
   const [a, b] = [retterI('fisk')[0], retterI('jul')[0]];
   await start('#/', { foer: () => { Lager.skiftFavorit(a, FILER); Lager.skiftFavorit(b, FILER); } });
   const hjerte = rod.querySelector('.forside-favoritter');
   assert.equal(hjerte.tag, 'button');
   assert.equal(hjerte.getAttribute('aria-label'), 'Favoritter');
-  assert.equal(knapper().length, 10, 'hjertet er ud over de 10');
+  assert.equal(knapper().length, 11, 'hjertet er ud over de 11');
   tryk(hjerte);
   assert.equal(location.hash, '#/gruppe/' + FAVORITTER);
   assert.equal(overskrift(), 'Favoritter');
@@ -664,21 +664,19 @@ test('«Voksne: hold» står under knapperne', async () => {
 test('grupper i listen, koden ikke kender, forsvinder ikke i stilhed', async () => {
   const ny = { version: 2, grupper: [...INDEX.grupper, { id: 'ukendt-gruppe', retter: ['ny-ret-her'] }] };
   await start('#/', { hent: (sti) => (sti === 'opskrifter/index.json' ? ny : undefined) });
-  assert.equal(knapper().length, 10);
+  assert.equal(knapper().length, 11);
   const fejl = rod.querySelectorAll('.fejl-linje').map((p) => p.textContent).join(' ');
   assert.match(fejl, /ukendt-gruppe/);
   assert.equal(rod.querySelector('.fejl-linje').getAttribute('role'), 'status');
 });
 
-test('Madpakke har ingen knap, før den står i index.json, og får 7. pladsen, når den gør', async () => {
+test('Madpakke har 7. pladsen, og uden for index.json har den ingen knap', async () => {
   await start();
-  assert.ok(!knapper().some((b) => b.dataset.gruppe === 'madpakke'));
-  const laant = retterI('broed-og-pizza').slice(0, 2);
-  const grupper = INDEX.grupper.map((g) => (g.id === 'broed-og-pizza' ? { id: g.id, retter: g.retter.slice(2) } : g));
-  grupper.splice(grupper.findIndex((g) => g.id === 'broed-og-pizza') + 1, 0, { id: 'madpakke', retter: laant });
-  await start('#/', { hent: (sti) => (sti === 'opskrifter/index.json' ? { version: 2, grupper } : undefined) });
   assert.deepEqual(knapper().map((b) => b.dataset.gruppe), GRUPPE_IDS);
   assert.equal(knapper()[6].getAttribute('aria-label'), 'Madpakke');
+  const grupper = INDEX.grupper.filter((g) => g.id !== 'madpakke');
+  await start('#/', { hent: (sti) => (sti === 'opskrifter/index.json' ? { version: 2, grupper } : undefined) });
+  assert.deepEqual(knapper().map((b) => b.dataset.gruppe), GRUPPE_IDS.filter((id) => id !== 'madpakke'));
 });
 
 test('en gruppe, der er tom i listen, har ingen knap, og adressen til den giver fejlskærmen', async () => {
@@ -716,7 +714,7 @@ test('en ret, der ikke kan læses, nævnes på gruppen og forsiden, og resten vi
   assert.match(rod.querySelector('.fejl-linje').textContent, new RegExp(dårlig));
   gaaTil('#/');
   assert.match(rod.querySelector('.fejl-linje').textContent, new RegExp(dårlig));
-  assert.equal(knapper().length, 10);
+  assert.equal(knapper().length, 11);
 });
 
 test('intet nyt gemmes: forsiden, grupperne, lupen og retterne skriver ikke i lageret', async () => {
@@ -741,7 +739,7 @@ test('intet nyt gemmes: forsiden, grupperne, lupen og retterne skriver ikke i la
 test('en lås på familien (nyere udgave) giver hverken fejl på forsiden eller mistede favoritter', async () => {
   const gemt = JSON.stringify({ v: 999, favoritter: ['noget-nyt'] });
   await start('#/', { foer: () => { lageret.set('kog-familie-v1', gemt); } });
-  assert.equal(knapper().length, 10);
+  assert.equal(knapper().length, 11);
   assert.equal(rod.querySelector('.forside-favoritter'), null);
   assert.equal(lageret.get('kog-familie-v1'), gemt, 'en nyere udgaves data er urørt');
 });

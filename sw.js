@@ -9,7 +9,7 @@
    Svarer nettet ikke inden for HENT_MS (4 s), kommer en opskrift (også index.json) fra cachen, og nettets svar gemmes
    til næste gang. De næste LANGSOM_MS (30 s) tager opskrifterne cachen med det samme (code review U3 og F2, 23-10). */
 const PRAEFIKS = 'kog-';
-const INDHOLD = '8e94e81988fe3328'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = 'a227f2e061bf9f8d'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '9b43a0862f935e29'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
@@ -393,6 +393,20 @@ const FILER = [
   'grafik/ing-vandmelon.svg', 'grafik/verbum-blende.svg', 'grafik/verbum-dyppe.svg', 'grafik/verbum-klemme.svg',
   'grafik/verbum-ryste.svg',
   'grafik/gruppe-madpakke.svg', 'grafik/ing-spegepoelse.svg', 'grafik/ing-squash.svg',
+  'opskrifter/rugbroedsmadpakke.json', 'opskrifter/bolle-med-spegepoelse-og-pesto.json', 'opskrifter/tun-snurrer.json',
+  'opskrifter/pandekage-wraps-med-skinke.json', 'opskrifter/tortilla-ruller-med-koedfyld.json',
+  'opskrifter/kartoffelmad-med-spegepoelse.json', 'opskrifter/pastasalat-med-squash.json',
+  'opskrifter/fiskefrikadeller-med-dilddip.json', 'opskrifter/spinattaerte.json',
+  'opskrifter/avocadodip-med-groentstave.json', 'opskrifter/farverig-raakost.json',
+  'opskrifter/grove-sandwichboller.json', 'opskrifter/havregroedsboller.json', 'opskrifter/rug-pitabroed.json',
+  'opskrifter/skyrmuffins-med-abrikos.json', 'opskrifter/cowboyboenner.json',
+  'grafik/ret-rugbroedsmadpakke.webp', 'grafik/ret-bolle-med-spegepoelse-og-pesto.webp', 'grafik/ret-tun-snurrer.webp',
+  'grafik/ret-pandekage-wraps-med-skinke.webp', 'grafik/ret-tortilla-ruller-med-koedfyld.webp',
+  'grafik/ret-kartoffelmad-med-spegepoelse.webp', 'grafik/ret-pastasalat-med-squash.webp',
+  'grafik/ret-fiskefrikadeller-med-dilddip.webp', 'grafik/ret-spinattaerte.webp',
+  'grafik/ret-avocadodip-med-groentstave.webp', 'grafik/ret-farverig-raakost.webp',
+  'grafik/ret-grove-sandwichboller.webp', 'grafik/ret-havregroedsboller.webp', 'grafik/ret-rug-pitabroed.webp',
+  'grafik/ret-skyrmuffins-med-abrikos.webp', 'grafik/ret-cowboyboenner.webp',
 ];
 
 const iScope = (url) => url.href.startsWith(self.registration.scope);
