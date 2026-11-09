@@ -1,0 +1,56 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Grøn avocadodip med grøntsagsstave",
+  "description": "En blød, grøn dip af avocado og yoghurt med stave af gulerod, agurk og peberfrugt og æblebåde. Barnet vælger selv, hvad der skal dyppes.",
+  "image": "grafik/ret-avocadodip-med-groentstave.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 madpakker",
+  "prepTime": "PT20M",
+  "totalTime": "PT20M",
+  "recipeIngredient": [
+    "2 modne avocadoer",
+    "½ citron",
+    "1 dl yoghurt naturel",
+    "1 knivspids salt",
+    "2 gulerødder",
+    "½ agurk",
+    "1 peberfrugt",
+    "1 æble"
+  ],
+  "tool": ["kniv", "skærebræt", "ske", "skål", "gaffel", "husholdningsfilm", "små bøtter med låg", "madkasser med små rum"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Skær avocadoerne over, og fjern stenen.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["avocado"], "note": "Avocadoen er moden, når den giver lidt efter for et tryk." } },
+    { "@type": "HowToStep", "text": "Skrab avocadoen ned i en skål.", "tumbi": { "verbum": "haelde", "ikoner": ["avocado"], "note": "Med en ske." } },
+    { "@type": "HowToStep", "text": "Pres citronen over.", "tumbi": { "verbum": "klemme", "ikoner": ["citron"], "note": "Den voksne skærer citronen over. Citronen holder dippen grøn længere." } },
+    { "@type": "HowToStep", "text": "Mos avocadoen med en gaffel.", "tumbi": { "verbum": "mose", "ikoner": ["avocado"], "note": "Helt glat eller med små stykker, som barnet vil have det." } },
+    { "@type": "HowToStep", "text": "Rør yoghurt og salt i.", "tumbi": { "verbum": "roere", "ikoner": ["yoghurt", "salt"], "note": "1 dl yoghurt og en knivspids salt." } },
+    { "@type": "HowToStep", "text": "Skær gulerødder og agurk i stave.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod", "agurk"], "note": "Skrub gulerødderne først." } },
+    { "@type": "HowToStep", "text": "Skær peberfrugten i strimler.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["peberfrugt"], "note": "Den voksne fjerner stilk og kerner først." } },
+    { "@type": "HowToStep", "text": "Skær æblet i både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["aeble"], "note": "Den voksne skærer kernehuset væk." } },
+    { "@type": "HowToStep", "text": "Fyld dippen i små bøtter med låg.", "tumbi": { "verbum": "haelde", "ikoner": ["avocado"], "note": "Tryk husholdningsfilm ned på dippen, før låget kommer på, så bliver den ikke brun. Dippen holder 1 dag i køleskabet." } },
+    { "@type": "HowToStep", "text": "Læg stave og æble i hvert sit rum.", "tumbi": { "verbum": "pakke-ind", "ikoner": ["gulerod", "agurk", "peberfrugt", "aeble"], "note": "Våde og tørre ting hver for sig. Læg et køleelement i tasken." } },
+    { "@type": "HowToStep", "text": "Dyp en gulerodsstav i dippen.", "tumbi": { "verbum": "dyppe", "ikoner": ["gulerod", "avocado"] } }
+  ],
+  "tumbi": {
+    "id": "avocadodip-med-groentstave",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Idé fra bogen «Sund & Glad skolestart». Egen tekst og egne mængder. Tiden er et skøn (ikke målt).",
+    "pris_kr": 46,
+    "pris_dato": "2026-11",
+    "groent_g": 525,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, nov. 2026: Rema 1000's hyldepriser 09-11-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Grønt er også et skøn (ikke målt) og er uden bælgfrugter, kartofler og frugt. Avocado er regnet som frugt.",
+    "ingredienser": [
+      { "ikon": "avocado", "maengde": "2" },
+      { "ikon": "citron", "maengde": "½" },
+      { "ikon": "yoghurt", "maengde": "1 dl" },
+      { "ikon": "salt", "maengde": "1 knivspids" },
+      { "ikon": "gulerod", "maengde": "2" },
+      { "ikon": "agurk", "maengde": "½" },
+      { "ikon": "peberfrugt", "maengde": "1" },
+      { "ikon": "aeble", "maengde": "1" }
+    ]
+  }
+}

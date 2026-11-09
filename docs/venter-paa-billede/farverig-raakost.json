@@ -1,0 +1,49 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Farverig råkost med æble og kerner",
+  "description": "Revet gulerod og æble med appelsinstykker, rosiner og sprøde græskarkerner. Sød nok i sig selv og uden nødder.",
+  "image": "grafik/ret-farverig-raakost.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 små portioner",
+  "prepTime": "PT15M",
+  "totalTime": "PT15M",
+  "recipeIngredient": [
+    "3 gulerødder",
+    "1 æble",
+    "½ citron",
+    "1 appelsin",
+    "2 spsk rosiner",
+    "2 spsk græskarkerner"
+  ],
+  "tool": ["rivejern", "kniv", "skærebræt", "skål", "grydeske", "små bøtter med låg"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Riv gulerødderne groft.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skrub dem først. Rivejernet er skarpt, så den voksne river." } },
+    { "@type": "HowToStep", "text": "Riv æblet groft.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["aeble"], "note": "Med skrællen på, til kernehuset." } },
+    { "@type": "HowToStep", "text": "Pres citronen over æblet.", "tumbi": { "verbum": "klemme", "ikoner": ["citron", "aeble"], "note": "Den voksne skærer citronen over. Så bliver æblet ikke brunt." } },
+    { "@type": "HowToStep", "text": "Pil appelsinen, og del den i både.", "tumbi": { "verbum": "pille", "ikoner": ["appelsin"], "note": "Del bådene i to med fingrene, så de passer til en gaffel." } },
+    { "@type": "HowToStep", "text": "Bland det hele i en skål.", "tumbi": { "verbum": "roere", "ikoner": ["gulerod", "aeble", "appelsin"] } },
+    { "@type": "HowToStep", "text": "Drys rosiner og kerner over.", "tumbi": { "verbum": "drysse", "ikoner": ["rosiner", "kerner"], "note": "2 spsk af hver. Græskarkernerne er sprøde i stedet for nødder." } },
+    { "@type": "HowToStep", "text": "Fyld råkosten i små bøtter med låg.", "tumbi": { "verbum": "haelde", "ikoner": ["gulerod"], "note": "Den holder 1 dag i køleskabet. Kernerne er sprødest, hvis de drysses på om morgenen." } },
+    { "@type": "HowToStep", "text": "Smag på råkosten.", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "farverig-raakost",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Idé fra bogen «Sund & Glad skolestart». Egen tekst og egne mængder. Tiden er et skøn (ikke målt).",
+    "pris_kr": 18,
+    "pris_dato": "2026-11",
+    "groent_g": 300,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, nov. 2026: Rema 1000's hyldepriser 09-11-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Grønt er også et skøn (ikke målt) og er uden bælgfrugter, kartofler og frugt.",
+    "ingredienser": [
+      { "ikon": "gulerod", "maengde": "3" },
+      { "ikon": "aeble", "maengde": "1" },
+      { "ikon": "citron", "maengde": "½" },
+      { "ikon": "appelsin", "maengde": "1" },
+      { "ikon": "rosiner", "maengde": "2 spsk" },
+      { "ikon": "kerner", "maengde": "2 spsk" }
+    ]
+  }
+}
