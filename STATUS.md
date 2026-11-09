@@ -2,6 +2,18 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
+## 09-11-2026 kl. 13:49: v9 «Madpakke» er bygget, billederne venter (hovedsessionen)
+
+Jimmy 09-11: «ja, lav madpakkerne». Gren `v9-madpakke` fra `v8-drikke` (worktree `D:/Claude/.claude/worktrees/kogebog-v9`). Plan: `docs/madpakke-plan-09-11-2026.md`. Intet er pushet eller flettet.
+
+- `b951d94`: gruppen Madpakke i `GRUPPER`, gitter til 11 knapper, ikonerne squash og spegepølse. `00fc1ba`: planen. `06b1520` og `1cded18`: 15 nøddefri retter i `docs/venter-paa-billede/` (`afproevet: false`, pris og grønt er skøn). `f11ed31`: ventemappens README med trinene, når billederne kommer.
+- Tests: `test-opskrifter` grøn (223 + 15 venter). `koer-alle.js` 15 af 17; `test-lyd` og `test-version` var røde i forvejen. **E2e er ikke kørt**, og 11-knaps-gitteret er ikke set i en browser.
+- Billederne: prompter, stilbillede, `lav-billede.py` (v8's stil) og løkken ligger varigt i `D:/Stemmer/kogebog-v9-billeder/`. Kør `bash D:/Stemmer/kogebog-v9-billeder/billed-loekke.sh` (ét billede pr. låsekald; stop med filen `billed-stop`).
+
+**Næste:** billederne → tjek på mørk bund → ventemappens trin 1-7 → e2e (`former`, `hele`, `lyn`, `voksen`) → ui-reviewer (11 knapper, Grøn mod Madpakke på mobil) → stemmen efter v8's Røst-trin 3-5.
+
+**Afventer Jimmy:** retterne skal prøves i et køkken, før `afproevet` sættes til true.
+
 ## 08-11-2026 kl. 10:47: ny ret «Bedste venners kæmpesmåkager» i v8, stemmen kører igen (Saga)
 
 Jimmy 08-11: pigerne savnede de store småkager fra deres YouTube-favoritter (navnene står ikke i repoet, for det er offentligt). De må ikke lave dem, så Saga finder et alternativ.
