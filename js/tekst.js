@@ -94,6 +94,8 @@ export const KOEN = Object.freeze({
   'blåbær': 't', 'hindbær': 't', 'jordbær': 't', 'mynteblad': 't', 'tebrev': 't',
   'moden': 'n', 'modent': 't', 'frisk': 'n', 'friskt': 't', 'blød': 'n', 'blødt': 't', 'kold': 'n', 'koldt': 't',
   'hvid': 'n', 'hvidt': 't', 'gul': 'n', 'gult': 't', 'lyserød': 'n', 'lyserødt': 't',
+  // Madpakker (09-11-2026): «½ bundt dild», «1 squash», «4 grove boller», «4 salatblade», «8 cherrytomater»
+  'bundt': 't', 'squash': 'n', 'salatblad': 't', 'cherrytomat': 'n', 'grov': 'n', 'groft': 't',
   // Enhederne i flertal, som skaler.js giver med et halvt («2,5 dåser» er «to og en halv»)
   'dåser': 'n', 'poser': 'n', 'pakker': 'n', 'blad': 't', // «1 blad icebergsalat» ved 1 portion
   'lille': null, 'sort': null, 'orange': null,
@@ -118,8 +120,10 @@ export const NAVNEORD = Object.freeze({
   'dråbe': 'dråber', 'fersken': 'ferskner', 'håndfuld': 'håndfulde', 'ispind': 'ispinde', 'isterning': 'isterninger', 'isvaffel': 'isvafler',
   'kiwi': 'kiwier', 'kugle': 'kugler', 'kvist': 'kviste', 'mango': 'mangoer', 'muffinform': 'muffinforme', 'mynteblad': 'mynteblade',
   'rødbede': 'rødbeder', 'skumfidus': 'skumfiduser', 'stykke': 'stykker', 'tebrev': 'tebreve', 'tepose': 'teposer', 'vandmelon': 'vandmeloner',
+  // Madpakker (09-11-2026)
+  'bolle': 'boller', 'bundt': 'bundter', 'cherrytomat': 'cherrytomater', 'salatblad': 'salatblade',
   // Uændret i flertal
-  'løg': 'løg', 'oliven': 'oliven', 'æg': 'æg',
+  'løg': 'løg', 'oliven': 'oliven', 'æg': 'æg', 'squash': 'squash',
   'ananas': 'ananas', 'blåbær': 'blåbær', 'chokoladekiks': 'chokoladekiks', 'hindbær': 'hindbær', 'jordbær': 'jordbær', 'kiks': 'kiks', 'lime': 'lime',
 });
 
@@ -129,6 +133,7 @@ export const TILLAEGSORD = Object.freeze([
   ['sort', 'sort', 'sorte'], ['orange', 'orange', 'orange'],
   ['moden', 'modent', 'modne'], ['frisk', 'friskt', 'friske'], ['blød', 'blødt', 'bløde'], ['kold', 'koldt', 'kolde'],
   ['hel', 'helt', 'hele'], ['hvid', 'hvidt', 'hvide'], ['gul', 'gult', 'gule'], ['lyserød', 'lyserødt', 'lyserøde'],
+  ['grov', 'groft', 'grove'],
 ].map((t) => Object.freeze(t)));
 
 // Hver form (ental og flertal) → [ental, flertal], og hver form af et tillægsord → dets tre former
