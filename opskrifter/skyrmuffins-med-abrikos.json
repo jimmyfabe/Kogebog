@@ -23,7 +23,7 @@
     "2 spsk græskarkerner",
     "12 muffinforme af papir"
   ],
-  "tool": ["rivejern", "kniv", "skærebræt", "stor skål", "piskeris", "dl-mål", "køkkenvægt", "måleskeer", "grydeske", "kop", "2 skeer", "muffinplade", "grydelapper", "rist", "frysepose"],
+  "tool": ["rivejern", "kniv", "skærebræt", "stor skål", "piskeris", "dl-mål", "køkkenvægt", "måleskeer", "grydeske", "kop", "gaffel", "2 skeer", "muffinplade", "grydelapper", "tandstik", "rist", "frysepose"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
     { "@type": "HowToStep", "text": "Sæt muffinformene i muffinpladen.", "tumbi": { "verbum": "pynte", "ikoner": ["muffinforme"], "note": "Den voksne tænder ovnen på 200 °C (180 °C varmluft)." } },
@@ -33,7 +33,7 @@
     { "@type": "HowToStep", "text": "Rør æble og abrikos i.", "tumbi": { "verbum": "roere", "ikoner": ["aeble", "fersken"] } },
     { "@type": "HowToStep", "text": "Hæld mel, bagepulver og salt i.", "tumbi": { "verbum": "haelde", "ikoner": ["mel", "bagepulver", "salt"], "note": "150 g hvedemel, 100 g grahamsmel, 2 tsk bagepulver og en knivspids salt." } },
     { "@type": "HowToStep", "text": "Rør forsigtigt, til melet er væk.", "tumbi": { "verbum": "roere", "ikoner": ["mel"], "note": "Ikke mere end det: så bliver muffinsene bløde." } },
-    { "@type": "HowToStep", "text": "Pisk æggene i.", "tumbi": { "verbum": "piske", "ikoner": ["aeg"], "note": "Slå æggene ud i en kop først, så er det let at fiske skaller op." } },
+    { "@type": "HowToStep", "text": "Rør æggene forsigtigt i.", "tumbi": { "verbum": "roere", "ikoner": ["aeg"], "note": "Slå æggene ud i en kop, og pisk dem let med en gaffel først. Så er det let at fiske skaller op, og de blander sig hurtigt." } },
     { "@type": "HowToStep", "text": "Fyld dejen i de 12 forme.", "tumbi": { "verbum": "haelde", "note": "Med to skeer. Fyld dem næsten op." } },
     { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: der er råt æg i dejen." } },
     { "@type": "HowToStep", "text": "Drys græskarkerner på toppen.", "tumbi": { "verbum": "drysse", "ikoner": ["kerner"], "note": "2 spsk til alle 12. Kernerne er sprøde i stedet for nødder." } },

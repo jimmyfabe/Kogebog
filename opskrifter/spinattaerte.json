@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "Recipe",
   "name": "Spinattærte med hytteost",
-  "description": "En mild tærte med grov bund, spinat, hytteost og cherrytomater. Kold kan den holdes i hånden, og stykkerne kan fryses.",
+  "description": "En mild tærte med grov bund, spinat, hytteost og cherrytomater. Kold kan den holdes i hånden, og stykkerne kan fryses. Tø spinaten op i køleskabet natten over.",
   "image": "grafik/ret-spinattaerte.webp",
   "inLanguage": "da",
   "recipeYield": "8 stykker",
@@ -26,8 +26,8 @@
   "tool": ["si", "køkkenvægt", "stor skål", "spiseske", "kagerulle", "tærteform (ca. 24 cm)", "gaffel", "kniv", "skærebræt", "skål", "piskeris", "kop", "grydelapper", "fryseposer"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
-    { "@type": "HowToStep", "text": "Hæld spinaten i en si.", "tumbi": { "verbum": "haelde", "ikoner": ["spinat"], "note": "Den skal være tøet op: tag den op af fryseren aftenen før. Sæt sien over en skål." } },
-    { "@type": "HowToStep", "text": "Mål graham- og hvedemel.", "tumbi": { "verbum": "maale", "ikoner": ["mel"], "note": "100 g af hver i en stor skål. Brug køkkenvægten." } },
+    { "@type": "HowToStep", "text": "Hæld spinaten i en si.", "tumbi": { "verbum": "haelde", "ikoner": ["spinat"], "note": "Den skal være tøet op i køleskabet natten over. Sæt sien over en skål." } },
+    { "@type": "HowToStep", "text": "Mål grahamsmel og hvedemel.", "tumbi": { "verbum": "maale", "ikoner": ["mel"], "note": "100 g af hver i en stor skål. Brug køkkenvægten." } },
     { "@type": "HowToStep", "text": "Smuldr smør og salt i melet.", "tumbi": { "verbum": "smuldre", "ikoner": ["smoer", "salt", "mel"], "note": "100 g koldt smør i små stykker og ½ tsk salt. Gnid det mellem fingrene, til det ligner groft sand." } },
     { "@type": "HowToStep", "text": "Rør vandet i, og saml dejen.", "tumbi": { "verbum": "roere", "ikoner": ["vand"], "note": "4 spsk koldt vand. Saml dejen hurtigt med hænderne. Den må ikke æltes længe, så bliver bunden sej." } },
     { "@type": "HowToStep", "text": "Lad dejen hvile i køleskabet.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "30 min i en pose. Den voksne tænder ovnen på 200 °C (180 °C varmluft) til sidst." } },
@@ -42,7 +42,8 @@
     { "@type": "HowToStep", "text": "Hæld fyldet over spinat og tomater.", "tumbi": { "verbum": "haelde", "note": "Langsomt, så det løber ned mellem spinaten." } },
     { "@type": "HowToStep", "text": "Bag tærten i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 2100, "note": "200 °C (180 °C varmluft) i ca. 35 min, til fyldet har sat sig og er gyldent." } },
     { "@type": "HowToStep", "text": "Tag formen ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme" } },
-    { "@type": "HowToStep", "text": "Lad tærten køle af.", "tumbi": { "verbum": "vente", "timer_sek": 1200, "note": "Mindst 20 min, ellers falder den fra hinanden. Skær den i 8 stykker. Kold tærte holder 2 dage i køleskabet, og stykkerne kan fryses hver for sig." } },
+    { "@type": "HowToStep", "text": "Lad tærten køle af.", "tumbi": { "verbum": "vente", "timer_sek": 1200, "note": "Mindst 20 min, ellers falder den fra hinanden." } },
+    { "@type": "HowToStep", "text": "Skær tærten i 8 stykker.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "note": "Kold tærte holder 2 dage i køleskabet, og stykkerne kan fryses hver for sig. Læg et køleelement i tasken. Et frossent stykke virker også som køleelement." } },
     { "@type": "HowToStep", "text": "Smag et stykke tærte.", "tumbi": { "verbum": "smage" } }
   ],
   "tumbi": {

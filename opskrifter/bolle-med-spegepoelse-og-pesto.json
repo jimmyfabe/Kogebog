@@ -24,7 +24,8 @@
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
     { "@type": "HowToStep", "text": "Pluk bladene af basilikummen.", "tumbi": { "verbum": "pille", "ikoner": ["krydderurt"], "note": "De tynde stilke må gerne komme med. De smager også godt." } },
-    { "@type": "HowToStep", "text": "Pil hvidløget.", "tumbi": { "verbum": "pille", "ikoner": ["hvidloeg"], "note": "Kun et halvt fed. Rå hvidløg smager stærkt." } },
+    { "@type": "HowToStep", "text": "Pil hvidløget.", "tumbi": { "verbum": "pille", "ikoner": ["hvidloeg"], "note": "Ét fed. Rå hvidløg smager stærkt." } },
+    { "@type": "HowToStep", "text": "Skær fedet over.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["hvidloeg"], "note": "Kun den ene halvdel skal bruges." } },
     { "@type": "HowToStep", "text": "Kom basilikum, kerner, ost og hvidløg i bægeret.", "tumbi": { "verbum": "haelde", "ikoner": ["krydderurt", "kerner", "ost", "hvidloeg"], "note": "3 spsk solsikkekerner og 40 g revet ost. Blenderen er slukket og trukket ud af stikket, mens barnet fylder bægeret." } },
     { "@type": "HowToStep", "text": "Hæld olie og salt i.", "tumbi": { "verbum": "haelde", "ikoner": ["olie", "salt"], "note": "1 dl olie og en knivspids salt." } },
     { "@type": "HowToStep", "text": "Blend det til en grøn pesto.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "note": "Skrab ned langs siden et par gange. Pestoen er uden nødder og pinjekerner. Den holder 3-4 dage i et glas med låg i køleskabet og kan fryses i små portioner." } },

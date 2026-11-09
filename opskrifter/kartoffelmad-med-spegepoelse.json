@@ -22,10 +22,10 @@
   "tool": ["gryde med låg", "si", "skål", "gaffel", "smørekniv", "saks", "kniv", "skærebræt", "madkasser"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
-    { "@type": "HowToStep", "text": "Læg kartoflerne i en gryde med koldt vand.", "tumbi": { "verbum": "haelde", "ikoner": ["kartoffel"], "note": "Skrub dem først. Vandet skal lige dække dem." } },
+    { "@type": "HowToStep", "text": "Læg kartoflerne i en gryde med koldt vand.", "tumbi": { "verbum": "haelde", "ikoner": ["kartoffel"], "note": "Skrub dem først. Vandet skal lige dække dem. Har I kolde, kogte kartofler fra i går, så spring frem til «Pil kartoflerne»." } },
     { "@type": "HowToStep", "text": "Kog kartoflerne i 15 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900, "note": "Fra vandet koger, med låg på. De er færdige, når en gaffel glider let ind." } },
     { "@type": "HowToStep", "text": "Hæld vandet fra kartoflerne.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "note": "Pas på dampen." } },
-    { "@type": "HowToStep", "text": "Lad kartoflerne køle helt af.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "Gerne aftenen før: kolde kartofler fra køleskabet er nemmest. Rester fra aftensmaden kan også bruges, så spring de tre trin før over." } },
+    { "@type": "HowToStep", "text": "Lad kartoflerne køle helt af.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "Gerne aftenen før: kolde kartofler fra køleskabet er nemmest." } },
     { "@type": "HowToStep", "text": "Pil kartoflerne.", "tumbi": { "verbum": "pille", "ikoner": ["kartoffel"], "note": "Skindet glider let af kolde kartofler. Nye kartofler kan også bruges med skind." } },
     { "@type": "HowToStep", "text": "Mos kartoflerne groft med en gaffel.", "tumbi": { "verbum": "mose", "ikoner": ["kartoffel"] } },
     { "@type": "HowToStep", "text": "Rør creme fraiche og salt i.", "tumbi": { "verbum": "roere", "ikoner": ["yoghurt", "salt"], "note": "2 spsk creme fraiche og en knivspids salt." } },
@@ -34,7 +34,7 @@
     { "@type": "HowToStep", "text": "Læg spegepølse på maddene.", "tumbi": { "verbum": "pynte", "ikoner": ["spegepoelse"], "note": "2 skiver på hver." } },
     { "@type": "HowToStep", "text": "Drys purløg over maddene.", "tumbi": { "verbum": "drysse", "ikoner": ["krydderurt"], "note": "Klip purløget fint med en saks først. En børnesaks kan også." } },
     { "@type": "HowToStep", "text": "Skær tomaterne i halve.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["tomat"], "note": "Halve cherrytomater er sikrere for små børn end hele." } },
-    { "@type": "HowToStep", "text": "Pak madder og tomater i madkassen.", "tumbi": { "verbum": "pakke-ind", "ikoner": ["broed", "tomat"], "note": "Maddene ved siden af hinanden, ikke ovenpå. Tomaterne i et rum for sig. Holder til næste dag i køleskabet." } },
+    { "@type": "HowToStep", "text": "Pak madder og tomater i madkassen.", "tumbi": { "verbum": "pakke-ind", "ikoner": ["broed", "tomat"], "note": "Maddene ved siden af hinanden, ikke ovenpå. Tomaterne i et rum for sig. Holder til næste dag i køleskabet. Læg et køleelement i tasken." } },
     { "@type": "HowToStep", "text": "Smag en mad.", "tumbi": { "verbum": "smage" } }
   ],
   "tumbi": {

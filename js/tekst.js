@@ -94,7 +94,9 @@ export const KOEN = Object.freeze({
   'blåbær': 't', 'hindbær': 't', 'jordbær': 't', 'mynteblad': 't', 'tebrev': 't',
   'moden': 'n', 'modent': 't', 'frisk': 'n', 'friskt': 't', 'blød': 'n', 'blødt': 't', 'kold': 'n', 'koldt': 't',
   'hvid': 'n', 'hvidt': 't', 'gul': 'n', 'gult': 't', 'lyserød': 'n', 'lyserødt': 't',
-  // Madpakker (09-11-2026): «½ bundt dild», «1 squash», «4 grove boller», «4 salatblade», «8 cherrytomater»
+  // Madpakker (09-11-2026): «½ bundt dild», «1 squash», «4 grove boller», «4 salatblade», «8 cherrytomater».
+  // Pas på: «groft» som biord («1 groft revet gulerod») giver «et»; skriv «1 gulerod, groft revet» (test-skaler kræver
+  // tillægsordene i KOEN)
   'bundt': 't', 'squash': 'n', 'salatblad': 't', 'cherrytomat': 'n', 'grov': 'n', 'groft': 't',
   // Enhederne i flertal, som skaler.js giver med et halvt («2,5 dåser» er «to og en halv»)
   'dåser': 'n', 'poser': 'n', 'pakker': 'n', 'blad': 't', // «1 blad icebergsalat» ved 1 portion

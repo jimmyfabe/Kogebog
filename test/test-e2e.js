@@ -1715,8 +1715,8 @@ async function forsideTop(browser) {
     tjek(t.linjer === 1, 'forside ' + b + '×' + h + ': «Tumbi Køkken» står på én linje (' + t.linjer + ' linjer)');
     tjek(t.dyr.every((w) => w === 0 || w >= 32), 'forside ' + b + '×' + h + ': Rosa og Bo er skjult eller mindst 32 px brede (' + t.dyr.join(', ') + ' px)');
   }
-  // Elleve knapper (v9 får «Madpakke»). Har siden færre, klones den sidste knap, til der er 11 (index.json har 10 grupper,
-  // til Madpakkes retter har billeder). Første række, antal rækker, mindstemål og at den sidste række står i midten
+  // Elleve knapper (v9 får «Madpakke»). Har siden færre (en ældre index.json), klones den sidste knap, til der
+  // er 11. Første række, antal rækker, mindstemål og at den sidste række står i midten
   for (const [b, h, iRaekke, raekker, udenRul] of [[1180, 820, 6, 2, true], [1280, 800, 6, 2, true], [1024, 800, 6, 2, true], [901, 800, 3, 4, true],
     [820, 1180, 2, 6, true], [768, 1024, 2, 6, true], [390, 844, 2, 6, false], [360, 780, 2, 6, false], [844, 390, 3, 4, false], [667, 375, 2, 6, false]]) {
     await side.setViewportSize({ width: b, height: h });

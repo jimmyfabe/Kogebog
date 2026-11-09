@@ -22,7 +22,7 @@
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
     { "@type": "HowToStep", "text": "Hak løget fint.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["loeg"] } },
-    { "@type": "HowToStep", "text": "Skær pølserne i skiver.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["poelse"], "note": "Skiver er sikrere end hele pølser for de mindste: en hel lille pølse kan sætte sig fast i halsen." } },
+    { "@type": "HowToStep", "text": "Skær pølserne i skiver.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["poelse"], "note": "Skiver er sikrere end hele pølser for de mindste: en hel lille pølse kan sætte sig fast i halsen. Til de helt små: skær skiverne i halve." } },
     { "@type": "HowToStep", "text": "Hæld vandet fra majsen.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner alle tre dåser: kanten er skarp. Barnet hælder majsen i dørslaget over vasken." } },
     { "@type": "HowToStep", "text": "Steg løget i olien.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "ikoner": ["loeg", "olie"], "note": "1 spsk olie i en stor pande ved middel varme. Rør, til løget er blødt." } },
     { "@type": "HowToStep", "text": "Kom pølserne på panden.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "ikoner": ["poelse"], "note": "Rør, til skiverne er lysebrune." } },

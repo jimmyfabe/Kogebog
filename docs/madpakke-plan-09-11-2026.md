@@ -19,6 +19,9 @@ Pak småt i små rum, så barnet selv kan vælge. Barnet kan også selv pakke ve
 ikke i pesto (ingen pinjekerner eller cashew). Det sprøde kommer fra solsikke- og græskarkerner. En ny madpakke-ret skal
 følge samme regel.
 
+Købte kerner, tørret frugt, boller og rugbrød kan være mærket «kan indeholde spor af nødder». Tjek posen, hvis
+skolen også forbyder spor (ikke tjekket pr. vare, 09-11-2026).
+
 ## 2-ugers plan (mandag-fredag)
 
 Retterne står i appen. De nye er markeret med \*, og resten findes i forvejen.

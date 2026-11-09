@@ -21,11 +21,12 @@
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
     { "@type": "HowToStep", "text": "Riv gulerødderne groft.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skrub dem først. Rivejernet er skarpt, så den voksne river." } },
     { "@type": "HowToStep", "text": "Riv æblet groft.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["aeble"], "note": "Med skrællen på, til kernehuset." } },
-    { "@type": "HowToStep", "text": "Pres citronen over æblet.", "tumbi": { "verbum": "klemme", "ikoner": ["citron", "aeble"], "note": "Den voksne skærer citronen over. Så bliver æblet ikke brunt." } },
+    { "@type": "HowToStep", "text": "Skær citronen over.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["citron"], "note": "Over på midten. Kun den ene halvdel skal bruges." } },
+    { "@type": "HowToStep", "text": "Pres citronen over æblet.", "tumbi": { "verbum": "klemme", "ikoner": ["citron", "aeble"], "note": "Så bliver æblet ikke brunt." } },
     { "@type": "HowToStep", "text": "Pil appelsinen, og del den i både.", "tumbi": { "verbum": "pille", "ikoner": ["appelsin"], "note": "Del bådene i to med fingrene, så de passer til en gaffel." } },
     { "@type": "HowToStep", "text": "Bland det hele i en skål.", "tumbi": { "verbum": "roere", "ikoner": ["gulerod", "aeble", "appelsin"] } },
-    { "@type": "HowToStep", "text": "Drys rosiner og kerner over.", "tumbi": { "verbum": "drysse", "ikoner": ["rosiner", "kerner"], "note": "2 spsk af hver. Græskarkernerne er sprøde i stedet for nødder." } },
-    { "@type": "HowToStep", "text": "Fyld råkosten i små bøtter med låg.", "tumbi": { "verbum": "haelde", "ikoner": ["gulerod"], "note": "Den holder 1 dag i køleskabet. Kernerne er sprødest, hvis de drysses på om morgenen." } },
+    { "@type": "HowToStep", "text": "Drys rosiner og kerner over.", "tumbi": { "verbum": "drysse", "ikoner": ["rosiner", "kerner"], "note": "2 spsk af hver. Græskarkernerne er sprøde i stedet for nødder. Laves råkosten aftenen før, så gem kernerne til om morgenen." } },
+    { "@type": "HowToStep", "text": "Fyld råkosten i små bøtter med låg.", "tumbi": { "verbum": "haelde", "ikoner": ["gulerod"], "note": "Den holder 1 dag i køleskabet." } },
     { "@type": "HowToStep", "text": "Smag på råkosten.", "tumbi": { "verbum": "smage" } }
   ],
   "tumbi": {

@@ -22,10 +22,10 @@
     "1 peberfrugt",
     "½ agurk"
   ],
-  "tool": ["køkkenvægt", "stor skål", "piskeris", "dl-mål", "kop", "pande", "paletkniv", "tallerken", "kniv", "skærebræt", "smørekniv", "husholdningsfilm"],
+  "tool": ["køkkenvægt", "stor skål", "piskeris", "dl-mål", "kop", "pande", "lille øse", "paletkniv", "tallerken", "kniv", "skærebræt", "smørekniv", "husholdningsfilm"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
-    { "@type": "HowToStep", "text": "Mål graham- og hvedemel.", "tumbi": { "verbum": "maale", "ikoner": ["mel"], "note": "100 g af hver. Brug køkkenvægten." } },
+    { "@type": "HowToStep", "text": "Mål grahamsmel og hvedemel.", "tumbi": { "verbum": "maale", "ikoner": ["mel"], "note": "100 g af hver. Brug køkkenvægten." } },
     { "@type": "HowToStep", "text": "Hæld mel og salt i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["mel", "salt"], "note": "½ tsk salt." } },
     { "@type": "HowToStep", "text": "Mål 5 dl mælk.", "tumbi": { "verbum": "maale", "ikoner": ["maelk"] } },
     { "@type": "HowToStep", "text": "Pisk mælken i lidt ad gangen.", "tumbi": { "verbum": "piske", "ikoner": ["maelk"], "note": "Så bliver der ingen klumper." } },
@@ -39,7 +39,7 @@
     { "@type": "HowToStep", "text": "Skær peberfrugt og agurk i strimler.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["peberfrugt", "agurk"], "note": "Den voksne fjerner stilk og kerner fra peberfrugten." } },
     { "@type": "HowToStep", "text": "Smør flødeost på pandekagerne.", "tumbi": { "verbum": "smoere", "ikoner": ["flodeost"], "note": "Et tyndt lag. 150 g rækker til 8." } },
     { "@type": "HowToStep", "text": "Læg skinke, salat og grønt på.", "tumbi": { "verbum": "pynte", "ikoner": ["skinke", "kaal", "peberfrugt", "agurk"], "note": "I den nederste tredjedel. Ikke for meget, så kan de rulles." } },
-    { "@type": "HowToStep", "text": "Rul pandekagerne stramt sammen.", "tumbi": { "verbum": "rulle", "note": "Fold siderne ind først, så falder fyldet ikke ud. Pak dem i husholdningsfilm. De holder til næste dag i køleskabet." } },
+    { "@type": "HowToStep", "text": "Rul pandekagerne stramt sammen.", "tumbi": { "verbum": "rulle", "note": "Fold siderne ind først, så falder fyldet ikke ud. Pak dem i husholdningsfilm. De holder til næste dag i køleskabet. Læg et køleelement i tasken." } },
     { "@type": "HowToStep", "text": "Smag en wrap.", "tumbi": { "verbum": "smage" } }
   ],
   "tumbi": {

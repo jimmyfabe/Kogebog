@@ -217,7 +217,7 @@ export const DYR = {
 // Forsidens billedknapper (opskrifter/index.json bestemmer rækkefølgen, docs/forside-sortering-05-11-2026.md hvad der
 // står hvor). Navnet står på knappen og siges af stemmen (js/replikker.js); billedet er grafikGruppe nedenfor, og farven
 // står i app.css under [data-gruppe]. Fra 05-11-2026 afløser de Aftensmad og Bagning. Madpakke (v9, 09-11-2026) er den
-// 11. knap; den kommer på forsiden, når dens retter står i index.json (docs/madpakke-plan-09-11-2026.md)
+// 11. knap (docs/madpakke-plan-09-11-2026.md)
 export const GRUPPER = {
   'pasta-og-nudler': 'Pasta og nudler',
   'kylling': 'Kylling',

@@ -145,7 +145,7 @@ function knapBredde(rod, n, b, h) {
 
 test('forsidens gitter: 5 × 2 på iPad, 2 kolonner på iPhone, og alle knapper har en plads', () => {
   const rod = blokke(CSS);
-  // index.json har 10 grupper, til Madpakkes retter har billeder; GRUPPER har 11 (testene for 11 står nedenfor)
+  // GRUPPER og index.json har 11 grupper fra v9 (testene for 11 står nedenfor)
   assert.equal(Object.keys(GRUPPER).length, 11, 'v9 har 11 grupper med Madpakke');
   const n = 10;
   const ipad = gitter(rod, n, 1180, 820);
