@@ -2,6 +2,38 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
+## 09-11-2026 kl. 23:29: v9 har billeder, review-rettelser og grøn e2e; stemmen kører (Saga)
+
+Intet er pushet eller flettet til main. v8 er flettet ind i v9 (`84cb394`).
+
+**Lavet i aften:**
+- `7906232` + `650c8c4`: billeder til de 16 retter (FLUX.2 klein), og retterne er flyttet fra ventemappen ind i `index.json`. `74c135d`: ordbogen kender madpakkernes ord.
+- `cd51243`: rettelser efter code- og indholdsreview i 13 retter:
+  - rå fisk kom ikke længere i dip-skålen (det alvorlige fund);
+  - eget trin «Skær citronen over.» i 5 retter;
+  - køleelement i madpakkerne;
+  - havregrødsbollerne køler 30 min;
+  - spinaten tøs op natten over;
+  - paprika har ikonet krydderurt, som i resten af kogebogen.
+  - **Rettelse til commit-beskeden:** der står «Afvist: fund 16 (krydderi-ikonet)», men fund 16 *blev* rettet (tortilla-ruller).
+- `4d1e031` (v9) og `6be3c67` (v8): blød bindestreg i «Rugbrødsmadpakke» og «Gulerodssmoothie», som stak ud af kortet på iPhone og 360 px.
+- Tests:
+  - node-testene er grønne, undtagen `test-lyd` (453 replikker mangler, til Røst er færdig, plus de 2 gamle gruppe-mp3) og `test-version` (nummeret hæves ved udgivelsen);
+  - e2e i v9 (`former`, `hele`, `lyn`, `voksen`) er grøn efter bindestregen.
+- Review-fund 1 (iPad 768×1024 med en kørende timer) er målt i WebKit. Siden kan rulle 1 px (og 3 px på 901×800), ikke ~30 px, og alle 11 knapper og «Voksne: hold» kan ses. Ingen rettelse.
+
+**Kører nu:** Røst seed 42 på v9's 453 replikker (lukkes ca. kl. 03). Derefter trin 3-5 i CLAUDE.md «Stemmen», så `LYD`/`UDGAVE_INDHOLD`/`INDHOLD`. Lyt efter: squashen, basilikummen, spegepølse.
+
+**Næste:** ui-reviewer på v9 (skærmbilleder på 5 skærme) og e2e på v8 alene, begge gennem låsen.
+
+**Afventer Jimmy** (alle spørgsmål samlet her):
+- (09-11) «Grove gulerodsboller til madpakken» står i Brød og pizza. Skal de flyttes til Madpakke? Reglen i `docs/forside-sortering-05-11-2026.md` nævner ikke Madpakke endnu (review-fund 4). Flytningen er én linje i `index.json`.
+- (09-11) Nødder: købte kerner, tørret frugt, boller og rugbrød kan være mærket «kan indeholde spor af nødder». Er spor også forbudt på skolen? (ikke tjekket pr. vare)
+- (09-11) Madpakkerne skal prøves i et køkken, før `afproevet` sættes til true.
+- (08-11) Kæmpesmåkagerne skal smages og bages i en rigtig ovn.
+- (06-11) Udgivelse: v7, v8 og v9 venter på dit «ja». v7 skal ud før eller sammen med v8, og v9 indeholder v8.
+- (05-11) Må de 2 gamle gruppe-mp3 og `grafik/gruppe-bagning.svg` slettes? `test-lyd` er rød, til de er væk.
+
 ## 09-11-2026 kl. 13:49: v9 «Madpakke» er bygget, billederne venter (hovedsessionen)
 
 Jimmy 09-11: «ja, lav madpakkerne». Gren `v9-madpakke` fra `v8-drikke` (worktree `D:/Claude/.claude/worktrees/kogebog-v9`). Plan: `docs/madpakke-plan-09-11-2026.md`. Intet er pushet eller flettet.
@@ -10,7 +42,7 @@ Jimmy 09-11: «ja, lav madpakkerne». Gren `v9-madpakke` fra `v8-drikke` (worktr
 - Tests: `test-opskrifter` grøn (223 + 15 venter). `koer-alle.js` 15 af 17; `test-lyd` og `test-version` var røde i forvejen. **E2e er ikke kørt**, og 11-knaps-gitteret er ikke set i en browser.
 - Billederne: prompter, stilbillede, `lav-billede.py` (v8's stil) og løkken ligger varigt i `D:/Stemmer/kogebog-v9-billeder/`. Kør `bash D:/Stemmer/kogebog-v9-billeder/billed-loekke.sh` (ét billede pr. låsekald; stop med filen `billed-stop`).
 
-**Næste:** billederne → tjek på mørk bund → ventemappens trin 1-7 → e2e (`former`, `hele`, `lyn`, `voksen`) → ui-reviewer (11 knapper, Grøn mod Madpakke på mobil) → stemmen efter v8's Røst-trin 3-5.
+**Næste:** afløst af afsnittet 23:29 ovenfor (billeder, flytning og e2e er gjort).
 
 - 09-11 kl. 16:00: **Cowboybønner** (`b03b158`) er ret nr. 16 i ventemappen: gruppe `koed`, i ugeplanen (70 kr., Rema-priser 09-11), billedprompten står som linje 16 i `retter-v9.txt`, så løkken tegner den med. Ekstra trin står i ventemappens README. Jimmys ønske efter Trinity-bønnerne (PDF på Drev).
 
