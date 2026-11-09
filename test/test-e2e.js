@@ -1715,24 +1715,39 @@ async function forsideTop(browser) {
     tjek(t.linjer === 1, 'forside ' + b + '×' + h + ': «Tumbi Køkken» står på én linje (' + t.linjer + ' linjer)');
     tjek(t.dyr.every((w) => w === 0 || w >= 32), 'forside ' + b + '×' + h + ': Rosa og Bo er skjult eller mindst 32 px brede (' + t.dyr.join(', ') + ' px)');
   }
-  // Ti knapper (v8 får «Drikke»): gitteret skal klare det uden ny kode. Knappen lægges ind i siden, ikke i koden
-  for (const [b, h, kolonner, udenRul] of [[1180, 820, 5, true], [820, 1180, 2, true], [390, 844, 2, false], [360, 780, 2, false]]) {
+  // Elleve knapper (v9 får «Madpakke»). Har siden færre, klones den sidste knap, til der er 11 (index.json har 10 grupper,
+  // til Madpakkes retter har billeder). Første række, antal rækker, mindstemål og at den sidste række står i midten
+  for (const [b, h, iRaekke, raekker, udenRul] of [[1180, 820, 6, 2, true], [1280, 800, 6, 2, true], [1024, 800, 6, 2, true], [901, 800, 3, 4, true],
+    [820, 1180, 2, 6, true], [768, 1024, 2, 6, true], [390, 844, 2, 6, false], [360, 780, 2, 6, false], [844, 390, 3, 4, false], [667, 375, 2, 6, false]]) {
     await side.setViewportSize({ width: b, height: h });
+    await vent(150);
     const t = await side.evaluate(() => {
       const ul = document.querySelector('.gruppe-knapper');
-      if (!ul.querySelector('[data-tiende]')) {
+      while (ul.children.length < 11) {
         const li = ul.lastElementChild.cloneNode(true);
-        li.setAttribute('data-tiende', '');
+        li.setAttribute('data-klon', '');
         ul.append(li);
       }
       const knapper = [...ul.querySelectorAll('.gruppe-knap')].map((x) => x.getBoundingClientRect());
-      return { antal: knapper.length, kolonner: new Set(knapper.map((k) => Math.round(k.left))).size, bund: Math.max(...knapper.map((k) => k.bottom)), hold: document.querySelector('.forside-voksen').getBoundingClientRect().bottom, H: innerHeight, mindst: [Math.round(Math.min(...knapper.map((k) => k.width))), Math.round(Math.min(...knapper.map((k) => k.height)))] };
+      const toppe = [...new Set(knapper.map((k) => Math.round(k.top)))].sort((x, y) => x - y);
+      const sidste = knapper.filter((k) => Math.round(k.top) === toppe.at(-1));
+      const g = ul.getBoundingClientRect();
+      const cs = getComputedStyle(ul);
+      const venstre = Math.min(...sidste.map((k) => k.left)) - (g.left + parseFloat(cs.paddingLeft));
+      const hoejre = g.right - parseFloat(cs.paddingRight) - Math.max(...sidste.map((k) => k.right));
+      return { antal: knapper.length, iRaekke: knapper.filter((k) => Math.round(k.top) === toppe[0]).length, raekker: toppe.length,
+        skaev: Math.round(Math.abs(venstre - hoejre)), bund: Math.max(...knapper.map((k) => k.bottom)),
+        hold: document.querySelector('.forside-voksen').getBoundingClientRect().bottom, H: innerHeight,
+        mindst: [Math.round(Math.min(...knapper.map((k) => k.width))), Math.round(Math.min(...knapper.map((k) => k.height)))] };
     });
-    tjek(t.antal === 10 && t.kolonner === kolonner, 'ti knapper på ' + b + '×' + h + ': ' + kolonner + ' kolonner (' + JSON.stringify(t) + ')');
-    tjek(t.mindst[0] >= FORSIDE_MIN_BRED && t.mindst[1] >= FORSIDE_MIN_HOEJ, 'ti knapper på ' + b + '×' + h + ': mindst ' + FORSIDE_MIN_BRED + '×' + FORSIDE_MIN_HOEJ + ' px (' + t.mindst.join('×') + ')');
-    if (udenRul) tjek(t.hold <= t.H && t.bund <= t.H, 'ti knapper på ' + b + '×' + h + ': alt kan ses uden at rulle (' + JSON.stringify(t) + ')');
-    maal.push('ti knapper på ' + b + '×' + h + ': ' + t.mindst.join('×') + ' px, bund ' + Math.round(t.hold) + ' på ' + t.H + ' px');
+    const hvor = '11 knapper på ' + b + '×' + h;
+    tjek(t.antal === 11 && t.iRaekke === iRaekke && t.raekker === raekker, hvor + ': ' + iRaekke + ' i første række og ' + raekker + ' rækker (' + JSON.stringify(t) + ')');
+    tjek(t.skaev <= 2, hvor + ': den sidste række står i midten (' + t.skaev + ' px skævt)');
+    tjek(t.mindst[0] >= FORSIDE_MIN_BRED && t.mindst[1] >= FORSIDE_MIN_HOEJ, hvor + ': mindst ' + FORSIDE_MIN_BRED + '×' + FORSIDE_MIN_HOEJ + ' px (' + t.mindst.join('×') + ')');
+    if (udenRul) tjek(t.hold <= t.H && t.bund <= t.H, hvor + ': alt kan ses uden at rulle (' + JSON.stringify(t) + ')');
+    maal.push(hvor + ': ' + t.mindst.join('×') + ' px, bund ' + Math.round(t.hold) + ' på ' + t.H + ' px');
   }
+  await side.evaluate(() => document.querySelectorAll('.gruppe-knapper > [data-klon]').forEach((li) => li.remove()));
   tjek(side.fejl.length === 0, 'forsidens top: ' + side.fejl.join(' | '));
   await ctx.close();
 }

@@ -118,20 +118,36 @@ function gaeldende(rod, vaelger, b, h) {
 }
 const GITTER = '.gruppe-knapper';
 const MED_TI = '.gruppe-knapper:has(> li:nth-child(10))';
+const MED_ELLEVE = '.gruppe-knapper:has(> li:nth-child(11):last-child)';
 const pxTal = (v) => {
   assert.match(String(v), /^\d+(\.\d+)?px$/, 'forventede en værdi i px, fandt ' + v);
   return parseFloat(v);
 };
-// Gitterets variabler ved n knapper: reglen for 10 knapper lægges oven på den almindelige, som i browseren
+// Gitterets variabler ved n knapper: reglen for 10 knapper lægges oven på den almindelige, og reglen for præcis 11 oven på
+// den, som i browseren (:has() vejer det samme som vælgeren i parentesen). spor er antallet i grid-template-columns: med
+// 11 knapper to pr. kolonne, så den sidste række kan stå i midten
 function gitter(rod, n, b, h) {
-  const g = { ...gaeldende(rod, GITTER, b, h), ...(n >= 10 ? gaeldende(rod, MED_TI, b, h) : {}) };
-  return { kolonner: Number(g['--kolonner']), raekker: Number(g['--raekker']), rest: pxTal(g['--rest']), gab: pxTal(g['--raek-gab']), plade: g['--plade'] };
+  const g = { ...gaeldende(rod, GITTER, b, h), ...(n >= 10 ? gaeldende(rod, MED_TI, b, h) : {}), ...(n === 11 ? gaeldende(rod, MED_ELLEVE, b, h) : {}) };
+  const spor = /^repeat\((\d+),/.exec(g['grid-template-columns'] || '');
+  return { kolonner: Number(g['--kolonner']), raekker: Number(g['--raekker']), spor: spor ? Number(spor[1]) : Number(g['--kolonner']),
+    rest: pxTal(g['--rest']), gab: pxTal(g['--raek-gab']), plade: g['--plade'] };
+}
+// En knaps grid-column ved 11 knapper: reglen for alle knapper og så den for knap nr. i (vejer mere)
+const elleveLi = (rod, i, b, h) => ({ ...gaeldende(rod, MED_ELLEVE + ' > li', b, h), ...gaeldende(rod, MED_ELLEVE + ' > li:nth-child(' + i + ')', b, h) })['grid-column'];
+// Knappens bredde ved n knapper: gitteret er højst 1180 px, minus luften i siderne og mellem kolonnerne
+function knapBredde(rod, n, b, h) {
+  const g = gitter(rod, n, b, h);
+  const luft = gaeldende(rod, GITTER, b, h);
+  const vandret = parseFloat(luft.padding.split(/\s+/)[1]);
+  const kolonneGab = parseFloat(luft.gap.replace(/var\(--raek-gab\)/, '0px').split(/\s+/)[1]);
+  return (Math.min(b, 1180) - 2 * vandret - (g.kolonner - 1) * kolonneGab) / g.kolonner;
 }
 
 test('forsidens gitter: 5 × 2 på iPad, 2 kolonner på iPhone, og alle knapper har en plads', () => {
   const rod = blokke(CSS);
-  const n = Object.keys(GRUPPER).length;
-  assert.equal(n, 10, 'v8 har 10 knapper: gitteret regner begge antal (næste test)');
+  // index.json har 10 grupper, til Madpakkes retter har billeder; GRUPPER har 11 (testene for 11 står nedenfor)
+  assert.equal(Object.keys(GRUPPER).length, 11, 'v9 har 11 grupper med Madpakke');
+  const n = 10;
   const ipad = gitter(rod, n, 1180, 820);
   assert.deepEqual([ipad.kolonner, ipad.raekker], [5, 2]);
   assert.deepEqual([gitter(rod, n, 390, 844).kolonner, gitter(rod, n, 390, 844).raekker], [2, 5]);
@@ -155,13 +171,51 @@ test('forsidens gitter: en 10. knap giver 5 × 2 på iPad på langs og 2 kolonne
   }
 });
 
+// Madpakke (v9) er den 11. knap. Den sidste række står i midten: gitteret har to spor pr. kolonne, og den første knap i
+// den sidste række starter i spor 2. Hvilken knap det er, følger kolonnerne (7 ved 6 + 5, 10 ved 3 × 4, 11 ved 2 × 6)
+test('forsidens gitter: 11 knapper giver 6 + 5 på iPad på langs, 3 × 4 i smalle vinduer på langs og ellers 2 kolonner', () => {
+  const rod = blokke(CSS);
+  const forventet = [
+    [1180, 820, 6], [1280, 800, 6], [1024, 768, 6], [1024, 800, 6], [1000, 700, 6],
+    [999, 800, 3], [960, 800, 3], [901, 800, 3], [701, 500, 3], [844, 390, 3], [932, 430, 3], [812, 375, 3], [736, 414, 3], [1024, 500, 3],
+    [820, 1180, 2], [768, 1024, 2], [744, 1133, 2], [390, 844, 2], [360, 780, 2], [667, 375, 2], [700, 400, 2],
+  ];
+  for (const [b, h, k] of forventet) {
+    const g = gitter(rod, 11, b, h);
+    const hvor = '11 knapper på ' + b + '×' + h;
+    assert.equal(g.kolonner, k, hvor + ': kolonner');
+    assert.equal(g.spor, 2 * k, hvor + ': to spor pr. kolonne');
+    assert.equal(g.raekker, Math.ceil(11 / k), hvor + ': rækker');
+    const midten = 11 - ((11 % k) || k) + 1; // den første knap i den sidste række
+    for (let i = 1; i <= 11; i++) assert.equal(elleveLi(rod, i, b, h), i === midten ? '2 / span 2' : 'span 2', hvor + ': knap ' + i);
+  }
+  for (let b = 360; b <= 700; b++) assert.equal(gitter(rod, 11, b, 1000).kolonner, 2, b + ' px');
+  // Reglen gælder kun præcis 11: med 10 knapper er der ingen dobbelte spor
+  assert.equal(gitter(rod, 10, 1180, 820).spor, 5);
+});
+
+test('forsidens gitter: med 11 knapper er hver knap mindst 140 px bred, fra 360 px og op', () => {
+  const rod = blokke(CSS);
+  for (let b = 360; b <= 1400; b++) {
+    for (const h of b <= 700 ? [1000, 400] : [400, 800, 1200]) {
+      const k = knapBredde(rod, 11, b, h);
+      assert.ok(k >= 140, '11 knapper på ' + b + '×' + h + ': knappen er ' + k + ' px bred');
+    }
+  }
+});
+
 // Rækkens højde regnes af skærmen og --rest (som i app.css). En knap skal mindst kunne rumme den mindste tallerken (72 px),
 // knappens luft og et navn: ellers presses gitteret ud over skærmen
-test('forsidens gitter: rækkerne er høje nok uden at rulle på iPad, med 9 og 10 knapper og med timeren fremme', () => {
+test('forsidens gitter: rækkerne er høje nok uden at rulle på iPad, med 9, 10 og 11 knapper og med timeren fremme', () => {
   const rod = blokke(CSS);
   const hoejde = (g, h, rest = g.rest) => (h - rest - (g.raekker - 1) * g.gab) / g.raekker;
-  for (const n of [9, 10]) {
-    for (const [b, h] of [[1180, 820], [1024, 768]]) {
+  // 11 knapper med tallerkenen til venstre for navnet: den mindste tallerken (72), knappens luft (20) og kanten (6)
+  for (const [b, h] of [[820, 1180], [768, 1024], [744, 1133], [901, 800], [960, 800]]) {
+    const g = gitter(rod, 11, b, h);
+    assert.ok(hoejde(g, h) >= 98, '11 knapper på ' + b + '×' + h + ': rækken er ' + hoejde(g, h) + ' px');
+  }
+  for (const n of [9, 10, 11]) {
+    for (const [b, h] of [[1180, 820], [1024, 768], [1280, 800]]) {
       const g = gitter(rod, n, b, h);
       assert.ok(hoejde(g, h) >= 92, n + ' knapper på ' + b + '×' + h + ': rækken er ' + hoejde(g, h) + ' px');
     }

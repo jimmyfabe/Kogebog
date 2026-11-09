@@ -16,7 +16,11 @@ import { FAVORITTER, gruppeRute, forsideGrupper, gruppeAf, gruppeRetter, tilbage
 import { lavModel, erLynhurtig, harTid } from '../js/model.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const TI = ['pasta-og-nudler', 'kylling', 'fisk', 'koed', 'groent', 'broed-og-pizza', 'soede-sager', 'drikke', 'jul', 'halloween'];
+// Alle grupper i forsidens rækkefølge. Madpakke (v9) står i GRUPPER, men kommer først i index.json, når dens retter har
+// billeder (docs/venter-paa-billede/README.md). Så tømmes VENTER_PAA_BILLEDER, og forsiden har 11 knapper
+const GRUPPE_IDS = ['pasta-og-nudler', 'kylling', 'fisk', 'koed', 'groent', 'broed-og-pizza', 'madpakke', 'soede-sager', 'drikke', 'jul', 'halloween'];
+const VENTER_PAA_BILLEDER = ['madpakke'];
+const KNAPPER = GRUPPE_IDS.filter((id) => !VENTER_PAA_BILLEDER.includes(id)); // forsidens knapper nu
 const ANTAL_RETTER = 223;
 const ANTAL_PLANLAGTE = 82;
 
@@ -30,7 +34,7 @@ const UGE = INDEX.grupper.flatMap((g) => g.retter).filter((id) => JSONER.get(id)
 
 // ---------- Sorteringen i opskrifter/index.json ----------
 
-test('alle 223 retter står i præcis én af de 10 grupper, og alle opskriftsfiler har en plads', () => {
+test('alle 223 retter står i præcis én af forsidens grupper, og alle opskriftsfiler har en plads', () => {
   const alle = INDEX.grupper.flatMap((g) => g.retter);
   assert.equal(alle.length, ANTAL_RETTER);
   assert.equal(new Set(alle).size, alle.length, 'en ret står to steder');
@@ -38,11 +42,11 @@ test('alle 223 retter står i præcis én af de 10 grupper, og alle opskriftsfil
   assert.equal(FILER.length, ANTAL_RETTER);
 });
 
-test('de 10 grupper står i forsidens rækkefølge, ingen er tom, og koden kender dem alle', () => {
-  assert.deepEqual(INDEX.grupper.map((g) => g.id), TI);
-  assert.deepEqual(Object.keys(GRUPPER), TI, 'GRUPPER i js/katalog.js har samme rækkefølge som listen');
+test('grupperne står i forsidens rækkefølge, ingen er tom, og koden kender dem alle', () => {
+  assert.deepEqual(INDEX.grupper.map((g) => g.id), KNAPPER);
+  assert.deepEqual(Object.keys(GRUPPER), GRUPPE_IDS, 'GRUPPER i js/katalog.js har samme rækkefølge som listen');
   for (const g of INDEX.grupper) assert.ok(g.retter.length > 0, g.id + ' er tom');
-  assert.deepEqual(forsideGrupper(INDEX.grupper), { knapper: TI, ukendte: [] });
+  assert.deepEqual(forsideGrupper(INDEX.grupper), { knapper: KNAPPER, ukendte: [] });
 });
 
 test('de 82 retter, der kan planlægges, er stadig 82 og står alle i en af grupperne', () => {
@@ -407,11 +411,11 @@ const knapMed = (label) => rod.querySelectorAll('button').find((b) => b.getAttri
 const knapMedTekst = (tekst) => rod.querySelectorAll('button').find((b) => b.textContent === tekst);
 const overskrift = () => rod.querySelector('h1').textContent;
 
-test('forsiden: 10 rigtige knapper med navn til skærmlæseren, billede og navn og ingen af de 223 kort', async () => {
+test('forsiden: en rigtig knap pr. gruppe med navn til skærmlæseren, billede og navn og ingen af de 223 kort', async () => {
   await start();
   const b = knapper();
-  assert.deepEqual(b.map((x) => x.dataset.gruppe), TI);
-  assert.deepEqual(b.map((x) => x.getAttribute('aria-label')), TI.map((id) => GRUPPER[id]));
+  assert.deepEqual(b.map((x) => x.dataset.gruppe), KNAPPER);
+  assert.deepEqual(b.map((x) => x.getAttribute('aria-label')), KNAPPER.map((id) => GRUPPER[id]));
   for (const x of b) {
     assert.equal(x.tag, 'button');
     assert.equal(x.getAttribute('type'), 'button');
@@ -437,7 +441,7 @@ test('billedet til chippen «Aftensmad» i voksendelen findes på disken', () =>
 
 test('et tryk åbner gruppen og siger navnet, og skærmen skifter først', async () => {
   await start();
-  for (const id of TI) {
+  for (const id of KNAPPER) {
     gaaTil('#/');
     sagt = [];
     tryk(knapper().find((b) => b.dataset.gruppe === id));
@@ -461,7 +465,7 @@ test('en stemme, der fejler, holder ikke navigationen tilbage', async () => {
 
 test('gruppeskærmen viser kun gruppens retter med kortene fra før (minuttal og lyn)', async () => {
   await start();
-  for (const id of TI) {
+  for (const id of KNAPPER) {
     gaaTil('#/gruppe/' + id);
     assert.deepEqual(kort(), retterI(id), id);
     assert.equal(overskrift(), GRUPPER[id]);
@@ -472,7 +476,7 @@ test('gruppeskærmen viser kun gruppens retter med kortene fra før (minuttal og
   const medLyn = hvor(erLynhurtig);
   const medTid = hvor(harTid);
   assert.ok(medLyn.length > 0, 'testen skal have lynhurtige retter at prøve på');
-  for (const id of TI) {
+  for (const id of KNAPPER) {
     gaaTil('#/gruppe/' + id);
     assert.equal(rod.querySelectorAll('.lyn').length, medLyn.filter((g) => g === id).length, 'lyn på ' + id);
     assert.equal(rod.querySelectorAll('.kort-tid').length, medTid.filter((g) => g === id).length, 'minuttal på ' + id);
@@ -535,7 +539,7 @@ test('tilbage fra gruppen fører til forsiden', async () => {
 });
 
 test('gamle adresser til en ret virker og fører tilbage til rettens gruppe', async () => {
-  for (const g of TI) {
+  for (const g of KNAPPER) {
     const id = retterI(g)[0];
     await start('#/ret/' + id);
     assert.equal(overskrift(), lavModel(JSONER.get(id)).navn, id);
@@ -666,10 +670,21 @@ test('grupper i listen, koden ikke kender, forsvinder ikke i stilhed', async () 
   assert.equal(rod.querySelector('.fejl-linje').getAttribute('role'), 'status');
 });
 
+test('Madpakke har ingen knap, før den står i index.json, og får 7. pladsen, når den gør', async () => {
+  await start();
+  assert.ok(!knapper().some((b) => b.dataset.gruppe === 'madpakke'));
+  const laant = retterI('broed-og-pizza').slice(0, 2);
+  const grupper = INDEX.grupper.map((g) => (g.id === 'broed-og-pizza' ? { id: g.id, retter: g.retter.slice(2) } : g));
+  grupper.splice(grupper.findIndex((g) => g.id === 'broed-og-pizza') + 1, 0, { id: 'madpakke', retter: laant });
+  await start('#/', { hent: (sti) => (sti === 'opskrifter/index.json' ? { version: 2, grupper } : undefined) });
+  assert.deepEqual(knapper().map((b) => b.dataset.gruppe), GRUPPE_IDS);
+  assert.equal(knapper()[6].getAttribute('aria-label'), 'Madpakke');
+});
+
 test('en gruppe, der er tom i listen, har ingen knap, og adressen til den giver fejlskærmen', async () => {
   const ny = { version: 2, grupper: INDEX.grupper.map((g) => (g.id === 'fisk' ? { id: 'fisk', retter: [] } : g)) };
   await start('#/', { hent: (sti) => (sti === 'opskrifter/index.json' ? ny : undefined) });
-  assert.deepEqual(knapper().map((b) => b.dataset.gruppe), TI.filter((x) => x !== 'fisk'));
+  assert.deepEqual(knapper().map((b) => b.dataset.gruppe), KNAPPER.filter((x) => x !== 'fisk'));
   gaaTil('#/gruppe/fisk');
   assert.equal(overskrift(), 'Den gruppe findes ikke');
 });

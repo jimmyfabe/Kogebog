@@ -19,6 +19,7 @@
   --lilla-lys: #EADFF4;     /* Halloween-afsnittet (græskarret står på lilla) */
   --jul-lys: #F2B8B5;       /* Jul-afsnittet: det grønne juletræ står på julerødt (kakao 8,0:1; tydeligt mørkere end tomat-lys) */
   --drikke-lys: #B5E3DC;    /* Drikke-afsnittet: det orange glas står på havgrønt (kakao 9,7:1) */
+  --madpakke-lys: #D4E8A0;  /* Madpakke-afsnittet: den blå madkasse står på æblegrønt, gulere end Grønt (kakao 10,3:1) */
   --dej-lys: #F6E7D0;
   --blaa: #3E8FB0;
   --blaa-moerk: #2E6A83;   /* fokusring */
@@ -270,7 +271,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
    højde og rækkerne, så alle knapper kan ses uden at rulle på iPad. --rest er det, der ikke er rækker: dugen (ca. 152 px),
    gitterets luft (24), bunden med «Voksne: hold» (86) og de to linjer om stemmen og versionen (52). Regnet, ikke målt:
    e2e måler det på 1180×820.
-   9 knapper: 3 × 3. 10 knapper (:has nedenfor): 5 × 2 på langs, 2 × 5 på højkant, uden at koden skal ændres */
+   9 knapper: 3 × 3. 10 knapper (:has nedenfor): 5 × 2 på langs, 2 × 5 på højkant, uden at koden skal ændres.
+   11 knapper (Madpakke, v9): 6 + 5 på iPad på langs, 3 × 4 i smalle vinduer på langs, ellers 2 kolonner (reglerne under 10) */
 .gruppe-knapper {
   --kolonner: 3;
   --raekker: 3;
@@ -323,6 +325,30 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .gruppe-knapper:has(> li:nth-child(10)) .gruppe-knap { flex-direction: row; justify-content: flex-start; gap: 14px; padding: 10px 14px; }
   .gruppe-knapper:has(> li:nth-child(10)) .gruppe-knap-navn { text-align: left; }
 }
+/* Præcis 11 knapper. Gitteret har dobbelt så mange spor som kolonner, og hver knap fylder to spor, så den sidste række kan
+   stå i midten: dens første knap starter i spor 2 (6 + 5, 3 + 3 + 3 + 2 og 2 × 5 + 1). Uden mediereglerne: 2 kolonner på
+   telefonen og iPad'en på højkant, hvor reglen for 10 knapper giver tallerkenen til venstre for navnet */
+.gruppe-knapper:has(> li:nth-child(11):last-child) { --kolonner: 2; --raekker: 6; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.gruppe-knapper:has(> li:nth-child(11):last-child) > li { grid-column: span 2; }
+.gruppe-knapper:has(> li:nth-child(11):last-child) > li:nth-child(11) { grid-column: 2 / span 2; }
+/* 11 knapper på langs i et smalt vindue (701-999 px, og iPhone på tværs): 6 kolonner ville give knapper under 140 px, så
+   3 × 4 med tallerkenen til venstre for navnet */
+@media (min-width: 701px) and (orientation: landscape) {
+  .gruppe-knapper:has(> li:nth-child(11):last-child) { --kolonner: 3; --raekker: 4; --plade: clamp(72px, calc(var(--raekke) - 38px), 150px); grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .gruppe-knapper:has(> li:nth-child(11):last-child) .gruppe-knap { flex-direction: row; justify-content: flex-start; gap: 14px; padding: 10px 14px; }
+  .gruppe-knapper:has(> li:nth-child(11):last-child) .gruppe-knap-navn { text-align: left; }
+  .gruppe-knapper:has(> li:nth-child(11):last-child) > li:nth-child(10) { grid-column: 2 / span 2; }
+  .gruppe-knapper:has(> li:nth-child(11):last-child) > li:nth-child(11) { grid-column: span 2; }
+}
+/* 11 knapper på en iPad på langs og på desktop: 6 + 5 som en mur, tallerkenen over navnet og lidt mindre skrift end med 10,
+   så «Halloween» kan være i en knap på 144 px (1000 px bred) */
+@media (min-width: 1000px) and (min-height: 521px) and (orientation: landscape) {
+  .gruppe-knapper:has(> li:nth-child(11):last-child) { --kolonner: 6; --raekker: 2; --plade: clamp(72px, calc(var(--raekke) - 110px), 170px); grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .gruppe-knapper:has(> li:nth-child(11):last-child) .gruppe-knap { flex-direction: column; justify-content: center; gap: 6px; padding: 10px 8px 12px; font-size: clamp(20px, 2.2vw, 28px); }
+  .gruppe-knapper:has(> li:nth-child(11):last-child) .gruppe-knap-navn { text-align: center; }
+  .gruppe-knapper:has(> li:nth-child(11):last-child) > li:nth-child(7) { grid-column: 2 / span 2; }
+  .gruppe-knapper:has(> li:nth-child(11):last-child) > li:nth-child(10) { grid-column: span 2; }
+}
 /* iPhone: 2 kolonner. Siden må gerne rulle, for knapperne skal være store til små fingre */
 @media (max-width: 700px) {
   .gruppe-knapper { --kolonner: 2; --raekker: 5; --raek-gab: 14px; --plade: 112px; gap: var(--raek-gab) 12px; padding: 12px 12px 8px; }
@@ -335,6 +361,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .knap.gruppe-knap { flex-direction: row; justify-content: flex-start; gap: 10px; padding: 9px 12px; font-size: 20px; border-radius: 24px; }
   .gruppe-knap-navn { text-align: left; }
   .gruppe-knapper:has(> li:nth-child(10)) { --plade: 64px; }
+  .gruppe-knapper:has(> li:nth-child(11):last-child) { --plade: 64px; }
+  .gruppe-knapper:has(> li:nth-child(11):last-child) .gruppe-knap { gap: 10px; padding: 9px 12px; }
 }
 
 /* «Voksne: hold» og hjertet under knapperne. Rækken er lige høj med og uden hjertet, så knapperne ikke flytter sig */
@@ -360,6 +388,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 [data-gruppe="jul"] { --ret-farve: var(--jul-lys); }
 [data-gruppe="halloween"] { --ret-farve: var(--lilla-lys); }
 [data-gruppe="drikke"] { --ret-farve: var(--drikke-lys); }
+[data-gruppe="madpakke"] { --ret-farve: var(--madpakke-lys); }
 [data-gruppe="favoritter"] { --ret-farve: var(--tomat-lys); }
 /* Søgningen: vejledningen, når der endnu ikke er skrevet noget, og luft mellem feltet, tallet og listen */
 .soeg-skaerm .gruppe { display: flex; flex-direction: column; gap: 14px; }

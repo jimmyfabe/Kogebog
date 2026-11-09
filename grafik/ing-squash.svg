@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="squash" transform="translate(120 114) rotate(-28)">
+    <path d="M-84 -6 C-84 -22 -66 -26 -36 -28 L44 -40 C84 -44 104 -24 104 0 C104 24 84 44 44 40 L-36 28 C-66 26 -84 22 -84 6 Z" fill="#2F6B2A"/>
+    <g fill="#B9D77E" stroke="none">
+      <ellipse cx="-50" cy="-12" rx="7" ry="2.5"/><ellipse cx="-20" cy="-20" rx="8" ry="2.5"/><ellipse cx="14" cy="-26" rx="9" ry="3"/>
+      <ellipse cx="50" cy="-30" rx="9" ry="3"/><ellipse cx="-36" cy="12" rx="7" ry="2.5"/><ellipse cx="0" cy="18" rx="8" ry="2.5"/>
+      <ellipse cx="36" cy="26" rx="9" ry="3"/><ellipse cx="74" cy="-8" rx="8" ry="3"/>
+    </g>
+    <path d="M-84 -12 L-104 -18 L-104 18 L-84 12 Z" fill="#9AAE54"/>
+    <path d="M-104 0 L-118 -4" fill="none" stroke-width="9"/>
+  </g>
+  <g id="slice" transform="translate(190 196)">
+    <circle r="42" fill="#2F6B2A"/>
+    <circle r="35" fill="#F6EFB4"/>
+    <g fill="#D8CC74" stroke="none">
+      <circle cx="0" cy="-11" r="4"/><circle cx="10" cy="6" r="4"/><circle cx="-10" cy="6" r="4"/>
+    </g>
+  </g>
+</g>
+</svg>
