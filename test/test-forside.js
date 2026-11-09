@@ -17,7 +17,7 @@ import { lavModel, erLynhurtig, harTid } from '../js/model.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const TI = ['pasta-og-nudler', 'kylling', 'fisk', 'koed', 'groent', 'broed-og-pizza', 'soede-sager', 'drikke', 'jul', 'halloween'];
-const ANTAL_RETTER = 222;
+const ANTAL_RETTER = 223;
 const ANTAL_PLANLAGTE = 82;
 
 const laesJson = (sti) => JSON.parse(fs.readFileSync(path.join(ROD, sti), 'utf8'));
