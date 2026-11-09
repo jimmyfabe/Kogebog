@@ -22,6 +22,11 @@ Intet er pushet eller flettet til main. v8 er flettet ind i v9 (`84cb394`).
   - e2e i v9 (`former`, `hele`, `lyn`, `voksen`) er grøn efter bindestregen.
 - Review-fund 1 (iPad 768×1024 med en kørende timer) er målt i WebKit. Siden kan rulle 1 px (og 3 px på 901×800), ikke ~30 px, og alle 11 knapper og «Voksne: hold» kan ses. Ingen rettelse.
 
+- E2e på **v8 alene** (09-11 kl. 23:56) har 26 fejl, og ingen af dem findes i v9:
+  - 6 skyldes en forældet test: «ti knapper» kloner en 10. knap oven i v8's 10 rigtige;
+  - 20 er en ægte layoutfejl: 10 knapper i 5 kolonner bliver 123–138 px brede på iPhone på langs (736×414 og 812×375), og mindstemålet er 140. v9's regel for 11 knapper giver 3 kolonner der.
+  - **Valg (Saga):** v8 er ikke rettet, for anbefalingen er at udgive v9 i ét hug (den indeholder v7 og v8). Alternativet er, at v8 skal ud alene. Så skal reglen fra v9 genbruges for 10 knapper, og testen rettes (ca. 30 min plus review).
+
 **Kører nu:** Røst seed 42 på v9's 453 replikker (lukkes ca. kl. 03). Derefter trin 3-5 i CLAUDE.md «Stemmen», så `LYD`/`UDGAVE_INDHOLD`/`INDHOLD`. Lyt efter: squashen, basilikummen, spegepølse.
 
 **Næste:** ui-reviewer på v9 (skærmbilleder på 5 skærme) og e2e på v8 alene, begge gennem låsen.
@@ -31,7 +36,7 @@ Intet er pushet eller flettet til main. v8 er flettet ind i v9 (`84cb394`).
 - (09-11) Nødder: købte kerner, tørret frugt, boller og rugbrød kan være mærket «kan indeholde spor af nødder». Er spor også forbudt på skolen? (ikke tjekket pr. vare)
 - (09-11) Madpakkerne skal prøves i et køkken, før `afproevet` sættes til true.
 - (08-11) Kæmpesmåkagerne skal smages og bages i en rigtig ovn.
-- (06-11) Udgivelse: v7, v8 og v9 venter på dit «ja». v7 skal ud før eller sammen med v8, og v9 indeholder v8.
+- (06-11) Udgivelse: v7, v8 og v9 venter på dit «ja». v7 skal ud før eller sammen med v8, og v9 indeholder v8. **Anbefaling 09-11:** udgiv v9 i ét hug, når stemmen er færdig. v8 alene har en layoutfejl på iPhone på langs (se ovenfor).
 - (05-11) Må de 2 gamle gruppe-mp3 og `grafik/gruppe-bagning.svg` slettes? `test-lyd` er rød, til de er væk.
 
 ## 09-11-2026 kl. 13:49: v9 «Madpakke» er bygget, billederne venter (hovedsessionen)
