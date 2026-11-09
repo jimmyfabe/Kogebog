@@ -2,6 +2,42 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
+## 10-11-2026 kl. 00:33: UI-review af v9 gav 9 fund; de 2 layoutfund rettes nu (Saga)
+
+ui-reviewer så 65 skærmbilleder (5 skærme) og målte 17 retter × 4 skærme (246 trin). Der var ingen JS-fejl og ingen vandret rulning. Fund og mål ligger i kladdemappen `kogebog-0911/v9/ui-review-agent/` (`maal.txt`).
+
+**Rettes nu af frontend-dev** (CSS, ikke tekst, fordi stemmen indtales af de nuværende tekster). Hver rettelse får en e2e-test, der først er rød, og sin egen commit:
+- **A (høj):** voksen-noten (også sikkerhedsteksten) ligger under den faste bund på trinsider. På 390×844 gælder det 4 trin (14–60 px), og på 360×780 53 af 246 trin. Værst er gulerodssmoothie trin 6 med «hold hånden på låget». Billedet skal give efter, ikke teksten.
+- **B (mellem):** rettens titel knækker midt i ordet på iPad på højkant 768×1024 («Cowboybønn|er», «fiskefrikadell|er»).
+
+**Ikke rettet** (med grund):
+- Ingrediensnavne knækker uden bindestreg på 360–390 px («grahamsme|l»). WebKit på Windows deler ikke dansk med bindestreg, men Safari på iPhone gør det måske selv. Prøv først på en rigtig iPhone.
+- Versionsnummeret står stadig på v6. Det hæves ved udgivelsen, som planlagt.
+- Når et navn fylder to linjer, står forsidens tallerkener 12–15 px skævt. Med en timer på iPad på langs og desktop er der et hul på ca. 55 px. Begge dele er lavt og kan tages senere.
+- Fiskefars, laks og fiskepinde har ikonet «kød» (rødt hakket kød, `js/katalog.js:385` og 401–422). Et `ing-fisk`-ikon skal tegnes.
+- «45 / minutter» deles over to linjer. Et hårdt mellemrum ændrer teksten og dermed muligvis stemmen, så det venter til efter stemmen.
+
+**Kører nu:**
+- Røst seed 42, 343 replikker tilbage kl. 00:28, ca. 10 pr. 7 min, så den er færdig ca. kl. 05.
+- Derefter trin 3-5 i CLAUDE.md «Stemmen» og fingeraftrykkene `LYD`/`UDGAVE_INDHOLD`/`INDHOLD`.
+- Lyt efter: squashen, basilikummen, spegepølse.
+
+**Afventer Jimmy** (alle spørgsmål samlet her):
+- (10-11) Billederne, som et barn kan forveksle (dit øje, ikke målt):
+  - Små rug-pitabrød ligner bagte kartofler eller æg.
+  - Spinattærtens midte ligner et spejlæg.
+  - Havregrødsboller, fiskefrikadeller og grove sandwichboller er alle brune kugler.
+  - Rugbrødsmadpakken viser bart rugbrød uden pålæg.
+  - Rugbrød og burgerboller har samme ikon (en baguette).
+
+  Skal nogle af dem laves om (FLUX, ca. 6 min pr. billede)?
+- (09-11) «Grove gulerodsboller til madpakken» står i Brød og pizza. Skal de flyttes til Madpakke? Reglen i `docs/forside-sortering-05-11-2026.md` nævner ikke Madpakke endnu (review-fund 4). Flytningen er én linje i `index.json`.
+- (09-11) Nødder: købte kerner, tørret frugt, boller og rugbrød kan være mærket «kan indeholde spor af nødder». Er spor også forbudt på skolen? (ikke tjekket pr. vare)
+- (09-11) Madpakkerne skal prøves i et køkken, før `afproevet` sættes til true.
+- (08-11) Kæmpesmåkagerne skal smages og bages i en rigtig ovn.
+- (06-11) Udgivelse: v7, v8 og v9 venter på dit «ja». v7 skal ud før eller sammen med v8, og v9 indeholder v8. **Anbefaling 09-11:** udgiv v9 i ét hug, når stemmen er færdig. v8 alene har en layoutfejl på iPhone på langs (se 09-11 kl. 23:29).
+- (05-11) Må de 2 gamle gruppe-mp3 og `grafik/gruppe-bagning.svg` slettes? `test-lyd` er rød, til de er væk.
+
 ## 09-11-2026 kl. 23:29: v9 har billeder, review-rettelser og grøn e2e; stemmen kører (Saga)
 
 Intet er pushet eller flettet til main. v8 er flettet ind i v9 (`84cb394`).
@@ -27,17 +63,7 @@ Intet er pushet eller flettet til main. v8 er flettet ind i v9 (`84cb394`).
   - 20 er en ægte layoutfejl: 10 knapper i 5 kolonner bliver 123–138 px brede på iPhone på langs (736×414 og 812×375), og mindstemålet er 140. v9's regel for 11 knapper giver 3 kolonner der.
   - **Valg (Saga):** v8 er ikke rettet, for anbefalingen er at udgive v9 i ét hug (den indeholder v7 og v8). Alternativet er, at v8 skal ud alene. Så skal reglen fra v9 genbruges for 10 knapper, og testen rettes (ca. 30 min plus review).
 
-**Kører nu:** Røst seed 42 på v9's 453 replikker (lukkes ca. kl. 03). Derefter trin 3-5 i CLAUDE.md «Stemmen», så `LYD`/`UDGAVE_INDHOLD`/`INDHOLD`. Lyt efter: squashen, basilikummen, spegepølse.
-
-**Næste:** ui-reviewer på v9 (skærmbilleder på 5 skærme) og e2e på v8 alene, begge gennem låsen.
-
-**Afventer Jimmy** (alle spørgsmål samlet her):
-- (09-11) «Grove gulerodsboller til madpakken» står i Brød og pizza. Skal de flyttes til Madpakke? Reglen i `docs/forside-sortering-05-11-2026.md` nævner ikke Madpakke endnu (review-fund 4). Flytningen er én linje i `index.json`.
-- (09-11) Nødder: købte kerner, tørret frugt, boller og rugbrød kan være mærket «kan indeholde spor af nødder». Er spor også forbudt på skolen? (ikke tjekket pr. vare)
-- (09-11) Madpakkerne skal prøves i et køkken, før `afproevet` sættes til true.
-- (08-11) Kæmpesmåkagerne skal smages og bages i en rigtig ovn.
-- (06-11) Udgivelse: v7, v8 og v9 venter på dit «ja». v7 skal ud før eller sammen med v8, og v9 indeholder v8. **Anbefaling 09-11:** udgiv v9 i ét hug, når stemmen er færdig. v8 alene har en layoutfejl på iPhone på langs (se ovenfor).
-- (05-11) Må de 2 gamle gruppe-mp3 og `grafik/gruppe-bagning.svg` slettes? `test-lyd` er rød, til de er væk.
+**Kørte (afløst af afsnittet 10-11 kl. 00:33):** Røst, ui-reviewer og e2e på v8 alene. «Afventer Jimmy» er ført op.
 
 ## 09-11-2026 kl. 13:49: v9 «Madpakke» er bygget, billederne venter (hovedsessionen)
 
