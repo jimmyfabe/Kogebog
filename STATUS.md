@@ -12,6 +12,8 @@ Jimmy 09-11: «ja, lav madpakkerne». Gren `v9-madpakke` fra `v8-drikke` (worktr
 
 **Næste:** billederne → tjek på mørk bund → ventemappens trin 1-7 → e2e (`former`, `hele`, `lyn`, `voksen`) → ui-reviewer (11 knapper, Grøn mod Madpakke på mobil) → stemmen efter v8's Røst-trin 3-5.
 
+- 09-11 kl. 16:00: **Cowboybønner** (`b03b158`) er ret nr. 16 i ventemappen: gruppe `koed`, i ugeplanen (70 kr., Rema-priser 09-11), billedprompten står som linje 16 i `retter-v9.txt`, så løkken tegner den med. Ekstra trin står i ventemappens README. Jimmys ønske efter Trinity-bønnerne (PDF på Drev).
+
 **Afventer Jimmy:** retterne skal prøves i et køkken, før `afproevet` sættes til true.
 
 ## 08-11-2026 kl. 10:47: ny ret «Bedste venners kæmpesmåkager» i v8, stemmen kører igen (Saga)
