@@ -1,0 +1,61 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Kold pastasalat med squash og tomater",
+  "description": "Fuldkornspasta med sprød squash, halve cherrytomater, majs og basilikum i en frisk citrondressing. Laves aftenen før.",
+  "image": "grafik/ret-pastasalat-med-squash.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 madpakker",
+  "prepTime": "PT20M",
+  "cookTime": "PT10M",
+  "totalTime": "PT45M",
+  "recipeIngredient": [
+    "200 g fuldkornspasta, fx fusilli",
+    "2 l vand og 1 tsk salt til pastaen",
+    "1 squash",
+    "250 g cherrytomater",
+    "1 dåse majs",
+    "½ citron",
+    "3 spsk olie",
+    "½ tsk salt",
+    "1 knivspids peber",
+    "1 håndfuld basilikum"
+  ],
+  "tool": ["stor gryde", "si", "fad", "kniv", "skærebræt", "dåseåbner", "lille skål", "gaffel", "stor skål", "grydeske", "bøtter med låg"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Kog pastaen i saltet vand.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 600, "ikoner": ["spaghetti", "vand"], "note": "2 l vand og 1 tsk salt. Pastaen kommer i, når vandet koger. Ca. 10 min, eller som der står på pakken." } },
+    { "@type": "HowToStep", "text": "Hæld pastaen i en si.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "note": "Skyl den med koldt vand, så den køler hurtigt og ikke klistrer." } },
+    { "@type": "HowToStep", "text": "Lad pastaen køle af.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Bredt ud i et fad." } },
+    { "@type": "HowToStep", "text": "Skær squashen i små tern.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["squash"], "note": "Skyl den først. Den skal ikke skrælles." } },
+    { "@type": "HowToStep", "text": "Skær tomaterne i halve.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["tomat"], "note": "Halve cherrytomater er sikrere for små børn end hele." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra majsen.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp." } },
+    { "@type": "HowToStep", "text": "Pres citronen i en lille skål.", "tumbi": { "verbum": "klemme", "ikoner": ["citron"], "note": "Den voksne skærer citronen over. Fisk kernerne op." } },
+    { "@type": "HowToStep", "text": "Pisk olie, salt og peber i.", "tumbi": { "verbum": "piske", "ikoner": ["olie", "salt", "peber"], "note": "3 spsk olie, ½ tsk salt og en knivspids peber. Pisk med en gaffel." } },
+    { "@type": "HowToStep", "text": "Pluk bladene af basilikummen.", "tumbi": { "verbum": "pille", "ikoner": ["krydderurt"], "note": "Store blade kan rives i stykker med fingrene." } },
+    { "@type": "HowToStep", "text": "Bland pasta, grønt og dressing i en skål.", "tumbi": { "verbum": "roere", "ikoner": ["spaghetti", "squash", "tomat", "majs", "krydderurt"] } },
+    { "@type": "HowToStep", "text": "Smag pastasalaten til.", "tumbi": { "verbum": "smage", "note": "Måske lidt mere salt eller citron. Pastasalaten holder 2 dage i en bøtte med låg i køleskabet. Læg et køleelement i tasken." } }
+  ],
+  "tumbi": {
+    "id": "pastasalat-med-squash",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Idé fra bogen «Sund & Glad skolestart». Egen tekst og egne mængder. Tiden er et skøn (ikke målt).",
+    "pris_kr": 45,
+    "pris_dato": "2026-11",
+    "groent_g": 845,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, nov. 2026: Rema 1000's hyldepriser 09-11-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Grønt er også et skøn (ikke målt) og er uden bælgfrugter, kartofler og frugt.",
+    "ingredienser": [
+      { "ikon": "spaghetti", "maengde": "200 g" },
+      { "ikon": "vand", "maengde": "2 l" },
+      { "ikon": "squash", "maengde": "1" },
+      { "ikon": "tomat", "maengde": "250 g" },
+      { "ikon": "majs", "maengde": "1 dåse" },
+      { "ikon": "citron", "maengde": "½" },
+      { "ikon": "olie", "maengde": "3 spsk" },
+      { "ikon": "salt", "maengde": "½ tsk" },
+      { "ikon": "peber", "maengde": "1 knivspids" },
+      { "ikon": "krydderurt", "maengde": "1 håndfuld" }
+    ]
+  }
+}
