@@ -2018,6 +2018,79 @@ async function former(browser) {
   }
 }
 
+// ---------- Trinets indhold over den faste bund på telefonen (UI-review 10-11-2026, fund A) ----------
+// Voksen-noten (ofte en sikkerhedstekst) lå under den faste bund ved rulning 0, og intet viste, at der var mere tekst:
+// 4 trin på 390×844 (op til 60 px, gulerodssmoothie trin 6) og 53 af de 246 nye madpakke-trin på 360×780. Nu giver
+// billedet efter (app.css). For alle trin i alle retter skal bunden af trinets sidste indhold (teksten, ikonerne,
+// «Læs op», timeren og noten) stå over toppen af den faste bund ved rulning 0. 390×826 er iPhonen på 390×844 med sin
+// safe-area: på en iPhone er bunden 18 px højere end her, hvor env() er 0, og den kræves. 360×780 kan ikke nås for alle
+// trin, uden at billedet kommer under sit mindste mål (140 px; dino-vulkan trin 10 skulle have 57 px), så dér skrives
+// antallet som måling. Det mindste billede og antallet af trin med et mindre billede end normalt skrives også.
+// E2E_TRINBUND_RETTER=a,b begrænser retterne
+const TRINBUND = [
+  { navn: 'iphone-safe', viewport: { width: 390, height: 826 }, hasTouch: true, krav: true },
+  { navn: 'w360', viewport: { width: 360, height: 780 }, hasTouch: true, krav: false },
+];
+async function trinOverBund(browser) {
+  const retter = process.env.E2E_TRINBUND_RETTER ? process.env.E2E_TRINBUND_RETTER.split(',').map((x) => x.trim()) : index;
+  for (const sk of TRINBUND) {
+    const n = sk.navn;
+    console.log('[' + n + '] trinenes indhold over den faste bund på ' + sk.viewport.width + '×' + sk.viewport.height);
+    const { ctx, side } = await nySide(browser, sk);
+    const under = [];
+    let antal = 0;
+    let mindst = null;
+    let mindre = 0;
+    for (const id of retter) {
+      // Et nyt dokument pr. ret: WebKit afviser over ca. 200 adresseskift pr. 10 s i samme dokument (se heleVejen)
+      await side.goto('about:blank');
+      await side.goto(BASE + '/index.html#/ret/' + id);
+      await side.waitForSelector('.ret h1');
+      for (let i = 0; i < RETTER[id].recipeInstructions.length; i++) {
+        const t = RETTER[id].recipeInstructions[i];
+        const hvor = n + ' ' + id + ' trin ' + (i + 1);
+        const ok = await side.evaluate((h) => {
+          const s = document.querySelector('#app > .skaerm');
+          if (s) s.dataset.gammel = '1';
+          location.hash = h;
+          return location.hash === h;
+        }, '#/ret/' + id + '/trin/' + (i + 1));
+        tjek(ok, hvor + ': WebKit afviste adresseskiftet (for mange skift i samme dokument)');
+        await side.waitForFunction((x) => {
+          const h = document.querySelector('#app > .trin:not([data-gammel]) h1');
+          return h && h.textContent === x;
+        }, t.text, { timeout: 5000 }).catch(() => tjek(false, hvor + ': viste ikke «' + t.text + '»'));
+        await side.waitForFunction(() => [...document.images].every((b) => b.complete), null, { timeout: 5000 }).catch(() => {});
+        const r = await side.evaluate(() => {
+          window.scrollTo(0, 0);
+          const s = document.querySelector('#app > .skaerm:not([data-gammel])');
+          const bund = [...s.querySelectorAll('.trin-tekst *')].map((e) => e.getBoundingClientRect())
+            .filter((b) => b.width && b.height).reduce((m, b) => Math.max(m, b.bottom), -Infinity);
+          const f = s.querySelector('.verbum-ramme');
+          const ramme = f.getBoundingClientRect();
+          return { bund, bundTop: s.querySelector('.handlinger').getBoundingClientRect().top, rul: Math.round(scrollY),
+            billede: Math.round(ramme.height), bredde: Math.round(ramme.width), normal: Math.min(0.72 * innerWidth, 0.34 * innerHeight),
+            mindstMaal: parseFloat(getComputedStyle(f).minHeight) || 0 };
+        });
+        antal++;
+        const over = r.rul === 0 && r.bund <= r.bundTop + 0.5;
+        if (!over) under.push({ hvor, px: Math.round(r.bund - r.bundTop) });
+        if (sk.krav) tjek(over, hvor + ': trinets sidste indhold ligger under den faste bund ved rulning 0 (bund ' + Math.round(r.bund) + ' > bundens top ' + Math.round(r.bundTop) + ', rulning ' + r.rul + ')');
+        tjek(Math.abs(r.billede - r.bredde) <= 1, hvor + ': billedet skal være rundt (' + r.bredde + '×' + r.billede + ' px)');
+        tjek(r.billede >= r.mindstMaal - 1, hvor + ': billedet er mindre end sit mindste mål (' + r.billede + ' < ' + r.mindstMaal + ' px)');
+        if (!mindst || r.billede < mindst.px) mindst = { px: r.billede, hvor };
+        if (r.billede < r.normal - 1) mindre++;
+      }
+    }
+    under.sort((a, b) => b.px - a.px);
+    maal.push(n + ': ' + under.length + ' af ' + antal + ' trin har indhold under den faste bund ved rulning 0' +
+      (under.length ? ' (værst ' + under.slice(0, 5).map((u) => u.hvor + ' ' + u.px + ' px').join(', ') + ')' : ''));
+    maal.push(n + ': mindste billede ' + mindst.px + ' px (' + mindst.hvor + '), mindre end normalt på ' + mindre + ' trin');
+    tjek(side.fejl.length === 0, n + ' (trinene over bunden): ' + side.fejl.join(' | '));
+    await ctx.close();
+  }
+}
+
 // ---------- ⚡ på de lynhurtige retter, og navnene uden blød bindestreg (iPad) ----------
 // ⚡ (lynMaerke i app.js) står på kortet eller rækken for hver ret på højst LYN_MIN minutter, hvor retterne vælges:
 // forsiden, børnenes valg (#/uge/vaelg/<dyr>) og den voksnes valg til en dag (#/uge/dag/<n>). Skærmlæseren får teksten
@@ -2252,9 +2325,9 @@ async function lynOgNavne(browser) {
   await ctx.close();
 }
 
-// E2E_DELE=hele,print,tastatur,timer,fejl,beroering,former,lyn,ugeplan,voksen,skaermfund (standard: alle) og E2E_SKAERME=ipad,iphone,desktop (standard: alle)
+// E2E_DELE=hele,print,tastatur,timer,fejl,beroering,former,trinbund,lyn,ugeplan,voksen,skaermfund (standard: alle) og E2E_SKAERME=ipad,iphone,desktop (standard: alle)
 // «former» kører på sine egne skærme (FORMER) og ser bort fra E2E_SKAERME
-const DELE = (process.env.E2E_DELE || 'hele,print,tastatur,timer,fejl,beroering,former,lyn,ugeplan,voksen,skaermfund').split(',').map((x) => x.trim()).filter(Boolean);
+const DELE = (process.env.E2E_DELE || 'hele,print,tastatur,timer,fejl,beroering,former,trinbund,lyn,ugeplan,voksen,skaermfund').split(',').map((x) => x.trim()).filter(Boolean);
 const VALGTE = SKAERME.filter((s) => !process.env.E2E_SKAERME || process.env.E2E_SKAERME.split(',').includes(s.navn));
 const KOERSEL = [];
 for (const s of VALGTE) if (DELE.includes('hele')) KOERSEL.push(['hele vejen ' + s.navn, (b) => heleVejen(b, s)]);
@@ -2268,6 +2341,7 @@ if (DELE.includes('fejl')) KOERSEL.push(['fejltilstande', (b) => fejltilstande(b
 if (DELE.includes('beroering')) KOERSEL.push(['berøring', (b) => beroering(b, SKAERME[0])]);
 if (DELE.includes('former')) KOERSEL.push(['skærmformer', (b) => former(b)]);
 if (DELE.includes('former')) KOERSEL.push(['forsidens top', (b) => forsideTop(b)]);
+if (DELE.includes('trinbund')) KOERSEL.push(['trinene over den faste bund', (b) => trinOverBund(b)]);
 if (DELE.includes('lyn')) KOERSEL.push(['⚡ og navnene', (b) => lynOgNavne(b)]);
 // Ugeplanen står i sin egen fil (test/e2e-ugeplan.js) og får hjælperne herfra
 if (DELE.includes('ugeplan')) {

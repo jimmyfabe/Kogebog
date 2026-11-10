@@ -1053,19 +1053,20 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .ret .handlinger .forfra .ikon { width: 24px; height: 24px; }
   .ret .handlinger .print-knap { padding: 0 14px; }
 
+  /* Billedet over teksten i én kolonne. Flex og ikke grid, så billedet kan give efter (.verbum-ramme nedenfor) */
   .scene {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    position: relative;
     margin: 4px 8px;
     padding: 10px 12px;
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "billede" "tekst";
-    grid-template-rows: auto 1fr;
     gap: 12px;
-    align-items: start;
     border-radius: 28px;
   }
-  /* Trekanten sidder som et mærkat på billedets frie hjørne. På sin egen række (84 px) skubbede den «Start timer» op til
-     26 px ind under bunden på 60 af 373 trin med timer (e2e 05-11-2026) */
-  .voksen-trekant { grid-area: billede; align-self: start; justify-self: start; position: relative; z-index: 1; --trekant: 72px; }
+  /* Trekanten sidder som et mærkat på billedets frie hjørne, øverst til venstre i scenen (dens padding). På sin egen række
+     (84 px) skubbede den «Start timer» op til 26 px ind under bunden på 60 af 373 trin med timer (e2e 05-11-2026) */
+  .voksen-trekant { position: absolute; top: 10px; left: 12px; z-index: 1; --trekant: 72px; }
   /* Retten: advarslen har en række for sig under hjem (og pillen), så teksten kan stå på én linje ned til 360 px */
   .ret .topbar { grid-template-columns: max-content minmax(0, 1fr); row-gap: 8px; }
   .ret .topbar > .topbar-midte { grid-column: 1 / -1; grid-row: 2; }
@@ -1074,7 +1075,22 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .start-trekanter .trekant { --trekant: 46px; }
   .start-advarsel-tekst strong { font-size: 18px; }
   .start-advarsel-tekst span { font-size: 16px; }
-  .verbum-ramme { width: min(72vw, 34svh); }
+  /* Billedet giver efter, når teksten fylder: det starter ved sit mindste mål og vokser op til det normale (72vw og 34svh),
+     så langt pladsen over den faste bund rækker, og pladsen, der er tilbage, står under teksten som før. Med et fast
+     billede lå voksen-noten (ofte en sikkerhedstekst) under bunden ved rulning 0, og intet viste, at der var mere tekst:
+     60 px på 390×844 ved gulerodssmoothie trin 6 (UI-review 10-11-2026) og på 92 af 3327 trin på 390×826 (e2e 10-11).
+     Mindst 140 px, lidt større end retternes billeder på forsidens kort (132 px), som børnene vælger efter: billedet er
+     det, de læser trinnet på. Så kan alle trin stå over bunden på 390×826 (sushi-bowl trin 3 kræver ca. 150 px), men ikke
+     alle på 360×780 (dino-vulkan trin 10 skulle have 57 px). Er teksten for høj selv med det mindste billede, bliver siden
+     højere, og man ruller som før */
+  .verbum-ramme {
+    --billede-min: min(140px, 72vw, 34svh);
+    flex: 1 0 var(--billede-min);
+    align-self: center;
+    width: auto;
+    min-height: var(--billede-min);
+    max-height: min(72vw, 34svh);
+  }
   .trin-tekst { gap: 14px; }
   .trin-tekst h1 { font-size: 30px; }
   .trin-ikoner img { width: 56px; height: 56px; }
