@@ -2,6 +2,29 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
+## 10-11-2026 kl. 13:26: v9 madpakker har Røst-stemmen, og hele e2e er grøn (Saga)
+
+**Stemmen** (`67e3a4e`): Røst har indtalt de 453 replikker til de 16 madpakker. `sw.js` (INDHOLD og LYD) og `js/version.js` (UDGAVE_INDHOLD) har nye fingeraftryk. Backuppen ligger i `D:\Stemmer\kogebog-500m\foer-trin4-1011\`. Logs: `trin4-1011.log` og `overstyr-1011.log` samme sted. Seed 42 gav 1.108 mistænkelige; efter seed 43–47 er **878 «stadig mistænkelige»**. De fleste har en for lang hale, så de er ikke nødvendigvis forkerte.
+
+**Fuld e2e efter stemmen**, 14 dele hver for sig gennem låsen, 10-11 kl. 11:00–13:26: **201.983 tjek, 0 fejl**.
+
+| Del | Tjek | | Del | Tjek |
+|---|---|---|---|---|
+| hele | 136.269 | | titler | 2.145 |
+| trinbund | 33.385 | | voksen | 1.041 |
+| print | 19.363 | | ugeplan | 697 |
+| former | 8.409 | | skaermfund | 420 |
+| timer | 164 | | de 5 små (lyn, fejl, tastatur, beroering, mindre) | 90 |
+
+**Kendt rødt indtil udgivelsen:**
+- `test-version` («nummeret er hævet siden main»).
+- `test-lyd` for 2 gamle gruppe-mp3, der ikke længere bruges. De fjernes kun med `--ryd`, og det kræver dit ok, fordi det sletter filer.
+
+**Afventer Jimmy** (10-11):
+- Lyt til et udvalg af de 878 mistænkelige replikker, især ordene «squashen», «basilikummen» og «spegepølse». Listen står i `D:\Stemmer\kogebog-500m\trin4-1011.log`.
+- Ok til `--ryd` for de 2 gamle gruppe-mp3.
+- Udgivelsen: versionsnummeret hæves (UDGAVE står stadig på v6), og v9 flettes til main. Det går live på GitHub Pages, så du får kommandoen.
+
 ## 10-11-2026 kl. 00:33: UI-review af v9 gav 9 fund; de 2 layoutfund rettes nu (Saga)
 
 ui-reviewer så 65 skærmbilleder (5 skærme) og målte 17 retter × 4 skærme (246 trin). Der var ingen JS-fejl og ingen vandret rulning. Fund og mål ligger i kladdemappen `kogebog-0911/v9/ui-review-agent/` (`maal.txt`).
