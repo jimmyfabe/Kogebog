@@ -2075,23 +2075,23 @@ async function trinOverBund(browser) {
           return h && h.textContent === x;
         }, t.text, { timeout: 5000 }).catch(() => tjek(false, hvor + ': viste ikke «' + t.text + '»'));
         await side.waitForFunction(() => [...document.images].every((b) => b.complete), null, { timeout: 5000 }).catch(() => {});
+        // Bunden er .trin-tekst's egen: hedder den noget andet, stopper testen her. Før blev bunden af ingenting
+        // -Infinity, og alle trin stod over bunden. Billedets normale og mindste mål regnes efter formlen i app.css
+        // (.verbum-ramme) og læses ikke fra CSS'en, som er det, der testes
         const r = await side.evaluate(() => {
           window.scrollTo(0, 0);
           const s = document.querySelector('#app > .skaerm:not([data-gammel])');
-          const bund = [...s.querySelectorAll('.trin-tekst *')].map((e) => e.getBoundingClientRect())
-            .filter((b) => b.width && b.height).reduce((m, b) => Math.max(m, b.bottom), -Infinity);
-          const f = s.querySelector('.verbum-ramme');
-          const ramme = f.getBoundingClientRect();
-          return { bund, bundTop: s.querySelector('.handlinger').getBoundingClientRect().top, rul: Math.round(scrollY),
-            billede: Math.round(ramme.height), bredde: Math.round(ramme.width), normal: Math.min(0.72 * innerWidth, 0.34 * innerHeight),
-            mindstMaal: parseFloat(getComputedStyle(f).minHeight) || 0 };
+          const ramme = s.querySelector('.verbum-ramme').getBoundingClientRect();
+          return { bund: s.querySelector('.trin-tekst').getBoundingClientRect().bottom, bundTop: s.querySelector('.handlinger').getBoundingClientRect().top,
+            rul: Math.round(scrollY), billede: Math.round(ramme.height), bredde: Math.round(ramme.width),
+            normal: Math.min(0.72 * innerWidth, 0.34 * innerHeight), mindstMaal: Math.min(140, 0.72 * innerWidth, 0.34 * innerHeight) };
         });
         antal++;
         const over = r.rul === 0 && r.bund <= r.bundTop + 0.5;
         if (!over) under.push({ hvor, px: Math.round(r.bund - r.bundTop) });
         if (sk.krav) tjek(over, hvor + ': trinets sidste indhold ligger under den faste bund ved rulning 0 (bund ' + Math.round(r.bund) + ' > bundens top ' + Math.round(r.bundTop) + ', rulning ' + r.rul + ')');
         tjek(Math.abs(r.billede - r.bredde) <= 1, hvor + ': billedet skal være rundt (' + r.bredde + '×' + r.billede + ' px)');
-        tjek(r.billede >= r.mindstMaal - 1, hvor + ': billedet er mindre end sit mindste mål (' + r.billede + ' < ' + r.mindstMaal + ' px)');
+        tjek(r.billede >= r.mindstMaal - 1, hvor + ': billedet er mindre end sit mindste mål (' + r.billede + ' < ' + Math.round(r.mindstMaal) + ' px, min(140px, 72vw, 34svh))');
         if (!mindst || r.billede < mindst.px) mindst = { px: r.billede, hvor };
         if (r.billede < r.normal - 1) mindre++;
       }
