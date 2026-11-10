@@ -592,6 +592,18 @@ const VEJ_NAVN = RETTER[VEJ].name;
 const VEJ_TRIN = RETTER[VEJ].recipeInstructions;
 const TIMER_NR = VEJ_TRIN.findIndex((t) => t.tumbi.timer_sek) + 1;
 const HOLD_NR = VEJ_TRIN.map((t, i) => (t.tumbi.voksen === true && i < VEJ_TRIN.length - 1 ? i + 1 : 0)).reduce((a, b) => Math.max(a, b), 0);
+// Skift adressen efter # i samme dokument. WebKit afviser over ca. 200 skift pr. 10 s i samme dokument (se heleVejen), og
+// et afvist skift meldes som det, det er. gammel: den skærm, der står, mærkes først, for adressen skifter med det samme,
+// men skærmen først ved hashchange, og så kan man vente på den nye (#app > .skaerm:not([data-gammel]))
+async function gaaTil(side, h, hvor, { gammel = false } = {}) {
+  const ok = await side.evaluate(({ h, gammel }) => {
+    const s = document.querySelector('#app > .skaerm');
+    if (gammel && s) s.dataset.gammel = '1';
+    location.hash = h;
+    return location.hash === h;
+  }, { h, gammel });
+  tjek(ok, hvor + ': WebKit afviste adresseskiftet til ' + h + ' (for mange skift i samme dokument)');
+}
 async function heleVejen(browser, skaerm) {
   const n = skaerm.navn;
   console.log('[' + n + '] forside → pandekager → færdig');
@@ -878,11 +890,7 @@ async function heleVejen(browser, skaerm) {
   // WebKit afviser adresseskift ud over ca. 200 pr. 10 s i samme dokument («Excessive navigation attempts blocked.»,
   // målt 18-10-2026). Alle trin i alle retter er over 200 skift, og så stod «havregrynskugler trin 11» aldrig frem.
   // Hver ret åbnes derfor i et nyt dokument, hvilket nulstiller tælleren. Omvejen over about:blank er nødvendig, fordi goto
-  // til en adresse, der kun skifter efter #, bliver i samme dokument. Et afvist skift meldes som det, det er
-  const gaaTil = async (h, hvad) => {
-    const ok = await side.evaluate((x) => { location.hash = x; return location.hash === x; }, h);
-    tjek(ok, n + ' ' + hvad + ': WebKit afviste adresseskiftet til ' + h + ' (for mange skift i samme dokument)');
-  };
+  // til en adresse, der kun skifter efter #, bliver i samme dokument. Et afvist skift meldes som det, det er (gaaTil)
   for (const id of index) {
     await side.goto('about:blank');
     await side.goto(BASE + '/index.html?hurtig=1#/ret/' + id);
@@ -893,7 +901,7 @@ async function heleVejen(browser, skaerm) {
     if (n !== 'ipad' && id === 'koedsovs') await foto(side, n + '-8-ret-koedsovs');
     for (let i = 0; i < RETTER[id].recipeInstructions.length; i++) {
       const t = RETTER[id].recipeInstructions[i];
-      await gaaTil('#/ret/' + id + '/trin/' + (i + 1), id + ' trin ' + (i + 1));
+      await gaaTil(side, '#/ret/' + id + '/trin/' + (i + 1), n + ' ' + id + ' trin ' + (i + 1));
       await side.waitForFunction((x) => document.querySelector('.trin h1') && document.querySelector('.trin h1').textContent === x, t.text, { timeout: 5000 })
         .catch(() => tjek(false, n + ' ' + id + ' trin ' + (i + 1) + ': viste ikke «' + t.text + '»'));
       await billederFaerdige();
@@ -903,7 +911,7 @@ async function heleVejen(browser, skaerm) {
       if (n === 'ipad' && id === 'boller' && i === 6) await foto(side, n + '-9-boller-trin-7');
     }
     // Tilbage på retten efter det sidste trin står «Fortsæt ved trin N» i bunden: hovedet ses stadig
-    await gaaTil('#/ret/' + id, id + ' ret med Fortsæt');
+    await gaaTil(side, '#/ret/' + id, n + ' ' + id + ' ret med Fortsæt');
     await side.waitForSelector('.ret .fortsaet', { timeout: 5000 }).catch(() => tjek(false, n + ' ' + id + ': retten skal vise «Fortsæt» efter det sidste trin'));
     await billederFaerdige();
     await tjekLayout(side, n + ' ' + id + ' ret med Fortsæt', { knapperSes: true });
@@ -2063,33 +2071,27 @@ async function trinOverBund(browser) {
       for (let i = 0; i < RETTER[id].recipeInstructions.length; i++) {
         const t = RETTER[id].recipeInstructions[i];
         const hvor = n + ' ' + id + ' trin ' + (i + 1);
-        const ok = await side.evaluate((h) => {
-          const s = document.querySelector('#app > .skaerm');
-          if (s) s.dataset.gammel = '1';
-          location.hash = h;
-          return location.hash === h;
-        }, '#/ret/' + id + '/trin/' + (i + 1));
-        tjek(ok, hvor + ': WebKit afviste adresseskiftet (for mange skift i samme dokument)');
+        await gaaTil(side, '#/ret/' + id + '/trin/' + (i + 1), hvor, { gammel: true });
         await side.waitForFunction((x) => {
           const h = document.querySelector('#app > .trin:not([data-gammel]) h1');
           return h && h.textContent === x;
         }, t.text, { timeout: 5000 }).catch(() => tjek(false, hvor + ': viste ikke «' + t.text + '»'));
         await side.waitForFunction(() => [...document.images].every((b) => b.complete), null, { timeout: 5000 }).catch(() => {});
-        // Bunden er .trin-tekst's egen: hedder den noget andet, stopper testen her. Før blev bunden af ingenting
-        // -Infinity, og alle trin stod over bunden. Billedets normale og mindste mål regnes efter formlen i app.css
-        // (.verbum-ramme) og læses ikke fra CSS'en, som er det, der testes
+        // Billedets normale og mindste mål regnes efter formlen i app.css (.verbum-ramme) og læses ikke fra CSS'en, som er
+        // det, der testes
         const r = await side.evaluate(() => {
           window.scrollTo(0, 0);
-          const s = document.querySelector('#app > .skaerm:not([data-gammel])');
-          const ramme = s.querySelector('.verbum-ramme').getBoundingClientRect();
-          return { bund: s.querySelector('.trin-tekst').getBoundingClientRect().bottom, bundTop: s.querySelector('.handlinger').getBoundingClientRect().top,
-            rul: Math.round(scrollY), billede: Math.round(ramme.height), bredde: Math.round(ramme.width),
+          const ramme = document.querySelector('#app > .skaerm:not([data-gammel]) .verbum-ramme').getBoundingClientRect();
+          return { billede: Math.round(ramme.height), bredde: Math.round(ramme.width),
             normal: Math.min(0.72 * innerWidth, 0.34 * innerHeight), mindstMaal: Math.min(140, 0.72 * innerWidth, 0.34 * innerHeight) };
         });
+        // Bunden er .trin-tekst's egen: hedder den noget andet, stopper testen her (overBunden). Før blev bunden af
+        // ingenting -Infinity, og alle trin stod over bunden
+        const b = await overBunden(side, ['.trin-tekst']);
         antal++;
-        const over = r.rul === 0 && r.bund <= r.bundTop + 0.5;
-        if (!over) under.push({ hvor, px: Math.round(r.bund - r.bundTop) });
-        if (sk.krav) tjek(over, hvor + ': trinets sidste indhold ligger under den faste bund ved rulning 0 (bund ' + Math.round(r.bund) + ' > bundens top ' + Math.round(r.bundTop) + ', rulning ' + r.rul + ')');
+        const over = b.rul === 0 && b.ses;
+        if (!over) under.push({ hvor, px: b.bund - b.fast });
+        if (sk.krav) tjek(over, hvor + ': trinets sidste indhold ligger under den faste bund ved rulning 0 (bund ' + b.bund + ' > bundens top ' + b.fast + ', rulning ' + b.rul + ')');
         tjek(Math.abs(r.billede - r.bredde) <= 1, hvor + ': billedet skal være rundt (' + r.bredde + '×' + r.billede + ' px)');
         tjek(r.billede >= r.mindstMaal - 1, hvor + ': billedet er mindre end sit mindste mål (' + r.billede + ' < ' + Math.round(r.mindstMaal) + ' px, min(140px, 72vw, 34svh))');
         if (!mindst || r.billede < mindst.px) mindst = { px: r.billede, hvor };
@@ -2156,7 +2158,7 @@ async function titlerHoejkant(browser) {
         await side.goto('about:blank');
         await side.goto(BASE + '/index.html#/ret/' + id);
       } else {
-        await side.evaluate((h) => { document.querySelector('#app > .skaerm').dataset.gammel = '1'; location.hash = h; }, '#/ret/' + id);
+        await gaaTil(side, '#/ret/' + id, n + ' ' + id, { gammel: true });
       }
       await side.waitForFunction((x) => {
         const h = document.querySelector('#app > .ret:not([data-gammel]) .ret-titel h1');
