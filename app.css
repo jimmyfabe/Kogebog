@@ -1142,6 +1142,10 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   /* Bunden er 119 px høj, på retten med «Fortsæt» 199 px (to rækker), plus samme safe-area som bundens padding */
   .trin, .ret { --bund: calc(110px + max(22px, env(safe-area-inset-bottom))); }
   .ret:has(.fortsaet) { --bund: calc(190px + max(22px, env(safe-area-inset-bottom))); }
+  /* Rettens navn får hele kolonnens bredde, og højttaleren står i midten under det, medmindre navnet kan stå på én linje
+     ved siden af den. I de ca. 190 px ved siden af knappen knækkede navnet midt i ordet på 768×1024: «Cowboybønn|er»,
+     «fiskefrikadell|er», «grøntsagsstav|e» og «sandwichboll|er» (UI-review 10-11-2026) */
+  .ret-titel { flex-wrap: wrap; justify-content: center; }
   /* «Tumbi Køkken» brydes aldrig: på 744×1133 (iPad mini) manglede 0,3 px i WebKit (e2e 29-10), og hvor bred teksten
      bliver, afhænger af enhedens skrift */
   .forside-titel h1 { white-space: nowrap; }

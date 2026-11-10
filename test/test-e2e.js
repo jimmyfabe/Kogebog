@@ -2091,6 +2091,84 @@ async function trinOverBund(browser) {
   }
 }
 
+// ---------- Rettens navn på iPad på højkant (UI-review 10-11-2026, fund B) ----------
+// I kolonnen ved siden af højttaleren (192 px på 768×1024) knækkede navnet midt i ordet: «Cowboybønn|er»,
+// «fiskefrikadell|er», «grøntsagsstav|e» og «sandwichboll|er». Intet ord i nogen rets navn må deles, undtagen ved en
+// blød bindestreg eller en bindestreg (fx «Rugbrøds-|madpakke» og «Tun-|snurrer»). Før rettelsen: 24 af 239 navne på
+// 768×1024 og 8 på 820×1180. Hvor ofte højttaleren står under navnet, skrives som måling
+const TITEL_PAA = [
+  { navn: 'tablet', viewport: { width: 768, height: 1024 }, hasTouch: true },
+  { navn: 'air-hoej', viewport: { width: 820, height: 1180 }, hasTouch: true },
+];
+// I browseren: ord i elementet, der er delt over to linjer et andet sted end ved en blød bindestreg eller en bindestreg.
+// Linjen findes for hvert synligt tegn; en blød bindestreg, der ikke deler, har ingen bredde
+function delteOrd(sel) {
+  const ud = [];
+  const e = document.querySelector(sel);
+  const w = document.createTreeWalker(e, NodeFilter.SHOW_TEXT);
+  let node;
+  while ((node = w.nextNode())) {
+    const re = /\S+/g;
+    let m;
+    while ((m = re.exec(node.data))) {
+      let forrige = null;
+      for (let i = 0; i < m[0].length; i++) {
+        const r = document.createRange();
+        r.setStart(node, m.index + i);
+        r.setEnd(node, m.index + i + 1);
+        const q = [...r.getClientRects()].find((x) => x.width > 0);
+        if (!q) continue;
+        if (forrige && Math.abs(q.top - forrige.top) > 2 && !/[\u00AD-]/.test(m[0].slice(forrige.i, i))) {
+          ud.push(m[0].slice(0, i).replace(/\u00AD/g, '') + '|' + m[0].slice(i).replace(/\u00AD/g, ''));
+        }
+        forrige = { top: q.top, i };
+      }
+    }
+  }
+  return ud;
+}
+async function titlerHoejkant(browser) {
+  for (const sk of TITEL_PAA) {
+    const n = sk.navn;
+    console.log('[' + n + '] rettens navn på ' + sk.viewport.width + '×' + sk.viewport.height);
+    const { ctx, side } = await nySide(browser, sk);
+    const delte = [];
+    let underNavn = 0;
+    for (let i = 0; i < index.length; i++) {
+      const id = index[i];
+      // Et nyt dokument for hver 100 retter: WebKit afviser over ca. 200 adresseskift pr. 10 s i samme dokument
+      if (i % 100 === 0) {
+        await side.goto('about:blank');
+        await side.goto(BASE + '/index.html#/ret/' + id);
+      } else {
+        await side.evaluate((h) => { document.querySelector('#app > .skaerm').dataset.gammel = '1'; location.hash = h; }, '#/ret/' + id);
+      }
+      await side.waitForFunction((x) => {
+        const h = document.querySelector('#app > .ret:not([data-gammel]) .ret-titel h1');
+        return h && h.textContent === x;
+      }, RETTER[id].name, { timeout: 5000 }).catch(() => tjek(false, n + ' ' + id + ': viste ikke retten'));
+      const d = await side.evaluate(delteOrd, '#app > .ret:not([data-gammel]) .ret-titel h1');
+      tjek(!d.length, n + ' ' + id + ': navnet er delt midt i ordet uden bindestreg: ' + d.join(', '));
+      if (d.length) delte.push(id);
+      // Højttaleren står ved siden af navnet eller i midten under det; den er rund, og begge står inden for titlen
+      const k = await side.evaluate(() => {
+        const t = document.querySelector('#app > .ret:not([data-gammel]) .ret-titel');
+        const a = t.getBoundingClientRect();
+        const h = t.querySelector('h1').getBoundingClientRect();
+        const r = t.querySelector('.stor-rund').getBoundingClientRect();
+        const inde = (b) => b.left >= a.left - 1 && b.right <= a.right + 1;
+        return { under: r.top >= h.bottom - 1, rund: Math.abs(r.width - r.height) <= 1, inde: inde(h) && inde(r) };
+      });
+      tjek(k.rund && k.inde, n + ' ' + id + ': højttaleren skal være rund, og navn og højttaler skal stå inden for titlen');
+      if (k.under) underNavn++;
+    }
+    maal.push(n + ': ' + delte.length + ' af ' + index.length + ' retters navn er delt midt i et ord' + (delte.length ? ' (' + delte.slice(0, 8).join(', ') + ')' : ''));
+    maal.push(n + ': højttaleren står under navnet på ' + underNavn + ' af ' + index.length + ' retter og ved siden af det på resten');
+    tjek(side.fejl.length === 0, n + ' (rettens navn): ' + side.fejl.join(' | '));
+    await ctx.close();
+  }
+}
+
 // ---------- ⚡ på de lynhurtige retter, og navnene uden blød bindestreg (iPad) ----------
 // ⚡ (lynMaerke i app.js) står på kortet eller rækken for hver ret på højst LYN_MIN minutter, hvor retterne vælges:
 // forsiden, børnenes valg (#/uge/vaelg/<dyr>) og den voksnes valg til en dag (#/uge/dag/<n>). Skærmlæseren får teksten
@@ -2325,9 +2403,9 @@ async function lynOgNavne(browser) {
   await ctx.close();
 }
 
-// E2E_DELE=hele,print,tastatur,timer,fejl,beroering,former,trinbund,lyn,ugeplan,voksen,skaermfund (standard: alle) og E2E_SKAERME=ipad,iphone,desktop (standard: alle)
+// E2E_DELE=hele,print,tastatur,timer,fejl,beroering,former,trinbund,titler,lyn,ugeplan,voksen,skaermfund (standard: alle) og E2E_SKAERME=ipad,iphone,desktop (standard: alle)
 // «former» kører på sine egne skærme (FORMER) og ser bort fra E2E_SKAERME
-const DELE = (process.env.E2E_DELE || 'hele,print,tastatur,timer,fejl,beroering,former,trinbund,lyn,ugeplan,voksen,skaermfund').split(',').map((x) => x.trim()).filter(Boolean);
+const DELE = (process.env.E2E_DELE || 'hele,print,tastatur,timer,fejl,beroering,former,trinbund,titler,lyn,ugeplan,voksen,skaermfund').split(',').map((x) => x.trim()).filter(Boolean);
 const VALGTE = SKAERME.filter((s) => !process.env.E2E_SKAERME || process.env.E2E_SKAERME.split(',').includes(s.navn));
 const KOERSEL = [];
 for (const s of VALGTE) if (DELE.includes('hele')) KOERSEL.push(['hele vejen ' + s.navn, (b) => heleVejen(b, s)]);
@@ -2342,6 +2420,7 @@ if (DELE.includes('beroering')) KOERSEL.push(['berøring', (b) => beroering(b, S
 if (DELE.includes('former')) KOERSEL.push(['skærmformer', (b) => former(b)]);
 if (DELE.includes('former')) KOERSEL.push(['forsidens top', (b) => forsideTop(b)]);
 if (DELE.includes('trinbund')) KOERSEL.push(['trinene over den faste bund', (b) => trinOverBund(b)]);
+if (DELE.includes('titler')) KOERSEL.push(['rettens navn på højkant', (b) => titlerHoejkant(b)]);
 if (DELE.includes('lyn')) KOERSEL.push(['⚡ og navnene', (b) => lynOgNavne(b)]);
 // Ugeplanen står i sin egen fil (test/e2e-ugeplan.js) og får hjælperne herfra
 if (DELE.includes('ugeplan')) {
