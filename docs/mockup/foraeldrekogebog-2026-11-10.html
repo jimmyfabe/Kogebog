@@ -1,0 +1,568 @@
+<!doctype html>
+<html lang="da">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Tumbi Køkken — mockup af forældrekogebog</title>
+<style>
+/* ===== Tokens: lys er standard, mørk efter systemet eller knappen i demo-linjen ===== */
+:root {
+  --skrift: ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", "Nunito", "Trebuchet MS", system-ui, sans-serif;
+  /* Børnedelen (som i appen i dag) */
+  --kakao: #3B2A20; --kakao-blid: #6B5545; --creme: #FFF4E2; --creme-moerk: #EEDDBF; --hvid: #FFFFFF;
+  --sennep: #F2C14E; --sennep-lys: #FBEBC2; --raev: #F08A3C; --urt: #5BAA6A; --urt-lys: #DDEFE0; --tomat: #E2513B; --tomat-lys: #F9DCD6;
+  --blaa-lys: #D9EBF2; --lilla-lys: #EADFF4; --dej-lys: #F6E7D0;
+  --tryk: 64px;
+  /* Forældredelen: roligt, voksent */
+  --p-bg: #F6F3EE; --p-flade: #FFFFFF; --p-flade2: #F0ECE5; --p-tekst: #26201B; --p-blid: #6E655C; --p-streg: #DDD6CC;
+  --p-accent: #F2C14E; --p-accent-tekst: #26201B; --p-ok: #3E8E55; --p-ok-lys: #E3F1E6; --p-advar: #B9482F; --p-advar-lys: #FBE4DE;
+  --p-skygge: 0 1px 2px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.05);
+  --p-radius: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="lys"]) {
+    --p-bg: #17161A; --p-flade: #232227; --p-flade2: #2C2B31; --p-tekst: #F1EEE9; --p-blid: #A9A39B; --p-streg: #3A383F;
+    --p-accent: #E6B445; --p-accent-tekst: #1A1710; --p-ok: #6CC083; --p-ok-lys: #1F3326; --p-advar: #E07A62; --p-advar-lys: #3A2420;
+    --p-skygge: 0 1px 2px rgba(0,0,0,.4), 0 6px 16px rgba(0,0,0,.35);
+  }
+}
+:root[data-tema="moerk"] {
+  --p-bg: #17161A; --p-flade: #232227; --p-flade2: #2C2B31; --p-tekst: #F1EEE9; --p-blid: #A9A39B; --p-streg: #3A383F;
+  --p-accent: #E6B445; --p-accent-tekst: #1A1710; --p-ok: #6CC083; --p-ok-lys: #1F3326; --p-advar: #E07A62; --p-advar-lys: #3A2420;
+  --p-skygge: 0 1px 2px rgba(0,0,0,.4), 0 6px 16px rgba(0,0,0,.35);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+body { font-family: var(--skrift); background: var(--p-bg); color: var(--p-tekst); -webkit-text-size-adjust: 100%; }
+button { font: inherit; color: inherit; cursor: pointer; touch-action: manipulation; }
+[hidden] { display: none !important; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+/* ===== Demo-linjen (kun i mockuppen) ===== */
+.demo { position: fixed; top: 0; left: 0; right: 0; z-index: 50; display: flex; gap: 6px; align-items: center; padding: 6px 10px; padding-top: max(6px, env(safe-area-inset-top)); background: #1F1D22; color: #EEE; font-size: 13px; }
+.demo .mellem { flex: 1; text-align: center; opacity: .75; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.demo button { min-height: 30px; padding: 0 10px; border: 1px solid #555; border-radius: 8px; background: #2C2A31; color: #EEE; font-size: 13px; }
+.demo button[aria-pressed="true"] { background: #F2C14E; color: #1F1D22; border-color: #F2C14E; }
+.app { padding-top: 44px; min-height: 100vh; }
+
+/* ======================= FORÆLDREDELEN ======================= */
+.p { display: grid; grid-template-rows: 1fr auto; min-height: calc(100vh - 44px); background: var(--p-bg); color: var(--p-tekst); font-size: 17px; line-height: 1.35; }
+.p-side { padding: 16px 16px 24px; max-width: 760px; width: 100%; margin: 0 auto; }
+.p h1 { font-size: 26px; margin: 4px 0 2px; letter-spacing: -.01em; }
+.p h2 { font-size: 15px; font-weight: 700; color: var(--p-blid); text-transform: uppercase; letter-spacing: .04em; margin: 22px 0 8px; }
+.p .under { color: var(--p-blid); margin: 0 0 12px; font-size: 15px; }
+.p-hoved { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+/* Knapper til voksne: mindst 48 px, tynd streg, én accent */
+.pk { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 16px; border: 1.5px solid var(--p-streg); border-radius: 12px; background: var(--p-flade); font-weight: 700; font-size: 16px; }
+.pk:active { transform: translateY(1px); }
+.pk.primaer { background: var(--p-accent); color: var(--p-accent-tekst); border-color: transparent; }
+.pk.lille { min-height: 44px; padding: 0 12px; font-size: 15px; }
+.pk.rund { width: 44px; min-height: 44px; padding: 0; border-radius: 50%; font-size: 20px; }
+.pk.ikon { width: 48px; padding: 0; font-size: 22px; }
+.pk[aria-pressed="true"] { background: var(--p-tekst); color: var(--p-bg); border-color: var(--p-tekst); }
+.pk.hjerte[aria-pressed="true"] { background: var(--tomat-lys); color: var(--tomat); border-color: var(--tomat); }
+:root[data-tema="moerk"] .pk.hjerte[aria-pressed="true"] { background: #3A2420; }
+@media (prefers-color-scheme: dark) { :root:not([data-tema="lys"]) .pk.hjerte[aria-pressed="true"] { background: #3A2420; } }
+.chip { min-height: 40px; padding: 0 14px; border-radius: 999px; font-size: 15px; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0 12px; }
+.raekke-knapper { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+.kort { background: var(--p-flade); border: 1.5px solid var(--p-streg); border-radius: var(--p-radius); box-shadow: var(--p-skygge); }
+.liste { list-style: none; margin: 0; padding: 0; }
+.liste > li { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-top: 1.5px solid var(--p-streg); min-height: 64px; }
+.liste > li:first-child { border-top: 0; }
+.emoji { font-size: 32px; width: 44px; text-align: center; flex: none; line-height: 1; }
+.navn { font-weight: 700; }
+.meta { color: var(--p-blid); font-size: 14px; }
+.tekst { flex: 1; min-width: 0; }
+.tekst .navn, .tekst .meta { display: block; }
+.status-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 12px; border-radius: 999px; background: var(--p-flade2); border: 1.5px solid var(--p-streg); font-size: 14px; font-weight: 700; }
+.status-chip.ok { background: var(--p-ok-lys); color: var(--p-ok); border-color: transparent; }
+
+/* Ugen */
+.dag { align-items: stretch; }
+.dag-hoved { width: 72px; flex: none; display: flex; flex-direction: column; justify-content: center; }
+.dag-hoved b { font-size: 15px; }
+.dag-hoved span { color: var(--p-blid); font-size: 13px; }
+.dag.fri .tekst .navn { color: var(--p-blid); font-weight: 500; }
+.dag.idag { background: var(--p-flade2); }
+.af { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; color: var(--p-blid); }
+.stepper { display: inline-flex; align-items: center; gap: 4px; }
+.stepper output { min-width: 56px; text-align: center; font-weight: 700; font-size: 15px; }
+@media (max-width: 480px) { .dag .tekst .meta { display: none; } .dag-hoved { width: 64px; } }
+.sum { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 12px 14px; color: var(--p-blid); font-size: 15px; }
+
+/* Indkøb */
+.afd { margin-top: 14px; }
+.afd h3 { margin: 0; padding: 10px 12px; font-size: 15px; color: var(--p-blid); background: var(--p-flade2); border-bottom: 1.5px solid var(--p-streg); border-radius: var(--p-radius) var(--p-radius) 0 0; display: flex; justify-content: space-between; }
+.vare { cursor: pointer; }
+.vare .boks { width: 28px; height: 28px; border: 2px solid var(--p-streg); border-radius: 8px; flex: none; display: grid; place-items: center; font-size: 18px; }
+.vare.koebt { opacity: .5; }
+.vare.koebt .navn { text-decoration: line-through; }
+.vare.koebt .boks { background: var(--p-ok); border-color: var(--p-ok); color: #fff; }
+.fremdrift { height: 8px; border-radius: 4px; background: var(--p-flade2); overflow: hidden; margin: 8px 0 4px; }
+.fremdrift > span { display: block; height: 100%; background: var(--p-ok); width: 0; transition: width .2s; }
+.menu { position: relative; }
+.menu-liste { position: absolute; right: 0; top: 52px; z-index: 5; min-width: 220px; padding: 6px; background: var(--p-flade); border: 1.5px solid var(--p-streg); border-radius: 12px; box-shadow: var(--p-skygge); }
+.menu-liste button { display: flex; width: 100%; min-height: 48px; align-items: center; gap: 10px; padding: 0 12px; border: 0; background: none; border-radius: 8px; font-weight: 600; text-align: left; }
+.menu-liste button:hover { background: var(--p-flade2); }
+.besked { margin: 12px 0 0; padding: 10px 14px; border-radius: 12px; background: var(--p-ok-lys); color: var(--p-ok); font-weight: 600; font-size: 15px; }
+
+/* Retter */
+.soeg { display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 14px; border: 1.5px solid var(--p-streg); border-radius: 12px; background: var(--p-flade); }
+.soeg input { flex: 1; min-width: 0; border: 0; background: none; font: inherit; color: inherit; outline: none; }
+.maerke { display: inline-block; padding: 1px 8px; border-radius: 999px; background: var(--p-flade2); font-size: 12px; font-weight: 700; margin-right: 4px; }
+
+/* Mere */
+.indst { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border-top: 1.5px solid var(--p-streg); min-height: 64px; flex-wrap: wrap; }
+.indst:first-child { border-top: 0; }
+.indst .tekst .meta { margin-top: 2px; }
+.kontakt { width: 56px; height: 32px; border-radius: 16px; background: var(--p-streg); border: 0; position: relative; flex: none; }
+.kontakt::after { content: ""; position: absolute; top: 3px; left: 3px; width: 26px; height: 26px; border-radius: 50%; background: var(--p-flade); box-shadow: 0 1px 3px rgba(0,0,0,.3); transition: left .15s; }
+.kontakt[aria-checked="true"] { background: var(--p-ok); }
+.kontakt[aria-checked="true"]::after { left: 27px; }
+.valg-par { display: inline-flex; gap: 6px; }
+
+/* Fanelinjen: nederst på telefon, til venstre på bred skærm */
+.faner { position: sticky; bottom: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; padding: 6px 8px; padding-bottom: max(6px, env(safe-area-inset-bottom)); background: var(--p-flade); border-top: 1.5px solid var(--p-streg); }
+.fane { display: flex; flex-direction: column; align-items: center; gap: 2px; min-height: 56px; border: 0; border-radius: 10px; background: none; font-size: 12px; font-weight: 700; color: var(--p-blid); }
+.fane span:first-child { font-size: 22px; }
+.fane[aria-current="page"] { color: var(--p-tekst); background: var(--p-flade2); }
+.laas-info { font-size: 13px; color: var(--p-blid); display: none; align-items: center; gap: 4px; }
+.p-hoved .laas-info { display: inline-flex; }
+@media (min-width: 900px) {
+  .p { grid-template-rows: none; grid-template-columns: 200px 1fr; }
+  .faner { position: sticky; top: 44px; align-self: start; grid-column: 1; grid-row: 1; grid-template-columns: 1fr; gap: 6px; height: calc(100vh - 44px); padding: 16px 10px; border-top: 0; border-right: 1.5px solid var(--p-streg); align-content: start; }
+  .fane { flex-direction: row; justify-content: flex-start; gap: 10px; padding: 0 12px; font-size: 16px; min-height: 52px; }
+  .fane span:first-child { font-size: 22px; }
+  .p-side { grid-column: 2; max-width: 900px; padding: 24px 32px 40px; }
+  .faner .laas-info { display: inline-flex; margin-top: auto; padding: 0 12px; }
+}
+
+/* ======================= BØRNEDELEN ======================= */
+.b { min-height: calc(100vh - 44px); background: var(--creme); color: var(--kakao); font-size: 20px; --streg: 3px; --kant: var(--streg) solid var(--kakao); --loeft: 0 5px 0 var(--kakao); }
+.b-top { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 10px 16px; background: repeating-linear-gradient(90deg, var(--sennep-lys) 0 24px, #F7D98A 24px 48px); border-bottom: var(--kant); }
+.b-titel { padding: 6px 22px; background: var(--creme); border: var(--kant); border-radius: 22px; text-align: center; }
+.b-titel h1 { margin: 0; font-size: 30px; }
+.b-titel p { margin: 0; font-size: 15px; color: var(--kakao-blid); }
+.b-dyr { font-size: 48px; line-height: 1; }
+.b-indhold { padding: 16px; max-width: 1100px; margin: 0 auto; }
+
+.bk { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: var(--tryk); min-width: var(--tryk); padding: 0 22px; border: var(--kant); border-radius: 999px; background: var(--hvid); box-shadow: var(--loeft); font-weight: 800; font-size: 20px; }
+.bk:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--kakao); }
+.bk.primaer { background: var(--sennep); }
+.bk.lille { min-height: 48px; min-width: 48px; font-size: 16px; padding: 0 16px; box-shadow: 0 3px 0 var(--kakao); }
+
+/* I dag-kortet */
+.idag { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px; padding: 14px 18px; border: var(--kant); border-radius: 28px; background: var(--hvid); box-shadow: var(--loeft); margin-bottom: 18px; }
+.idag .tallerken { width: 96px; height: 96px; border-radius: 50%; background: var(--urt-lys); border: var(--kant); display: grid; place-items: center; font-size: 56px; }
+.idag .lille-tekst { font-size: 15px; color: var(--kakao-blid); font-weight: 700; }
+.idag .stor { font-size: 28px; font-weight: 800; line-height: 1.1; }
+.idag.tom { background: var(--creme-moerk); box-shadow: none; }
+
+.grupper { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+.gruppe { width: 100%; min-height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border: var(--kant); border-radius: 28px; box-shadow: var(--loeft); font-weight: 800; font-size: 19px; padding: 10px; }
+.gruppe .cirkel { width: 84px; height: 84px; border-radius: 50%; background: var(--hvid); border: var(--kant); display: grid; place-items: center; font-size: 46px; }
+.b-bund { display: flex; justify-content: center; padding: 22px 16px; }
+.hold { position: relative; overflow: hidden; }
+.hold .fyld { position: absolute; inset: 0; width: 0; background: var(--sennep); transition: none; }
+.hold .hold-indhold { position: relative; }
+
+/* Børnenes valg */
+.valg-hoved { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; margin: 8px 0 18px; }
+.valg-hoved h2 { margin: 0; font-size: 34px; }
+.dyr-gitter, .kort-gitter { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+.dyr-gitter { grid-template-columns: repeat(3, 1fr); max-width: 900px; margin: 0 auto; }
+.dyr-kort { width: 100%; min-height: 220px; padding: 16px 12px; border: var(--kant); border-radius: 28px; background: var(--hvid); box-shadow: var(--loeft); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font-size: 24px; font-weight: 800; }
+.dyr-kort .cirkel { width: 120px; height: 120px; border-radius: 50%; display: grid; place-items: center; font-size: 72px; border: var(--kant); }
+.dyr-kort .plads { width: 40px; height: 40px; border-radius: 50%; border: 3px dashed var(--kakao-blid); display: grid; place-items: center; font-size: 24px; }
+.dyr-kort .plads.fyldt { border-style: solid; background: var(--urt-lys); }
+.dyr-kort.faerdig { opacity: .75; }
+.kort-gitter { grid-template-columns: repeat(2, 1fr); max-width: 980px; margin: 0 auto; }
+@media (min-width: 900px) { .kort-gitter { grid-template-columns: repeat(4, 1fr); } }
+.ret-kort { position: relative; width: 100%; min-height: 190px; border: var(--kant); border-radius: 28px; background: var(--hvid); box-shadow: var(--loeft); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; font-size: 20px; font-weight: 800; }
+.ret-kort .tallerken { width: 110px; height: 110px; border-radius: 50%; background: var(--creme); border: var(--kant); display: grid; place-items: center; font-size: 64px; }
+.ret-kort[aria-pressed="true"] { background: var(--sennep-lys); box-shadow: inset 0 0 0 3px var(--kakao), var(--loeft); }
+.ret-kort .mk { position: absolute; top: 10px; left: 10px; width: 44px; height: 44px; border-radius: 50%; border: var(--kant); background: var(--urt-lys); display: grid; place-items: center; font-size: 22px; }
+.ret-kort .mk.fav { background: var(--tomat-lys); }
+.valg-bund { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 20px; }
+.prikker { display: flex; gap: 8px; justify-content: center; }
+.prikker span { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--kakao); }
+.prikker span.nu { background: var(--kakao); }
+.dage { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+.dag-brik { width: 100%; min-height: 150px; border: var(--kant); border-radius: 22px; box-shadow: var(--loeft); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; font-weight: 800; font-size: 18px; }
+.dag-brik .t { width: 60px; height: 60px; border-radius: 50%; border: var(--kant); background: var(--hvid); display: grid; place-items: center; font-size: 34px; }
+.dag-brik.optaget { opacity: .7; }
+@media (max-width: 600px) { .dage { grid-template-columns: repeat(4, 1fr); } .dyr-gitter { grid-template-columns: 1fr; } .dyr-kort { min-height: 120px; flex-direction: row; } .dyr-kort .cirkel { width: 80px; height: 80px; font-size: 48px; } }
+/* Liggende telefon: 88 px børneknapper som i appen */
+@media (max-height: 500px) and (orientation: landscape) { .b { --tryk: 88px; } }
+.laes-op { font-size: 18px; }
+.tale { position: fixed; left: 12px; bottom: 12px; z-index: 40; max-width: 60vw; padding: 8px 14px; border-radius: 14px; background: var(--kakao); color: var(--creme); font-size: 15px; opacity: 0; transition: opacity .2s; pointer-events: none; }
+.tale.vis { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="demo" role="toolbar" aria-label="Mockup-valg">
+  <button type="button" id="dm-f" aria-pressed="true">Forældre</button>
+  <button type="button" id="dm-b" aria-pressed="false">Børn</button>
+  <span class="mellem">Mockup · klik rundt · opdigtede retter</span>
+  <button type="button" id="dm-t">Tema: auto</button>
+</div>
+
+<div class="app" id="app"></div>
+<div class="tale" id="tale" aria-live="polite"></div>
+
+<script>
+/* ===================== Opdigtede data (ingen rigtige navne) ===================== */
+const RETTER = [
+  { id: 'maanepasta',   navn: 'Månepasta',               e: '🍝', min: 25, kr: 45, g: 180, gruppe: 'Pasta',   mk: ['hurtig','vegetar'],        fav: true },
+  { id: 'regnbuesuppe', navn: 'Regnbuesuppe',            e: '🍲', min: 30, kr: 38, g: 320, gruppe: 'Grønt',   mk: ['vegetar','groent','billig'], fav: true },
+  { id: 'dragetacos',   navn: 'Drage-tacos',             e: '🌮', min: 30, kr: 70, g: 150, gruppe: 'Kød',     mk: [],                         fav: true },
+  { id: 'skovboller',   navn: 'Skovboller med suppe',    e: '🥖', min: 40, kr: 42, g: 200, gruppe: 'Brød',    mk: ['vegetar'],                fav: false },
+  { id: 'solskinsris',  navn: 'Solskinsris med kylling', e: '🍛', min: 35, kr: 62, g: 220, gruppe: 'Kylling', mk: ['groent'],                 fav: true },
+  { id: 'fiskepakker',  navn: 'Sø-fiskepakker',          e: '🐟', min: 35, kr: 78, g: 260, gruppe: 'Fisk',    mk: ['groent','kniv'],          fav: true },
+  { id: 'pandekager',   navn: 'Rosas pandekager',        e: '🥞', min: 45, kr: 30, g: 0,   gruppe: 'Brød',    mk: ['vegetar','billig','kniv'],fav: true },
+  { id: 'kartoffel',    navn: 'Pips kartoffelbåde',      e: '🥔', min: 40, kr: 35, g: 300, gruppe: 'Grønt',   mk: ['vegetar','groent','kniv','billig'], fav: true },
+  { id: 'boennegryde',  navn: 'Tigerbønne-gryde',        e: '🫘', min: 30, kr: 33, g: 280, gruppe: 'Grønt',   mk: ['vegetar','groent','billig'], fav: true },
+  { id: 'bjoernegryde', navn: 'Bjørnegryde',             e: '🥘', min: 45, kr: 85, g: 170, gruppe: 'Kød',     mk: [],                         fav: false },
+  { id: 'stjernepizza', navn: 'Stjernepizza',            e: '🍕', min: 50, kr: 55, g: 120, gruppe: 'Brød',    mk: [],                         fav: false },
+  { id: 'spyd',         navn: 'Kyllingespyd med majs',   e: '🍢', min: 25, kr: 60, g: 140, gruppe: 'Kylling', mk: ['hurtig','kniv'],          fav: true },
+  { id: 'nudelsky',     navn: 'Nudelsky',                e: '🍜', min: 20, kr: 40, g: 160, gruppe: 'Pasta',   mk: ['hurtig','vegetar'],       fav: false, ny: true },
+  { id: 'kaalsalat',    navn: 'Lilla kålsalat med æg',   e: '🥗', min: 20, kr: 28, g: 350, gruppe: 'Grønt',   mk: ['hurtig','vegetar','groent','billig'], fav: false, ny: true },
+];
+const MAERKER = { hurtig: '⚡ Hurtig', vegetar: '🌱 Vegetar', groent: '🥕 Masser af grønt', billig: '💰 Billig', kniv: '🔪 Ingen kniv' };
+const GRUPPER = ['Pasta', 'Kylling', 'Fisk', 'Kød', 'Grønt', 'Brød'];
+const DAGE = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag', 'Søndag'];
+const DATO = ['16/11', '17/11', '18/11', '19/11', '20/11', '21/11', '22/11'];
+const DYR = { bo: { navn: 'Bo', e: '🐻', farve: 'var(--dej-lys)' }, rosa: { navn: 'Rosa', e: '🦊', farve: 'var(--tomat-lys)' }, pip: { navn: 'Pip', e: '🦔', farve: 'var(--urt-lys)' } };
+const INDKOEB = [
+  ['Frugt og grønt', [['🥕', 'Gulerødder', '1 kg'], ['🧅', 'Løg', '3 stk'], ['🥦', 'Broccoli', '2 stk'], ['🍋', 'Citron', '1 stk'], ['🥔', 'Kartofler', '1,5 kg']]],
+  ['Brød', [['🥖', 'Tortillas', '1 pakke (8 stk)']]],
+  ['Dåser og tørvarer', [['🍝', 'Spaghetti', '500 g'], ['🥫', 'Hakkede tomater', '3 dåser (1,2 kg)'], ['🫘', 'Kidneybønner', '2 dåser'], ['🍚', 'Ris', '500 g']]],
+  ['Køl', [['🧀', 'Revet ost', '200 g'], ['🥛', 'Mælk', '1 l'], ['🍗', 'Kyllingebryst', '600 g'], ['🥩', 'Hakket oksekød', '400 g']]],
+  ['Frost', [['🐟', 'Torskefilet', '600 g'], ['🟢', 'Ærter', '400 g']]],
+];
+const BASIS = ['Salt', 'Peber', 'Olie', 'Paprika', 'Oregano'];
+
+/* ===================== Tilstand ===================== */
+const S = {
+  del: 'f',                  // 'f' forældre, 'b' børn
+  fane: 'uge',               // uge | vaelg-dag | indkoeb | retter | mere
+  vaelgDag: null,
+  plan: [ { ret: 'maanepasta', af: 'rosa', n: 4 }, { ret: 'solskinsris', af: 'bo', n: 4 }, null, { ret: 'fiskepakker', af: 'bo', n: 4 }, null, null, null ],
+  idag: 1,                   // tirsdag i mockuppen
+  n: 4, voksne: 2, boern: 2, prBarn: 1, nyePrUge: 2, mereGroent: false,
+  koebt: new Set(['Løg', 'Mælk']), harVi: new Set(['Ris']),
+  basisAaben: false, delMenu: false, besked: null,
+  soeg: '', gruppe: null, maerke: null, kunVores: true,
+  bSide: 'forside',          // forside | hvem | ret | dag
+  bDyr: null, bRet: null, bPrikSide: 0,
+};
+const ret = (id) => RETTER.find((r) => r.id === id);
+const vores = () => RETTER.filter((r) => r.fav);
+const boernenesKort = () => [...vores().slice(0, 12 - S.nyePrUge), ...RETTER.filter((r) => r.ny && !r.fav).slice(0, S.nyePrUge)];
+const portioner = () => Math.max(1, Math.ceil(S.voksne + 0.7 * S.boern));
+
+function h(tag, attrs = {}, ...born) {
+  const e = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (v == null || v === false) continue;
+    if (k === 'tekst') e.textContent = v;
+    else if (k === 'onclick') e.addEventListener('click', v);
+    else if (k === 'oninput') e.addEventListener('input', v);
+    else e.setAttribute(k, v === true ? '' : v);
+  }
+  for (const b of born.flat(Infinity)) if (b != null && b !== false) e.append(b);
+  return e;
+}
+let taleTid = 0;
+function sig(t) { // «stemmen» i mockuppen: en lille boble nederst
+  const el = document.getElementById('tale');
+  el.textContent = '🔊 ' + t; el.classList.add('vis');
+  clearTimeout(taleTid); taleTid = setTimeout(() => el.classList.remove('vis'), 2200);
+}
+function vis() {
+  const app = document.getElementById('app');
+  app.replaceChildren(S.del === 'f' ? foraeldre() : boern());
+  document.getElementById('dm-f').setAttribute('aria-pressed', String(S.del === 'f'));
+  document.getElementById('dm-b').setAttribute('aria-pressed', String(S.del === 'b'));
+  window.scrollTo(0, 0);
+}
+
+/* ===================== FORÆLDREDELEN ===================== */
+function foraeldre() {
+  const side = { uge: ugeSide, 'vaelg-dag': vaelgDagSide, indkoeb: indkoebSide, retter: retterSide, mere: mereSide }[S.fane]();
+  return h('div', { class: 'p' }, h('div', { class: 'p-side' }, side), faner());
+}
+function faner() {
+  const f = (id, ikon, navn) => h('button', { type: 'button', class: 'fane', 'aria-current': (S.fane === id || (id === 'uge' && S.fane === 'vaelg-dag')) ? 'page' : null,
+    onclick: () => { S.fane = id; S.delMenu = false; S.besked = null; vis(); } }, h('span', { tekst: ikon, 'aria-hidden': 'true' }), h('span', { tekst: navn }));
+  return h('nav', { class: 'faner', 'aria-label': 'Voksendelen' }, f('uge', '📅', 'Uge'), f('indkoeb', '🧺', 'Indkøb'), f('retter', '🍽️', 'Retter'), f('mere', '⚙️', 'Mere'),
+    h('span', { class: 'laas-info' }, '🔒 Lukker efter 10 min'));
+}
+const pk = (tekst, o = {}) => h('button', { type: 'button', class: 'pk ' + (o.klasse || ''), 'aria-pressed': o.pressed, 'aria-label': o.label, onclick: o.onclick }, tekst);
+function metaTekst(r, n = S.n) {
+  const kr = Math.round(r.kr * n / 4);
+  return r.min + ' min · ca. ' + kr + ' kr' + (r.g >= 150 ? ' · 🥕 ' + r.g + ' g' : '') + (r.mk.includes('kniv') ? ' · 🔪 ingen kniv' : '');
+}
+
+/* --- Uge --- */
+function ugeSide() {
+  const valgte = S.plan.filter(Boolean);
+  const kr = valgte.reduce((s, d) => s + Math.round(ret(d.ret).kr * d.n / 4), 0);
+  const groent = valgte.filter((d) => ret(d.ret).g >= 150).length;
+  const fyld = () => {
+    const brugte = new Set(valgte.map((d) => d.ret));
+    const kandidater = vores().filter((r) => !brugte.has(r.id));
+    S.plan = S.plan.map((d) => d || (kandidater.length ? { ret: kandidater.shift().id, af: 'bo', n: portioner() } : null));
+    S.besked = 'Ugen er fyldt op med jeres retter. Byt dem, I ikke vil have.'; vis();
+  };
+  return [
+    h('div', { class: 'p-hoved' },
+      h('div', {}, h('h1', { tekst: 'Uge 47' }), h('p', { class: 'under', tekst: '16/11–22/11 · ' + valgte.length + ' af 7 dage' })),
+      h('button', { type: 'button', class: 'status-chip', onclick: () => { S.fane = 'mere'; vis(); } }, '👨‍👩‍👧‍👧 ' + S.voksne + ' voksne · ' + S.boern + ' børn = ' + portioner() + ' port.')),
+    h('div', { class: 'raekke-knapper', style: 'margin:8px 0 14px' },
+      pk('🦊 Børnene vælger', { klasse: 'primaer', onclick: () => { S.del = 'b'; S.bSide = 'hvem'; vis(); sig('Hvem skal vælge?'); } }),
+      pk('Fyld ugen med vores retter', { onclick: fyld })),
+    S.besked ? h('p', { class: 'besked', tekst: S.besked }) : null,
+    h('ol', { class: 'kort liste', 'aria-label': 'Ugens dage' }, S.plan.map((d, i) => dagRaekke(d, i))),
+    h('div', { class: 'sum' }, h('span', { tekst: 'Ca. ' + Math.round(kr / 10) * 10 + ' kr' }), h('span', { tekst: 'Grønt ' + groent + ' af 7 dage' })),
+    h('div', { class: 'raekke-knapper', style: 'margin-top:14px' },
+      pk('🧺 Se indkøbslisten', { onclick: () => { S.fane = 'indkoeb'; vis(); } }),
+      pk('Ny uge: hold', { klasse: 'lille', label: 'Ny uge tømmer planen. Hold knappen inde i 2 sekunder.', onclick: () => { S.besked = 'I appen kræver «Ny uge» et hold på 2 s.'; vis(); } })),
+  ];
+}
+function dagRaekke(d, i) {
+  const r = d && ret(d.ret);
+  const hoved = h('div', { class: 'dag-hoved' }, h('b', { tekst: DAGE[i] }), h('span', { tekst: DATO[i] + (i === S.idag ? ' · i dag' : '') }));
+  if (!r) return h('li', { class: 'dag fri' + (i === S.idag ? ' idag' : '') }, hoved,
+    h('div', { class: 'tekst' }, h('span', { class: 'navn', tekst: 'Fri aften' })),
+    pk('Vælg', { klasse: 'lille', label: 'Vælg ret til ' + DAGE[i].toLowerCase(), onclick: () => { S.fane = 'vaelg-dag'; S.vaelgDag = i; vis(); } }));
+  return h('li', { class: 'dag' + (i === S.idag ? ' idag' : '') }, hoved,
+    h('span', { class: 'emoji', tekst: r.e, 'aria-hidden': 'true' }),
+    h('div', { class: 'tekst' }, h('span', { class: 'navn', tekst: r.navn }), h('span', { class: 'meta', tekst: metaTekst(r, d.n) }),
+      h('span', { class: 'af', tekst: DYR[d.af].e + ' Valgt af ' + DYR[d.af].navn + ' · ' + d.n + ' pers.' })),
+    h('div', { class: 'raekke-knapper' },
+      pk('Byt', { klasse: 'lille', label: 'Byt retten ' + DAGE[i].toLowerCase(), onclick: () => { S.fane = 'vaelg-dag'; S.vaelgDag = i; vis(); } }),
+      pk('✕', { klasse: 'rund', label: 'Fjern retten fra ' + DAGE[i].toLowerCase(), onclick: () => { S.plan[i] = null; vis(); } })));
+}
+function vaelgDagSide() {
+  const i = S.vaelgDag;
+  const liste = (S.kunVores ? vores() : RETTER).filter((r) => !S.maerke || r.mk.includes(S.maerke));
+  return [
+    h('div', { class: 'p-hoved' }, h('div', {}, h('h1', { tekst: 'Vælg ret til ' + DAGE[i].toLowerCase() }), h('p', { class: 'under', tekst: DAGE[i] + ' ' + DATO[i] + ' · ' + portioner() + ' pers.' })),
+      pk('← Tilbage til ugen', { klasse: 'lille', onclick: () => { S.fane = 'uge'; vis(); } })),
+    h('div', { class: 'chips', role: 'group', 'aria-label': 'Vis' },
+      pk('♥ Vores retter (' + vores().length + ')', { klasse: 'chip', pressed: S.kunVores, onclick: () => { S.kunVores = true; vis(); } }),
+      pk('Alle (' + RETTER.length + ')', { klasse: 'chip', pressed: !S.kunVores, onclick: () => { S.kunVores = false; vis(); } }),
+      ...['hurtig', 'vegetar', 'groent', 'kniv'].map((k) => pk(MAERKER[k], { klasse: 'chip', pressed: S.maerke === k, onclick: () => { S.maerke = S.maerke === k ? null : k; vis(); } }))),
+    h('ul', { class: 'kort liste', 'aria-label': 'Retter' }, liste.map((r) => h('li', {},
+      h('span', { class: 'emoji', tekst: r.e, 'aria-hidden': 'true' }),
+      h('div', { class: 'tekst' }, h('span', { class: 'navn', tekst: r.navn + (r.fav ? ' ♥' : '') }), h('span', { class: 'meta', tekst: metaTekst(r, portioner()) })),
+      pk('Vælg', { klasse: 'lille', label: 'Vælg ' + r.navn, onclick: () => { const gl = S.plan[i]; S.plan[i] = { ret: r.id, af: gl ? gl.af : 'bo', n: gl ? gl.n : portioner() }; S.fane = 'uge'; S.besked = r.navn + ' står nu på ' + DAGE[i].toLowerCase() + '.'; vis(); } })))),
+  ];
+}
+
+/* --- Indkøb --- */
+function indkoebSide() {
+  const alle = INDKOEB.flatMap(([, v]) => v).filter(([, navn]) => !S.harVi.has(navn));
+  const koebt = alle.filter(([, navn]) => S.koebt.has(navn)).length;
+  const del = (t) => { S.delMenu = false; S.besked = t; vis(); };
+  const menu = h('div', { class: 'menu' },
+    pk('Del ▾', { onclick: () => { S.delMenu = !S.delMenu; vis(); } }),
+    S.delMenu ? h('div', { class: 'menu-liste', role: 'menu' },
+      h('button', { type: 'button', role: 'menuitem', tekst: '📱 Send til telefon', onclick: () => del('Linket er delt. Åbn det på telefonen, så ligger listen dér — også uden net.') }),
+      h('button', { type: 'button', role: 'menuitem', tekst: '📝 Del som tekst (Noter)', onclick: () => del('Listen er kopieret som tekst. I Noter: markér linjerne, og tryk på tjeklisten.') }),
+      h('button', { type: 'button', role: 'menuitem', tekst: '🖨️ Print A4', onclick: () => del('Printet åbner: ugen på side 1 og listen med □ på side 2.') })) : null);
+  return [
+    h('div', { class: 'p-hoved' },
+      h('div', {}, h('h1', { tekst: 'Indkøb' }), h('p', { class: 'under', tekst: 'Uge 47 · lavet af ugens ' + S.plan.filter(Boolean).length + ' retter · ' + portioner() + ' pers.' })),
+      menu),
+    h('div', { class: 'fremdrift', role: 'progressbar', 'aria-valuenow': koebt, 'aria-valuemax': alle.length }, h('span', { style: 'width:' + Math.round(100 * koebt / Math.max(1, alle.length)) + '%' })),
+    h('p', { class: 'meta', tekst: koebt + ' af ' + alle.length + ' købt · tryk på en vare, når den er i kurven' }),
+    S.besked ? h('p', { class: 'besked', tekst: S.besked }) : null,
+    INDKOEB.map(([afd, varer]) => {
+      const synlige = varer.filter(([, navn]) => !S.harVi.has(navn));
+      if (!synlige.length) return null;
+      return h('section', { class: 'afd kort' }, h('h3', {}, h('span', { tekst: afd }), h('span', { tekst: synlige.filter(([, n]) => S.koebt.has(n)).length + '/' + synlige.length })),
+        h('ul', { class: 'liste' }, synlige.map(([e, navn, m]) => h('li', { class: 'vare' + (S.koebt.has(navn) ? ' koebt' : ''), onclick: () => { S.koebt.has(navn) ? S.koebt.delete(navn) : S.koebt.add(navn); vis(); } },
+          h('span', { class: 'boks', 'aria-hidden': 'true', tekst: S.koebt.has(navn) ? '✓' : '' }),
+          h('span', { class: 'emoji', tekst: e, 'aria-hidden': 'true' }),
+          h('div', { class: 'tekst' }, h('span', { class: 'navn', tekst: navn }), h('span', { class: 'meta', tekst: m })),
+          pk('Har vi', { klasse: 'lille', label: navn + ': har vi allerede', onclick: (ev) => { ev.stopPropagation(); S.harVi.add(navn); vis(); } })))));
+    }),
+    h('section', { class: 'afd kort' },
+      h('h3', {}, h('span', { tekst: 'Tjek, at I har' }), pk(S.basisAaben ? 'Skjul' : 'Vis', { klasse: 'lille', onclick: () => { S.basisAaben = !S.basisAaben; vis(); } })),
+      S.basisAaben ? h('ul', { class: 'liste' }, BASIS.map((b) => h('li', {}, h('span', { class: 'emoji', tekst: '🧂', 'aria-hidden': 'true' }), h('div', { class: 'tekst' }, h('span', { class: 'navn', tekst: b }))))) : null),
+    S.harVi.size ? h('p', { class: 'meta', style: 'margin-top:12px' }, 'Har vi allerede: ' + [...S.harVi].join(', ') + ' · ', h('button', { type: 'button', class: 'pk lille', tekst: 'Vis igen', onclick: () => { S.harVi.clear(); vis(); } })) : null,
+  ];
+}
+
+/* --- Retter: ÉN liste --- */
+function retterSide() {
+  const q = S.soeg.trim().toLowerCase();
+  const liste = RETTER.filter((r) => (!q || r.navn.toLowerCase().includes(q) || r.gruppe.toLowerCase().includes(q)) && (!S.gruppe || r.gruppe === S.gruppe) && (!S.maerke || (S.maerke === 'fav' ? r.fav : r.mk.includes(S.maerke))));
+  const felt = h('input', { type: 'search', placeholder: 'Søg, fx kylling', value: S.soeg, 'aria-label': 'Søg i retterne', oninput: (e) => { S.soeg = e.target.value; const ul = document.getElementById('ret-liste'); ul.replaceChildren(...retterListe()); } });
+  function retterListe() {
+    const q2 = S.soeg.trim().toLowerCase();
+    return RETTER.filter((r) => (!q2 || r.navn.toLowerCase().includes(q2) || r.gruppe.toLowerCase().includes(q2)) && (!S.gruppe || r.gruppe === S.gruppe) && (!S.maerke || (S.maerke === 'fav' ? r.fav : r.mk.includes(S.maerke)))).map(raekke);
+  }
+  function raekke(r) {
+    return h('li', {},
+      h('span', { class: 'emoji', tekst: r.e, 'aria-hidden': 'true' }),
+      h('div', { class: 'tekst' }, h('span', { class: 'navn', tekst: r.navn }),
+        h('span', { class: 'meta' }, h('span', { class: 'maerke', tekst: r.gruppe }), r.ny ? h('span', { class: 'maerke', tekst: '✨ Ny for os' }) : null, metaTekst(r, portioner()))),
+      pk('♥', { klasse: 'ikon hjerte', pressed: r.fav, label: (r.fav ? 'Fjern ' : 'Gør ') + r.navn + (r.fav ? ' fra vores retter' : ' til en af vores retter'), onclick: () => { r.fav = !r.fav; vis(); } }),
+      pk('Åbn', { klasse: 'lille', label: 'Åbn ' + r.navn, onclick: () => { S.besked = 'Åbner retten trin for trin (børneskærmen) — uændret i forslaget.'; vis(); } }));
+  }
+  return [
+    h('div', { class: 'p-hoved' },
+      h('div', {}, h('h1', { tekst: 'Retter' }), h('p', { class: 'under', tekst: '♥ Vores retter: ' + vores().length + ' · børnene ser ' + Math.min(12 - S.nyePrUge, vores().length) + ' + ' + S.nyePrUge + ' nye' })),
+      h('span', { class: 'status-chip ok', tekst: RETTER.length + ' retter i alt' })),
+    S.besked ? h('p', { class: 'besked', tekst: S.besked }) : null,
+    h('div', { class: 'soeg' }, h('span', { tekst: '🔍', 'aria-hidden': 'true' }), felt),
+    h('div', { class: 'chips', role: 'group', 'aria-label': 'Grupper' },
+      pk('Alle', { klasse: 'chip', pressed: !S.gruppe, onclick: () => { S.gruppe = null; vis(); } }),
+      ...GRUPPER.map((g) => pk(g, { klasse: 'chip', pressed: S.gruppe === g, onclick: () => { S.gruppe = S.gruppe === g ? null : g; vis(); } }))),
+    h('div', { class: 'chips', role: 'group', 'aria-label': 'Mærker' },
+      pk('♥ Vores', { klasse: 'chip', pressed: S.maerke === 'fav', onclick: () => { S.maerke = S.maerke === 'fav' ? null : 'fav'; vis(); } }),
+      ...Object.keys(MAERKER).map((k) => pk(MAERKER[k], { klasse: 'chip', pressed: S.maerke === k, onclick: () => { S.maerke = S.maerke === k ? null : k; vis(); } }))),
+    h('p', { class: 'meta', tekst: 'Viser ' + liste.length + ' af ' + RETTER.length + ' retter' }),
+    h('ul', { id: 'ret-liste', class: 'kort liste', 'aria-label': 'Retter' }, liste.map(raekke)),
+  ];
+}
+
+/* --- Mere --- */
+function mereSide() {
+  const stepper = (navn, vaerdi, saet, min = 0, maks = 8, enhed = '') => h('div', { class: 'stepper', role: 'group', 'aria-label': navn },
+    pk('−', { klasse: 'rund', label: 'Færre ' + navn, onclick: () => { if (vaerdi > min) { saet(vaerdi - 1); vis(); } } }),
+    h('output', { tekst: vaerdi + enhed }),
+    pk('+', { klasse: 'rund', label: 'Flere ' + navn, onclick: () => { if (vaerdi < maks) { saet(vaerdi + 1); vis(); } } }));
+  const tema = document.documentElement.dataset.tema || 'auto';
+  const indst = (navn, meta, kontrol) => h('div', { class: 'indst' }, h('div', { class: 'tekst' }, h('span', { class: 'navn', tekst: navn }), meta ? h('span', { class: 'meta', tekst: meta }) : null), kontrol);
+  return [
+    h('h1', { tekst: 'Mere' }),
+    h('h2', { tekst: 'Husstand' }),
+    h('div', { class: 'kort' },
+      indst('Voksne', null, stepper('voksne', S.voksne, (v) => { S.voksne = v; })),
+      indst('Børn', 'Et barn regnes som 0,7 voksen', stepper('børn', S.boern, (v) => { S.boern = v; })),
+      indst('Portioner til nye retter', 'Regnet af husstanden. Dage i planen beholder deres tal', h('span', { class: 'status-chip', tekst: portioner() + ' portioner' }))),
+    h('h2', { tekst: 'Børnenes valg' }),
+    h('div', { class: 'kort' },
+      indst('Retter pr. barn', 'Hvor mange dage Rosa og Pip hver vælger', h('div', { class: 'valg-par', role: 'group' }, [1, 2].map((x) => pk(String(x), { klasse: 'rund', pressed: S.prBarn === x, onclick: () => { S.prBarn = x; vis(); } })))),
+      indst('Nye retter pr. uge', 'Kort med ✨, som familien ikke har lavet. Resten er jeres ♥', stepper('nye retter', S.nyePrUge, (v) => { S.nyePrUge = v; }, 0, 4)),
+      indst('Mere grønt i maden', S.mereGroent ? 'Halvt kød og halvt røde linser i 2 retter' : 'Slået fra', h('button', { type: 'button', class: 'kontakt', role: 'switch', 'aria-checked': String(S.mereGroent), 'aria-label': 'Mere grønt i maden', onclick: () => { S.mereGroent = !S.mereGroent; vis(); } }))),
+    h('h2', { tekst: 'Appen' }),
+    h('div', { class: 'kort' },
+      indst('Tema for voksendelen', 'Børnedelen er altid lys', h('div', { class: 'valg-par', role: 'group' }, [['auto', 'Auto'], ['lys', 'Lys'], ['moerk', 'Mørk']].map(([k, t]) => pk(t, { klasse: 'lille', pressed: tema === k, onclick: () => saetTema(k) })))),
+      indst('Lås', 'Voksendelen åbnes med et hold på 2 s og lukker efter 10 min uden tryk', pk('Luk nu', { klasse: 'lille', onclick: () => { S.del = 'b'; S.bSide = 'forside'; vis(); } })),
+      indst('Version', 'v10 · mockup', null)),
+  ];
+}
+
+/* ===================== BØRNEDELEN ===================== */
+function boern() {
+  const side = { forside: bForside, hvem: bHvem, ret: bRet, dag: bDag }[S.bSide]();
+  return h('div', { class: 'b' }, side);
+}
+const bk = (tekst, o = {}) => h('button', { type: 'button', class: 'bk ' + (o.klasse || ''), 'aria-label': o.label, 'aria-pressed': o.pressed, onclick: o.onclick }, tekst);
+function holdKnap(tekst, naarFaerdig) { // hold 2 s: fyldet vokser, slip før tiden = intet
+  const fyld = h('span', { class: 'fyld', 'aria-hidden': 'true' });
+  const b = h('button', { type: 'button', class: 'bk lille hold', 'aria-label': tekst + '. Hold knappen inde i 2 sekunder.' }, fyld, h('span', { class: 'hold-indhold', tekst: tekst }));
+  let t0 = 0, raf = 0, holder = false;
+  const tegn = () => { const a = Math.min(1, (performance.now() - t0) / 2000); fyld.style.width = (a * 100) + '%'; if (a >= 1) { holder = false; fyld.style.width = '0'; naarFaerdig(); return; } raf = requestAnimationFrame(tegn); };
+  const start = () => { if (holder) return; holder = true; t0 = performance.now(); raf = requestAnimationFrame(tegn); };
+  const slut = () => { if (!holder) return; holder = false; cancelAnimationFrame(raf); fyld.style.width = '0'; sig('Hold knappen inde lidt længere.'); };
+  b.addEventListener('pointerdown', start); b.addEventListener('pointerup', slut); b.addEventListener('pointerleave', slut); b.addEventListener('pointercancel', slut);
+  b.addEventListener('contextmenu', (e) => e.preventDefault());
+  b.addEventListener('keydown', (e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); if (!e.repeat) start(); } });
+  b.addEventListener('keyup', (e) => { if (e.key === ' ' || e.key === 'Enter') slut(); });
+  return b;
+}
+function bTop() {
+  return h('header', { class: 'b-top' }, h('span', { class: 'b-dyr', tekst: '🦊', 'aria-hidden': 'true' }),
+    h('div', { class: 'b-titel' }, h('h1', { tekst: 'Tumbi Køkken' }), h('p', { tekst: 'Hvad skal vi lave i dag?' })),
+    h('span', { class: 'b-dyr', tekst: '🐻', 'aria-hidden': 'true' }));
+}
+function bForside() {
+  const d = S.plan[S.idag];
+  const r = d && ret(d.ret);
+  const idag = r
+    ? h('button', { type: 'button', class: 'idag', 'aria-label': 'I dag: ' + r.navn + '. Tryk for at starte', onclick: () => sig('I dag laver vi ' + r.navn + '. Tryk igen for at starte.') },
+        h('span', { class: 'tallerken', tekst: r.e, 'aria-hidden': 'true' }),
+        h('span', {}, h('span', { class: 'lille-tekst', tekst: 'I DAG · ' + DAGE[S.idag] }), h('br'), h('span', { class: 'stor', tekst: r.navn }), h('br'), h('span', { class: 'lille-tekst', tekst: DYR[d.af].e + ' ' + DYR[d.af].navn + ' valgte den · ' + r.min + ' min' })),
+        h('span', { class: 'bk primaer', tekst: '▶ Start', 'aria-hidden': 'true' }))
+    : h('div', { class: 'idag tom' }, h('span', { class: 'tallerken', tekst: '🍽️', 'aria-hidden': 'true' }), h('span', {}, h('span', { class: 'lille-tekst', tekst: 'I DAG' }), h('br'), h('span', { class: 'stor', tekst: 'Fri aften' })), h('span'));
+  const grupper = [['🍝', 'Pasta', 'var(--sennep-lys)'], ['🍗', 'Kylling', 'var(--tomat-lys)'], ['🐟', 'Fisk', 'var(--blaa-lys)'], ['🥩', 'Kød', 'var(--dej-lys)'], ['🥦', 'Grønt', 'var(--urt-lys)'], ['🥖', 'Brød og pizza', 'var(--creme-moerk)'], ['🍱', 'Madpakke', '#D4E8A0'], ['🍰', 'Søde sager', 'var(--tomat-lys)'], ['🥤', 'Drikke', '#B5E3DC'], ['🎄', 'Jul og nytår', '#F2B8B5'], ['🎃', 'Halloween', 'var(--lilla-lys)']];
+  return [bTop(), h('main', { class: 'b-indhold' },
+    idag,
+    h('ul', { class: 'grupper', 'aria-label': 'Vælg slags mad' }, grupper.map(([e, navn, farve]) => h('li', {}, h('button', { type: 'button', class: 'gruppe', style: 'background:' + farve, onclick: () => sig(navn) }, h('span', { class: 'cirkel', tekst: e, 'aria-hidden': 'true' }), h('span', { tekst: navn }))))),
+    h('div', { class: 'b-bund' }, holdKnap('🔒 Voksne: hold', () => { S.del = 'f'; S.fane = 'uge'; vis(); })))];
+}
+const valgtAf = (dyr) => S.plan.filter((d) => d && d.af === dyr).length;
+const erFaerdig = (dyr) => dyr === 'bo' ? false : valgtAf(dyr) >= S.prBarn;
+function bHvem() {
+  return [h('main', { class: 'b-indhold' },
+    h('div', { class: 'valg-hoved' }, h('h2', { tekst: 'Hvem skal vælge?' }), bk('🔊 Læs op', { klasse: 'lille laes-op', onclick: () => sig('Hvem skal vælge?') })),
+    h('ul', { class: 'dyr-gitter', 'aria-label': 'Dyrene' }, Object.entries(DYR).map(([id, d]) => {
+      const faerdig = erFaerdig(id);
+      const pladser = id === 'bo' ? [] : Array.from({ length: S.prBarn }, (_, k) => { const valg = S.plan.filter((x) => x && x.af === id)[k]; return h('span', { class: 'plads' + (valg ? ' fyldt' : ''), tekst: valg ? ret(valg.ret).e : '' }); });
+      return h('li', {}, h('button', { type: 'button', class: 'dyr-kort' + (faerdig ? ' faerdig' : ''), 'aria-label': d.navn + (faerdig ? '. Har valgt.' : ''),
+        onclick: () => { if (faerdig) { sig(d.navn + ' har allerede valgt.'); return; } S.bDyr = id; S.bRet = null; S.bPrikSide = 0; S.bSide = 'ret'; vis(); sig(d.navn + ' vælger. Tryk på den mad, du vil have.'); } },
+        h('span', { class: 'cirkel', style: 'background:' + d.farve, tekst: d.e, 'aria-hidden': 'true' }), h('span', { tekst: d.navn }),
+        pladser.length ? h('span', { style: 'display:flex;gap:8px', 'aria-hidden': 'true' }, pladser) : null, faerdig ? h('span', { tekst: '✓', 'aria-hidden': 'true' }) : null));
+    })),
+    h('div', { class: 'valg-bund' }, holdKnap('🔒 Ugeplan: hold', () => { S.del = 'f'; S.fane = 'uge'; vis(); }), bk('🏠', { klasse: 'lille', label: 'Til forsiden', onclick: () => { S.bSide = 'forside'; vis(); } })))];
+}
+function bRet() {
+  const d = DYR[S.bDyr];
+  const kort = boernenesKort().filter((r) => !S.plan.some((x) => x && x.ret === r.id));
+  const sider = Math.max(1, Math.ceil(kort.length / 4));
+  const side = Math.min(S.bPrikSide, sider - 1);
+  const vist = kort.slice(side * 4, side * 4 + 4);
+  const valgt = S.bRet && ret(S.bRet);
+  return [h('main', { class: 'b-indhold' },
+    h('div', { class: 'valg-hoved' }, h('span', { style: 'font-size:48px', tekst: d.e, 'aria-hidden': 'true' }), h('h2', { tekst: d.navn + ' vælger' }), bk('🔊 Læs op', { klasse: 'lille laes-op', onclick: () => sig(d.navn + ' vælger. Tryk på den mad, du vil have.') })),
+    h('ul', { class: 'kort-gitter', 'aria-label': 'Retter' }, vist.map((r) => h('li', {}, h('button', { type: 'button', class: 'ret-kort', 'aria-pressed': String(S.bRet === r.id), 'aria-label': r.navn + (r.ny ? ', ny for os' : r.fav ? ', favorit' : ''),
+      onclick: () => { S.bRet = r.id; vis(); sig(r.navn); } },
+      r.ny ? h('span', { class: 'mk', tekst: '✨', 'aria-hidden': 'true' }) : r.fav ? h('span', { class: 'mk fav', tekst: '❤️', 'aria-hidden': 'true' }) : null,
+      h('span', { class: 'tallerken', tekst: r.e, 'aria-hidden': 'true' }), h('span', { tekst: r.navn }))))),
+    h('div', { class: 'valg-bund' },
+      bk('◀', { label: 'Forrige side', onclick: () => { S.bPrikSide = (side - 1 + sider) % sider; vis(); } }),
+      h('div', { class: 'prikker', 'aria-label': 'Side ' + (side + 1) + ' af ' + sider }, Array.from({ length: sider }, (_, k) => h('span', { class: k === side ? 'nu' : '' }))),
+      bk('▶', { label: 'Næste side', onclick: () => { S.bPrikSide = (side + 1) % sider; vis(); } })),
+    h('div', { class: 'valg-bund' },
+      bk('◀ Tilbage', { onclick: () => { S.bSide = 'hvem'; vis(); sig('Hvem skal vælge?'); } }),
+      valgt ? bk('✓ Vælg ' + valgt.navn, { klasse: 'primaer', onclick: () => { S.bSide = 'dag'; vis(); sig('Hvilken dag?'); } }) : h('span', { class: 'bk', style: 'opacity:.4', tekst: 'Tryk på en ret' })))];
+}
+function bDag() {
+  const r = ret(S.bRet);
+  const farver = ['var(--urt-lys)', 'var(--sennep-lys)', 'var(--tomat-lys)', 'var(--blaa-lys)', 'var(--lilla-lys)', 'var(--dej-lys)', 'var(--creme-moerk)'];
+  return [h('main', { class: 'b-indhold' },
+    h('div', { class: 'valg-hoved' }, h('span', { style: 'font-size:48px', tekst: r.e, 'aria-hidden': 'true' }), h('h2', { tekst: 'Hvilken dag?' }), bk('🔊 Læs op', { klasse: 'lille laes-op', onclick: () => sig('Hvilken dag skal vi have ' + r.navn + '?') })),
+    h('ol', { class: 'dage', 'aria-label': 'Ugens dage' }, S.plan.map((d, i) => h('li', {}, h('button', { type: 'button', class: 'dag-brik' + (d ? ' optaget' : ''), style: 'background:' + farver[i],
+      'aria-label': DAGE[i] + (d ? ': ' + ret(d.ret).navn + ', valgt af ' + DYR[d.af].navn : ''),
+      onclick: () => { if (d) { sig(DAGE[i] + ' er optaget. ' + DYR[d.af].navn + ' valgte ' + ret(d.ret).navn + '.'); return; } S.plan[i] = { ret: r.id, af: S.bDyr, n: portioner() }; S.bSide = 'hvem'; S.bRet = null; vis(); sig('Så bliver det ' + r.navn + ' på ' + DAGE[i].toLowerCase() + '. Tak, ' + DYR[S.bDyr].navn + '!'); } },
+      h('span', { tekst: DAGE[i] }), h('span', { class: 't', tekst: d ? ret(d.ret).e : '', 'aria-hidden': 'true' }), d ? h('span', { tekst: DYR[d.af].e, 'aria-hidden': 'true' }) : null)))),
+    h('div', { class: 'valg-bund' }, bk('◀ Tilbage', { onclick: () => { S.bSide = 'ret'; vis(); } })))];
+}
+
+/* ===================== Demo-linjen og tema ===================== */
+function saetTema(k) {
+  if (k === 'auto') delete document.documentElement.dataset.tema; else document.documentElement.dataset.tema = k;
+  document.getElementById('dm-t').textContent = 'Tema: ' + k;
+  try { localStorage.setItem('tumbi-mockup-tema', k); } catch (e) { /* privat browsing */ }
+  vis();
+}
+document.getElementById('dm-f').addEventListener('click', () => { S.del = 'f'; vis(); });
+document.getElementById('dm-b').addEventListener('click', () => { S.del = 'b'; S.bSide = 'forside'; vis(); });
+document.getElementById('dm-t').addEventListener('click', () => { const nu = document.documentElement.dataset.tema || 'auto'; saetTema({ auto: 'lys', lys: 'moerk', moerk: 'auto' }[nu]); });
+try { const t = localStorage.getItem('tumbi-mockup-tema'); if (t && t !== 'auto') { document.documentElement.dataset.tema = t; document.getElementById('dm-t').textContent = 'Tema: ' + t; } } catch (e) { /* ingen lager */ }
+vis();
+</script>
+</body>
+</html>
