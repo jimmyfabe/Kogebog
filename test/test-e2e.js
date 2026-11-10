@@ -1632,15 +1632,29 @@ async function timerFrem(browser) {
     tjek(side.fejl.length === 0, n + ' (timeren rulles frem): ' + side.fejl.join(' | '));
     await ctx.close();
   }
-  // Mindre bevægelse: siden står det rette sted med det samme (ingen blød rulning). Kødsovs trin 10 ligger lavest på 390×844
-  const { ctx, side } = await nySide(browser, FORMER.find((f) => f.navn === 'iphone'), { reducedMotion: 'reduce' });
+}
+
+// Mindre bevægelse: timeren rulles frem uden animation, så siden står det rette sted straks efter trykket. Det kan kun
+// ses, hvor siden ruller ved timerstart. På telefonen på højkant gør den ikke længere, for billedet giver efter (UI-review
+// 10-11-2026, fund A): på kødsovs trin 10 på 390×844, som tjekket brugte før, rullede siden 0 px, og tjekket bestod
+// også med blød rulning; det samme på de 16 timer-trin med det mindste billede på 390×844 og 360×780 (målt 10-11).
+// På 667×375 ruller kødsovs trin 10 31 px. «Start timer» skal stå over bunden ved rulning 0, så det er appen og ikke
+// Playwright, der ruller, og ruller siden ikke, fejler tjekket. E2E_DELE=mindre kører kun denne del
+async function timerMindre(browser) {
+  const hvor = 'se-land kødsovs trin 10 med mindre bevægelse';
+  const { ctx, side } = await nySide(browser, FORMER.find((f) => f.navn === 'se-land'), { reducedMotion: 'reduce' });
   await side.goto(BASE + '/index.html#/ret/koedsovs/trin/10');
   await side.waitForSelector('.timer-start');
+  await side.waitForFunction(() => [...document.images].every((i) => i.complete), null, { timeout: 5000 }).catch(() => {});
+  const foer = await overBunden(side, ['.timer-start']);
+  tjek(foer.rul === 0 && foer.ses, hvor + ': «Start timer» skal ses over bunden ved rulning 0 før trykket ' + JSON.stringify(foer));
   await tryk(side, '.timer-start');
   const straks = await side.evaluate(() => Math.round(scrollY));
   const til = await stille(side);
   const r = await overBunden(side, ['.timer-ring', '.timer .knap']);
-  tjek(r.ses && straks === til, 'iphone med mindre bevægelse: timeren skal rulles frem uden animation (straks ' + straks + ', til sidst ' + til + ', ' + JSON.stringify(r) + ')');
+  tjek(til > 0, hvor + ': siden ruller ikke, når timeren starter (til sidst ' + til + ' px), så tjekket kan ikke se, om det sker uden animation. Vælg et trin, hvor ringen kommer under bunden');
+  tjek(r.ses && straks === til, hvor + ': timeren skal rulles frem uden animation (straks ' + straks + ', til sidst ' + til + ', ' + JSON.stringify(r) + ')');
+  tjek(side.fejl.length === 0, hvor + ': ' + side.fejl.join(' | '));
   await ctx.close();
 }
 
@@ -2439,7 +2453,8 @@ async function lynOgNavne(browser) {
 }
 
 // E2E_DELE=hele,print,tastatur,timer,fejl,beroering,former,trinbund,titler,lyn,ugeplan,voksen,skaermfund (standard: alle) og E2E_SKAERME=ipad,iphone,desktop (standard: alle)
-// «former» kører på sine egne skærme (FORMER) og ser bort fra E2E_SKAERME
+// «former» kører på sine egne skærme (FORMER) og ser bort fra E2E_SKAERME. «mindre» er kun tjekket for «mindre bevægelse»
+// ved timerstart (timerMindre), som også er med i «timer»
 const DELE = (process.env.E2E_DELE || 'hele,print,tastatur,timer,fejl,beroering,former,trinbund,titler,lyn,ugeplan,voksen,skaermfund').split(',').map((x) => x.trim()).filter(Boolean);
 const VALGTE = SKAERME.filter((s) => !process.env.E2E_SKAERME || process.env.E2E_SKAERME.split(',').includes(s.navn));
 const KOERSEL = [];
@@ -2448,6 +2463,7 @@ for (const s of VALGTE) if (DELE.includes('print')) KOERSEL.push(['print ' + s.n
 if (DELE.includes('tastatur')) KOERSEL.push(['tastatur', (b) => tastatur(b, SKAERME[2])]);
 if (DELE.includes('timer')) KOERSEL.push(['timere', (b) => timere(b, SKAERME[0])]);
 if (DELE.includes('timer')) KOERSEL.push(['timeren rulles frem', (b) => timerFrem(b)]);
+if (DELE.includes('timer') || DELE.includes('mindre')) KOERSEL.push(['timeren med mindre bevægelse', (b) => timerMindre(b)]);
 if (DELE.includes('timer')) KOERSEL.push(['timeren er færdig', (b) => timerFaerdig(b)]);
 if (DELE.includes('timer')) KOERSEL.push(['«Start timer», mens en anden timer løber ud', (b) => startUnderSkift(b, SKAERME[0])]);
 if (DELE.includes('fejl')) KOERSEL.push(['fejltilstande', (b) => fejltilstande(b, SKAERME[0])]);
