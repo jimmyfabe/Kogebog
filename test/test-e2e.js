@@ -21,6 +21,7 @@ import { tilTale, isoTilMinutter, minutterTekst, utenBloede } from '../js/tekst.
 import { erLynhurtig, LYN_MIN } from '../js/model.js';
 import { formaterTid, varighedTale, HURTIG_SEK } from '../js/tid.js';
 import { GRUPPER, AFTENSMAD_GRUPPER } from '../js/katalog.js';
+import { medMereGroent } from '../js/groent.js';
 import { UDGAVE } from '../js/version.js';
 import { ugeplan } from './e2e-ugeplan.js';
 import { voksen } from './e2e-voksen.js';
@@ -2032,18 +2033,19 @@ async function former(browser) {
 // ---------- Trinets indhold over den faste bund på telefonen (UI-review 10-11-2026, fund A) ----------
 // Voksen-noten (ofte en sikkerhedstekst) lå under den faste bund ved rulning 0, og intet viste, at der var mere tekst:
 // 4 trin på 390×844 (op til 60 px, gulerodssmoothie trin 6) og 53 af de 246 nye madpakke-trin på 360×780. Nu giver
-// billedet efter (app.css). For alle trin i alle retter skal bunden af trinets sidste indhold (teksten, ikonerne,
-// «Læs op», timeren og noten) stå over toppen af den faste bund ved rulning 0. 390×826 er iPhonen på 390×844 med sin
-// safe-area: på en iPhone er bunden 18 px højere end her, hvor env() er 0, og den kræves. 360×780 kan ikke nås for alle
-// trin, uden at billedet kommer under sit mindste mål (140 px; dino-vulkan trin 10 skulle have 57 px), så dér skrives
-// antallet som måling. Det mindste billede og antallet af trin med et mindre billede end normalt skrives også.
+// billedet efter (app.css). For alle trin i alle retter, også de skiftede og nye trin i retten med mere grønt
+// (trinbundTrin), skal bunden af trinets sidste indhold (teksten, ikonerne, «Læs op», timeren og noten) stå over toppen
+// af den faste bund ved rulning 0. 390×826 er iPhonen på 390×844 med sin safe-area: på en iPhone er bunden 18 px højere
+// end her, hvor env() er 0, og den kræves. 360×780 kan ikke nås for alle trin, uden at billedet kommer under sit mindste
+// mål (140 px; dino-vulkan trin 10 skulle have 57 px), så dér skrives antallet som måling. Det mindste billede og
+// antallet af trin med et mindre billede end normalt skrives også.
 // 390×779 er samme iPhone, når appen er lagt på hjemmeskærmen: med status-bar-style «default» (index.html) står siden
 // under statuslinjen og er måske 47 px lavere (844 − 47 − 18 = 779). Det er ikke set på en rigtig iPhone, så dér er
 // antallet også kun en måling, og kravet på 390×826 er det samme som før.
 // E2E_TRINBUND_RETTER=a,b begrænser retterne, E2E_TRINBUND_SKAERME=w360,iphone-status skærmene
-// Hvor der ikke er krav, må antallet ikke vokse i stilhed: højst loftet, tallet fra seneste kørsel. 360×780: 4 af 3327
+// Hvor der ikke er krav, må antallet ikke vokse i stilhed: højst loftet, tallet fra seneste kørsel. 360×780: 4 af 3338
 // trin (dino-vulkan 10, sushi-bowl-med-tun 3, medister-i-ovn 2 og stegte-ris-med-aeg-aerter-og-majs 2; e2e 10-11-2026).
-// 390×779: 1 af 3327 (sushi-bowl-med-tun trin 3, 18 px; e2e 10-11-2026).
+// 390×779: 1 af 3338 (sushi-bowl-med-tun trin 3, 18 px; e2e 10-11-2026).
 // Bliver tallet mindre, sænkes loftet; skal det op, er det et valg, der begrundes her
 const W360_LOFT = 4;
 const STATUS_LOFT = 1;
@@ -2052,6 +2054,21 @@ const TRINBUND = [
   { navn: 'w360', viewport: { width: 360, height: 780 }, hasTouch: true, krav: false, loft: W360_LOFT },
   { navn: 'iphone-status', viewport: { width: 390, height: 779 }, hasTouch: true, krav: false, loft: STATUS_LOFT },
 ];
+// Trinene, trinbund måler i en ret: alle grundrettens og de skiftede og nye trin i retten med mere grønt
+// (#/ret/<id>/groen/trin/<nr>). js/groent.js giver netop dem en lydfil, der begynder med «groen-»; de andre er grundrettens
+// trin med et andet nummer. Passer antallet ikke med rettelsen i opskriften («trin» og «nye_trin»), stopper delen, så de
+// ikke falder fra i stilhed
+function trinbundTrin(id) {
+  const grund = RETTER[id].recipeInstructions.map((t, i) => ({ t, h: '#/ret/' + id + '/trin/' + (i + 1), navn: id + ' trin ' + (i + 1) }));
+  const g = medMereGroent(RETTER[id]);
+  if (!g) return grund;
+  const groen = g.recipeInstructions.map((t, i) => ({ t, h: '#/ret/' + id + '/groen/trin/' + (i + 1), navn: id + ' grønt trin ' + (i + 1) }))
+    .filter((x) => x.t.tumbi.lyd.startsWith('groen-'));
+  const p = RETTER[id].tumbi.mere_groent;
+  const skiftede = (p.trin || []).length + (p.nye_trin || []).length;
+  if (groen.length !== skiftede) throw new Error(id + ': ' + groen.length + ' trin med «groen-»-lyd i retten med mere grønt, men rettelsen skifter eller tilføjer ' + skiftede);
+  return grund.concat(groen);
+}
 async function trinOverBund(browser) {
   const retter = process.env.E2E_TRINBUND_RETTER ? process.env.E2E_TRINBUND_RETTER.split(',').map((x) => x.trim()) : index;
   const skaerme = process.env.E2E_TRINBUND_SKAERME ? process.env.E2E_TRINBUND_SKAERME.split(',').map((x) => x.trim()) : null;
@@ -2068,10 +2085,9 @@ async function trinOverBund(browser) {
       await side.goto('about:blank');
       await side.goto(BASE + '/index.html#/ret/' + id);
       await side.waitForSelector('.ret h1');
-      for (let i = 0; i < RETTER[id].recipeInstructions.length; i++) {
-        const t = RETTER[id].recipeInstructions[i];
-        const hvor = n + ' ' + id + ' trin ' + (i + 1);
-        await gaaTil(side, '#/ret/' + id + '/trin/' + (i + 1), hvor, { gammel: true });
+      for (const { t, h: adresse, navn } of trinbundTrin(id)) {
+        const hvor = n + ' ' + navn;
+        await gaaTil(side, adresse, hvor, { gammel: true });
         await side.waitForFunction((x) => {
           const h = document.querySelector('#app > .trin:not([data-gammel]) h1');
           return h && h.textContent === x;
