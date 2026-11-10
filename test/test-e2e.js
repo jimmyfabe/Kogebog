@@ -52,6 +52,9 @@ const MAAL = Boolean(process.env.E2E_MAAL);
 let antalTjek = 0;
 const fejl = [];
 const maal = []; // målinger, der ikke er fejl (fx at man skal rulle på iPhone)
+// En måling, der også skrives med det samme, hvor den laves: listen til sidst viser kun de første 40, og i en fuld kørsel
+// fyldte «former» dem, så målingerne fra «trinbund» og «titler» aldrig blev vist (fuld e2e 10-11-2026, 177 målinger)
+const maalNu = (tekst) => { maal.push(tekst); console.log('  MÅL ' + tekst); };
 let cspSprunget = 0; // CSP-beskeder fra Playwrights eget <style> ved skærmbilleder, som ikke tælles som fejl (se foto())
 function tjek(betingelse, besked) {
   antalTjek++;
@@ -2027,9 +2030,13 @@ async function former(browser) {
 // trin, uden at billedet kommer under sit mindste mål (140 px; dino-vulkan trin 10 skulle have 57 px), så dér skrives
 // antallet som måling. Det mindste billede og antallet af trin med et mindre billede end normalt skrives også.
 // E2E_TRINBUND_RETTER=a,b begrænser retterne
+// Hvor der ikke er krav, må antallet ikke vokse i stilhed: højst loftet, tallet fra seneste kørsel. 360×780: 4 af 3327
+// trin (dino-vulkan 10, sushi-bowl-med-tun 3, medister-i-ovn 2 og stegte-ris-med-aeg-aerter-og-majs 2; e2e 10-11-2026).
+// Bliver tallet mindre, sænkes loftet; skal det op, er det et valg, der begrundes her
+const W360_LOFT = 4;
 const TRINBUND = [
   { navn: 'iphone-safe', viewport: { width: 390, height: 826 }, hasTouch: true, krav: true },
-  { navn: 'w360', viewport: { width: 360, height: 780 }, hasTouch: true, krav: false },
+  { navn: 'w360', viewport: { width: 360, height: 780 }, hasTouch: true, krav: false, loft: W360_LOFT },
 ];
 async function trinOverBund(browser) {
   const retter = process.env.E2E_TRINBUND_RETTER ? process.env.E2E_TRINBUND_RETTER.split(',').map((x) => x.trim()) : index;
@@ -2083,9 +2090,10 @@ async function trinOverBund(browser) {
       }
     }
     under.sort((a, b) => b.px - a.px);
-    maal.push(n + ': ' + under.length + ' af ' + antal + ' trin har indhold under den faste bund ved rulning 0' +
-      (under.length ? ' (værst ' + under.slice(0, 5).map((u) => u.hvor + ' ' + u.px + ' px').join(', ') + ')' : ''));
-    maal.push(n + ': mindste billede ' + mindst.px + ' px (' + mindst.hvor + '), mindre end normalt på ' + mindre + ' trin');
+    const vaerst = under.slice(0, 5).map((u) => u.hvor + ' ' + u.px + ' px').join(', ');
+    maalNu(n + ': ' + under.length + ' af ' + antal + ' trin har indhold under den faste bund ved rulning 0' + (under.length ? ' (værst ' + vaerst + ')' : ''));
+    maalNu(n + ': mindste billede ' + mindst.px + ' px (' + mindst.hvor + '), mindre end normalt på ' + mindre + ' trin');
+    if (!sk.krav) tjek(under.length <= sk.loft, n + ': ' + under.length + ' trin har indhold under den faste bund ved rulning 0, flere end loftet på ' + sk.loft + ' (værst ' + vaerst + ')');
     tjek(side.fejl.length === 0, n + ' (trinene over bunden): ' + side.fejl.join(' | '));
     await ctx.close();
   }
@@ -2162,8 +2170,8 @@ async function titlerHoejkant(browser) {
       tjek(k.rund && k.inde, n + ' ' + id + ': højttaleren skal være rund, og navn og højttaler skal stå inden for titlen');
       if (k.under) underNavn++;
     }
-    maal.push(n + ': ' + delte.length + ' af ' + index.length + ' retters navn er delt midt i et ord' + (delte.length ? ' (' + delte.slice(0, 8).join(', ') + ')' : ''));
-    maal.push(n + ': højttaleren står under navnet på ' + underNavn + ' af ' + index.length + ' retter og ved siden af det på resten');
+    maalNu(n + ': ' + delte.length + ' af ' + index.length + ' retters navn er delt midt i et ord' + (delte.length ? ' (' + delte.slice(0, 8).join(', ') + ')' : ''));
+    maalNu(n + ': højttaleren står under navnet på ' + underNavn + ' af ' + index.length + ' retter og ved siden af det på resten');
     tjek(side.fejl.length === 0, n + ' (rettens navn): ' + side.fejl.join(' | '));
     await ctx.close();
   }
