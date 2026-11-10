@@ -14,7 +14,15 @@ ui-reviewer så 65 skærmbilleder (5 skærme) og målte 17 retter × 4 skærme (
 - `db2b2ad` A: trinets billede giver efter (mindst 140 px). Trin med teksten under bunden: 390×826 92 → 0 af 3327; 360×780 486 → 4 (dino-vulkan 10, sushi-bowl 3, medister 2, stegte ris 2), som ruller som før.
 - `024581a` B: navne, der knækker midt i ordet: 768×1024 24 → 0, 820×1180 8 → 0, 744×1133 34 → 0.
 
-**Review af A+B** (code-reviewer + ui-reviewer): intet ødelagt, men to tests kunne bestå uden at teste noget. De rettes nu af en ny frontend-dev, én commit pr. rettelse, kun de berørte e2e-dele.
+**Review af A+B** (code-reviewer + ui-reviewer): intet ødelagt, men to tests kunne bestå uden at teste noget. Det er rettet (se nedenfor).
+- **Rettet efter reviewet 10-11** (frontend-dev, 8 commits `8ac8d29`…`de44df1`, hver med et rødt bevis før og et grønt efter, kun `test/test-e2e.js`, `app.css`, `js/version.js` og `sw.js`; kontrolleret med `git diff --stat` kl. 06:48):
+  - `trinbund` skriver sine målinger straks, fejler højlydt, hvis `.trin-tekst` mangler, og måler nu også trinene i «Mere grønt» (3338 trin pr. skærm).
+  - 360×780 har et loft på 4 trin under bunden. 390×779 (iPhonen med statuslinjen) måles også, med et loft på 1 trin (sushi-bowl 3, 18 px).
+  - `titler` måler også iPad mini (744×1133), med 0 delte navne.
+  - Tjekket for «mindre bevægelse» testede intet på højkant (siden ruller 0 px). Det er nu sin egen del, `mindre`, på 667×375, hvor siden ruller.
+  - CSS: billedets største mål står ét sted (`--billede-max`), og målingerne er de samme før og efter.
+  - Ikke kørt: den fulde e2e, hele `timer`-delen og `hele` (efter omskrivningen til `gaaTil`). De kører i den samlede e2e efter stemmen.
+  - Kogebogs CLAUDE.md har fået de nye dele og faldgruben med trykspærren på 350 ms (`96b3ad3`).
 - **Valg (Saga):** B forbliver, som den er. Højttaleren står i midten under navnet på 207 af 239 retter på iPad på højkant.
   - Alternativet var at flytte den kun ved for lange ord. ui-reviewer målte, at 32 navne så stod på 4–5 linjer i en kolonne på 192 px, og at højttaleren hoppede fra ret til ret.
 - **Kendt pris ved A:**
@@ -34,8 +42,8 @@ ui-reviewer så 65 skærmbilleder (5 skærme) og målte 17 retter × 4 skærme (
 - «45 / minutter» deles over to linjer. Et hårdt mellemrum ændrer teksten og dermed muligvis stemmen, så det venter til efter stemmen.
 
 **Kører nu:**
-- Røst seed 42, 343 replikker tilbage kl. 00:28, ca. 10 pr. 7 min, så den er færdig ca. kl. 05.
-- Derefter trin 3-5 i CLAUDE.md «Stemmen» og fingeraftrykkene `LYD`/`UDGAVE_INDHOLD`/`INDHOLD`.
+- Røst seed 42: 143 replikker tilbage kl. 06:38, så den er færdig ca. kl. 08. Den stod stille 02:41–04:45, mens den fulde e2e havde låsen.
+- Derefter trin 3-5 i CLAUDE.md «Stemmen», fingeraftrykkene `LYD`/`UDGAVE_INDHOLD`/`INDHOLD` og én samlet fuld e2e (ca. 2 t).
 - Lyt efter: squashen, basilikummen, spegepølse.
 
 **Afventer Jimmy** (alle spørgsmål samlet her):
