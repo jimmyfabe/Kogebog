@@ -10,6 +10,22 @@ ui-reviewer så 65 skærmbilleder (5 skærme) og målte 17 retter × 4 skærme (
 - **A (høj):** voksen-noten (også sikkerhedsteksten) ligger under den faste bund på trinsider. På 390×844 gælder det 4 trin (14–60 px), og på 360×780 53 af 246 trin. Værst er gulerodssmoothie trin 6 med «hold hånden på låget». Billedet skal give efter, ikke teksten.
 - **B (mellem):** rettens titel knækker midt i ordet på iPad på højkant 768×1024 («Cowboybønn|er», «fiskefrikadell|er»).
 
+**Rettet 10-11** (frontend-dev, fuld e2e 0 FEJL i 190.695 tjek):
+- `db2b2ad` A: trinets billede giver efter (mindst 140 px). Trin med teksten under bunden: 390×826 92 → 0 af 3327; 360×780 486 → 4 (dino-vulkan 10, sushi-bowl 3, medister 2, stegte ris 2), som ruller som før.
+- `024581a` B: navne, der knækker midt i ordet: 768×1024 24 → 0, 820×1180 8 → 0, 744×1133 34 → 0.
+
+**Review af A+B** (code-reviewer + ui-reviewer): intet ødelagt, men to tests kunne bestå uden at teste noget. De rettes nu af en ny frontend-dev, én commit pr. rettelse, kun de berørte e2e-dele.
+- **Valg (Saga):** B forbliver, som den er. Højttaleren står i midten under navnet på 207 af 239 retter på iPad på højkant.
+  - Alternativet var at flytte den kun ved for lange ord. ui-reviewer målte, at 32 navne så stod på 4–5 linjer i en kolonne på 192 px, og at højttaleren hoppede fra ret til ret.
+- **Kendt pris ved A:**
+  - Når «Start timer» trykkes på telefon, krymper billedet i ét hug, fx fra 281 til 140 px på fiskefrikadeller 15. Ringen er højere end knappen, og «Læs op» ryger ned på sin egen række.
+  - På sushi-bowl 3 glider noten ind under bunden igen, mens timeren kører.
+  - Billedets størrelse skifter også fra trin til trin.
+  - Roligere kræver, at «Læs op» bliver på rækken ved timeren. Det er ikke bygget.
+- **Ikke afprøvet:**
+  - rigtig iPhone (statuslinjen kan tage ca. 47 px; safe-area tælles måske dobbelt);
+  - ældre Safari (iOS 15/16: billedets bredde regnes nu ud fra højden).
+
 **Ikke rettet** (med grund):
 - Ingrediensnavne knækker uden bindestreg på 360–390 px («grahamsme|l»). WebKit på Windows deler ikke dansk med bindestreg, men Safari på iPhone gør det måske selv. Prøv først på en rigtig iPhone.
 - Versionsnummeret står stadig på v6. Det hæves ved udgivelsen, som planlagt.
@@ -23,6 +39,7 @@ ui-reviewer så 65 skærmbilleder (5 skærme) og målte 17 retter × 4 skærme (
 - Lyt efter: squashen, basilikummen, spegepølse.
 
 **Afventer Jimmy** (alle spørgsmål samlet her):
+- (10-11) Din iPhone viser stadig v6, så v9 kan først ses der efter udgivelsen eller via Tailscale (kræver dit ja). Åbn Kogebogen som app fra hjemmeskærmen, gå til et trin med en lang note (fx Gulerodssmoothie trin 6), og se, om hele noten står over knapperne i bunden. Billedet bliver mindre på de trin. Er det i orden?
 - (10-11) Billederne, som et barn kan forveksle (dit øje, ikke målt):
   - Små rug-pitabrød ligner bagte kartofler eller æg.
   - Spinattærtens midte ligner et spejlæg.
