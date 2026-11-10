@@ -2029,18 +2029,25 @@ async function former(browser) {
 // safe-area: på en iPhone er bunden 18 px højere end her, hvor env() er 0, og den kræves. 360×780 kan ikke nås for alle
 // trin, uden at billedet kommer under sit mindste mål (140 px; dino-vulkan trin 10 skulle have 57 px), så dér skrives
 // antallet som måling. Det mindste billede og antallet af trin med et mindre billede end normalt skrives også.
-// E2E_TRINBUND_RETTER=a,b begrænser retterne
+// 390×779 er samme iPhone, når appen er lagt på hjemmeskærmen: med status-bar-style «default» (index.html) står siden
+// under statuslinjen og er måske 47 px lavere (844 − 47 − 18 = 779). Det er ikke set på en rigtig iPhone, så dér er
+// antallet også kun en måling, og kravet på 390×826 er det samme som før.
+// E2E_TRINBUND_RETTER=a,b begrænser retterne, E2E_TRINBUND_SKAERME=w360,iphone-status skærmene
 // Hvor der ikke er krav, må antallet ikke vokse i stilhed: højst loftet, tallet fra seneste kørsel. 360×780: 4 af 3327
 // trin (dino-vulkan 10, sushi-bowl-med-tun 3, medister-i-ovn 2 og stegte-ris-med-aeg-aerter-og-majs 2; e2e 10-11-2026).
+// 390×779: 1 af 3327 (sushi-bowl-med-tun trin 3, 18 px; e2e 10-11-2026).
 // Bliver tallet mindre, sænkes loftet; skal det op, er det et valg, der begrundes her
 const W360_LOFT = 4;
+const STATUS_LOFT = 1;
 const TRINBUND = [
   { navn: 'iphone-safe', viewport: { width: 390, height: 826 }, hasTouch: true, krav: true },
   { navn: 'w360', viewport: { width: 360, height: 780 }, hasTouch: true, krav: false, loft: W360_LOFT },
+  { navn: 'iphone-status', viewport: { width: 390, height: 779 }, hasTouch: true, krav: false, loft: STATUS_LOFT },
 ];
 async function trinOverBund(browser) {
   const retter = process.env.E2E_TRINBUND_RETTER ? process.env.E2E_TRINBUND_RETTER.split(',').map((x) => x.trim()) : index;
-  for (const sk of TRINBUND) {
+  const skaerme = process.env.E2E_TRINBUND_SKAERME ? process.env.E2E_TRINBUND_SKAERME.split(',').map((x) => x.trim()) : null;
+  for (const sk of TRINBUND.filter((s) => !skaerme || skaerme.includes(s.navn))) {
     const n = sk.navn;
     console.log('[' + n + '] trinenes indhold over den faste bund på ' + sk.viewport.width + '×' + sk.viewport.height);
     const { ctx, side } = await nySide(browser, sk);
