@@ -2128,8 +2128,10 @@ async function trinOverBund(browser) {
 // I kolonnen ved siden af højttaleren (192 px på 768×1024) knækkede navnet midt i ordet: «Cowboybønn|er»,
 // «fiskefrikadell|er», «grøntsagsstav|e» og «sandwichboll|er». Intet ord i nogen rets navn må deles, undtagen ved en
 // blød bindestreg eller en bindestreg (fx «Rugbrøds-|madpakke» og «Tun-|snurrer»). Før rettelsen: 24 af 239 navne på
-// 768×1024 og 8 på 820×1180. Hvor ofte højttaleren står under navnet, skrives som måling
+// 768×1024 og 8 på 820×1180. iPad mini på højkant (744×1133) er det smalleste i laget (701-900 px): uden rettelsen
+// 34 af 239 (målt 10-11-2026). Hvor ofte højttaleren står under navnet, skrives som måling
 const TITEL_PAA = [
+  { navn: 'mini', viewport: { width: 744, height: 1133 }, hasTouch: true },
   { navn: 'tablet', viewport: { width: 768, height: 1024 }, hasTouch: true },
   { navn: 'air-hoej', viewport: { width: 820, height: 1180 }, hasTouch: true },
 ];
