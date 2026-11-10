@@ -1084,12 +1084,13 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
      alle på 360×780 (dino-vulkan trin 10 skulle have 57 px). Er teksten for høj selv med det mindste billede, bliver siden
      højere, og man ruller som før */
   .verbum-ramme {
-    --billede-min: min(140px, 72vw, 34svh);
+    --billede-max: min(72vw, 34svh);
+    --billede-min: min(140px, var(--billede-max));
     flex: 1 0 var(--billede-min);
     align-self: center;
     width: auto;
     min-height: var(--billede-min);
-    max-height: min(72vw, 34svh);
+    max-height: var(--billede-max);
   }
   .trin-tekst { gap: 14px; }
   .trin-tekst h1 { font-size: 30px; }
