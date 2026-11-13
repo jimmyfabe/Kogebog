@@ -1,0 +1,40 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Chokolade-milkshake",
+  "description": "Vaniljeis og rigtig kakao bliver til en tyk, brun milkshake. Den smager af chokolade hele vejen ned i bunden af glasset.",
+  "image": "grafik/ret-chokolade-milkshake.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 små glas",
+  "prepTime": "PT10M",
+  "totalTime": "PT15M",
+  "recipeIngredient": [
+    "½ l vaniljeis",
+    "2 dl mælk",
+    "3 spsk ren kakao",
+    "2 spsk sukker"
+  ],
+  "tool": ["blender med kande", "isske eller stor ske", "målebæger", "spiseske", "4 små glas", "sugerør"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk. Tag kanden af blenderen, og træk stikket ud, mens barnet fylder den: knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Stil isen frem, og vent 5 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 300, "ikoner": ["is"], "note": "Så bliver isen blød nok til blenderen." } },
+    { "@type": "HowToStep", "text": "Hæld mælken i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk"], "note": "2 dl." } },
+    { "@type": "HowToStep", "text": "Kom kakao og sukker i kanden.", "tumbi": { "verbum": "maale", "ikoner": ["kakao", "sukker"], "note": "3 spsk ren kakao fra bageafdelingen og 2 spsk sukker. Kakaoen støver, så kom den forsigtigt i." } },
+    { "@type": "HowToStep", "text": "Kom isen i kanden med en stor ske.", "tumbi": { "verbum": "maale", "ikoner": ["is"], "note": "½ l, det er ca. 8 kugler." } },
+    { "@type": "HowToStep", "text": "Blend, til det er brunt og glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["is", "kakao"], "note": "Den voksne sætter kanden på, lægger låget på og blender i ca. 45 sekunder. Stop blenderen, før låget tages af. Noget varmt kommer aldrig i blenderen." } },
+    { "@type": "HowToStep", "text": "Hæld milkshaken i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Smag chokolade-milkshaken!", "tumbi": { "verbum": "smage", "note": "Drik den med det samme: så er den tykkest." } }
+  ],
+  "tumbi": {
+    "id": "chokolade-milkshake",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdet mellem is, mælk, kakao og sukker er et skøn. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "is", "maengde": "½ l" },
+      { "ikon": "maelk", "maengde": "2 dl" },
+      { "ikon": "kakao", "maengde": "3 spsk" },
+      { "ikon": "sukker", "maengde": "2 spsk" }
+    ]
+  }
+}

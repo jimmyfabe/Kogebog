@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<g id="bottle">
+    <path id="tip" fill="#E2513B" d="M92 80 L108 34 Q110 28 116 28 L120 28 Q126 28 128 34 L144 80 Z"/>
+    <path fill="#C3331D" stroke="none" d="M122 30 Q126 30 128 36 L142 78 L132 78 Z"/>
+    <path id="body" fill="#C98A4B" d="M58 96 C58 86 66 78 78 78 L158 78 C170 78 178 86 178 96 L178 212 C178 224 168 232 156 232 L80 232 C68 232 58 224 58 212 Z"/>
+    <path fill="#9A6A44" stroke="none" d="M158 82 C168 84 174 90 174 98 L174 212 C174 222 166 228 156 228 L146 228 C156 224 160 218 160 208 Z"/>
+    <path fill="none" stroke="#E8C79A" stroke-width="7" d="M72 100 L72 136"/>
+    <rect id="label" x="72" y="134" width="84" height="66" rx="9" fill="#FFF4E2"/>
+    <g id="caramel" transform="translate(114 167)">
+      <path fill="#E8B26A" d="M-20 0 L-34 -12 L-34 12 Z"/>
+      <path fill="#E8B26A" d="M20 0 L34 -12 L34 12 Z"/>
+      <rect x="-20" y="-15" width="40" height="30" rx="7" fill="#9A6A44"/>
+      <path fill="none" stroke="#C98A4B" stroke-width="4" d="M-11 -7 Q-4 -10 2 -8"/>
+    </g>
+    <path fill="none" d="M58 96 C58 86 66 78 78 78 L158 78 C170 78 178 86 178 96 L178 212 C178 224 168 232 156 232 L80 232 C68 232 58 224 58 212 Z"/>
+  </g>
+  <g id="drizzle">
+    <path fill="none" stroke-width="16" d="M186 110 C222 104 232 142 206 152 C186 160 190 182 214 186"/>
+    <path fill="none" stroke="#C98A4B" stroke-width="9" d="M186 110 C222 104 232 142 206 152 C186 160 190 182 214 186"/>
+    <path fill="#C98A4B" d="M210 176 C222 176 234 194 234 208 C234 220 224 228 214 228 C204 228 194 220 194 208 C194 194 204 176 210 176 Z"/>
+    <path fill="none" stroke="#E8C79A" stroke-width="4" d="M204 208 Q204 216 212 218"/>
+  </g>
+</g>
+</svg>

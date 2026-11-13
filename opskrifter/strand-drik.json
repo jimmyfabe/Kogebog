@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Strand-drik",
+  "description": "Gul og cremet som en ferie på stranden, med ananas og kokos. Bo, kok-bjørnen, drikker sin i solstolen.",
+  "image": "grafik/ret-strand-drik.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 glas",
+  "prepTime": "PT5M",
+  "totalTime": "PT5M",
+  "recipeIngredient": [
+    "1½ dl kokosmælk",
+    "6 dl ananasjuice (kold)",
+    "8 isterninger"
+  ],
+  "tool": ["dåseåbner", "stor kande", "målebæger", "piskeris", "4 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Sæt juicen og dåsen på køl i god tid. Drikken indeholder kokos. Isterningerne skal være lavet i forvejen, ellers springer I dem over." } },
+    { "@type": "HowToStep", "text": "Ryst dåsen med kokosmælk godt.", "tumbi": { "verbum": "ryste", "ikoner": ["kokosmaelk"], "note": "Dåsen er lukket, så barnet kan selv. Så blandes det tykke og det tynde." } },
+    { "@type": "HowToStep", "text": "Hæld kokosmælken i en stor kande.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kokosmaelk"], "note": "Den voksne åbner dåsen: kanten er skarp. 1½ dl. Resten kan fryses i en lille bøtte." } },
+    { "@type": "HowToStep", "text": "Hæld ananasjuicen i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["ananas"], "note": "6 dl." } },
+    { "@type": "HowToStep", "text": "Pisk, til drikken er lys og glat.", "tumbi": { "verbum": "piske", "ikoner": ["kokosmaelk", "ananas"], "note": "Med et piskeris. Kold kokosmælk kan lave små klumper: pisk, til de er væk." } },
+    { "@type": "HowToStep", "text": "Læg to isterninger i hvert glas.", "tumbi": { "verbum": "pynte", "ikoner": ["isterninger"] } },
+    { "@type": "HowToStep", "text": "Hæld strand-drikken i glassene.", "tumbi": { "verbum": "haelde" } },
+    { "@type": "HowToStep", "text": "Smag strand-drikken!", "tumbi": { "verbum": "smage", "note": "Kokosmælken lægger sig ovenpå, hvis den står: rør en gang rundt." } }
+  ],
+  "tumbi": {
+    "id": "strand-drik",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til: mængderne er et skøn. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "kokosmaelk", "maengde": "1½ dl" },
+      { "ikon": "ananas", "maengde": "6 dl" },
+      { "ikon": "isterninger", "maengde": "8" }
+    ]
+  }
+}

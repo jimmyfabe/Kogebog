@@ -381,11 +381,30 @@ test('boejNavn: ental og flertal, tillægsordet efter kønnet, «eller», resten
   assert.equal(boejNavn('grøn peberfrugt (til stilkene)', true), 'grønne peberfrugter (til stilkene)');
   assert.equal(boejNavn('æbler eller pærer', false), 'æble eller pære');
   assert.equal(boejNavn('æble eller pære til pynt', true), 'æbler eller pærer til pynt');
-  assert.equal(boejNavn('æbler eller blommer', false), 'æble eller blommer', 'et ukendt ord efter «eller» står som før');
+  assert.equal(boejNavn('æbler eller kvæder', false), 'æble eller kvæder', 'et ukendt ord efter «eller» står som før');
   assert.equal(boejNavn('laksefileter, ca. 400 g i alt', false), 'laksefilet, ca. 400 g i alt');
   for (const n of ['peber', 'stor portion', '(til pensling)', '', ' gulerod', 'Gulerod']) assert.equal(boejNavn(n, true), null, JSON.stringify(n));
   for (const n of [null, undefined, 3]) assert.throws(() => boejNavn(n, true), TypeError, String(n));
   for (const f of [1, 'ja', undefined]) assert.throws(() => boejNavn('gulerod', f), TypeError, String(f));
+});
+
+// Ordene til drikke, cupcakes og kager (05-11-2026): et tillægsord, der bøjes med navneordet, og et intetkønsord i stemmen
+test('boejNavn og tilTale: ordene til drikke, cupcakes og kager', () => {
+  for (const [navn, flertal, ud] of [
+    ['modne bananer', false, 'moden banan'],
+    ['moden banan', true, 'modne bananer'],
+    ['hele citroner', false, 'hel citron'],
+    ['hel citron', true, 'hele citroner'],
+    ['frisk mynteblad', true, 'friske mynteblade'],
+    ['friske mynteblade', false, 'friskt mynteblad'],
+    ['ferskner', false, 'fersken'],
+    ['kiwier', false, 'kiwi'],
+    ['skumfiduser', false, 'skumfidus'],
+    ['tebrev', true, 'tebreve'],
+  ]) assert.equal(boejNavn(navn, flertal), ud, navn);
+  assert.equal(tilTale('1 tebrev'), 'et tebrev');
+  assert.equal(tilTale('2 tebreve'), 'to tebreve');
+  assert.equal(tilTale('1 moden banan'), 'en moden banan');
 });
 
 test('NAVNEORD og TILLAEGSORD passer til KOEN, og ingen form står to steder', () => {

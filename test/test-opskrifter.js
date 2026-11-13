@@ -26,12 +26,12 @@ const TRIN_NOEGLER = new Set(['verbum', 'voksen', 'voksen_hjaelp', 'timer_sek', 
 const RET_TUMBI = new Set(['id', 'version', 'afproevet', 'kilde', 'ingredienser', 'ugeplan', 'portioner', 'pris_kr', 'pris_dato', 'groent_g', 'ugeplan_kilde', 'mere_groent']);
 const INGR_NOEGLER = new Set(['ikon', 'maengde', 'vare', 'antal', 'enhed']);
 // Ugeplanen (docs/ugeplan-plan.md, afsnit 4): felterne, en ret med «tumbi.ugeplan»: true skal have, og dens grænser.
-// En time fra hjemkomst til aftensmad, og højst 2 trin med kniv eller rivejern (skånsomt for hænderne). Dåseåbneren
+// En time fra hjemkomst til aftensmad, og højst 2 trin med kniv, rivejern eller blender (skånsomt for hænderne). Dåseåbneren
 // tæller ikke med i loftet, men appen viser den som et knivtrin («N knivtrin», knivtrin i js/model.js; Jimmys valg A 01-11)
 const UGEPLAN_FELTER = ['portioner', 'pris_kr', 'pris_dato', 'groent_g', 'ugeplan_kilde'];
 const UGEPLAN_MAKS_MIN = 60;
 const UGEPLAN_MAKS_KNIV = 2;
-const KNIV_VERBER = Object.keys(VOKSEN_KRAV).filter((v) => VOKSEN_KRAV[v] === 'kniv'); // skaere og rive
+const KNIV_VERBER = Object.keys(VOKSEN_KRAV).filter((v) => VOKSEN_KRAV[v] === 'kniv'); // skaere, rive og blende
 const PRIS_DATO_RE = /^20\d\d-(?:0[1-9]|1[0-2])$/; // ÅÅÅÅ-MM
 const VARE_NOEGLER = new Set(['navn', 'afd', 'enhed', 'ikon', 'pakke', 'basis', 'skjul', 'slags']);
 // Kød eller fisk i en vare («slags», mærkerne vegetar og fisk i js/maerker.js). En vare med et af disse ikoner skal have
@@ -55,12 +55,21 @@ const VENTER = 'docs/venter-paa-billede'; // færdige retter uden retbillede (do
 // alle bøjninger («smelte», «skære», «æggeblommer»). En liste over tilladte former mangler altid en form, og så slipper
 // den igennem i stilhed. De få ord, der ikke er kniv, varme eller råt, står som hele ord i UNDTAGELSER. Mangler et ord
 // dér, giver det et falsk fund, som man ser og retter: skriv ordet i UNDTAGELSER med grunden.
-// Kniv og rivejern i trinteksten. «kniv» også inde i ord (brødkniven, køkkenkniven)
-const KNIV_ORD = /(?<!\p{L})(?:riv|hak|skær|skræl)\p{L}*|\p{L}*kniv\p{L}*/giu;
-// Varme i trinteksten. «kog» dækker også «kogeplade». «steg», «kog», «smelt», «komfur» og «ovn» også inde i ord
-// (småkoge, gennemstegt, gaskomfur, bageovnen), «bag» kun forrest (ikke «tilbage»). Ikke «varm» og «brun»: de står i
-// «en varm skive» og «brun farin»
-const VARME_ORD = /(?<!\p{L})bag\p{L}*|\p{L}*(?:steg|kog|smelt|komfur|ovn)\p{L}*/giu;
+// Kniv, rivejern og blender i trinteksten. Blenderen har flere navne: mixer, miks, foodprocessor og at purere. «kniv», «blend»,
+// «mix», «miks» og «foodprocessor» også inde i ord (brødkniven, køkkenkniven, stavblenderen, håndmixeren)
+const KNIV_ORD = /(?<!\p{L})(?:riv|hak|skær|skræl|pur[eé]r)\p{L}*|\p{L}*(?:kniv|blend|mix|miks|foodprocessor)\p{L}*/giu;
+// To ældre trin, hvor den voksne kører stavblenderen i en kogende gryde. Den største fare er varmen, så de beholder «mose»
+// med "varme" (billedet og mærket passer, og «mose» kan kun have varme-hjælp). Alle andre blender-trin skal have "kniv"
+const VARM_STAVBLENDER = new Set([
+  'groen-porre-kartoffelsuppe-med-bacondrys: Blend suppen glat med stavblenderen.',
+  'orange-pasta-med-hemmelig-groentsagssovs: Blend sovsen helt glat.',
+]);
+// Varme i trinteksten. «kog» dækker også «kogeplade». «steg», «kog», «smelt», «komfur», «ovn» og «damp» også inde i ord
+// (småkoge, gennemstegt, gaskomfur, bageovnen, vanddamp), «bag» kun forrest (ikke «tilbage»). Ikke «varm» og «brun» midt i
+// teksten: de står i «en varm skive» og «brun farin»
+const VARME_ORD = /(?<!\p{L})bag\p{L}*|\p{L}*(?:steg|kog|smelt|komfur|ovn|damp)\p{L}*/giu;
+// «Varm mælken.»: bydeformen forrest i teksten er varme, også når verbet ikke er «koge»
+const VARM_BYDEFORM = /^Varm(?=\s)/u;
 // Redaktionelle noter («Kilden siger …», «(skøn)») står i «tumbi.kilde», ikke i det, der vises og læses op i køkkenet.
 // Også efter stammen: «Kildeteksten», «skønsmæssig», «skønnede». «kildevand», «skønt» og «skønne» står i UNDTAGELSER
 const REDAKTION = /(?<!\p{L})(?:kild|skøn)\p{L}*/giu;
@@ -85,6 +94,7 @@ const UNDTAGELSER = new Set([
   'kogebog', 'kogebogen', // bogen
   'bagefter', 'bagved', // tid og sted. «bag» alene (forholdsordet) kan ikke skelnes fra «Bag bollerne.»: falsk fund med vilje
   'hovne', 'hovner', 'hovnet', 'dovne', 'sovne', // «ovn» inde i ordet: «Lad rosinerne hovne op.»
+  'dampe', // en pause: «Lad kartoflerne dampe af.» Barnet rører dem ikke. «damper» og «dampende» er det varme
   // Råt
   'ægte', // «ægte vanilje»
   'kyllingebouillon', 'kyllingefond', 'kødbouillon', 'fiskebouillon', 'fiskefond', 'fiskesauce', // kogt og færdig: ikonet «bouillon»
@@ -108,7 +118,7 @@ const LYD_RE = /^([a-z0-9]+(?:-[a-z0-9]+)*)\/(\d+|navn|valgt|ingrediens-\d+|time
 // Børnenes valg af ugens mad (js/ugeplan.js): de samme fælles replikker som i vaerktoej/lav-taleliste.js
 const UGE_FAELLES = [R.UGE_HVEM, R.HVILKEN_DAG, R.DAG_OPTAGET, R.UGE_TAK, R.ALLE_VALGT, R.UGE_FULD, R.GEM_FEJL, R.SIDE_FLERE,
   R.SIDE_FORRIGE, ...Object.keys(DYR).map(R.dyrVaelger), ...Object.keys(DYR).map(R.dyrFaerdig), ...[0, 1, 2, 3, 4, 5, 6].map(R.dag)];
-const LYD_FAELLES = new Set(['faerdig', 'print-hold', 'voksen-start-begge', 'voksen-start-varme', 'voksen-start-kniv', ...Object.keys(GRUPPER).map((g) => 'gruppe-' + g),
+const LYD_FAELLES = new Set(['faerdig', 'print-hold', 'voksen-start-begge', 'voksen-start-varme', 'voksen-start-kniv', 'gruppe-favoritter', ...Object.keys(GRUPPER).map((g) => 'gruppe-' + g),
   ...UGE_FAELLES.map((x) => /^faelles\/(.+)\.mp3$/.exec(x.fil)[1])]);
 
 const erTekst = (v) => typeof v === 'string' && v.trim().length > 0;
@@ -489,13 +499,13 @@ export function valider(rod = ROD) {
         // Ordvagten: nævner teksten kniv, rivejern eller varme, er det den voksnes trin, uanset verbet, og hjælpen passer
         // til ordet. «voksen_hjaelp» er én værdi, så et trin med både kniv og varme skal deles i to
         const kniv = fund(KNIV_ORD, s.text);
-        const varme = fund(VARME_ORD, s.text);
+        const varme = fund(VARME_ORD, s.text) || VARM_BYDEFORM.exec(s.text);
         const farlig = kniv || varme;
-        if (farlig && st.voksen !== true) f(hvor + ': teksten nævner «' + farlig[0] + '» (kniv, rivejern eller varme), så trinnet skal have "voksen": true og «voksen_hjaelp»: «' + s.text + '»');
+        if (farlig && st.voksen !== true) f(hvor + ': teksten nævner «' + farlig[0] + '» (kniv, rivejern, blender eller varme), så trinnet skal have "voksen": true og «voksen_hjaelp»: «' + s.text + '»');
         else if (kniv && varme) f(hvor + ': teksten nævner både «' + kniv[0] + '» (kniv) og «' + varme[0] + '» (varme), men «voksen_hjaelp» kan kun være én af dem: del trinnet i to: «' + s.text + '»');
         else if (farlig && Object.hasOwn(VOKSEN_HJAELP, st.voksen_hjaelp)) {
-          const skal = kniv ? 'kniv' : 'varme';
-          if (st.voksen_hjaelp !== skal) f(hvor + ': teksten nævner «' + farlig[0] + '» (' + (kniv ? 'kniv eller rivejern' : 'varme') + '), så «voksen_hjaelp» skal være "' + skal + '", fandt ' + JSON.stringify(st.voksen_hjaelp) + ': «' + s.text + '»');
+          const skal = kniv && !VARM_STAVBLENDER.has(filId + ': ' + s.text) ? 'kniv' : 'varme';
+          if (st.voksen_hjaelp !== skal) f(hvor + ': teksten nævner «' + farlig[0] + '» (' + (skal === 'kniv' ? 'kniv, rivejern eller blender' : 'varme') + '), så «voksen_hjaelp» skal være "' + skal + '", fandt ' + JSON.stringify(st.voksen_hjaelp) + ': «' + s.text + '»');
         }
         if (st.voksen === true) taelt.voksentrin++;
         if ('timer_sek' in st) {
@@ -592,7 +602,7 @@ export function valider(rod = ROD) {
       if (ugeplan) {
         if (total != null && total > UGEPLAN_MAKS_MIN) f('«totalTime» er ' + total + ' min, men en ret i ugeplanen tager højst ' + UGEPLAN_MAKS_MIN + ' min');
         const kniv = trin.filter((s) => s && s.tumbi && KNIV_VERBER.includes(s.tumbi.verbum)).length;
-        if (kniv > UGEPLAN_MAKS_KNIV) f('en ret i ugeplanen har højst ' + UGEPLAN_MAKS_KNIV + ' trin med kniv eller rivejern (skånsomt for hænderne), fandt ' + kniv + ': brug frosne hakkede grøntsager, dåser eller revet ost');
+        if (kniv > UGEPLAN_MAKS_KNIV) f('en ret i ugeplanen har højst ' + UGEPLAN_MAKS_KNIV + ' trin med kniv, rivejern eller blender (skånsomt for hænderne), fandt ' + kniv + ': brug frosne hakkede grøntsager, dåser eller revet ost');
       }
     }
     if (!groen && harMereGroent(r)) tjekMereGroent(r, { rel, filId, venterPaaBillede });

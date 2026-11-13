@@ -1,0 +1,44 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Tomat-gulerod-smoothie",
+  "description": "En orangerød smoothie, der smager af sommer: en moden tomat, en gulerod og søde æbler.",
+  "image": "grafik/ret-tomat-gulerod-smoothie.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 3 glas",
+  "prepTime": "PT15M",
+  "totalTime": "PT15M",
+  "recipeIngredient": [
+    "1 gulerod (ca. 80 g)",
+    "3 dl æblemost (kold)",
+    "1 tomat",
+    "2 æbler"
+  ],
+  "tool": ["grøntsagsskræller", "rivejern", "kniv og skærebræt", "målebæger", "blender", "3 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Stil tomaten, æblerne og æblemosten på køl i forvejen, så smoothien bliver kold. En moden tomat smager sødest." } },
+    { "@type": "HowToStep", "text": "Skræl guleroden.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skyl den først, og skær toppen af." } },
+    { "@type": "HowToStep", "text": "Riv guleroden fint.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "På den fine side af rivejernet: så bliver smoothien glat uden hårde stykker." } },
+    { "@type": "HowToStep", "text": "Kom den revne gulerod i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["gulerod"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
+    { "@type": "HowToStep", "text": "Hæld 3 dl æblemost i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["aeble"] } },
+    { "@type": "HowToStep", "text": "Blend guleroden og æblemosten helt fint.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod", "aeble"], "note": "Guleroden blendes først med æblemosten alene: så bliver den helt fin og kan ikke mærkes bagefter. Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Skær tomaten i både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["tomat"], "note": "Skær det hårde stykke ved stilken væk." } },
+    { "@type": "HowToStep", "text": "Skær æblerne i både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["aeble"], "note": "Skær kernehuset væk. Skrællen må gerne blive på." } },
+    { "@type": "HowToStep", "text": "Kom tomat og æble i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["tomat", "aeble"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
+    { "@type": "HowToStep", "text": "Blend, til smoothien er glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["tomat", "aeble"], "note": "Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Hæld smoothien i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Smag den orangerøde smoothie!", "tumbi": { "verbum": "smage", "note": "Er den for sur, så rør lidt mere æblemost i." } }
+  ],
+  "tumbi": {
+    "id": "tomat-gulerod-smoothie",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdene og tiden er et skøn (ikke målt). Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "gulerod", "maengde": "1" },
+      { "ikon": "aeble", "maengde": "3 dl" },
+      { "ikon": "tomat", "maengde": "1" },
+      { "ikon": "aeble", "maengde": "2" }
+    ]
+  }
+}

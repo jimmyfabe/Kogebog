@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<g id="mango" transform="translate(100 134) rotate(-14) scale(0.92)">
+    <path id="stalk" fill="#704D31" d="M52 -66 L58 -88 L70 -84 L64 -62 Z"/>
+    <path id="leaf" fill="#5BAA6A" d="M62 -78 C78 -104 110 -110 130 -100 C118 -74 90 -66 62 -78 Z"/>
+    <path fill="none" d="M70 -80 C86 -92 106 -98 122 -99"/>
+    <path id="skin" fill="#F2C14E" d="M-88 26 C-92 -28 -40 -72 24 -70 C72 -68 94 -36 86 6 C78 50 32 78 -20 74 C-60 70 -86 56 -88 26 Z"/>
+    <path id="blush" fill="#F08A3C" stroke="none" d="M-40 -56 C-14 -68 4 -70 24 -70 C72 -68 94 -36 86 6 C82 28 68 46 50 58 C62 20 40 -34 -40 -56 Z"/>
+    <path fill="#E2513B" stroke="none" d="M20 -68 C70 -68 94 -36 86 6 C84 16 80 26 74 34 C80 -6 64 -44 20 -68 Z"/>
+    <path fill="none" stroke="#FAE09A" stroke-width="7" d="M-70 18 C-70 -8 -52 -32 -28 -44"/>
+    <path fill="none" d="M-88 26 C-92 -28 -40 -72 24 -70 C72 -68 94 -36 86 6 C78 50 32 78 -20 74 C-60 70 -86 56 -88 26 Z"/>
+  </g>
+  <g id="mango-half" transform="translate(186 188)">
+    <ellipse rx="54" ry="46" fill="#F08A3C"/>
+    <ellipse rx="45" ry="37" fill="#F2C14E" stroke="none"/>
+    <path fill="none" stroke="#D9A52E" d="M-24 -31 L-24 31 M0 -36 L0 36 M24 -31 L24 31 M-41 -13 L41 -13 M-41 13 L41 13"/>
+    <ellipse rx="54" ry="46" fill="none"/>
+  </g>
+</g>
+</svg>

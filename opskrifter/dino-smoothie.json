@@ -1,0 +1,41 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Dino-smoothie",
+  "description": "Grøn som en dinosaur! En lille håndfuld spinat giver farven, og banan og æble giver den søde smag.",
+  "image": "grafik/ret-dino-smoothie.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 3 glas",
+  "prepTime": "PT10M",
+  "totalTime": "PT10M",
+  "recipeIngredient": [
+    "1 lille håndfuld frisk spinat (ca. 20 g)",
+    "1 æble",
+    "2 modne bananer",
+    "2 dl æblemost (kold)"
+  ],
+  "tool": ["si", "kniv og skærebræt", "målebæger", "blender", "3 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Stil frugten og æblemosten på køl i forvejen, så smoothien bliver kold." } },
+    { "@type": "HowToStep", "text": "Skyl spinaten i en si.", "tumbi": { "verbum": "haelde", "ikoner": ["spinat"], "note": "Kun en lille håndfuld, og det er med vilje: der skal kun lidt rå spinat i, så banan og æble smager mest." } },
+    { "@type": "HowToStep", "text": "Skær æblet i både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["aeble"], "note": "Skær kernehuset væk. Skrællen må gerne blive på." } },
+    { "@type": "HowToStep", "text": "Pil bananerne, og knæk dem i stykker.", "tumbi": { "verbum": "pille", "ikoner": ["banan"] } },
+    { "@type": "HowToStep", "text": "Kom spinat, æble og banan i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["spinat", "aeble", "banan"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
+    { "@type": "HowToStep", "text": "Hæld 2 dl æblemost i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["aeble"] } },
+    { "@type": "HowToStep", "text": "Blend, til smoothien er grøn og glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["spinat", "banan"], "note": "Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Hæld dino-smoothien i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Smag, og brøl som en dinosaur!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "dino-smoothie",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdene og tiden er et skøn (ikke målt). Den lille mængde er vores eget forsigtige valg. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "spinat", "maengde": "1" },
+      { "ikon": "aeble", "maengde": "1" },
+      { "ikon": "banan", "maengde": "2" },
+      { "ikon": "aeble", "maengde": "2 dl" }
+    ]
+  }
+}

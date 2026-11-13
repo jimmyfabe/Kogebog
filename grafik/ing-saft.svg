@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="bottle">
+    <path id="glass" fill="#E2513B" d="M84 66 L124 66 L124 84 C124 100 152 108 152 136 L152 218 C152 230 144 236 134 236 L74 236 C64 236 56 230 56 218 L56 136 C56 108 84 100 84 84 Z"/>
+    <path fill="#C3331D" stroke="none" d="M114 94 C126 104 148 112 150 136 L150 218 C150 228 142 234 134 234 L124 234 C132 230 136 224 136 214 L136 136 C134 120 116 112 114 94 Z"/>
+    <path fill="none" stroke="#F2A0A0" stroke-width="7" d="M72 128 L72 146"/>
+    <rect id="label" x="70" y="156" width="68" height="60" rx="8" fill="#FFF4E2"/>
+    <g id="label-berry" transform="translate(104 186)">
+      <g fill="#E2513B" stroke-width="2.5">
+        <circle cx="-9" cy="-10" r="7"/>
+        <circle cx="9" cy="-10" r="7"/>
+        <circle cx="-13" cy="2" r="7"/>
+        <circle cx="0" cy="0" r="7"/>
+        <circle cx="13" cy="2" r="7"/>
+        <circle cx="-7" cy="12" r="7"/>
+        <circle cx="7" cy="12" r="7"/>
+      </g>
+      <path fill="#5BAA6A" stroke-width="2.5" d="M0 -14 L-12 -22 L-3 -20 L0 -26 L3 -20 L12 -22 Z"/>
+    </g>
+    <path id="cap" fill="#5BAA6A" d="M82 42 L126 42 Q130 42 130 46 L130 66 Q130 70 126 70 L82 70 Q78 70 78 66 L78 46 Q78 42 82 42 Z"/>
+    <path fill="#448450" stroke="none" d="M118 44 L126 44 Q128 44 128 46 L128 66 Q128 68 126 68 L118 68 Z"/>
+    <path fill="none" d="M92 42 L92 70 M104 42 L104 70 M116 42 L116 70"/>
+  </g>
+  <g id="glass-of-juice">
+    <path fill="#FFFFFF" d="M172 136 L228 136 L220 228 Q219 236 211 236 L189 236 Q181 236 180 228 Z"/>
+    <path fill="#F2A0A0" d="M175 164 L225 164 L220 228 Q219 234 211 234 L189 234 Q181 234 180 228 Z"/>
+    <path fill="#E98585" stroke="none" d="M212 166 L223 166 L218 228 Q217 232 211 232 L205 232 Q211 228 211 222 Z"/>
+    <path fill="none" d="M172 136 L228 136 L220 228 Q219 236 211 236 L189 236 Q181 236 180 228 Z"/>
+    <path fill="none" stroke="#EDE8E0" stroke-width="5" d="M184 146 L186 156"/>
+  </g>
+  <g id="raspberry" transform="translate(200 94)">
+    <g fill="#E2513B">
+      <circle cx="-12" cy="-14" r="11"/>
+      <circle cx="12" cy="-14" r="11"/>
+      <circle cx="-18" cy="4" r="11"/>
+      <circle cx="0" cy="2" r="11"/>
+      <circle cx="18" cy="4" r="11" fill="#C3331D"/>
+      <circle cx="-9" cy="20" r="11"/>
+      <circle cx="9" cy="20" r="11" fill="#C3331D"/>
+    </g>
+    <path fill="#5BAA6A" d="M0 -22 L-18 -32 L-7 -28 L0 -40 L7 -28 L18 -32 Z"/>
+  </g>
+</g>
+</svg>

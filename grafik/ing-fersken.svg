@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<g id="leaf">
+    <path fill="#5BAA6A" d="M112 54 C124 26 156 16 182 26 C170 54 140 64 112 54 Z"/>
+    <path fill="none" d="M122 52 C138 40 156 32 174 28"/>
+    <path id="stalk" fill="#704D31" d="M104 60 L100 38 L112 36 L114 58 Z"/>
+  </g>
+  <g id="peach">
+    <path fill="#F6B26B" d="M108 56 C146 38 192 66 192 118 C192 168 152 204 108 204 C64 204 24 168 24 118 C24 66 70 38 108 56 Z"/>
+    <path fill="#F08A3C" stroke="none" d="M132 50 C166 54 192 80 192 118 C192 168 152 204 108 204 C96 204 84 201 74 196 C124 196 170 150 132 50 Z"/>
+    <path fill="#E2513B" stroke="none" d="M160 62 C180 76 192 96 192 118 C192 148 178 172 156 188 C176 150 180 100 160 62 Z"/>
+    <path fill="none" stroke="#FDE7D3" stroke-width="8" d="M46 108 C48 88 60 74 76 68"/>
+    <path fill="none" d="M108 56 C90 88 92 150 108 204"/>
+    <path fill="none" d="M108 56 C146 38 192 66 192 118 C192 168 152 204 108 204 C64 204 24 168 24 118 C24 66 70 38 108 56 Z"/>
+  </g>
+  <g id="peach-wedge" transform="translate(192 194) rotate(-22)">
+    <path fill="#F08A3C" d="M-52 -18 A52 52 0 0 0 52 -18 Z"/>
+    <path fill="#F2C14E" stroke="none" d="M-44 -18 A44 44 0 0 0 44 -18 Z"/>
+    <path fill="none" stroke="#FAE09A" stroke-width="6" d="M-28 -6 C-20 8 -8 14 4 15"/>
+    <path fill="none" d="M-52 -18 A52 52 0 0 0 52 -18 Z"/>
+  </g>
+</g>
+</svg>

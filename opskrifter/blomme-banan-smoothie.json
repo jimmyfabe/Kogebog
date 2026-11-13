@@ -1,0 +1,43 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Blomme-smoothie",
+  "description": "Rødlilla og sød med modne blommer, banan og yoghurt. Bedst i sensommeren, når blommerne er modne.",
+  "image": "grafik/ret-blomme-banan-smoothie.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 3 glas",
+  "prepTime": "PT15M",
+  "totalTime": "PT15M",
+  "recipeIngredient": [
+    "6 modne blommer",
+    "1 moden banan",
+    "2 dl yoghurt naturel (kold)",
+    "1 spsk honning"
+  ],
+  "tool": ["si", "kniv og skærebræt", "målebæger", "spiseske", "blender", "3 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk. Stil frugten og yoghurten på køl i forvejen, så smoothien bliver kold. Honning er ikke til børn under 1 år, så små søskende skal have noget andet." } },
+    { "@type": "HowToStep", "text": "Skyl blommerne i en si.", "tumbi": { "verbum": "haelde", "ikoner": ["blomme"] } },
+    { "@type": "HowToStep", "text": "Skær blommerne i to.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["blomme"] } },
+    { "@type": "HowToStep", "text": "Pil stenene ud af blommerne.", "tumbi": { "verbum": "pille", "ikoner": ["blomme"], "note": "Tæl stenene: 6 sten for 6 blommer. En sten må aldrig komme i blenderen." } },
+    { "@type": "HowToStep", "text": "Pil bananen, og knæk den i stykker.", "tumbi": { "verbum": "pille", "ikoner": ["banan"] } },
+    { "@type": "HowToStep", "text": "Kom blommer og banan i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["blomme", "banan"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
+    { "@type": "HowToStep", "text": "Hæld 2 dl yoghurt i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["yoghurt"] } },
+    { "@type": "HowToStep", "text": "Kom 1 spsk honning i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["honning"], "note": "Er blommerne sure, så kom lidt mere i." } },
+    { "@type": "HowToStep", "text": "Blend, til det er lilla og glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["blomme", "banan"], "note": "Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Hæld smoothien i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Smag, og skål med Pip!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "blomme-banan-smoothie",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdene og tiden er et skøn (ikke målt). Rådet om honning til børn under 1 år er ikke slået efter i en kilde. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "blomme", "maengde": "6" },
+      { "ikon": "banan", "maengde": "1" },
+      { "ikon": "yoghurt", "maengde": "2 dl" },
+      { "ikon": "honning", "maengde": "1 spsk" }
+    ]
+  }
+}

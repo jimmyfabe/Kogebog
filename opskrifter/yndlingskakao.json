@@ -1,0 +1,43 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Yndlingskakao",
+  "description": "Den allerbedste kakao af mælk, rigtig kakao og sukker, rørt helt glat fra starten. Når den er lun, pisker barnet skum på.",
+  "image": "grafik/ret-yndlingskakao.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 kopper",
+  "prepTime": "PT5M",
+  "cookTime": "PT10M",
+  "totalTime": "PT25M",
+  "recipeIngredient": [
+    "4 spsk ren kakao",
+    "4 spsk sukker",
+    "1 knivspids salt",
+    "8 dl mælk (gerne sødmælk)"
+  ],
+  "tool": ["gryde", "målebæger", "spiseske", "grydeske", "lille piskeris eller gaffel", "4 kopper med hank"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk. Brug ren kakao fra bageafdelingen, ikke kakaopulver med sukker i." } },
+    { "@type": "HowToStep", "text": "Mål kakao, sukker og salt i gryden.", "tumbi": { "verbum": "maale", "ikoner": ["kakao", "sukker", "salt"], "note": "4 spsk kakao, 4 spsk sukker og en knivspids salt. Gryden er kold endnu, så barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Hæld lidt mælk i gryden.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk"], "note": "1 dl af mælken." } },
+    { "@type": "HowToStep", "text": "Rør, til der ikke er flere klumper.", "tumbi": { "verbum": "roere", "ikoner": ["kakao", "maelk"], "note": "Det er hemmeligheden bag en glat kakao: kakaoen skal røres ud i lidt mælk først." } },
+    { "@type": "HowToStep", "text": "Hæld resten af mælken i gryden.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk"], "note": "7 dl. Rør rundt." } },
+    { "@type": "HowToStep", "text": "Varm kakaoen, til den damper.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["maelk"], "note": "Ved middel varme, og rør i bunden med en grydeske. Den må ikke koge: tag gryden af varmen, når den damper." } },
+    { "@type": "HowToStep", "text": "Hæld kakaoen i kopperne.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne hælder: kakaoen er varm. Fyld kun kopperne to tredjedele op, så der er plads til at piske." } },
+    { "@type": "HowToStep", "text": "Vent, til kakaoen er lun.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Kopperne bliver hos den voksne. Barnet får først kakaoen, når den er lun. Mærk efter først, og vent lidt længere, hvis den stadig er varm." } },
+    { "@type": "HowToStep", "text": "Pisk skum på kakaoen sammen med en voksen.", "tumbi": { "verbum": "piske", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["kakao"], "note": "Med et lille piskeris eller en gaffel i ca. et halvt minut. Den voksne mærker efter først, at kakaoen kun er lun, og holder koppen." } },
+    { "@type": "HowToStep", "text": "Smag din yndlingskakao!", "tumbi": { "verbum": "smage", "note": "Rør rundt, hvis der ligger kakao på bunden." } }
+  ],
+  "tumbi": {
+    "id": "yndlingskakao",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdet mellem mælk, kakao og sukker er et skøn, og tiden er ikke målt. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "kakao", "maengde": "4 spsk" },
+      { "ikon": "sukker", "maengde": "4 spsk" },
+      { "ikon": "salt", "maengde": "1 knivspids" },
+      { "ikon": "maelk", "maengde": "8 dl" }
+    ]
+  }
+}

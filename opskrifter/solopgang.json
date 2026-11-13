@@ -1,0 +1,36 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Solopgang",
+  "description": "Rød saft i bunden og appelsinjuice ovenpå, så glasset ligner himlen, når solen står op. Det tager kun få minutter, og barnet kan lave det hele.",
+  "image": "grafik/ret-solopgang.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 glas",
+  "prepTime": "PT5M",
+  "totalTime": "PT5M",
+  "recipeIngredient": [
+    "4 spsk rød saft (koncentrat), fx hindbær",
+    "8 isterninger",
+    "6 dl appelsinjuice (kold)"
+  ],
+  "tool": ["spiseske", "målebæger", "4 høje glas", "lang ske"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Sæt appelsinjuicen på køl i god tid. Høje glas viser farverne bedst. Saften er koncentrat og skal ikke blandes op først. Isterningerne skal være lavet i forvejen, ellers springer I dem over." } },
+    { "@type": "HowToStep", "text": "Hæld 1 spsk saft i hvert glas.", "tumbi": { "verbum": "maale", "ikoner": ["saft"], "note": "Den røde saft, lige ned i bunden." } },
+    { "@type": "HowToStep", "text": "Læg to isterninger i hvert glas.", "tumbi": { "verbum": "pynte", "ikoner": ["isterninger"], "note": "Læg dem forsigtigt ned, så saften bliver i bunden." } },
+    { "@type": "HowToStep", "text": "Hæld juicen langsomt ned over isen.", "tumbi": { "verbum": "haelde", "ikoner": ["appelsin"], "note": "1½ dl i hvert glas. Isen bremser juicen, så saften bliver i bunden, og farverne lægger sig i lag." } },
+    { "@type": "HowToStep", "text": "Se solen stå op i glasset.", "tumbi": { "verbum": "vente", "note": "Hold glasset op mod lyset. Den røde farve stiger langsomt op i den orange." } },
+    { "@type": "HowToStep", "text": "Rør rundt, og smag din solopgang!", "tumbi": { "verbum": "smage", "note": "Rør først, så saften kommer med i hele glasset." } }
+  ],
+  "tumbi": {
+    "id": "solopgang",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til: mængderne er et skøn. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "saft", "maengde": "4 spsk" },
+      { "ikon": "isterninger", "maengde": "8" },
+      { "ikon": "appelsin", "maengde": "6 dl" }
+    ]
+  }
+}

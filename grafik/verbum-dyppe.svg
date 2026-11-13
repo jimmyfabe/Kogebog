@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="dip" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="plate">
+      <path d="M28 198 C28 186 72 176 128 176 C184 176 228 186 228 198 L228 204 C228 220 184 232 128 232 C72 232 28 220 28 204 Z" fill="#EEDDBF"/>
+      <ellipse cx="128" cy="198" rx="100" ry="24" fill="#FFF4E2"/>
+      <ellipse cx="128" cy="198" rx="80" ry="16" fill="#F9C6CF"/>
+    </g>
+    <g id="sprinkles" stroke-width="2.5">
+      <rect x="62" y="193" width="15" height="6" rx="3" fill="#E2513B" transform="rotate(-20 69 196)"/>
+      <rect x="82" y="203" width="15" height="6" rx="3" fill="#5BAA6A" transform="rotate(22 89 206)"/>
+      <rect x="170" y="202" width="15" height="6" rx="3" fill="#F2C14E" transform="rotate(-24 177 205)"/>
+      <rect x="182" y="191" width="15" height="6" rx="3" fill="#3E8FB0" transform="rotate(18 189 194)"/>
+      <rect x="114" y="206" width="15" height="6" rx="3" fill="#3E8FB0" transform="rotate(-12 121 209)"/>
+      <rect x="144" y="206" width="15" height="6" rx="3" fill="#E2513B" transform="rotate(16 151 209)"/>
+    </g>
+    <g id="upside-down-glass">
+      <path d="M84 192 L172 192 L152 66 Q151 60 145 60 L111 60 Q105 60 104 66 Z" fill="#D9EBF2"/>
+      <path d="M152 192 L172 192 L152 66 Q151 62 146 60 L144 60 Z" fill="#A9D3E3" stroke="none"/>
+      <path d="M104 66 Q105 60 111 60 L145 60 Q151 60 152 66 L154 80 L102 80 Z" fill="#FFFFFF"/>
+      <path d="M84 192 L172 192 L152 66 Q151 60 145 60 L111 60 Q105 60 104 66 Z" fill="none"/>
+      <path d="M102 100 L92 168" fill="none" stroke="#FFFFFF" stroke-width="6"/>
+      <path d="M84 192 L172 192 L170 180 L86 180 Z" fill="#F2A0A0"/>
+      <rect x="96" y="181" width="12" height="5" rx="2.5" fill="#F2C14E" stroke-width="2"/>
+      <rect x="124" y="181" width="12" height="5" rx="2.5" fill="#5BAA6A" stroke-width="2"/>
+      <rect x="150" y="181" width="12" height="5" rx="2.5" fill="#E2513B" stroke-width="2"/>
+    </g>
+    <g id="downward-motion">
+      <path d="M58 76 C52 86 52 99 58 109 L65 104 L63 127 Q63 130 60 128 L43 114 L50 113 C42 99 43 83 49 72 Q55 67 58 76 Z" fill="#3E8FB0"/>
+    </g>
+    <g id="rosa-forearm">
+      <path d="M256 66 C229 66 208 71 186 78 L181 100 C203 109 229 106 256 99" fill="#F08A3C"/>
+    </g>
+    <g id="rosa-holding-paw">
+      <path d="M170 71 Q158 73 163 85 C155 94 162 105 172 101 C180 110 191 103 187 95 C197 90 190 78 181 82 Q182 70 170 71 Z" transform="translate(-14 0)" fill="#F08A3C"/>
+      <path d="M169 84 Q176 79 183 88 Q188 97 178 99 Q166 98 169 84 Z" transform="translate(-14 0)" fill="#FFF4E2"/>
+    </g>
+  </g>
+</svg>

@@ -279,7 +279,7 @@ test('FNV-1a giver de kendte værdier, og kontrolsummen er 4 hex', () => {
 test('ugeplanen er aftensretterne med ugeplan-felter (de fem første, de billige fra 22-10 og de sunde fra 31-10), og pandekager er ikke med', () => {
   assert.deepEqual(UGEPLAN.slice().sort(), [
     'bagte-kartofler-med-fyld', 'bakkeret-knuste-kartofler-og-kylling', 'bolognese-one-pot', 'bradepande-fajitas',
-    'bradepandekylling', 'chili-con-carne', 'chorizo-pasta', 'cremet-carbonara-med-aerter-uden-raa-aeg',
+    'bradepandekylling', 'chili-con-carne', 'chorizo-pasta', 'cowboyboenner', 'cremet-carbonara-med-aerter-uden-raa-aeg',
     'cremet-fiskesuppe-med-majs', 'cremet-koedsovs', 'cremet-ostris-med-aerter', 'egg-foo-young-med-ris',
     'fisk-i-tomatfad', 'fiskefars-i-fad', 'fiskelasagne', 'fiskepakker-med-laks', 'fiskepinde-med-baade',
     'fisketacos-med-majs', 'floedekartofler-med-skinke-og-broccoli', 'foldet-fladbroed-med-ost',

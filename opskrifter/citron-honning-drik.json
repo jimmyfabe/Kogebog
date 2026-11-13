@@ -1,0 +1,44 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Varm citron med honning",
+  "description": "En lun drik af citron, honning og vand til en kold dag. Den smager både sødt og surt.",
+  "image": "grafik/ret-citron-honning-drik.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 kopper",
+  "prepTime": "PT5M",
+  "cookTime": "PT5M",
+  "totalTime": "PT15M",
+  "recipeIngredient": [
+    "2 citroner",
+    "4 spsk honning",
+    "6 dl vand",
+    "2 dl koldt vand"
+  ],
+  "tool": ["kniv og skærebræt", "citronpresser", "stor kande, der tåler varmt vand", "gryde", "målebæger", "spiseske", "lang ske", "4 kopper med hank"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Honning er ikke til børn under 1 år, så små søskende skal have noget andet. Skyl citronerne." } },
+    { "@type": "HowToStep", "text": "Skær citronerne i to.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["citron"], "note": "2 citroner." } },
+    { "@type": "HowToStep", "text": "Pres saften ud i en stor kande.", "tumbi": { "verbum": "klemme", "ikoner": ["citron"], "note": "Med hænderne eller en citronpresser. Fisk kernerne op. Det giver ca. 1 dl. Kanden skal kunne tåle varmt vand." } },
+    { "@type": "HowToStep", "text": "Hæld honningen i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["honning"], "note": "4 spsk." } },
+    { "@type": "HowToStep", "text": "Varm vandet, til det damper.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "6 dl i en gryde. Det behøver ikke koge: tag gryden af varmen, når det damper." } },
+    { "@type": "HowToStep", "text": "Hæld det varme vand i kanden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "Den voksne hælder." } },
+    { "@type": "HowToStep", "text": "Rør, til honningen er væk.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["honning"], "note": "Den voksne rører med en lang ske: kanden er varm." } },
+    { "@type": "HowToStep", "text": "Hæld det kolde vand i kanden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "2 dl koldt vand. Det køler drikken ned." } },
+    { "@type": "HowToStep", "text": "Hæld drikken i kopperne.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne hælder: drikken er varm." } },
+    { "@type": "HowToStep", "text": "Vent, til drikken er lun.", "tumbi": { "verbum": "vente", "timer_sek": 300, "note": "Kopperne bliver hos den voksne. Barnet får først drikken, når den er lun. Mærk efter først, og vent lidt længere, hvis den stadig er varm." } },
+    { "@type": "HowToStep", "text": "Smag den varme citron!", "tumbi": { "verbum": "smage", "note": "Er den for sur, så rør lidt mere honning i." } }
+  ],
+  "tumbi": {
+    "id": "citron-honning-drik",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdet mellem citron, honning og vand er et skøn, og tiden er ikke målt. Rådet om honning til børn under 1 år er ikke slået efter i en kilde. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "citron", "maengde": "2" },
+      { "ikon": "honning", "maengde": "4 spsk" },
+      { "ikon": "vand", "maengde": "6 dl" },
+      { "ikon": "vand", "maengde": "2 dl" }
+    ]
+  }
+}

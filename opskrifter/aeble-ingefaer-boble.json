@@ -1,0 +1,39 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Æble-ingefær-boble",
+  "description": "Æblemost med bobler og en lille smule ingefær, der prikker lidt på tungen. Rosa, den lille ræv, kalder den sin hemmelige drik.",
+  "image": "grafik/ret-aeble-ingefaer-boble.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 glas",
+  "prepTime": "PT10M",
+  "totalTime": "PT15M",
+  "recipeIngredient": [
+    "1 tsk revet frisk ingefær",
+    "5 dl æblemost (kold)",
+    "3 dl danskvand (kold)"
+  ],
+  "tool": ["rivejern", "teske", "skål", "målebæger", "ske", "si", "stor kande", "4 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Sæt æblemost og danskvand på køl i god tid. Et lille stykke ingefær er nok." } },
+    { "@type": "HowToStep", "text": "Riv ingefæren fint.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["ingefaer"], "note": "Skræl den først. 1 tsk og ikke mere: ingefær er stærk, og drikken skal også smage af æble." } },
+    { "@type": "HowToStep", "text": "Hæld æblemosten i en skål.", "tumbi": { "verbum": "haelde", "ikoner": ["aeble"], "note": "5 dl." } },
+    { "@type": "HowToStep", "text": "Rør ingefæren i æblemosten.", "tumbi": { "verbum": "roere", "ikoner": ["ingefaer"] } },
+    { "@type": "HowToStep", "text": "Lad det trække i 5 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 300, "note": "Så kommer smagen ud i æblemosten." } },
+    { "@type": "HowToStep", "text": "Hæld mosten gennem en si ned i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["aeble"], "note": "Sien holder ingefæren tilbage, så der ikke kommer stykker i glasset." } },
+    { "@type": "HowToStep", "text": "Hæld danskvanden langsomt i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["danskvand"], "note": "3 dl, og lige før I skal drikke, så boblerne ikke forsvinder. Rør kun en enkelt gang." } },
+    { "@type": "HowToStep", "text": "Hæld boblerne i glassene.", "tumbi": { "verbum": "haelde", "note": "Hæld langsomt ned ad siden af glasset, så det ikke skummer over." } },
+    { "@type": "HowToStep", "text": "Smag æble-ingefær-boblen!", "tumbi": { "verbum": "smage", "note": "Tag en lille tår først. Er den for stærk, så hæld lidt mere æblemost i." } }
+  ],
+  "tumbi": {
+    "id": "aeble-ingefaer-boble",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til: mængder og tider er et skøn. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "ingefaer", "maengde": "1 tsk" },
+      { "ikon": "aeble", "maengde": "5 dl" },
+      { "ikon": "danskvand", "maengde": "3 dl" }
+    ]
+  }
+}

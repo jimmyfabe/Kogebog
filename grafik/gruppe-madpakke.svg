@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="madkasse">
+    <rect x="20" y="74" width="216" height="156" rx="28" fill="#3E8FB0"/>
+    <path fill="#2E6A83" stroke="none" d="M30 196 L226 196 L226 202 Q226 222 206 222 L50 222 Q30 222 30 202 Z"/>
+    <rect x="36" y="90" width="184" height="120" rx="16" fill="#D9EBF2"/>
+    <path fill="none" d="M128 90 L128 210 M128 150 L220 150"/>
+  </g>
+  <g id="rugbroed">
+    <rect x="46" y="100" width="72" height="100" rx="12" fill="#6B4A32"/>
+    <g fill="#8A6446" stroke="none">
+      <ellipse cx="62" cy="168" rx="4" ry="3"/>
+      <ellipse cx="84" cy="182" rx="4" ry="3"/>
+      <ellipse cx="102" cy="164" rx="4" ry="3"/>
+      <ellipse cx="70" cy="188" rx="3" ry="2"/>
+    </g>
+    <path fill="#F2C14E" d="M54 108 L110 108 L110 148 Q100 156 92 148 Q82 158 72 148 Q62 156 54 148 Z"/>
+  </g>
+  <g id="gulerodsstave">
+    <path fill="none" stroke-width="17" d="M144 136 L170 106 M166 138 L194 106 M188 138 L210 112"/>
+    <path fill="none" stroke="#F08A3C" stroke-width="8" d="M144 136 L170 106 M166 138 L194 106 M188 138 L210 112"/>
+  </g>
+  <g id="agurkestave">
+    <path fill="none" stroke-width="17" d="M146 172 L204 168 M146 194 L204 190"/>
+    <path fill="none" stroke="#5BAA6A" stroke-width="8" d="M146 172 L204 168 M146 194 L204 190"/>
+  </g>
+  <g id="aeble" transform="translate(196 64)">
+    <path fill="#E2513B" d="M0 -20 C14 -32 38 -26 38 2 C38 26 20 40 0 32 C-20 40 -38 26 -38 2 C-38 -26 -14 -32 0 -20 Z"/>
+    <path fill="#F9DCD6" stroke="none" d="M-26 -6 C-26 -16 -18 -22 -10 -20 C-18 -14 -22 -8 -22 0 Z"/>
+    <path fill="none" d="M0 -20 C0 -30 4 -38 10 -42"/>
+    <path fill="#5BAA6A" d="M6 -30 C14 -44 30 -44 34 -38 C26 -28 14 -26 6 -30 Z"/>
+  </g>
+</g>
+</svg>

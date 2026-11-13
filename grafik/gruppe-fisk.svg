@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <path id="hale" fill="#2E6A83" d="M72 128 C56 112 38 90 18 80 C26 110 26 146 18 176 C38 166 56 144 72 128 Z"/>
+  <path id="ryg" fill="#2E6A83" d="M104 84 C112 56 142 42 172 52 C170 64 168 76 170 88 Z"/>
+  <path id="bug" fill="#2E6A83" d="M120 176 C122 196 136 212 158 212 C160 200 160 188 158 174 Z"/>
+  <path id="krop" fill="#3E8FB0" d="M60 128 C88 74 180 56 240 128 C180 200 88 182 60 128 Z"/>
+  <path fill="#D9EBF2" stroke="none" d="M72 138 C110 158 186 158 228 140 C180 186 104 182 72 138 Z"/>
+  <path id="gaelle" fill="none" d="M178 92 C164 112 164 144 178 164"/>
+  <path fill="none" d="M104 112 Q116 122 104 132"/>
+  <path fill="none" d="M128 100 Q140 110 128 120"/>
+  <path fill="none" d="M128 130 Q140 140 128 150"/>
+  <path id="sidefinne" fill="#2E6A83" d="M150 124 C138 132 134 148 138 158 C152 156 160 142 160 130 Z"/>
+  <circle id="oeje" cx="202" cy="110" r="14" fill="#FFFFFF"/>
+  <circle cx="205" cy="110" r="6.5" fill="#3B2A20" stroke="none"/>
+  <path id="mund" fill="none" d="M238 130 Q226 138 214 134"/>
+</g>
+</svg>

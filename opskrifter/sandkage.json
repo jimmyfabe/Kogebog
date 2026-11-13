@@ -1,0 +1,54 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Sandkage",
+  "description": "Den klassiske smørkage i aflang form. Den er enkel og god, og barnet kan selv røre dejen.",
+  "image": "grafik/ret-sandkage.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 16 skiver",
+  "prepTime": "PT20M",
+  "cookTime": "PT55M",
+  "totalTime": "PT2H15M",
+  "recipeIngredient": [
+    "250 g blødt smør",
+    "3 dl sukker",
+    "4 æg",
+    "4 dl hvedemel",
+    "1 tsk bagepulver",
+    "2 tsk vaniljesukker",
+    "½ dl mælk"
+  ],
+  "tool": ["aflang form (ca. 2 l)", "bagepapir", "stor skål", "elpisker eller grydeske", "dl-mål", "kop", "teske", "tandstik", "ske", "grydelapper", "rist", "kniv"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Tag smørret ud af køleskabet i god tid, så det er blødt. Tænd ovnen på 175 °C (alm. ovn), og læg bagepapir i formen. Kagen indeholder gluten, æg og mælk." } },
+    { "@type": "HowToStep", "text": "Mål smør og sukker i en stor skål.", "tumbi": { "verbum": "maale", "ikoner": ["smoer", "sukker"], "note": "En hel pakke smør (250 g) og 3 dl sukker." } },
+    { "@type": "HowToStep", "text": "Pisk smør og sukker luftigt i 3 minutter.", "tumbi": { "verbum": "piske", "timer_sek": 180, "ikoner": ["smoer", "sukker"], "note": "Med elpisker eller en grydeske, til det er lyst og blødt. Med en elpisker hjælper den voksne lidt." } },
+    { "@type": "HowToStep", "text": "Pisk æggene i, ét ad gangen.", "tumbi": { "verbum": "piske", "ikoner": ["aeg"], "note": "Slå æggene ud i en kop først, så der ikke kommer skal i dejen. Med en elpisker hjælper den voksne lidt." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter rå æg." } },
+    { "@type": "HowToStep", "text": "Hæld mel, bagepulver og vaniljesukker i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["mel", "bagepulver", "sukker"], "note": "4 dl mel, 1 tsk bagepulver og 2 tsk vaniljesukker." } },
+    { "@type": "HowToStep", "text": "Hæld mælken i.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk"], "note": "En halv deciliter." } },
+    { "@type": "HowToStep", "text": "Rør forsigtigt, til melet er væk.", "tumbi": { "verbum": "roere", "note": "Rør kun lige, til dejen er samlet: så bliver kagen blød." } },
+    { "@type": "HowToStep", "text": "Hæld dejen i formen.", "tumbi": { "verbum": "haelde", "note": "Bred den ud med en ske, så den ligger jævnt." } },
+    { "@type": "HowToStep", "text": "Vask hænderne igen.", "tumbi": { "verbum": "vaske-haender", "note": "Dejen har råt æg i: smag ikke på den." } },
+    { "@type": "HowToStep", "text": "Bag kagen i 55 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 3300, "note": "Midt i ovnen ved 175 °C. Den er færdig, når en tandstik kommer tør op. Læg bagepapir over, hvis den bliver for mørk." } },
+    { "@type": "HowToStep", "text": "Tag formen ud af ovnen.", "tumbi": { "verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Med grydelapper. Formen er meget varm." } },
+    { "@type": "HowToStep", "text": "Lad kagen køle helt af.", "tumbi": { "verbum": "vente", "timer_sek": 3600, "note": "Den voksne løfter den op af formen efter 15 minutter, med grydelapper." } },
+    { "@type": "HowToStep", "text": "Skær kagen i skiver.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv" } },
+    { "@type": "HowToStep", "text": "Smag sandkagen!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "sandkage",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Mængder og tider er et skøn (ikke målt). Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "smoer", "maengde": "250 g" },
+      { "ikon": "sukker", "maengde": "3 dl" },
+      { "ikon": "aeg", "maengde": "4" },
+      { "ikon": "mel", "maengde": "4 dl" },
+      { "ikon": "bagepulver", "maengde": "1 tsk" },
+      { "ikon": "sukker", "maengde": "2 tsk" },
+      { "ikon": "maelk", "maengde": "½ dl" }
+    ]
+  }
+}

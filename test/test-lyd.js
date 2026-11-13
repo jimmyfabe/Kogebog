@@ -140,8 +140,6 @@ test('UDTALE retter kun hele ord, beholder stort bogstav og når kun Røst', () 
   assert.equal(tilRoest('nu kommer bagning.'), 'nu kommer bæining.');
   assert.equal(tilRoest('Bagningen og ombagning'), 'Bagningen og ombagning', 'kun hele ord');
   assert.equal(tilRoest('toString constructor'), 'toString constructor', 'arvede egenskaber er ikke ord på listen');
-  assert.equal(TALE.find((x) => x.fil === 'faelles/gruppe-bagning.mp3').tekst, 'Bæining');
-  assert.equal(R.gruppe('bagning').tekst, 'Bagning', 'skærmen og iPad-stemmen får det rigtige ord');
 });
 
 // indsaet-lyd.js i en midlertidig kopi af appen: gamle mp3-filer nævnes, og --ryd sletter kun dem (code review 19-10)

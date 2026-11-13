@@ -2,6 +2,160 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
+## 10-11-2026 kl. 13:26: v9 madpakker har Røst-stemmen, og hele e2e er grøn (Saga)
+
+**Stemmen** (`67e3a4e`): Røst har indtalt de 453 replikker til de 16 madpakker. `sw.js` (INDHOLD og LYD) og `js/version.js` (UDGAVE_INDHOLD) har nye fingeraftryk. Backuppen ligger i `D:\Stemmer\kogebog-500m\foer-trin4-1011\`. Logs: `trin4-1011.log` og `overstyr-1011.log` samme sted. Seed 42 gav 1.108 mistænkelige; efter seed 43–47 er **878 «stadig mistænkelige»**. De fleste har en for lang hale, så de er ikke nødvendigvis forkerte.
+
+**Fuld e2e efter stemmen**, 14 dele hver for sig gennem låsen, 10-11 kl. 11:00–13:26: **201.983 tjek, 0 fejl**.
+
+| Del | Tjek | | Del | Tjek |
+|---|---|---|---|---|
+| hele | 136.269 | | titler | 2.145 |
+| trinbund | 33.385 | | voksen | 1.041 |
+| print | 19.363 | | ugeplan | 697 |
+| former | 8.409 | | skaermfund | 420 |
+| timer | 164 | | de 5 små (lyn, fejl, tastatur, beroering, mindre) | 90 |
+
+**Kendt rødt indtil udgivelsen:**
+- `test-version` («nummeret er hævet siden main»).
+- `test-lyd` for 2 gamle gruppe-mp3, der ikke længere bruges. De fjernes kun med `--ryd`, og det kræver dit ok, fordi det sletter filer.
+
+**Afventer Jimmy** (10-11):
+- Lyt til et udvalg af de 878 mistænkelige replikker, især ordene «squashen», «basilikummen» og «spegepølse». Listen står i `D:\Stemmer\kogebog-500m\trin4-1011.log`.
+- Ok til `--ryd` for de 2 gamle gruppe-mp3.
+- Udgivelsen: versionsnummeret hæves (UDGAVE står stadig på v6), og v9 flettes til main. Det går live på GitHub Pages, så du får kommandoen.
+
+## 10-11-2026 kl. 00:33: UI-review af v9 gav 9 fund; de 2 layoutfund rettes nu (Saga)
+
+ui-reviewer så 65 skærmbilleder (5 skærme) og målte 17 retter × 4 skærme (246 trin). Der var ingen JS-fejl og ingen vandret rulning. Fund og mål ligger i kladdemappen `kogebog-0911/v9/ui-review-agent/` (`maal.txt`).
+
+**Rettes nu af frontend-dev** (CSS, ikke tekst, fordi stemmen indtales af de nuværende tekster). Hver rettelse får en e2e-test, der først er rød, og sin egen commit:
+- **A (høj):** voksen-noten (også sikkerhedsteksten) ligger under den faste bund på trinsider. På 390×844 gælder det 4 trin (14–60 px), og på 360×780 53 af 246 trin. Værst er gulerodssmoothie trin 6 med «hold hånden på låget». Billedet skal give efter, ikke teksten.
+- **B (mellem):** rettens titel knækker midt i ordet på iPad på højkant 768×1024 («Cowboybønn|er», «fiskefrikadell|er»).
+
+**Rettet 10-11** (frontend-dev, fuld e2e 0 FEJL i 190.695 tjek):
+- `db2b2ad` A: trinets billede giver efter (mindst 140 px). Trin med teksten under bunden: 390×826 92 → 0 af 3327; 360×780 486 → 4 (dino-vulkan 10, sushi-bowl 3, medister 2, stegte ris 2), som ruller som før.
+- `024581a` B: navne, der knækker midt i ordet: 768×1024 24 → 0, 820×1180 8 → 0, 744×1133 34 → 0.
+
+**Review af A+B** (code-reviewer + ui-reviewer): intet ødelagt, men to tests kunne bestå uden at teste noget. Det er rettet (se nedenfor).
+- **Rettet efter reviewet 10-11** (frontend-dev, 8 commits `8ac8d29`…`de44df1`, hver med et rødt bevis før og et grønt efter, kun `test/test-e2e.js`, `app.css`, `js/version.js` og `sw.js`; kontrolleret med `git diff --stat` kl. 06:48):
+  - `trinbund` skriver sine målinger straks, fejler højlydt, hvis `.trin-tekst` mangler, og måler nu også trinene i «Mere grønt» (3338 trin pr. skærm).
+  - 360×780 har et loft på 4 trin under bunden. 390×779 (iPhonen med statuslinjen) måles også, med et loft på 1 trin (sushi-bowl 3, 18 px).
+  - `titler` måler også iPad mini (744×1133), med 0 delte navne.
+  - Tjekket for «mindre bevægelse» testede intet på højkant (siden ruller 0 px). Det er nu sin egen del, `mindre`, på 667×375, hvor siden ruller.
+  - CSS: billedets største mål står ét sted (`--billede-max`), og målingerne er de samme før og efter.
+  - Ikke kørt: den fulde e2e, hele `timer`-delen og `hele` (efter omskrivningen til `gaaTil`). De kører i den samlede e2e efter stemmen.
+  - Kogebogs CLAUDE.md har fået de nye dele og faldgruben med trykspærren på 350 ms (`96b3ad3`).
+- **Valg (Saga):** B forbliver, som den er. Højttaleren står i midten under navnet på 207 af 239 retter på iPad på højkant.
+  - Alternativet var at flytte den kun ved for lange ord. ui-reviewer målte, at 32 navne så stod på 4–5 linjer i en kolonne på 192 px, og at højttaleren hoppede fra ret til ret.
+- **Kendt pris ved A:**
+  - Når «Start timer» trykkes på telefon, krymper billedet i ét hug, fx fra 281 til 140 px på fiskefrikadeller 15. Ringen er højere end knappen, og «Læs op» ryger ned på sin egen række.
+  - På sushi-bowl 3 glider noten ind under bunden igen, mens timeren kører.
+  - Billedets størrelse skifter også fra trin til trin.
+  - Roligere kræver, at «Læs op» bliver på rækken ved timeren. Det er ikke bygget.
+- **Ikke afprøvet:**
+  - rigtig iPhone (statuslinjen kan tage ca. 47 px; safe-area tælles måske dobbelt);
+  - ældre Safari (iOS 15/16: billedets bredde regnes nu ud fra højden).
+
+**Ikke rettet** (med grund):
+- Ingrediensnavne knækker uden bindestreg på 360–390 px («grahamsme|l»). WebKit på Windows deler ikke dansk med bindestreg, men Safari på iPhone gør det måske selv. Prøv først på en rigtig iPhone.
+- Versionsnummeret står stadig på v6. Det hæves ved udgivelsen, som planlagt.
+- Når et navn fylder to linjer, står forsidens tallerkener 12–15 px skævt. Med en timer på iPad på langs og desktop er der et hul på ca. 55 px. Begge dele er lavt og kan tages senere.
+- Fiskefars, laks og fiskepinde har ikonet «kød» (rødt hakket kød, `js/katalog.js:385` og 401–422). Et `ing-fisk`-ikon skal tegnes.
+- «45 / minutter» deles over to linjer. Et hårdt mellemrum ændrer teksten og dermed muligvis stemmen, så det venter til efter stemmen.
+
+**Kører nu:**
+- Røst seed 42: 143 replikker tilbage kl. 06:38, så den er færdig ca. kl. 08. Den stod stille 02:41–04:45, mens den fulde e2e havde låsen.
+- Derefter trin 3-5 i CLAUDE.md «Stemmen», fingeraftrykkene `LYD`/`UDGAVE_INDHOLD`/`INDHOLD` og én samlet fuld e2e (ca. 2 t).
+- Lyt efter: squashen, basilikummen, spegepølse.
+
+**Afventer Jimmy** (alle spørgsmål samlet her):
+- (10-11) Din iPhone viser stadig v6, så v9 kan først ses der efter udgivelsen eller via Tailscale (kræver dit ja). Åbn Kogebogen som app fra hjemmeskærmen, gå til et trin med en lang note (fx Gulerodssmoothie trin 6), og se, om hele noten står over knapperne i bunden. Billedet bliver mindre på de trin. Er det i orden?
+- (10-11) Billederne, som et barn kan forveksle (dit øje, ikke målt):
+  - Små rug-pitabrød ligner bagte kartofler eller æg.
+  - Spinattærtens midte ligner et spejlæg.
+  - Havregrødsboller, fiskefrikadeller og grove sandwichboller er alle brune kugler.
+  - Rugbrødsmadpakken viser bart rugbrød uden pålæg.
+  - Rugbrød og burgerboller har samme ikon (en baguette).
+
+  Skal nogle af dem laves om (FLUX, ca. 6 min pr. billede)?
+- (09-11) «Grove gulerodsboller til madpakken» står i Brød og pizza. Skal de flyttes til Madpakke? Reglen i `docs/forside-sortering-05-11-2026.md` nævner ikke Madpakke endnu (review-fund 4). Flytningen er én linje i `index.json`.
+- (09-11) Nødder: købte kerner, tørret frugt, boller og rugbrød kan være mærket «kan indeholde spor af nødder». Er spor også forbudt på skolen? (ikke tjekket pr. vare)
+- (09-11) Madpakkerne skal prøves i et køkken, før `afproevet` sættes til true.
+- (08-11) Kæmpesmåkagerne skal smages og bages i en rigtig ovn.
+- (06-11) Udgivelse: v7, v8 og v9 venter på dit «ja». v7 skal ud før eller sammen med v8, og v9 indeholder v8. **Anbefaling 09-11:** udgiv v9 i ét hug, når stemmen er færdig. v8 alene har en layoutfejl på iPhone på langs (se 09-11 kl. 23:29).
+- (05-11) Må de 2 gamle gruppe-mp3 og `grafik/gruppe-bagning.svg` slettes? `test-lyd` er rød, til de er væk.
+
+## 09-11-2026 kl. 23:29: v9 har billeder, review-rettelser og grøn e2e; stemmen kører (Saga)
+
+Intet er pushet eller flettet til main. v8 er flettet ind i v9 (`84cb394`).
+
+**Lavet i aften:**
+- `7906232` + `650c8c4`: billeder til de 16 retter (FLUX.2 klein), og retterne er flyttet fra ventemappen ind i `index.json`. `74c135d`: ordbogen kender madpakkernes ord.
+- `cd51243`: rettelser efter code- og indholdsreview i 13 retter:
+  - rå fisk kom ikke længere i dip-skålen (det alvorlige fund);
+  - eget trin «Skær citronen over.» i 5 retter;
+  - køleelement i madpakkerne;
+  - havregrødsbollerne køler 30 min;
+  - spinaten tøs op natten over;
+  - paprika har ikonet krydderurt, som i resten af kogebogen.
+  - **Rettelse til commit-beskeden:** der står «Afvist: fund 16 (krydderi-ikonet)», men fund 16 *blev* rettet (tortilla-ruller).
+- `4d1e031` (v9) og `6be3c67` (v8): blød bindestreg i «Rugbrødsmadpakke» og «Gulerodssmoothie», som stak ud af kortet på iPhone og 360 px.
+- Tests:
+  - node-testene er grønne, undtagen `test-lyd` (453 replikker mangler, til Røst er færdig, plus de 2 gamle gruppe-mp3) og `test-version` (nummeret hæves ved udgivelsen);
+  - e2e i v9 (`former`, `hele`, `lyn`, `voksen`) er grøn efter bindestregen.
+- Review-fund 1 (iPad 768×1024 med en kørende timer) er målt i WebKit. Siden kan rulle 1 px (og 3 px på 901×800), ikke ~30 px, og alle 11 knapper og «Voksne: hold» kan ses. Ingen rettelse.
+
+- E2e på **v8 alene** (09-11 kl. 23:56) har 26 fejl, og ingen af dem findes i v9:
+  - 6 skyldes en forældet test: «ti knapper» kloner en 10. knap oven i v8's 10 rigtige;
+  - 20 er en ægte layoutfejl: 10 knapper i 5 kolonner bliver 123–138 px brede på iPhone på langs (736×414 og 812×375), og mindstemålet er 140. v9's regel for 11 knapper giver 3 kolonner der.
+  - **Valg (Saga):** v8 er ikke rettet, for anbefalingen er at udgive v9 i ét hug (den indeholder v7 og v8). Alternativet er, at v8 skal ud alene. Så skal reglen fra v9 genbruges for 10 knapper, og testen rettes (ca. 30 min plus review).
+
+**Kørte (afløst af afsnittet 10-11 kl. 00:33):** Røst, ui-reviewer og e2e på v8 alene. «Afventer Jimmy» er ført op.
+
+## 09-11-2026 kl. 13:49: v9 «Madpakke» er bygget, billederne venter (hovedsessionen)
+
+Jimmy 09-11: «ja, lav madpakkerne». Gren `v9-madpakke` fra `v8-drikke` (worktree `D:/Claude/.claude/worktrees/kogebog-v9`). Plan: `docs/madpakke-plan-09-11-2026.md`. Intet er pushet eller flettet.
+
+- `b951d94`: gruppen Madpakke i `GRUPPER`, gitter til 11 knapper, ikonerne squash og spegepølse. `00fc1ba`: planen. `06b1520` og `1cded18`: 15 nøddefri retter i `docs/venter-paa-billede/` (`afproevet: false`, pris og grønt er skøn). `f11ed31`: ventemappens README med trinene, når billederne kommer.
+- Tests: `test-opskrifter` grøn (223 + 15 venter). `koer-alle.js` 15 af 17; `test-lyd` og `test-version` var røde i forvejen. **E2e er ikke kørt**, og 11-knaps-gitteret er ikke set i en browser.
+- Billederne: prompter, stilbillede, `lav-billede.py` (v8's stil) og løkken ligger varigt i `D:/Stemmer/kogebog-v9-billeder/`. Kør `bash D:/Stemmer/kogebog-v9-billeder/billed-loekke.sh` (ét billede pr. låsekald; stop med filen `billed-stop`).
+
+**Næste:** afløst af afsnittet 23:29 ovenfor (billeder, flytning og e2e er gjort).
+
+- 09-11 kl. 16:00: **Cowboybønner** (`b03b158`) er ret nr. 16 i ventemappen: gruppe `koed`, i ugeplanen (70 kr., Rema-priser 09-11), billedprompten står som linje 16 i `retter-v9.txt`, så løkken tegner den med. Ekstra trin står i ventemappens README. Jimmys ønske efter Trinity-bønnerne (PDF på Drev).
+
+**Afventer Jimmy:** retterne skal prøves i et køkken, før `afproevet` sættes til true.
+
+## 08-11-2026 kl. 10:47: ny ret «Bedste venners kæmpesmåkager» i v8, stemmen kører igen (Saga)
+
+Jimmy 08-11: pigerne savnede de store småkager fra deres YouTube-favoritter (navnene står ikke i repoet, for det er offentligt). De må ikke lave dem, så Saga finder et alternativ.
+
+- `18b4401`: retten ligger i Søde sager med 21 trin, ovntrinnene er voksentrin, der er billede, og `afproevet: false`. Mængder og bagetid er et skøn og ikke smagt til. Validator, sw og 14 andre tests er grønne; `test-lyd` og `test-version` var røde i forvejen.
+- Rettens 35 replikker er lagt i Røsts aktive taleliste (`D:/Stemmer/kogebog-500m/taleliste.json`, nu 5882; den gamle er gemt som `taleliste-foer-smaakager-0811.json`). Løkken kører, og ved bid 6 kl. 10:29 manglede 223 + 35 replikker.
+- Ikke kørt: e2e, ui-reviewer og `koer-alle.js` gennem låsen. Det sker sammen med «Næste» nedenfor.
+
+**Afventer Jimmy:** smag og bagetid skal prøves i en rigtig ovn, før `afproevet` sættes til true.
+
+## 06-11-2026 kl. 14:07: v8 (drikke, smoothies, kager, cupcakes) har alle billeder, stemmen laves nu (Saga)
+
+Gren `v8-drikke` (worktree `D:/Claude/.claude/worktrees/kogebog-v8`). Plan: `docs/drikke-plan-05-11-2026.md`. Intet er pushet.
+
+**Afventer Jimmy:**
+- (06-11) v7 skal udgives før eller sammen med v8. Begge grene står stadig på nummeret v6, så nummeret sættes ved udgivelsen.
+- (05-11) Må `grafik/gruppe-bagning.svg`, `lyd/faelles/gruppe-aftensmad.mp3` og `lyd/faelles/gruppe-bagning.mp3` slettes? Ingen bruger dem, og `test-lyd` er rød, til de er væk.
+
+**Lavet 06-11:**
+- `66c30e3`: 71 billeder tegnet lokalt (FLUX.2 klein 4B) og tjekket på mørk bund. Fire blev tegnet om: sommerkagen, isbjørnens milkshake, regnbue-drikken og kanelkagen (to gange).
+- `4c88a1b`: v7 flettet ind igen, så juleretternes 18 billeder er med. `test-opskrifter` er grøn: 222 retter, 0 venter på billede.
+
+**Stoppet 06-11 kl. 15:11** (pc'en skulle slukkes): Røst seed 42 nåede 97 af 1539 replikker (1442 tilbage). Løkken og Python-kørslen er stoppet, og låsen er fri. Fortsæt sådan: slet `scratchpad/kogebog-v8/lyd/roest-stop` og kør `bash scratchpad/kogebog-v8/lyd/roest-loekke.sh 42`. Replikker, der allerede er lavet, springes over. Ligger kladdemappen der ikke længere, så kør trin 2 i CLAUDE.md «Stemmen» direkte. Den gamle taleliste er gemt ved siden af.
+
+**Næste:**
+1. Kør trin 3-5 i CLAUDE.md «Stemmen»: seed 43/44 på de mistænkelige, efterbehandling med `--mp3`, og `indsaet-lyd.js`. Gendan uændrede replikkers mp3 fra HEAD.
+2. Sæt `INDHOLD` og `LYD` i sw.js.
+3. Kør e2e og ui-reviewer.
+
 ## Stadig åbent (ført op fra arkivet 03-11-2026)
 
 - (29-10) Lyt til de 9 lydfiler, hvor ASR stadig hører noget forkert (listen står i arkivet under 29-10 kl. 06:11).

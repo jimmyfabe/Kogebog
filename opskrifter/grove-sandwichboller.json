@@ -1,0 +1,62 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Grove sandwichboller",
+  "description": "Flade, grove boller med grahamsmel og solsikkekerner. Bag dem i weekenden, og frys dem til ugens madpakker.",
+  "image": "grafik/ret-grove-sandwichboller.webp",
+  "inLanguage": "da",
+  "recipeYield": "12 boller",
+  "prepTime": "PT30M",
+  "cookTime": "PT15M",
+  "totalTime": "PT2H",
+  "recipeIngredient": [
+    "25 g gær",
+    "3 dl lunkent vand",
+    "1 dl yoghurt naturel",
+    "2 spsk olie",
+    "1 tsk salt",
+    "150 g grahamsmel",
+    "ca. 400 g hvedemel",
+    "1 dl solsikkekerner"
+  ],
+  "tool": ["stor skål", "dl-mål", "måleskeer", "køkkenvægt", "grydeske", "viskestykke", "bageplade", "bagepapir", "pensel", "grydelapper", "rist", "paletkniv", "fryseposer"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Smuldr gæren ned i en stor skål.", "tumbi": { "verbum": "smuldre", "ikoner": ["gaer"], "note": "25 g gær er en halv pakke." } },
+    { "@type": "HowToStep", "text": "Mål 3 dl lunkent vand.", "tumbi": { "verbum": "maale", "ikoner": ["vand"], "note": "Lunkent vand føles hverken koldt eller varmt på en finger." } },
+    { "@type": "HowToStep", "text": "Hæld vand og yoghurt over gæren, og rør.", "tumbi": { "verbum": "roere", "ikoner": ["vand", "yoghurt", "gaer"], "note": "1 dl yoghurt. Rør, til gæren er helt opløst." } },
+    { "@type": "HowToStep", "text": "Hæld olie, salt og grahamsmel i.", "tumbi": { "verbum": "haelde", "ikoner": ["olie", "salt", "mel"], "note": "2 spsk olie, 1 tsk salt og 150 g grahamsmel." } },
+    { "@type": "HowToStep", "text": "Rør hvedemelet i lidt ad gangen.", "tumbi": { "verbum": "roere", "ikoner": ["mel"], "note": "Ca. 400 g. Stop, når dejen slipper skålen. Den må gerne klistre lidt." } },
+    { "@type": "HowToStep", "text": "Drys det meste af kernerne på dejen.", "tumbi": { "verbum": "drysse", "ikoner": ["kerner"], "note": "Gem 2 spsk til toppen. Kernerne giver det sprøde, som nødder ellers ville give." } },
+    { "@type": "HowToStep", "text": "Ælt dejen i 5 minutter.", "tumbi": { "verbum": "aelte", "timer_sek": 300, "note": "På bordet med lidt mel. Tryk, fold og drej, til kernerne sidder overalt i dejen." } },
+    { "@type": "HowToStep", "text": "Lad dejen hæve i 45 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 2700, "note": "I skålen med et viskestykke over et lunt sted. Den skal blive cirka dobbelt så stor." } },
+    { "@type": "HowToStep", "text": "Del dejen i 12 boller.", "tumbi": { "verbum": "rulle", "note": "Rul dem runde, og læg dem på en bageplade med bagepapir. Tryk dem lidt flade: så er de lette at fylde." } },
+    { "@type": "HowToStep", "text": "Lad bollerne hæve i 20 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 1200, "note": "Under viskestykket. Den voksne tænder ovnen på 220 °C (200 °C varmluft) imens." } },
+    { "@type": "HowToStep", "text": "Pensl bollerne med vand.", "tumbi": { "verbum": "pensle", "ikoner": ["vand"], "note": "Så hænger kernerne fast." } },
+    { "@type": "HowToStep", "text": "Drys resten af kernerne på bollerne.", "tumbi": { "verbum": "drysse", "ikoner": ["kerner"] } },
+    { "@type": "HowToStep", "text": "Bag bollerne i ovnen.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 840, "note": "Ca. 14 min, til de er gyldne og lyder hule, når man banker under dem." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme" } },
+    { "@type": "HowToStep", "text": "Lad bollerne køle af på en rist.", "tumbi": { "verbum": "vente", "timer_sek": 900, "note": "Den voksne flytter dem med en paletkniv: pladen er meget varm. Kolde boller kan fryses i poser i op til en måned. En bolle fra fryseren om morgenen er tøet op til frokost." } },
+    { "@type": "HowToStep", "text": "Smag en bolle.", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "grove-sandwichboller",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Idé fra bogen «Sund & Glad skolestart». Egen tekst og egne mængder. Tiden er et skøn (ikke målt).",
+    "pris_kr": 10,
+    "pris_dato": "2026-11",
+    "groent_g": 0,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, nov. 2026: Rema 1000's hyldepriser 09-11-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Grønt er også et skøn (ikke målt) og er uden bælgfrugter, kartofler og frugt.",
+    "ingredienser": [
+      { "ikon": "gaer", "maengde": "25 g" },
+      { "ikon": "vand", "maengde": "3 dl" },
+      { "ikon": "yoghurt", "maengde": "1 dl" },
+      { "ikon": "olie", "maengde": "2 spsk" },
+      { "ikon": "salt", "maengde": "1 tsk" },
+      { "ikon": "mel", "maengde": "150 g" },
+      { "ikon": "mel", "maengde": "ca. 400 g" },
+      { "ikon": "kerner", "maengde": "1 dl" }
+    ]
+  }
+}

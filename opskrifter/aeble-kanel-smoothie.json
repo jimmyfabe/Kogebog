@@ -1,0 +1,44 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Æble-kanel-smoothie",
+  "description": "Den smager som æblekage i et glas: æbler, yoghurt, lidt honning og en lille smule kanel.",
+  "image": "grafik/ret-aeble-kanel-smoothie.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 3 glas",
+  "prepTime": "PT10M",
+  "totalTime": "PT10M",
+  "recipeIngredient": [
+    "2 æbler",
+    "2½ dl yoghurt naturel (kold)",
+    "1 dl æblemost (kold)",
+    "1 spsk honning",
+    "½ tsk kanel"
+  ],
+  "tool": ["kniv og skærebræt", "målebæger", "spiseske", "teske", "blender", "3 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk. Stil æblerne, yoghurten og æblemosten på køl i forvejen, så smoothien bliver kold. Honning er ikke til børn under 1 år, så små søskende skal have noget andet." } },
+    { "@type": "HowToStep", "text": "Skær æblerne i både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["aeble"], "note": "Skær kernehuset væk. Skrællen må gerne blive på." } },
+    { "@type": "HowToStep", "text": "Kom æblerne i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["aeble"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
+    { "@type": "HowToStep", "text": "Hæld 2½ dl yoghurt i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["yoghurt"] } },
+    { "@type": "HowToStep", "text": "Hæld 1 dl æblemost i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["aeble"] } },
+    { "@type": "HowToStep", "text": "Kom 1 spsk honning i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["honning"] } },
+    { "@type": "HowToStep", "text": "Drys lidt kanel i kanden.", "tumbi": { "verbum": "drysse", "ikoner": ["krydderi"], "note": "½ tsk til hele kanden. Kanel smager kraftigt, så kun lidt." } },
+    { "@type": "HowToStep", "text": "Blend, til det hele er glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["aeble", "yoghurt"], "note": "Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Hæld smoothien i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Smag æblekagen i glasset!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "aeble-kanel-smoothie",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdene og tiden er et skøn (ikke målt). Rådet om honning til børn under 1 år er ikke slået efter i en kilde. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "aeble", "maengde": "2" },
+      { "ikon": "yoghurt", "maengde": "2½ dl" },
+      { "ikon": "aeble", "maengde": "1 dl" },
+      { "ikon": "honning", "maengde": "1 spsk" },
+      { "ikon": "krydderi", "maengde": "½ tsk" }
+    ]
+  }
+}

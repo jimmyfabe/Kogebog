@@ -1,0 +1,39 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Vandmelon-køler",
+  "description": "En rød, kold drik til de varmeste sommerdage, lavet af vandmelon og lime. Barnet moser melonen, og sien tager alle kernerne.",
+  "image": "grafik/ret-vandmelon-koeler.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 glas",
+  "prepTime": "PT20M",
+  "totalTime": "PT20M",
+  "recipeIngredient": [
+    "1½ kg vandmelon (med skal)",
+    "1 lime",
+    "8 isterninger"
+  ],
+  "tool": ["skærebræt", "stor kniv", "stor skål", "kartoffelmoser eller gaffel", "si", "ske", "stor kande", "lang ske", "spiseske", "4 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Læg melonen på køl i god tid. Skyl melonen, inden den skæres, og skyl limen. Isterningerne skal være lavet i forvejen, ellers springer I dem over." } },
+    { "@type": "HowToStep", "text": "Skær melonen i stykker og limen over.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["vandmelon", "lime"], "note": "Skær skallen af melonen, og skær det røde i små stykker. Limen over på midten." } },
+    { "@type": "HowToStep", "text": "Mos melonen i en stor skål.", "tumbi": { "verbum": "mose", "ikoner": ["vandmelon"], "note": "Med en kartoffelmoser eller en gaffel, til det hele er saft og små stykker." } },
+    { "@type": "HowToStep", "text": "Hæld mosen gennem en si ned i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["vandmelon"], "note": "Tryk med bagsiden af en ske, så al saften kommer med. Kernerne bliver i sien." } },
+    { "@type": "HowToStep", "text": "Klem limen ud i kanden.", "tumbi": { "verbum": "klemme", "ikoner": ["lime"], "note": "Begge halvdele. Fisk kernerne op." } },
+    { "@type": "HowToStep", "text": "Rør drikken godt rundt.", "tumbi": { "verbum": "roere", "note": "Med en lang ske." } },
+    { "@type": "HowToStep", "text": "Læg to isterninger i hvert glas.", "tumbi": { "verbum": "pynte", "ikoner": ["isterninger"] } },
+    { "@type": "HowToStep", "text": "Hæld drikken i glassene.", "tumbi": { "verbum": "haelde" } },
+    { "@type": "HowToStep", "text": "Smag vandmelon-køleren!", "tumbi": { "verbum": "smage", "note": "Melonens egen sødme er som regel nok. Er den ikke så sød, så rør 1 spsk sukker i." } }
+  ],
+  "tumbi": {
+    "id": "vandmelon-koeler",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til: mængder og tider er et skøn. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "vandmelon", "maengde": "1½ kg" },
+      { "ikon": "lime", "maengde": "1" },
+      { "ikon": "isterninger", "maengde": "8" }
+    ]
+  }
+}

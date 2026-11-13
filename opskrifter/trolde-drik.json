@@ -1,0 +1,43 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Troldens blå drik",
+  "description": "Mørk og hemmelig som skovsøen, hvor trolden bor, lavet af friske blåbær og bobler. Farven er mere lilla end blå, og barnet moser alle bærrene selv.",
+  "image": "grafik/ret-trolde-drik.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 glas",
+  "prepTime": "PT15M",
+  "totalTime": "PT25M",
+  "recipeIngredient": [
+    "250 g friske blåbær",
+    "3 spsk sukker",
+    "½ citron",
+    "6 dl danskvand (kold)"
+  ],
+  "tool": ["skærebræt", "kniv", "dyb skål", "gaffel eller kartoffelmoser", "spiseske", "si", "ske", "stor kande", "målebæger", "4 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Sæt danskvanden på køl i god tid. Skyl blåbær og citron. Brug friske bær: frosne bær skal koges, før de spises kolde. Blåbær farver tøjet." } },
+    { "@type": "HowToStep", "text": "Skær citronen over.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["citron"], "note": "Over på midten. Kun den ene halvdel skal bruges." } },
+    { "@type": "HowToStep", "text": "Hæld blåbærrene i en dyb skål.", "tumbi": { "verbum": "haelde", "ikoner": ["baer"], "note": "250 g, det er to små bakker." } },
+    { "@type": "HowToStep", "text": "Mos blåbærrene godt med en gaffel.", "tumbi": { "verbum": "mose", "ikoner": ["baer"], "note": "Alle bærrene skal springe, så der kommer farve. Tag en kartoffelmoser, hvis gaflen ikke kan." } },
+    { "@type": "HowToStep", "text": "Rør sukkeret i mosen.", "tumbi": { "verbum": "roere", "ikoner": ["sukker"], "note": "3 spsk." } },
+    { "@type": "HowToStep", "text": "Klem citronen ud over mosen.", "tumbi": { "verbum": "klemme", "ikoner": ["citron"], "note": "Den halve citron. Fisk kernerne op." } },
+    { "@type": "HowToStep", "text": "Lad mosen trække i 10 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Så går sukkeret i opløsning, og bærrene giver saft og farve." } },
+    { "@type": "HowToStep", "text": "Hæld mosen gennem en si ned i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["baer"], "note": "Tryk med bagsiden af en ske, så al saften kommer med." } },
+    { "@type": "HowToStep", "text": "Hæld danskvanden langsomt i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["danskvand"], "note": "6 dl, og lige før I skal drikke, så boblerne ikke forsvinder. Rør kun en enkelt gang." } },
+    { "@type": "HowToStep", "text": "Hæld troldens drik i glassene.", "tumbi": { "verbum": "haelde", "note": "Hæld langsomt ned ad siden af glasset, så det ikke skummer over." } },
+    { "@type": "HowToStep", "text": "Smag troldens blå drik!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "trolde-drik",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til: mængder og tider er et skøn. Bærrene er friske, fordi Fødevarestyrelsen råder til at koge frosne bær, før de spises kolde. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "baer", "maengde": "250 g" },
+      { "ikon": "sukker", "maengde": "3 spsk" },
+      { "ikon": "citron", "maengde": "½" },
+      { "ikon": "danskvand", "maengde": "6 dl" }
+    ]
+  }
+}

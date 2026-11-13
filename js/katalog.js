@@ -37,13 +37,21 @@ export const VERBER = {
   'forme': 'forme',
   'pille': 'pille',
   'smelte': 'smelte',
+  // Smoothies og milkshakes (05-11-2026): altid den voksne, også når alt i kanden er koldt, for blenderen har knive
+  'blende': 'blende',
+  // Drikkene (05-11-2026): «ryste» er en lukket dåse, «klemme» citrusfrugt, som den voksne har skåret over, og «dyppe» glassets
+  // kant i saft og krymmel. Barnet kan alle tre selv
+  'ryste': 'ryste',
+  'klemme': 'klemme',
+  'dyppe': 'dyppe',
 };
 
-// Verber, der altid kræver en voksen, og hvilken slags hjælp. Rivejernet skærer, «bage» og «tage-ud» er altid ovnen
+// Verber, der altid kræver en voksen, og hvilken slags hjælp. Rivejernet skærer, blenderen har knive, «bage» og «tage-ud» er altid ovnen
 // («tage-ud» er en flad plade, «tage-ud-form» en dyb form), «si» er kogende vand gennem dørslaget, og «smelte» er varmt.
 export const VOKSEN_KRAV = {
   'skaere': 'kniv',
   'rive': 'kniv',
+  'blende': 'kniv',
   'stege': 'varme',
   'koge': 'varme',
   'vende': 'varme',
@@ -55,10 +63,10 @@ export const VOKSEN_KRAV = {
 };
 
 // Verber, barnet kan selv, når der er koldt: piske dej, pensle boller, mose, drysse ost, pynte, sprøjte ketchup, stikke ud,
-// forme og pille. Er der varme med (varmt fedt, en varm gryde eller pande, et lunt æg), skal den voksne hjælpe, og så er det
-// for varmens skyld, aldrig kniven.
+// forme, pille, ryste, klemme og dyppe. Er der varme med (varmt fedt, en varm gryde eller pande, et lunt æg), skal den
+// voksne hjælpe, og så er det for varmens skyld, aldrig kniven.
 // Validatoren kan ikke se, om der er varme; det skriver opskriften med «voksen». Den tjekker, at hjælpen er «varme».
-export const KUN_VARME_HJAELP = ['piske', 'pensle', 'mose', 'drysse', 'pynte', 'sproejte', 'stikke-ud', 'forme', 'pille'];
+export const KUN_VARME_HJAELP = ['piske', 'pensle', 'mose', 'drysse', 'pynte', 'sproejte', 'stikke-ud', 'forme', 'pille', 'ryste', 'klemme', 'dyppe'];
 
 export const VOKSEN_HJAELP = {
   kniv: 'Kniv',
@@ -128,7 +136,7 @@ export const INGREDIENSER = {
   'bulgur': 'bulgur',
   // De sunde hverdagsretter (31-10-2026): æbler i kikærteboller og muffins, syltede rødbeder til vegetarbiksen
   'aeble': 'æble',
-  'roedbede': 'syltede rødbeder',
+  'roedbede': 'rødbeder',
   // De hurtige hverdagsretter, runde 2 (31-10-2026): porrer i suppen, frosne gyoza, mayonnaise, citron til laksen og ananas
   'porre': 'porre',
   'gyoza': 'gyoza',
@@ -160,6 +168,40 @@ export const INGREDIENSER = {
   'asparges': 'asparges',
   // Nytår (02-11-2026): «sennep» er sennep i glas (fx sød fransk sennep)
   'sennep': 'sennep',
+  // Drikke, cupcakes og kager (05-11-2026, docs/drikke-plan-05-11-2026.md). Te kun som rooibos og frugt-te: uden koffein, så
+  // sort og grøn te slet ikke kan vælges. «isterninger» er frosset vand («is» er flødeis), «slik» er pynten på cupcakes
+  'mango': 'mango',
+  'kiwi': 'kiwi',
+  'vandmelon': 'vandmelon',
+  'avocado': 'avocado',
+  'ingefaer': 'ingefær',
+  'groenkaal': 'grønkål',
+  'lime': 'lime',
+  'mynte': 'mynte',
+  'fersken': 'fersken',
+  'blomme': 'blomme',
+  'paere': 'pære',
+  'jordbaer': 'jordbær',
+  'danskvand': 'danskvand',
+  'hyldeblomst': 'hyldeblomst',
+  'rooibos': 'rooibos-te',
+  'frugt-te': 'frugt-te',
+  'kokosmaelk': 'kokosmælk',
+  'isterninger': 'isterninger',
+  'karamelsauce': 'karamelsauce',
+  'hvid-chokolade': 'hvid chokolade',
+  'chokoladeknapper': 'chokoladeknapper',
+  'skumfiduser': 'skumfiduser',
+  'isvaffel': 'isvaffel',
+  'muffinforme': 'muffinforme',
+  'flormelis': 'flormelis',
+  'konditorfarve': 'konditorfarve',
+  'slik': 'slik',
+  // Saft er koncentrat på flaske (hindbær og solbær). Hyldeblomstsaft bruger «hyldeblomst»
+  'saft': 'saft',
+  // Madpakken (v9, 09-11-2026). Spegepølse er færdigt pålæg (også salami), ikke råt kød
+  'squash': 'squash',
+  'spegepoelse': 'spegepølse',
 };
 
 // Ikoner for råt kød og råt æg: efter dem skal der komme et trin med «vaske-haender».
@@ -172,17 +214,33 @@ export const DYR = {
   pip: 'Pip, det lille pindsvin',
 };
 
-// Forsidens afsnit (opskrifter/index.json). Navnet er overskriften; billedet er grafik/gruppe-<id>.svg
-// (et juletræ, en gryde, en ovn, en kage og et græskar), og farven på kortenes cirkel står i app.css under [data-gruppe].
-// Halloween er sit eget afsnit fra 22-10-2026. Jul står først i index.json fra 01-11-2026, og Halloween er flyttet sidst.
-// Skal retterne tilbage i Bagning, flyttes de i index.json, og 'halloween' kan blive stående her
+// Forsidens billedknapper (opskrifter/index.json bestemmer rækkefølgen, docs/forside-sortering-05-11-2026.md hvad der
+// står hvor). Navnet står på knappen og siges af stemmen (js/replikker.js); billedet er grafikGruppe nedenfor, og farven
+// står i app.css under [data-gruppe]. Fra 05-11-2026 afløser de Aftensmad og Bagning. Madpakke (v9, 09-11-2026) er den
+// 11. knap (docs/madpakke-plan-09-11-2026.md)
 export const GRUPPER = {
-  'jul': 'Jul',
-  'aftensmad': 'Aftensmad',
-  'bagning': 'Bagning',
+  'pasta-og-nudler': 'Pasta og nudler',
+  'kylling': 'Kylling',
+  'fisk': 'Fisk',
+  'koed': 'Kød',
+  'groent': 'Grønt',
+  'broed-og-pizza': 'Brød og pizza',
+  'madpakke': 'Madpakke',
   'soede-sager': 'Søde sager',
+  'drikke': 'Drikke',
+  'jul': 'Jul og nytår',
   'halloween': 'Halloween',
 };
+
+// De gamle navne lever videre, så den voksne stadig kan finde retterne: «aftensmad» i søgningen og som chip i kataloget
+// finder de fem grupper, Aftensmad blev delt i, og «bagning» finder Brød og pizza. Kun søgeord, ingen knapper og ingen lyd
+export const AFTENSMAD = 'aftensmad';
+export const AFTENSMAD_NAVN = 'Aftensmad';
+export const AFTENSMAD_GRUPPER = ['pasta-og-nudler', 'kylling', 'fisk', 'koed', 'groent'];
+export function gruppeSoegeord(id) {
+  if (AFTENSMAD_GRUPPER.includes(id)) return AFTENSMAD_NAVN;
+  return id === 'broed-og-pizza' ? 'Bagning' : null;
+}
 
 // Grafikken. Pladsholderne er SVG; skiftes de til PNG i fase 2, rettes det kun her.
 export const GRAFIK_MAPPE = 'grafik/';
@@ -193,7 +251,9 @@ export const grafikVerbum = (id) => GRAFIK_MAPPE + 'verbum-' + id + GRAFIK_ENDEL
 export const grafikIngrediens = (id) => GRAFIK_MAPPE + 'ing-' + id + GRAFIK_ENDELSE;
 export const grafikDyr = (navn) => GRAFIK_MAPPE + 'dyr-' + navn + GRAFIK_ENDELSE;
 export const grafikRet = (id) => GRAFIK_MAPPE + 'ret-' + id + GRAFIK_RET_ENDELSE;
-export const grafikGruppe = (id) => GRAFIK_MAPPE + 'gruppe-' + id + GRAFIK_ENDELSE;
+// Fire af knapperne genbruger ingrediensernes tegning. De andre har grafik/gruppe-<id>.svg (også chippen «Aftensmad»)
+const GRUPPE_BILLEDE = { 'pasta-og-nudler': 'ing-spaghetti', 'koed': 'ing-koed', 'groent': 'ing-broccoli', 'broed-og-pizza': 'ing-broed' };
+export const grafikGruppe = (id) => GRAFIK_MAPPE + (Object.hasOwn(GRUPPE_BILLEDE, id) ? GRUPPE_BILLEDE[id] : 'gruppe-' + id) + GRAFIK_ENDELSE;
 export const GRAFIK_FAERDIG = GRAFIK_MAPPE + 'faerdig' + GRAFIK_ENDELSE;
 
 // Højst så mange ord i en trin-tekst («højst ca. 8 ord»; 9 giver plads til «ca.»).

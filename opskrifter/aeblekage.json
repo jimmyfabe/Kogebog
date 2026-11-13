@@ -1,0 +1,50 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Dansk æblekage",
+  "description": "Den danske dessert med æblemos, sprød ristet rasp og flødeskum i lag. Der skal ingen ovn til, og den voksne rister raspen på panden.",
+  "image": "grafik/ret-aeblekage.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 store glas",
+  "prepTime": "PT20M",
+  "cookTime": "PT10M",
+  "totalTime": "PT45M",
+  "recipeIngredient": [
+    "75 g smør",
+    "2,5 dl rasp",
+    "1 dl sukker",
+    "2,5 dl piskefløde",
+    "5 dl færdig æblemos",
+    "2 spsk ribsgelé"
+  ],
+  "tool": ["pande", "grydeske", "bagepapir", "dl-mål", "stor skål", "elpisker eller piskeris", "ske", "4 store glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Der skal ingen ovn til, kun panden. Retten indeholder gluten og mælk." } },
+    { "@type": "HowToStep", "text": "Smelt smørret på en pande.", "tumbi": { "verbum": "smelte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["smoer"], "note": "75 g ved middel varme." } },
+    { "@type": "HowToStep", "text": "Hæld rasp og sukker på panden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["rasp", "sukker"], "note": "2,5 dl rasp og 1 dl sukker. Den voksne hælder." } },
+    { "@type": "HowToStep", "text": "Rist raspen gylden i 5 minutter.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "ikoner": ["rasp"], "note": "Rør hele tiden: sukkeret brænder let på." } },
+    { "@type": "HowToStep", "text": "Hæld raspen ud på bagepapir.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["rasp"], "note": "Bred den ud. Den er meget varm." } },
+    { "@type": "HowToStep", "text": "Lad raspen køle af i 15 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 900, "note": "Så bliver den kold og sprød." } },
+    { "@type": "HowToStep", "text": "Pisk fløden til skum.", "tumbi": { "verbum": "piske", "ikoner": ["flode"], "note": "2,5 dl piskefløde i en stor skål. Med en elpisker hjælper den voksne lidt." } },
+    { "@type": "HowToStep", "text": "Kom lidt rasp i hvert glas.", "tumbi": { "verbum": "haelde", "ikoner": ["rasp"], "note": "Brug kun halvdelen af raspen nu." } },
+    { "@type": "HowToStep", "text": "Kom æblemos ovenpå.", "tumbi": { "verbum": "haelde", "ikoner": ["aeble"], "note": "Brug kun halvdelen af æblemosen nu." } },
+    { "@type": "HowToStep", "text": "Kom flødeskum ovenpå.", "tumbi": { "verbum": "haelde", "ikoner": ["flode"], "note": "Brug kun halvdelen af flødeskummet nu." } },
+    { "@type": "HowToStep", "text": "Lav et lag mere af det samme.", "tumbi": { "verbum": "haelde", "ikoner": ["rasp", "aeble", "flode"], "note": "Rasp, æblemos og flødeskum, til det hele er brugt." } },
+    { "@type": "HowToStep", "text": "Pynt med en klat ribsgelé.", "tumbi": { "verbum": "pynte", "ikoner": ["syltetoej"], "note": "En lille klat på toppen af hvert glas." } },
+    { "@type": "HowToStep", "text": "Smag æblekagen!", "tumbi": { "verbum": "smage", "note": "Den er bedst med det samme, mens raspen er sprød." } }
+  ],
+  "tumbi": {
+    "id": "aeblekage",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Mængden af smør, rasp og sukker svarer til appens Gammeldags æblekage i glas, omregnet til dl, og resten er et skøn (ikke målt). Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "smoer", "maengde": "75 g" },
+      { "ikon": "rasp", "maengde": "2,5 dl" },
+      { "ikon": "sukker", "maengde": "1 dl" },
+      { "ikon": "flode", "maengde": "2,5 dl" },
+      { "ikon": "aeble", "maengde": "5 dl" },
+      { "ikon": "syltetoej", "maengde": "2 spsk" }
+    ]
+  }
+}

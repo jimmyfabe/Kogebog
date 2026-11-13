@@ -1,0 +1,46 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Lyserød limonade",
+  "description": "Sur, sød og lyserød limonade af citroner og hindbær. Sukkerlagen laves helt uden varme: barnet rører selv, til sukkeret er væk.",
+  "image": "grafik/ret-lyseroed-limonade.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 glas",
+  "prepTime": "PT15M",
+  "totalTime": "PT15M",
+  "recipeIngredient": [
+    "2 citroner",
+    "1 dl sukker",
+    "125 g friske hindbær",
+    "6 dl koldt vand",
+    "8 isterninger"
+  ],
+  "tool": ["skærebræt", "kniv", "citronpresser (kan undværes)", "stor kande", "målebæger", "lang ske", "skål", "gaffel", "si", "ske", "4 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Skyl citroner og hindbær. Brug friske bær: frosne bær skal koges, før de spises kolde. Vandet skal være helt koldt fra hanen, så lad det løbe lidt. Isterningerne skal være lavet i forvejen, ellers springer I dem over." } },
+    { "@type": "HowToStep", "text": "Skær citronerne over.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["citron"], "note": "Over på midten." } },
+    { "@type": "HowToStep", "text": "Klem citronerne ud i en stor kande.", "tumbi": { "verbum": "klemme", "ikoner": ["citron"], "note": "Alle fire halvdele, med hænderne eller en citronpresser. Fisk kernerne op." } },
+    { "@type": "HowToStep", "text": "Hæld sukkeret i citronsaften.", "tumbi": { "verbum": "haelde", "ikoner": ["sukker"], "note": "1 dl." } },
+    { "@type": "HowToStep", "text": "Rør i 2 minutter, til sukkeret er væk.", "tumbi": { "verbum": "roere", "timer_sek": 120, "ikoner": ["sukker", "citron"], "note": "Det er sukkerlagen, og den er lavet uden varme. Rør helt nede i bunden med en lang ske. Lidt sukker, der bliver tilbage, går væk, når vandet kommer i." } },
+    { "@type": "HowToStep", "text": "Mos hindbærrene i en skål med en gaffel.", "tumbi": { "verbum": "mose", "ikoner": ["baer"], "note": "125 g, det er en lille bakke." } },
+    { "@type": "HowToStep", "text": "Hæld mosen gennem en si ned i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["baer"], "note": "Tryk mosen igennem med bagsiden af en ske. Kernerne bliver i sien." } },
+    { "@type": "HowToStep", "text": "Hæld det kolde vand i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["vand"], "note": "6 dl." } },
+    { "@type": "HowToStep", "text": "Rør limonaden godt rundt.", "tumbi": { "verbum": "roere" } },
+    { "@type": "HowToStep", "text": "Læg to isterninger i hvert glas.", "tumbi": { "verbum": "pynte", "ikoner": ["isterninger"] } },
+    { "@type": "HowToStep", "text": "Hæld limonaden i glassene.", "tumbi": { "verbum": "haelde" } },
+    { "@type": "HowToStep", "text": "Smag den lyserøde limonade!", "tumbi": { "verbum": "smage", "note": "For surt? Så rør lidt mere sukker i. For sødt? Så lidt mere koldt vand." } }
+  ],
+  "tumbi": {
+    "id": "lyseroed-limonade",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til: mængder og tider er et skøn. Sukkeret røres ud i citronsaften, så der ikke skal bruges varme. Bærrene er friske, fordi Fødevarestyrelsen råder til at koge frosne bær, før de spises kolde. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "citron", "maengde": "2" },
+      { "ikon": "sukker", "maengde": "1 dl" },
+      { "ikon": "baer", "maengde": "125 g" },
+      { "ikon": "vand", "maengde": "6 dl" },
+      { "ikon": "isterninger", "maengde": "8" }
+    ]
+  }
+}

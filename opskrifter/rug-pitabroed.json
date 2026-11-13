@@ -1,0 +1,55 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Små rug-pitabrød",
+  "description": "Små, flade brød med rugmel, der puster sig op i en meget varm ovn. Skær en lomme i kanten, og fyld dem med det, barnet kan lide.",
+  "image": "grafik/ret-rug-pitabroed.webp",
+  "inLanguage": "da",
+  "recipeYield": "8 pitabrød",
+  "prepTime": "PT30M",
+  "cookTime": "PT10M",
+  "totalTime": "PT1H45M",
+  "recipeIngredient": [
+    "15 g gær",
+    "2½ dl lunkent vand",
+    "1 tsk salt",
+    "1 spsk olie",
+    "100 g rugmel",
+    "ca. 250 g hvedemel"
+  ],
+  "tool": ["skål", "dl-mål", "køkkenvægt", "grydeske", "viskestykke", "kagerulle", "2 bageplader", "bagepapir", "grydelapper", "fryseposer"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Smuldr gæren ned i en skål.", "tumbi": { "verbum": "smuldre", "ikoner": ["gaer"], "note": "15 g gær er lidt under en tredjedel af en pakke." } },
+    { "@type": "HowToStep", "text": "Hæld det lunkne vand over, og rør.", "tumbi": { "verbum": "roere", "ikoner": ["vand", "gaer"], "note": "2½ dl. Rør, til gæren er opløst." } },
+    { "@type": "HowToStep", "text": "Hæld salt, olie og rugmel i.", "tumbi": { "verbum": "haelde", "ikoner": ["salt", "olie", "mel"], "note": "1 tsk salt, 1 spsk olie og 100 g rugmel." } },
+    { "@type": "HowToStep", "text": "Rør hvedemelet i lidt ad gangen.", "tumbi": { "verbum": "roere", "ikoner": ["mel"], "note": "Ca. 250 g, til dejen slipper skålen." } },
+    { "@type": "HowToStep", "text": "Ælt dejen i 5 minutter.", "tumbi": { "verbum": "aelte", "timer_sek": 300, "note": "Med lidt mel på bordet, til dejen er glat." } },
+    { "@type": "HowToStep", "text": "Lad dejen hæve i 45 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 2700, "note": "Under et viskestykke. Den voksne tænder ovnen på 250 °C til sidst og sætter en tom bageplade ind, så den bliver meget varm." } },
+    { "@type": "HowToStep", "text": "Del dejen i 8 kugler.", "tumbi": { "verbum": "forme", "note": "Rul dem runde mellem hænderne." } },
+    { "@type": "HowToStep", "text": "Rul kuglerne ud til flade brød.", "tumbi": { "verbum": "kagerulle", "ikoner": ["mel"], "note": "Ca. ½ cm tykke og på størrelse med en barnehånd. Læg dem på bagepapir." } },
+    { "@type": "HowToStep", "text": "Lad brødene hvile i 10 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Under viskestykket." } },
+    { "@type": "HowToStep", "text": "Bag brødene på den varme plade.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 360, "note": "Den voksne trækker bagepapiret med brødene over på den varme plade. Ca. 6 min, til de har pustet sig op." } },
+    { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme", "note": "Pladen er meget varm." } },
+    { "@type": "HowToStep", "text": "Lad brødene køle under et viskestykke.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Så bliver de bløde. De kan fryses. Fyld dem fx med kødfyldet fra tortilla-rullerne eller med ost og grønt." } },
+    { "@type": "HowToStep", "text": "Smag et pitabrød.", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "rug-pitabroed",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Idé fra bogen «Sund & Glad skolestart». Egen tekst og egne mængder. Tiden er et skøn (ikke målt).",
+    "pris_kr": 6,
+    "pris_dato": "2026-11",
+    "groent_g": 0,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, nov. 2026: Rema 1000's hyldepriser 09-11-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Grønt er også et skøn (ikke målt) og er uden bælgfrugter, kartofler og frugt.",
+    "ingredienser": [
+      { "ikon": "gaer", "maengde": "15 g" },
+      { "ikon": "vand", "maengde": "2½ dl" },
+      { "ikon": "salt", "maengde": "1 tsk" },
+      { "ikon": "olie", "maengde": "1 spsk" },
+      { "ikon": "mel", "maengde": "100 g" },
+      { "ikon": "mel", "maengde": "ca. 250 g" }
+    ]
+  }
+}

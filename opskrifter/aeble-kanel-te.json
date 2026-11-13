@@ -1,0 +1,46 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Æble-kanel-te",
+  "description": "Lun te uden koffein med æblemost, æblebåde og lidt kanel. Hele køkkenet dufter af æble, mens den trækker.",
+  "image": "grafik/ret-aeble-kanel-te.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 kopper",
+  "prepTime": "PT5M",
+  "cookTime": "PT10M",
+  "totalTime": "PT25M",
+  "recipeIngredient": [
+    "1 æble",
+    "5 dl vand",
+    "½ tsk stødt kanel",
+    "2 teposer rooibos eller frugt-te uden sort og grøn te",
+    "3 dl kold æblemost"
+  ],
+  "tool": ["kniv og skærebræt", "gryde", "målebæger", "teske", "ske", "4 kopper med hank"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Rooibos er uden koffein. Læs på pakken, at frugt-teen er uden sort og grøn te, så der ikke er koffein i. Skyl æblet. Æblemosten skal være kold fra køleskabet: den køler teen ned til sidst." } },
+    { "@type": "HowToStep", "text": "Skær æblet i tynde både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["aeble"], "note": "1 æble. Skrællen må gerne blive på. Fjern kernehuset." } },
+    { "@type": "HowToStep", "text": "Hæld vandet i gryden.", "tumbi": { "verbum": "haelde", "ikoner": ["vand"], "note": "5 dl. Gryden er kold endnu, så barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Kom æblebådene og kanelen i gryden.", "tumbi": { "verbum": "haelde", "ikoner": ["aeble", "krydderi"], "note": "½ tsk stødt kanel. Kun lidt: ikke mere til 4 kopper." } },
+    { "@type": "HowToStep", "text": "Kog det op, og lad det simre 5 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "ikoner": ["aeble"], "note": "Start timeren, når det koger, og skru ned, så det kun lige simrer." } },
+    { "@type": "HowToStep", "text": "Læg teposerne i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["rooibos"], "note": "2 teposer. Tag gryden af varmen først. Den voksne lægger dem i: gryden er varm." } },
+    { "@type": "HowToStep", "text": "Lad teen trække i 5 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 300, "ikoner": ["rooibos"], "note": "Stil gryden, hvor barnet ikke kan nå den." } },
+    { "@type": "HowToStep", "text": "Tag teposerne op, og hæld æblemosten i.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["aeble"], "note": "3 dl kold æblemost. Den gør teen sødere og køler den ned." } },
+    { "@type": "HowToStep", "text": "Hæld teen i kopperne.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne hælder: teen er stadig varm. Æblebådene må gerne komme med." } },
+    { "@type": "HowToStep", "text": "Vent, til teen er lun.", "tumbi": { "verbum": "vente", "timer_sek": 300, "note": "Kopperne bliver hos den voksne. Barnet får først teen, når den er lun. Mærk efter først, og vent lidt længere, hvis den stadig er varm. Mærk også på en æblebåd." } },
+    { "@type": "HowToStep", "text": "Smag æble-kanel-teen!", "tumbi": { "verbum": "smage", "note": "Æblebådene kan spises med en ske." } }
+  ],
+  "tumbi": {
+    "id": "aeble-kanel-te",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdet mellem vand, most, te og kanel er et skøn, og tiden er ikke målt. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "aeble", "maengde": "1" },
+      { "ikon": "vand", "maengde": "5 dl" },
+      { "ikon": "krydderi", "maengde": "½ tsk" },
+      { "ikon": "rooibos", "maengde": "2" },
+      { "ikon": "aeble", "maengde": "3 dl" }
+    ]
+  }
+}

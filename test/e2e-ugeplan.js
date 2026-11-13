@@ -496,23 +496,15 @@ const sesHelt = (side, sel) => side.waitForFunction((s) => {
   return { ok, r };
 });
 
-// Linjer med led delt af « · » (metalinjen under retten, summen): leddene, der er brudt over to linjer, og led, hvor
-// prikken er røget ned forrest på næste linje (UI-review V5 og V6, 23-10). sel: elementerne, der måles
+// Linjer med led delt af « · » (metalinjen under retten, summen): leddene, der er brudt over to linjer (UI-review V5 og
+// V6, 23-10). At prikken ikke står ved linjens kant, måler test/e2e-skaermfund.js (fund 7). sel: elementerne, der måles.
+// En tekst med prik uden led (<span class="led">) meldes også, så tjekket ikke bliver tomt i stilhed
 const brudteLed = (side, sel) => side.evaluate((s) => {
   const delt = [];
   for (const e of document.querySelectorAll(s)) {
-    const t = e.firstChild;
-    if (!t || t.nodeType !== 3 || !t.data.includes('·')) continue;
-    for (let start = 0; start < t.data.length;) {
-      const prik = t.data.indexOf('·', start);
-      const slut = prik === -1 ? t.data.length : prik + 1;
-      let a = start;
-      while (a < slut && /\s/.test(t.data[a])) a++;
-      const r = document.createRange();
-      r.setStart(t, a);
-      r.setEnd(t, slut);
-      if (new Set([...r.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top))).size > 1) delt.push(t.data.slice(a, slut));
-      start = slut;
+    if (e.textContent.includes('·') && !e.querySelector('.led')) delt.push('uden led: ' + e.textContent);
+    for (const led of e.querySelectorAll('.led')) {
+      if (new Set([...led.getClientRects()].filter((x) => x.width > 0).map((x) => Math.round(x.top))).size > 1) delt.push(led.textContent);
     }
   }
   return delt;
@@ -796,7 +788,7 @@ async function mereGroentLinje(browser, H) {
   const ORD = 'mere grønt';
   const { ctx, side } = await nySide(browser, skaerm, { serviceWorkers: 'block' });
   await side.goto(BASE + '/index.html');
-  await side.waitForSelector('.kort[data-ret]');
+  await side.waitForSelector('.gruppe-knap');
   const dage = [medGroent[0], uden, null, null, null, null, null].map((ret) => (ret ? { ret, af: 'bo', n: 4 } : null));
   await side.evaluate(([uge, d]) => localStorage.setItem('kog-uge-v1', JSON.stringify({ v: 1, uge, dage: d, n: 4, prBarn: 1, rettet: null })), [planMandag(new Date()), dage]);
   for (const til of [true, false]) {

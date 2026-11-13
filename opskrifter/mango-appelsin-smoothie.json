@@ -1,0 +1,35 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Mango-appelsin-smoothie",
+  "description": "Gul som solen: moden mango og appelsinjuice, blendet til en blød og sød smoothie.",
+  "image": "grafik/ret-mango-appelsin-smoothie.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 3 glas",
+  "prepTime": "PT10M",
+  "totalTime": "PT10M",
+  "recipeIngredient": [
+    "1 moden mango",
+    "2½ dl appelsinjuice (kold)"
+  ],
+  "tool": ["kniv og skærebræt", "målebæger", "blender", "3 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Mangoen er moden, når den giver lidt efter, når man trykker. Stil den og juicen på køl i forvejen, så smoothien bliver kold." } },
+    { "@type": "HowToStep", "text": "Skær mangoen i stykker.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["mango"], "note": "Skræl den, og skær frugten fra den store, flade sten. Den er glat, så hold godt fast." } },
+    { "@type": "HowToStep", "text": "Kom mangoen i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["mango"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
+    { "@type": "HowToStep", "text": "Hæld 2½ dl juice i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["appelsin"] } },
+    { "@type": "HowToStep", "text": "Blend, til smoothien er gul og glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["mango", "appelsin"], "note": "Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Hæld smoothien i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Smag den gule smoothie!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "mango-appelsin-smoothie",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdene og tiden er et skøn (ikke målt). Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "mango", "maengde": "1" },
+      { "ikon": "appelsin", "maengde": "2½ dl" }
+    ]
+  }
+}

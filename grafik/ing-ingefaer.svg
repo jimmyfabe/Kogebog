@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<g id="root">
+    <path fill="#E8C79A" d="M36 132 C28 108 46 88 70 96 C72 70 98 54 120 70 C130 48 164 44 176 68 C196 60 224 74 218 102 C240 112 238 146 214 150 C208 176 178 184 160 168 C146 188 112 190 102 170 C80 182 44 164 36 132 Z"/>
+    <path fill="#CFA976" stroke="none" d="M214 150 C208 176 178 184 160 168 C146 188 112 190 102 170 C80 182 44 164 38 138 C60 156 84 158 104 148 C118 166 146 164 160 146 C176 158 204 154 214 150 Z"/>
+    <path fill="none" stroke="#9A6A44" d="M64 124 Q76 116 88 124 M112 96 Q124 88 136 96 M160 104 Q174 96 188 104 M126 134 Q138 128 150 134"/>
+    <path fill="none" stroke="#F4E0BF" stroke-width="6" d="M84 88 C92 78 104 72 114 74 M136 62 C146 58 156 58 164 62"/>
+    <path fill="none" d="M36 132 C28 108 46 88 70 96 C72 70 98 54 120 70 C130 48 164 44 176 68 C196 60 224 74 218 102 C240 112 238 146 214 150 C208 176 178 184 160 168 C146 188 112 190 102 170 C80 182 44 164 36 132 Z"/>
+  </g>
+  <g id="slice" transform="translate(188 202)">
+    <ellipse rx="40" ry="32" fill="#E8C79A"/>
+    <ellipse rx="33" ry="25" fill="#FBE6A6" stroke="none"/>
+    <path fill="none" stroke="#E3C168" stroke-width="3" d="M-20 -8 Q0 -14 20 -8 M-22 6 Q0 0 22 6 M-12 16 Q0 12 12 16"/>
+    <ellipse rx="40" ry="32" fill="none"/>
+  </g>
+</g>
+</svg>

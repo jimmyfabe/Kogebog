@@ -1,0 +1,45 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Hindbær-havre-smoothie",
+  "description": "Lyserød og blød med friske hindbær og havregryn. Der er små kerner i fra bærrene, og det skal der være.",
+  "image": "grafik/ret-hindbaer-havre-smoothie.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 3 glas",
+  "prepTime": "PT15M",
+  "totalTime": "PT15M",
+  "recipeIngredient": [
+    "3 spsk havregryn",
+    "3 dl mælk (kold)",
+    "125 g friske hindbær",
+    "1 moden banan",
+    "2 tsk honning"
+  ],
+  "tool": ["spiseske", "teske", "målebæger", "si", "blender", "3 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk og havre. 125 g hindbær er en lille bakke. Brug friske bær: frosne bær skal koges først. Honning er ikke til børn under 1 år, så små søskende skal have noget andet." } },
+    { "@type": "HowToStep", "text": "Mål 3 spsk havregryn i kanden.", "tumbi": { "verbum": "maale", "ikoner": ["havregryn"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
+    { "@type": "HowToStep", "text": "Hæld 3 dl mælk i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk"] } },
+    { "@type": "HowToStep", "text": "Lad havren trække i 5 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 300, "note": "Så bliver havren blød, og smoothien bliver glat." } },
+    { "@type": "HowToStep", "text": "Skyl hindbærrene forsigtigt i en si.", "tumbi": { "verbum": "haelde", "ikoner": ["baer"] } },
+    { "@type": "HowToStep", "text": "Pil bananen, og knæk den i stykker.", "tumbi": { "verbum": "pille", "ikoner": ["banan"] } },
+    { "@type": "HowToStep", "text": "Kom hindbær og banan i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["baer", "banan"] } },
+    { "@type": "HowToStep", "text": "Kom 2 tsk honning i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["honning"] } },
+    { "@type": "HowToStep", "text": "Blend, til det er lyserødt og glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["baer", "havregryn"], "note": "Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Hæld smoothien i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Smag, og find de små kerner!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "hindbaer-havre-smoothie",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdene og tiden er et skøn (ikke målt). Bærrene er friske, fordi Fødevarestyrelsen råder til at koge frosne bær, før de spises kolde. Rådet om honning til børn under 1 år er ikke slået efter i en kilde. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "havregryn", "maengde": "3 spsk" },
+      { "ikon": "maelk", "maengde": "3 dl" },
+      { "ikon": "baer", "maengde": "125 g" },
+      { "ikon": "banan", "maengde": "1" },
+      { "ikon": "honning", "maengde": "2 tsk" }
+    ]
+  }
+}

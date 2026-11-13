@@ -194,17 +194,60 @@ test('tage-ud, tage-ud-form og si kræver en voksen for varmens skyld; kagerulle
 });
 
 // De fire verber til jule-retterne (01-11-2026). «smelte» er altid den voksnes (skålen over den varme gryde); udstikkeren,
-// at forme og at pille kan barnet, og hjælper den voksne, er det for varmens skyld
-test('smelte kræver en voksen for varmens skyld; stikke-ud, forme og pille kan barnet', () => {
+// at forme og at pille kan barnet, og hjælper den voksne, er det for varmens skyld. Det samme gælder ryste, klemme og dyppe
+// (05-11-2026): kniven hører ikke til dem
+test('smelte kræver en voksen for varmens skyld; stikke-ud, forme, pille, ryste, klemme og dyppe kan barnet', () => {
   forventFejl('opskrifter/koedsovs.json', (d) => { const st = d.recipeInstructions[2].tumbi; st.verbum = 'smelte'; delete st.voksen; delete st.voksen_hjaelp; },
     'trin 3: verbet «smelte» skal have "voksen": true og "voksen_hjaelp": "varme"');
   forventFejl('opskrifter/koedsovs.json', (d) => { Object.assign(d.recipeInstructions[2].tumbi, { verbum: 'smelte', voksen: true, voksen_hjaelp: 'kniv' }); },
     'trin 3: verbet «smelte» skal have "voksen": true og "voksen_hjaelp": "varme"');
-  for (const v of ['stikke-ud', 'forme', 'pille']) {
+  for (const v of ['stikke-ud', 'forme', 'pille', 'ryste', 'klemme', 'dyppe']) {
     forventGyldig('opskrifter/boller.json', (d) => { const st = d.recipeInstructions[10].tumbi; st.verbum = v; delete st.voksen; delete st.voksen_hjaelp; });
     forventFejl('opskrifter/boller.json', (d) => { Object.assign(d.recipeInstructions[10].tumbi, { verbum: v, voksen: true, voksen_hjaelp: 'kniv' }); },
       'trin 11: verbet «' + v + '» kan barnet selv');
   }
+});
+
+// «blende» (05-11-2026): blenderen har knive, så trinnet er altid den voksnes, også når alt i kanden er koldt
+test('blende kræver en voksen for knivens skyld', () => {
+  const krav = 'trin 3: verbet «blende» skal have "voksen": true og "voksen_hjaelp": "kniv"';
+  forventFejl('opskrifter/koedsovs.json', (d) => { const st = d.recipeInstructions[2].tumbi; st.verbum = 'blende'; delete st.voksen; delete st.voksen_hjaelp; }, krav);
+  forventFejl('opskrifter/koedsovs.json', (d) => { Object.assign(d.recipeInstructions[2].tumbi, { verbum: 'blende', voksen: true, voksen_hjaelp: 'varme' }); }, krav);
+  forventGyldig('opskrifter/koedsovs.json', (d) => { Object.assign(d.recipeInstructions[2].tumbi, { verbum: 'blende', voksen: true, voksen_hjaelp: 'kniv' }); });
+});
+
+// Ordvagten ser blenderen i alle bøjninger og inde i ord, uanset hvilket verbum trinnet har
+test('trinteksten om blenderen kræver et voksen-trin med kniv-hjælp', () => {
+  const tekst = (t) => (d) => { d.recipeInstructions[2].text = t; };
+  forventFejl('opskrifter/pandekager.json', tekst('Tænd blenderen.'), 'trin 3: teksten nævner «blenderen»');
+  forventFejl('opskrifter/pandekager.json', tekst('Blend det hele.'), 'trin 3: teksten nævner «Blend»');
+  forventFejl('opskrifter/pandekager.json', tekst('Lad den voksne blende.'), 'trin 3: teksten nævner «blende»');
+  forventFejl('opskrifter/pandekager.json', tekst('Brug stavblenderen.'), 'trin 3: teksten nævner «stavblenderen»');
+  // Blenderens andre navne
+  forventFejl('opskrifter/pandekager.json', tekst('Kør det glat i mixeren.'), 'trin 3: teksten nævner «mixeren»');
+  forventFejl('opskrifter/pandekager.json', tekst('Mix det hele glat.'), 'trin 3: teksten nævner «Mix»');
+  forventFejl('opskrifter/pandekager.json', tekst('Miks det hele.'), 'trin 3: teksten nævner «Miks»');
+  forventFejl('opskrifter/pandekager.json', tekst('Purér bananen.'), 'trin 3: teksten nævner «Purér»');
+  forventFejl('opskrifter/pandekager.json', tekst('Kør det i foodprocessoren.'), 'trin 3: teksten nævner «foodprocessoren»');
+  forventFejl('opskrifter/pandekager.json', (d) => {
+    d.recipeInstructions[2].text = 'Tænd blenderen.';
+    Object.assign(d.recipeInstructions[2].tumbi, { voksen: true, voksen_hjaelp: 'varme' });
+  }, 'trin 3: teksten nævner «blenderen» (kniv, rivejern eller blender), så «voksen_hjaelp» skal være "kniv", fandt "varme"');
+  forventGyldig('opskrifter/pandekager.json', (d) => {
+    d.recipeInstructions[2].text = 'Tænd blenderen.';
+    Object.assign(d.recipeInstructions[2].tumbi, { voksen: true, voksen_hjaelp: 'kniv' });
+  });
+  // De to ældre trin i en kogende gryde (VARM_STAVBLENDER) beholder "varme", men de er stadig den voksnes, og undtagelsen
+  // gælder kun i de to retter
+  forventFejl('opskrifter/groen-porre-kartoffelsuppe-med-bacondrys.json', (d) => { const st = d.recipeInstructions[12].tumbi; delete st.voksen; delete st.voksen_hjaelp; },
+    'trin 13: teksten nævner «Blend»');
+  // Fejlbeskeden siger det samme som kravet: faren i gryden er varmen
+  forventFejl('opskrifter/groen-porre-kartoffelsuppe-med-bacondrys.json', (d) => { d.recipeInstructions[12].tumbi.voksen_hjaelp = 'kniv'; },
+    'trin 13: teksten nævner «Blend» (varme), så «voksen_hjaelp» skal være "varme", fandt "kniv"');
+  forventFejl('opskrifter/pandekager.json', (d) => {
+    d.recipeInstructions[2].text = 'Blend suppen glat med stavblenderen.';
+    Object.assign(d.recipeInstructions[2].tumbi, { voksen: true, voksen_hjaelp: 'varme' });
+  }, 'trin 3: teksten nævner «Blend» (kniv, rivejern eller blender), så «voksen_hjaelp» skal være "kniv", fandt "varme"');
 });
 
 // Trinene, der fik de nye verber. Tunfrikadellernes «Hæld vandet fra tunen.» beholder «haelde»: si-billedet viser
@@ -232,7 +275,8 @@ test('trinene med de nye verber', () => {
 });
 
 // Ordvagten: nævner trinteksten kniv, rivejern eller varme, er det et voksen-trin, uanset hvilket verbum trinnet har fået.
-// Den går efter stammen (riv, hak, skær, skræl, kniv, bag, steg, kog, smelt, komfur, ovn) og fanger alle bøjninger.
+// Den går efter stammen (riv, hak, skær, skræl, purér, kniv, blend, mix, miks, foodprocessor, bag, steg, kog, smelt, komfur,
+// ovn, damp) og fanger alle bøjninger.
 // Ordene, der ikke er kniv eller varme, står i UNDTAGELSER i test-opskrifter.js
 test('trinteksten om kniv eller varme kræver et voksen-trin', () => {
   const tekst = (t) => (d) => { d.recipeInstructions[2].text = t; };
@@ -252,6 +296,9 @@ test('trinteksten om kniv eller varme kræver et voksen-trin', () => {
   forventFejl('opskrifter/pandekager.json', tekst('Lad sovsen småkoge.'), 'trin 3: teksten nævner «småkoge»');
   forventFejl('opskrifter/pandekager.json', tekst('Brug brødkniven.'), 'trin 3: teksten nævner «brødkniven»');
   forventFejl('opskrifter/pandekager.json', tekst('Stil den i bageovnen.'), 'trin 3: teksten nævner «bageovnen»');
+  // «Varm» som bydeform forrest, og damp fra det varme
+  forventFejl('opskrifter/pandekager.json', tekst('Varm mælken i gryden.'), 'trin 3: teksten nævner «Varm»');
+  forventFejl('opskrifter/pandekager.json', tekst('Hæld kakaoen i kopperne, mens den damper.'), 'trin 3: teksten nævner «damper»');
   // Undtagelserne: redskabet i sig selv (bagepapir, rivejern, kogebog, skærebræt, smørekniv), et mål (knivspids),
   // tid (bagefter), det, der allerede er hakket, og «ovn» inde i et andet ord (hovne)
   forventGyldig('opskrifter/pandekager.json', tekst('Læg bagepapir ved rivejernet.'));
@@ -261,6 +308,7 @@ test('trinteksten om kniv eller varme kræver et voksen-trin', () => {
   forventGyldig('opskrifter/pandekager.json', tekst('Smør med smørekniven.'));
   forventGyldig('opskrifter/pandekager.json', tekst('Kom de hakkede tomater i.'));
   forventGyldig('opskrifter/pandekager.json', tekst('Vask hænderne bagefter.'));
+  forventGyldig('opskrifter/pandekager.json', tekst('Lad kartoflerne dampe af i 2 minutter.'));
   // «bag» som forholdsord kan ikke skelnes fra «og bag dem» (hvidløgsflutes trin 10): et falsk fund med vilje. Skriv «bagved»
   forventFejl('opskrifter/pandekager.json', tekst('Stil skålen bag gryden.'), 'trin 3: teksten nævner «bag»');
   forventGyldig('opskrifter/pandekager.json', tekst('Stil skålen bagved gryden.'));
@@ -271,6 +319,10 @@ test('trinteksten om kniv eller varme kræver et voksen-trin', () => {
   // Som voksen-trin er det i orden
   forventGyldig('opskrifter/pandekager.json', (d) => {
     d.recipeInstructions[2].text = 'Tænd ovnen.';
+    Object.assign(d.recipeInstructions[2].tumbi, { voksen: true, voksen_hjaelp: 'varme' });
+  });
+  forventGyldig('opskrifter/pandekager.json', (d) => {
+    d.recipeInstructions[2].text = 'Varm mælken i gryden.';
     Object.assign(d.recipeInstructions[2].tumbi, { voksen: true, voksen_hjaelp: 'varme' });
   });
   forventGyldig('opskrifter/pandekager.json', (d) => {
@@ -287,7 +339,7 @@ test('trinteksten om kniv eller varme kræver den rigtige voksen_hjaelp', () => 
     Object.assign(d.recipeInstructions[2].tumbi, { voksen: true, voksen_hjaelp });
   };
   forventFejl('opskrifter/pandekager.json', trin3('Tænd ovnen.', 'kniv'), 'trin 3: teksten nævner «ovnen» (varme), så «voksen_hjaelp» skal være "varme", fandt "kniv"');
-  forventFejl('opskrifter/pandekager.json', trin3('Hak melet fint.', 'varme'), 'trin 3: teksten nævner «Hak» (kniv eller rivejern), så «voksen_hjaelp» skal være "kniv", fandt "varme"');
+  forventFejl('opskrifter/pandekager.json', trin3('Hak melet fint.', 'varme'), 'trin 3: teksten nævner «Hak» (kniv, rivejern eller blender), så «voksen_hjaelp» skal være "kniv", fandt "varme"');
   for (const hjaelp of ['kniv', 'varme']) {
     forventFejl('opskrifter/pandekager.json', trin3('Hak smørret, og smelt det.', hjaelp),
       'trin 3: teksten nævner både «Hak» (kniv) og «smelt» (varme), men «voksen_hjaelp» kan kun være én af dem: del trinnet i to');
@@ -304,7 +356,7 @@ test('en pause, hvor der bages, kræver en voksen og varme', () => {
     s.tumbi.verbum = verbum;
     if (!voksen) { delete s.tumbi.voksen; delete s.tumbi.voksen_hjaelp; }
   };
-  forventFejl(fil, bager('vente', false), 'trin 13: teksten nævner «bage» (kniv, rivejern eller varme), så trinnet skal have "voksen": true');
+  forventFejl(fil, bager('vente', false), 'trin 13: teksten nævner «bage» (kniv, rivejern, blender eller varme), så trinnet skal have "voksen": true');
   forventGyldig(fil, bager('vente', true));
   forventGyldig(fil, bager('bage', true));
   forventFejl(fil, (d) => { bager('bage', true)(d); d.recipeInstructions.splice(13, 1); }, 'trin 13: når tiden i ovnen er gået, tager en voksen det ud');
@@ -384,18 +436,18 @@ test('id skal passe til filnavnet', () => {
 });
 
 test('index.json skal passe til filerne', () => {
-  forventFejl('opskrifter/index.json', (d) => { const g = gruppe(d, 'bagning'); g.retter = g.retter.filter((x) => x !== 'boller'); }, 'opskrifter/boller.json: står ikke i opskrifter/index.json');
-  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'aftensmad').retter.push('lasagne'); }, 'retten «lasagne» findes ikke');
-  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'bagning').retter.push('boller'); }, 'id «boller» står der to gange');
+  forventFejl('opskrifter/index.json', (d) => { const g = gruppe(d, 'broed-og-pizza'); g.retter = g.retter.filter((x) => x !== 'boller'); }, 'opskrifter/boller.json: står ikke i opskrifter/index.json');
+  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'koed').retter.push('lasagne'); }, 'retten «lasagne» findes ikke');
+  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'broed-og-pizza').retter.push('boller'); }, 'id «boller» står der to gange');
 });
 
-// Forsiden har tre afsnit (aftensmad, bagning, søde sager), og hver ret står i præcis én af dem
+// Forsiden har en knap pr. gruppe, og hver ret står i præcis én af dem
 test('hver ret står i præcis én kendt gruppe', () => {
-  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'soede-sager').retter.push('boller'); }, '«boller» står i to grupper (bagning og soede-sager)');
+  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'soede-sager').retter.push('boller'); }, '«boller» står i to grupper (broed-og-pizza og soede-sager)');
   forventFejl('opskrifter/index.json', (d) => { d.grupper[0].id = 'forretter'; }, 'ukendt gruppe «forretter»');
-  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'bagning').id = 'aftensmad'; }, 'gruppen «aftensmad» står der to gange');
-  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'bagning').retter = []; }, 'gruppen «bagning» skal have mindst én ret');
-  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'bagning').navn = 'Bagværk'; }, 'gruppen «bagning»: ukendt felt «navn»');
+  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'broed-og-pizza').id = 'koed'; }, 'gruppen «koed» står der to gange');
+  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'broed-og-pizza').retter = []; }, 'gruppen «broed-og-pizza» skal have mindst én ret');
+  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'broed-og-pizza').navn = 'Bagværk'; }, 'gruppen «broed-og-pizza»: ukendt felt «navn»');
   forventFejl('opskrifter/index.json', (d) => { d.version = 1; d.retter = d.grupper.flatMap((g) => g.retter); delete d.grupper; }, '«version» skal være 2');
   forventFejl('opskrifter/index.json', (d) => { delete d.grupper; }, '«grupper» skal være en liste med mindst én gruppe');
 });
@@ -681,11 +733,11 @@ test('portioner, pris, prisens måned og grønt har faste grænser', () => {
   forventFejl(KS, (d) => { d.tumbi.portioner = 0; }, '«tumbi.portioner» skal være et heltal fra 1 til 12');
 });
 
-test('en ret i ugeplanen tager højst en time og har højst to trin med kniv eller rivejern', () => {
+test('en ret i ugeplanen tager højst en time og har højst to trin med kniv, rivejern eller blender', () => {
   ugeplanFejl((d) => { d.totalTime = 'PT1H5M'; }, '«totalTime» er 65 min, men en ret i ugeplanen tager højst 60 min');
   // Kødsovsen har 2 (hak og riv). Et tredje er for meget i ugeplanen, men i orden uden den
   const tredje = (d) => d.recipeInstructions.splice(3, 0, { '@type': 'HowToStep', text: 'Skær løget i ringe.', tumbi: { verbum: 'skaere', voksen: true, voksen_hjaelp: 'kniv', ikoner: ['loeg'] } });
-  ugeplanFejl(tredje, 'en ret i ugeplanen har højst 2 trin med kniv eller rivejern (skånsomt for hænderne), fandt 3');
+  ugeplanFejl(tredje, 'en ret i ugeplanen har højst 2 trin med kniv, rivejern eller blender (skånsomt for hænderne), fandt 3');
   forventGyldig(KS, (d) => { udenUgeplan(d); tredje(d); });
   forventGyldig(KS, (d) => { udenUgeplan(d); d.totalTime = 'PT1H5M'; });
 });
@@ -758,11 +810,11 @@ test('manglende grafik for et verbum, en ret eller en gruppe', () => {
   try {
     fs.rmSync(path.join(m, 'grafik/verbum-aelte.svg'));
     fs.rmSync(path.join(m, 'grafik/ret-boller.webp'));
-    fs.rmSync(path.join(m, 'grafik/gruppe-bagning.svg'));
+    fs.rmSync(path.join(m, 'grafik/gruppe-kylling.svg'));
     const { fejl } = valider(m);
     assert.ok(fejl.includes('grafik/verbum-aelte.svg: billedet mangler (verbum «aelte»)'), fejl.join('\n'));
     assert.ok(fejl.includes('grafik/ret-boller.webp: billedet mangler (retten «boller»)'), fejl.join('\n'));
-    assert.ok(fejl.includes('grafik/gruppe-bagning.svg: billedet mangler (gruppen «bagning»)'), fejl.join('\n'));
+    assert.ok(fejl.includes('grafik/gruppe-kylling.svg: billedet mangler (gruppen «kylling»)'), fejl.join('\n'));
   } finally { ryd(m); }
 });
 

@@ -1,0 +1,37 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Sommer-smoothie",
+  "description": "Den smager af sommerferie: saftig vandmelon og friske jordbær, lyserød og tynd som en saft. Bedst om sommeren, når frugten er moden.",
+  "image": "grafik/ret-vandmelon-jordbaer-smoothie.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 3 glas",
+  "prepTime": "PT15M",
+  "totalTime": "PT15M",
+  "recipeIngredient": [
+    "400 g vandmelon uden skal",
+    "200 g friske jordbær"
+  ],
+  "tool": ["kniv og skærebræt", "si", "blender", "3 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Bedst om sommeren. Stil frugten på køl i forvejen, så smoothien bliver kold. 400 g vandmelon uden skal er en skive på størrelse med to hænder, og 200 g jordbær er ca. en lille halv bakke. Brug friske bær: frosne bær skal koges først." } },
+    { "@type": "HowToStep", "text": "Skær vandmelonen i stykker.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["vandmelon"], "note": "Skær skallen af, og skær melonen i tern." } },
+    { "@type": "HowToStep", "text": "Pil de store kerner af melonen.", "tumbi": { "verbum": "pille", "ikoner": ["vandmelon"], "note": "De store, sorte kerner. De små, hvide må gerne blive." } },
+    { "@type": "HowToStep", "text": "Skyl jordbærrene i en si.", "tumbi": { "verbum": "haelde", "ikoner": ["jordbaer"] } },
+    { "@type": "HowToStep", "text": "Pil de grønne blade af jordbærrene.", "tumbi": { "verbum": "pille", "ikoner": ["jordbaer"] } },
+    { "@type": "HowToStep", "text": "Kom melon og jordbær i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["vandmelon", "jordbaer"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
+    { "@type": "HowToStep", "text": "Blend, til det er lyserødt og glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["vandmelon", "jordbaer"], "note": "Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Hæld smoothien i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Smag sommeren!", "tumbi": { "verbum": "smage", "note": "Den skiller, når den står: rør rundt med en ske, eller drik den med det samme." } }
+  ],
+  "tumbi": {
+    "id": "vandmelon-jordbaer-smoothie",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdene og tiden er et skøn (ikke målt). Bærrene er friske, fordi Fødevarestyrelsen råder til at koge frosne bær, før de spises kolde. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "vandmelon", "maengde": "400 g" },
+      { "ikon": "jordbaer", "maengde": "200 g" }
+    ]
+  }
+}

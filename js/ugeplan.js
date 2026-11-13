@@ -9,7 +9,7 @@
 // Koden i linket kommer udefra. Den går kun gennem afkod() i js/plankode.js, og intet fra adressen kommer i DOM'en: fejlene
 // er faste tekster, og listen gemmes med den genskrevne kode. Lageret røres kun gennem js/lager.js, og al tekst sættes
 // som tekst (js/dom.js). app.js ejer ruterne og tilstanden (S) og giver sine hjælpere med init().
-import { el, ikon } from './dom.js';
+import { el, ikon, ledLinje } from './dom.js';
 import * as Lager from './lager.js';
 import { afkod, kod, kodeFraTekst, ukendtTekst, BESKED_UGYLDIG, BESKED_NYERE, BESKED_GAMMEL } from './plankode.js';
 import { saml, grupper, tekst as listeTekst, manglerTekst, holdSammen } from './indkoeb.js';
@@ -20,6 +20,7 @@ import { holdKnap } from './hold.js';
 import { maerkerFor, MAERKER } from './maerker.js';
 import { knivtrin } from './model.js';
 import { valgt as udgaveAf } from './groent.js';
+import { blandet } from './grupper.js';
 import * as Tale from './tale.js';
 import * as R from './replikker.js';
 
@@ -379,12 +380,12 @@ function listeSkaerm(liste) {
       const m = d && model(d.ret, r.mereGroent);
       if (!m || !m.uge) return null;
       // Retten åbnes i linkets udgave (med «/groen»), ikke telefonens egen: ellers viste retten alt kødet og ingen linser,
-      // mens listen havde linserne (code review kode-2)
-      return el('li', {}, el('a', { class: 'ret-link', href: '#/ret/' + m.id + (m.erGroen ? '/groen' : '') },
+      // mens listen havde linserne (code review kode-2). Rettens pil fører tilbage til listen
+      return el('li', {}, el('a', { class: 'ret-link', href: '#/ret/' + m.id + (m.erGroen ? '/groen' : ''), onclick: () => K.huskFra(m.id) },
         K.billede(grafikRet(m.id), '', 'ret-link-billede'),
         el('span', { class: 'vare-tekst' },
           el('span', { class: 'vare-navn', tekst: m.navn }),
-          el('span', { class: 'vare-maengde', tekst: DAGE[i] + ' ' + dagDato(r.uge, i) + ' · ' + d.n + ' pers.' }))));
+          ledLinje('span', { class: 'vare-maengde' }, [DAGE[i] + ' ' + dagDato(r.uge, i), d.n + ' pers.']))));
     }).filter(Boolean);
     if (!links.length) return null;
     return el('section', { class: 'afd', 'aria-labelledby': 'afd-retter' },
@@ -445,16 +446,17 @@ export function sorterValg(retter, { kniv = false, billig = false } = {}) {
 }
 
 // Tid, pris, grønt, kniv og «mere grønt» (derfor er prisen lavere) i én linje, som oversigten og valget viser dem. Hvert led
-// holdes sammen med hårde mellemrum, og prikken står sidst på linjen, så linjen kun brydes mellem leddene: før stod der
-// «268 g grønt pr. | person» og «· 2 knivtrin» alene (UI-review V5, 23-10)
-function metaTekst(m, n) {
-  return [
+// holdes sammen med hårde mellemrum, så linjen kun brydes mellem leddene: før stod der «268 g grønt pr. | person» og
+// «· 2 knivtrin» alene (UI-review V5, 23-10). Prikken skjules, hvor linjen brydes (ledLinje i js/dom.js)
+const SKILLE_HEL = '\u00a0· ';
+function metaLinje(m, n) {
+  return ledLinje('span', { class: 'dag-meta' }, [
     m.minutter ? minutterTekst(m.minutter) : '',
     'ca. ' + Math.round(prisFor(m, n)) + ' kr.',
     Math.round(m.uge.groentG / m.uge.portioner) + ' g grønt pr. person',
     knivTekst(m),
     m.erGroen ? 'mere grønt' : '',
-  ].filter(Boolean).map((led) => led.replace(/ /g, '\u00a0')).join('\u00a0· ');
+  ].filter(Boolean).map((led) => led.replace(/ /g, '\u00a0')), SKILLE_HEL);
 }
 
 // Planen, som skærmen viser den. Den læses med alle id'erne fra index.json, så en dag, hvis opskrift ikke kunne hentes,
@@ -524,9 +526,9 @@ function dagRaekke(p, d, i) {
   const lille = navn.toLowerCase();
   const hoved = el('div', { class: 'dag-hoved' }, el('span', { class: 'dag-navn', tekst: navn }),
     el('span', { class: 'dag-dato', tekst: dagDato(p.uge || planMandag(), i) }));
-  const li = (...born) => el('li', { class: 'dag' + (d ? '' : ' fri'), 'data-dag': String(i) }, hoved, ...born);
+  const li = (klasse, ...born) => el('li', { class: 'dag' + klasse, 'data-dag': String(i) }, hoved, ...born);
   if (!d) {
-    return li(el('div', { class: 'dag-ret' }, el('span', { class: 'dag-ret-navn', tekst: 'Fri aften' })),
+    return li(' fri', el('div', { class: 'dag-ret' }, el('span', { class: 'dag-ret-navn', tekst: 'Fri aften' })),
       el('div', { class: 'dag-knapper' },
         medFokus(K.knap('Vælg ret', { klasse: 'lille', ikonNavn: 'plus', label: 'Vælg ret til ' + lille, onclick: () => K.naviger('#/uge/dag/' + (i + 1)) }), 'dag-' + i + '-vaelg')));
   }
@@ -538,7 +540,7 @@ function dagRaekke(p, d, i) {
   const byt = medFokus(K.knap('Byt ret', { klasse: 'lille', label: 'Byt retten ' + lille, onclick: () => K.naviger('#/uge/dag/' + (i + 1)) }), 'dag-' + i + '-byt');
   if (!m || m instanceof Error || !m.uge) {
     const tekst = m instanceof Error ? 'Opskriften kunne ikke hentes. Tjek internetforbindelsen.' : 'Retten er ikke længere i ugeplanen.';
-    return li(el('div', { class: 'dag-ret' }, el('span', { class: 'dag-ret-navn', tekst: m && !(m instanceof Error) ? m.navn : 'Ukendt ret' }),
+    return li(' uden-billede', el('div', { class: 'dag-ret' }, el('span', { class: 'dag-ret-navn', tekst: m && !(m instanceof Error) ? m.navn : 'Ukendt ret' }),
       el('span', { class: 'dag-meta', tekst })), el('div', { class: 'dag-knapper' }, byt, fjern));
   }
   const portioner = stepper({ vaerdi: d.n, navn: 'portioner ' + lille, enhed: 'pers.', fokus: 'dag-' + i, saet: (n, fokus) => {
@@ -546,11 +548,11 @@ function dagRaekke(p, d, i) {
     if (gemPlan((q) => { if (q.dage[i]) q.dage[i] = { ...q.dage[i], n }; return { dage: q.dage }; })) K.annoncer(navn + ': ' + n + ' personer.');
     tegnIgen(fokus);
   } });
-  return li(
+  return li('',
     K.billede(grafikRet(m.id), '', 'dag-billede'),
     el('div', { class: 'dag-ret' },
       el('span', { class: 'dag-ret-navn', tekst: m.navn }),
-      el('span', { class: 'dag-meta', tekst: metaTekst(m, d.n) }),
+      metaLinje(m, d.n),
       el('span', { class: 'dag-af' }, K.billede(grafikDyr(d.af), '', 'dag-dyr'), el('span', { tekst: 'Valgt af ' + dyrNavn(d.af) }))),
     el('div', { class: 'dag-knapper' }, portioner, byt, fjern));
 }
@@ -635,7 +637,7 @@ function oversigtSkaerm() {
     if (m.uge.groentG > 0) groent++;
   }
   // Hårde mellemrum i begge led: på 360 px stod «dage» alene på næste linje (UI-review V6, 23-10)
-  const sum = harRetter ? 'Ca.\u00a0' + Math.round(kr / 10) * 10 + '\u00a0kr.\u00a0· grønt\u00a0' + groent + '\u00a0af\u00a07\u00a0dage' : 'Ingen retter endnu';
+  const sum = harRetter ? ['Ca.\u00a0' + Math.round(kr / 10) * 10 + '\u00a0kr.', 'grønt\u00a0' + groent + '\u00a0af\u00a07\u00a0dage'] : ['Ingen retter endnu'];
   // Et link til en uge mere end 8 uger fra i dag afviser afkod (på telefonen og på #/hent/ her). Så er «Indkøbsliste» og
   // «Send til telefon» væk, og advarslen siger, hvad den voksne gør; «Del som tekst» og «Print» virker stadig (U4, 23-10)
   const kanSendes = !harRetter || afkod(data.kode, { retter: K.S.ids, idag: new Date() }).ok;
@@ -694,12 +696,12 @@ function oversigtSkaerm() {
     el('div', { class: 'uge' },
       el('header', { class: 'uge-hoved' },
         el('h1', { tabindex: '-1', tekst: 'Ugeplan' }),
-        el('p', { class: 'uge-nr', tekst: 'Uge ' + ugeNr(uge) + ' · ' + dagDato(uge, 0) + '–' + dagDato(uge, 6) })),
+        ledLinje('p', { class: 'uge-nr' }, ['Uge ' + ugeNr(uge), dagDato(uge, 0) + '–' + dagDato(uge, 6)])),
       advarsel ? el('p', { class: 'uge-advarsel', role: 'status', tekst: advarsel }) : null,
       indstillinger,
       el('ol', { class: 'uge-dage', role: 'list', 'aria-label': 'Ugens dage' }, p.dage.map((d, i) => dagRaekke(p, d, i))),
       el('div', { class: 'uge-bund' },
-        el('p', { class: 'uge-sum', tekst: sum }),
+        ledLinje('p', { class: 'uge-sum' }, sum, SKILLE_HEL),
         harRetter ? null : el('p', { class: 'uge-tom', tekst: 'Vælg mindst én ret, så kan listen sendes til telefonen.' })),
       hoved.length ? el('div', { class: 'uge-knapper uge-handlinger' }, hoved) : null,
       andre.length ? el('div', { class: 'uge-knapper' }, andre) : null,
@@ -784,7 +786,7 @@ function dagSkaerm(i) {
         el('div', { class: 'dag-ret' },
           el('span', { class: 'dag-ret-navn', tekst: m.navn }),
           K.lynTekst(m),
-          el('span', { class: 'dag-meta', tekst: metaTekst(m, n) }),
+          metaLinje(m, n),
           valgt ? el('span', { class: 'dag-af', tekst: 'Står på ' + navn + ' nu' }) : null),
         medFokus(K.knap(valgt ? 'Behold' : 'Vælg', { klasse: 'lille vaelg-ret', ikonNavn: 'tjek', label: (valgt ? 'Behold ' : 'Vælg ') + m.navn + ' til ' + navn,
           onclick: () => vaelg(m) }), 'vaelg-' + m.id),
@@ -797,7 +799,7 @@ function dagSkaerm(i) {
     el('div', { class: 'uge' },
       el('header', { class: 'uge-hoved' },
         el('h1', { tabindex: '-1', tekst: 'Vælg ret til ' + navn }),
-        el('p', { class: 'uge-nr', tekst: DAGE[i] + ' ' + dagDato(p.uge || planMandag(), i) + ' · ' + n + ' pers.' })),
+        ledLinje('p', { class: 'uge-nr' }, [DAGE[i] + ' ' + dagDato(p.uge || planMandag(), i), n + ' pers.'])),
       el('div', { class: 'dag-vaerktoej' },
         K.knap('Tilbage til ugeplanen', { klasse: 'lille', ikonNavn: 'tilbage', onclick: () => K.naviger('#/uge') }),
         chips),
@@ -842,6 +844,19 @@ export function retterTilBoern(alle, udvalg) {
 }
 // Antal sider med PR_SIDE retter, mindst én (også uden retter)
 export const sideAntal = (retter) => Math.max(1, Math.ceil(retter.length / PR_SIDE));
+
+// Sideprikkerne: højst maks prikker i et vindue, der følger siden. Prikken ved kanten er lille, når der er flere sider
+// den vej. 21 prikker på 198 px blev klemt til 4×16 px på en iPhone. Hvilken side det er, siger aria-label
+export function prikVindue(side, sider, maks = 7) {
+  const antal = Math.min(maks, sider);
+  if (!(antal > 0)) return [];
+  const nu = Math.min(Math.max(0, side), sider - 1);
+  const fra = Math.min(Math.max(0, nu - Math.floor(antal / 2)), sider - antal);
+  return Array.from({ length: antal }, (_, k) => ({
+    nu: fra + k === nu,
+    lille: (k === 0 && fra > 0) || (k === antal - 1 && fra + antal < sider),
+  }));
+}
 
 // ✨ ny for os og ❤️ favorit på børnenes kort (maerkerFor i js/maerker.js): kun ikonet, med mærkets navn til skærmlæseren.
 // De står efter rettens navn, som dyret i hjørnet, så navnet siges først
@@ -947,10 +962,12 @@ function fuldSkaerm(p) {
     tilUgeplanen());
 }
 
-// Trin 2: fire retter pr. side. Første tryk siger navnet og markerer retten, fluebenet («Vælg») går videre til dagene
+// Trin 2: fire retter pr. side. Første tryk siger navnet og markerer retten, fluebenet («Vælg») går videre til dagene.
+// Blandet efter udvalget, så første side heller ikke med et udvalg kun er pasta. Den voksnes «Vælg ret» (dagSkaerm) har
+// filtre og står som i planen
 function retValgSkaerm(p, dyr) {
   const familie = Lager.hentFamilie(K.S.ids);
-  const alle = retterTilBoern(iPlanen(), familie.udvalg);
+  const alle = blandet(retterTilBoern(iPlanen(), familie.udvalg), K.S.grupper, (m) => m.id);
   const sider = sideAntal(alle);
   barn.side = Math.min(Math.max(barn.side, 0), sider - 1);
   const vist = alle.slice(barn.side * PR_SIDE, (barn.side + 1) * PR_SIDE);
@@ -1002,7 +1019,7 @@ function retValgSkaerm(p, dyr) {
   };
   const prikker = sider > 1
     ? el('div', { class: 'side-prikker', role: 'img', 'aria-label': 'Side ' + (barn.side + 1) + ' af ' + sider },
-      Array.from({ length: sider }, (_, k) => el('span', { class: k === barn.side ? 'nu' : null })))
+      prikVindue(barn.side, sider).map((prik) => el('span', { class: [prik.nu && 'nu', prik.lille && 'lille'].filter(Boolean).join(' ') || null })))
     : null;
 
   const valgt = barn.ret && model(barn.ret);

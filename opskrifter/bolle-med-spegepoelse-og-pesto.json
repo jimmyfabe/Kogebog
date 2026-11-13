@@ -1,0 +1,62 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Bolle med spegepølse og grøn pesto",
+  "description": "En grov bolle med grøn pesto af basilikum og solsikkekerner, spegepølse og salat. Peberfrugt i strimler ved siden af.",
+  "image": "grafik/ret-bolle-med-spegepoelse-og-pesto.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 boller",
+  "prepTime": "PT20M",
+  "totalTime": "PT20M",
+  "recipeIngredient": [
+    "25 g basilikum",
+    "3 spsk solsikkekerner",
+    "40 g revet ost",
+    "½ fed hvidløg",
+    "1 dl olie",
+    "1 knivspids salt",
+    "4 grove boller",
+    "8 skiver spegepølse",
+    "4 salatblade",
+    "1 peberfrugt"
+  ],
+  "tool": ["blender eller stavblender med bæger", "spiseske", "dl-mål", "kniv", "skærebræt", "smørekniv", "glas med låg", "4 madkasser"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Pluk bladene af basilikummen.", "tumbi": { "verbum": "pille", "ikoner": ["krydderurt"], "note": "De tynde stilke må gerne komme med. De smager også godt." } },
+    { "@type": "HowToStep", "text": "Pil hvidløget.", "tumbi": { "verbum": "pille", "ikoner": ["hvidloeg"], "note": "Ét fed. Rå hvidløg smager stærkt." } },
+    { "@type": "HowToStep", "text": "Skær fedet over.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["hvidloeg"], "note": "Kun den ene halvdel skal bruges." } },
+    { "@type": "HowToStep", "text": "Kom basilikum, kerner, ost og hvidløg i bægeret.", "tumbi": { "verbum": "haelde", "ikoner": ["krydderurt", "kerner", "ost", "hvidloeg"], "note": "3 spsk solsikkekerner og 40 g revet ost. Blenderen er slukket og trukket ud af stikket, mens barnet fylder bægeret." } },
+    { "@type": "HowToStep", "text": "Hæld olie og salt i.", "tumbi": { "verbum": "haelde", "ikoner": ["olie", "salt"], "note": "1 dl olie og en knivspids salt." } },
+    { "@type": "HowToStep", "text": "Blend det til en grøn pesto.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "note": "Skrab ned langs siden et par gange. Pestoen er uden nødder og pinjekerner. Den holder 3-4 dage i et glas med låg i køleskabet og kan fryses i små portioner." } },
+    { "@type": "HowToStep", "text": "Skær bollerne over.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["broed"], "note": "Grove sandwichboller fra fryseren er gode her." } },
+    { "@type": "HowToStep", "text": "Smør pesto på bollerne.", "tumbi": { "verbum": "smoere", "ikoner": ["broed", "krydderurt"], "note": "Ca. 1 spsk på hver bolle. Resten kommer i glasset." } },
+    { "@type": "HowToStep", "text": "Læg salat og spegepølse i bollerne.", "tumbi": { "verbum": "pynte", "ikoner": ["kaal", "spegepoelse"], "note": "Først et salatblad, så 2 skiver spegepølse. Salaten holder brødet tørt." } },
+    { "@type": "HowToStep", "text": "Læg låget på bollerne.", "tumbi": { "verbum": "pynte", "ikoner": ["broed"] } },
+    { "@type": "HowToStep", "text": "Skær peberfrugten i strimler.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["peberfrugt"], "note": "Den voksne fjerner stilk og kerner først." } },
+    { "@type": "HowToStep", "text": "Pak bolle og peberfrugt i madkassen.", "tumbi": { "verbum": "pakke-ind", "ikoner": ["broed", "peberfrugt"], "note": "I køleskabet til om morgenen, og med et køleelement i tasken. Spegepølse er færdigt pålæg, men skal stadig holdes kold." } },
+    { "@type": "HowToStep", "text": "Smag pestoen på en strimmel peberfrugt.", "tumbi": { "verbum": "smage", "ikoner": ["peberfrugt"] } }
+  ],
+  "tumbi": {
+    "id": "bolle-med-spegepoelse-og-pesto",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Idé fra bogen «Sund & Glad skolestart». Egen tekst og egne mængder. Tiden er et skøn (ikke målt).",
+    "pris_kr": 55,
+    "pris_dato": "2026-11",
+    "groent_g": 235,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, nov. 2026: Rema 1000's hyldepriser 09-11-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon, med købte fuldkornsburgerboller. Grønt er også et skøn (ikke målt) og er uden bælgfrugter, kartofler og frugt.",
+    "ingredienser": [
+      { "ikon": "krydderurt", "maengde": "25 g" },
+      { "ikon": "kerner", "maengde": "3 spsk" },
+      { "ikon": "ost", "maengde": "40 g" },
+      { "ikon": "hvidloeg", "maengde": "½ fed" },
+      { "ikon": "olie", "maengde": "1 dl" },
+      { "ikon": "salt", "maengde": "1 knivspids" },
+      { "ikon": "broed", "maengde": "4" },
+      { "ikon": "spegepoelse", "maengde": "8 skiver" },
+      { "ikon": "kaal", "maengde": "4" },
+      { "ikon": "peberfrugt", "maengde": "1" }
+    ]
+  }
+}

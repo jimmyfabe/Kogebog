@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<g id="saucer">
+    <ellipse cx="100" cy="212" rx="84" ry="18" fill="#EEDDBF"/>
+    <ellipse cx="100" cy="208" rx="62" ry="10" fill="#FFF4E2"/>
+  </g>
+  <g id="cup">
+    <path id="handle" fill="#FFF4E2" d="M162 128 C204 118 212 178 152 184 L158 168 C186 164 186 138 164 142 Z"/>
+    <path fill="#FFF4E2" d="M34 110 L166 110 C166 170 144 210 100 210 C56 210 34 170 34 110 Z"/>
+    <path fill="#EEDDBF" stroke="none" d="M164 114 C164 170 142 208 100 208 C134 196 146 158 146 118 Z"/>
+    <ellipse cx="100" cy="110" rx="66" ry="17" fill="#FFF4E2"/>
+    <ellipse cx="100" cy="112" rx="56" ry="12" fill="#B5472A"/>
+    <path fill="#8F3520" stroke="none" d="M124 102 C142 103 154 107 155 112 C154 118 138 123 116 124 C132 118 134 110 124 102 Z"/>
+    <path fill="none" d="M34 110 C34 170 56 210 100 210 C144 210 166 170 166 110"/>
+  </g>
+  <g id="tea-bag" transform="translate(206 192) rotate(10)">
+    <path fill="#EEDDBF" d="M-27 -30 L27 -30 L27 34 Q0 42 -27 34 Z"/>
+    <path fill="none" d="M-27 -18 L27 -18"/>
+    <g fill="#B5472A" stroke="none">
+      <circle cx="-12" cy="-4" r="4"/>
+      <circle cx="10" cy="-6" r="4"/>
+      <circle cx="-4" cy="12" r="4"/>
+      <circle cx="14" cy="14" r="4"/>
+      <circle cx="-15" cy="24" r="4"/>
+    </g>
+  </g>
+  <g id="string">
+    <path fill="none" d="M208 164 C214 124 212 94 198 70"/>
+    <path fill="#E2513B" d="M174 26 L214 18 Q220 17 221 23 L227 55 Q228 61 222 62 L182 70 Q176 71 175 65 L169 33 Q168 27 174 26 Z"/>
+    <path fill="#5BAA6A" stroke-width="2.5" d="M184 54 C184 38 196 28 214 28 C216 44 204 56 184 54 Z"/>
+    <path fill="none" stroke-width="2.5" d="M188 52 C194 44 200 38 208 33"/>
+  </g>
+</g>
+</svg>

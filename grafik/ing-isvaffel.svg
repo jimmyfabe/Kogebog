@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<defs>
+  <clipPath id="cone-clip">
+    <path d="M56 54 L200 54 L140 224 Q128 240 116 224 Z"/>
+  </clipPath>
+</defs>
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<g id="cone">
+    <path fill="#E8B26A" d="M56 54 L200 54 L140 224 Q128 240 116 224 Z"/>
+    <path fill="#CF9550" stroke="none" d="M166 54 L198 54 L139 222 Q133 232 126 232 Z"/>
+    <g fill="none" stroke="#B87A3A" stroke-width="3.5" clip-path="url(#cone-clip)">
+      <path d="M30 76 L166 256 M62 54 L198 234 M98 54 L234 234 M134 54 L270 234"/>
+      <path d="M226 76 L90 256 M194 54 L58 234 M158 54 L22 234 M122 54 L-14 234"/>
+    </g>
+    <path fill="none" d="M56 54 L200 54 L140 224 Q128 240 116 224 Z"/>
+  </g>
+  <g id="rim">
+    <path fill="#E8B26A" d="M46 36 C80 22 176 22 210 36 L202 62 C168 50 88 50 54 62 Z"/>
+    <path fill="#CF9550" stroke="none" d="M176 28 C190 30 202 32 208 37 L201 60 C194 57 184 55 172 53 Z"/>
+    <path fill="none" stroke="#F4D3A0" stroke-width="5" d="M62 40 C82 34 104 31 124 31"/>
+    <path fill="none" d="M46 36 C80 22 176 22 210 36 L202 62 C168 50 88 50 54 62 Z"/>
+  </g>
+</g>
+</svg>

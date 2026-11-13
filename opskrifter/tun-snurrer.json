@@ -1,0 +1,59 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Tun-snurrer i tortilla",
+  "description": "Tortillas med tun og flødeost, revet gulerod og salat, rullet stramt og skåret i små snurrer, man spiser med fingrene.",
+  "image": "grafik/ret-tun-snurrer.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 madpakker (ca. 24 snurrer)",
+  "prepTime": "PT25M",
+  "totalTime": "PT1H",
+  "recipeIngredient": [
+    "1 dåse tun i vand",
+    "150 g flødeost naturel",
+    "½ citron",
+    "1 knivspids peber",
+    "2 gulerødder",
+    "4 store tortillas",
+    "4 salatblade",
+    "½ agurk"
+  ],
+  "tool": ["dåseåbner", "skål", "gaffel", "rivejern", "smørekniv", "kniv med savtakker", "skærebræt", "husholdningsfilm", "4 madkasser"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra tunen.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["tun"], "note": "Den voksne åbner dåsen: kanten er skarp. Tryk låget ned, og hæld vandet ud." } },
+    { "@type": "HowToStep", "text": "Kom tun og flødeost i en skål.", "tumbi": { "verbum": "haelde", "ikoner": ["tun", "flodeost"], "note": "150 g flødeost." } },
+    { "@type": "HowToStep", "text": "Skær citronen over.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["citron"], "note": "Over på midten. Kun den ene halvdel skal bruges." } },
+    { "@type": "HowToStep", "text": "Pres citronen over.", "tumbi": { "verbum": "klemme", "ikoner": ["citron"], "note": "Fisk kernerne op." } },
+    { "@type": "HowToStep", "text": "Drys peber over, og mos det sammen.", "tumbi": { "verbum": "mose", "ikoner": ["peber"], "note": "Med en gaffel, til fyldet er jævnt og let at smøre." } },
+    { "@type": "HowToStep", "text": "Riv gulerødderne fint.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skrub dem først. Rivejernet er skarpt, så den voksne river." } },
+    { "@type": "HowToStep", "text": "Smør fyldet ud på tortillaerne.", "tumbi": { "verbum": "smoere", "ikoner": ["tortilla"], "note": "Et tyndt lag helt ud til kanten. Så klæber rullen sammen." } },
+    { "@type": "HowToStep", "text": "Drys gulerod over, og læg salat på.", "tumbi": { "verbum": "drysse", "ikoner": ["gulerod", "kaal"], "note": "Et salatblad på hver tortilla." } },
+    { "@type": "HowToStep", "text": "Rul tortillaerne stramt sammen.", "tumbi": { "verbum": "rulle", "ikoner": ["tortilla"], "note": "Start ved den ene kant. Pak hver rulle i husholdningsfilm." } },
+    { "@type": "HowToStep", "text": "Lad rullerne hvile i køleskabet.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "En halv time. Så holder de formen, når de skæres ud." } },
+    { "@type": "HowToStep", "text": "Skær rullerne i snurrer.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "note": "Skær først enderne af. Så ca. 3 cm brede, 6 af hver rulle. En kniv med savtakker skærer pænest." } },
+    { "@type": "HowToStep", "text": "Skær agurken i stave.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["agurk"] } },
+    { "@type": "HowToStep", "text": "Pak snurrer og agurk i madkassen.", "tumbi": { "verbum": "pakke-ind", "ikoner": ["agurk"], "note": "Tæt sammen med snittet opad. De holder til næste dag i køleskabet. Fisk og flødeost skal holdes kolde, så læg et køleelement i tasken." } },
+    { "@type": "HowToStep", "text": "Smag på en snurre.", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "tun-snurrer",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Idé fra bogen «Sund & Glad skolestart». Egen tekst og egne mængder. Tiden er et skøn (ikke målt).",
+    "pris_kr": 48,
+    "pris_dato": "2026-11",
+    "groent_g": 435,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, nov. 2026: Rema 1000's hyldepriser 09-11-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Antallet af tortillas i pakken (8) er antaget. Grønt er også et skøn (ikke målt) og er uden bælgfrugter, kartofler og frugt.",
+    "ingredienser": [
+      { "ikon": "tun", "maengde": "1 dåse" },
+      { "ikon": "flodeost", "maengde": "150 g" },
+      { "ikon": "citron", "maengde": "½" },
+      { "ikon": "peber", "maengde": "1 knivspids" },
+      { "ikon": "gulerod", "maengde": "2" },
+      { "ikon": "tortilla", "maengde": "4" },
+      { "ikon": "kaal", "maengde": "4" },
+      { "ikon": "agurk", "maengde": "½" }
+    ]
+  }
+}

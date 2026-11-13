@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="laar" transform="translate(128 128) rotate(-38)">
+    <path id="ben" fill="#FFF4E2" d="M38 -13 L92 -11 C96 -30 122 -32 124 -13 C125 -6 121 -2 116 0 C121 2 125 6 124 13 C122 32 96 30 92 11 L38 13 Z"/>
+    <path fill="#EEDDBF" stroke="none" d="M38 5 L92 5 L92 10 L38 12 Z"/>
+    <path id="koed" fill="#F2C14E" d="M-112 0 C-112 -50 -62 -72 -20 -58 C4 -50 26 -26 50 -15 L50 15 C26 26 4 50 -20 58 C-62 72 -112 50 -112 0 Z"/>
+    <path fill="#D9A52E" stroke="none" d="M-110 12 C-96 34 -48 44 -12 30 C10 22 30 12 48 8 L48 13 C26 25 3 48 -20 56 C-58 68 -100 50 -110 12 Z"/>
+    <path fill="#FBEBC2" stroke="none" d="M-92 -22 C-84 -40 -60 -50 -40 -46 C-56 -40 -76 -30 -84 -14 C-88 -8 -96 -14 -92 -22 Z"/>
+    <path fill="none" d="M-56 -8 Q-46 -14 -36 -8"/>
+    <path fill="none" d="M-30 12 Q-20 6 -10 12"/>
+  </g>
+</g>
+</svg>

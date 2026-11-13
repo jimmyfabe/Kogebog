@@ -1,0 +1,45 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Kiwi-æble-smoothie",
+  "description": "Frisk og grøn med små sorte prikker fra kiwierne. Æble og honning gør den sød.",
+  "image": "grafik/ret-kiwi-aeble-smoothie.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 3 glas",
+  "prepTime": "PT10M",
+  "totalTime": "PT10M",
+  "recipeIngredient": [
+    "3 modne kiwier",
+    "1 æble",
+    "2 dl yoghurt naturel (kold)",
+    "1 dl æblemost (kold)",
+    "1 spsk honning"
+  ],
+  "tool": ["kniv og skærebræt", "ske", "målebæger", "spiseske", "blender", "3 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk. Stil frugten, yoghurten og æblemosten på køl i forvejen, så smoothien bliver kold. Honning er ikke til børn under 1 år, så små søskende skal have noget andet." } },
+    { "@type": "HowToStep", "text": "Skær kiwierne i to.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kiwi"] } },
+    { "@type": "HowToStep", "text": "Skrab kiwierne ned i kanden med en ske.", "tumbi": { "verbum": "maale", "ikoner": ["kiwi"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
+    { "@type": "HowToStep", "text": "Skær æblet i både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["aeble"], "note": "Skær kernehuset væk. Skrællen må gerne blive på." } },
+    { "@type": "HowToStep", "text": "Kom æblet i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["aeble"] } },
+    { "@type": "HowToStep", "text": "Hæld 2 dl yoghurt i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["yoghurt"] } },
+    { "@type": "HowToStep", "text": "Hæld 1 dl æblemost i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["aeble"] } },
+    { "@type": "HowToStep", "text": "Kom 1 spsk honning i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["honning"] } },
+    { "@type": "HowToStep", "text": "Blend, til smoothien er grøn og glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kiwi", "aeble"], "note": "Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Hæld smoothien i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Smag, og tæl de sorte prikker!", "tumbi": { "verbum": "smage", "note": "Drik den med det samme: kiwi og yoghurt kan blive bitre, når de står længe sammen." } }
+  ],
+  "tumbi": {
+    "id": "kiwi-aeble-smoothie",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdene og tiden er et skøn (ikke målt). Rådet om honning til børn under 1 år er ikke slået efter i en kilde. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "kiwi", "maengde": "3" },
+      { "ikon": "aeble", "maengde": "1" },
+      { "ikon": "yoghurt", "maengde": "2 dl" },
+      { "ikon": "aeble", "maengde": "1 dl" },
+      { "ikon": "honning", "maengde": "1 spsk" }
+    ]
+  }
+}

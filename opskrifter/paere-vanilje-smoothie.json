@@ -1,0 +1,43 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Pære-vanilje-smoothie",
+  "description": "Blød og mild med modne pærer, yoghurt og vanilje. Den smager næsten som en dessert.",
+  "image": "grafik/ret-paere-vanilje-smoothie.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 3 glas",
+  "prepTime": "PT10M",
+  "totalTime": "PT10M",
+  "recipeIngredient": [
+    "2 modne pærer",
+    "2½ dl yoghurt naturel (kold)",
+    "1 dl mælk (kold)",
+    "1 spsk sukker",
+    "2 tsk vaniljesukker"
+  ],
+  "tool": ["kniv og skærebræt", "målebæger", "spiseske", "teske", "blender", "3 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk. Stil pærerne, yoghurten og mælken på køl i forvejen, så smoothien bliver kold." } },
+    { "@type": "HowToStep", "text": "Skær pærerne i både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["paere"], "note": "Skær kernehuset og stilken væk. Skrællen må gerne blive på, når pærerne er bløde." } },
+    { "@type": "HowToStep", "text": "Kom pærerne i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["paere"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
+    { "@type": "HowToStep", "text": "Hæld 2½ dl yoghurt i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["yoghurt"] } },
+    { "@type": "HowToStep", "text": "Hæld 1 dl mælk i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk"] } },
+    { "@type": "HowToStep", "text": "Mål sukker og vaniljesukker i kanden.", "tumbi": { "verbum": "maale", "ikoner": ["sukker"], "note": "1 spsk sukker og 2 tsk vaniljesukker." } },
+    { "@type": "HowToStep", "text": "Blend, til det hele er glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["paere", "yoghurt"], "note": "Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Hæld smoothien i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Smag, og luk øjnene imens!", "tumbi": { "verbum": "smage", "note": "Drik den med det samme: pærer bliver hurtigt lidt brune." } }
+  ],
+  "tumbi": {
+    "id": "paere-vanilje-smoothie",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdene og tiden er et skøn (ikke målt). Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "paere", "maengde": "2" },
+      { "ikon": "yoghurt", "maengde": "2½ dl" },
+      { "ikon": "maelk", "maengde": "1 dl" },
+      { "ikon": "sukker", "maengde": "1 spsk" },
+      { "ikon": "sukker", "maengde": "2 tsk" }
+    ]
+  }
+}

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+<g id="plate">
+    <ellipse cx="118" cy="224" rx="100" ry="20" fill="#3E8FB0"/>
+    <ellipse cx="118" cy="219" rx="82" ry="12" fill="#FFF4E2"/>
+  </g>
+  <g id="powder-mound">
+    <path fill="#FFFFFF" d="M38 218 C56 192 84 150 116 150 C150 150 178 192 198 218 C150 232 86 232 38 218 Z"/>
+    <path fill="#EDE8E0" stroke="none" d="M140 158 C162 172 182 198 196 217 C176 223 156 226 134 227 C154 212 158 186 140 158 Z"/>
+    <path fill="none" d="M38 218 C56 192 84 150 116 150 C150 150 178 192 198 218 C150 232 86 232 38 218 Z"/>
+  </g>
+  <g id="falling-powder" fill="#FFFFFF" stroke-width="2.5">
+    <circle cx="82" cy="94" r="5"/>
+    <circle cx="112" cy="88" r="5"/>
+    <circle cx="142" cy="96" r="5"/>
+    <circle cx="96" cy="116" r="5"/>
+    <circle cx="128" cy="118" r="5"/>
+    <circle cx="74" cy="126" r="4.5"/>
+    <circle cx="156" cy="128" r="4.5"/>
+    <circle cx="112" cy="136" r="4.5"/>
+  </g>
+  <g id="sieve">
+    <path id="handle" fill="#9A6A44" d="M178 40 L238 16 Q246 14 248 22 Q250 30 242 32 L184 58 Z"/>
+    <path id="mesh" fill="#D5DBE1" d="M46 44 C50 74 80 84 112 84 C144 84 174 74 178 44 Z"/>
+    <path fill="none" stroke="#8E9AA6" stroke-width="3" d="M66 48 L80 78 M92 48 L100 82 M118 48 L118 84 M144 48 L136 82 M168 48 L154 78 M54 62 L170 62"/>
+    <path fill="none" d="M46 44 C50 74 80 84 112 84 C144 84 174 74 178 44"/>
+    <ellipse id="rim" cx="112" cy="44" rx="68" ry="16" fill="#FFFFFF"/>
+    <ellipse cx="112" cy="46" rx="56" ry="10" fill="#FFFFFF"/>
+    <path fill="#EDE8E0" stroke="none" d="M72 44 C90 36 136 36 152 44 C136 52 90 52 72 44 Z"/>
+    <ellipse cx="112" cy="44" rx="68" ry="16" fill="none" stroke="#3B2A20"/>
+  </g>
+</g>
+</svg>

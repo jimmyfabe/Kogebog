@@ -1,0 +1,47 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Enhjørningens lyserøde drik",
+  "description": "Lyserød bobledrik med hindbær og vanilje og krymmel på kanten af glasset, som om en enhjørning lige har drukket af det. Barnet moser bærrene og pynter glassene.",
+  "image": "grafik/ret-enhjoerning-drik.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 glas",
+  "prepTime": "PT15M",
+  "totalTime": "PT20M",
+  "recipeIngredient": [
+    "125 g friske hindbær",
+    "3 spsk sukker",
+    "2 tsk vaniljesukker",
+    "2 spsk rød saft (koncentrat), fx hindbær",
+    "3 spsk krymmel",
+    "7 dl danskvand (kold)"
+  ],
+  "tool": ["skål", "gaffel", "si", "ske", "stor kande", "målebæger", "spiseske", "teske", "2 små tallerkener", "4 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Sæt danskvanden på køl i god tid. Skyl hindbærrene. Brug friske bær: frosne bær skal koges, før de spises kolde. Tjek allergener på pakken med krymmel." } },
+    { "@type": "HowToStep", "text": "Mos hindbærrene i en skål med en gaffel.", "tumbi": { "verbum": "mose", "ikoner": ["baer"], "note": "125 g, det er en lille bakke." } },
+    { "@type": "HowToStep", "text": "Rør sukker og vaniljesukker i mosen.", "tumbi": { "verbum": "roere", "ikoner": ["sukker"], "note": "3 spsk sukker og 2 tsk vaniljesukker." } },
+    { "@type": "HowToStep", "text": "Lad mosen trække i 5 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 300, "note": "Så går sukkeret i opløsning, og bærrene giver saft." } },
+    { "@type": "HowToStep", "text": "Hæld mosen gennem en si ned i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["baer"], "note": "Tryk mosen igennem med bagsiden af en ske. Kernerne bliver i sien." } },
+    { "@type": "HowToStep", "text": "Hæld saften på en lille tallerken.", "tumbi": { "verbum": "haelde", "ikoner": ["saft"], "note": "2 spsk rød saft. Den er koncentrat og skal ikke blandes op: den klistrer krymlen fast." } },
+    { "@type": "HowToStep", "text": "Hæld krymlen på en anden tallerken.", "tumbi": { "verbum": "haelde", "ikoner": ["krymmel"], "note": "3 spsk." } },
+    { "@type": "HowToStep", "text": "Dyp kanten af hvert glas i saft og krymmel.", "tumbi": { "verbum": "dyppe", "ikoner": ["saft", "krymmel"], "note": "Vend glasset på hovedet. Først i saften, så i krymlen. Stil glassene forsigtigt fra jer." } },
+    { "@type": "HowToStep", "text": "Hæld danskvanden langsomt i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["danskvand"], "note": "7 dl, og lige før I skal drikke, så boblerne ikke forsvinder. Rør kun en enkelt gang." } },
+    { "@type": "HowToStep", "text": "Hæld drikken langsomt i glassene.", "tumbi": { "verbum": "haelde", "note": "Hæld ind mod midten, så krymlen bliver på kanten." } },
+    { "@type": "HowToStep", "text": "Smag den lyserøde drik!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "enhjoerning-drik",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til: mængder og tider er et skøn. Bærrene er friske, fordi Fødevarestyrelsen råder til at koge frosne bær, før de spises kolde. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "baer", "maengde": "125 g" },
+      { "ikon": "sukker", "maengde": "3 spsk" },
+      { "ikon": "sukker", "maengde": "2 tsk" },
+      { "ikon": "saft", "maengde": "2 spsk" },
+      { "ikon": "krymmel", "maengde": "3 spsk" },
+      { "ikon": "danskvand", "maengde": "7 dl" }
+    ]
+  }
+}

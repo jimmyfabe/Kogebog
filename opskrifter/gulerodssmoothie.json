@@ -1,0 +1,44 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Gulerods­smoothie",
+  "description": "Den orange smoothie med en hemmelighed: en revet gulerod gemmer sig bag sød banan og appelsin. Den smager af solskin.",
+  "image": "grafik/ret-gulerodssmoothie.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 3 glas",
+  "prepTime": "PT15M",
+  "totalTime": "PT15M",
+  "recipeIngredient": [
+    "1 gulerod (ca. 80 g)",
+    "2½ dl appelsinjuice (kold)",
+    "1 appelsin",
+    "1 moden banan"
+  ],
+  "tool": ["grøntsagsskræller", "rivejern", "kniv og skærebræt", "målebæger", "blender", "3 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Stil juicen og frugten på køl i forvejen, så smoothien bliver kold." } },
+    { "@type": "HowToStep", "text": "Skræl guleroden.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skyl den først, og skær toppen af." } },
+    { "@type": "HowToStep", "text": "Riv guleroden fint.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "På den fine side af rivejernet: så bliver smoothien glat uden hårde stykker." } },
+    { "@type": "HowToStep", "text": "Kom den revne gulerod i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["gulerod"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
+    { "@type": "HowToStep", "text": "Hæld 2½ dl juice i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["appelsin"] } },
+    { "@type": "HowToStep", "text": "Blend guleroden og juicen helt fint.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod", "appelsin"], "note": "Guleroden blendes først med juicen alene: så bliver den helt fin og kan ikke mærkes bagefter. Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Pil appelsinen, og del den i både.", "tumbi": { "verbum": "pille", "ikoner": ["appelsin"], "note": "Den voksne kan lave et lille snit i skrællen, så den er nem at komme i gang med. Pil det meste af det hvide af, og tag kernerne ud." } },
+    { "@type": "HowToStep", "text": "Pil bananen, og knæk den i stykker.", "tumbi": { "verbum": "pille", "ikoner": ["banan"] } },
+    { "@type": "HowToStep", "text": "Kom appelsin og banan i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["appelsin", "banan"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
+    { "@type": "HowToStep", "text": "Blend, til det hele er glat og orange.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["appelsin", "banan"], "note": "Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Hæld smoothien i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden. Er den for tyk, så rør lidt mere juice i." } },
+    { "@type": "HowToStep", "text": "Smag den orange smoothie!", "tumbi": { "verbum": "smage", "note": "Drik den med det samme: så er den koldest." } }
+  ],
+  "tumbi": {
+    "id": "gulerodssmoothie",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdene og tiden er et skøn (ikke målt). Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "gulerod", "maengde": "1" },
+      { "ikon": "appelsin", "maengde": "2½ dl" },
+      { "ikon": "appelsin", "maengde": "1" },
+      { "ikon": "banan", "maengde": "1" }
+    ]
+  }
+}

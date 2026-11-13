@@ -1,0 +1,54 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Rugbrøds­madpakke med frugt og grønt",
+  "description": "Rugbrød med ost og skinke i det store rum, gulerod, agurk og æble i de små. Barnet pakker selv sin madkasse.",
+  "image": "grafik/ret-rugbroedsmadpakke.webp",
+  "inLanguage": "da",
+  "recipeYield": "2 madpakker",
+  "prepTime": "PT15M",
+  "totalTime": "PT15M",
+  "recipeIngredient": [
+    "4 skiver rugbrød",
+    "1 spsk smør",
+    "2 skiver ost",
+    "2 skiver skinke",
+    "2 gulerødder",
+    "½ agurk",
+    "2 æbler",
+    "2 spsk rosiner"
+  ],
+  "tool": ["kniv", "skærebræt", "smørekniv", "2 madkasser med små rum", "2 køleelementer"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Skær gulerødderne i stave.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skrub dem først. Stave på længde med en finger er lette at spise." } },
+    { "@type": "HowToStep", "text": "Skær agurken i stave.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["agurk"] } },
+    { "@type": "HowToStep", "text": "Skær æblerne i både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["aeble"], "note": "Den voksne skærer kernehuset væk. Læg bådene tæt sammen igen, så bliver de ikke så hurtigt brune." } },
+    { "@type": "HowToStep", "text": "Smør rugbrødet tyndt med smør.", "tumbi": { "verbum": "smoere", "ikoner": ["broed", "smoer"] } },
+    { "@type": "HowToStep", "text": "Læg ost og skinke på rugbrødet.", "tumbi": { "verbum": "pynte", "ikoner": ["ost", "skinke"], "note": "Ost på to skiver og skinke på de to andre." } },
+    { "@type": "HowToStep", "text": "Læg rugbrødet i det store rum.", "tumbi": { "verbum": "pakke-ind", "ikoner": ["broed"], "note": "Med pålægget opad og ved siden af hinanden. Så bliver brødet ikke blødt." } },
+    { "@type": "HowToStep", "text": "Fyld grønt og frugt i de små rum.", "tumbi": { "verbum": "pakke-ind", "ikoner": ["gulerod", "agurk", "aeble", "rosiner"], "note": "2 spsk rosiner er den lille ekstra. Skift med årstiden: pære og mandarin om vinteren, halve cherrytomater og blåbær om sommeren." } },
+    { "@type": "HowToStep", "text": "Sæt madkasserne i køleskabet.", "tumbi": { "verbum": "pakke-ind", "note": "Til de skal med. Læg et køleelement i tasken, så holder madpakken sig kold til frokost." } },
+    { "@type": "HowToStep", "text": "Smag en gulerodsstav.", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "rugbroedsmadpakke",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Idé fra bogen «Sund & Glad skolestart». Egen tekst og egne mængder. Tiden er et skøn (ikke målt).",
+    "pris_kr": 25,
+    "pris_dato": "2026-11",
+    "groent_g": 375,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, nov. 2026: Rema 1000's hyldepriser 09-11-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Grønt er også et skøn (ikke målt) og er uden bælgfrugter, kartofler og frugt.",
+    "ingredienser": [
+      { "ikon": "broed", "maengde": "4 skiver" },
+      { "ikon": "smoer", "maengde": "1 spsk" },
+      { "ikon": "ost", "maengde": "2 skiver" },
+      { "ikon": "skinke", "maengde": "2 skiver" },
+      { "ikon": "gulerod", "maengde": "2" },
+      { "ikon": "agurk", "maengde": "½" },
+      { "ikon": "aeble", "maengde": "2" },
+      { "ikon": "rosiner", "maengde": "2 spsk" }
+    ]
+  }
+}

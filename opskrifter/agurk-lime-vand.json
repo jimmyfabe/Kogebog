@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Agurk-lime-vand",
+  "description": "Koldt vand, der smager af agurk og lime, med skiver, der svømmer rundt i kanden. Så nemt, at barnet næsten kan lave det hele selv.",
+  "image": "grafik/ret-agurk-lime-vand.webp",
+  "inLanguage": "da",
+  "recipeYield": "5 glas",
+  "prepTime": "PT5M",
+  "totalTime": "PT35M",
+  "recipeIngredient": [
+    "½ agurk",
+    "1 lime",
+    "1 l koldt vand"
+  ],
+  "tool": ["skærebræt", "kniv", "stor kande", "lang ske", "5 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Skyl agurken og limen. Lad hanen løbe lidt, så vandet er helt koldt." } },
+    { "@type": "HowToStep", "text": "Skær agurk og lime i tynde skiver.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["agurk", "lime"] } },
+    { "@type": "HowToStep", "text": "Læg skiverne i en stor kande.", "tumbi": { "verbum": "haelde", "ikoner": ["agurk", "lime"] } },
+    { "@type": "HowToStep", "text": "Hæld koldt vand i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["vand"], "note": "1 l. Rør 2 spsk hyldeblomstsaft (koncentrat) i, hvis det skal være sødere." } },
+    { "@type": "HowToStep", "text": "Rør forsigtigt med en lang ske.", "tumbi": { "verbum": "roere" } },
+    { "@type": "HowToStep", "text": "Stil kanden i køleskabet i 30 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "Så når smagen ud i vandet. Skal det stå længere end et par timer, så tag limeskiverne op: skrællen kan gøre vandet bittert." } },
+    { "@type": "HowToStep", "text": "Hæld vandet i glassene.", "tumbi": { "verbum": "haelde", "note": "Et par skiver må gerne følge med." } },
+    { "@type": "HowToStep", "text": "Smag det kolde agurk-lime-vand!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "agurk-lime-vand",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til: mængder og tider er et skøn. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "agurk", "maengde": "½" },
+      { "ikon": "lime", "maengde": "1" },
+      { "ikon": "vand", "maengde": "1 l" }
+    ]
+  }
+}

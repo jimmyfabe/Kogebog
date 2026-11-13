@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Ananas-kokos-smoothie",
+  "description": "Den smager af strand og ferie: ananas, kokosmælk og banan. Tag solbriller på, når den drikkes!",
+  "image": "grafik/ret-ananas-kokos-smoothie.webp",
+  "inLanguage": "da",
+  "recipeYield": "ca. 4 glas",
+  "prepTime": "PT10M",
+  "totalTime": "PT10M",
+  "recipeIngredient": [
+    "1 dåse ananasringe i juice (ca. 340 g uden saft)",
+    "1 dl kokosmælk",
+    "1 moden banan"
+  ],
+  "tool": ["dåseåbner", "målebæger", "blender", "4 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Stil dåserne på køl i forvejen, så smoothien bliver kold. Der skal kun bruges lidt kokosmælk: resten kan fryses i en lille bøtte." } },
+    { "@type": "HowToStep", "text": "Hæld ananas og juice i kanden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["ananas"], "note": "Den voksne åbner begge dåser: kanterne er skarpe. Ryst dåsen med kokosmælk først. Kanden står på bordet, og blenderens stik er ude." } },
+    { "@type": "HowToStep", "text": "Hæld 1 dl kokosmælk i kanden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kokosmaelk"], "note": "Den voksne hælder fra dåsen over i målebægeret." } },
+    { "@type": "HowToStep", "text": "Pil bananen, og knæk den i stykker.", "tumbi": { "verbum": "pille", "ikoner": ["banan"] } },
+    { "@type": "HowToStep", "text": "Kom bananen i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["banan"], "note": "Ingen fingre i kanden: knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Blend, til det hele er glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["ananas", "kokosmaelk"], "note": "Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },
+    { "@type": "HowToStep", "text": "Hæld smoothien i glassene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne hælder: kanden er tung, og knivene sidder i bunden." } },
+    { "@type": "HowToStep", "text": "Smag, og sig aloha!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "ananas-kokos-smoothie",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til. Forholdene og tiden er et skøn (ikke målt). Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "ananas", "maengde": "1 dåse" },
+      { "ikon": "kokosmaelk", "maengde": "1 dl" },
+      { "ikon": "banan", "maengde": "1" }
+    ]
+  }
+}

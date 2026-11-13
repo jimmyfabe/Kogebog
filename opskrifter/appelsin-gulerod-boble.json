@@ -1,0 +1,39 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Appelsin-gulerod-boble",
+  "description": "Orange bobler med appelsinjuice og gulerod. De revne gulerødder bliver i sien, så det kun er smagen, der kommer med i glasset.",
+  "image": "grafik/ret-appelsin-gulerod-boble.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 glas",
+  "prepTime": "PT10M",
+  "totalTime": "PT20M",
+  "recipeIngredient": [
+    "2 gulerødder",
+    "5 dl appelsinjuice (kold)",
+    "3 dl danskvand (kold)"
+  ],
+  "tool": ["skrællekniv", "rivejern", "skål", "målebæger", "si", "ske", "stor kande", "4 glas"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Sæt appelsinjuice og danskvand på køl i god tid. Skyl gulerødderne. Har I 2 dl gulerodsjuice, kan den bruges i stedet for gulerødderne: så hældes den direkte i kanden sammen med appelsinjuicen, og I kan springe rivejernet, ventetiden og sien over." } },
+    { "@type": "HowToStep", "text": "Riv gulerødderne fint.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skræl dem først. Den voksne står for rivejernet." } },
+    { "@type": "HowToStep", "text": "Kom gulerødderne i en skål.", "tumbi": { "verbum": "haelde", "ikoner": ["gulerod"] } },
+    { "@type": "HowToStep", "text": "Hæld appelsinjuicen over gulerødderne.", "tumbi": { "verbum": "haelde", "ikoner": ["appelsin"], "note": "5 dl." } },
+    { "@type": "HowToStep", "text": "Lad det trække i 10 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Så kommer gulerodens smag og farve ud i juicen." } },
+    { "@type": "HowToStep", "text": "Hæld saften gennem en si ned i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["appelsin"], "note": "Tryk med bagsiden af en ske, så al saften kommer med. De revne gulerødder kan bruges i en salat." } },
+    { "@type": "HowToStep", "text": "Hæld danskvanden langsomt i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["danskvand"], "note": "3 dl, og lige før I skal drikke, så boblerne ikke forsvinder. Rør kun en enkelt gang." } },
+    { "@type": "HowToStep", "text": "Hæld boblerne i glassene.", "tumbi": { "verbum": "haelde", "note": "Hæld langsomt ned ad siden af glasset, så det ikke skummer over." } },
+    { "@type": "HowToStep", "text": "Smag appelsin-gulerod-boblen!", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "appelsin-gulerod-boble",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Egen opskrift, der ikke er smagt til: mængder og tider er et skøn. Trinene er egen tekst.",
+    "ingredienser": [
+      { "ikon": "gulerod", "maengde": "2" },
+      { "ikon": "appelsin", "maengde": "5 dl" },
+      { "ikon": "danskvand", "maengde": "3 dl" }
+    ]
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Kartoffelmad med spegepølse",
+  "description": "Rugbrød med groft moste kartofler, spegepølse og purløg, og halve cherrytomater ved siden af. Brug gerne kartofler fra i går.",
+  "image": "grafik/ret-kartoffelmad-med-spegepoelse.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 madder",
+  "prepTime": "PT20M",
+  "cookTime": "PT20M",
+  "totalTime": "PT1H15M",
+  "recipeIngredient": [
+    "4 små kartofler",
+    "2 spsk creme fraiche",
+    "1 knivspids salt",
+    "4 skiver rugbrød",
+    "1 spsk smør",
+    "8 skiver spegepølse",
+    "½ bundt purløg",
+    "8 cherrytomater"
+  ],
+  "tool": ["gryde med låg", "si", "skål", "gaffel", "smørekniv", "saks", "kniv", "skærebræt", "madkasser"],
+  "recipeInstructions": [
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Læg kartoflerne i en gryde med koldt vand.", "tumbi": { "verbum": "haelde", "ikoner": ["kartoffel"], "note": "Skrub dem først. Vandet skal lige dække dem. Har I kolde, kogte kartofler fra i går, så spring frem til «Pil kartoflerne»." } },
+    { "@type": "HowToStep", "text": "Kog kartoflerne i 15 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900, "note": "Fra vandet koger, med låg på. De er færdige, når en gaffel glider let ind." } },
+    { "@type": "HowToStep", "text": "Hæld vandet fra kartoflerne.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "note": "Pas på dampen." } },
+    { "@type": "HowToStep", "text": "Lad kartoflerne køle helt af.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "Gerne aftenen før: kolde kartofler fra køleskabet er nemmest." } },
+    { "@type": "HowToStep", "text": "Pil kartoflerne.", "tumbi": { "verbum": "pille", "ikoner": ["kartoffel"], "note": "Skindet glider let af kolde kartofler. Nye kartofler kan også bruges med skind." } },
+    { "@type": "HowToStep", "text": "Mos kartoflerne groft med en gaffel.", "tumbi": { "verbum": "mose", "ikoner": ["kartoffel"] } },
+    { "@type": "HowToStep", "text": "Rør creme fraiche og salt i.", "tumbi": { "verbum": "roere", "ikoner": ["yoghurt", "salt"], "note": "2 spsk creme fraiche og en knivspids salt." } },
+    { "@type": "HowToStep", "text": "Smør rugbrødet tyndt med smør.", "tumbi": { "verbum": "smoere", "ikoner": ["broed", "smoer"] } },
+    { "@type": "HowToStep", "text": "Fordel kartoffelmosen på rugbrødet.", "tumbi": { "verbum": "smoere", "ikoner": ["kartoffel", "broed"] } },
+    { "@type": "HowToStep", "text": "Læg spegepølse på maddene.", "tumbi": { "verbum": "pynte", "ikoner": ["spegepoelse"], "note": "2 skiver på hver." } },
+    { "@type": "HowToStep", "text": "Drys purløg over maddene.", "tumbi": { "verbum": "drysse", "ikoner": ["krydderurt"], "note": "Klip purløget fint med en saks først. En børnesaks kan også." } },
+    { "@type": "HowToStep", "text": "Skær tomaterne i halve.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["tomat"], "note": "Halve cherrytomater er sikrere for små børn end hele." } },
+    { "@type": "HowToStep", "text": "Pak madder og tomater i madkassen.", "tumbi": { "verbum": "pakke-ind", "ikoner": ["broed", "tomat"], "note": "Maddene ved siden af hinanden, ikke ovenpå. Tomaterne i et rum for sig. Holder til næste dag i køleskabet. Læg et køleelement i tasken." } },
+    { "@type": "HowToStep", "text": "Smag en mad.", "tumbi": { "verbum": "smage" } }
+  ],
+  "tumbi": {
+    "id": "kartoffelmad-med-spegepoelse",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Idé fra bogen «Sund & Glad skolestart». Egen tekst og egne mængder. Tiden er et skøn (ikke målt).",
+    "pris_kr": 32,
+    "pris_dato": "2026-11",
+    "groent_g": 110,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, nov. 2026: Rema 1000's hyldepriser 09-11-2026 ganget med 1,09 plus 3 kr. til olie, salt, krydderier og bouillon. Grønt er også et skøn (ikke målt) og er uden bælgfrugter, kartofler og frugt.",
+    "ingredienser": [
+      { "ikon": "kartoffel", "maengde": "4" },
+      { "ikon": "yoghurt", "maengde": "2 spsk" },
+      { "ikon": "salt", "maengde": "1 knivspids" },
+      { "ikon": "broed", "maengde": "4 skiver" },
+      { "ikon": "smoer", "maengde": "1 spsk" },
+      { "ikon": "spegepoelse", "maengde": "8 skiver" },
+      { "ikon": "krydderurt", "maengde": "½" },
+      { "ikon": "tomat", "maengde": "8" }
+    ]
+  }
+}

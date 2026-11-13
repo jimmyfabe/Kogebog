@@ -87,6 +87,17 @@ export const KOEN = Object.freeze({
   'stilk': 'n', 'tartelet': 'n',
   // Nytår (02-11-2026): «1 clementin» (raket-frugtspyd ved færre portioner)
   'clementin': 'n',
+  // Drikke, cupcakes og kager (05-11-2026): «1 mango», «½ avocado», «1 håndfuld spinat», «1 kvist mynte», «1 tepose»
+  'ananas': 'n', 'avocado': 'n', 'blomme': 'n', 'båd': 'n', 'chokoladekiks': 'n', 'chokoladeknap': 'n', 'cupcake': 'n',
+  'dråbe': 'n', 'fersken': 'n', 'håndfuld': 'n', 'ispind': 'n', 'isterning': 'n', 'isvaffel': 'n', 'kiks': 'n', 'kiwi': 'n',
+  'kvist': 'n', 'lime': 'n', 'mango': 'n', 'muffinform': 'n', 'rødbede': 'n', 'skumfidus': 'n', 'tepose': 'n', 'vandmelon': 'n',
+  'blåbær': 't', 'hindbær': 't', 'jordbær': 't', 'mynteblad': 't', 'tebrev': 't',
+  'moden': 'n', 'modent': 't', 'frisk': 'n', 'friskt': 't', 'blød': 'n', 'blødt': 't', 'kold': 'n', 'koldt': 't',
+  'hvid': 'n', 'hvidt': 't', 'gul': 'n', 'gult': 't', 'lyserød': 'n', 'lyserødt': 't',
+  // Madpakker (09-11-2026): «½ bundt dild», «1 squash», «4 grove boller», «4 salatblade», «8 cherrytomater».
+  // Pas på: «groft» som biord («1 groft revet gulerod») giver «et»; skriv «1 gulerod, groft revet» (test-skaler kræver
+  // tillægsordene i KOEN)
+  'bundt': 't', 'squash': 'n', 'salatblad': 't', 'cherrytomat': 'n', 'grov': 'n', 'groft': 't',
   // Enhederne i flertal, som skaler.js giver med et halvt («2,5 dåser» er «to og en halv»)
   'dåser': 'n', 'poser': 'n', 'pakker': 'n', 'blad': 't', // «1 blad icebergsalat» ved 1 portion
   'lille': null, 'sort': null, 'orange': null,
@@ -106,14 +117,25 @@ export const NAVNEORD = Object.freeze({
   'porre': 'porrer', 'pølse': 'pølser', 'pære': 'pærer', 'småkage': 'småkager', 'stilk': 'stilke', 'sveske': 'svesker',
   'tartelet': 'tarteletter', 'tomat': 'tomater', 'tortilla': 'tortillas',
   'æble': 'æbler',
+  // Drikke, cupcakes og kager (05-11-2026)
+  'avocado': 'avocadoer', 'blomme': 'blommer', 'båd': 'både', 'bæger': 'bægre', 'chokoladeknap': 'chokoladeknapper', 'cupcake': 'cupcakes',
+  'dråbe': 'dråber', 'fersken': 'ferskner', 'håndfuld': 'håndfulde', 'ispind': 'ispinde', 'isterning': 'isterninger', 'isvaffel': 'isvafler',
+  'kiwi': 'kiwier', 'kugle': 'kugler', 'kvist': 'kviste', 'mango': 'mangoer', 'muffinform': 'muffinforme', 'mynteblad': 'mynteblade',
+  'rødbede': 'rødbeder', 'skumfidus': 'skumfiduser', 'stykke': 'stykker', 'tebrev': 'tebreve', 'tepose': 'teposer', 'vandmelon': 'vandmeloner',
+  // Madpakker (09-11-2026)
+  'bolle': 'boller', 'bundt': 'bundter', 'cherrytomat': 'cherrytomater', 'salatblad': 'salatblade',
   // Uændret i flertal
-  'løg': 'løg', 'oliven': 'oliven', 'æg': 'æg',
+  'løg': 'løg', 'oliven': 'oliven', 'æg': 'æg', 'squash': 'squash',
+  'ananas': 'ananas', 'blåbær': 'blåbær', 'chokoladekiks': 'chokoladekiks', 'hindbær': 'hindbær', 'jordbær': 'jordbær', 'kiks': 'kiks', 'lime': 'lime',
 });
 
 // Tillægsord foran navneordet: [en-ord, et-ord, flertal] («en stor kartoffel», «et stort løg», «store kartofler»)
 export const TILLAEGSORD = Object.freeze([
   ['stor', 'stort', 'store'], ['lille', 'lille', 'små'], ['rød', 'rødt', 'røde'], ['grøn', 'grønt', 'grønne'],
   ['sort', 'sort', 'sorte'], ['orange', 'orange', 'orange'],
+  ['moden', 'modent', 'modne'], ['frisk', 'friskt', 'friske'], ['blød', 'blødt', 'bløde'], ['kold', 'koldt', 'kolde'],
+  ['hel', 'helt', 'hele'], ['hvid', 'hvidt', 'hvide'], ['gul', 'gult', 'gule'], ['lyserød', 'lyserødt', 'lyserøde'],
+  ['grov', 'groft', 'grove'],
 ].map((t) => Object.freeze(t)));
 
 // Hver form (ental og flertal) → [ental, flertal], og hver form af et tillægsord → dets tre former

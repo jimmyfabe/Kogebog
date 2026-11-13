@@ -161,6 +161,12 @@
   .kun-bred { display: none; }
 }
 
+/* 667×375: samme kant som topbaren (24 px), som .uge i app.css */
+@media (max-width: 700px) and (max-height: 520px) and (orientation: landscape) {
+  .voksen-indhold { padding-left: 24px; padding-right: 24px; }
+  .udvalg-tal { margin: 0 -24px; padding: 8px 24px; }
+}
+
 /* Telefonen: lige så små og tæt på hjørnet som dyret (.kort-dyr i app.css) */
 @media (max-width: 700px) {
   .maerke { top: 6px; left: 6px; --maerke: 36px; font-size: 18px; }
