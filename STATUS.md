@@ -2,6 +2,10 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
+## 13-11-2026 kl. 13:30: v9 er live igen
+
+Jimmy pushede main (`df3e125..2785747`) og slog GitHub Pages til (main, / root). Claude tjekkede kl. 13:30, ca. 30 s efter: https://jimmyfabe.github.io/Kogebog/ svarer 200, `js/version.js` siger `v9 · 13-11-2026` og `v9:eaba115fe45c41bd`, og `sw.js` har `INDHOLD = '795750507c2054b4'`. Punkterne 1-3 nedenfor er lukket. Ikke afprøvet på en rigtig iPad. En iPad med den gamle udgave henter den nye første gang, den er på nettet.
+
 ## 13-11-2026 kl. 11:40: v9 er flettet til main og klar til udgivelse
 
 Jimmy (13-11): «godkender det hele», så v9 udgives, og de 3 gamle filer bliver liggende (ingen `--ryd`).
