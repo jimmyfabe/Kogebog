@@ -2,6 +2,12 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
+## 13-11-2026 kl. 16:09: Jimmy vil vende appen om (forældreapp, der er børnevenlig)
+
+Ønsket og planen står i `docs/brief-2026-11-13.md`. Den bygger på Fables redesign fra 10-11 (`docs/fable-foraeldrekogebog-2026-11-10.md`), plus print af alle retter fra computeren og nye retter fra Jimmys reels (kyllingebid i rispapir; kebab venter på skærmbilleder). Intet er bygget endnu.
+
+**Afventer Jimmy (13-11):** «ja» til Fables plan med fase 1 først. Start efter ugenulstillingen 14-11 kl. 19:00 (ugen stod på 91 %).
+
 ## 13-11-2026 kl. 13:30: v9 er live igen
 
 Jimmy pushede main (`df3e125..2785747`) og slog GitHub Pages til (main, / root). Claude tjekkede kl. 13:30, ca. 30 s efter: https://jimmyfabe.github.io/Kogebog/ svarer 200, `js/version.js` siger `v9 · 13-11-2026` og `v9:eaba115fe45c41bd`, og `sw.js` har `INDHOLD = '795750507c2054b4'`. Punkterne 1-3 nedenfor er lukket. Ikke afprøvet på en rigtig iPad. En iPad med den gamle udgave henter den nye første gang, den er på nettet.
