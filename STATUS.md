@@ -2,6 +2,21 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
+## 13-11-2026 kl. 11:40: v9 er flettet til main og klar til udgivelse
+
+Jimmy (13-11): «godkender det hele», så v9 udgives, og de 3 gamle filer bliver liggende (ingen `--ryd`).
+- `6616a57`: v9-madpakke flettet til main (main havde kun docs og STATUS ud over v9).
+- `1948055`: `UDGAVE = 'v9 · 13-11-2026'`, ny `UDGAVE_INDHOLD` og `INDHOLD`. Navnet v9 følger grenen (v7 og v8 er med), ikke løbenummeret +1.
+- Node-tests: 16 af 17 filer grønne. `test-lyd` fejler kun på de 2 gamle gruppe-mp3 (forventet).
+- E2e er ikke kørt igen: koden er den samme som v9 10-11 (201.983 tjek, 0 fejl). Kun versionsfilen og `sw.js` er ændret.
+
+**Hvorfor kogebogen var væk:** GitHub Pages blev slået fra på repoet 09-11 kl. 16:38 dansk tid (`has_pages=false`, siden giver 404). Ingen chat forklarer det.
+
+**Afventer Jimmy (13-11):**
+1. Push main: `cd D:\Claude\Kogebog; git push origin main` (PowerShell).
+2. Slå Pages til igen: repo → Settings → Pages → Deploy from a branch → `main` og `/ (root)` → Save.
+3. Bagefter tjekker Claude, at https://jimmyfabe.github.io/Kogebog/ svarer og viser v9.
+
 ## 10-11-2026 kl. 13:26: v9 madpakker har Røst-stemmen, og hele e2e er grøn (Saga)
 
 **Stemmen** (`67e3a4e`): Røst har indtalt de 453 replikker til de 16 madpakker. `sw.js` (INDHOLD og LYD) og `js/version.js` (UDGAVE_INDHOLD) har nye fingeraftryk. Backuppen ligger i `D:\Stemmer\kogebog-500m\foer-trin4-1011\`. Logs: `trin4-1011.log` og `overstyr-1011.log` samme sted. Seed 42 gav 1.108 mistænkelige; efter seed 43–47 er **878 «stadig mistænkelige»**. De fleste har en for lang hale, så de er ikke nødvendigvis forkerte.
