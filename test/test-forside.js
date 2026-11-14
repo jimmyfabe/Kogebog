@@ -21,7 +21,7 @@ const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const GRUPPE_IDS = ['pasta-og-nudler', 'kylling', 'fisk', 'koed', 'groent', 'broed-og-pizza', 'madpakke', 'soede-sager', 'drikke', 'jul', 'halloween'];
 const VENTER_PAA_BILLEDER = [];
 const KNAPPER = GRUPPE_IDS.filter((id) => !VENTER_PAA_BILLEDER.includes(id)); // forsidens knapper nu
-const ANTAL_RETTER = 239;
+const ANTAL_RETTER = 241;
 const ANTAL_PLANLAGTE = 83;
 
 const laesJson = (sti) => JSON.parse(fs.readFileSync(path.join(ROD, sti), 'utf8'));
@@ -34,7 +34,7 @@ const UGE = INDEX.grupper.flatMap((g) => g.retter).filter((id) => JSONER.get(id)
 
 // ---------- Sorteringen i opskrifter/index.json ----------
 
-test('alle 239 retter står i præcis én af forsidens grupper, og alle opskriftsfiler har en plads', () => {
+test('alle 241 retter står i præcis én af forsidens grupper, og alle opskriftsfiler har en plads', () => {
   const alle = INDEX.grupper.flatMap((g) => g.retter);
   assert.equal(alle.length, ANTAL_RETTER);
   assert.equal(new Set(alle).size, alle.length, 'en ret står to steder');
@@ -411,7 +411,7 @@ const knapMed = (label) => rod.querySelectorAll('button').find((b) => b.getAttri
 const knapMedTekst = (tekst) => rod.querySelectorAll('button').find((b) => b.textContent === tekst);
 const overskrift = () => rod.querySelector('h1').textContent;
 
-test('forsiden: en rigtig knap pr. gruppe med navn til skærmlæseren, billede og navn og ingen af de 239 kort', async () => {
+test('forsiden: en rigtig knap pr. gruppe med navn til skærmlæseren, billede og navn og ingen af de 241 kort', async () => {
   await start();
   const b = knapper();
   assert.deepEqual(b.map((x) => x.dataset.gruppe), KNAPPER);
@@ -590,7 +590,7 @@ test('lupen: «is» og «aftensmad» på den rigtige skærm, og feltet tegnes ik
   assert.equal(rod.querySelector('.soeg-felt'), felt, 'Safari lukker tastaturet, hvis feltet tegnes om');
   skriv(felt, 'aftensmad');
   assert.deepEqual(kort().sort(), AFTENSMAD_GRUPPER.flatMap(retterI).sort());
-  assert.match(rod.querySelector('.soeg-tal').textContent, /83/);
+  assert.match(rod.querySelector('.soeg-tal').textContent, /85/);
 });
 
 test('lupen: mærkelige tegn giver «ingen træf» med en vej videre, ikke en fejl', async () => {

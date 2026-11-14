@@ -202,6 +202,8 @@ export const INGREDIENSER = {
   // Madpakken (v9, 09-11-2026). Spegepølse er færdigt pålæg (også salami), ikke råt kød
   'squash': 'squash',
   'spegepoelse': 'spegepølse',
+  // Kyllingenuggets i rispapir (v10, 14-11-2026): tørre ark af ris, der bliver bløde i lunkent vand
+  'rispapir': 'rispapir',
 };
 
 // Ikoner for råt kød og råt æg: efter dem skal der komme et trin med «vaske-haender».

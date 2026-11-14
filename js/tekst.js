@@ -98,6 +98,8 @@ export const KOEN = Object.freeze({
   // Pas på: «groft» som biord («1 groft revet gulerod») giver «et»; skriv «1 gulerod, groft revet» (test-skaler kræver
   // tillægsordene i KOEN)
   'bundt': 't', 'squash': 'n', 'salatblad': 't', 'cherrytomat': 'n', 'grov': 'n', 'groft': 't',
+  // Kyllingenuggets og kebab (v10, 14-11-2026): «5 ark rispapir», «6 pitabrød»
+  'ark': 't', 'pitabrød': 't',
   // Enhederne i flertal, som skaler.js giver med et halvt («2,5 dåser» er «to og en halv»)
   'dåser': 'n', 'poser': 'n', 'pakker': 'n', 'blad': 't', // «1 blad icebergsalat» ved 1 portion
   'lille': null, 'sort': null, 'orange': null,
@@ -124,7 +126,8 @@ export const NAVNEORD = Object.freeze({
   'rødbede': 'rødbeder', 'skumfidus': 'skumfiduser', 'stykke': 'stykker', 'tebrev': 'tebreve', 'tepose': 'teposer', 'vandmelon': 'vandmeloner',
   // Madpakker (09-11-2026)
   'bolle': 'boller', 'bundt': 'bundter', 'cherrytomat': 'cherrytomater', 'salatblad': 'salatblade',
-  // Uændret i flertal
+  // Uændret i flertal (kyllingenuggets og kebab, 14-11-2026: «ark» og «pitabrød»)
+  'ark': 'ark', 'pitabrød': 'pitabrød',
   'løg': 'løg', 'oliven': 'oliven', 'æg': 'æg', 'squash': 'squash',
   'ananas': 'ananas', 'blåbær': 'blåbær', 'chokoladekiks': 'chokoladekiks', 'hindbær': 'hindbær', 'jordbær': 'jordbær', 'kiks': 'kiks', 'lime': 'lime',
 });

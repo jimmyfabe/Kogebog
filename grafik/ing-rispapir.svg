@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<defs>
+  <clipPath id="rispapir-forrest"><circle cx="118" cy="146" r="84"/></clipPath>
+</defs>
+<g stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="ark-bagerst">
+    <circle cx="150" cy="104" r="80" fill="#E9DFC8"/>
+    <g fill="none" stroke="#CDBE9C" stroke-width="2.5">
+      <path d="M100 58 L196 154"/><path d="M122 40 L214 132"/><path d="M196 54 L100 150"/><path d="M216 82 L130 168"/>
+    </g>
+  </g>
+  <g id="ark-forrest">
+    <circle cx="118" cy="146" r="84" fill="#F5EEDC"/>
+    <g clip-path="url(#rispapir-forrest)" fill="none" stroke="#D8CBAA" stroke-width="2.5">
+      <path d="M20 100 L164 244"/><path d="M40 72 L192 224"/><path d="M68 56 L212 200"/><path d="M100 48 L220 168"/>
+      <path d="M216 100 L72 244"/><path d="M196 72 L44 224"/><path d="M168 56 L24 200"/><path d="M136 48 L16 168"/>
+    </g>
+    <circle cx="118" cy="146" r="84" fill="none"/>
+    <path d="M58 112 C70 92 92 78 116 74" fill="none" stroke="#FFFAEE" stroke-width="4"/>
+  </g>
+</g>
+</svg>
