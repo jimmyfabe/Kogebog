@@ -2369,8 +2369,14 @@ async function lynOgNavne(browser) {
   await tjekMinuttal(side, n + ' minuttal grupperne (pandekager uden tid, kødsovs 0 min)', { ...TIDER, pandekager: null, koedsovs: 0 });
   await side.unrouteAll({ behavior: 'wait' });
 
-  // 2. Børnenes valg: alle sider med fire retter (Rosa). Et nyt dokument, så retterne hentes uden ændringerne ovenfor
+  // 2. Børnenes valg: alle sider med fire retter (Rosa). Et nyt dokument, så retterne hentes uden ændringerne ovenfor.
+  //    Uden udvalg ser børnene højst 12 retter (fase 1 b, retterTilBoern i js/ugeplan.js), så de får et udvalg på 24 med
+  //    alle de lynhurtige retter til ugeplanen og kødsovsen (uden ⚡). Udvalget fjernes igen efter tjekket
+  const LYN_UDVALG = [...new Set([...IPLAN.filter(erLyn), 'koedsovs', ...IPLAN])].slice(0, 24);
   await side.goto('about:blank');
+  await side.goto(BASE + '/index.html');
+  await side.waitForSelector('.gruppe-knap');
+  await side.evaluate((ids) => localStorage.setItem('kog-familie-v1', JSON.stringify({ v: 1, udvalg: { ids, rettet: '2026-11-05' } })), LYN_UDVALG);
   await side.goto(BASE + '/index.html#/uge/vaelg/rosa');
   await side.waitForSelector('.ret-gitter .ret-kort');
   const boern = [];
@@ -2384,7 +2390,9 @@ async function lynOgNavne(browser) {
     await tryk(side, '.side-naeste');
     await venterPaa(side, (f) => document.querySelector('.ret-kort')?.dataset.ret !== f, k[0].id, n + ' ⚡ børnenes valg: pilen frem skal vise de næste retter');
   }
-  tjek(boern.length === IPLAN.length && new Set(boern.map((k) => k.id)).size === IPLAN.length, n + ' ⚡ børnenes valg: alle ' + IPLAN.length + ' retter i ugeplanen én gang (' + boern.length + ')');
+  tjek(boern.length === LYN_UDVALG.length && new Set(boern.map((k) => k.id)).size === LYN_UDVALG.length && boern.every((k) => LYN_UDVALG.includes(k.id)),
+    n + ' ⚡ børnenes valg: alle ' + LYN_UDVALG.length + ' retter i udvalget én gang (' + boern.length + ')');
+  await side.evaluate(() => localStorage.removeItem('kog-familie-v1'));
   tjekLyn(boern, n + ' ⚡ børnenes valg', 'koedsovs');
   tjek(tidBoern === 0, n + ' minuttal: børnenes valg har intet minuttal (' + tidBoern + ' .kort-tid)');
   maal.push(n + ' ⚡ børnenes valg: ' + boern.length + ' kort på ' + Math.ceil(boern.length / 4) + ' sider, ⚡ på ' + boern.filter((k) => k.lyn).map((k) => k.id).join(', '));
@@ -2394,6 +2402,9 @@ async function lynOgNavne(browser) {
     await side.setViewportSize({ width: b, height: h });
     await side.goto('about:blank');
     await side.goto(BASE + '/index.html#/uge/dag/1');
+    // #/uge/dag/<n> ligger bag voksendelens lås (laasFor i js/voksen-del.js): et nyt dokument viser holdet først
+    await side.waitForSelector('.voksen-vagt');
+    await hold(side, '.voksen-vagt');
     await side.waitForSelector('li.ret-valg-raekke[data-ret]');
     await side.waitForFunction(() => [...document.images].every((i) => i.complete));
     const dag = await lynPaa(side, 'li.ret-valg-raekke[data-ret]');

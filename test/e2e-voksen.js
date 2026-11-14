@@ -92,6 +92,13 @@ function forventetLinjer(RETTER, id, faktor) {
   }));
 }
 
+// Ugeplanens skærme til den voksne (#/uge og #/uge/dag/<n>) ligger bag voksendelens lås (laasFor i js/voksen-del.js).
+// Står holdet der (låsen lukker på forsiden, en ret og børnenes valg), holdes det
+async function tilUgen(H, side, h) {
+  await gaaTil(side, h);
+  if (await side.locator('main .voksen-vagt').count()) await holdHer(H, side, '.voksen-vagt');
+}
+
 // Voksendelen på adressen #/voksen<del>: står holdet der (låsen lukker, når man går ud af #/voksen…), holdes det.
 const VOKSEN_SKAERM = { '': 'voksen-hub', '/husstand': 'voksen-husstand', '/udvalg': 'voksen-udvalg', '/favoritter': 'voksen-favoritter', '/katalog': 'voksen-katalog' };
 async function aabnVoksen(H, side, del, hvor) {
@@ -171,8 +178,10 @@ async function forloeb(browser, H, skaerm) {
   await tryk(side, '[data-fokus="gem"]');
   p = await laesLager(side, UGE);
   tjek(p && p.n === 6 && JSON.stringify(p.dage[0]) === JSON.stringify(mandag), n + ': 6 voksne giver ugeplanen 6 portioner, og mandag er uændret (' + JSON.stringify(p) + ')');
+  // Fra voksendelen til ugeplanen uden et nyt hold: låsen dækker begge (fase 1 c)
   await gaaTil(side, '#/uge/dag/2');
   await venterPaa(side, () => location.hash === '#/uge/dag/2' && document.querySelector('.ret-valg'), null, n + ': valget til tirsdag');
+  tjek(await side.locator('.voksen-vagt').count() === 0, n + ': fra husstanden til «Vælg ret til tirsdag» uden et nyt hold');
   await tryk(side, 'li[data-ret="' + RET + '"] .vaelg-ret');
   await venterPaa(side, () => location.hash === '#/uge' && document.querySelector('.uge-dage'), null, n + ': «Vælg» skal gå til oversigten');
   p = await laesLager(side, UGE);
@@ -260,7 +269,7 @@ async function forloeb(browser, H, skaerm) {
   f = await laesLager(side, FAMILIE);
   await saetLager(side, FAMILIE, { ...f, lavet: lavetFoer });
   await aabnVoksen(H, side, '/udvalg', n + ' udvalg');
-  tjek(await tekstAf(side, '.udvalg-tal') === 'Intet udvalg: børnene ser alle retter', n + ': intet udvalg i starten (' + await tekstAf(side, '.udvalg-tal') + ')');
+  tjek(await tekstAf(side, '.udvalg-tal') === 'Intet udvalg: børnene ser favoritterne og nye retter', n + ': intet udvalg i starten (' + await tekstAf(side, '.udvalg-tal') + ')');
   await tryk(side, '[data-fokus="fyld-op"]');
   // Blandet: skiftevis én fra hver gruppe (js/grupper.js), og børnenes valg viser dem i samme rækkefølge
   const indexGrupper = JSON.parse(fs.readFileSync(path.join(H.ROD, 'opskrifter/index.json'), 'utf8')).grupper;
@@ -335,6 +344,10 @@ async function forloeb(browser, H, skaerm) {
   tjek(bv.sider.flat().filter((k) => k.id !== fav).every((k) => k.ny && !k.fav), n + ': de andre er stadig nye og ikke favoritter');
   await aabnVoksen(H, side, '/favoritter', n + ' favoritter');
   tjek(await side.locator('[data-fokus="fav-' + fav + '"]').getAttribute('aria-pressed') === 'true', n + ': favoritten står med rødt hjerte under favoritterne');
+  // Favoritterne viser alle retters billeder. Børnenes valg viser fra v10 kun 12 retter, så de fleste billeder er ikke
+  // hentet før, og de sidste kan være på vej (31 ikke indlæst på iPad 14-11-2026). Vent, til alle er færdige (også de
+  // fejlede, så tjekLayout melder et billede, der mangler)
+  await side.waitForFunction(() => [...document.images].every((i) => i.complete), null, { timeout: 10000 }).catch(() => {});
   await tjekLayout(side, n + ' favoritter');
   await foto(side, n + '-voksen-favoritter');
 
@@ -447,15 +460,24 @@ async function katalog(browser, H, skaerm) {
   await side.goto(BASE + '/index.html');
   await side.waitForSelector('.gruppe-knap');
 
-  // Oversigten: «Ugeplan» og «Indkøbsliste» står øverst, så de er lette at finde. «Katalog» siger, hvor mange retter der kan
-  // søges i
+  // Oversigten i den rækkefølge, den voksne bruger den: Ugeplan · Indkøbsliste · Retter, og under «Mere» husstand, udvalg og
+  // favoritter (fase 1 d). «Retter» siger, hvor mange retter der kan søges i og printes
   await aabnVoksen(H, side, '', n + ' katalog: oversigten');
-  const punkter = await side.evaluate(() => [...document.querySelectorAll('.voksen-punkt')].map((b) => b.dataset.fokus));
+  const menu = await side.evaluate(() => ({
+    punkter: [...document.querySelectorAll('.voksen-punkt')].map((b) => b.dataset.fokus),
+    mere: [...document.querySelectorAll('.voksen-mere .voksen-punkt')].map((b) => b.dataset.fokus),
+    afsnit: document.querySelector('nav .voksen-afsnit')?.textContent || '',
+    hoejder: [...document.querySelectorAll('.voksen-punkt')].map((b) => Math.round(b.getBoundingClientRect().height)),
+  }));
   const status = await tekstAf(side, '[data-fokus="katalog"] .voksen-punkt-status');
-  tjek(punkter[0] === 'ugeplan' && punkter[1] === 'indkoeb' && punkter.at(-1) === 'katalog' && status === 'Søg i alle ' + retter(ALLE.length), n + ': «Ugeplan» og «Indkøbsliste» øverst og «Katalog» nederst på oversigten (' + punkter.join(', ') + ' · ' + status + ')');
+  tjek(menu.punkter.join() === 'ugeplan,indkoeb,katalog,husstand,udvalg,favoritter' && menu.mere.join() === 'husstand,udvalg,favoritter' && menu.afsnit === 'Mere'
+    && status === 'Søg og print i alle ' + retter(ALLE.length), n + ': oversigten er Ugeplan, Indkøbsliste, Retter og under «Mere» husstand, udvalg og favoritter (' + JSON.stringify(menu) + ' · ' + status + ')');
+  tjek(menu.hoejder.every((h) => h >= 48), n + ': punkterne på oversigten er mindst 48 px høje (' + menu.hoejder.join(', ') + ')');
+  await tjekLayout(side, n + ' oversigten');
+  await foto(side, n + '-voksen-oversigt');
   await tryk(side, '[data-fokus="katalog"]');
-  await venterPaa(side, () => location.hash === '#/voksen/katalog' && document.querySelector('main.voksen-katalog'), null, n + ': «Katalog» åbner kataloget');
-  tjek(await h1(side) === 'Katalog', n + ': katalogets overskrift (' + await h1(side) + ')');
+  await venterPaa(side, () => location.hash === '#/voksen/katalog' && document.querySelector('main.voksen-katalog'), null, n + ': «Retter» åbner kataloget');
+  tjek(await h1(side) === 'Retter', n + ': katalogets overskrift (' + await h1(side) + ')');
   const felt = await side.evaluate(() => {
     const f = document.getElementById('soeg-katalog');
     return f && { type: f.type, label: document.querySelector('label[for="soeg-katalog"]')?.textContent || '', hoejde: Math.round(f.getBoundingClientRect().height), vaerdi: f.value };
@@ -472,19 +494,30 @@ async function katalog(browser, H, skaerm) {
   const start = await side.evaluate(() => ({ open: document.querySelector('.voksen-filtre').open,
     top: Math.round(document.querySelector('.voksen-liste .voksen-raekke').getBoundingClientRect().top), H: innerHeight }));
   tjek(start.open === !kompakt && start.top < start.H - 120, n + ': grupper og mærker er ' + (kompakt ? 'foldet sammen' : 'foldet ud') + ', og den første ret ses (' + JSON.stringify(start) + ')');
-  // Review-fund 9 (02-11): på telefonen får knapperne kun deres egen linje i rækker med «Med». Uden «Med» står hjertet og
-  // «Åbn» ved billedet, og navnet har stadig plads (ikke ét bogstav pr. linje)
+  // På telefonen får knapperne (Med, hjertet, Åbn og Print) deres egen linje i alle rækker; ellers står de ved navnet.
+  // Navnet har plads (ikke ét bogstav pr. linje). Review-fund 9 (02-11) gav kun rækkerne med «Med» en linje; med «Print»
+  // blev navnet ved knapperne under 80 px bredt
   const telefon = skaerm.viewport.width <= 700;
   const linjer = await side.evaluate(() => [...document.querySelectorAll('.voksen-katalog .voksen-raekke')].map((r) => {
     const knapper = r.querySelector('.voksen-raekke-knapper');
-    return { id: r.dataset.ret, med: knapper.classList.contains('med-udvalg'), egenLinje: knapper.getBoundingClientRect().top >= r.querySelector('.voksen-raekke-billede').getBoundingClientRect().bottom - 1,
-      navn: Math.round(r.querySelector('.voksen-raekke-navn').getBoundingClientRect().width) };
+    const print = r.querySelector('.print-link');
+    return { id: r.dataset.ret, egenLinje: knapper.getBoundingClientRect().top >= r.querySelector('.voksen-raekke-billede').getBoundingClientRect().bottom - 1,
+      navn: Math.round(r.querySelector('.voksen-raekke-navn').getBoundingClientRect().width),
+      print: print ? print.getAttribute('href') : null, printHoejde: print ? Math.round(print.getBoundingClientRect().height) : 0 };
   }));
-  const forkert = linjer.filter((l) => l.egenLinje !== (telefon && l.med)).map((l) => l.id);
+  const forkert = linjer.filter((l) => l.egenLinje !== telefon).map((l) => l.id);
   const smal = linjer.filter((l) => l.navn < 80).map((l) => l.id + ' ' + l.navn + ' px');
-  tjek(forkert.length === 0 && smal.length === 0 && linjer.some((l) => l.med) && linjer.some((l) => !l.med),
-    n + ': knapperne har ' + (telefon ? 'kun deres egen linje i rækker med «Med»' : 'aldrig deres egen linje') + ', og navnene er mindst 80 px brede ('
-    + JSON.stringify({ forkert: forkert.slice(0, 5), smal: smal.slice(0, 5), med: linjer.filter((l) => l.med).length, i_alt: linjer.length }) + ')');
+  tjek(forkert.length === 0 && smal.length === 0,
+    n + ': knapperne har ' + (telefon ? 'deres egen linje i alle rækker' : 'aldrig deres egen linje') + ', og navnene er mindst 80 px brede ('
+    + JSON.stringify({ forkert: forkert.slice(0, 5), smal: smal.slice(0, 5), i_alt: linjer.length }) + ')');
+  // «Print» i hver række og «Print hele kogebogen» over listen (uden husstand: ingen n)
+  const udenPrint = linjer.filter((l) => l.print !== 'print.html?ret=' + l.id || l.printHoejde < 48).map((l) => l.id + ' ' + l.print + ' ' + l.printHoejde);
+  tjek(udenPrint.length === 0, n + ': hver ret har «Print» til print.html?ret=<id>, mindst 48 px høj (' + JSON.stringify(udenPrint.slice(0, 5)) + ')');
+  const flere = await side.evaluate(() => {
+    const a = document.querySelector('[data-fokus="print-flere"]');
+    return a && { href: a.getAttribute('href'), tekst: a.textContent.replace(/\s+/g, ' ').trim(), hoejde: Math.round(a.getBoundingClientRect().height) };
+  });
+  tjek(flere && flere.href === 'print.html?alle' && flere.tekst === 'Print hele kogebogen' && flere.hoejde >= 48, n + ': «Print hele kogebogen» over listen (' + JSON.stringify(flere) + ')');
   await tjekLayout(side, n + ' katalog');
   await foto(side, n + '-voksen-katalog');
 
@@ -494,6 +527,8 @@ async function katalog(browser, H, skaerm) {
   tjek(ens(await raekker(side), JUL) && await tekstAf(side, '.soeg-tal') === 'Viser ' + JUL.length + ' af ' + retter(ALLE.length),
     n + ': «jul» viser kun de ' + JUL.length + ' juleretter (' + await tekstAf(side, '.soeg-tal') + ')');
   tjek((await feltNu(side, 'soeg-katalog')).ryd === false, n + ': «Ryd søgningen» (×) står i feltet, når der er skrevet noget');
+  const julPrint = await side.evaluate(() => document.querySelector('[data-fokus="print-flere"]')?.getAttribute('href'));
+  tjek(julPrint === 'print.html?retter=' + JUL.join(','), n + ': med «jul» printer knappen over listen de viste juleretter (' + julPrint + ')');
   await tjekLayout(side, n + ' katalog med «jul»');
   await foto(side, n + '-voksen-katalog-jul');
 
@@ -731,13 +766,33 @@ async function telefon(browser, H) {
   await side.waitForSelector('.gruppe-knap');
   await saetLager(side, FAMILIE, { v: 1, voksne: 6, boern: 0, barnAndel: 0.7, udvalg: null, favoritter: [], lavet: {} });
   await saetLager(side, UGE, { v: 1, uge, dage, n: 6, prBarn: 1, rettet: null });
+  // Ugeplanen ligger bag låsen (fase 1 c): fra forsiden kommer holdet først, og efter det står «Voksne» i topbaren og
+  // husstanden i hovedet. Begge fører til voksendelen uden et nyt hold
   await gaaTil(side, '#/uge');
-  await venterPaa(side, () => document.querySelector('.uge-dage'), null, 'ipad: ugeplanen');
+  await venterPaa(side, () => document.querySelector('.voksen-vagt'), null, 'ipad: #/uge fra forsiden viser holdet');
+  tjek(await H.h1(side) === 'Til de voksne' && await side.locator('.uge-dage').count() === 0, 'ipad: ugeplanen er låst, til holdet er holdt');
+  await holdHer(H, side, '.voksen-vagt');
+  await venterPaa(side, () => location.hash === '#/uge' && document.querySelector('.uge-dage'), null, 'ipad: ugeplanen efter holdet');
+  const hoved = await side.evaluate(() => ({
+    voksne: document.querySelector('.topbar .topbar-tilbage')?.textContent.trim() || '',
+    husstand: (document.querySelector('.knap.uge-husstand')?.textContent || '').replace(/\s+/g, ' ').trim(),
+    hoejde: Math.round(document.querySelector('.knap.uge-husstand')?.getBoundingClientRect().height || 0),
+  }));
+  tjek(hoved.voksne === 'Voksne' && hoved.husstand === '6 voksne = 6 portioner' && hoved.hoejde >= 48,
+    'ipad: «Voksne» i topbaren og husstanden (mindst 48 px) i ugeplanens hoved (' + JSON.stringify(hoved) + ')');
+  await H.tjekLayout(side, 'ipad ugeplanen bag låsen');
+  await H.foto(side, 'ipad-uge-laas-aaben');
   await tryk(side, 'button:has-text("Send til telefon")');
   await venterPaa(side, () => window.__delt.length === 1, null, 'ipad: «Send til telefon» skal åbne delearket');
   const delt = await side.evaluate(() => window.__delt[0] || {});
   const kode = kod(uge, dage.map((d) => (d ? { ret: d.ret, n: d.n } : null)));
   tjek(kode.startsWith('v1.') && delt.url === BASE + '/index.html#/hent/' + kode, 'ipad: linket er det samme v1-link med dagenes portioner (' + delt.url + ')');
+  // «Voksne» går til voksendelens oversigt uden et nyt hold, og forsiden lukker låsen igen
+  await tryk(side, '.topbar .topbar-tilbage');
+  await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('main.voksen-hub'), null, 'ipad: «Voksne» åbner oversigten uden holdet');
+  await gaaTil(side, '#/');
+  await gaaTil(side, '#/uge');
+  await venterPaa(side, () => document.querySelector('.voksen-vagt'), null, 'ipad: efter forsiden er ugeplanen låst igen');
   tjek(side.fejl.length === 0, 'ipad (send til telefon): ' + side.fejl.join(' | '));
   await ctx.close();
 
@@ -775,7 +830,7 @@ async function migrering(browser, H) {
   await saetLager(side, LISTE, listeV3);
   await side.reload();
   await side.waitForSelector('.gruppe-knap');
-  await gaaTil(side, '#/uge');
+  await tilUgen(H, side, '#/uge');
   await venterPaa(side, () => document.querySelector('.uge-dage'), null, n + ': ugeplanen fra v3');
   tjek(await side.locator('.uge-dage > .dag:not(.fri)').count() === 2, n + ': ugeplanen fra v3 har sine 2 retter');
   await gaaTil(side, '#/indkoeb');
@@ -836,10 +891,13 @@ async function nyereFamilie(browser, H) {
   tjek(groen === 'låst: Lavet med en nyere udgave', n + ': «Mere grønt i maden» er låst med en nyere familie (' + groen + ')');
   await tryk(side, '[data-fokus="ugeplan"]');
   await venterPaa(side, () => location.hash === '#/uge' && document.querySelector('.uge-dage'), null, n + ': ugeplanen kan nås fra oversigten');
+  // Husstanden i ugeplanens hoved er tekst uden knap, når familien er fra en nyere udgave
+  const husstand = await side.evaluate(() => ({ knap: document.querySelectorAll('button.uge-husstand').length, tekst: document.querySelector('p.uge-husstand')?.textContent || '' }));
+  tjek(husstand.knap === 0 && husstand.tekst === 'Husstand: Lavet med en nyere udgave', n + ': husstanden i ugeplanens hoved kan ikke ændres (' + JSON.stringify(husstand) + ')');
+  // Låsen er stadig åben fra ugeplanen til voksendelen
   await gaaTil(side, '#/voksen/husstand');
-  await venterPaa(side, () => document.querySelector('.voksen-vagt'), null, n + ': holdet ved husstanden');
-  await holdHer(H, side, '.voksen-vagt');
   await venterPaa(side, () => document.querySelector('main h1')?.textContent === 'Voksendelen er gemt med en nyere udgave', null, n + ': husstanden siger, at familien er gemt med en nyere udgave');
+  tjek(await side.locator('.voksen-vagt').count() === 0, n + ': fra ugeplanen til husstanden uden et nyt hold');
   await tryk(side, 'main .knap[aria-label="Tilbage til voksendelen"]');
   await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('main.voksen-hub'), null, n + ': «Tilbage» går til oversigten');
   await gaaTil(side, '#/ret/' + RET + '/faerdig');
@@ -1054,7 +1112,7 @@ async function mereGroent(browser, H, skaerm) {
     const uge = planMandag(new Date());
     const dage = [{ ret: GROEN_RET, af: 'bo', n: 4 }, null, null, null, null, null, null];
     await saetLager(side, UGE, { v: 1, uge, dage, n: 4, prBarn: 1, rettet: null });
-    await gaaTil(side, '#/uge');
+    await tilUgen(H, side, '#/uge');
     await venterPaa(side, () => document.querySelector('.uge-dage'), null, n + ': ugeplanen');
     const kr = Math.round((groen.uge.prisKr * 4) / groen.uge.portioner);
     const meta = await tekstAf(side, '.dag-meta');

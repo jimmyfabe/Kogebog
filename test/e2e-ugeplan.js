@@ -81,6 +81,15 @@ const listeNu = (side) => side.evaluate(() => {
   };
 });
 
+// Ugeplanens skærme til den voksne (#/uge og #/uge/dag/<n>) ligger bag voksendelens lås (laasFor i js/voksen-del.js):
+// efter en ny indlæsning, forsiden eller børnenes valg kommer holdet først. Venter på holdet eller på sel, holder holdet,
+// hvis det står der, og venter så på sel
+async function forbiLaasen(H, side, sel) {
+  await side.waitForSelector('.voksen-vagt, ' + sel);
+  if (await side.locator('.voksen-vagt').count()) await H.hold(side, '.voksen-vagt');
+  await side.waitForSelector(sel);
+}
+
 // Åbner linket, som når man trykker på det i Beskeder: en ny indlæsning af siden
 async function aabn(side, BASE, hashDel) {
   await side.goto('about:blank');
@@ -590,7 +599,7 @@ async function oversigtIpad(browser, H) {
   // anden dag ændres (code review af trin 1-5)
   await side.route('**/opskrifter/tunfrikadeller.json', (x) => x.abort());
   await side.reload();
-  await side.waitForSelector('.uge-dage');
+  await forbiLaasen(H, side, '.uge-dage');
   tjek((await side.locator('.dag[data-dag="2"] .dag-meta').textContent()).includes('kunne ikke hentes'), n + ': en ret, der ikke kan hentes, skal sige det');
   await tryk(side, '[data-fokus="dag-0-plus"]');
   gemt = await ugeLager(side);
@@ -607,7 +616,7 @@ async function oversigtIpad(browser, H) {
   await side.unroute('**/opskrifter/tunfrikadeller.json');
   await tryk(side, '[data-fokus="dag-0-minus"]'); // mandag tilbage til 4
   await side.reload();
-  await side.waitForSelector('.uge-dage');
+  await forbiLaasen(H, side, '.uge-dage');
 
   // 6. Fjern fredag
   await tryk(side, '[data-fokus="dag-4-fjern"]');
@@ -672,7 +681,7 @@ async function oversigtIpad(browser, H) {
   // 10. Oversigten på en telefon (360 px), iPad'en på højkant og (for metalinjen) på langs
   await side.evaluate((p) => { localStorage.setItem('kog-uge-v1', JSON.stringify(p)); }, { ...gemt, dage: [{ ret: 'koedsovs', af: 'rosa', n: 4 }, null, { ret: 'tunfrikadeller', af: 'pip', n: 12 }, null, null, { ret: 'bolognese-one-pot', af: 'bo', n: 6 }, null] });
   await side.reload();
-  await side.waitForSelector('.uge-dage');
+  await forbiLaasen(H, side, '.uge-dage');
   for (const [b, h] of [[360, 740], [390, 844], [820, 1180], [1180, 820], [1280, 800]]) {
     await side.setViewportSize({ width: b, height: h });
     await vent(150);
@@ -795,6 +804,7 @@ async function mereGroentLinje(browser, H) {
     const hvor = n + ' kontakten ' + (til ? 'til' : 'fra');
     await side.evaluate((v) => localStorage.setItem('kog-familie-v1', JSON.stringify({ v: 1, mereGroent: v })), til);
     await aabn(side, BASE, '#/uge');
+    await forbiLaasen(H, side, '.uge-dage');
     await venterPaa(side, () => document.querySelector('.dag[data-dag="1"] .dag-meta'), null, hvor + ': oversigten');
     const plan = await side.evaluate(() => [...document.querySelectorAll('.dag:not(.fri) .dag-meta')].map((e) => e.textContent));
     tjek(plan.length === 2 && plan[0].includes(ORD) === til && !plan[1].includes(ORD),
@@ -806,6 +816,7 @@ async function mereGroentLinje(browser, H) {
       await side.setViewportSize(skaerm.viewport);
     }
     await aabn(side, BASE, '#/uge/dag/3');
+    await forbiLaasen(H, side, '.ret-valg');
     await venterPaa(side, () => document.querySelector('.ret-valg-raekke .dag-meta'), null, hvor + ': valget');
     const valg = await side.evaluate(() => [...document.querySelectorAll('.ret-valg-raekke')].map((r) => [r.dataset.ret, r.querySelector('.dag-meta').textContent]));
     const forkert = valg.filter(([id, t]) => t.includes(ORD) !== (til && medGroent.includes(id))).map(([id]) => id);
@@ -837,7 +848,7 @@ async function oversigtDesktop(browser, H) {
   await side.goto(BASE + '/index.html');
   await side.evaluate((p) => localStorage.setItem('kog-uge-v1', JSON.stringify(p)), plan);
   await side.goto(BASE + '/index.html#/uge');
-  await side.waitForSelector('.uge-dage');
+  await forbiLaasen(H, side, '.uge-dage');
   const dage = plan.dage.map((d) => (d ? { ret: d.ret, n: d.n } : null));
   const url = BASE + '/index.html#/hent/' + kod(uge, dage);
   tjek(await side.locator('.uge-sum').textContent() === sumTekst(H, dage), n + ': summen (' + await side.locator('.uge-sum').textContent() + ')');
@@ -886,7 +897,7 @@ async function oversigtDesktop(browser, H) {
   // advarslen siger «Ny uge». «Del som tekst» virker stadig (code review U4, 23-10)
   await side.evaluate((p) => localStorage.setItem('kog-uge-v1', JSON.stringify(p)), { ...plan, uge: plusDage(uge, -70), rettet: Date.now() });
   await side.reload();
-  await side.waitForSelector('.uge-dage');
+  await forbiLaasen(H, side, '.uge-dage');
   const gammel = await side.evaluate(() => ({
     knapper: [...document.querySelectorAll('.uge-knapper .knap')].map((b) => b.textContent.trim()),
     advarsel: (document.querySelector('.uge-advarsel')?.textContent || '').replace(/\s/g, ' '), // hårde mellemrum som almindelige
@@ -960,7 +971,9 @@ async function boernValg(browser, H) {
   const n = skaerm.navn;
   console.log('[' + n + '] ugeplan: børnene vælger med dyrene, billederne og stemmen');
   const IPLAN = Object.keys(RETTER).filter((id) => RETTER[id].tumbi.ugeplan === true);
-  const sider = Math.ceil(IPLAN.length / 4);
+  // Uden udvalg og favoritter ser børnene højst 12 nye retter (BOERN_KORT i js/ugeplan.js, fase 1 b), ikke alle
+  const VIST = Math.min(IPLAN.length, 12);
+  const sider = Math.ceil(VIST / 4);
   const ret = (id) => ({ id, navn: RETTER[id].name });
   const uge = planMandag(new Date());
   const hvem = (hvor) => venterPaa(side, () => location.hash === '#/uge/vaelg' && document.querySelector('.dyr-gitter, ol.dag-brikker'), null, n + ': ' + hvor);
@@ -980,7 +993,7 @@ async function boernValg(browser, H) {
 
   // 1. Fra oversigten: «Børnene vælger» åbner dyrene, og stemmen spørger, hvem der skal vælge
   await side.goto(BASE + '/index.html#/uge');
-  await side.waitForSelector('.boern-vaelger');
+  await forbiLaasen(H, side, '.boern-vaelger');
   await tryk(side, '.boern-vaelger');
   await hvem('«Børnene vælger» skal åbne #/uge/vaelg');
   tjek(await h1(side) === 'Hvem skal vælge?', n + ': første trins overskrift (' + await h1(side) + ')');
@@ -997,7 +1010,8 @@ async function boernValg(browser, H) {
   tjek(await h1(side) === 'Rosa vælger mad', n + ': andet trins overskrift (' + await h1(side) + ')');
   tjek(await sagt(side) === siger(R.dyrVaelger('rosa')), n + ': stemmen siger, at Rosa vælger (' + await sagt(side) + ')');
   let k = await kortNu(side);
-  tjek(k.length === Math.min(4, IPLAN.length), n + ': fire retter pr. side (' + k.length + ')');
+  tjek(k.length === Math.min(4, VIST), n + ': fire retter pr. side (' + k.length + ')');
+  tjek(await side.locator('.side-prikker span').count() === sider, n + ': uden udvalg er der ' + sider + ' sider (højst 12 retter, ikke alle ' + IPLAN.length + ')');
   tjek(new Set(k.map((x) => x.top)).size === 1, n + ': retterne står på én række på iPad på langs');
   tjek(await side.locator(VAELG).count() === 0, n + ': fluebenet vises først, når en ret er trykket på');
   tjek(await side.locator('.side-forrige').evaluate((b) => b.disabled && getComputedStyle(b).visibility === 'hidden'), n + ': på første side er pilen tilbage væk');
@@ -1021,7 +1035,7 @@ async function boernValg(browser, H) {
     k = await kortNu(side);
     // Pilene taler som alle andre tryk på børneskærmene (code review U8, 23-10)
     tjek(await sagt(side) === siger(R.SIDE_FLERE), n + ': pilen frem siger, at der er mere mad (' + await sagt(side) + ')');
-    tjek(k.length === Math.min(4, IPLAN.length - 4) && !k.some((x) => x.id === a || x.id === b), n + ': pilen viser de næste retter (' + k.map((x) => x.id).join(', ') + ')');
+    tjek(k.length === Math.min(4, VIST - 4) && !k.some((x) => x.id === a || x.id === b), n + ': pilen viser de næste retter (' + k.map((x) => x.id).join(', ') + ')');
     tjek(!k.some((x) => x.valgt) && await side.locator(VAELG).count() === 0, n + ': en ny side har ingen markeret ret');
     tjek(await side.evaluate(() => Boolean(document.querySelectorAll('.side-prikker span')[1]?.classList.contains('nu'))), n + ': prikken for side 2 er fyldt');
     if (sider === 2) tjek(await side.evaluate(() => Boolean(document.activeElement?.classList.contains('side-forrige'))), n + ': på sidste side går fokus til pilen tilbage');
@@ -1222,7 +1236,10 @@ async function boernValg(browser, H) {
   await vent(200);
   tjek(await h1(side) === 'Pip vælger mad' && await side.locator('.ret-kort').count() > 0,
     n + ': Pip får den sidste frie dag med to retter pr. barn (' + await h1(side) + ')');
+  // Børnenes valg lukker låsen, så holdet kommer før oversigten
   await valgHash(side, '#/uge');
+  await venterPaa(side, () => location.hash === '#/uge' && document.querySelector('.voksen-vagt'), null, n + ': fra børnenes valg til #/uge viser holdet');
+  await forbiLaasen(H, side, '.uge-dage');
   await venterPaa(side, () => location.hash === '#/uge' && document.querySelector('.uge-dage'), null, n + ': tilbage til oversigten');
 
   // 10. To retter pr. barn: Rosa har to pladser, én fyldt, og er ikke færdig
@@ -1312,12 +1329,17 @@ async function boernValg(browser, H) {
   }
 
   // 12b. Den sidste side har færre retter, og de står i midten: før stod de tre til venstre på iPad'en på langs, og på
-  //      højkant og telefonen stod den sidste alene til venstre (UI-review 27-10). Løkken sluttede på sidste side, og
-  //      siden huskes, når skærmen skifter størrelse. Går retterne op i 4, er den sidste side fuld, og der er intet at
-  //      tjekke: så siger målingerne, at 12b er sprunget over, så det ikke er grønt i det stille (code review 28-10)
-  const rest = IPLAN.length % 4;
-  if (!rest) maal.push(n + ' børnene: 12b (den sidste sides retter står i midten) er sprunget over: ' + IPLAN.length + ' retter går op i 4, så den sidste side er fuld');
-  for (const [bredde, hoejde] of rest ? [[360, 740], [390, 844], [820, 1180], [1180, 820], [1280, 800]] : []) {
+  //      højkant og telefonen stod den sidste alene til venstre (UI-review 27-10). Uden udvalg er det 12 retter, der går
+  //      op i 4, så her får børnene et udvalg på 6: side 2 har 2 retter. Siden huskes, når skærmen skifter størrelse
+  const udvalg12b = IPLAN.slice(0, 6);
+  const rest = udvalg12b.length % 4;
+  await side.setViewportSize(skaerm.viewport);
+  await side.evaluate((ids) => localStorage.setItem('kog-familie-v1', JSON.stringify({ v: 1, udvalg: { ids, rettet: '2026-11-05' } })), udvalg12b);
+  await side.goto(BASE + '/index.html#/uge/vaelg/pip');
+  await side.waitForSelector('.ret-kort');
+  await tryk(side, '.side-naeste');
+  await venterPaa(side, (r) => document.querySelectorAll('.ret-kort').length === r, rest, n + ': side 2 med udvalget på 6');
+  for (const [bredde, hoejde] of [[360, 740], [390, 844], [820, 1180], [1180, 820], [1280, 800]]) {
     await side.setViewportSize({ width: bredde, height: hoejde });
     await vent(150);
     const c = await side.evaluate(() => {
@@ -1365,7 +1387,7 @@ async function boernValg(browser, H) {
   }
   tjek(!side.fejl.length, n + ' børnene: ' + side.fejl.join(' | '));
   await ctx.close();
-  maal.push(n + ' børnene: ' + IPLAN.length + ' retter på ' + sider + (sider === 1 ? ' side' : ' sider'));
+  maal.push(n + ' børnene: ' + VIST + ' af ' + IPLAN.length + ' retter på ' + sider + (sider === 1 ? ' side' : ' sider'));
 }
 
 // ---------- Printet: print.html?uge på desktop ----------
@@ -1405,7 +1427,7 @@ async function ugePrint(browser, H) {
   const dage = [{ ret: 'koedsovs', af: 'rosa', n: 4 }, null, { ret: 'tunfrikadeller', af: 'pip', n: 2 }, null, { ret: 'chorizo-pasta', af: 'bo', n: 6 }, null, null];
   await side.evaluate((p) => localStorage.setItem('kog-uge-v1', JSON.stringify(p)), { v: 1, uge, dage, n: 4, prBarn: 1, rettet: Date.now() });
   await side.goto(BASE + '/index.html#/uge');
-  await side.waitForSelector('a.print-link');
+  await forbiLaasen(H, side, 'a.print-link');
   await tryk(side, 'a.print-link');
   await ark(() => location.pathname.endsWith('/print.html') && location.search === '?uge' && document.querySelectorAll('.uge-dag').length === 7
     && !document.querySelector('#print').disabled, 'oversigtens «Print» skal åbne printet med syv dage');
@@ -1592,7 +1614,7 @@ async function udenNet(H) {
     let side = await nyFane(ctx, ipad);
     for (const s of foerste) await s.close();
     await side.goto(base + '/index.html#/uge');
-    await side.waitForSelector('.uge-dage');
+    await forbiLaasen(H, side, '.uge-dage');
     await side.evaluate((p) => localStorage.setItem('kog-uge-v1', JSON.stringify(p)),
       { v: 1, uge, dage: [{ ret: 'koedsovs', af: 'bo', n: 4 }, null, null, null, null, null, null], n: 4, prBarn: 1, rettet: Date.now() });
     const sw = await side.evaluate(async (antal) => {
@@ -1650,6 +1672,7 @@ async function udenNet(H) {
       'ipad uden net: Rosas ret skal stå på tirsdag (' + JSON.stringify(plan.dage) + ')');
     tjek(await sagt(side) === siger(R.UGE_TAK), 'ipad uden net: stemmen takker (' + await sagt(side) + ')');
     await valgHash(side, '#/uge');
+    await forbiLaasen(H, side, '.uge-dage');
     await venterPaa(side, () => document.querySelectorAll('.uge-dage > .dag').length === 7, null, 'ipad uden net: oversigten');
     const r = await raekker(side);
     tjek(r[0]?.navn === RETTER.koedsovs.name && r[1]?.navn === RETTER[valgt].name, 'ipad uden net: oversigten viser mandag og tirsdag (' + JSON.stringify(r.slice(0, 2)) + ')');

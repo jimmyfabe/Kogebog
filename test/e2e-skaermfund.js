@@ -51,6 +51,26 @@ async function gaa(side, hash, klar, vent) {
   await vent(60);
 }
 
+// Som gaa, til ugeplanens skærme til den voksne (#/uge og #/uge/dag/<n>): de ligger bag voksendelens lås (laasFor i
+// js/voksen-del.js), så efter en ny indlæsning, forsiden eller en ret kommer holdet først. Står det der, holdes det, og
+// appen tegner den samme adresse
+async function gaaForbi(side, H, hash, klar) {
+  await side.evaluate((h) => {
+    if (location.hash === h) return;
+    const s = document.querySelector('#app > .skaerm');
+    if (s) s.dataset.gammel = '1';
+    location.hash = h;
+  }, hash);
+  const vagt = nuSkaerm + '.voksen-vagt';
+  await side.waitForSelector(nuSkaerm + klar + ', ' + vagt, { timeout: 15000 });
+  if (await side.locator(vagt).count()) {
+    await side.locator(vagt).scrollIntoViewIfNeeded(); // under folden på en lav skærm
+    await H.hold(side, vagt);
+    await side.waitForSelector(nuSkaerm + klar, { timeout: 15000 });
+  }
+  await H.vent(60);
+}
+
 // Nyt dokument, når der er skiftet adresse mange gange
 async function frisk(side) {
   await side.reload();
@@ -73,7 +93,7 @@ async function raekkeUdenBillede(browser, H) {
     await side.route('**/opskrifter/koedsovs.json*', (r) => r.abort());
     await side.reload();
     await side.waitForSelector('.gruppe-knap');
-    await gaa(side, '#/uge', '.uge-dage .dag-meta', vent);
+    await gaaForbi(side, H, '#/uge', '.uge-dage .dag-meta');
     await side.waitForFunction(() => document.querySelector('.dag-billede') && /internetforbindelsen/.test(document.querySelector('.uge-dage').textContent), null, { timeout: 10000 });
     const r = await side.evaluate(() => [...document.querySelectorAll('.dag:not(.fri)')].map((d) => {
       const ret = d.querySelector('.dag-ret');
@@ -122,13 +142,17 @@ async function raekkeUdenBillede(browser, H) {
 
 // ---------- 2. Børnenes sideprikker ----------
 // 21 prikker i en række på 198 px blev 4×16 px. Prikkerne er pynt: siden siges i aria-label, og pilene er knapperne.
-// På 320 px gik syv prikker ind over pilene (code review 05-11-2026)
+// På 320 px gik syv prikker ind over pilene (code review 05-11-2026). Fra v10 ser børnene højst 12 retter uden et
+// udvalg (retterTilBoern i js/ugeplan.js), så de fleste sider kommer med et fuldt udvalg: 24 retter (MAKS_UDVALG i
+// js/lager.js) på 6 sider
 async function sidePrikker(browser, H) {
   const { RETTER, tjek, foto, tryk, vent, maal } = H;
-  const sider = Math.ceil(IPLAN(RETTER).length / 4);
+  const ids = IPLAN(RETTER).slice(0, 24);
+  const sider = Math.ceil(ids.length / 4);
+  const udvalg = JSON.stringify({ v: 1, udvalg: { ids, rettet: '2026-11-14' } });
   for (const n of paa(['iphone', 'ipad', 'se-land', 'land', 'w360', 'w320'])) {
     console.log('[' + n + '] fund 2: børnenes sideprikker');
-    const { ctx, side } = await aabn(browser, H, n);
+    const { ctx, side } = await aabn(browser, H, n, { lager: { 'kog-familie-v1': udvalg } });
     await gaa(side, '#/uge/vaelg/rosa', '.ret-gitter', vent);
     const prikker = () => side.evaluate(() => {
       const p = document.querySelector('.side-prikker');
@@ -383,11 +407,11 @@ async function adskiller(browser, H) {
     tjek(!forkertSkaleret.length, n + ' med husstand: ' + forkertSkaleret.length + ' retter viser ikke den rigtige «Til N portioner», fx ' + forkertSkaleret.slice(0, 4).join(' | '));
     maal.push(n + ' med husstand: «Til N portioner» på ' + skaleres + ' af ' + ids.length + ' retter, ' + forkertSkaleret.length + ' forkerte');
     await side.evaluate(() => localStorage.removeItem('kog-familie-v1'));
-    await gaa(side, '#/uge', '.uge-dage', vent);
+    await gaaForbi(side, H, '#/uge', '.uge-dage');
     await side.waitForFunction((a) => document.querySelectorAll('.dag:not(.fri) .dag-meta').length === a, 7, { timeout: 20000 });
     await se('ugeplanen');
     await foto(side, n + '-fund7-uge');
-    await gaa(side, '#/uge/dag/1', '.ret-valg', vent);
+    await gaaForbi(side, H, '#/uge/dag/1', '.ret-valg');
     await side.waitForFunction((a) => document.querySelectorAll('.ret-valg .dag-meta').length === a, plan.length, { timeout: 30000 });
     await se('vælg ret');
     await side.evaluate((h) => { location.hash = h; }, '#/hent/' + kod(mandag, længst.map((ret) => ({ ret, n: 4 }))));
@@ -420,7 +444,7 @@ async function afmeldes(browser, H, uge) {
   });
   const { ctx, side } = await aabn(browser, H, 'se-land', { lager: { 'kog-uge-v1': uge }, foer: spor });
   await side.waitForSelector('.gruppe-knap');
-  await gaa(side, '#/uge', '.uge-dage', vent);
+  await gaaForbi(side, H, '#/uge', '.uge-dage');
   await side.waitForFunction((a) => document.querySelectorAll('.dag:not(.fri) .dag-meta').length === a, 7, { timeout: 20000 });
   const status = async () => {
     await tegnet(side);
@@ -533,7 +557,7 @@ async function vaelgRet(browser, H) {
     console.log('[' + n + '] fund 9: vælg ret');
     const a = await aabn(browser, H, n);
     await a.side.waitForSelector('.gruppe-knap');
-    await gaa(a.side, '#/uge/dag/1', '.ret-valg', vent);
+    await gaaForbi(a.side, H, '#/uge/dag/1', '.ret-valg');
     const f = await a.side.evaluate(() => {
       const r = document.querySelector('.ret-valg-raekke').getBoundingClientRect();
       return { H: innerHeight, raekke: Math.round(r.top), billede: Math.round(document.querySelector('.ret-valg-raekke .dag-billede').getBoundingClientRect().bottom) };
@@ -544,7 +568,7 @@ async function vaelgRet(browser, H) {
     await a.ctx.close();
     const b = await aabn(browser, H, n, { foer: enRet });
     await b.side.waitForSelector('.gruppe-knap');
-    await gaa(b.side, '#/uge/dag/1', '.ret-valg', vent);
+    await gaaForbi(b.side, H, '#/uge/dag/1', '.ret-valg');
     await tryk(b.side, nuSkaerm + '.filtre .filter:has-text("Vegetar")'); // tryk venter, til appen tager imod tryk efter skiftet
     await b.side.waitForSelector('[data-fokus="vis-alle"]');
     const t = await b.side.evaluate(() => ({ H: innerHeight, bund: Math.round(document.querySelector('[data-fokus="vis-alle"]').getBoundingClientRect().bottom + 5) }));
