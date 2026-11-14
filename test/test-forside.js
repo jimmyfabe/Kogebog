@@ -10,7 +10,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { GRUPPER, AFTENSMAD, AFTENSMAD_GRUPPER, VARER, gruppeSoegeord, grafikGruppe } from '../js/katalog.js';
 import { kod } from '../js/plankode.js';
-import { planMandag } from '../js/tid.js';
+import { planMandag, idag } from '../js/tid.js';
 import { soeg, soegeTekst } from '../js/soeg.js';
 import { FAVORITTER, gruppeRute, forsideGrupper, gruppeAf, gruppeRetter, tilbageFraRet, rulleplads, blandet } from '../js/grupper.js';
 import { lavModel, erLynhurtig, harTid } from '../js/model.js';
@@ -808,13 +808,28 @@ const alleSider = () => {
   return sider;
 };
 
-test('børnenes valg: første side blander grupperne, og man når alle retter til ugeplanen og ingen andre', async () => {
+// Uden udvalg (fase 1 b i docs/fable-foraeldrekogebog-2026-11-10.md): favoritterne og nye retter, højst 12 på 3 sider,
+// ikke alle 83. Reglen selv prøves i test-udvalg.js
+test('børnenes valg uden udvalg: 12 nye retter på 3 sider, første side blander grupperne, og kun retter til ugeplanen', async () => {
   await start('#/uge/vaelg/rosa');
   const sider = alleSider();
+  assert.equal(sider.length, 3);
   assert.equal(sider[0].length, 4);
   assert.equal(new Set(gruppeNavne(sider[0])).size, 4, 'side 1 har: ' + gruppeNavne(sider[0]).join(', '));
-  assert.deepEqual(sider.flat().sort(), [...UGE].sort());
+  assert.deepEqual(sider.flat(), blandet(UGE, INDEX.grupper, (x) => x).slice(0, 12));
   assert.deepEqual(skrivninger, [], 'at bladre gemmer intet');
+});
+
+test('børnenes valg uden udvalg: hjerterne står først, og så nye retter, til der er 12', async () => {
+  const fav = [retterI('fisk').find((id) => UGE.includes(id)), retterI('koed').find((id) => UGE.includes(id))];
+  const ikkeIPlanen = INDEX.grupper.flatMap((g) => g.retter).find((id) => !UGE.includes(id)); // en kage: aldrig med
+  // Bo: Rosa og Pip huskes fra testene før (barn i js/ugeplan.js)
+  await start('#/uge/vaelg/bo', { foer: () => { for (const id of [...fav, ikkeIPlanen]) Lager.skiftFavorit(id, FILER); } });
+  const vist = alleSider().flat();
+  assert.equal(vist.length, 12);
+  assert.deepEqual(vist.slice(0, 2), fav);
+  assert.ok(!vist.includes(ikkeIPlanen), ikkeIPlanen + ' er ikke en ret til ugeplanen');
+  assert.deepEqual(vist.slice(2), blandet(UGE.filter((id) => !fav.includes(id)), INDEX.grupper, (x) => x).slice(0, 10));
 });
 
 test('børnenes valg med et udvalg: kun udvalgets retter, blandet, og det gemte udvalg er urørt', async () => {
@@ -874,6 +889,74 @@ test('fyldOp med den blandede liste: de 8 første har mindst 3 grupper, og kun r
   assert.equal(ny.length, V.UDVALG_STANDARD);
   assert.ok(new Set(gruppeNavne(ny)).size >= 3, 'kun: ' + gruppeNavne(ny).join(', '));
   assert.ok(ny.every((id) => UGE.includes(id)));
+});
+
+// ---------- «I dag» på forsiden og låsen på ugeplanen (fase 1 a og c) ----------
+
+// Mandagen i den uge, der er i gang (planMandag giver den næste mandag, så en plan lavet i weekenden er til næste uge)
+const denneMandag = () => {
+  const d = new Date();
+  return idag(new Date(d.getFullYear(), d.getMonth(), d.getDate() - ((d.getDay() + 6) % 7)));
+};
+const dagNr = () => (new Date().getDay() + 6) % 7; // mandag 0 … søndag 6
+const planMed = (uge, i, ret, af = 'rosa') => () => {
+  const dage = [null, null, null, null, null, null, null];
+  if (ret) dage[i] = { ret, af, n: 4 };
+  assert.ok(Lager.gemUge({ uge, dage }, FILER), 'planen blev gemt');
+};
+const idagKort = () => rod.querySelector('.idag-kort');
+
+test('«I dag» på forsiden: dagens ret fra ugeplanen som en knap, der åbner retten, og grupperne står der stadig', async () => {
+  const id = UGE[3];
+  await start('#/', { foer: planMed(denneMandag(), dagNr(), id) });
+  const k = idagKort();
+  assert.ok(k, 'kortet står på forsiden');
+  assert.equal(k.tag, 'button');
+  assert.equal(k.getAttribute('aria-label'), 'I dag laver vi ' + lavModel(JSONER.get(id)).navn.replace(/\u00AD/g, ''));
+  assert.equal(k.dataset.ret, id);
+  assert.equal(k.dataset.gruppe, gruppeAf(id, INDEX.grupper));
+  assert.ok(k.querySelector('.idag-dyr'), 'dyret, der valgte retten');
+  assert.match(k.textContent, /^I dag laver vi/);
+  assert.deepEqual(knapper().map((x) => x.dataset.gruppe), KNAPPER, 'de 11 grupper står der stadig');
+  assert.deepEqual(skrivninger, [], 'forsiden gemmer intet');
+  tryk(k);
+  assert.equal(location.hash, '#/ret/' + id);
+});
+
+test('«I dag» står der ikke uden en plan, på en tom dag, med en plan til en anden uge, eller med en plan fra en nyere udgave', async () => {
+  const id = UGE[3];
+  const naesteMandag = planMandag() === denneMandag() ? idag(new Date(Date.now() + 7 * 864e5)) : planMandag();
+  const tilfaelde = [
+    ['ingen plan', null],
+    ['dagen er tom', planMed(denneMandag(), (dagNr() + 1) % 7, id)],
+    ['næste uge', planMed(naesteMandag, dagNr(), id)],
+    ['nyere udgave', () => { lageret.set('kog-uge-v1', JSON.stringify({ v: 99, uge: denneMandag(), dage: [0, 1, 2, 3, 4, 5, 6].map(() => ({ ret: id, af: 'bo', n: 4 })) })); }],
+  ];
+  for (const [navn, foer] of tilfaelde) {
+    await start('#/', { foer });
+    assert.equal(idagKort(), null, navn);
+    assert.deepEqual(knapper().map((x) => x.dataset.gruppe), KNAPPER, navn);
+  }
+});
+
+test('ugeplanen ligger bag låsen: #/uge viser holdet, holdet åbner oversigten, og indkøbslisten kræver det ikke', async () => {
+  await start('#/uge');
+  try {
+    assert.equal(overskrift(), 'Til de voksne');
+    holdInde(rod.querySelector('.voksen-vagt'));
+    assert.equal(location.hash, '#/uge');
+    assert.ok(rod.querySelector('main.uge-oversigt'), 'ugeplanens oversigt efter holdet');
+    // «Voksne» i topbaren og husstanden i hovedet fører til voksendelen, uden et nyt hold
+    assert.ok(rod.querySelector('.uge-husstand'), 'husstanden står i hovedet');
+    tryk(rod.querySelector('.topbar-tilbage'));
+    gaaTil(location.hash);
+    assert.equal(location.hash, '#/voksen');
+    assert.equal(rod.querySelector('.voksen-vagt'), null, 'låsen er stadig åben');
+  } finally {
+    gaaTil('#/');
+  }
+  await start('#/indkoeb');
+  assert.equal(rod.querySelector('.voksen-vagt'), null, 'indkøbslisten (telefonen) har intet hold');
 });
 
 // ---------- Pilen «Tilbage» fra en ret, der ikke er åbnet fra børnenes grupper ----------

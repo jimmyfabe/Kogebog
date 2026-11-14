@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { nyTimer, timerStatus, formaterTid, varighed, varighedKort, varighedTale, HURTIG_SEK, planMandag, ugeNr, dagDato } from '../js/tid.js';
+import { nyTimer, timerStatus, formaterTid, varighed, varighedKort, varighedTale, HURTIG_SEK, planMandag, ugeNr, dagDato, dagIUgen } from '../js/tid.js';
 import { isoTilMinutter, minutterTekst, tilTale, talOrd, ukendtKoen, KOEN, antalOrd, delIngrediens } from '../js/tekst.js';
 import { lavModel, erLynhurtig, harTid, LYN_MIN } from '../js/model.js';
 import { hentIndex } from '../js/data.js';
@@ -281,6 +281,18 @@ test('ugeplanens mandag, ugenummer og datoer', () => {
   assert.equal(dagDato('2026-10-26', 0), '26/10');
   assert.equal(dagDato('2026-10-26', 6), '1/11');
   assert.equal(dagDato('2026-12-28', 4), '1/1');
+});
+
+// Forsidens «I dag»-kort: dagen i planens uge, og -1 uden for ugen eller ved en dato, der ikke passer
+test('dagIUgen: dagen i ugen eller -1', () => {
+  assert.equal(dagIUgen('2026-10-26', '2026-10-26'), 0, 'mandag');
+  assert.equal(dagIUgen('2026-10-26', '2026-11-01'), 6, 'søndag, over månedsskiftet og sommertiden');
+  assert.equal(dagIUgen('2026-12-28', '2027-01-01'), 4, 'over nytår');
+  assert.equal(dagIUgen('2026-10-26', '2026-10-25'), -1, 'dagen før planen');
+  assert.equal(dagIUgen('2026-10-26', '2026-11-02'), -1, 'ugen efter');
+  for (const [uge, dato] of [[null, '2026-10-26'], ['2026-10-26', undefined], ['26-10-2026', '2026-10-26'], ['2026-10-26', '2026-10-26T00:00'], ['', ''], [20261026, '2026-10-26']]) {
+    assert.equal(dagIUgen(uge, dato), -1, JSON.stringify([uge, dato]));
+  }
 });
 
 // hentIndex (js/data.js) med en falsk fetch, der svarer med index.json

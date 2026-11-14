@@ -265,6 +265,18 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .forside-timer { display: flex; justify-content: center; padding: 0 16px; }
 .forside-timer .pille { margin-top: 16px; }
 
+/* «I dag»-kortet (idagKort i app.js): dagens ret fra ugeplanen lige under dugen, som svar på «Hvad skal vi lave i dag?».
+   Kun når der er en ret i dag; ellers står forsiden som før. Hvid som dugens skilt, med rettens gruppefarve på
+   tallerkenen og dyret, der valgte den, i højre side. 82 px højt: tallerken 64 + luft 12 + kant 6 */
+.forside-idag { display: flex; justify-content: center; padding: 12px 24px 0; }
+.knap.idag-kort { width: min(100%, 620px); min-height: 82px; justify-content: flex-start; gap: 16px; padding: 6px 14px 6px 6px; border-radius: 999px; background: var(--hvid); text-align: left; }
+.idag-plade { flex: none; display: grid; place-items: center; width: 64px; height: 64px; border: var(--kant); border-radius: 50%; background: var(--ret-farve, var(--creme)); }
+.idag-plade img { width: 84%; }
+.idag-tekst { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.idag-naar { font-size: 17px; font-weight: 750; color: var(--kakao-blid); }
+.idag-navn { font-size: clamp(22px, 2.4vw, 28px); font-weight: 800; line-height: 1.1; overflow-wrap: break-word; -webkit-hyphens: auto; hyphens: auto; }
+.idag-dyr { flex: none; width: 56px; }
+
 .forside-indhold { flex: 1; display: flex; flex-direction: column; justify-content: center; }
 
 /* Forsidens billedknapper. Gitteret får antallet af kolonner og rækker som variabler, og tallerkenen regnes ud af skærmens
@@ -289,6 +301,9 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 }
 /* Pillen skubber knapperne ned: tallerkenerne bliver mindre, så den nederste række stadig kan ses (56 + 16 px) */
 .forside:has(.forside-timer .pille:not([hidden])) .gruppe-knapper { --rest: 386px; }
+/* … og det gør «I dag»-kortet også (82 + 12 px), alene og sammen med pillen */
+.forside:has(.forside-idag) .gruppe-knapper { --rest: 408px; }
+.forside:has(.forside-idag):has(.forside-timer .pille:not([hidden])) .gruppe-knapper { --rest: 480px; }
 .gruppe-knapper > li { display: flex; min-width: 0; }
 .knap.gruppe-knap {
   flex: 1;
@@ -353,6 +368,9 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 @media (max-width: 700px) {
   .gruppe-knapper { --kolonner: 2; --raekker: 5; --raek-gab: 14px; --plade: 112px; gap: var(--raek-gab) 12px; padding: 12px 12px 8px; }
   .knap.gruppe-knap { font-size: 22px; padding: 10px 8px 12px; border-radius: 24px; }
+  .forside-idag { padding: 12px 12px 0; }
+  .knap.idag-kort { gap: 12px; }
+  .idag-dyr { width: 48px; }
 }
 /* Lave skærme på langs (iPhone på tværs): tallerkenen ved siden af navnet, så flere knapper kan ses ad gangen.
    Knappen er 88 px høj, mindstemålet for små fingre: tallerken 64 + padding 18 + kant 6 (e2e måler det; med 6 px padding 82) */

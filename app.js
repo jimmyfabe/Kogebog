@@ -15,12 +15,12 @@ import { holdKnap } from './js/hold.js';
 import { trekant, voksenNaeste } from './js/voksen.js';
 import { voksenFarer, erLynhurtig, harTid, LYN_MIN } from './js/model.js';
 import { valgt, GROENT_TEKST } from './js/groent.js';
-import { VERBER, INGREDIENSER, GRUPPER, grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, grafikGruppe, GRAFIK_FAERDIG } from './js/katalog.js';
-import { formaterTid, varighed, varighedTale, idag } from './js/tid.js';
+import { VERBER, INGREDIENSER, GRUPPER, DYR, grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, grafikGruppe, GRAFIK_FAERDIG } from './js/katalog.js';
+import { formaterTid, varighed, varighedTale, idag, dagIUgen } from './js/tid.js';
 import { minutterTekst, utenBloede } from './js/tekst.js';
 import { UDGAVE } from './js/version.js';
 import { soeg, soegeord } from './js/soeg.js';
-import { FAVORITTER, HASH_SOEG, hashGruppe, gruppeRute, forsideGrupper, gruppeRetter, tilbageFraRet, rulleplads } from './js/grupper.js';
+import { FAVORITTER, HASH_SOEG, hashGruppe, gruppeRute, forsideGrupper, gruppeRetter, gruppeAf, tilbageFraRet, rulleplads } from './js/grupper.js';
 
 // ?hurtig=1 (kun til test): alle timere varer 2 sekunder
 const HURTIG = new URLSearchParams(location.search).get('hurtig') === '1';
@@ -156,11 +156,14 @@ function timerPille() {
 
 // Huset fører til forsiden. Med tilbage (en adresse, kun retten) står en pil i stedet: to knapper til venstre gav
 // advarslen «Sammen med en voksen» for lidt plads på iPhone
-function topbar(midte, tilbage = null) {
+// tilbage: adressen bag pilen (uden: huset til forsiden). tekst: pilen får et ord ved siden af og label som navn
+// (ugeplanens «Voksne» tilbage til voksendelens menu)
+function topbar(midte, tilbage = null, { tekst = '', label = 'Tilbage' } = {}) {
+  const tilbageTryk = () => { Tale.stop(); naviger(tilbage); };
   return el('header', { class: 'topbar' },
-    tilbage
-      ? knap('', { klasse: 'rund', ikonNavn: 'tilbage', label: 'Tilbage', onclick: () => { Tale.stop(); naviger(tilbage); } })
-      : knap('', { klasse: 'rund', ikonNavn: 'hjem', label: 'Til forsiden', onclick: () => { Tale.stop(); naviger(hashFor.forside()); } }),
+    tilbage && tekst ? knap(tekst, { klasse: 'lille topbar-tilbage', ikonNavn: 'tilbage', label, onclick: tilbageTryk })
+      : tilbage ? knap('', { klasse: 'rund', ikonNavn: 'tilbage', label: 'Tilbage', onclick: tilbageTryk })
+        : knap('', { klasse: 'rund', ikonNavn: 'hjem', label: 'Til forsiden', onclick: () => { Tale.stop(); naviger(hashFor.forside()); } }),
     el('div', { class: 'topbar-midte' }, midte || null),
     timerPille());
 }
@@ -271,6 +274,28 @@ function favoritKnap() {
   return b;
 }
 
+// «I dag»-kortet (docs/fable-foraeldrekogebog-2026-11-10.md, fase 1 a): dagens ret i ugeplanen (kog-uge-v1 gennem
+// js/lager.js) med billedet og navnet, så barnet selv kan starte den. Ét tryk åbner retten, som andet tryk på et kort, og
+// dens pil fører tilbage til forsiden. Dyret, der valgte retten, står i højre side. Uden en ret i dag (ingen plan, en
+// anden uge, en fri aften, en plan fra en nyere udgave, eller retten kunne ikke hentes) er der intet kort
+function idagKort() {
+  const p = Lager.hentUge(S.ids);
+  const i = p.laast ? -1 : dagIUgen(p.uge, idag());
+  const d = i >= 0 ? p.dage[i] : null;
+  const m = d ? S.retter.get(d.ret) : null;
+  if (!m || m instanceof Error) return null;
+  const b = el('button', { type: 'button', class: 'knap idag-kort', 'data-ret': m.id, 'data-gruppe': gruppeAf(m.id, S.grupper), 'aria-label': 'I dag laver vi ' + m.navn },
+    el('span', { class: 'idag-plade' }, billede(grafikRet(m.id), '')),
+    el('span', { class: 'idag-tekst' }, el('span', { class: 'idag-naar', tekst: 'I dag laver vi' }), el('span', { class: 'idag-navn', tekst: m.navn })),
+    Object.hasOwn(DYR, d.af) ? billede(grafikDyr(d.af), '', 'idag-dyr') : null);
+  b.addEventListener('click', klik(() => {
+    const u = udgave(m);
+    huskFra(m.id);
+    naviger(hashFor.ret(m.id), () => Tale.sig(R.retAaben(u), { derefter: R.voksenStart(u) }));
+  }));
+  return el('div', { class: 'forside-idag' }, b);
+}
+
 function forside() {
   S.fra = null;
   S.soegTekst = '';
@@ -319,7 +344,7 @@ function forside() {
   const bund = harRetter ? el('div', { class: 'forside-voksen' }, Lager.hentFamilie(S.ids).favoritter.length ? favoritKnap() : null, voksne) : null;
   // Røsts licens kræver, at man får at vide, at stemmen er en computerstemme, før den taler (sikkerhedsreview 20-10).
   // Før stod det kun på printet. Versionsnummeret står under, så den voksne kan se, om iPad'en har den nye udgave (js/version.js)
-  return el('main', { class: 'skaerm forside' }, top, el('div', { class: 'forside-timer' }, timerPille()), indhold, bund,
+  return el('main', { class: 'skaerm forside' }, top, el('div', { class: 'forside-timer' }, timerPille()), harRetter ? idagKort() : null, indhold, bund,
     el('p', { class: 'forside-fod', tekst: 'Stemmen er en computerstemme (Røst\u00a0fra\u00a0Alexandra\u00a0Instituttet).' }),
     el('p', { class: 'forside-fod forside-version', tekst: 'Version ' + UDGAVE }));
 }
@@ -839,7 +864,8 @@ async function indlaes() {
   vis();
 }
 
-Ugeplan.init({ S, knap, klik, billede, lynMaerke, lynTekst, topbar, statusSkaerm, naviger, annoncer, indlaes, vis, huskFra });
+Ugeplan.init({ S, knap, klik, billede, lynMaerke, lynTekst, topbar, statusSkaerm, naviger, annoncer, indlaes, vis, huskFra,
+  voksne: (hash) => VoksenDel.aabn(hash), husstand: () => VoksenDel.husstandKnap() });
 VoksenDel.init({ S, knap, klik, billede, topbar, statusSkaerm, naviger, annoncer, indlaes, vis, visSkaerm, huskFra });
 Timer.gendan();
 Tale.hentLydListe();

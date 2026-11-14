@@ -1,5 +1,6 @@
 // test-voksen-del.js — voksendelens logik (js/voksen-del.js, docs/foraeldredel.md afsnit 2-5): adresserne, låsen (hold,
-// 10 minutter uden tryk, ud af #/voksen…), «Fyld op med nye», afkrydsningen og filtrene i udvalget. Skærmene selv
+// 10 minutter uden tryk, ugeplanen bag den, børnenes adresser lukker den), oversigtens rækkefølge, «Print» i «Retter»,
+// «Fyld op med nye», afkrydsningen og filtrene i udvalget. Skærmene selv
 // prøves i WebKit. js/hold.js lytter på document, når den indlæses, så testen giver et lille falsk document først.
 // Kør:  node test/test-voksen-del.js
 import { test, mock } from 'node:test';
@@ -109,13 +110,52 @@ test('låst: en adresse herinde viser holdet først, og aabn() låser op og går
   assert.equal(location.hash, '#/voksen');
 });
 
-test('låsen lukker, når man forlader #/voksen…', () => {
-  V.aabn();
-  assert.equal(V.rute('#/uge'), false);
-  assert.equal(V.erLaastOp(), false);
-  V.aabn();
-  assert.equal(V.rute('#/'), false);
-  assert.equal(V.erLaastOp(), false);
+test('låsen dækker ugeplanen: laasFor siger bag, fri eller luk for hver adresse', () => {
+  const tabel = [
+    ['#/voksen', 'bag'], ['#/voksen/katalog', 'bag'], ['#/uge', 'bag'], ['#/uge/', 'bag'], ['#/uge/dag/3', 'bag'],
+    ['#/uge/xyz', 'bag'], ['#/uge/vaelg', 'luk'], ['#/uge/vaelg/rosa', 'luk'], ['#/indkoeb', 'fri'], ['#/hent/x', 'fri'],
+    ['#/', 'luk'], ['', 'luk'], ['#/ret/x', 'luk'], ['#/gruppe/kylling', 'luk'], ['#/ugex', 'luk'],
+  ];
+  for (const [hash, zone] of tabel) assert.equal(V.laasFor(hash), zone, hash);
+});
+
+test('låsen holder på ugeplanen og indkøbslisten, og lukker på forsiden og børnenes valg', () => {
+  for (const hash of ['#/uge', '#/uge/dag/2', '#/indkoeb', '#/hent/abc']) {
+    V.aabn();
+    assert.equal(V.rute(hash), false, hash + ': ugeplanen tegner selv sin skærm');
+    assert.equal(V.erLaastOp(), true, hash + ': låsen er stadig åben');
+  }
+  for (const hash of ['#/', '#/uge/vaelg', '#/uge/vaelg/rosa', '#/ret/koedsovs']) {
+    V.aabn();
+    assert.equal(V.rute(hash), false, hash);
+    assert.equal(V.erLaastOp(), false, hash + ': låsen lukker');
+  }
+});
+
+test('låst: #/uge og #/uge/dag/<n> viser holdet, indkøbslisten gør ikke', () => {
+  V.rute('#/');
+  for (const hash of ['#/uge', '#/uge/dag/4']) {
+    vist.length = 0;
+    assert.equal(V.rute(hash), true, hash);
+    assert.equal(vist.at(-1).status.titel, 'Til de voksne', hash + ': holdet, ikke ugeplanen');
+  }
+  vist.length = 0;
+  assert.equal(V.rute('#/indkoeb'), false);
+  assert.equal(vist.length, 0, 'indkøbslisten kræver ikke holdet (telefonen åbner den)');
+});
+
+test('aabn(hash) går til en adresse bag låsen, og ellers til oversigten', () => {
+  V.aabn('#/uge');
+  assert.equal(location.hash, '#/uge');
+  assert.equal(V.erLaastOp(), true);
+  V.aabn('#/uge/dag/5');
+  assert.equal(location.hash, '#/uge/dag/5');
+  for (const hash of ['#/ret/koedsovs', '#/uge/vaelg', '#/indkoeb', 'javascript:alert(1)', undefined]) {
+    V.rute('#/');
+    V.aabn(hash);
+    assert.equal(location.hash, '#/voksen', String(hash));
+  }
+  V.rute('#/');
 });
 
 test('låsen lukker efter 10 minutter uden tryk, og skærmen bliver til holdet', (t) => {
@@ -506,25 +546,66 @@ test('katalogets hjælpetekst siger, at det første «Med» gør børnenes valg 
   const uge = S.ids.filter((id) => S.retter.get(id).uge);
   const hjaelp = () => tekstAf(medKlasse(vist.at(-1), 'voksen-hjaelp')[0]);
   aabnSide('katalog');
-  assert.match(hjaelp(), new RegExp('Nu vælger børnene mellem alle ' + uge.length + ' retter\. Efter det første «Med» vælger de kun mellem dem, der er med\.'), hjaelp());
+  assert.match(hjaelp(), /Nu vælger børnene mellem favoritterne og nye retter, højst 12\. Efter det første «Med» vælger de kun mellem dem, der er med\./, hjaelp());
   send(medFokusNavn(vist.at(-1), 'ret-' + uge[0]), 'click');
   assert.equal(JSON.parse(lageret.get('kog-familie-v1')).udvalg.ids.length, 1, '«Med» har lavet et udvalg med én ret');
   assert.match(hjaelp(), /Børnene vælger kun mellem de retter, der er med\.$/, hjaelp());
   assert.doesNotMatch(hjaelp(), /alle \d+ retter/);
 });
 
-// Review-fund 9 (02-11): på telefonen stod hjertet og «Åbn» altid på deres egen linje, også i rækker uden «Med» («jul» gav
-// en side på 4.322 px). Kun rækker med «Med» får klassen .med-udvalg, der giver knapperne en linje for sig (familie.css,
-// test-css.js)
-test('kataloget: kun rækker med «Med» har knapperne med .med-udvalg', (t) => {
+// «Print» i «Retter» (v10): hver række har et link til print.html?ret=<id>, og over listen står hele kogebogen eller de
+// viste retter. Husstandens portioner (n) og «Mere grønt» (groen=1) følger med, som på retten uden en dag i ugeplanen
+const printHref = (rod, navn) => medFokusNavn(rod, navn)?.attr.href;
+test('«Retter»: «Print» i hver række og «Print hele kogebogen» over listen, med husstanden og mere grønt i adressen', (t) => {
   t.after(() => V.rute('#/'));
   medOpskrifter();
-  const skaerm = aabnSide('katalog', { b: 390, h: 844 });
+  let skaerm = aabnSide('katalog');
   const raekker = find(skaerm, (e) => e.tag === 'li' && e.attr['data-ret']);
   assert.equal(raekker.length, S.ids.length);
-  const forkert = raekker.filter((li) => harKlasse(medKlasse(li, 'voksen-raekke-knapper')[0], 'med-udvalg') !== Boolean(medFokusNavn(li, 'ret-' + li.attr['data-ret'])));
-  assert.deepEqual(forkert.map((li) => li.attr['data-ret']), [], 'rækker, hvor .med-udvalg ikke følger «Med»');
-  assert.ok(raekker.some((li) => !medFokusNavn(li, 'ret-' + li.attr['data-ret'])), 'der er rækker uden «Med» (juleretterne)');
+  const forkert = raekker.filter((li) => printHref(li, 'print-' + li.attr['data-ret']) !== 'print.html?ret=' + li.attr['data-ret']);
+  assert.deepEqual(forkert.map((li) => li.attr['data-ret']), [], 'rækker uden det rigtige printlink');
+  const link = medFokusNavn(skaerm, 'print-' + S.ids[0]);
+  assert.equal(link.tag, 'a');
+  assert.equal(link.attr['aria-label'], 'Print ' + S.retter.get(S.ids[0]).navn);
+  assert.equal(printHref(skaerm, 'print-flere'), 'print.html?alle');
+  assert.equal(tekstAf(medFokusNavn(skaerm, 'print-flere')), 'Print hele kogebogen');
+  // Søgningen gør det til de viste retter, i listens rækkefølge
+  skriv(skaerm, 'jul');
+  const jul = raekkerI(skaerm);
+  assert.ok(jul.length > 1 && jul.length < S.ids.length, 'jul: ' + jul.length);
+  assert.equal(printHref(skaerm, 'print-flere'), 'print.html?retter=' + jul.join(','));
+  assert.equal(tekstAf(medFokusNavn(skaerm, 'print-flere')), 'Print de ' + jul.length + ' viste');
+  // Husstand og mere grønt: n og groen=1 på alle links
+  V.rute('#/');
+  lageret.clear();
+  assert.ok(lager.gemFamilie({ voksne: 2, boern: 2, mereGroent: true }, S.ids));
+  V.aabn();
+  location.hash = '#/voksen/katalog';
+  V.rute(location.hash);
+  skaerm = vist.at(-1);
+  const f = lager.hentFamilie(S.ids);
+  const n = V.husstandSum(f.voksne, f.boern, f.barnAndel).n;
+  assert.ok(f.mereGroent === true && n >= 3, JSON.stringify({ mereGroent: f.mereGroent, n }));
+  assert.equal(printHref(skaerm, 'print-koedsovs'), 'print.html?ret=koedsovs&n=' + n + '&groen=1');
+  assert.equal(printHref(skaerm, 'print-flere'), 'print.html?alle&n=' + n + '&groen=1');
+});
+
+test('oversigten: Ugeplan, Indkøbsliste og Retter øverst, og husstand, udvalg og favoritter under «Mere»', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  const skaerm = aabnSide('');
+  const lister = find(skaerm, (e) => e.tag === 'ul' && harKlasse(e, 'voksen-menu'));
+  assert.equal(lister.length, 2);
+  const punkterI = (ul) => find(ul, (e) => harKlasse(e, 'voksen-punkt')).map((b) => b.dataset.fokus);
+  assert.deepEqual(punkterI(lister[0]), ['ugeplan', 'indkoeb', 'katalog']);
+  assert.deepEqual(punkterI(lister[1]), ['husstand', 'udvalg', 'favoritter']);
+  const nav = find(skaerm, (e) => e.tag === 'nav')[0];
+  assert.deepEqual(nav.born.map((b) => b.tag), ['ul', 'h2', 'ul'], '«Mere» står mellem de to lister');
+  assert.equal(tekstAf(nav.born[1]), 'Mere');
+  assert.equal(lister[1].attr['aria-labelledby'], nav.born[1].attr.id);
+  assert.match(tekstAf(medFokusNavn(skaerm, 'katalog')), /^Retter/);
+  // Uden udvalg siger «Ugens udvalg», hvor mange børnene vælger mellem (højst 12; hårdt mellemrum før «retter»)
+  assert.match(tekstAf(medFokusNavn(skaerm, 'udvalg')), /Ikke sat: børnene vælger mellem 12\u00a0retter$/);
 });
 
 // Review 02-11 (fund 3): på en kompakt skærm står «Alle» i den lukkede boks, så «Fjern filtrene» gav fokus til

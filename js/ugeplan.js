@@ -1,11 +1,12 @@
 // ugeplan.js — skærmene til ugeplanen og indkøbslisten (docs/ugeplan-plan.md, afsnit 1-3):
 //   #/hent/<kode>  telefonen: gemmer listen fra linket og skifter adressen til #/indkoeb (history.replaceState)
 //   #/indkoeb      telefonen: listen, der krydses af i butikken. Er den tom, kan linket sættes ind i et felt
-//   #/uge          iPad og desktop: den voksnes oversigt over ugen, Send til telefon, Del som tekst, Print og Ny uge
+//   #/uge          iPad og desktop: den voksnes oversigt over ugen, Send til telefon, Del som tekst, Print og Ny uge.
+//                  #/uge og #/uge/dag/<n> ligger bag voksendelens lås (laasFor i js/voksen-del.js), #/uge/vaelg ikke
 //   #/uge/dag/<n>  den voksne vælger en ret til dag n (1 = mandag) med filtrene højst 40 min, vegetar, masser af grønt,
 //                  billigst og mindst kniv
 //   #/uge/vaelg    iPad: børnene vælger med dyrene, billederne og stemmen (hvem → ret → dag) blandt ugens udvalg fra
-//                  voksendelen (alle ugeplan-retter, når der intet udvalg er)
+//                  voksendelen (favoritterne og nye retter, højst 12, når der intet udvalg er: retterTilBoern)
 // Koden i linket kommer udefra. Den går kun gennem afkod() i js/plankode.js, og intet fra adressen kommer i DOM'en: fejlene
 // er faste tekster, og listen gemmes med den genskrevne kode. Lageret røres kun gennem js/lager.js, og al tekst sættes
 // som tekst (js/dom.js). app.js ejer ruterne og tilstanden (S) og giver sine hjælpere med init().
@@ -24,7 +25,9 @@ import { blandet } from './grupper.js';
 import * as Tale from './tale.js';
 import * as R from './replikker.js';
 
-// app.js: { S, knap, klik, billede, lynMaerke, lynTekst, topbar, statusSkaerm, naviger, annoncer, indlaes, vis }
+// app.js: { S, knap, klik, billede, lynMaerke, lynTekst, topbar, statusSkaerm, naviger, annoncer, indlaes, vis, huskFra,
+// voksne, husstand }. voksne(hash) låser voksendelen op og går til hash; husstand() er knappen med husstanden
+// (js/voksen-del.js)
 let K = null;
 export function init(k) {
   K = k;
@@ -691,12 +694,15 @@ function oversigtSkaerm() {
     harRetter || p.uge ? ny : null,
   ].filter(Boolean);
 
+  // «Voksne» fører tilbage til voksendelens menu (ugeplanen ligger bag samme lås), og husstanden står i hovedet, så den
+  // voksne kan se, hvem portionerne er regnet til, uden at gå derind
   return el('main', { class: 'skaerm uge-oversigt' },
-    K.topbar(),
+    K.topbar(null, '#/voksen', { tekst: 'Voksne', label: 'Tilbage til voksendelen' }),
     el('div', { class: 'uge' },
       el('header', { class: 'uge-hoved' },
         el('h1', { tabindex: '-1', tekst: 'Ugeplan' }),
-        ledLinje('p', { class: 'uge-nr' }, ['Uge ' + ugeNr(uge), dagDato(uge, 0) + '–' + dagDato(uge, 6)])),
+        ledLinje('p', { class: 'uge-nr' }, ['Uge ' + ugeNr(uge), dagDato(uge, 0) + '–' + dagDato(uge, 6)]),
+        el('div', { class: 'uge-husstand-linje' }, medFokus(K.husstand(), 'husstand'))),
       advarsel ? el('p', { class: 'uge-advarsel', role: 'status', tekst: advarsel }) : null,
       indstillinger,
       el('ol', { class: 'uge-dage', role: 'list', 'aria-label': 'Ugens dage' }, p.dage.map((d, i) => dagRaekke(p, d, i))),
@@ -833,14 +839,33 @@ const harValgt = (p, dyr) => (BOERN.includes(dyr)
 const ugenErFuld = (p) => p.dage.every(Boolean);
 const nulstilBarn = () => Object.assign(barn, { dyr: null, side: 0, ret: null, dag: null });
 
-// Retterne, børnene vælger mellem: ugens udvalg fra voksendelen (udvalg fra hentFamilie i js/lager.js), men kun dem, der
-// stadig står i alle (ugeplan-retterne), og i samme rækkefølge. Uden udvalg, eller når ingen af dets retter er tilbage,
-// er det alle, som før udvalget fandtes. Ren funktion (test/test-udvalg.js)
-export function retterTilBoern(alle, udvalg) {
+// Uden et udvalg vælger børnene blandt højst BOERN_KORT retter (3 sider), og højst BOERN_HJERTER af dem er favoritter, så
+// der altid er mindst 2, familien ikke har lavet (docs/fable-foraeldrekogebog-2026-11-10.md, fase 1 b)
+export const BOERN_KORT = 12;
+export const BOERN_HJERTER = 10;
+
+// Retterne, børnene vælger mellem, i den rækkefølge de står på siderne. familie er hentFamilie fra js/lager.js, grupper
+// index.json's grupper. Med et udvalg fra voksendelen: udvalgets retter, der stadig står i alle (ugeplan-retterne),
+// blandet over grupperne, så første side ikke kun er pasta. Uden udvalg, eller når ingen af dets retter er tilbage:
+// favoritterne først (de mindst nyligt lavede først, højst BOERN_HJERTER), og så retter, der aldrig er lavet (blandet over
+// grupperne), til der er BOERN_KORT. Er der ikke nye nok, de mindst nyligt lavede. Ren funktion (test/test-udvalg.js)
+export function retterTilBoern(alle, familie, grupper = []) {
   if (!Array.isArray(alle)) throw new TypeError('retterTilBoern: alle skal være en liste med ugeplan-retterne');
-  const ids = udvalg && Array.isArray(udvalg.ids) ? udvalg.ids : [];
+  const f = familie && typeof familie === 'object' ? familie : {};
+  const gr = Array.isArray(grupper) ? grupper : [];
+  const ids = f.udvalg && Array.isArray(f.udvalg.ids) ? f.udvalg.ids : [];
   const valgte = alle.filter((m) => ids.includes(m.id));
-  return valgte.length ? valgte : alle;
+  if (valgte.length) return blandet(valgte, gr, (m) => m.id);
+  const fav = Array.isArray(f.favoritter) ? f.favoritter : [];
+  const lavet = f.lavet && typeof f.lavet === 'object' ? f.lavet : {};
+  const erLavet = (m) => Object.hasOwn(lavet, m.id);
+  const sidst = (m) => (erLavet(m) && lavet[m.id] && typeof lavet[m.id].sidst === 'string' ? lavet[m.id].sidst : '');
+  const tidligstFoerst = (a, b) => (sidst(a) < sidst(b) ? -1 : sidst(a) > sidst(b) ? 1 : 0);
+  const hjerter = alle.filter((m) => fav.includes(m.id)).sort(tidligstFoerst).slice(0, BOERN_HJERTER);
+  const resten = alle.filter((m) => !fav.includes(m.id));
+  const nye = blandet(resten.filter((m) => !erLavet(m)), gr, (m) => m.id);
+  const lavede = resten.filter(erLavet).sort(tidligstFoerst);
+  return [...hjerter, ...[...nye, ...lavede].slice(0, BOERN_KORT - hjerter.length)];
 }
 // Antal sider med PR_SIDE retter, mindst én (også uden retter)
 export const sideAntal = (retter) => Math.max(1, Math.ceil(retter.length / PR_SIDE));
@@ -891,12 +916,13 @@ function valgSide(klasse, hoved, indhold, ...bund) {
     el('footer', { class: 'handlinger valg-bund' }, bund));
 }
 
-// Den voksnes vej tilbage til oversigten: bag et hold, så et barn ikke kommer derud ved et tilfælde
+// Den voksnes vej tilbage til oversigten: bag et hold, så et barn ikke kommer derud ved et tilfælde. Holdet låser
+// voksendelen op igen (børnenes valg lukkede den), så oversigten ikke beder om et hold mere
 const tilUgeplanen = () => holdKnap({
   klasse: 'lille voksen-hold til-ugeplan',
   label: 'Ugeplan til den voksne. Hold knappen inde i 2 sekunder.',
   indhold: [ikon('kalender'), el('span', { tekst: 'Ugeplan: hold' })],
-  naarFaerdig: () => K.naviger('#/uge'),
+  naarFaerdig: () => K.voksne('#/uge'),
 });
 
 // Dagens navn, tallerkenen (rettens billede, eller tom) og dyret, der har valgt. ny: retten, der vises på en fri dag,
@@ -963,11 +989,11 @@ function fuldSkaerm(p) {
 }
 
 // Trin 2: fire retter pr. side. Første tryk siger navnet og markerer retten, fluebenet («Vælg») går videre til dagene.
-// Blandet efter udvalget, så første side heller ikke med et udvalg kun er pasta. Den voksnes «Vælg ret» (dagSkaerm) har
-// filtre og står som i planen
+// Retterne og rækkefølgen kommer fra retterTilBoern (et udvalg blandet over grupperne, ellers favoritterne først). Den
+// voksnes «Vælg ret» (dagSkaerm) har filtre og står som i planen
 function retValgSkaerm(p, dyr) {
   const familie = Lager.hentFamilie(K.S.ids);
-  const alle = blandet(retterTilBoern(iPlanen(), familie.udvalg), K.S.grupper, (m) => m.id);
+  const alle = retterTilBoern(iPlanen(), familie, K.S.grupper);
   const sider = sideAntal(alle);
   barn.side = Math.min(Math.max(barn.side, 0), sider - 1);
   const vist = alle.slice(barn.side * PR_SIDE, (barn.side + 1) * PR_SIDE);

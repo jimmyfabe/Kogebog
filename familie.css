@@ -24,6 +24,14 @@
 /* Hjertet står midt i færdig-skærmens topbar, som .ret .topbar-midte i app.css */
 .faerdig .topbar-midte { display: flex; justify-content: center; }
 
+/* Ugeplanens oversigt (#/uge) ligger bag voksendelens lås: «Voksne» i topbaren fører tilbage til menuen, og husstanden
+   står som en stille knap på sin egen linje under overskriften (husstandKnap i js/voksen-del.js). 48 px som filterchips */
+.uge-husstand-linje { flex-basis: 100%; }
+.knap.uge-husstand { min-height: 48px; max-width: 100%; padding: 6px 18px 6px 14px; gap: 10px; border-width: 2px; box-shadow: 0 3px 0 var(--kakao); font-size: 17px; text-align: left; }
+.knap.uge-husstand:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--kakao); }
+.uge-husstand .ikon { width: 24px; height: 24px; }
+p.uge-husstand { font-size: 17px; font-weight: 750; color: var(--kakao-blid); }
+
 /* En mængde, der er regnet om til husstanden («450 g» i stedet for «300 g»): sennepsgul bund, så den voksne kan se, at
    den ikke står sådan i opskriften */
 .skaleret { padding: 0 6px; border-radius: 8px; background: var(--sennep-lys); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
@@ -66,6 +74,12 @@
 .voksen-punkt-tekst { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
 .voksen-punkt-navn { font-size: 24px; font-weight: 800; }
 .voksen-punkt-status { font-size: 17px; font-weight: 700; color: var(--kakao-blid); overflow-wrap: anywhere; }
+/* «Mere»: det, man sætter én gang og sjældent ændrer (husstand, udvalg, favoritter). Lavere kort og mindre navne end de
+   tre øverst (Ugeplan, Indkøbsliste, Retter), så rækkefølgen også ses */
+.voksen-afsnit { margin-top: 10px; margin-bottom: 12px; font-size: 22px; font-weight: 800; color: var(--kakao-blid); }
+.voksen-mere .knap.voksen-punkt { min-height: 76px; padding: 10px 20px; border-width: 2px; box-shadow: 0 3px 0 var(--kakao); }
+.voksen-mere .voksen-punkt-navn { font-size: 20px; }
+.voksen-mere .voksen-punkt .ikon { width: 28px; height: 28px; }
 
 /* «Mere grønt i maden» (role="switch", js/voksen-del.js): formet som et kort, med et spor i stedet for ikonet. Slået til
    er sporet grønt, og prikken står til højre, så tilstanden ikke kun er en farve (statuslinjen siger den også med ord).
@@ -134,9 +148,14 @@
 .voksen-filtre > .filter-chips { padding-bottom: 14px; }
 .filter-chip-billede { width: 28px; height: 28px; object-fit: contain; }
 
-/* Katalogets række: «Med» (kun retter til ugeplanen), hjertet og «Åbn» til højre for navnet. «Med» står først, så hjertet
-   og «Åbn» står samme sted i alle rækker */
+/* Katalogets række: «Med» (kun retter til ugeplanen), hjertet, «Åbn» og «Print» til højre for navnet. «Med» står først,
+   så de andre står samme sted i alle rækker */
 .voksen-raekke-knapper { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 10px; }
+
+/* Over katalogets liste: «Print hele kogebogen» eller de viste retter, og en linje om, hvordan det bliver */
+.voksen-liste-boks { display: flex; flex-direction: column; gap: 14px; }
+.voksen-print { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.voksen-print-hjaelp { font-size: 16px; font-weight: 650; color: var(--kakao-blid); }
 
 @media (prefers-reduced-motion: reduce) {
   .voksen-filtre > summary::before { transition: none; }
@@ -153,9 +172,10 @@
   .voksen-raekke { grid-template-columns: 56px minmax(0, 1fr) auto; gap: 0 10px; padding: 8px 10px; }
   .voksen-raekke-billede { width: 56px; height: 56px; }
   .knap.voksen-punkt, .knap.voksen-kontakt { min-height: 84px; padding: 12px 18px; }
-  /* Kataloget: i rækker med «Med» får knapperne deres egen linje under billedet og navnet, og «Med i udvalget» bliver til
-     «Med». Uden «Med» står hjertet og «Åbn» ved navnet. Hjertet er 48 px som de andre voksenknapper, så navnet har plads */
-  .voksen-raekke-knapper.med-udvalg { grid-column: 1 / -1; padding-bottom: 8px; }
+  .voksen-mere .knap.voksen-punkt { min-height: 72px; padding: 10px 16px; }
+  /* Kataloget: knapperne får deres egen linje under billedet og navnet (fire knapper ved navnet gav det under 80 px), og
+     «Med i udvalget» bliver til «Med». Hjertet er 48 px som de andre voksenknapper */
+  .voksen-katalog .voksen-raekke-knapper { grid-column: 1 / -1; padding-bottom: 8px; }
   .voksen-raekke-knapper .knap.hjerte-knap { width: 48px; min-width: 48px; min-height: 48px; }
   .voksen-raekke-knapper .hjerte-knap .ikon { width: 26px; height: 26px; }
   .kun-bred { display: none; }

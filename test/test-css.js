@@ -318,15 +318,17 @@ test('søgeteksten i «Ingen retter passer til …» kan brydes, også uden mell
   assert.match(regler, /overflow-wrap\s*:\s*anywhere/, '.voksen-tom p skal have overflow-wrap: anywhere');
 });
 
-// Review-fund 9 (02-11): på telefonen får kun katalogets rækker med «Med» (.med-udvalg) knapperne på en linje for sig.
-// Uden «Med» står hjertet og «Åbn» ved siden af navnet, så «jul» (24 retter uden «Med») ikke giver en side på 4.322 px.
-// Rækkerne og klassen tjekkes i test-voksen-del.js, og e2e måler, at hjertet står ved billedet
-test('katalogets knapper får kun deres egen linje på telefonen i rækker med «Med» (familie.css)', () => {
+// Review-fund 9 (02-11) gav kun rækker med «Med» en linje til knapperne på telefonen, så «jul» ikke blev en side på
+// 4.322 px. Med «Print» (v10) er der tre-fire knapper i hver række, og ved navnet blev det under 80 px bredt, så nu får
+// knapperne deres egen linje i alle katalogets rækker på telefonen. Kun i kataloget: udvalgets og favoritternes rækker
+// har én knap. e2e måler det i WebKit
+test('katalogets knapper får deres egen linje i alle rækker på telefonen, og kun i kataloget (familie.css)', () => {
   const FAM = fs.readFileSync(path.join(ROD, 'familie.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
   const telefon = blokke(FAM).regler.filter((b) => /^@media\s*\(max-width:\s*700px\)$/.test(b.hoved)).flatMap((b) => b.regler);
   const helLinje = telefon.filter((r) => /grid-column\s*:\s*1\s*\/\s*-1/.test(r.deklarationer)).flatMap((r) => r.hoved.split(',').map((s) => s.trim()));
-  assert.ok(helLinje.includes('.voksen-raekke-knapper.med-udvalg'), 'forventede grid-column: 1 / -1 på .voksen-raekke-knapper.med-udvalg (' + helLinje.join(', ') + ')');
-  assert.ok(!helLinje.includes('.voksen-raekke-knapper'), '.voksen-raekke-knapper uden .med-udvalg må ikke få en linje for sig');
+  assert.ok(helLinje.includes('.voksen-katalog .voksen-raekke-knapper'), 'forventede grid-column: 1 / -1 på .voksen-katalog .voksen-raekke-knapper (' + helLinje.join(', ') + ')');
+  assert.ok(!helLinje.includes('.voksen-raekke-knapper'), '.voksen-raekke-knapper uden .voksen-katalog må ikke få en linje for sig (udvalget og favoritterne)');
+  assert.doesNotMatch(FAM, /\.med-udvalg/, '.med-udvalg bruges ikke længere');
 });
 
 // Review 02-11: voksendelens <details class="filtre"> fik også app.css' «.valg-par, .filtre { display: flex }» (til

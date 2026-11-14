@@ -88,6 +88,15 @@ export function ugeNr(dato) {
   return 1 + Math.floor((torsdag - jan1) / DAG_MS / 7);
 }
 
+// Hvilken dag i ugen, der starter mandag uge, datoen er: 0 (mandag) til 6 (søndag), ellers -1 (en anden uge, eller en dato,
+// der ikke er ÅÅÅÅ-MM-DD). Forsidens «I dag»-kort læser dage[dagIUgen(plan.uge, idag())] i kog-uge-v1
+const DATO_RE = /^\d{4}-\d{2}-\d{2}$/;
+export function dagIUgen(uge, dato) {
+  if (typeof uge !== 'string' || typeof dato !== 'string' || !DATO_RE.test(uge) || !DATO_RE.test(dato)) return -1;
+  const i = Math.round((fraDato(dato) - fraDato(uge)) / DAG_MS);
+  return Number.isInteger(i) && i >= 0 && i <= 6 ? i : -1;
+}
+
 // Dag i (0 = mandag) i ugen, der starter mandag: «26/10»
 export function dagDato(mandag, i) {
   const d = new Date(fraDato(mandag) + i * DAG_MS);
