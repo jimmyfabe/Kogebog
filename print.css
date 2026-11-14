@@ -61,6 +61,9 @@ ol.trin li {
 /* Det sidste trin og foden deles ikke over to sider (se js/print.js): foden står ikke alene øverst på side 2.
    Det sidste trin står i blokkens egen liste og har ingen streg under sig */
 .slut { break-inside: avoid; }
+/* Flere retter (print.html?retter=… og ?alle, js/print-flere.js): hver ret efter den første starter på en ny side. På
+   skærmen skiller en stiplet streg dem, som ugeplanens to sider (.liste-side) */
+.ret-side + .ret-side { break-before: page; margin-top: 30px; padding-top: 24px; border-top: 2px dashed #bbb; }
 .slut ol.trin li { border-bottom: 0; }
 ol.trin li::before { content: counter(trin) "."; font-weight: 800; text-align: right; }
 .trin-ikon { align-self: start; width: 34px; height: 34px; filter: grayscale(1) contrast(1.15); }
@@ -88,6 +91,8 @@ ol.trin li::before { content: counter(trin) "."; font-weight: 800; text-align: r
 @media print {
   body { background: #fff; font-size: 10.5pt; line-height: 1.35; }
   .vaerktoej { display: none; }
+  .ret-side + .ret-side { margin-top: 0; padding-top: 0; border-top: 0; }
+  .print-advarsel { display: none; }
   .ark { max-width: none; margin: 0; padding: 0; border: 0; }
   .hoved h1 { font-size: 22pt; }
   h2 { font-size: 12.5pt; }

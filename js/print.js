@@ -2,6 +2,7 @@
 // print.html?ret=<id>&n=<1-12> regner mængderne om til n portioner (retten på skærmen, når husstanden er sat).
 // print.html?ret=<id>&groen=1 er retten med mere grønt (js/groent.js), som retten på skærmen, når kontakten er slået til.
 // print.html?uge er ugeplanen og indkøbslisten (js/print-uge.js).
+// print.html?retter=<id>,<id> og print.html?alle er flere retter, én pr. side (js/print-flere.js), også med n og groen.
 import { el, ikon, sideTitel } from './dom.js';
 import { hentRet, ID_RE } from './data.js';
 import { VERBER, grafikVerbum } from './katalog.js';
@@ -9,6 +10,7 @@ import { varighedKort } from './tid.js';
 import { minutterTekst } from './tekst.js';
 import { faktorFor, skaleretIngrediens, voksenNoter, portionerTekst } from './skaler.js';
 import { printUge } from './print-uge.js';
+import { printFlere } from './print-flere.js';
 import { valgt, GROENT_TEKST } from './groent.js';
 import { UDGAVE } from './version.js';
 
@@ -32,8 +34,9 @@ function besked(titel, tekst) {
 // En dato i kilden brydes ikke: «(22-10-2026)» stod som «(22-10-» og «2026)» på to linjer (UI-review 2, 23-10)
 const medDatoer = (tekst) => tekst.split(/(\d{1,2}-\d{1,2}-\d{4})/).map((s, i) => (i % 2 ? el('span', { class: 'dato', tekst: s }) : s));
 
-function tegn(m) {
-  sideTitel(m.navn + ' · Tumbi Køkken');
+// Én ret som en side: hovedet, ingredienserne og trinene. nr gør overskrifternes id'er unikke, når flere retter står
+// på samme side (js/print-flere.js). Hver ret efter den første starter på en ny side (.ret-side i print.css)
+function retArk(m, nr = 0) {
   // Faktor 1, og bage- og søde retter uden talportioner, printes som før
   const f = n ? faktorFor(m, n) : null;
   const faktor = f && f !== 1 ? f : null;
@@ -62,7 +65,9 @@ function tegn(m) {
     slutListe.style.counterReset = 'trin ' + trin.length;
   }
 
-  ark.replaceChildren(
+  const ingrId = 'p-ingr-' + nr;
+  const trinId = 'p-trin-' + nr;
+  return el('article', { class: 'ret-side', 'aria-label': m.navn },
     el('header', { class: 'hoved' },
       el('div', {},
         el('h1', { tekst: m.navn }),
@@ -71,14 +76,14 @@ function tegn(m) {
         m.beskrivelse ? el('p', { class: 'beskrivelse', tekst: m.beskrivelse }) : null),
       m.afproevet ? null : el('p', { class: 'ikke-afproevet', tekst: 'Ikke afprøvet' })),
     el('div', { class: 'spalter' },
-      el('section', { class: 'ingredienser', 'aria-labelledby': 'p-ingr' },
-        el('h2', { id: 'p-ingr', tekst: 'Ingredienser' }),
+      el('section', { class: 'ingredienser', 'aria-labelledby': ingrId },
+        el('h2', { id: ingrId, tekst: 'Ingredienser' }),
         el('ul', { class: 'tjek' }, m.ingredienser.map((x, i) => el('li', { tekst: linjer ? linjer[i].tekst : x.tekst }))),
         faktor ? voksenNoter(m, faktor, linjer).map((t) => el('p', { class: 'note', tekst: t })) : null,
         m.redskaber.length ? el('h2', { tekst: 'Redskaber' }) : null,
         m.redskaber.length ? el('p', { class: 'redskaber', tekst: m.redskaber.join(', ') }) : null),
-      el('section', { class: 'fremgang', 'aria-labelledby': 'p-trin' },
-        el('h2', { id: 'p-trin', tekst: 'Sådan gør du' }),
+      el('section', { class: 'fremgang', 'aria-labelledby': trinId },
+        el('h2', { id: trinId, tekst: 'Sådan gør du' }),
         trin.length ? el('ol', { class: 'trin', role: 'list' }, trin) : null,
         el('div', { class: 'slut' },
           slutListe,
@@ -89,6 +94,11 @@ function tegn(m) {
             m.erGroen ? el('p', { tekst: 'Kød, røde linser og vand i udgaven med mere grønt er egne mængder.' }) : null,
             el('p', { tekst: 'Stemmen er en computerstemme (Røst fra Alexandra Instituttet).' }),
             el('p', { tekst: 'Version ' + UDGAVE }))))));
+}
+
+function tegn(m) {
+  sideTitel(m.navn + ' · Tumbi Køkken');
+  ark.replaceChildren(retArk(m));
   printKnap.disabled = false;
 }
 
@@ -112,6 +122,9 @@ async function start() {
 if (params.has('uge')) {
   printUge({ ark, printKnap, tilbage, besked })
     .catch(() => besked('Ugeplanen kunne ikke vises', 'Genindlæs siden. Sker det igen, så åbn printet fra ugeplanen.'));
+} else if (params.has('retter') || params.has('alle')) {
+  printFlere({ ark, printKnap, tilbage, besked, params, retArk, groen })
+    .catch(() => besked('Retterne kunne ikke vises', 'Genindlæs siden. Sker det igen, så åbn printet fra «Retter» i voksendelen.'));
 } else {
   start();
 }
