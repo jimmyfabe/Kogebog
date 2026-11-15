@@ -503,8 +503,14 @@ async function katalog(browser, H, skaerm) {
     const print = r.querySelector('.print-link');
     return { id: r.dataset.ret, egenLinje: knapper.getBoundingClientRect().top >= r.querySelector('.voksen-raekke-billede').getBoundingClientRect().bottom - 1,
       navn: Math.round(r.querySelector('.voksen-raekke-navn').getBoundingClientRect().width),
-      print: print ? print.getAttribute('href') : null, printHoejde: print ? Math.round(print.getBoundingClientRect().height) : 0 };
+      print: print ? print.getAttribute('href') : null, printHoejde: print ? Math.round(print.getBoundingClientRect().height) : 0,
+      knapLinjer: new Set([...knapper.children].map((k) => Math.round(k.getBoundingClientRect().top))).size };
   }));
+  // Review F4 (15-11): på telefonen (390 px) står de fire knapper på én linje, «Print» som ikon alene
+  if (telefon && skaerm.viewport.width >= 390) {
+    const toLinjer = linjer.filter((l) => l.knapLinjer > 1).map((l) => l.id + ' ' + l.knapLinjer);
+    tjek(toLinjer.length === 0, n + ': knapperne står på én linje i alle rækker (' + JSON.stringify(toLinjer.slice(0, 5)) + ')');
+  }
   const forkert = linjer.filter((l) => l.egenLinje !== telefon).map((l) => l.id);
   const smal = linjer.filter((l) => l.navn < 80).map((l) => l.id + ' ' + l.navn + ' px');
   tjek(forkert.length === 0 && smal.length === 0,

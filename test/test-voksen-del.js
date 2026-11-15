@@ -608,6 +608,9 @@ test('«Retter»: «Print» i hver række og «Print hele kogebogen» over liste
   assert.equal(link.attr.tabindex, '0', '«Print» i rækken kan nås med Tab');
   assert.equal(medFokusNavn(skaerm, 'print-flere').attr.tabindex, '0', '«Print hele kogebogen» kan nås med Tab');
   assert.equal(link.attr['aria-label'], 'Print ' + S.retter.get(S.ids[0]).navn);
+  // Review F4 (15-11): på telefonen står kun printikonet i rækken (.kun-bred), så de fire knapper kan stå på én linje
+  assert.deepEqual(link.born.filter((b) => b.tag === 'span').map((b) => b.className), ['kun-bred']);
+  assert.equal(medFokusNavn(skaerm, 'print-flere').born.find((b) => b.tag === 'span').className, undefined, '«Print hele kogebogen» står altid med tekst');
   assert.equal(printHref(skaerm, 'print-flere'), 'print.html?alle');
   assert.equal(tekstAf(medFokusNavn(skaerm, 'print-flere')), 'Print hele kogebogen');
   // Søgningen gør det til de viste retter, i listens rækkefølge

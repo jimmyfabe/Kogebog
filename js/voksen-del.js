@@ -901,9 +901,11 @@ function printAdresse(f, { ret = null, retter = null } = {}) {
 }
 
 // Et link til printet (det åbner en ny side), der ligner en knap som ugeplanens «Print». tabindex="0": Safari springer
-// et link uden tabindex over med Tab (målt i WebKit 26.6, review F2 15-11), og knappen skal kunne nås med tastaturet
-function printLink(tekst, href, label, fokus) {
-  return medFokus(el('a', { class: 'knap lille print-link', href, tabindex: '0', 'aria-label': label }, ikon('print'), el('span', { tekst })), fokus);
+// et link uden tabindex over med Tab (målt i WebKit 26.6, review F2 15-11), og knappen skal kunne nås med tastaturet.
+// kunIkonSmal: på telefonen står kun ikonet (.kun-bred i familie.css); navnet til skærmlæseren er det samme (label)
+function printLink(tekst, href, label, fokus, { kunIkonSmal = false } = {}) {
+  return medFokus(el('a', { class: 'knap lille print-link', href, tabindex: '0', 'aria-label': label },
+    ikon('print'), el('span', { class: kunIkonSmal ? 'kun-bred' : null, tekst })), fokus);
 }
 
 // Over listen: hele kogebogen, eller de retter, søgningen og filtrene viser. Står i listens boks, så den følger med ved
@@ -928,7 +930,8 @@ function katalogRaekke(p, f, ids, fuldt) {
       m.uge ? medKnap(m, ids, fuldt, { lang: true }) : null,
       hjerteKnap(m, f),
       medFokus(K.knap('Åbn', { klasse: 'lille', label: 'Åbn ' + m.navn, onclick: () => { K.huskFra(m.id, katalogFiltreret() || filtreFlytterListen() ? 0 : undefined); K.naviger('#/ret/' + m.id); } }), 'aabn-' + m.id),
-      printLink('Print', printAdresse(f, { ret: m.id }), 'Print ' + m.navn, 'print-' + m.id)),
+      // Kun ikonet på telefonen: med teksten stod de fire knapper på to linjer (review F4)
+      printLink('Print', printAdresse(f, { ret: m.id }), 'Print ' + m.navn, 'print-' + m.id, { kunIkonSmal: true })),
   });
 }
 

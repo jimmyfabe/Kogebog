@@ -174,8 +174,9 @@ p.uge-husstand { font-size: 17px; font-weight: 750; color: var(--kakao-blid); }
   .knap.voksen-punkt, .knap.voksen-kontakt { min-height: 84px; padding: 12px 18px; }
   .voksen-mere .knap.voksen-punkt { min-height: 72px; padding: 10px 16px; }
   /* Kataloget: knapperne får deres egen linje under billedet og navnet (fire knapper ved navnet gav det under 80 px), og
-     «Med i udvalget» bliver til «Med». Hjertet er 48 px som de andre voksenknapper */
-  .voksen-katalog .voksen-raekke-knapper { grid-column: 1 / -1; padding-bottom: 8px; }
+     «Med i udvalget» bliver til «Med» og «Print» til printikonet, så de står på én linje (review F4). Hjertet er 48 px som
+     de andre voksenknapper */
+  .voksen-katalog .voksen-raekke-knapper { grid-column: 1 / -1; padding-bottom: 8px; gap: 8px; }
   .voksen-raekke-knapper .knap.hjerte-knap { width: 48px; min-width: 48px; min-height: 48px; }
   .voksen-raekke-knapper .hjerte-knap .ikon { width: 26px; height: 26px; }
   .kun-bred { display: none; }
