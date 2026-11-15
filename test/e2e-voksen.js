@@ -505,12 +505,21 @@ async function katalog(browser, H, skaerm) {
   // blev navnet ved knapperne under 80 px bredt
   const telefon = skaerm.viewport.width <= 700;
   const linjer = await side.evaluate(() => [...document.querySelectorAll('.voksen-katalog .voksen-raekke')].map((r) => {
+    // Linjerne i knaprækken: en ny linje begynder under den forriges bund (hjertet er lavere end de andre og står i midten)
+    const linjerI = (boks) => {
+      let n = 0;
+      let bund = -Infinity;
+      for (const k of [...boks.children].map((b) => b.getBoundingClientRect()).sort((a, b) => a.top - b.top)) {
+        if (k.top >= bund - 1) { n++; bund = k.bottom; } else bund = Math.max(bund, k.bottom);
+      }
+      return n;
+    };
     const knapper = r.querySelector('.voksen-raekke-knapper');
     const print = r.querySelector('.print-link');
     return { id: r.dataset.ret, egenLinje: knapper.getBoundingClientRect().top >= r.querySelector('.voksen-raekke-billede').getBoundingClientRect().bottom - 1,
       navn: Math.round(r.querySelector('.voksen-raekke-navn').getBoundingClientRect().width),
       print: print ? print.getAttribute('href') : null, printHoejde: print ? Math.round(print.getBoundingClientRect().height) : 0,
-      knapLinjer: new Set([...knapper.children].map((k) => Math.round(k.getBoundingClientRect().top))).size };
+      knapLinjer: linjerI(knapper) };
   }));
   // Review F4 (15-11): på telefonen (390 px) står de fire knapper på én linje, «Print» som ikon alene
   if (telefon && skaerm.viewport.width >= 390) {
