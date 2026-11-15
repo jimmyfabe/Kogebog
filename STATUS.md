@@ -2,11 +2,63 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
+## 15-11-2026 kl. 07:31: v10 er klar på grenen `v10-foraeldre`, ikke flettet og ikke udgivet (Saga)
+
+Bygget efter Jimmys «ja» 14-11 kl. 20:18 (`docs/brief-2026-11-13.md`, «Startet 14-11-2026»). 22 commits over `main` før denne STATUS-commit (den sidste er `9c34fa9`). `UDGAVE = 'v10 · 14-11-2026'`. Ingen ændring af gemte data (ingen nye nøgler eller felter).
+
+**Hvad v10 indeholder**
+- **Fase 1 fra Fables plan:** forsiden viser «I dag laver vi …» (dagens ret fra ugeplanen, et tryk åbner den). Uden ugens udvalg ser børnene hjerterne + nye retter, højst 12. Låsen dækker også ugeplanen (`#/uge`, `#/uge/dag/<n>`), og ugeplanen har «Voksne» i topbaren tilbage til menuen. Menuen er Ugeplan · Indkøbsliste · Retter, og under «Mere» Husstand, Ugens udvalg, Favoritter og «Mere grønt i maden». Husstanden står i ugeplanens hoved.
+- **Print fra «Retter»:** Print pr. ret, «Print hele kogebogen» (241 retter) og «Print de N viste» efter en søgning, én ret pr. A4-side (`print.html?alle` og `?retter=<id,id>`).
+- **To nye retter** med billede (FLUX.2 klein) og Røst-stemme: Kyllingenuggets i rispapir (Kylling) og Hjemmelavet kebab i ovnen (Kød), begge `afproevet: false`. De er ikke i ugeplanen: kebab har 4 knivtrin (loftet er 2), og nuggets er en snack uden grønt.
+
+**Review** (code-reviewer + ui-reviewer i WebKit på 390×844, 1180×820 og 1280×800): 18 fund.
+- Rettet med test og egen commit: K1 (nuggets: ny håndvask efter penslingen af de rå bidder, og validatoren fanger det nu), T1, L2 (indkøbslisten lukker låsen), L3, L4, F1 (om søndagen siger ugeplanen først «Uge N er gået» mandag), F2 (Print kan nås med Tab i Safari), F3, F4, F5 og F6.
+- Ikke rettet: **L1** (tilbage fra et print kræver holdet igen, og søgningen i «Retter» er glemt; valgt med vilje, står i `docs/foraeldredel.md`, kræver ellers gemt data). **F7** (fokus på overskriften efter «Voksne»: sådan gør alle tilbage-knapper i voksendelen; reviewets påstand om det modsatte holdt ikke i koden). **F8** (de nye retter er ikke i ugeplanen, se ovenfor).
+- **Nyt fund fra e2e:** «Voksne: hold» rykkede væk midt i holdet, når statusskærmens dyr kom sent (første start). Genskabt 2 af 2, rettet med `aspect-ratio` (`d3ea820`), 2 af 2 efter.
+
+**Tests (15-11):**
+
+| Kørsel | Resultat |
+|---|---|
+| Node, 18 filer | 17 grønne. `test-lyd` fejler kun på 3 mp3-filer uden for listen: de 2 gamle gruppe-mp3 og nuggets' `timer-optaget-16.mp3` (overflødig efter K1) |
+| E2e hele, former, voksen, ugeplan, lyn (06:57–07:25) | 148.242 tjek, 0 fejl |
+
+**Ikke gjort:**
+- E2e-delene print, tastatur, timer, trinbund, titler, skaermfund, fejl, beroering og mindre er ikke kørt på v10.
+- Intet er afprøvet på en rigtig iPad eller iPhone.
+- Røst: `lyd/kyllingenuggets-i-rispapir/timer-optaget-17.mp3` er lavet med seed 44 og bør lyttes til.
+- F3: på desktop med både «I dag» og en timer står et langt navn med «…» på én linje (skærmlæseren får hele navnet).
+
+**Testliste til Jimmy.** Grenen kan ikke ses på iPad og iPhone før udgivelsen (eller via Tailscale, som kræver dit ja). Indtil da på pc'en, i **PowerShell**: `cd D:\Claude\Kogebog; py -m http.server 8091 --bind 127.0.0.1 --protocol HTTP/1.1 --directory D:\Claude\Kogebog`, og åbn http://127.0.0.1:8091/.
+
+*iPad på langs:*
+1. Forsiden: «Version v10 · 14-11-2026» står nederst.
+2. Hold «Voksne» i 2 s. Menuen viser Ugeplan, Indkøbsliste og Retter øverst, og under «Mere» fire kort, der er lige høje.
+3. På en hverdag (om søndagen viser ugeplanen den næste uge): Ugeplan → «Vælg ret» på i dag → vælg en ret. Tryk «Voksne» øverst: menuen kommer uden nyt hold. Tryk «Luk»: forsiden viser «I dag laver vi …». Tryk på kortet: retten åbner.
+4. Start en timer i en ret, og gå til forsiden: «I dag»-kortet, timeren og alle 11 knapper kan ses uden at rulle.
+5. Lad ugeplanen stå i 10 min uden tryk: den bliver til «Til de voksne».
+6. Hold «Voksne» → Indkøbsliste → swipe tilbage (eller Safaris tilbagepil): «Til de voksne» kommer (holdet kræves igen).
+7. Uden ugens udvalg: Ugeplan → «Børnene vælger» → Rosa: hjerterne og nye retter, højst 12, på højst 3 sider.
+8. Retter → søg «kylling» → «Print de N viste»: én ret pr. side. «Tilbage til retterne»: holdet kommer igen (valgt sådan).
+9. Kylling → Kyllingenuggets i rispapir: trin 15 «Pensl bidderne med olie.» følges af trin 16 «Vask hænderne igen.». Kød → Hjemmelavet kebab i ovnen: stemmen læser alle trin.
+10. Start timeren på nuggets trin 17, åbn en anden ret, og tryk «Start timer»: lyt til «Der kører allerede en timer på Kyllingenuggets i rispapir, trin 17 …».
+
+*iPhone:*
+11. Hold «Voksne» → Retter: Med, hjertet, Åbn og printikonet står på én linje i hver række.
+12. Menuen: Ugeplan, Indkøbsliste og Retter er højere end de fire under «Mere».
+13. Med en plan lavet tidligere på ugen, om søndagen: forsiden viser søndagens ret, og ugeplanen siger ikke «Uge N er gået» før mandag.
+
+**Afventer Jimmy (14-11):**
+1. Se v10 på grenen (testlisten ovenfor), og sig til, før den flettes til `main` og udgives. Ved fletningen: ok til at slette `lyd/kyllingenuggets-i-rispapir/timer-optaget-16.mp3` (kun lavet på grenen og ikke brugt mere)?
+2. Ja til fase 2 (`kog-familie` v1 → v2, bilag B i `docs/fable-foraeldrekogebog-2026-11-10.md`). Spørgsmålet: må iPad'en flytte «Ugens udvalg» over i hjerterne og fjerne udvalget som eget punkt (et udvalg på 8 retter bliver til 8 hjerter, og børnene ser det samme + 2 nye), og få to nye felter: `nyePrUge` (0-4 nye retter om ugen, standard 2) og `harVi` (varer, I altid har, til fase 3)? Migreringen sker selv og testes, og intet gemt forsvinder.
+
+De ældre «Afventer Jimmy»-punkter længere nede er ikke gennemgået i denne runde.
+
 ## 13-11-2026 kl. 16:09: Jimmy vil vende appen om (forældreapp, der er børnevenlig)
 
 Ønsket og planen står i `docs/brief-2026-11-13.md`. Den bygger på Fables redesign fra 10-11 (`docs/fable-foraeldrekogebog-2026-11-10.md`), plus print af alle retter fra computeren og nye retter fra Jimmys reels (kyllingebid i rispapir; kebab venter på skærmbilleder). Intet er bygget endnu.
 
-**Afventer Jimmy (13-11):** «ja» til Fables plan med fase 1 først. Start efter ugenulstillingen 14-11 kl. 19:00 (ugen stod på 91 %).
+~~**Afventer Jimmy (13-11):** «ja» til Fables plan med fase 1 først.~~ Lukket: Jimmy sagde ja 14-11 kl. 20:18 (se afsnittet 15-11 ovenfor).
 
 ## 13-11-2026 kl. 13:30: v9 er live igen
 
