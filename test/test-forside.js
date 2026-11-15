@@ -974,6 +974,11 @@ test('ugeplanens oversigt: «Print» kan nås med Tab (tabindex="0")', async () 
     const print = rod.querySelector('.print-link');
     assert.ok(print, '«Print» står på oversigten med en ret i planen');
     assert.equal(print.getAttribute('tabindex'), '0');
+    // Review R5 (15-11): samme printLink som voksendelen: navnet begynder med «Print» og siger, hvad der kommer på papir,
+    // og fokus kommer tilbage til den, når skærmen tegnes igen
+    assert.equal(print.getAttribute('aria-label'), 'Print ugeplanen og indkøbslisten');
+    assert.equal(print.textContent, 'Print');
+    assert.equal(print.dataset.fokus, 'print');
   } finally {
     gaaTil('#/');
   }
@@ -1023,6 +1028,8 @@ for (const [hvad, valg, slutning] of [['retten', undefined, ''], ['retten med me
     await start('#/indkoeb', { foer: listeMed(id, valg) });
     const link = rod.querySelector('.ret-link');
     assert.equal(link.getAttribute('href'), '#/ret/' + id + slutning);
+    // Review R5 (15-11): Safari springer et link uden tabindex over med Tab (som F2)
+    assert.equal(link.getAttribute('tabindex'), '0');
     window.scrollY = 420;
     tryk(link);
     gaaTil(link.getAttribute('href'));

@@ -15,7 +15,7 @@
 // adresse bag låsen uden låsen (et bogmærke, eller tilbage fra printet), kommer holdet først. Kun ANTAL voksne og børn
 // gemmes, aldrig hvem (regel 6). Lageret røres kun gennem js/lager.js, og al tekst sættes som tekst (js/dom.js).
 // Udseendet står i familie.css.
-import { el, ikon, svgEl } from './dom.js';
+import { el, ikon, svgEl, printLink as printLinkDom } from './dom.js';
 import * as Lager from './lager.js';
 import { MAKS_PERSONER, MAKS_PORTIONER, MAKS_UDVALG as UDVALG_MAKS } from './lager.js';
 import { holdKnap } from './hold.js';
@@ -903,10 +903,10 @@ function printAdresse(f, { ret = null, retter = null } = {}) {
 
 // Et link til printet (det åbner en ny side), der ligner en knap som ugeplanens «Print». tabindex="0": Safari springer
 // et link uden tabindex over med Tab (målt i WebKit 26.6, review F2 15-11), og knappen skal kunne nås med tastaturet.
-// kunIkonSmal: på telefonen står kun ikonet (.kun-bred i familie.css); navnet til skærmlæseren er det samme (label)
+// kunIkonSmal: på telefonen står kun ikonet (.kun-bred i familie.css); navnet til skærmlæseren er det samme (label).
+// Selve linket bygger printLink i dom.js, som ugeplanen også bruger (review R5, 15-11)
 function printLink(tekst, href, label, fokus, { kunIkonSmal = false } = {}) {
-  return medFokus(el('a', { class: 'knap lille print-link', href, tabindex: '0', 'aria-label': label },
-    ikon('print'), el('span', { class: kunIkonSmal ? 'kun-bred' : null, tekst })), fokus);
+  return medFokus(printLinkDom(tekst, href, label, { klasse: 'lille', kunIkonSmal }), fokus);
 }
 
 // Over listen: hele kogebogen, eller de retter, søgningen og filtrene viser. Står i listens boks, så den følger med ved

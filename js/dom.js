@@ -152,3 +152,11 @@ export function svgEl(tag, attrs = {}) {
   for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, String(v));
   return e;
 }
+
+// «Print» som et link, der ligner en knap (print.html åbner i samme fane). tabindex: Safari springer et link uden tabindex
+// over med Tab (review F2). label er navnet til skærmlæseren og begynder med den tekst, man ser (review L4). Bruges af
+// voksendelen og ugeplanen, så en rettelse rammer begge (review R5, 15-11)
+export function printLink(tekst, href, label, { klasse = '', kunIkonSmal = false } = {}) {
+  return el('a', { class: 'knap print-link' + (klasse ? ' ' + klasse : ''), href, tabindex: '0', 'aria-label': label },
+    ikon('print'), el('span', { class: kunIkonSmal ? 'kun-bred' : null, tekst }));
+}

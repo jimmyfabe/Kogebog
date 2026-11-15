@@ -10,7 +10,7 @@
 // Koden i linket kommer udefra. Den går kun gennem afkod() i js/plankode.js, og intet fra adressen kommer i DOM'en: fejlene
 // er faste tekster, og listen gemmes med den genskrevne kode. Lageret røres kun gennem js/lager.js, og al tekst sættes
 // som tekst (js/dom.js). app.js ejer ruterne og tilstanden (S) og giver sine hjælpere med init().
-import { el, ikon, ledLinje } from './dom.js';
+import { el, ikon, ledLinje, printLink } from './dom.js';
 import * as Lager from './lager.js';
 import { afkod, kod, kodeFraTekst, ukendtTekst, BESKED_UGYLDIG, BESKED_NYERE, BESKED_GAMMEL } from './plankode.js';
 import { saml, grupper, tekst as listeTekst, manglerTekst, holdSammen } from './indkoeb.js';
@@ -384,7 +384,8 @@ function listeSkaerm(liste) {
       if (!m || !m.uge) return null;
       // Retten åbnes i linkets udgave (med «/groen»), ikke telefonens egen: ellers viste retten alt kødet og ingen linser,
       // mens listen havde linserne (code review kode-2). Rettens pil fører tilbage til listen
-      return el('li', {}, el('a', { class: 'ret-link', href: '#/ret/' + m.id + (m.erGroen ? '/groen' : ''), onclick: () => K.huskFra(m.id) },
+      // tabindex: Safari springer et link uden tabindex over med Tab (review R5, 15-11, som F2)
+      return el('li', {}, el('a', { class: 'ret-link', href: '#/ret/' + m.id + (m.erGroen ? '/groen' : ''), tabindex: '0', onclick: () => K.huskFra(m.id) },
         K.billede(grafikRet(m.id), '', 'ret-link-billede'),
         el('span', { class: 'vare-tekst' },
           el('span', { class: 'vare-navn', tekst: m.navn }),
@@ -686,8 +687,9 @@ function oversigtSkaerm() {
   ] : [];
   const andre = [
     harRetter ? medFokus(K.knap('Del som tekst', { ikonNavn: 'liste', onclick: () => delTekst(data) }), 'del') : null,
-    // tabindex: Safari springer et link uden tabindex over med Tab (review F2, 15-11)
-    harRetter ? el('a', { class: 'knap print-link', href: 'print.html?uge', tabindex: '0' }, ikon('print'), el('span', { tekst: 'Print' })) : null,
+    // Samme printLink som voksendelen: tabindex til Safari (F2), navnet begynder med «Print» (L4), og fokus kommer
+    // tilbage, når skærmen tegnes igen (review R5, 15-11)
+    harRetter ? medFokus(printLink('Print', 'print.html?uge', 'Print ugeplanen og indkøbslisten'), 'print') : null,
     harRetter || p.uge ? ny : null,
   ].filter(Boolean);
 
