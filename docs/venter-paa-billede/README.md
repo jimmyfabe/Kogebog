@@ -11,8 +11,6 @@ Disse retter venter fra 15-11-2026 (v11, `afproevet: false`):
 | `lynpizza-med-yoghurtdej` | `broed-og-pizza` | En firkantet pizza på bagepapir, skåret i stykker, med tomat, skinketern, majs og smeltet ost; agurkestave ved siden af |
 | `pizzabroed-med-hvidloeg-og-ost` | `broed-og-pizza` | Pizzabrød skåret i lange stave på et bræt, gylden smeltet ost og lidt grønt oregano ovenpå, ingen tomat |
 | `naan-paa-panden` | `broed-og-pizza` | En stak ovale, bløde naan med brune pletter fra panden, på en tallerken |
-| `hvidloegsnaan` | `broed-og-pizza` | Tre ovale naan med brune pletter, blanke af smeltet smør, med små grønne persilleblade og lidt hvidløg ovenpå, på en tallerken |
-| `ostenaan` | `broed-og-pizza` | En tyk, rund naan revet over i to, så den smeltede hvide ost trækker tråde, og en hel naan ved siden af, på en tallerken |
 | `hvidloegsnaan` | `broed-og-pizza` | Ovale naan med brune pletter, skinnende af smør og drysset med små grønne persilleblade, på en tallerken |
 | `ostenaan` | `broed-og-pizza` | To ovale naan på en tallerken; den ene er brudt over, så den smeltede hvide ost trækker tråde |
 
