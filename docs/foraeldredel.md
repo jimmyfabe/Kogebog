@@ -31,6 +31,7 @@
   - Vagt: åbnes `#/voksen…` direkte (bogmærke på telefonen), vises først en holdeknap. Den kommer først, når opskrifterne er hentet («Henter opskrifterne …» imens), så den ikke tegnes om midt i et hold.
   - Låsen holdes kun i hukommelsen (en modulvariabel). Den lukker, når man forlader `#/voksen…`, efter 10 minutter uden tryk, og med knappen «Luk».
   - Ingen sessionStorage i MVP, så regel 5 ikke rammes.
+  - **Tilbage fra et print kræver holdet igen (valgt 15-11-2026, review L1).** `print.html` er sit eget dokument, så «Tilbage til ugeplanen» og «Tilbage til retterne» indlæser appen forfra, og låsen i hukommelsen er væk. Den voksne holder «Voksne» igen og lander på ugeplanen eller «Retter». Søgningen og filtrene i «Retter» er også glemt. Det er prisen for, at låsen ikke gemmes: et barn med et bogmærke eller printets link kommer ikke forbi holdet. Skal den voksne slippe for holdet, kræver det, at låsen gemmes (sessionStorage), og det er ny gemt data (fase 2 eller senere).
 - **Adgangskode/PIN fravalgt:** en PIN i en offentlig statisk app kan læses i koden og glemmes af forældrene. Holdet er nok mod 5-9-årige.
 - **Konti og synk mellem enheder (kun fremtid).** Det kræver:
   - en backend med database og login (adgangskode eller e-mail-link). Nøgler må ikke ligge i den offentlige frontend;
