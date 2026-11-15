@@ -228,6 +228,28 @@ test('forsidens gitter: rækkerne er høje nok uden at rulle på iPad, med 9, 10
   assert.ok(hoejde(g, 820, pxTal(m[1])) >= 92, 'med timeren: ' + hoejde(g, 820, pxTal(m[1])) + ' px');
 });
 
+// Review F3 (15-11): med «I dag»-kortet og en timer rullede forsiden på desktop (1280×800: 824 px med et kort navn, 842 med
+// et langt), for tallerkenen stod på sit mindste (72 px). Kun i det tilfælde må den gå ned til 64 px (billedet 48 px, regel
+// 9), pillen og kortet rykker tættere på dugen, og navnet står på én linje på skærme på langs. e2e måler det (heleVejen)
+test('forsiden med «I dag» og en timer: tallerkenen må gå ned til 64 px, og alle tallerkenregler bruger --plade-min', () => {
+  const rod = blokke(CSS);
+  const BEGGE = '.forside:has(.forside-idag):has(.forside-timer .pille:not([hidden]))';
+  const gitterRegel = rod.regler.filter((r) => r.hoved === BEGGE + ' .gruppe-knapper').map((r) => r.deklarationer).join(';');
+  assert.match(gitterRegel, /--plade-min\s*:\s*64px/);
+  assert.doesNotMatch(CSS.replace(gitterRegel, ''), /--plade-min\s*:/, '--plade-min sættes kun med «I dag» og en timer');
+  // Alle steder, tallerkenen regnes af rækken, er mindstemålet --plade-min (72 px, når den ikke er sat)
+  const clamps = CSS.match(/--plade\s*:\s*clamp\([^;]+/g);
+  assert.ok(clamps.length >= 6, 'fandt ' + clamps.length);
+  for (const c of clamps) assert.match(c, /^--plade\s*:\s*clamp\(var\(--plade-min,\s*72px\),/, c);
+  for (const [b, h] of [[1280, 800], [1180, 820]]) {
+    assert.equal(gaeldende(rod, BEGGE + ' .forside-timer .pille', b, h)['margin-top'], '8px', b + '×' + h);
+    assert.equal(gaeldende(rod, BEGGE + ' .forside-idag', b, h)['padding-top'], '8px', b + '×' + h);
+    const navn = gaeldende(rod, BEGGE + ' .idag-navn', b, h);
+    assert.deepEqual([navn['white-space'], navn.overflow, navn['text-overflow']], ['nowrap', 'hidden', 'ellipsis'], b + '×' + h);
+  }
+  assert.equal(gaeldende(rod, BEGGE + ' .idag-navn', 390, 844)['white-space'], undefined, 'på telefonen må navnet stå på to linjer (siden ruller)');
+});
+
 test('knapperne er store nok til små fingre på iPhone, og navnene kan ikke knække midt i et ord', () => {
   const rod = blokke(CSS);
   for (let b = 360; b <= 700; b++) {

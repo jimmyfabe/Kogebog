@@ -291,7 +291,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   --rest: 314px;
   --raek-gab: 16px;
   --raekke: calc((100svh - var(--rest) - (var(--raekker) - 1) * var(--raek-gab)) / var(--raekker));
-  --plade: clamp(72px, calc(var(--raekke) - 110px), 170px); /* tallerkenen over navnet: to linjer tekst og knappens luft */
+  --plade: clamp(var(--plade-min, 72px), calc(var(--raekke) - 110px), 170px); /* tallerkenen over navnet: to linjer tekst og knappens luft */
   display: grid;
   grid-template-columns: repeat(var(--kolonner), minmax(0, 1fr));
   gap: var(--raek-gab) 18px;
@@ -303,7 +303,16 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .forside:has(.forside-timer .pille:not([hidden])) .gruppe-knapper { --rest: 386px; }
 /* … og det gør «I dag»-kortet også (82 + 12 px), alene og sammen med pillen */
 .forside:has(.forside-idag) .gruppe-knapper { --rest: 408px; }
-.forside:has(.forside-idag):has(.forside-timer .pille:not([hidden])) .gruppe-knapper { --rest: 480px; }
+.forside:has(.forside-idag):has(.forside-timer .pille:not([hidden])) .gruppe-knapper { --rest: 480px; --plade-min: 64px; }
+/* Med begge to stod tallerkenen på sit mindste (72 px), og desktop (1280×800) rullede 24-42 px (review F3). Kun her må
+   den gå ned til 64 px (billedet 48 px, regel 9: knappen er stadig over 64 px), og pillen og kortet rykker tættere på dugen.
+   På langs står rettens navn på én linje i et bredere kort (aria-label har hele navnet) */
+.forside:has(.forside-idag):has(.forside-timer .pille:not([hidden])) .forside-timer .pille { margin-top: 8px; }
+.forside:has(.forside-idag):has(.forside-timer .pille:not([hidden])) .forside-idag { padding-top: 8px; }
+@media (min-width: 1000px) and (min-height: 521px) and (orientation: landscape) {
+  .forside:has(.forside-idag):has(.forside-timer .pille:not([hidden])) .knap.idag-kort { width: min(100%, 860px); }
+  .forside:has(.forside-idag):has(.forside-timer .pille:not([hidden])) .idag-navn { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}
 .gruppe-knapper > li { display: flex; min-width: 0; }
 .knap.gruppe-knap {
   flex: 1;
@@ -324,19 +333,19 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .gruppe-knap-navn { min-width: 0; text-align: center; line-height: 1.08; overflow-wrap: break-word; -webkit-hyphens: auto; hyphens: auto; }
 /* iPad på langs: kolonnerne er brede og rækkerne lave, så tallerkenen står til venstre for navnet */
 @media (min-width: 1000px) and (min-height: 521px) and (orientation: landscape) {
-  .gruppe-knapper { --plade: clamp(72px, calc(var(--raekke) - 38px), 150px); }
+  .gruppe-knapper { --plade: clamp(var(--plade-min, 72px), calc(var(--raekke) - 38px), 150px); }
   .knap.gruppe-knap { flex-direction: row; justify-content: flex-start; gap: 14px; padding: 10px 14px; }
   .gruppe-knap-navn { text-align: left; }
 }
 /* Ti knapper på en iPad på langs: 5 × 2, og kolonnerne er for smalle til tallerkenen ved siden af navnet */
 @media (min-width: 701px) and (orientation: landscape) {
-  .gruppe-knapper:has(> li:nth-child(10)) { --kolonner: 5; --raekker: 2; --plade: clamp(72px, calc(var(--raekke) - 110px), 170px); }
+  .gruppe-knapper:has(> li:nth-child(10)) { --kolonner: 5; --raekker: 2; --plade: clamp(var(--plade-min, 72px), calc(var(--raekke) - 110px), 170px); }
   .gruppe-knapper:has(> li:nth-child(10)) .gruppe-knap { flex-direction: column; justify-content: center; gap: 6px; padding: 10px 8px 12px; }
   .gruppe-knapper:has(> li:nth-child(10)) .gruppe-knap-navn { text-align: center; }
 }
 /* Ti knapper på en iPad på højkant: 3 kolonner ville give én knap alene på fjerde række. 2 × 5 med tallerkenen til venstre */
 @media (min-width: 701px) and (orientation: portrait) {
-  .gruppe-knapper:has(> li:nth-child(10)) { --kolonner: 2; --raekker: 5; --plade: clamp(72px, calc(var(--raekke) - 38px), 150px); }
+  .gruppe-knapper:has(> li:nth-child(10)) { --kolonner: 2; --raekker: 5; --plade: clamp(var(--plade-min, 72px), calc(var(--raekke) - 38px), 150px); }
   .gruppe-knapper:has(> li:nth-child(10)) .gruppe-knap { flex-direction: row; justify-content: flex-start; gap: 14px; padding: 10px 14px; }
   .gruppe-knapper:has(> li:nth-child(10)) .gruppe-knap-navn { text-align: left; }
 }
@@ -349,7 +358,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 /* 11 knapper på langs i et smalt vindue (701-999 px, og iPhone på tværs): 6 kolonner ville give knapper under 140 px, så
    3 × 4 med tallerkenen til venstre for navnet */
 @media (min-width: 701px) and (orientation: landscape) {
-  .gruppe-knapper:has(> li:nth-child(11):last-child) { --kolonner: 3; --raekker: 4; --plade: clamp(72px, calc(var(--raekke) - 38px), 150px); grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .gruppe-knapper:has(> li:nth-child(11):last-child) { --kolonner: 3; --raekker: 4; --plade: clamp(var(--plade-min, 72px), calc(var(--raekke) - 38px), 150px); grid-template-columns: repeat(6, minmax(0, 1fr)); }
   .gruppe-knapper:has(> li:nth-child(11):last-child) .gruppe-knap { flex-direction: row; justify-content: flex-start; gap: 14px; padding: 10px 14px; }
   .gruppe-knapper:has(> li:nth-child(11):last-child) .gruppe-knap-navn { text-align: left; }
   .gruppe-knapper:has(> li:nth-child(11):last-child) > li:nth-child(10) { grid-column: 2 / span 2; }
@@ -358,7 +367,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 /* 11 knapper på en iPad på langs og på desktop: 6 + 5 som en mur, tallerkenen over navnet og lidt mindre skrift end med 10,
    så «Halloween» kan være i en knap på 144 px (1000 px bred) */
 @media (min-width: 1000px) and (min-height: 521px) and (orientation: landscape) {
-  .gruppe-knapper:has(> li:nth-child(11):last-child) { --kolonner: 6; --raekker: 2; --plade: clamp(72px, calc(var(--raekke) - 110px), 170px); grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  .gruppe-knapper:has(> li:nth-child(11):last-child) { --kolonner: 6; --raekker: 2; --plade: clamp(var(--plade-min, 72px), calc(var(--raekke) - 110px), 170px); grid-template-columns: repeat(12, minmax(0, 1fr)); }
   .gruppe-knapper:has(> li:nth-child(11):last-child) .gruppe-knap { flex-direction: column; justify-content: center; gap: 6px; padding: 10px 8px 12px; font-size: clamp(20px, 2.2vw, 28px); }
   .gruppe-knapper:has(> li:nth-child(11):last-child) .gruppe-knap-navn { text-align: center; }
   .gruppe-knapper:has(> li:nth-child(11):last-child) > li:nth-child(7) { grid-column: 2 / span 2; }
