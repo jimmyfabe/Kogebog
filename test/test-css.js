@@ -331,6 +331,30 @@ test('katalogets knapper får deres egen linje i alle rækker på telefonen, og 
   assert.doesNotMatch(FAM, /\.med-udvalg/, '.med-udvalg bruges ikke længere');
 });
 
+// Review F5 (15-11): på iPhone var de tre øverst (84 px) lavere end «Mere» (87 px med to linjer status), Favoritter 72 px
+// (én linje), og kontakten «Mere grønt i maden» den største (98-128 px, navnet på to linjer i 24 px). Kontakten er noget,
+// man sætter én gang, så den ligner «Mere». e2e måler højderne i WebKit
+test('voksendelens oversigt: de tre øverst er højest, «Mere» er lige høje, og kontakten ligner «Mere» (familie.css)', () => {
+  const FAM = fs.readFileSync(path.join(ROD, 'familie.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+  const trae = blokke(FAM).regler;
+  const telefon = trae.filter((b) => /^@media\s*\(max-width:\s*700px\)$/.test(b.hoved)).flatMap((b) => b.regler);
+  // Den sidste værdi af egenskaben i en regel, hvis vælgerliste har vælgeren
+  const vaerdi = (regler, vaelger, egenskab) => {
+    const fund = regler.filter((r) => r.hoved.split(',').map((x) => x.trim()).includes(vaelger))
+      .flatMap((r) => [...r.deklarationer.matchAll(new RegExp('(?:^|;)\\s*' + egenskab + '\\s*:\\s*([^;]+)', 'g'))].map((m) => m[1].trim()));
+    return fund.at(-1) ?? null;
+  };
+  assert.equal(vaerdi(trae, '.voksen-mere .voksen-punkt-status', 'min-height'), '2.2em', '«Mere» har plads til to linjer status');
+  assert.equal(vaerdi(trae, '.voksen-kontakt .voksen-punkt-status', 'min-height'), '2.2em', 'kontakten har plads til to linjer status');
+  for (const egenskab of ['min-height', 'padding', 'border-width', 'box-shadow']) {
+    assert.ok(vaerdi(trae, '.voksen-mere .knap.voksen-punkt', egenskab), egenskab + ' på «Mere»');
+    assert.equal(vaerdi(trae, '.knap.voksen-kontakt', egenskab), vaerdi(trae, '.voksen-mere .knap.voksen-punkt', egenskab), 'kontakten som «Mere»: ' + egenskab);
+  }
+  assert.equal(vaerdi(trae, '.voksen-kontakt .voksen-punkt-navn', 'font-size'), vaerdi(trae, '.voksen-mere .voksen-punkt-navn', 'font-size'), 'kontaktens navn som «Mere»');
+  assert.ok(parseFloat(vaerdi(telefon, '.knap.voksen-punkt', 'min-height')) >= 96, 'de tre øverst er mindst 96 px på telefonen (' + vaerdi(telefon, '.knap.voksen-punkt', 'min-height') + ')');
+  assert.equal(vaerdi(telefon, '.knap.voksen-kontakt', 'min-height'), vaerdi(telefon, '.voksen-mere .knap.voksen-punkt', 'min-height'), 'kontakten som «Mere» på telefonen');
+});
+
 // Review 02-11: voksendelens <details class="filtre"> fik også app.css' «.valg-par, .filtre { display: flex }» (til
 // ugeplanens chips), så linjen kun var så bred som teksten, og den lukkede boks lå ved siden af den. familie.css må kun
 // bruge app.css' klassenavne, når det er meningen at bygge videre på dem. Ellers skal klassen have et nyt navn (fx voksen-)

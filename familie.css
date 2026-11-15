@@ -74,17 +74,21 @@ p.uge-husstand { font-size: 17px; font-weight: 750; color: var(--kakao-blid); }
 .voksen-punkt-tekst { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
 .voksen-punkt-navn { font-size: 24px; font-weight: 800; }
 .voksen-punkt-status { font-size: 17px; font-weight: 700; color: var(--kakao-blid); overflow-wrap: anywhere; }
-/* «Mere»: det, man sætter én gang og sjældent ændrer (husstand, udvalg, favoritter). Lavere kort og mindre navne end de
-   tre øverst (Ugeplan, Indkøbsliste, Retter), så rækkefølgen også ses */
+/* «Mere»: det, man sætter én gang og sjældent ændrer (husstand, udvalg, favoritter og kontakten «Mere grønt i maden»).
+   Lavere kort og mindre navne end de tre øverst (Ugeplan, Indkøbsliste, Retter), så rækkefølgen også ses. To linjer
+   status, så kortene er lige høje, også «Ingen endnu» (review F5: 72 mod 87 px på iPhone) */
 .voksen-afsnit { margin-top: 10px; margin-bottom: 12px; font-size: 22px; font-weight: 800; color: var(--kakao-blid); }
 .voksen-mere .knap.voksen-punkt { min-height: 76px; padding: 10px 20px; border-width: 2px; box-shadow: 0 3px 0 var(--kakao); }
 .voksen-mere .voksen-punkt-navn { font-size: 20px; }
+.voksen-mere .voksen-punkt-status { min-height: 2.2em; }
 .voksen-mere .voksen-punkt .ikon { width: 28px; height: 28px; }
 
 /* «Mere grønt i maden» (role="switch", js/voksen-del.js): formet som et kort, med et spor i stedet for ikonet. Slået til
    er sporet grønt, og prikken står til højre, så tilstanden ikke kun er en farve (statuslinjen siger den også med ord).
-   Prikken er kakao i begge tilstande (4,9:1 på urt, 12,5:1 på hvid). Sporet er 64 × 36 med kanten: 28 px at flytte */
-.knap.voksen-kontakt { width: 100%; min-height: 96px; padding: 14px 22px; justify-content: flex-start; gap: 16px; border-radius: 24px; text-align: left; }
+   Prikken er kakao i begge tilstande (4,9:1 på urt, 12,5:1 på hvid). Sporet er 64 × 36 med kanten: 28 px at flytte.
+   Højde, kant og navn som «Mere» (review F5: den var det største kort, med navnet på to linjer) */
+.knap.voksen-kontakt { width: 100%; min-height: 76px; padding: 10px 20px; border-width: 2px; box-shadow: 0 3px 0 var(--kakao); justify-content: flex-start; gap: 16px; border-radius: 24px; text-align: left; }
+.voksen-kontakt .voksen-punkt-navn { font-size: 20px; }
 /* To linjer status (.knap har linjehøjde 1,1), også ved «Slået fra»: før voksede kortet ved tryk, og «Luk» rykkede (UI-review 02-11) */
 .voksen-kontakt .voksen-punkt-status { min-height: 2.2em; }
 .voksen-kontakt-spor { position: relative; flex: none; width: 64px; height: 36px; border: var(--kant); border-radius: 18px; background: var(--hvid); transition: background-color .15s ease-out; }
@@ -171,8 +175,9 @@ p.uge-husstand { font-size: 17px; font-weight: 750; color: var(--kakao-blid); }
   .udvalg-tal { margin: 0 -12px; padding: 8px 12px; font-size: 18px; }
   .voksen-raekke { grid-template-columns: 56px minmax(0, 1fr) auto; gap: 0 10px; padding: 8px 10px; }
   .voksen-raekke-billede { width: 56px; height: 56px; }
-  .knap.voksen-punkt, .knap.voksen-kontakt { min-height: 84px; padding: 12px 18px; }
-  .voksen-mere .knap.voksen-punkt { min-height: 72px; padding: 10px 16px; }
+  /* De tre øverst er højere end «Mere» med to linjer status (87 px), også her (review F5) */
+  .knap.voksen-punkt { min-height: 96px; padding: 12px 18px; }
+  .voksen-mere .knap.voksen-punkt, .knap.voksen-kontakt { min-height: 72px; padding: 10px 16px; }
   /* Kataloget: knapperne får deres egen linje under billedet og navnet (fire knapper ved navnet gav det under 80 px), og
      «Med i udvalget» bliver til «Med» og «Print» til printikonet, så de står på én linje (review F4). Hjertet er 48 px som
      de andre voksenknapper */

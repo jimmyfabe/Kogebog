@@ -468,11 +468,17 @@ async function katalog(browser, H, skaerm) {
     mere: [...document.querySelectorAll('.voksen-mere .voksen-punkt')].map((b) => b.dataset.fokus),
     afsnit: document.querySelector('nav .voksen-afsnit')?.textContent || '',
     hoejder: [...document.querySelectorAll('.voksen-punkt')].map((b) => Math.round(b.getBoundingClientRect().height)),
+    kontakt: Math.round(document.querySelector('.voksen-kontakt')?.getBoundingClientRect().height || 0),
   }));
   const status = await tekstAf(side, '[data-fokus="katalog"] .voksen-punkt-status');
   tjek(menu.punkter.join() === 'ugeplan,indkoeb,katalog,husstand,udvalg,favoritter' && menu.mere.join() === 'husstand,udvalg,favoritter' && menu.afsnit === 'Mere'
     && status === 'Søg og print i alle ' + retter(ALLE.length), n + ': oversigten er Ugeplan, Indkøbsliste, Retter og under «Mere» husstand, udvalg og favoritter (' + JSON.stringify(menu) + ' · ' + status + ')');
   tjek(menu.hoejder.every((h) => h >= 48), n + ': punkterne på oversigten er mindst 48 px høje (' + menu.hoejder.join(', ') + ')');
+  // Review F5 (15-11): de tre øverst er højere end «Mere», kortene i «Mere» er lige høje, og kontakten «Mere grønt» er som dem
+  const oeverst = menu.hoejder.slice(0, 3);
+  const mereH = menu.hoejder.slice(3);
+  tjek(Math.min(...oeverst) > Math.max(...mereH) && Math.max(...mereH) - Math.min(...mereH) <= 1 && Math.abs(menu.kontakt - Math.max(...mereH)) <= 2,
+    n + ': de tre øverst er højest, «Mere» og kontakten lige høje (' + menu.hoejder.join(', ') + ' · kontakt ' + menu.kontakt + ')');
   await tjekLayout(side, n + ' oversigten');
   await foto(side, n + '-voksen-oversigt');
   await tryk(side, '[data-fokus="katalog"]');
