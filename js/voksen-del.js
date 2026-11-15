@@ -64,7 +64,8 @@ export function voksenSide(hash) {
 // dagen»), der kræver holdet. 'fri': indkøbslisten og linket til den (#/indkoeb, #/hent/…), som telefonen også åbner, og
 // som ikke kræver låsen. 'luk': resten, også børnenes valg (#/uge/vaelg…), så iPad'en kan gives videre. Både 'fri' og
 // 'luk' lukker låsen (rute): listen har kun «Til forsiden», og en åben lås gav et barn vejen ind med browserens
-// «tilbage» (review L2, 15-11).
+// «tilbage» (review L2, 15-11). Koden spørger kun, om svaret er 'bag', så 'fri' og 'luk' gør det samme; de to navne
+// står kun for at vise, hvilke adresser telefonen må åbne uden hold (review R4, 15-11).
 // Ugeplanens adresser læses af dens egen rute(), så låsen og skærmen aldrig er uenige om, hvad adressen er
 export function laasFor(hash) {
   if (voksenSide(hash)) return 'bag';

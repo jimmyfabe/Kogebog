@@ -187,24 +187,22 @@ test('låsen lukker efter 10 minutter uden tryk, og skærmen bliver til holdet',
 });
 
 // Review T1 (15-11): ugeplanen ligger bag samme lås, så dens skærme skal også blive til holdet, når tiden løber ud.
-// Indkøbslisten (fri) tegnes ikke om
-test('efter 10 minutter bliver ugeplanen til holdet, men indkøbslisten tegnes ikke om', (t) => {
+// Review R4 (15-11): det tegnede skal være holdet («Til de voksne»), ikke bare et kald til vis(). Indkøbslisten har ingen
+// åben lås at løbe ud (rute lukker den med det samme, L2), så den del er væk; det står i testen af laasFor og rute ovenfor
+test('efter 10 minutter bliver ugeplanen til holdet', (t) => {
   t.after(() => mock.timers.reset());
   mock.timers.enable({ apis: ['setTimeout', 'Date'], now: 1_000_000 });
   for (const hash of ['#/uge', '#/uge/dag/3']) {
     V.aabn(hash);
     assert.equal(location.hash, hash);
     const foer = visKald;
+    const skaerme = vist.length;
     mock.timers.tick(V.LUK_MS);
     assert.equal(V.erLaastOp(), false, hash);
-    assert.equal(visKald, foer + 1, hash + ': skærmen skal tegnes igen (som holdet), når tiden er gået');
+    assert.equal(visKald, foer + 1, hash + ': skærmen skal tegnes igen, når tiden er gået');
+    assert.equal(vist.length, skaerme + 1, hash + ': voksendelen tegner holdet');
+    assert.equal(vist.at(-1).status?.titel, 'Til de voksne', hash + ': holdet, ikke ugeplanen');
   }
-  V.aabn();
-  location.hash = '#/indkoeb';
-  const foer = visKald;
-  mock.timers.tick(V.LUK_MS);
-  assert.equal(V.erLaastOp(), false);
-  assert.equal(visKald, foer, 'indkøbslisten ligger ikke bag låsen og tegnes ikke om');
   V.rute('#/');
 });
 
