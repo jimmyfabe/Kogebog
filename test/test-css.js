@@ -246,6 +246,15 @@ test('knapperne er store nok til små fingre på iPhone, og navnene kan ikke kn�
   assert.equal(navn['min-width'], '0');
 });
 
+// Review F6 (15-11): «Kom kyllingen og ægget i.» endte med «i.» alene på anden linje. text-wrap: balance gør linjerne lige
+// lange (WebKit fra Safari 17.5; ældre Safari bryder som før). e2e-tjekket «titler» ser kun på retternes navne
+test('trinteksten brydes i lige lange linjer på alle skærme (text-wrap: balance)', () => {
+  const rod = blokke(CSS);
+  for (const [b, h] of [[390, 844], [844, 390], [768, 1024], [1180, 820], [1280, 800]]) {
+    assert.equal(gaeldende(rod, '.trin-tekst h1', b, h)['text-wrap'], 'balance', b + '×' + h);
+  }
+});
+
 test('lupen er mindst 48 px på alle skærme, og Rosa og Bo giver plads til den på smalle skærme', () => {
   const rod = blokke(CSS);
   for (const [b, h] of [[1180, 820], [820, 1180], [390, 844], [360, 640], [844, 390], [667, 375]]) {
