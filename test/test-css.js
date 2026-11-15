@@ -421,6 +421,19 @@ test('katalogets knapper får deres egen linje i alle rækker på telefonen, og 
   assert.doesNotMatch(FAM, /\.med-udvalg/, '.med-udvalg bruges ikke længere');
 });
 
+// Review U7 (15-11): på 390 px stod katalogets knapper til højre med 21 px luft til venstre og 10 px til højre. «Med» står
+// nu i venstre side (margin-right: auto tager luften), og hjertet, «Åbn» og «Print» står stadig til højre, samme sted i alle
+// rækker, også dem uden «Med». Kun på telefonen, hvor knapperne har deres egen linje. e2e måler det i WebKit
+test('katalogets knaprække på telefonen: «Med» i venstre side, de andre til højre (familie.css)', () => {
+  const rod = blokke(fs.readFileSync(path.join(ROD, 'familie.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, ''));
+  const MED = '.voksen-katalog .voksen-raekke-knapper > .voksen-med';
+  for (const b of [360, 390, 430, 700]) {
+    assert.equal(gaeldende(rod, MED, b, 844)['margin-right'], 'auto', b + ' px');
+    assert.equal(gaeldende(rod, '.voksen-raekke-knapper', b, 844)['justify-content'], 'flex-end', b + ' px: de andre står til højre');
+  }
+  assert.equal(gaeldende(rod, MED, 1180, 820)['margin-right'], undefined, 'ved navnet (iPad, desktop): som før');
+});
+
 // Review F5 (15-11): på iPhone var de tre øverst (84 px) lavere end «Mere» (87 px med to linjer status), Favoritter 72 px
 // (én linje), og kontakten «Mere grønt i maden» den største (98-128 px, navnet på to linjer i 24 px). Kontakten er noget,
 // man sætter én gang, så den ligner «Mere». e2e måler højderne i WebKit

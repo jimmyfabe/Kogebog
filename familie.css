@@ -182,6 +182,9 @@ p.uge-husstand { font-size: 17px; font-weight: 750; color: var(--kakao-blid); }
      «Med i udvalget» bliver til «Med» og «Print» til printikonet, så de står på én linje (review F4). Hjertet er 48 px som
      de andre voksenknapper */
   .voksen-katalog .voksen-raekke-knapper { grid-column: 1 / -1; padding-bottom: 8px; gap: 8px; }
+  /* «Med» i venstre side, de andre til højre: luften i begge sider er ens (før 21 og 10 px på 390), og hjertet står samme
+     sted i rækker uden «Med» (review U7) */
+  .voksen-katalog .voksen-raekke-knapper > .voksen-med { margin-right: auto; }
   .voksen-raekke-knapper .knap.hjerte-knap { width: 48px; min-width: 48px; min-height: 48px; }
   .voksen-raekke-knapper .hjerte-knap .ikon { width: 26px; height: 26px; }
   .kun-bred { display: none; }

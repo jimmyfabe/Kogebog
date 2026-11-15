@@ -516,7 +516,11 @@ async function katalog(browser, H, skaerm) {
     };
     const knapper = r.querySelector('.voksen-raekke-knapper');
     const print = r.querySelector('.print-link');
+    const rr = r.getBoundingClientRect();
+    const kk = [...knapper.children].map((b) => b.getBoundingClientRect());
     return { id: r.dataset.ret, egenLinje: knapper.getBoundingClientRect().top >= r.querySelector('.voksen-raekke-billede').getBoundingClientRect().bottom - 1,
+      med: Boolean(r.querySelector('[data-fokus^="ret-"]')), luft: [Math.round(kk[0].left - rr.left), Math.round(rr.right - kk.at(-1).right)],
+      hjerte: Math.round(r.querySelector('[data-fokus^="fav-"]').getBoundingClientRect().left - rr.left),
       navn: Math.round(r.querySelector('.voksen-raekke-navn').getBoundingClientRect().width),
       print: print ? print.getAttribute('href') : null, printHoejde: print ? Math.round(print.getBoundingClientRect().height) : 0,
       knapLinjer: linjerI(knapper) };
@@ -525,6 +529,12 @@ async function katalog(browser, H, skaerm) {
   if (telefon && skaerm.viewport.width >= 390) {
     const toLinjer = linjer.filter((l) => l.knapLinjer > 1).map((l) => l.id + ' ' + l.knapLinjer);
     tjek(toLinjer.length === 0, n + ': knapperne står på én linje i alle rækker (' + JSON.stringify(toLinjer.slice(0, 5)) + ')');
+    // Review U7 (15-11): knapperne stod til højre med 21 px luft til venstre og 10 px til højre. «Med» står nu i venstre
+    // side, så luften er ens, og hjertet står samme sted i alle rækker, også uden «Med»
+    const skaev = linjer.filter((l) => l.med && Math.abs(l.luft[0] - l.luft[1]) > 1).map((l) => l.id + ' ' + l.luft.join('/'));
+    const hjerter = [...new Set(linjer.map((l) => l.hjerte))];
+    tjek(skaev.length === 0 && hjerter.length === 1, n + ': «Med» til venstre og samme luft i begge sider, hjertet samme sted ('
+      + JSON.stringify({ skaev: skaev.slice(0, 5), hjerter }) + ')');
   }
   const forkert = linjer.filter((l) => l.egenLinje !== telefon).map((l) => l.id);
   const smal = linjer.filter((l) => l.navn < 80).map((l) => l.id + ' ' + l.navn + ' px');

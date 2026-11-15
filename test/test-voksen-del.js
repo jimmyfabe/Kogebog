@@ -583,6 +583,8 @@ test('katalogets hjælpetekst siger, at det første «Med» gør børnenes valg 
   const hjaelp = () => tekstAf(medKlasse(vist.at(-1), 'voksen-hjaelp')[0]);
   aabnSide('katalog');
   assert.match(hjaelp(), /Nu vælger børnene mellem favoritterne og nye retter, højst 12\. Efter det første «Med» vælger de kun mellem dem, der er med\./, hjaelp());
+  // Review U7 (15-11): katalogets «Med» har sin egen klasse, så den kan stå i venstre side på telefonen (familie.css)
+  assert.ok(String(medFokusNavn(vist.at(-1), 'ret-' + uge[0]).className).split(/\s+/).includes('voksen-med'), 'katalogets «Med» har klassen voksen-med');
   send(medFokusNavn(vist.at(-1), 'ret-' + uge[0]), 'click');
   assert.equal(JSON.parse(lageret.get('kog-familie-v1')).udvalg.ids.length, 1, '«Med» har lavet et udvalg med én ret');
   assert.match(hjaelp(), /Børnene vælger kun mellem de retter, der er med\.$/, hjaelp());

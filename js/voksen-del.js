@@ -445,10 +445,11 @@ function skiftUdvalg(m, ids) {
 }
 
 // «Med» i udvalget. Fuldt: aria-disabled, ikke disabled, så fokus bliver, og et tryk siger grænsen. lang: «Med i udvalget»
-// i kataloget, hvor «Med» alene ikke siger hvad (på telefonen står kun «Med», .kun-bred i familie.css)
+// i kataloget, hvor «Med» alene ikke siger hvad (på telefonen står kun «Med», .kun-bred i familie.css). .voksen-med: i
+// kataloget står den i venstre side af knaprækken på telefonen (review U7)
 function medKnap(m, ids, fuldt, { lang = false } = {}) {
   const valgt = ids.includes(m.id);
-  const b = medFokus(K.knap(lang ? '' : 'Med', { klasse: 'lille valg', ikonNavn: valgt ? 'tjek' : 'plus', label: 'Med i udvalget: ' + m.navn, onclick: () => skiftUdvalg(m, ids) }), 'ret-' + m.id);
+  const b = medFokus(K.knap(lang ? '' : 'Med', { klasse: 'lille valg' + (lang ? ' voksen-med' : ''), ikonNavn: valgt ? 'tjek' : 'plus', label: 'Med i udvalget: ' + m.navn, onclick: () => skiftUdvalg(m, ids) }), 'ret-' + m.id);
   if (lang) b.append(el('span', {}, 'Med', el('span', { class: 'kun-bred', tekst: ' i udvalget' })));
   b.setAttribute('aria-pressed', String(valgt));
   if (!valgt && fuldt) b.setAttribute('aria-disabled', 'true');
