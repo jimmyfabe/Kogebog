@@ -979,6 +979,34 @@ test('ugeplanens oversigt: «Print» kan nås med Tab (tabindex="0")', async () 
   }
 });
 
+// Review R3 (15-11): ugeplanens brug af ugenErGaaet (F1). Om søndagen er planMandag() i morgen, så
+// ugenErGaaet(p.uge, planMandag()) sagde «Uge N er gået», mens «I dag»-kortet viste søndagens ret
+const AegteDate = Date;
+const falskDag = (iso) => class extends AegteDate {
+  constructor(...a) { if (a.length) super(...a); else super(iso); }
+  static now() { return new AegteDate(iso).getTime(); }
+};
+async function ugeAdvarselDen(iso, uge) {
+  globalThis.Date = falskDag(iso);
+  await start('#/uge', { foer: planMed(uge, 6, UGE[3]) });
+  holdInde(rod.querySelector('.voksen-vagt'));
+  assert.ok(rod.querySelector('main.uge-oversigt'), iso + ': ugeplanens oversigt efter holdet');
+  return rod.querySelector('.uge-advarsel')?.textContent || '';
+}
+test('ugeplanen siger ikke «er gået» om søndagen i ugen, men gør det mandagen efter', async () => {
+  try {
+    const soendag = await ugeAdvarselDen('2026-11-15T12:00:00', '2026-11-09');
+    assert.equal(new Date().getDay(), 0, 'den falske dag er en søndag');
+    assert.doesNotMatch(soendag, /er gået/, 'søndag i uge 46: ' + soendag);
+    gaaTil('#/');
+    const mandag = await ugeAdvarselDen('2026-11-16T12:00:00', '2026-11-09');
+    assert.match(mandag.replace(/ /g, ' '), /^Uge 46 er gået\. .*plan til uge 47\.$/);
+  } finally {
+    globalThis.Date = AegteDate;
+    gaaTil('#/');
+  }
+});
+
 // ---------- Pilen «Tilbage» fra en ret, der ikke er åbnet fra børnenes grupper ----------
 // tryk() kører linkets onclick, og gaaTil() er det, browseren gør bagefter, når den følger href
 
