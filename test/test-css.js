@@ -298,6 +298,18 @@ test('dyret på statusskærmene har sin højde, før billedet er hentet (aspect-
   }
 });
 
+// Review R6 (15-11): forsidens dyr (Rosa og Bo i dugen) havde også kun en bredde. Kommer billedet sent, vokser dugen, og
+// alt under den rykker ned midt i et hold på «Voksne: hold» (samme mønster som statusskærmens dyr ovenfor)
+test('forsidens dyr har deres højde, før billedet er hentet (aspect-ratio), på alle skærme, hvor de står', () => {
+  const rod = blokke(CSS);
+  for (const [b, h] of [[1180, 820], [820, 1180], [1280, 800], [1280, 720], [744, 1133], [600, 900]]) {
+    const d = gaeldende(rod, '.forside-dyr', b, h);
+    assert.notEqual(d.display, 'none', b + '×' + h + ': dyrene står på forsiden her');
+    assert.ok(d.width, b + '×' + h + ': dyrene har en bredde');
+    assert.equal(ens(d['aspect-ratio'] || ''), '1/1', b + '×' + h + ': dyrene er kvadratiske (viewBox 256 × 256)');
+  }
+});
+
 test('hovedknappen på statusskærmene (.knap.primaer) er mindst 48 px på alle skærme (regel 9)', () => {
   const rod = blokke(CSS);
   for (const [b, h] of [[1180, 820], [820, 1180], [390, 844], [360, 640], [844, 390], [667, 375]]) {

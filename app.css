@@ -246,7 +246,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
     linear-gradient(rgba(242, 193, 78, 0.55) 50%, transparent 50%);
   background-size: 40px 40px;
 }
-.forside-dyr { width: clamp(72px, 9vw, 112px); margin-bottom: -3px; }
+/* aspect-ratio: som .status-dyr, så dugen ikke vokser, og «Voksne: hold» ikke rykker, når dyrene kommer sent (review R6) */
+.forside-dyr { width: clamp(72px, 9vw, 112px); aspect-ratio: 1 / 1; margin-bottom: -3px; }
 .forside-titel {
   align-self: center;
   margin-bottom: 14px;
