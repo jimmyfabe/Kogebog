@@ -686,7 +686,8 @@ function oversigtSkaerm() {
   ] : [];
   const andre = [
     harRetter ? medFokus(K.knap('Del som tekst', { ikonNavn: 'liste', onclick: () => delTekst(data) }), 'del') : null,
-    harRetter ? el('a', { class: 'knap print-link', href: 'print.html?uge' }, ikon('print'), el('span', { tekst: 'Print' })) : null,
+    // tabindex: Safari springer et link uden tabindex over med Tab (review F2, 15-11)
+    harRetter ? el('a', { class: 'knap print-link', href: 'print.html?uge', tabindex: '0' }, ikon('print'), el('span', { tekst: 'Print' })) : null,
     harRetter || p.uge ? ny : null,
   ].filter(Boolean);
 

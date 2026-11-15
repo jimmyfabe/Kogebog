@@ -900,9 +900,10 @@ function printAdresse(f, { ret = null, retter = null } = {}) {
   return 'print.html?' + hvad + (n ? '&n=' + n : '') + (f.mereGroent === true ? '&groen=1' : '');
 }
 
-// Et link til printet (det åbner en ny side), der ligner en knap som ugeplanens «Print»
+// Et link til printet (det åbner en ny side), der ligner en knap som ugeplanens «Print». tabindex="0": Safari springer
+// et link uden tabindex over med Tab (målt i WebKit 26.6, review F2 15-11), og knappen skal kunne nås med tastaturet
 function printLink(tekst, href, label, fokus) {
-  return medFokus(el('a', { class: 'knap lille print-link', href, 'aria-label': label }, ikon('print'), el('span', { tekst })), fokus);
+  return medFokus(el('a', { class: 'knap lille print-link', href, tabindex: '0', 'aria-label': label }, ikon('print'), el('span', { tekst })), fokus);
 }
 
 // Over listen: hele kogebogen, eller de retter, søgningen og filtrene viser. Står i listens boks, så den følger med ved

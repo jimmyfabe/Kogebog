@@ -959,6 +959,20 @@ test('ugeplanen ligger bag låsen: #/uge viser holdet, holdet åbner oversigten,
   assert.equal(rod.querySelector('.voksen-vagt'), null, 'indkøbslisten (telefonen) har intet hold');
 });
 
+// Review F2 (15-11): Safari (og WebKit) springer et link over med Tab, medmindre det har tabindex. «Print» ligner en knap og
+// skal kunne nås med tastaturet, også på iPad med tastaturcover
+test('ugeplanens oversigt: «Print» kan nås med Tab (tabindex="0")', async () => {
+  await start('#/uge', { foer: planMed(denneMandag(), dagNr(), UGE[3]) });
+  try {
+    holdInde(rod.querySelector('.voksen-vagt'));
+    const print = rod.querySelector('.print-link');
+    assert.ok(print, '«Print» står på oversigten med en ret i planen');
+    assert.equal(print.getAttribute('tabindex'), '0');
+  } finally {
+    gaaTil('#/');
+  }
+});
+
 // ---------- Pilen «Tilbage» fra en ret, der ikke er åbnet fra børnenes grupper ----------
 // tryk() kører linkets onclick, og gaaTil() er det, browseren gør bagefter, når den følger href
 

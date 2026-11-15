@@ -604,6 +604,9 @@ test('«Retter»: «Print» i hver række og «Print hele kogebogen» over liste
   assert.deepEqual(forkert.map((li) => li.attr['data-ret']), [], 'rækker uden det rigtige printlink');
   const link = medFokusNavn(skaerm, 'print-' + S.ids[0]);
   assert.equal(link.tag, 'a');
+  // Review F2 (15-11): Safari springer links over med Tab, medmindre de har tabindex
+  assert.equal(link.attr.tabindex, '0', '«Print» i rækken kan nås med Tab');
+  assert.equal(medFokusNavn(skaerm, 'print-flere').attr.tabindex, '0', '«Print hele kogebogen» kan nås med Tab');
   assert.equal(link.attr['aria-label'], 'Print ' + S.retter.get(S.ids[0]).navn);
   assert.equal(printHref(skaerm, 'print-flere'), 'print.html?alle');
   assert.equal(tekstAf(medFokusNavn(skaerm, 'print-flere')), 'Print hele kogebogen');

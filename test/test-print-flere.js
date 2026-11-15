@@ -153,3 +153,11 @@ test('printFlere: en ret, der ikke kan hentes, står ikke med, og en linje siger
     svigter = new Set();
   }
 });
+
+// Review F2 (15-11): Safari springer et link uden tabindex over med Tab, så «Tilbage» i printets værktøjslinje skal have det
+test('print.html: «Tilbage» kan nås med Tab (tabindex="0")', () => {
+  const html = fs.readFileSync(path.join(ROD, 'print.html'), 'utf8');
+  const tilbage = html.match(/<a\b[^>]*\bid="tilbage"[^>]*>/);
+  assert.ok(tilbage, 'print.html har linket #tilbage');
+  assert.match(tilbage[0], /\btabindex="0"/);
+});
