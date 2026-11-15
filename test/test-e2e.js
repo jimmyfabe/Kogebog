@@ -199,7 +199,7 @@ async function foto(side, navn, ekstra = {}) {
 }
 
 // Børnenes egne knapper skal være mindst 64 px (de voksnes, fx print og stop, mindst 48 px)
-const BOERNEKNAPPER = '.kort, .ingr, .start, .naeste, .tilbage, .laes-op, .timer-start, .stor-rund, .knap.primaer, .gruppe-knap, .forside-favoritter, .dag-brik';
+const BOERNEKNAPPER = '.kort, .ingr, .start, .naeste, .tilbage, .laes-op, .timer-start, .stor-rund, .knap.primaer, .gruppe-knap, .forside-favoritter, .dag-brik, .idag-kort';
 const SKAERMKNAPPER = '.handlinger .knap'; // skal kunne ses uden at rulle på iPad og desktop
 
 // Ingen vandret rulning (heller ikke indhold, som body's overflow-x skjuler), knapper mindst 48/64 px, alle billeder indlæst
@@ -605,6 +605,47 @@ async function gaaTil(side, h, hvor, { gammel = false } = {}) {
   }, { h, gammel });
   tjek(ok, hvor + ': WebKit afviste adresseskiftet til ' + h + ' (for mange skift i samme dokument)');
 }
+// «I dag»-kortet sammen med en timer, med det længste navn (review L3, 15-11: e2e så aldrig kortet). Kortet er børnenes
+// knap (mindst 64 px, BOERNEKNAPPER), knapperne og «Voksne: hold» kan ses uden at rulle, og på iPad og desktop ruller siden
+// slet ikke (review F3: 1280×800 rullede 24-42 px). Et tryk åbner dagens ret. Lageret ryddes bagefter
+const IDAG_RET = 'floedekartofler-med-skinke-og-broccoli';
+async function tjekIdagMedTimer(side, n) {
+  const hvor = n + ' forside med «I dag» og en timer';
+  await side.evaluate((ret) => {
+    const d = new Date();
+    const dag = (d.getDay() + 6) % 7;
+    const mandag = new Date(d.getFullYear(), d.getMonth(), d.getDate() - dag);
+    const iso = (x) => x.getFullYear() + '-' + String(x.getMonth() + 1).padStart(2, '0') + '-' + String(x.getDate()).padStart(2, '0');
+    const dage = [null, null, null, null, null, null, null];
+    dage[dag] = { ret, af: 'rosa', n: 4 };
+    localStorage.setItem('kog-uge-v1', JSON.stringify({ v: 1, uge: iso(mandag), dage, n: 4, prBarn: 1, rettet: null }));
+    const nu = Date.now();
+    localStorage.setItem('kog-v1', JSON.stringify({ v: 1, sidste: null, timer: { ret: 'one-pot-tomatpasta', nr: 3, sek: 900, start: nu, slut: nu + 900000 } }));
+  }, IDAG_RET);
+  try {
+    await side.goto('about:blank');
+    await side.goto(BASE + '/index.html?hurtig=1');
+    if (!await venterPaa(side, () => document.querySelector('.idag-kort') && document.querySelector('.forside-timer .pille:not([hidden])'), null, hvor)) return;
+    await side.waitForFunction(() => [...document.images].every((i) => i.complete), null, { timeout: 5000 }).catch(() => {});
+    await tjekLayout(side, hvor);
+    await tjekForsideKnapper(side, hvor, { udenRul: n !== 'iphone' });
+    const k = await side.evaluate(() => {
+      const b = document.querySelector('.idag-kort');
+      return { label: b.getAttribute('aria-label'), H: Math.round(b.getBoundingClientRect().height), side: document.documentElement.scrollHeight, vindue: innerHeight };
+    });
+    tjek(k.label === 'I dag laver vi ' + utenBloede(RETTER[IDAG_RET].name) && k.H >= 64, hvor + ': kortet siger dagens ret og er mindst 64 px høj (' + JSON.stringify(k) + ')');
+    if (n !== 'iphone') tjek(k.side <= k.vindue, hvor + ': siden ruller ikke (' + k.side + ' px på ' + k.vindue + ')');
+    await foto(side, n + '-1b-forside-idag-timer');
+    await tryk(side, '.idag-kort');
+    await venterPaa(side, (ret) => location.hash === '#/ret/' + ret, IDAG_RET, hvor + ': et tryk på kortet åbner dagens ret');
+  } finally {
+    await side.evaluate(() => { localStorage.removeItem('kog-uge-v1'); localStorage.removeItem('kog-v1'); });
+    await side.goto('about:blank');
+    await side.goto(BASE + '/index.html?hurtig=1');
+    await side.waitForSelector('.gruppe-knap');
+  }
+}
+
 async function heleVejen(browser, skaerm) {
   const n = skaerm.navn;
   console.log('[' + n + '] forside → pandekager → færdig');
@@ -639,6 +680,7 @@ async function heleVejen(browser, skaerm) {
   });
   tjek(udgave && udgave.tekst === 'Version ' + UDGAVE && udgave.hoejde > 0 && udgave.under, n + ': forsiden skal vise «Version ' + UDGAVE + '» under linjen om stemmen, fandt ' + JSON.stringify(udgave));
   await foto(side, n + '-1-forside');
+  await tjekIdagMedTimer(side, n);
   await tjekGruppeTryk(side, n + ' forside');
   await tjekTilbageOgLup(side, n);
 
