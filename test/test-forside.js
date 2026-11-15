@@ -965,6 +965,21 @@ test('ugeplanen ligger bag låsen: #/uge viser holdet, holdet åbner oversigten,
   assert.equal(rod.querySelector('.voksen-vagt'), null, 'indkøbslisten (telefonen) har intet hold');
 });
 
+// Review U5 (15-11): kan dyret på statusskærmen ikke hentes (første besøg uden net, før service workeren har gemt det),
+// viste WebKit en grå ramme med «?». Billedet får klassen «mangler» (skjult i app.css, men pladsen står)
+test('statusskærmens dyr skjules, hvis billedet ikke kan hentes', async () => {
+  await start('#/uge');
+  try {
+    const dyr = rod.querySelector('.status-dyr');
+    assert.ok(dyr, 'dyret står på holdets statusskærm');
+    assert.ok(!dyr.classList.contains('mangler'), 'før en fejl');
+    for (const fn of dyr.lyt.error || []) fn({ type: 'error', target: dyr });
+    assert.ok(dyr.classList.contains('mangler'), 'efter en fejl');
+  } finally {
+    gaaTil('#/');
+  }
+});
+
 // Review F2 (15-11): Safari (og WebKit) springer et link over med Tab, medmindre det har tabindex. «Print» ligner en knap og
 // skal kunne nås med tastaturet, også på iPad med tastaturcover
 test('ugeplanens oversigt: «Print» kan nås med Tab (tabindex="0")', async () => {

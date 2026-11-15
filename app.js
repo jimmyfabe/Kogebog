@@ -169,9 +169,13 @@ function topbar(midte, tilbage = null, { tekst = '', label = 'Tilbage' } = {}) {
 }
 
 function statusSkaerm({ titel, tekst, handling, laeser = false }) {
+  // Kan dyret ikke hentes (første besøg uden net), viste WebKit en grå ramme med «?». «mangler» skjuler det, men pladsen
+  // står, så knapperne under det ikke rykker (app.css, review U5)
+  const dyr = billede(grafikDyr(laeser ? 'pip' : 'bo'), '', 'status-dyr');
+  dyr.addEventListener('error', () => dyr.classList.add('mangler'));
   return el('main', { class: 'skaerm status-skaerm' },
     el('div', { class: 'status-boks' + (laeser ? ' henter' : '') },
-      billede(grafikDyr(laeser ? 'pip' : 'bo'), '', 'status-dyr'),
+      dyr,
       el('h1', { tabindex: '-1', tekst: titel }),
       tekst ? el('p', { tekst }) : null,
       handling || null));

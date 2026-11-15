@@ -298,6 +298,17 @@ test('dyret på statusskærmene har sin højde, før billedet er hentet (aspect-
   }
 });
 
+// Review U5 (15-11): et dyr, der ikke kunne hentes (klassen «mangler» fra app.js), skjules uden at tage pladsen med sig,
+// så knapperne under det ikke rykker (visibility, ikke display)
+test('statusskærmens dyr uden billede er skjult, men holder sin plads', () => {
+  const rod = blokke(CSS);
+  for (const [b, h] of [[1180, 820], [390, 844], [1280, 800]]) {
+    const d = gaeldende(rod, '.status-dyr.mangler', b, h);
+    assert.equal(d.visibility, 'hidden', b + '×' + h);
+    assert.equal(d.display, undefined, b + '×' + h + ': display må ikke ændres (så forsvinder pladsen)');
+  }
+});
+
 // Review R6 (15-11): forsidens dyr (Rosa og Bo i dugen) havde også kun en bredde. Kommer billedet sent, vokser dugen, og
 // alt under den rykker ned midt i et hold på «Voksne: hold» (samme mønster som statusskærmens dyr ovenfor)
 test('forsidens dyr har deres højde, før billedet er hentet (aspect-ratio), på alle skærme, hvor de står', () => {
