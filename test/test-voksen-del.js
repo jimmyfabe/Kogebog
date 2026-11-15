@@ -170,6 +170,28 @@ test('låsen lukker efter 10 minutter uden tryk, og skærmen bliver til holdet',
   assert.equal(visKald, foer + 1, 'skærmen skal tegnes igen (som holdet), når tiden er gået');
 });
 
+// Review T1 (15-11): ugeplanen ligger bag samme lås, så dens skærme skal også blive til holdet, når tiden løber ud.
+// Indkøbslisten (fri) tegnes ikke om
+test('efter 10 minutter bliver ugeplanen til holdet, men indkøbslisten tegnes ikke om', (t) => {
+  t.after(() => mock.timers.reset());
+  mock.timers.enable({ apis: ['setTimeout', 'Date'], now: 1_000_000 });
+  for (const hash of ['#/uge', '#/uge/dag/3']) {
+    V.aabn(hash);
+    assert.equal(location.hash, hash);
+    const foer = visKald;
+    mock.timers.tick(V.LUK_MS);
+    assert.equal(V.erLaastOp(), false, hash);
+    assert.equal(visKald, foer + 1, hash + ': skærmen skal tegnes igen (som holdet), når tiden er gået');
+  }
+  V.aabn();
+  location.hash = '#/indkoeb';
+  const foer = visKald;
+  mock.timers.tick(V.LUK_MS);
+  assert.equal(V.erLaastOp(), false);
+  assert.equal(visKald, foer, 'indkøbslisten ligger ikke bag låsen og tegnes ikke om');
+  V.rute('#/');
+});
+
 test('et tryk holder den åben i 10 minutter mere', (t) => {
   t.after(() => mock.timers.reset());
   mock.timers.enable({ apis: ['setTimeout', 'Date'], now: 1_000_000 });
