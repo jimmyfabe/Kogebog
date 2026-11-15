@@ -1,0 +1,56 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Ostenaan med mozzarella",
+  "description": "Nemme naan uden gær med revet mozzarella lukket inde i dejen, rullet flade og stegt på en tør pande, til osten smelter. Allergener: gluten og mælk.",
+  "image": "grafik/ret-ostenaan.webp",
+  "inLanguage": "da",
+  "recipeYield": "8 små naan",
+  "prepTime": "PT25M",
+  "cookTime": "PT24M",
+  "totalTime": "PT55M",
+  "recipeIngredient": [
+    "300 g hvedemel og lidt til bordet",
+    "2 tsk bagepulver",
+    "½ tsk salt",
+    "250 g græsk yoghurt",
+    "2 spsk olie",
+    "evt. lidt vand",
+    "150 g revet mozzarella"
+  ],
+  "tool": ["køkkenvægt", "stor skål", "grydeske", "viskestykke", "ske", "kagerulle", "stor pande", "stegespade"],
+  "recipeInstructions": [
+    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Retten indeholder gluten og mælk."}},
+    {"@type": "HowToStep", "text": "Mål 300 g mel i en stor skål.", "tumbi": {"verbum": "maale", "ikoner": ["mel"], "note": "Brug køkkenvægten."}},
+    {"@type": "HowToStep", "text": "Drys bagepulver og salt i skålen.", "tumbi": {"verbum": "drysse", "ikoner": ["bagepulver", "salt"], "note": "2 tsk bagepulver og ½ tsk salt. Rør det rundt med en ske."}},
+    {"@type": "HowToStep", "text": "Hæld yoghurt og olie i skålen.", "tumbi": {"verbum": "haelde", "ikoner": ["yoghurt", "olie"], "note": "250 g græsk yoghurt og 2 spsk olie."}},
+    {"@type": "HowToStep", "text": "Rør, til det samler sig til en dej.", "tumbi": {"verbum": "roere", "ikoner": ["vand"], "note": "Er dejen tør og smuldrer, så kom lidt vand i, en skefuld ad gangen."}},
+    {"@type": "HowToStep", "text": "Ælt dejen i 2 minutter.", "tumbi": {"verbum": "aelte", "timer_sek": 120, "ikoner": ["mel"], "note": "Drys lidt mel på bordet. Dejen skal være blød og glat."}},
+    {"@type": "HowToStep", "text": "Lad dejen hvile i 10 minutter.", "tumbi": {"verbum": "vente", "timer_sek": 600, "note": "Dæk skålen med et viskestykke. Så er dejen lettere at arbejde med."}},
+    {"@type": "HowToStep", "text": "Del dejen i 8 kugler.", "tumbi": {"verbum": "forme", "note": "Del den først i to, så i fire og så i otte. Rul hver bid til en kugle mellem hænderne."}},
+    {"@type": "HowToStep", "text": "Tryk hver kugle flad i hånden.", "tumbi": {"verbum": "forme", "note": "Så den bliver som en lille, tyk pandekage."}},
+    {"@type": "HowToStep", "text": "Læg en skefuld ost midt på hver.", "tumbi": {"verbum": "drysse", "ikoner": ["ost"], "note": "150 g revet mozzarella i alt, fordelt på de 8 stykker."}},
+    {"@type": "HowToStep", "text": "Fold kanten op, og klem den sammen.", "tumbi": {"verbum": "pakke-ind", "note": "Osten skal være helt lukket inde, ellers løber den ud på panden. Vend bollen, så samlingen vender nedad."}},
+    {"@type": "HowToStep", "text": "Rul dem forsigtigt flade.", "tumbi": {"verbum": "kagerulle", "ikoner": ["mel"], "note": "Ca. 1 cm tykke. Drys lidt mel på. Kommer der hul, så klem det sammen."}},
+    {"@type": "HowToStep", "text": "Læg to naan på en tør pande.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "note": "Middel varme, uden olie, så osten når at smelte. Den voksne lægger dem på."}},
+    {"@type": "HowToStep", "text": "Steg dem i 3 minutter.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "note": "Til undersiden er gylden med brune pletter."}},
+    {"@type": "HowToStep", "text": "Vend dem, og steg 3 minutter mere.", "tumbi": {"verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "note": "Den voksne vender med stegespaden. Læg de færdige naan i et rent viskestykke."}},
+    {"@type": "HowToStep", "text": "Steg resten på samme måde.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "note": "To ad gangen, 3 minutter på hver side. Sluk for panden til sidst."}},
+    {"@type": "HowToStep", "text": "Lad dem køle i 2 minutter.", "tumbi": {"verbum": "vente", "timer_sek": 120, "note": "Osten indeni er meget varm. Bid forsigtigt."}}
+  ],
+  "tumbi": {
+    "id": "ostenaan",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er egne og ikke afprøvet. Naan af græsk yoghurt og bagepulver i stedet for gær som hos Arla, «Indisk naanbrød» (arla.dk/opskrifter/indisk-naanbrod/), Valdemarsro, «Naanbrød» (valdemarsro.dk/naanbrod/), og Madens Verden, «Naanbrød» (madensverden.dk/naanbroed/). Her lukkes revet mozzarella inde i dejen som i en cheese naan, og de steges på en tør pande. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      {"ikon": "mel", "maengde": "300 g"},
+      {"ikon": "bagepulver", "maengde": "2 tsk"},
+      {"ikon": "salt", "maengde": "½ tsk"},
+      {"ikon": "yoghurt", "maengde": "250 g"},
+      {"ikon": "olie", "maengde": "2 spsk"},
+      {"ikon": "vand", "maengde": ""},
+      {"ikon": "ost", "maengde": "150 g"}
+    ]
+  }
+}

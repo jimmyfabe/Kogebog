@@ -1,0 +1,61 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Hvidløgsnaan med smør og persille",
+  "description": "Nemme naan uden gær, stegt på en tør pande og penslet med hvidløgssmør og persille, mens de er varme. Allergener: gluten og mælk.",
+  "image": "grafik/ret-hvidloegsnaan.webp",
+  "inLanguage": "da",
+  "recipeYield": "8 små naan",
+  "prepTime": "PT25M",
+  "cookTime": "PT16M",
+  "totalTime": "PT45M",
+  "recipeIngredient": [
+    "300 g hvedemel og lidt til bordet",
+    "2 tsk bagepulver",
+    "½ tsk salt",
+    "250 g græsk yoghurt",
+    "2 spsk olie",
+    "evt. lidt vand",
+    "40 g smør",
+    "2 fed hvidløg",
+    "2 spsk friske persilleblade"
+  ],
+  "tool": ["køkkenvægt", "stor skål", "grydeske", "viskestykke", "hvidløgspresse", "lille skål", "lille gryde", "pensel", "kagerulle", "stor pande", "stegespade"],
+  "recipeInstructions": [
+    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Retten indeholder gluten og mælk."}},
+    {"@type": "HowToStep", "text": "Mål 300 g mel i en stor skål.", "tumbi": {"verbum": "maale", "ikoner": ["mel"], "note": "Brug køkkenvægten."}},
+    {"@type": "HowToStep", "text": "Drys bagepulver og salt i skålen.", "tumbi": {"verbum": "drysse", "ikoner": ["bagepulver", "salt"], "note": "2 tsk bagepulver og ½ tsk salt. Rør det rundt med en ske."}},
+    {"@type": "HowToStep", "text": "Hæld yoghurt og olie i skålen.", "tumbi": {"verbum": "haelde", "ikoner": ["yoghurt", "olie"], "note": "250 g græsk yoghurt og 2 spsk olie."}},
+    {"@type": "HowToStep", "text": "Rør, til det samler sig til en dej.", "tumbi": {"verbum": "roere", "ikoner": ["vand"], "note": "Er dejen tør og smuldrer, så kom lidt vand i, en skefuld ad gangen."}},
+    {"@type": "HowToStep", "text": "Ælt dejen i 2 minutter.", "tumbi": {"verbum": "aelte", "timer_sek": 120, "ikoner": ["mel"], "note": "Drys lidt mel på bordet. Dejen skal være blød og glat."}},
+    {"@type": "HowToStep", "text": "Lad dejen hvile i 10 minutter.", "tumbi": {"verbum": "vente", "timer_sek": 600, "note": "Dæk skålen med et viskestykke. Lav hvidløgssmørret imens."}},
+    {"@type": "HowToStep", "text": "Pres hvidløget ned i en lille skål.", "tumbi": {"verbum": "klemme", "ikoner": ["hvidloeg"], "note": "2 fed. Pil skallen af først, og brug en hvidløgspresse. Barnet kan selv."}},
+    {"@type": "HowToStep", "text": "Smelt smørret, og hæld det over hvidløget.", "tumbi": {"verbum": "smelte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["smoer", "hvidloeg"], "note": "40 g smør i en lille gryde ved svag varme. Den voksne smelter og hælder."}},
+    {"@type": "HowToStep", "text": "Pil bladene af persillen.", "tumbi": {"verbum": "pille", "ikoner": ["krydderurt"], "note": "Ca. 2 spsk blade fra en frisk persille. Store blade deles med fingrene. Barnet kan selv."}},
+    {"@type": "HowToStep", "text": "Del dejen i 8 kugler.", "tumbi": {"verbum": "forme", "note": "Del den først i to, så i fire og så i otte. Rul hver bid til en kugle mellem hænderne."}},
+    {"@type": "HowToStep", "text": "Rul kuglerne flade og ovale.", "tumbi": {"verbum": "kagerulle", "ikoner": ["mel"], "note": "Ca. ½ cm tykke. Drys lidt mel på bordet og kagerullen."}},
+    {"@type": "HowToStep", "text": "Læg to naan på en tør pande.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "note": "Middel til høj varme, uden olie. Den voksne lægger dem på."}},
+    {"@type": "HowToStep", "text": "Steg dem i 2 minutter.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 120, "note": "Til der kommer bobler, og undersiden har brune pletter."}},
+    {"@type": "HowToStep", "text": "Vend dem, og steg 2 minutter mere.", "tumbi": {"verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 120, "note": "Den voksne vender med stegespaden og lægger dem på et bræt."}},
+    {"@type": "HowToStep", "text": "Pensl dem med hvidløgssmør.", "tumbi": {"verbum": "pensle", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["smoer", "hvidloeg"], "note": "De er varme: den voksne holder, og barnet pensler forsigtigt."}},
+    {"@type": "HowToStep", "text": "Drys persille over.", "tumbi": {"verbum": "drysse", "ikoner": ["krydderurt"], "note": "Læg dem i et rent viskestykke, så de holder sig bløde."}},
+    {"@type": "HowToStep", "text": "Steg resten på samme måde.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "note": "To ad gangen, 2 minutter på hver side. Pensl og drys, når de kommer af panden. Sluk for panden til sidst."}}
+  ],
+  "tumbi": {
+    "id": "hvidloegsnaan",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er egne og ikke afprøvet. Naan af græsk yoghurt og bagepulver i stedet for gær som hos Arla, «Indisk naanbrød» (arla.dk/opskrifter/indisk-naanbrod/), Valdemarsro, «Naanbrød» (valdemarsro.dk/naanbrod/), og Madens Verden, «Naanbrød» (madensverden.dk/naanbroed/). Her steges de på en tør pande og pensles med smør, presset hvidløg og persille. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      {"ikon": "mel", "maengde": "300 g"},
+      {"ikon": "bagepulver", "maengde": "2 tsk"},
+      {"ikon": "salt", "maengde": "½ tsk"},
+      {"ikon": "yoghurt", "maengde": "250 g"},
+      {"ikon": "olie", "maengde": "2 spsk"},
+      {"ikon": "vand", "maengde": ""},
+      {"ikon": "smoer", "maengde": "40 g"},
+      {"ikon": "hvidloeg", "maengde": "2 fed"},
+      {"ikon": "krydderurt", "maengde": "2 spsk"}
+    ]
+  }
+}
