@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<defs>
+  <clipPath id="dyppe-vand-ark"><circle cx="124" cy="134" r="60"/></clipPath>
+  <clipPath id="dyppe-vand-under"><path d="M20 192 L236 192 L236 240 L20 240 Z"/></clipPath>
+</defs>
+  <g id="dip-in-water" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="deep-plate">
+      <path d="M28 198 C28 186 72 176 128 176 C184 176 228 186 228 198 L228 206 C228 222 184 234 128 234 C72 234 28 222 28 206 Z" fill="#EEDDBF"/>
+      <ellipse cx="128" cy="198" rx="100" ry="24" fill="#FFF4E2"/>
+      <ellipse cx="128" cy="199" rx="80" ry="16" fill="#A9D3E3"/>
+    </g>
+    <g id="rice-paper" transform="translate(0 8)">
+      <circle cx="124" cy="134" r="60" fill="#F5EEDC"/>
+      <g clip-path="url(#dyppe-vand-ark)" fill="none" stroke="#D8CBAA" stroke-width="2.5">
+        <path d="M52 98 L160 206"/><path d="M68 74 L184 190"/><path d="M92 62 L196 166"/><path d="M120 58 L200 138"/>
+        <path d="M196 98 L88 206"/><path d="M180 74 L64 190"/><path d="M156 62 L52 166"/><path d="M128 58 L48 138"/>
+      </g>
+      <circle cx="124" cy="134" r="60" fill="none"/>
+      <path d="M80 112 C88 96 102 86 120 82" fill="none" stroke="#FFFAEE" stroke-width="4"/>
+    </g>
+    <g id="water-in-front">
+      <ellipse cx="128" cy="199" rx="80" ry="16" fill="#A9D3E3" fill-opacity="0.8" stroke="none" clip-path="url(#dyppe-vand-under)"/>
+      <path d="M48 199 C48 207 84 215 128 215 C172 215 208 207 208 199" fill="none"/>
+      <path d="M86 192 Q98 188 108 192 M140 192 Q152 188 164 192" fill="none" stroke="#3E8FB0" stroke-width="3"/>
+      <path d="M78 204 Q92 200 104 204 M148 205 Q162 201 176 205" fill="none" stroke="#3E8FB0" stroke-width="3"/>
+    </g>
+    <g id="downward-motion" transform="translate(0 8)">
+      <path d="M44 76 C38 86 38 99 44 109 L51 104 L49 127 Q49 130 46 128 L29 114 L36 113 C28 99 29 83 35 72 Q41 67 44 76 Z" fill="#3E8FB0"/>
+    </g>
+    <g id="rosa-forearm" transform="translate(0 8)">
+      <path d="M256 66 C229 66 208 71 186 78 L181 100 C203 109 229 106 256 99" fill="#F08A3C"/>
+    </g>
+    <g id="rosa-holding-paw">
+      <path d="M170 71 Q158 73 163 85 C155 94 162 105 172 101 C180 110 191 103 187 95 C197 90 190 78 181 82 Q182 70 170 71 Z" transform="translate(-14 8)" fill="#F08A3C"/>
+      <path d="M169 84 Q176 79 183 88 Q188 97 178 99 Q166 98 169 84 Z" transform="translate(-14 8)" fill="#FFF4E2"/>
+    </g>
+  </g>
+</svg>

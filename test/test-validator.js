@@ -132,7 +132,7 @@ test('rive og bage kræver altid en voksen: rivejernet er kniv, og ovnen er varm
 // pynte og sproejte (20-10): læg en oliven på, klem ketchup ud. Øjebollernes «Læg et øje på hver varm bolle.» er varme
 test('piske, pensle, mose, drysse, pynte og sprøjte: barnet selv, eller en voksen for varmens skyld', () => {
   // Boller trin 11 (pisk ægget, og pensl) har ingen voksen: det er koldt
-  for (const v of ['piske', 'pensle', 'mose', 'drysse', 'pynte', 'sproejte']) {
+  for (const v of ['piske', 'pensle', 'mose', 'drysse', 'drysse-skaal', 'pynte', 'sproejte']) {
     forventGyldig('opskrifter/boller.json', (d) => { const st = d.recipeInstructions[10].tumbi; st.verbum = v; delete st.voksen; delete st.voksen_hjaelp; });
     forventGyldig('opskrifter/boller.json', (d) => { Object.assign(d.recipeInstructions[10].tumbi, { verbum: v, voksen: true, voksen_hjaelp: 'varme' }); });
     forventFejl('opskrifter/boller.json', (d) => { Object.assign(d.recipeInstructions[10].tumbi, { verbum: v, voksen: true, voksen_hjaelp: 'kniv' }); },
@@ -201,7 +201,7 @@ test('smelte kræver en voksen for varmens skyld; stikke-ud, forme, pille, ryste
     'trin 3: verbet «smelte» skal have "voksen": true og "voksen_hjaelp": "varme"');
   forventFejl('opskrifter/koedsovs.json', (d) => { Object.assign(d.recipeInstructions[2].tumbi, { verbum: 'smelte', voksen: true, voksen_hjaelp: 'kniv' }); },
     'trin 3: verbet «smelte» skal have "voksen": true og "voksen_hjaelp": "varme"');
-  for (const v of ['stikke-ud', 'forme', 'pille', 'ryste', 'klemme', 'dyppe']) {
+  for (const v of ['stikke-ud', 'forme', 'pille', 'ryste', 'klemme', 'dyppe', 'dyppe-vand']) {
     forventGyldig('opskrifter/boller.json', (d) => { const st = d.recipeInstructions[10].tumbi; st.verbum = v; delete st.voksen; delete st.voksen_hjaelp; });
     forventFejl('opskrifter/boller.json', (d) => { Object.assign(d.recipeInstructions[10].tumbi, { verbum: v, voksen: true, voksen_hjaelp: 'kniv' }); },
       'trin 11: verbet «' + v + '» kan barnet selv');

@@ -44,6 +44,10 @@ export const VERBER = {
   'ryste': 'ryste',
   'klemme': 'klemme',
   'dyppe': 'dyppe',
+  // Kyllingenuggets i rispapir (review U1 og U3, 15-11-2026): dyppe-billedet er et glas i krymmel, og drysse-billedet ost
+  // på en pizza. «dyppe-vand» er et ark rispapir i en dyb tallerken med vand, «drysse-skaal» ost ned i en skål
+  'dyppe-vand': 'dyppe i vand',
+  'drysse-skaal': 'drysse i skålen',
 };
 
 // Verber, der altid kræver en voksen, og hvilken slags hjælp. Rivejernet skærer, blenderen har knive, «bage» og «tage-ud» er altid ovnen
@@ -66,7 +70,8 @@ export const VOKSEN_KRAV = {
 // forme, pille, ryste, klemme og dyppe. Er der varme med (varmt fedt, en varm gryde eller pande, et lunt æg), skal den
 // voksne hjælpe, og så er det for varmens skyld, aldrig kniven.
 // Validatoren kan ikke se, om der er varme; det skriver opskriften med «voksen». Den tjekker, at hjælpen er «varme».
-export const KUN_VARME_HJAELP = ['piske', 'pensle', 'mose', 'drysse', 'pynte', 'sproejte', 'stikke-ud', 'forme', 'pille', 'ryste', 'klemme', 'dyppe'];
+export const KUN_VARME_HJAELP = ['piske', 'pensle', 'mose', 'drysse', 'pynte', 'sproejte', 'stikke-ud', 'forme', 'pille', 'ryste', 'klemme', 'dyppe',
+  'dyppe-vand', 'drysse-skaal'];
 
 export const VOKSEN_HJAELP = {
   kniv: 'Kniv',
