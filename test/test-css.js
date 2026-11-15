@@ -241,13 +241,37 @@ test('forsiden med «I dag» og en timer: tallerkenen må gå ned til 64 px, og 
   const clamps = CSS.match(/--plade\s*:\s*clamp\([^;]+/g);
   assert.ok(clamps.length >= 6, 'fandt ' + clamps.length);
   for (const c of clamps) assert.match(c, /^--plade\s*:\s*clamp\(var\(--plade-min,\s*72px\),/, c);
-  for (const [b, h] of [[1280, 800], [1180, 820]]) {
+  // Over hinanden (på højkant; på langs står de i én række, testen nedenfor)
+  for (const [b, h] of [[820, 1180], [744, 1133]]) {
     assert.equal(gaeldende(rod, BEGGE + ' .forside-timer .pille', b, h)['margin-top'], '8px', b + '×' + h);
     assert.equal(gaeldende(rod, BEGGE + ' .forside-idag', b, h)['padding-top'], '8px', b + '×' + h);
+  }
+  for (const [b, h] of [[1280, 800], [1180, 820]]) {
     const navn = gaeldende(rod, BEGGE + ' .idag-navn', b, h);
     assert.deepEqual([navn['white-space'], navn.overflow, navn['text-overflow']], ['nowrap', 'hidden', 'ellipsis'], b + '×' + h);
   }
   assert.equal(gaeldende(rod, BEGGE + ' .idag-navn', 390, 844)['white-space'], undefined, 'på telefonen må navnet stå på to linjer (siden ruller)');
+});
+
+// Review U6 og U8 (15-11): med pillen over kortet rullede 1280×720 76 px («Voksne: hold» skåret af), og 1280×800 havde
+// ingen luft (tallerkenen på 64 px). På skærme på langs står pillen nu til venstre for kortet i én række (.forside-nu i
+// app.js), og knapperne regnes som med kortet alene. På højkant og telefonen står de over hinanden. e2e måler det
+test('forsiden med «I dag» og en timer på langs: pillen står ved siden af kortet, og knapperne får kortets --rest', () => {
+  const rod = blokke(CSS);
+  const BEGGE = '.forside:has(.forside-idag):has(.forside-timer .pille:not([hidden]))';
+  for (const [b, h] of [[1280, 720], [1280, 800], [1180, 820], [1180, 746], [1000, 700], [1440, 900]]) {
+    const nu = gaeldende(rod, BEGGE + ' .forside-nu', b, h);
+    assert.equal(nu.display, 'flex', b + '×' + h);
+    assert.equal(nu['flex-direction'], undefined, b + '×' + h + ': i én række');
+    assert.equal(nu['align-items'], 'center', b + '×' + h);
+    assert.equal(gaeldende(rod, BEGGE + ' .forside-timer .pille', b, h)['margin-top'], '0', b + '×' + h);
+    assert.equal(gaeldende(rod, BEGGE + ' .forside-idag', b, h).padding, '0', b + '×' + h);
+    assert.equal(gaeldende(rod, BEGGE + ' .gruppe-knapper', b, h)['--rest'], gaeldende(rod, '.forside:has(.forside-idag) .gruppe-knapper', b, h)['--rest'],
+      b + '×' + h + ': samme --rest som med kortet alene');
+  }
+  for (const [b, h] of [[820, 1180], [744, 1133], [390, 844], [360, 740], [844, 390], [960, 600]]) {
+    assert.equal(gaeldende(rod, BEGGE + ' .forside-nu', b, h).display, undefined, b + '×' + h + ': over hinanden');
+  }
 });
 
 test('knapperne er store nok til små fingre på iPhone, og navnene kan ikke knække midt i et ord', () => {

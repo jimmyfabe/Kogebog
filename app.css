@@ -310,13 +310,20 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .forside:has(.forside-idag) .gruppe-knapper { --rest: 408px; }
 .forside:has(.forside-idag):has(.forside-timer .pille:not([hidden])) .gruppe-knapper { --rest: 480px; --plade-min: 64px; }
 /* Med begge to stod tallerkenen på sit mindste (72 px), og desktop (1280×800) rullede 24-42 px (review F3). Kun her må
-   den gå ned til 64 px (billedet 48 px, regel 9: knappen er stadig over 64 px), og pillen og kortet rykker tættere på dugen.
-   På langs står rettens navn på én linje i et bredere kort (aria-label har hele navnet) */
+   den gå ned til 64 px (billedet 48 px, regel 9: knappen er stadig over 64 px), og over hinanden rykker pillen og kortet
+   tættere på dugen. På langs står rettens navn på én linje (aria-label har hele navnet) */
 .forside:has(.forside-idag):has(.forside-timer .pille:not([hidden])) .forside-timer .pille { margin-top: 8px; }
 .forside:has(.forside-idag):has(.forside-timer .pille:not([hidden])) .forside-idag { padding-top: 8px; }
+/* På langs står pillen til venstre for kortet i én række (.forside-nu i app.js), og knapperne regnes som med kortet alene.
+   Over hinanden rullede 1280×720 76 px med «Voksne: hold» skåret af, og 1280×800 havde ingen luft (review U6 og U8) */
 @media (min-width: 1000px) and (min-height: 521px) and (orientation: landscape) {
-  .forside:has(.forside-idag):has(.forside-timer .pille:not([hidden])) .knap.idag-kort { width: min(100%, 860px); }
+  .forside:has(.forside-idag):has(.forside-timer .pille:not([hidden])) .forside-nu { display: flex; justify-content: center; align-items: center; gap: 16px; padding: 12px 24px 0; }
+  .forside:has(.forside-idag):has(.forside-timer .pille:not([hidden])) .forside-timer { flex: none; padding: 0; }
+  .forside:has(.forside-idag):has(.forside-timer .pille:not([hidden])) .forside-timer .pille { margin-top: 0; }
+  .forside:has(.forside-idag):has(.forside-timer .pille:not([hidden])) .forside-idag { flex: 0 1 860px; min-width: 0; padding: 0; }
+  .forside:has(.forside-idag):has(.forside-timer .pille:not([hidden])) .knap.idag-kort { width: 100%; }
   .forside:has(.forside-idag):has(.forside-timer .pille:not([hidden])) .idag-navn { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .forside:has(.forside-idag):has(.forside-timer .pille:not([hidden])) .gruppe-knapper { --rest: 408px; }
 }
 .gruppe-knapper > li { display: flex; min-width: 0; }
 .knap.gruppe-knap {

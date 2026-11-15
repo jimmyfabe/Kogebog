@@ -919,6 +919,11 @@ test('«I dag» på forsiden: dagens ret fra ugeplanen som en knap, der åbner r
   assert.equal(k.dataset.gruppe, gruppeAf(id, INDEX.grupper));
   assert.ok(k.querySelector('.idag-dyr'), 'dyret, der valgte retten');
   assert.match(k.textContent, /^I dag laver vi/);
+  // Review U6 og U8 (15-11): timeren og kortet har en fælles forælder, så de kan stå i én række på langs (app.css).
+  // Timeren først, så Tab og skærmlæseren tager dem i den rækkefølge, de står
+  const nu = k.closest('.forside-nu');
+  assert.ok(nu, 'kortet står i .forside-nu');
+  assert.deepEqual(nu.born.map((x) => x.className), ['forside-timer', 'forside-idag']);
   assert.deepEqual(knapper().map((x) => x.dataset.gruppe), KNAPPER, 'de 11 grupper står der stadig');
   assert.deepEqual(skrivninger, [], 'forsiden gemmer intet');
   tryk(k);

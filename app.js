@@ -346,9 +346,11 @@ function forside() {
     naarFaerdig: () => VoksenDel.aabn(),
   });
   const bund = harRetter ? el('div', { class: 'forside-voksen' }, Lager.hentFamilie(S.ids).favoritter.length ? favoritKnap() : null, voksne) : null;
+  // Timeren og «I dag»-kortet i én beholder: over hinanden, på skærme på langs ved siden af hinanden (app.css, review U6)
+  const nu = el('div', { class: 'forside-nu' }, el('div', { class: 'forside-timer' }, timerPille()), harRetter ? idagKort() : null);
   // Røsts licens kræver, at man får at vide, at stemmen er en computerstemme, før den taler (sikkerhedsreview 20-10).
   // Før stod det kun på printet. Versionsnummeret står under, så den voksne kan se, om iPad'en har den nye udgave (js/version.js)
-  return el('main', { class: 'skaerm forside' }, top, el('div', { class: 'forside-timer' }, timerPille()), harRetter ? idagKort() : null, indhold, bund,
+  return el('main', { class: 'skaerm forside' }, top, nu, indhold, bund,
     el('p', { class: 'forside-fod', tekst: 'Stemmen er en computerstemme (Røst\u00a0fra\u00a0Alexandra\u00a0Instituttet).' }),
     el('p', { class: 'forside-fod forside-version', tekst: 'Version ' + UDGAVE }));
 }

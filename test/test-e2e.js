@@ -635,6 +635,28 @@ async function tjekIdagMedTimer(side, n) {
     });
     tjek(k.label === 'I dag laver vi ' + utenBloede(RETTER[IDAG_RET].name) && k.H >= 64, hvor + ': kortet siger dagens ret og er mindst 64 px høj (' + JSON.stringify(k) + ')');
     if (n !== 'iphone') tjek(k.side <= k.vindue, hvor + ': siden ruller ikke (' + k.side + ' px på ' + k.vindue + ')');
+    // Review U6 og U8 (15-11): på langs står pillen til venstre for kortet i én række (over hinanden rullede 1280×720 76 px,
+    // og «Voksne: hold» var skåret af). På desktop måles også 1280×720: holdet kan ses uden at rulle
+    if (n !== 'iphone') {
+      const raekke = () => side.evaluate(() => {
+        const b = (s) => document.querySelector(s).getBoundingClientRect();
+        const p = b('.forside-timer .pille');
+        const c = b('.idag-kort');
+        return { pilleMidt: Math.round((p.top + p.bottom) / 2), kort: [Math.round(c.top), Math.round(c.bottom)], pilleHoejre: Math.round(p.right), kortVenstre: Math.round(c.left),
+          hold: Math.round(b('.forside-voksen .voksen-hold').bottom), H: innerHeight };
+      });
+      const r = await raekke();
+      tjek(r.pilleMidt > r.kort[0] && r.pilleMidt < r.kort[1] && r.pilleHoejre <= r.kortVenstre, hvor + ': pillen står til venstre for kortet i én række (' + JSON.stringify(r) + ')');
+      if (n === 'desktop') {
+        const fuld = side.viewportSize();
+        await side.setViewportSize({ width: 1280, height: 720 });
+        await vent(150);
+        const lav = await raekke();
+        await side.setViewportSize(fuld);
+        await vent(150);
+        tjek(lav.hold <= lav.H, hvor + ' på 1280×720: «Voksne: hold» kan ses uden at rulle (' + JSON.stringify(lav) + ')');
+      }
+    }
     await foto(side, n + '-1b-forside-idag-timer');
     await tryk(side, '.idag-kort');
     await venterPaa(side, (ret) => location.hash === '#/ret/' + ret, IDAG_RET, hvor + ': et tryk på kortet åbner dagens ret');
