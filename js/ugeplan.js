@@ -694,7 +694,7 @@ function oversigtSkaerm() {
   // «Voksne» fører tilbage til voksendelens menu (ugeplanen ligger bag samme lås), og husstanden står i hovedet, så den
   // voksne kan se, hvem portionerne er regnet til, uden at gå derind
   return el('main', { class: 'skaerm uge-oversigt' },
-    K.topbar(null, '#/voksen', { tekst: 'Voksne', label: 'Tilbage til voksendelen' }),
+    K.topbar(null, '#/voksen', { tekst: 'Voksne', label: 'Voksne: tilbage til voksendelen' }),
     el('div', { class: 'uge' },
       el('header', { class: 'uge-hoved' },
         el('h1', { tabindex: '-1', tekst: 'Ugeplan' }),

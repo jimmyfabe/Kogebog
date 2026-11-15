@@ -908,11 +908,12 @@ function printLink(tekst, href, label, fokus) {
 
 // Over listen: hele kogebogen, eller de retter, søgningen og filtrene viser. Står i listens boks, så den følger med ved
 // hvert tegn (soegeListe tegner kun tallet og listen om)
+// Navnet til skærmlæseren begynder med den tekst, man ser, så stemmestyring finder knappen (review L4)
 function printFlere(vist, iAlt, f) {
+  const tekst = vist.length === 1 ? 'Print den viste ret' : 'Print de ' + vist.length + ' viste';
   const link = vist.length === iAlt
     ? printLink('Print hele kogebogen', printAdresse(f), 'Print hele kogebogen: ' + flertal(iAlt, 'ret', 'retter') + ', én pr. side', 'print-flere')
-    : printLink(vist.length === 1 ? 'Print den viste ret' : 'Print de ' + vist.length + ' viste', printAdresse(f, { retter: vist.map((p) => p.m.id) }),
-      'Print ' + flertal(vist.length, 'viste ret', 'viste retter') + ', én pr. side', 'print-flere');
+    : printLink(tekst, printAdresse(f, { retter: vist.map((p) => p.m.id) }), tekst + (vist.length === 1 ? '' : ' retter') + ', én pr. side', 'print-flere');
   return el('div', { class: 'voksen-print' }, link,
     el('p', { class: 'voksen-print-hjaelp', tekst: 'Én ret pr. A4-side. Vælg «Gem som PDF» i printet for at få en PDF.' }));
 }

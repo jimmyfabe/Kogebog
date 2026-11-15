@@ -616,6 +616,12 @@ test('«Retter»: «Print» i hver række og «Print hele kogebogen» over liste
   assert.ok(jul.length > 1 && jul.length < S.ids.length, 'jul: ' + jul.length);
   assert.equal(printHref(skaerm, 'print-flere'), 'print.html?retter=' + jul.join(','));
   assert.equal(tekstAf(medFokusNavn(skaerm, 'print-flere')), 'Print de ' + jul.length + ' viste');
+  // Review L4 (15-11): navnet, skærmlæseren siger, begynder med den tekst, man ser (så stemmestyring finder knappen)
+  assert.equal(medFokusNavn(skaerm, 'print-flere').attr['aria-label'], 'Print de ' + jul.length + ' viste retter, én pr. side');
+  const enRet = S.ids.map((id) => S.retter.get(id).navn.replace(/\u00ad/g, '')).find((navn) => { skriv(skaerm, navn); return raekkerI(skaerm).length === 1; });
+  assert.ok(enRet, 'mindst én ret kan søges frem alene');
+  assert.equal(tekstAf(medFokusNavn(skaerm, 'print-flere')), 'Print den viste ret');
+  assert.equal(medFokusNavn(skaerm, 'print-flere').attr['aria-label'], 'Print den viste ret, én pr. side');
   // Husstand og mere grønt: n og groen=1 på alle links
   V.rute('#/');
   lageret.clear();

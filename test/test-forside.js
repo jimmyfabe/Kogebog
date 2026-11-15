@@ -948,6 +948,8 @@ test('ugeplanen ligger bag låsen: #/uge viser holdet, holdet åbner oversigten,
     assert.ok(rod.querySelector('main.uge-oversigt'), 'ugeplanens oversigt efter holdet');
     // «Voksne» i topbaren og husstanden i hovedet fører til voksendelen, uden et nyt hold
     assert.ok(rod.querySelector('.uge-husstand'), 'husstanden står i hovedet');
+    // Review L4 (15-11): navnet begynder med den tekst, man ser («Voksne»), så stemmestyring finder knappen
+    assert.match(rod.querySelector('.topbar-tilbage').getAttribute('aria-label'), /^Voksne\b/);
     tryk(rod.querySelector('.topbar-tilbage'));
     gaaTil(location.hash);
     assert.equal(location.hash, '#/voksen');
