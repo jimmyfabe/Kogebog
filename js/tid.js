@@ -97,6 +97,14 @@ export function dagIUgen(uge, dato) {
   return Number.isInteger(i) && i >= 0 && i <= 6 ? i : -1;
 }
 
+// Ugen, der starter mandag uge, er gået, når dens søndag er forbi: datoen (i dag, ÅÅÅÅ-MM-DD) er mandagen efter eller
+// senere. Ikke planMandag(): den er den næste mandag allerede om søndagen, så ugeplanen sagde «gået», mens «I dag»-kortet
+// viste søndagens ret (review F1, 15-11). En uge, der ikke er ÅÅÅÅ-MM-DD, er aldrig gået
+export function ugenErGaaet(uge, dato = idag()) {
+  if (typeof uge !== 'string' || typeof dato !== 'string' || !DATO_RE.test(uge) || !DATO_RE.test(dato)) return false;
+  return fraDato(uge) + 7 * DAG_MS <= fraDato(dato);
+}
+
 // Dag i (0 = mandag) i ugen, der starter mandag: «26/10»
 export function dagDato(mandag, i) {
   const d = new Date(fraDato(mandag) + i * DAG_MS);

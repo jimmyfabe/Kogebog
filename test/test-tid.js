@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { nyTimer, timerStatus, formaterTid, varighed, varighedKort, varighedTale, HURTIG_SEK, planMandag, ugeNr, dagDato, dagIUgen } from '../js/tid.js';
+import { nyTimer, timerStatus, formaterTid, varighed, varighedKort, varighedTale, HURTIG_SEK, planMandag, ugeNr, dagDato, dagIUgen, ugenErGaaet } from '../js/tid.js';
 import { isoTilMinutter, minutterTekst, tilTale, talOrd, ukendtKoen, KOEN, antalOrd, delIngrediens } from '../js/tekst.js';
 import { lavModel, erLynhurtig, harTid, LYN_MIN } from '../js/model.js';
 import { hentIndex } from '../js/data.js';
@@ -292,6 +292,22 @@ test('dagIUgen: dagen i ugen eller -1', () => {
   assert.equal(dagIUgen('2026-10-26', '2026-11-02'), -1, 'ugen efter');
   for (const [uge, dato] of [[null, '2026-10-26'], ['2026-10-26', undefined], ['26-10-2026', '2026-10-26'], ['2026-10-26', '2026-10-26T00:00'], ['', ''], [20261026, '2026-10-26']]) {
     assert.equal(dagIUgen(uge, dato), -1, JSON.stringify([uge, dato]));
+  }
+});
+
+// Ugeplanens «Uge N er gået» (review F1, 15-11): først når ugens søndag er forbi. Om søndagen viste forsidens «I dag»-kort
+// søndagens ret, mens ugeplanen sagde, at ugen var gået, og bad om «Ny uge», der tømte planen
+test('ugenErGaaet: først mandagen efter, aldrig på en dag, hvor «I dag»-kortet kan vise ugens ret', () => {
+  assert.equal(ugenErGaaet('2026-11-09', '2026-11-15'), false, 'søndag i ugen');
+  assert.equal(ugenErGaaet('2026-11-09', '2026-11-16'), true, 'mandagen efter');
+  assert.equal(ugenErGaaet('2026-11-09', '2026-11-09'), false, 'mandag i ugen');
+  assert.equal(ugenErGaaet('2026-11-16', '2026-11-15'), false, 'planen til næste uge, lavet om søndagen');
+  assert.equal(ugenErGaaet('2026-10-26', '2026-11-02'), true, 'over sommertiden');
+  assert.equal(ugenErGaaet('2026-12-28', '2027-01-04'), true, 'over nytår');
+  for (const uge of [null, undefined, '', '26-10-2026', 20261026]) assert.equal(ugenErGaaet(uge, '2026-11-16'), false, JSON.stringify(uge));
+  for (let i = 0; i < 14; i++) {
+    const dato = new Date(Date.UTC(2026, 10, 9 + i)).toISOString().slice(0, 10);
+    assert.equal(ugenErGaaet('2026-11-09', dato), dagIUgen('2026-11-09', dato) < 0 && i >= 7, dato);
   }
 });
 

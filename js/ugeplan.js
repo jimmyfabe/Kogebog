@@ -15,7 +15,7 @@ import * as Lager from './lager.js';
 import { afkod, kod, kodeFraTekst, ukendtTekst, BESKED_UGYLDIG, BESKED_NYERE, BESKED_GAMMEL } from './plankode.js';
 import { saml, grupper, tekst as listeTekst, manglerTekst, holdSammen } from './indkoeb.js';
 import { DYR, grafikIngrediens, grafikRet, grafikDyr } from './katalog.js';
-import { ugeNr, dagDato, planMandag, DAGE } from './tid.js';
+import { ugeNr, dagDato, planMandag, ugenErGaaet, DAGE } from './tid.js';
 import { minutterTekst, utenBloede } from './tekst.js';
 import { holdKnap } from './hold.js';
 import { maerkerFor, MAERKER } from './maerker.js';
@@ -426,7 +426,6 @@ function listeSkaerm(liste) {
 
 // ---------- Ugeplanen: fælles for den voksne og barnet ----------
 
-const DAG_MS = 86400000;
 const dyrNavn = (af) => (Object.hasOwn(DYR, af) ? DYR[af].split(',')[0] : '');
 const iPlanen = () => {
   const groen = mereGroent();
@@ -492,9 +491,6 @@ function visBesked(fokus) {
   tegnIgen(fokus);
   document.querySelector('.uge-besked')?.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
 }
-
-// Ugen er gået, når dens søndag er forbi (planMandag er i dag, eller den næste mandag)
-const ugenErGaaet = (uge) => Boolean(uge) && Date.parse(uge + 'T00:00:00Z') + 7 * DAG_MS <= Date.parse(planMandag() + 'T00:00:00Z');
 
 // Linket til telefonen og varerne til «Del som tekst»: kun dage, hvis ret er hentet og står i ugeplanen, kommer på listen.
 // «mangler» siger, hvor mange dage der ikke kom med, og hvorfor (som dagens række i oversigten: en fejl ved hentningen,
