@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="oerer">
+    <path fill="#F2A0A0" d="M60 104 C44 78 40 48 50 24 C78 30 104 50 118 76 Z"/>
+    <path fill="#E07E80" stroke="none" d="M66 88 C58 70 56 52 60 38 C78 44 92 56 100 70 Z"/>
+    <path fill="#F2A0A0" d="M196 104 C212 78 216 48 206 24 C178 30 152 50 138 76 Z"/>
+    <path fill="#E07E80" stroke="none" d="M190 88 C198 70 200 52 196 38 C178 44 164 56 156 70 Z"/>
+  </g>
+  <g id="hoved">
+    <path fill="#F2A0A0" d="M128 60 C188 60 232 98 232 148 C232 198 188 232 128 232 C68 232 24 198 24 148 C24 98 68 60 128 60 Z"/>
+    <path fill="#E07E80" stroke="none" d="M30 180 C50 212 88 226 128 226 C168 226 206 212 226 180 C214 216 176 232 128 232 C80 232 42 216 30 180 Z"/>
+    <path fill="none" d="M128 60 C188 60 232 98 232 148 C232 198 188 232 128 232 C68 232 24 198 24 148 C24 98 68 60 128 60 Z"/>
+  </g>
+  <g id="kinder" fill="#E98585" stroke="none">
+    <ellipse cx="58" cy="166" rx="15" ry="10"/>
+    <ellipse cx="198" cy="166" rx="15" ry="10"/>
+  </g>
+  <g id="oejne" stroke="none">
+    <ellipse cx="90" cy="124" rx="8" ry="10" fill="#3B2A20"/>
+    <ellipse cx="166" cy="124" rx="8" ry="10" fill="#3B2A20"/>
+    <circle cx="87.5" cy="120.5" r="2.6" fill="#FFFFFF"/>
+    <circle cx="163.5" cy="120.5" r="2.6" fill="#FFFFFF"/>
+  </g>
+  <g id="tryne">
+    <ellipse cx="128" cy="166" rx="46" ry="31" fill="#F9C9C9"/>
+    <ellipse cx="111" cy="166" rx="7.5" ry="12" fill="#3B2A20" stroke="none"/>
+    <ellipse cx="145" cy="166" rx="7.5" ry="12" fill="#3B2A20" stroke="none"/>
+  </g>
+  <path id="mund" fill="none" d="M108 210 Q128 220 148 210"/>
+</g>
+</svg>

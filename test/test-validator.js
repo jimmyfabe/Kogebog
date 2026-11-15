@@ -437,7 +437,7 @@ test('id skal passe til filnavnet', () => {
 
 test('index.json skal passe til filerne', () => {
   forventFejl('opskrifter/index.json', (d) => { const g = gruppe(d, 'broed-og-pizza'); g.retter = g.retter.filter((x) => x !== 'boller'); }, 'opskrifter/boller.json: står ikke i opskrifter/index.json');
-  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'koed').retter.push('lasagne'); }, 'retten «lasagne» findes ikke');
+  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'ko').retter.push('lasagne'); }, 'retten «lasagne» findes ikke');
   forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'broed-og-pizza').retter.push('boller'); }, 'id «boller» står der to gange');
 });
 
@@ -445,7 +445,9 @@ test('index.json skal passe til filerne', () => {
 test('hver ret står i præcis én kendt gruppe', () => {
   forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'soede-sager').retter.push('boller'); }, '«boller» står i to grupper (broed-og-pizza og soede-sager)');
   forventFejl('opskrifter/index.json', (d) => { d.grupper[0].id = 'forretter'; }, 'ukendt gruppe «forretter»');
-  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'broed-og-pizza').id = 'koed'; }, 'gruppen «koed» står der to gange');
+  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'broed-og-pizza').id = 'ko'; }, 'gruppen «ko» står der to gange');
+  // Kød blev delt i Gris og Ko i v11: en index.json med den gamle gruppe afvises
+  forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'ko').id = 'koed'; }, 'ukendt gruppe «koed»');
   forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'broed-og-pizza').retter = []; }, 'gruppen «broed-og-pizza» skal have mindst én ret');
   forventFejl('opskrifter/index.json', (d) => { gruppe(d, 'broed-og-pizza').navn = 'Bagværk'; }, 'gruppen «broed-og-pizza»: ukendt felt «navn»');
   forventFejl('opskrifter/index.json', (d) => { d.version = 1; d.retter = d.grupper.flatMap((g) => g.retter); delete d.grupper; }, '«version» skal være 2');

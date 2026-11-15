@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+<g stroke="#3B2A20" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+  <g id="horn">
+    <path fill="#E8C79A" d="M86 72 C70 64 58 46 60 22 C76 28 96 46 106 64 Z"/>
+    <path fill="#CFA976" stroke="none" d="M84 66 C74 58 66 46 66 32 C76 40 86 52 92 62 Z"/>
+    <path fill="#E8C79A" d="M170 72 C186 64 198 46 196 22 C180 28 160 46 150 64 Z"/>
+    <path fill="#CFA976" stroke="none" d="M172 66 C182 58 190 46 190 32 C180 40 170 52 164 62 Z"/>
+  </g>
+  <g id="oerer">
+    <path fill="#FFF4E2" d="M68 100 C46 102 22 94 10 78 C28 64 54 68 74 84 Z"/>
+    <path fill="#F2A0A0" stroke="none" d="M62 94 C46 95 30 90 22 80 C36 74 52 76 66 86 Z"/>
+    <path fill="#FFF4E2" d="M188 100 C210 102 234 94 246 78 C228 64 202 68 182 84 Z"/>
+    <path fill="#F2A0A0" stroke="none" d="M194 94 C210 95 226 90 234 80 C220 74 204 76 190 86 Z"/>
+  </g>
+  <g id="hoved">
+    <path fill="#FFF4E2" d="M128 56 C176 56 202 80 202 116 C202 142 194 162 188 180 L68 180 C62 162 54 142 54 116 C54 80 80 56 128 56 Z"/>
+    <g id="pletter" fill="#704D31" stroke="none">
+      <path d="M70 100 C76 84 98 80 110 92 C120 104 114 124 98 130 C82 134 66 120 70 100 Z"/>
+      <path d="M150 70 C162 64 180 68 186 80 C184 94 166 98 154 92 C146 88 144 78 150 70 Z"/>
+    </g>
+    <path fill="none" d="M128 56 C176 56 202 80 202 116 C202 142 194 162 188 180 L68 180 C62 162 54 142 54 116 C54 80 80 56 128 56 Z"/>
+  </g>
+  <path id="pandelok" fill="#704D31" d="M106 64 C108 48 122 42 128 54 C134 42 148 48 150 64 C138 72 118 72 106 64 Z"/>
+  <g id="oejne">
+    <circle cx="94" cy="114" r="14" fill="#FFFFFF"/>
+    <circle cx="162" cy="114" r="14" fill="#FFFFFF"/>
+    <circle cx="96" cy="116" r="6.5" fill="#3B2A20" stroke="none"/>
+    <circle cx="160" cy="116" r="6.5" fill="#3B2A20" stroke="none"/>
+  </g>
+  <g id="mule">
+    <path fill="#F2A0A0" d="M128 152 C180 152 212 166 212 194 C212 220 178 234 128 234 C78 234 44 220 44 194 C44 166 76 152 128 152 Z"/>
+    <path fill="#E07E80" stroke="none" d="M50 206 C64 222 96 228 128 228 C160 228 192 222 206 206 C198 224 166 234 128 234 C90 234 58 224 50 206 Z"/>
+    <path fill="none" d="M128 152 C180 152 212 166 212 194 C212 220 178 234 128 234 C78 234 44 220 44 194 C44 166 76 152 128 152 Z"/>
+    <ellipse cx="98" cy="190" rx="9" ry="12" fill="#3B2A20" stroke="none"/>
+    <ellipse cx="158" cy="190" rx="9" ry="12" fill="#3B2A20" stroke="none"/>
+    <path fill="none" d="M110 216 Q128 224 146 216"/>
+  </g>
+</g>
+</svg>

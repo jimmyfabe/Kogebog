@@ -17,8 +17,13 @@ import { lavModel, erLynhurtig, harTid } from '../js/model.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // Alle grupper i forsidens rækkefølge. En ny gruppe står i GRUPPER, men kommer først i index.json, når dens retter har
-// billeder (docs/venter-paa-billede/README.md). Indtil da står den i VENTER_PAA_BILLEDER. Madpakke (v9) er med: 11 knapper
-const GRUPPE_IDS = ['pasta-og-nudler', 'kylling', 'fisk', 'koed', 'groent', 'broed-og-pizza', 'madpakke', 'soede-sager', 'drikke', 'jul', 'halloween'];
+// billeder (docs/venter-paa-billede/README.md). Indtil da står den i VENTER_PAA_BILLEDER. Madpakke (v9) er med, og Kød er
+// delt i Gris og Ko (v11): 12 knapper
+const GRUPPE_IDS = ['pasta-og-nudler', 'kylling', 'fisk', 'gris', 'ko', 'groent', 'broed-og-pizza', 'madpakke', 'soede-sager', 'drikke', 'jul', 'halloween'];
+// Kødretterne fra før v11. Delingen må ikke tabe en af dem (de står alle i Gris eller Ko)
+const KOED_FOER_V11 = ['dino-vulkan', 'frikadeller', 'chili-con-carne', 'medister-i-ovn', 'poelse-boennegryde', 'cowboyboenner', 'hyrdetaerte',
+  'floedekartofler-med-skinke-og-broccoli', 'hoisin-gris-med-ris-og-agurk', 'honning-soja-koedboller', 'mild-bibimbap-risskaal',
+  'smash-burgere-med-ost', 'koteletter-med-aeble', 'hjemmelavet-kebab'];
 const VENTER_PAA_BILLEDER = [];
 const KNAPPER = GRUPPE_IDS.filter((id) => !VENTER_PAA_BILLEDER.includes(id)); // forsidens knapper nu
 const ANTAL_RETTER = 241;
@@ -56,11 +61,19 @@ test('de 83 retter, der kan planlægges, er stadig 83 og står alle i en af grup
   for (const id of planlagte) assert.ok(gruppeAf(id, INDEX.grupper), id + ' står ikke i en kendt gruppe');
 });
 
-test('de fem nye aftensmads-grupper og «Bagning»: søgeordene hænger på gruppen, ikke på retten', () => {
-  assert.deepEqual(AFTENSMAD_GRUPPER, ['pasta-og-nudler', 'kylling', 'fisk', 'koed', 'groent']);
-  for (const g of AFTENSMAD_GRUPPER) assert.equal(gruppeSoegeord(g), 'Aftensmad');
+test('de seks aftensmads-grupper, «Kød» og «Bagning»: søgeordene hænger på gruppen, ikke på retten', () => {
+  assert.deepEqual(AFTENSMAD_GRUPPER, ['pasta-og-nudler', 'kylling', 'fisk', 'gris', 'ko', 'groent']);
+  for (const g of ['pasta-og-nudler', 'kylling', 'fisk', 'groent']) assert.equal(gruppeSoegeord(g), 'Aftensmad', g);
+  for (const g of ['gris', 'ko']) assert.equal(gruppeSoegeord(g), 'Aftensmad Kød', g);
   assert.equal(gruppeSoegeord('broed-og-pizza'), 'Bagning');
-  for (const g of ['soede-sager', 'jul', 'halloween', 'ukendt', 'constructor', null, undefined]) assert.equal(gruppeSoegeord(g), null, String(g));
+  for (const g of ['soede-sager', 'jul', 'halloween', 'koed', 'ukendt', 'constructor', null, undefined]) assert.equal(gruppeSoegeord(g), null, String(g));
+});
+
+test('Kød er delt i Gris og Ko: alle kødretter fra før står i en af dem, og ingen gruppe er næsten tom', () => {
+  assert.ok(!INDEX.grupper.some((g) => g.id === 'koed'), 'koed står ikke længere i index.json');
+  assert.ok(!Object.hasOwn(GRUPPER, 'koed'), 'koed står ikke længere i GRUPPER');
+  for (const id of KOED_FOER_V11) assert.ok(['gris', 'ko'].includes(gruppeAf(id, INDEX.grupper)), id + ' står i ' + gruppeAf(id, INDEX.grupper));
+  for (const g of ['gris', 'ko']) assert.ok(retterI(g).length >= 2, g + ' har ' + retterI(g).length + ' retter');
 });
 
 // ---------- js/grupper.js ----------
@@ -199,10 +212,20 @@ test('korte ord: højst 3 bogstaver kun ordets begyndelse, madord også slutning
   assert.deepEqual(ids('lmos'), ['Kartoffelmos']);
 });
 
-test('«aftensmad» finder alle retter i de fem grupper og ingen andre', () => {
+test('«aftensmad» finder alle retter i de seks grupper og ingen andre', () => {
   const traef = soeg(POSTER, 'aftensmad');
   const forventet = AFTENSMAD_GRUPPER.flatMap(retterI);
   assert.deepEqual(traef.map((p) => p.m.id).sort(), [...forventet].sort());
+});
+
+// Før v11 stod gruppens navn «Kød» på alle kødretterne, så «kød» fandt også pølser, skinke, medister og koteletter, der
+// ikke har ordet i navn eller ingredienser. Det skal den stadig efter delingen i Gris og Ko
+test('«kød» finder alle retter i Gris og Ko, også dem uden ordet «kød»', () => {
+  const traef = soeg(POSTER, 'kød').map((p) => p.m.id);
+  for (const id of [...retterI('gris'), ...retterI('ko')]) assert.ok(traef.includes(id), id);
+  assert.ok(['poelse-boennegryde', 'koteletter-med-aeble', 'medister-i-ovn'].every((id) => !/kød/i.test(soegeTekst({ ...POSTER.find((p) => p.m.id === id), gruppeOrd: null }))),
+    'testen skal have retter, som kun gruppen gør til kød');
+  for (const id of retterI('gris')) assert.ok(soeg(POSTER, 'gris').some((p) => p.m.id === id), 'gruppens navn finder ' + id);
 });
 
 test('«jul» og «bagning» finder stadig deres gruppe', () => {
@@ -424,7 +447,7 @@ test('forsiden: en rigtig knap pr. gruppe med navn til skærmlæseren, billede o
     assert.equal(x.querySelector('img').getAttribute('alt'), '', 'billedet er pynt: knappen har navnet');
   }
   assert.equal(rod.querySelectorAll('.kort').length, 0);
-  assert.equal(rod.querySelectorAll('nav ul li button').length, 11, 'en liste i en nav, så skærmlæseren kan sige antallet');
+  assert.equal(rod.querySelectorAll('nav ul li button').length, 12, 'en liste i en nav, så skærmlæseren kan sige antallet');
 });
 
 test('billederne på forsiden findes alle på disken', async () => {
@@ -485,13 +508,48 @@ test('gruppeskærmen viser kun gruppens retter med kortene fra før (minuttal og
 
 test('en ukendt gruppe giver en fejlskærm med vej til forsiden', async () => {
   await start();
-  for (const id of ['constructor', '__proto__', 'toString', 'xyz', 'aftensmad', 'bagning']) {
+  // 'koed' er et gammelt bogmærke fra før v11, hvor Kød blev delt i Gris og Ko
+  for (const id of ['constructor', '__proto__', 'toString', 'xyz', 'aftensmad', 'bagning', 'koed']) {
     gaaTil('#/gruppe/' + id);
     assert.equal(overskrift(), 'Den gruppe findes ikke', id);
     assert.equal(kort().length, 0);
     tryk(knapMedTekst('Til forsiden'));
     assert.equal(location.hash, '#/', id);
   }
+});
+
+// v11 delte Kød i Gris og Ko uden en migrering (regel 5): de gemte data har kun rettens id, aldrig gruppens. Her gemmes
+// favoritter, ugens udvalg, «lavet» og en ugeplan med kødretter, som v10 gemte dem (formatet er det samme), og appen viser
+// dem bagefter uden at skrive lageret om
+const KOED_GEMT = KOED_FOER_V11.filter((id) => UGE.includes(id)).slice(0, 4);
+function gemKoedSomV10() {
+  for (const id of KOED_GEMT.slice(0, 2)) Lager.skiftFavorit(id, FILER);
+  Lager.gemFamilie({ udvalg: { ids: KOED_GEMT, rettet: '2026-11-14' } }, FILER);
+  Lager.markerLavet(KOED_GEMT[2], '2026-11-14', FILER);
+  const dage = [{ ret: KOED_GEMT[0], af: 'rosa', n: 4 }, null, { ret: KOED_GEMT[3], af: 'bo', n: 4 }, null, null, null, null];
+  Lager.gemUge({ uge: planMandag(), dage }, FILER);
+  return { familie: lageret.get('kog-familie-v1'), uge: lageret.get('kog-uge-v1') };
+}
+
+test('gemte data med kødretter fra før v11 overlever delingen i Gris og Ko, uden at blive skrevet om', async () => {
+  assert.equal(KOED_GEMT.length, 4, 'testen skal have fire kødretter til ugeplanen');
+  assert.ok(KOED_GEMT.some((id) => gruppeAf(id, INDEX.grupper) === 'gris') && KOED_GEMT.some((id) => gruppeAf(id, INDEX.grupper) === 'ko'),
+    'testen skal have retter fra både Gris og Ko: ' + KOED_GEMT.map((id) => gruppeAf(id, INDEX.grupper)).join(', '));
+  let foer = null;
+  await start('#/gruppe/favoritter', { foer: () => { foer = gemKoedSomV10(); } });
+  assert.deepEqual([...kort()].sort(), KOED_GEMT.slice(0, 2).sort(), 'hjertet viser de to kødretter');
+  const f = Lager.hentFamilie(FILER);
+  assert.deepEqual(f.favoritter, KOED_GEMT.slice(0, 2));
+  assert.deepEqual(f.udvalg.ids, KOED_GEMT);
+  assert.deepEqual(Object.keys(f.lavet), [KOED_GEMT[2]]);
+  assert.deepEqual(Lager.hentUge(FILER).dage.map((d) => d && d.ret), [KOED_GEMT[0], null, KOED_GEMT[3], null, null, null, null]);
+  assert.equal(lageret.get('kog-familie-v1'), foer.familie, 'familien står uændret i lageret');
+  assert.equal(lageret.get('kog-uge-v1'), foer.uge, 'ugeplanen står uændret i lageret');
+  // Børnenes valg viser ugens udvalg med alle fire kødretter (fire passer på én side). Pip, for Rosa har valgt sin ret
+  await start('#/uge/vaelg/pip', { foer: () => { foer = gemKoedSomV10(); } });
+  assert.deepEqual([...rod.querySelectorAll('.ret-kort').map((k) => k.dataset.ret)].sort(), [...KOED_GEMT].sort());
+  assert.equal(lageret.get('kog-familie-v1'), foer.familie);
+  assert.deepEqual(skrivninger, [], 'ingen nøgle skrives om');
 });
 
 test('tilbage fra en ret: pilen fører til gruppen på samme rulleplads og med fokus på kortet', async () => {
@@ -535,7 +593,7 @@ test('tilbage fra gruppen fører til forsiden', async () => {
   await start('#/gruppe/jul');
   tryk(knapMed('Til forsiden'));
   assert.equal(location.hash, '#/');
-  assert.equal(knapper().length, 11);
+  assert.equal(knapper().length, 12);
 });
 
 test('gamle adresser til en ret virker og fører tilbage til rettens gruppe', async () => {
@@ -628,14 +686,14 @@ test('lupen: kortene åbner retten, og tilbage står søgningen, som den var', a
 test('hjertet: kun når der findes en favorit, og det åbner favoritterne', async () => {
   await start();
   assert.equal(rod.querySelector('.forside-favoritter'), null, 'ingen favorit, intet hjerte');
-  assert.equal(knapper().length, 11);
+  assert.equal(knapper().length, 12);
 
   const [a, b] = [retterI('fisk')[0], retterI('jul')[0]];
   await start('#/', { foer: () => { Lager.skiftFavorit(a, FILER); Lager.skiftFavorit(b, FILER); } });
   const hjerte = rod.querySelector('.forside-favoritter');
   assert.equal(hjerte.tag, 'button');
   assert.equal(hjerte.getAttribute('aria-label'), 'Favoritter');
-  assert.equal(knapper().length, 11, 'hjertet er ud over de 11');
+  assert.equal(knapper().length, 12, 'hjertet er ud over de 12');
   tryk(hjerte);
   assert.equal(location.hash, '#/gruppe/' + FAVORITTER);
   assert.equal(overskrift(), 'Favoritter');
@@ -666,16 +724,16 @@ test('«Voksne: hold» står under knapperne', async () => {
 test('grupper i listen, koden ikke kender, forsvinder ikke i stilhed', async () => {
   const ny = { version: 2, grupper: [...INDEX.grupper, { id: 'ukendt-gruppe', retter: ['ny-ret-her'] }] };
   await start('#/', { hent: (sti) => (sti === 'opskrifter/index.json' ? ny : undefined) });
-  assert.equal(knapper().length, 11);
+  assert.equal(knapper().length, 12);
   const fejl = rod.querySelectorAll('.fejl-linje').map((p) => p.textContent).join(' ');
   assert.match(fejl, /ukendt-gruppe/);
   assert.equal(rod.querySelector('.fejl-linje').getAttribute('role'), 'status');
 });
 
-test('Madpakke har 7. pladsen, og uden for index.json har den ingen knap', async () => {
+test('Madpakke har 8. pladsen (efter Gris og Ko), og uden for index.json har den ingen knap', async () => {
   await start();
   assert.deepEqual(knapper().map((b) => b.dataset.gruppe), GRUPPE_IDS);
-  assert.equal(knapper()[6].getAttribute('aria-label'), 'Madpakke');
+  assert.equal(knapper()[7].getAttribute('aria-label'), 'Madpakke');
   const grupper = INDEX.grupper.filter((g) => g.id !== 'madpakke');
   await start('#/', { hent: (sti) => (sti === 'opskrifter/index.json' ? { version: 2, grupper } : undefined) });
   assert.deepEqual(knapper().map((b) => b.dataset.gruppe), GRUPPE_IDS.filter((id) => id !== 'madpakke'));
@@ -716,7 +774,7 @@ test('en ret, der ikke kan læses, nævnes på gruppen og forsiden, og resten vi
   assert.match(rod.querySelector('.fejl-linje').textContent, new RegExp(dårlig));
   gaaTil('#/');
   assert.match(rod.querySelector('.fejl-linje').textContent, new RegExp(dårlig));
-  assert.equal(knapper().length, 11);
+  assert.equal(knapper().length, 12);
 });
 
 test('intet nyt gemmes: forsiden, grupperne, lupen og retterne skriver ikke i lageret', async () => {
@@ -741,7 +799,7 @@ test('intet nyt gemmes: forsiden, grupperne, lupen og retterne skriver ikke i la
 test('en lås på familien (nyere udgave) giver hverken fejl på forsiden eller mistede favoritter', async () => {
   const gemt = JSON.stringify({ v: 999, favoritter: ['noget-nyt'] });
   await start('#/', { foer: () => { lageret.set('kog-familie-v1', gemt); } });
-  assert.equal(knapper().length, 11);
+  assert.equal(knapper().length, 12);
   assert.equal(rod.querySelector('.forside-favoritter'), null);
   assert.equal(lageret.get('kog-familie-v1'), gemt, 'en nyere udgaves data er urørt');
 });
@@ -823,7 +881,7 @@ test('børnenes valg uden udvalg: 12 nye retter på 3 sider, første side blande
 });
 
 test('børnenes valg uden udvalg: hjerterne står først, og så nye retter, til der er 12', async () => {
-  const fav = [retterI('fisk').find((id) => UGE.includes(id)), retterI('koed').find((id) => UGE.includes(id))];
+  const fav = [retterI('fisk').find((id) => UGE.includes(id)), retterI('ko').find((id) => UGE.includes(id))];
   const ikkeIPlanen = INDEX.grupper.flatMap((g) => g.retter).find((id) => !UGE.includes(id)); // en kage: aldrig med
   // Bo: Rosa og Pip huskes fra testene før (barn i js/ugeplan.js)
   await start('#/uge/vaelg/bo', { foer: () => { for (const id of [...fav, ikkeIPlanen]) Lager.skiftFavorit(id, FILER); } });
@@ -1043,7 +1101,7 @@ const listeMed = (id, valg) => () => Lager.gemListe({
 
 for (const [hvad, valg, slutning] of [['retten', undefined, ''], ['retten med mere grønt', { mereGroent: true }, '/groen']]) {
   test('indkøbslisten: pilen fra ' + hvad + ' fører tilbage til listen på samme rulleplads', async () => {
-    const id = valg ? UGE.find((x) => lavModel(JSONER.get(x)).groen) : retterI('koed').find((x) => UGE.includes(x));
+    const id = valg ? UGE.find((x) => lavModel(JSONER.get(x)).groen) : retterI('gris').find((x) => UGE.includes(x));
     assert.ok(id, 'testen skal have en ret at åbne');
     await start('#/indkoeb', { foer: listeMed(id, valg) });
     const link = rod.querySelector('.ret-link');

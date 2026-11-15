@@ -130,7 +130,7 @@ export function soegePost(m, gruppeId, noegler) {
   };
 }
 
-// Står posten i gruppen? Chippen «Aftensmad» (AFTENSMAD) er de fem grupper, Aftensmad blev delt i
+// Står posten i gruppen? Chippen «Aftensmad» (AFTENSMAD) er de seks grupper, Aftensmad blev delt i
 const iGruppe = (p, gruppe) => p.gruppeId === gruppe || (gruppe === AFTENSMAD && AFTENSMAD_GRUPPER.includes(p.gruppeId));
 
 // Listen efter filtrene: gruppen (null = alle), alle de valgte mærker og søgeteksten, i postenes rækkefølge
@@ -872,7 +872,7 @@ function gruppeChip(id, navn, antal) {
   return b;
 }
 
-// Grupper og mærker i filterBoks. «Aftensmad» samler de fem grupper, Aftensmad blev delt i, og står kun, når den har retter
+// Grupper og mærker i filterBoks. «Aftensmad» samler de seks grupper, Aftensmad blev delt i, og står kun, når den har retter
 function katalogFiltre(alle) {
   const v = katalogValg;
   const gruppeNavn = v.gruppe === AFTENSMAD ? AFTENSMAD_NAVN : GRUPPER[v.gruppe];

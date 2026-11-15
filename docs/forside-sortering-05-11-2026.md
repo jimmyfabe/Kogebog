@@ -4,6 +4,32 @@ Hver ret står i præcis én gruppe i `opskrifter/index.json`. Vil du flytte en 
 
 Regel ved tvivl: hvad ville et barn kalde retten? Først pasta og nudler, så kylling, så fisk (også rejer og tun), så kød. Resten er Grønt. Kartoffelmos og æggeretter er Grønt. Bagning er Brød og pizza. Søde sager, Jul og nytår og Halloween er urørte.
 
+## Gris og Ko (v11, 15-11-2026)
+
+Kød er delt i to knapper med et dyr på: Gris (`gris`, lyserødt grisehoved) og Ko (`ko`, kohoved med pletter). Så kan et barn, der ikke kan læse, vælge dyret. Forsiden har nu 12 knapper. Resten af dette dokument er fra 05-11 og siger stadig «Kød»: gruppen er de to nedenfor.
+
+Regel: svinekød (også medister, skinke og pølser) er Gris, oksekød er Ko. Er der to slags kød i retten, vinder den, der er mest af. Kød, der hverken er gris eller ko (lam, vildt), har ingen knap endnu, for ingen ret har det. Lam kan få sin egen knap, når der er mindst to retter med det, og gitteret i `app.css` får en opstilling til 13.
+
+Talt af en kommando fra `opskrifter/index.json` 15-11-2026:
+
+| Gruppe | Id | Retter |
+|---|---|---|
+| Gris | `gris` | 8: frikadeller, medister-i-ovn, poelse-boennegryde, cowboyboenner, floedekartofler-med-skinke-og-broccoli, hoisin-gris-med-ris-og-agurk, honning-soja-koedboller, koteletter-med-aeble |
+| Ko | `ko` | 6: dino-vulkan, chili-con-carne, hyrdetaerte, mild-bibimbap-risskaal, smash-burgere-med-ost, hjemmelavet-kebab |
+
+Tvivlsretter:
+
+| Ret | Står i | Hvorfor |
+|---|---|---|
+| Frikadeller (`frikadeller`) | Gris | «hakket gris- og kalvekød»: mest gris |
+| Pølse-bønnegryde med ris (`poelse-boennegryde`) og Cowboybønner med pølser og majs (`cowboyboenner`) | Gris | partypølser er normalt svinekød. Ikke bekræftet på varedeklarationen i Rema 1000, Netto, 365discount eller Lidl |
+| Flødekartofler i fad med skinke og broccoli (`floedekartofler-med-skinke-og-broccoli`) | Gris | skinke er gris |
+| Honning-soja-kødboller med ris og agurk (`honning-soja-koedboller`) | Gris | opskriften siger «hakket grisekød», selvom navnet siger kød |
+
+Søgningen: «kød» og chippen «Aftensmad» finder stadig alle 14 retter (`gruppeSoegeord` giver «Aftensmad Kød» for begge grupper), også dem uden ordet kød i navn eller ingredienser, fx Koteletter med æble. «Fyld op med nye» og børnenes bladren går på skift mellem grupperne, så kødet nu får to ture pr. runde.
+
+Ingen gemte data har gruppens id (kun rettens), så der er ingen migrering. Et gammelt bogmærke til `#/gruppe/koed` viser skærmen «Den gruppe findes ikke». Lyden `lyd/faelles/gruppe-koed.mp3` står ikke længere på `lyd/liste.json`, men filen er ikke slettet.
+
 ## Antal pr. gruppe
 
 Talt af en kommando fra `opskrifter/index.json`.

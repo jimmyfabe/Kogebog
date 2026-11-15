@@ -551,7 +551,7 @@ async function gruppeKolonner(browser, H) {
 async function vaelgRet(browser, H) {
   const { tjek, foto, tryk, vent, maal } = H;
   const enRet = async (c) => {
-    await c.route('**/opskrifter/index.json*', (r) => r.fulfill({ contentType: 'application/json', body: JSON.stringify({ version: 2, grupper: [{ id: 'koed', retter: ['koedsovs'] }] }) }));
+    await c.route('**/opskrifter/index.json*', (r) => r.fulfill({ contentType: 'application/json', body: JSON.stringify({ version: 2, grupper: [{ id: 'pasta-og-nudler', retter: ['koedsovs'] }] }) }));
   };
   for (const n of paa(['se-land', 'x-land', 'land'])) {
     console.log('[' + n + '] fund 9: vælg ret');

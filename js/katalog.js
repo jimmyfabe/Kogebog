@@ -224,12 +224,14 @@ export const DYR = {
 // Forsidens billedknapper (opskrifter/index.json bestemmer rækkefølgen, docs/forside-sortering-05-11-2026.md hvad der
 // står hvor). Navnet står på knappen og siges af stemmen (js/replikker.js); billedet er grafikGruppe nedenfor, og farven
 // står i app.css under [data-gruppe]. Fra 05-11-2026 afløser de Aftensmad og Bagning. Madpakke (v9, 09-11-2026) er den
-// 11. knap (docs/madpakke-plan-09-11-2026.md)
+// 11. knap (docs/madpakke-plan-09-11-2026.md). Kød blev delt i Gris og Ko i v11 (15-11-2026), så der er 12 knapper.
+// Ingen gemte data har gruppens id (kun rettens), så delingen kræver ingen migrering
 export const GRUPPER = {
   'pasta-og-nudler': 'Pasta og nudler',
   'kylling': 'Kylling',
   'fisk': 'Fisk',
-  'koed': 'Kød',
+  'gris': 'Gris',
+  'ko': 'Ko',
   'groent': 'Grønt',
   'broed-og-pizza': 'Brød og pizza',
   'madpakke': 'Madpakke',
@@ -240,11 +242,16 @@ export const GRUPPER = {
 };
 
 // De gamle navne lever videre, så den voksne stadig kan finde retterne: «aftensmad» i søgningen og som chip i kataloget
-// finder de fem grupper, Aftensmad blev delt i, og «bagning» finder Brød og pizza. Kun søgeord, ingen knapper og ingen lyd
+// finder de seks grupper, Aftensmad blev delt i, og «bagning» finder Brød og pizza. Kun søgeord, ingen knapper og ingen lyd
 export const AFTENSMAD = 'aftensmad';
 export const AFTENSMAD_NAVN = 'Aftensmad';
-export const AFTENSMAD_GRUPPER = ['pasta-og-nudler', 'kylling', 'fisk', 'koed', 'groent'];
+export const AFTENSMAD_GRUPPER = ['pasta-og-nudler', 'kylling', 'fisk', 'gris', 'ko', 'groent'];
+// … og «kød» finder stadig pølser, skinke, medister og koteletter i Gris og Ko (to ord i én streng: js/soeg.js
+// lægger felterne på hver sin linje, og et ord kan stå hvor som helst i feltet)
+const KOED_GRUPPER = ['gris', 'ko'];
+const KOED_NAVN = 'Kød';
 export function gruppeSoegeord(id) {
+  if (KOED_GRUPPER.includes(id)) return AFTENSMAD_NAVN + ' ' + KOED_NAVN;
   if (AFTENSMAD_GRUPPER.includes(id)) return AFTENSMAD_NAVN;
   return id === 'broed-og-pizza' ? 'Bagning' : null;
 }
@@ -258,8 +265,8 @@ export const grafikVerbum = (id) => GRAFIK_MAPPE + 'verbum-' + id + GRAFIK_ENDEL
 export const grafikIngrediens = (id) => GRAFIK_MAPPE + 'ing-' + id + GRAFIK_ENDELSE;
 export const grafikDyr = (navn) => GRAFIK_MAPPE + 'dyr-' + navn + GRAFIK_ENDELSE;
 export const grafikRet = (id) => GRAFIK_MAPPE + 'ret-' + id + GRAFIK_RET_ENDELSE;
-// Fire af knapperne genbruger ingrediensernes tegning. De andre har grafik/gruppe-<id>.svg (også chippen «Aftensmad»)
-const GRUPPE_BILLEDE = { 'pasta-og-nudler': 'ing-spaghetti', 'koed': 'ing-koed', 'groent': 'ing-broccoli', 'broed-og-pizza': 'ing-broed' };
+// Tre af knapperne genbruger ingrediensernes tegning. De andre har grafik/gruppe-<id>.svg (også chippen «Aftensmad»)
+const GRUPPE_BILLEDE = { 'pasta-og-nudler': 'ing-spaghetti', 'groent': 'ing-broccoli', 'broed-og-pizza': 'ing-broed' };
 export const grafikGruppe = (id) => GRAFIK_MAPPE + (Object.hasOwn(GRUPPE_BILLEDE, id) ? GRUPPE_BILLEDE[id] : 'gruppe-' + id) + GRAFIK_ENDELSE;
 export const GRAFIK_FAERDIG = GRAFIK_MAPPE + 'faerdig' + GRAFIK_ENDELSE;
 
