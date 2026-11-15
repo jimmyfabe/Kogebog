@@ -119,13 +119,15 @@ test('låsen dækker ugeplanen: laasFor siger bag, fri eller luk for hver adress
   for (const [hash, zone] of tabel) assert.equal(V.laasFor(hash), zone, hash);
 });
 
-test('låsen holder på ugeplanen og indkøbslisten, og lukker på forsiden og børnenes valg', () => {
-  for (const hash of ['#/uge', '#/uge/dag/2', '#/indkoeb', '#/hent/abc']) {
+test('låsen holder på ugeplanen, og lukker på indkøbslisten, forsiden og børnenes valg', () => {
+  for (const hash of ['#/uge', '#/uge/dag/2']) {
     V.aabn();
     assert.equal(V.rute(hash), false, hash + ': ugeplanen tegner selv sin skærm');
     assert.equal(V.erLaastOp(), true, hash + ': låsen er stadig åben');
   }
-  for (const hash of ['#/', '#/uge/vaelg', '#/uge/vaelg/rosa', '#/ret/koedsovs']) {
+  // Review L2 (15-11): indkøbslisten har kun «Til forsiden», så låsen kan ikke bruges derfra. Står den åben, kommer et barn
+  // ind i voksendelen med browserens «tilbage», når iPad'en er givet videre på listen
+  for (const hash of ['#/indkoeb', '#/hent/abc', '#/', '#/uge/vaelg', '#/uge/vaelg/rosa', '#/ret/koedsovs']) {
     V.aabn();
     assert.equal(V.rute(hash), false, hash);
     assert.equal(V.erLaastOp(), false, hash + ': låsen lukker');
@@ -142,6 +144,20 @@ test('låst: #/uge og #/uge/dag/<n> viser holdet, indkøbslisten gør ikke', () 
   vist.length = 0;
   assert.equal(V.rute('#/indkoeb'), false);
   assert.equal(vist.length, 0, 'indkøbslisten kræver ikke holdet (telefonen åbner den)');
+});
+
+test('tilbage fra indkøbslisten til voksendelen kræver holdet igen (review L2)', () => {
+  V.aabn();
+  V.rute('#/indkoeb');
+  vist.length = 0;
+  assert.equal(V.rute('#/voksen'), true);
+  assert.equal(vist.at(-1).status.titel, 'Til de voksne', '«tilbage» til #/voksen viser holdet, ikke menuen');
+  V.aabn('#/uge');
+  V.rute('#/hent/abc');
+  vist.length = 0;
+  assert.equal(V.rute('#/uge'), true);
+  assert.equal(vist.at(-1).status.titel, 'Til de voksne', '«tilbage» til #/uge viser holdet');
+  V.rute('#/');
 });
 
 test('aabn(hash) går til en adresse bag låsen, og ellers til oversigten', () => {

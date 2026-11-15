@@ -11,9 +11,10 @@
 // og tallet under det (et nyt input-element lukker tastaturet i Safari på iPad og iPhone).
 // Låsen er en børnelås, ikke sikkerhed. Den ligger kun i hukommelsen (en modulvariabel, ingen sessionStorage) og dækker
 // #/voksen… og ugeplanen (#/uge og #/uge/dag/<n>, laasFor). Den lukker på børnenes adresser (også #/uge/vaelg…), efter
-// 10 minutter uden tryk og med «Luk». Indkøbslisten (#/indkoeb, #/hent/…) rører den ikke. Åbnes en adresse bag låsen
-// uden låsen (et bogmærke), kommer holdet først. Kun ANTAL voksne og børn gemmes, aldrig hvem (regel 6). Lageret røres kun gennem
-// js/lager.js, og al tekst sættes som tekst (js/dom.js). Udseendet står i familie.css.
+// 10 minutter uden tryk og med «Luk». Indkøbslisten (#/indkoeb, #/hent/…) kræver den ikke, men lukker den. Åbnes en
+// adresse bag låsen uden låsen (et bogmærke, eller tilbage fra printet), kommer holdet først. Kun ANTAL voksne og børn
+// gemmes, aldrig hvem (regel 6). Lageret røres kun gennem js/lager.js, og al tekst sættes som tekst (js/dom.js).
+// Udseendet står i familie.css.
 import { el, ikon, svgEl } from './dom.js';
 import * as Lager from './lager.js';
 import { MAKS_PERSONER, MAKS_PORTIONER, MAKS_UDVALG as UDVALG_MAKS } from './lager.js';
@@ -61,7 +62,9 @@ export function voksenSide(hash) {
 
 // Hvad adressen gør ved låsen. 'bag': voksendelen og ugeplanens skærme til den voksne (oversigten og «Vælg ret til
 // dagen»), der kræver holdet. 'fri': indkøbslisten og linket til den (#/indkoeb, #/hent/…), som telefonen også åbner, og
-// som hverken kræver eller lukker låsen. 'luk': resten, også børnenes valg (#/uge/vaelg…), så iPad'en kan gives videre.
+// som ikke kræver låsen. 'luk': resten, også børnenes valg (#/uge/vaelg…), så iPad'en kan gives videre. Både 'fri' og
+// 'luk' lukker låsen (rute): listen har kun «Til forsiden», og en åben lås gav et barn vejen ind med browserens
+// «tilbage» (review L2, 15-11).
 // Ugeplanens adresser læses af dens egen rute(), så låsen og skærmen aldrig er uenige om, hvad adressen er
 export function laasFor(hash) {
   if (voksenSide(hash)) return 'bag';
@@ -222,7 +225,7 @@ function glemSoegning() {
 // til (svar true), når låsen er lukket; ellers tegner js/ugeplan.js dem (svar false). Børnenes adresser lukker låsen
 export function rute(hash) {
   const zone = laasFor(hash);
-  if (zone === 'luk') laas();
+  if (zone !== 'bag') laas();
   const side = zone === 'bag' ? voksenSide(hash) : null;
   if (!side) sidsteSide = null;
   if (side) {
