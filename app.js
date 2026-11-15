@@ -337,7 +337,7 @@ function forside() {
   // print, så et barn ikke kommer derind ved et tilfælde
   const voksne = holdKnap({
     klasse: 'lille voksen-hold voksen-knap',
-    label: 'Til de voksne. Hold knappen inde i 2 sekunder.',
+    label: 'Voksne: hold knappen inde i 2 sekunder for at åbne voksendelen.',
     indhold: [ikon('kalender'), el('span', { tekst: 'Voksne: hold' })],
     naarFaerdig: () => VoksenDel.aabn(),
   });

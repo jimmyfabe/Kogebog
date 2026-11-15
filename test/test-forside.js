@@ -659,6 +659,8 @@ test('«Voksne: hold» står under knapperne', async () => {
   assert.ok(hold.closest('.forside-voksen'));
   assert.ok(dele.indexOf('forside-indhold') < dele.indexOf('forside-voksen'));
   assert.ok(dele.indexOf('forside-voksen') < dele.indexOf('forside-fod'));
+  // Review R2 (15-11): navnet begynder med den tekst, man ser, så stemmestyring finder knappen (som L4)
+  assert.match(hold.getAttribute('aria-label'), /^Voksne: hold\b/);
 });
 
 test('grupper i listen, koden ikke kender, forsvinder ikke i stilhed', async () => {
@@ -943,6 +945,8 @@ test('ugeplanen ligger bag låsen: #/uge viser holdet, holdet åbner oversigten,
   await start('#/uge');
   try {
     assert.equal(overskrift(), 'Til de voksne');
+    // Review R2 (15-11): også vagtens hold hedder det, man ser
+    assert.match(rod.querySelector('.voksen-vagt').getAttribute('aria-label'), /^Voksne: hold\b/);
     holdInde(rod.querySelector('.voksen-vagt'));
     assert.equal(location.hash, '#/uge');
     assert.ok(rod.querySelector('main.uge-oversigt'), 'ugeplanens oversigt efter holdet');

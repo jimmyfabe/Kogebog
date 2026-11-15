@@ -471,7 +471,7 @@ function vagtSkaerm() {
     handling: el('div', { class: 'status-knapper' },
       holdKnap({
         klasse: 'voksen-hold voksen-vagt',
-        label: 'Åbn voksendelen. Hold knappen inde i 2 sekunder.',
+        label: 'Voksne: hold knappen inde i 2 sekunder for at åbne voksendelen.',
         indhold: [el('span', { tekst: 'Voksne: hold' })],
         naarFaerdig: () => {
           laasOp();
