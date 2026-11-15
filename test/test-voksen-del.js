@@ -611,6 +611,10 @@ test('«Retter»: «Print» i hver række og «Print hele kogebogen» over liste
   assert.equal(medFokusNavn(skaerm, 'print-flere').born.find((b) => b.tag === 'span').className, undefined, '«Print hele kogebogen» står altid med tekst');
   assert.equal(printHref(skaerm, 'print-flere'), 'print.html?alle');
   assert.equal(tekstAf(medFokusNavn(skaerm, 'print-flere')), 'Print hele kogebogen');
+  // Review U4 (15-11): mange retter fylder mere end én A4-side, så teksten lover kun, at hver ret begynder på en ny side
+  // (.ret-side + .ret-side { break-before: page } i print.css)
+  assert.equal(medFokusNavn(skaerm, 'print-flere').attr['aria-label'], 'Print hele kogebogen: ' + S.ids.length + ' retter, hver på en ny side');
+  assert.equal(tekstAf(find(skaerm, (e) => e.className === 'voksen-print-hjaelp')[0]), 'Hver ret begynder på en ny side. Vælg «Gem som PDF» i printet for at få en PDF.');
   // Søgningen gør det til de viste retter, i listens rækkefølge
   skriv(skaerm, 'jul');
   const jul = raekkerI(skaerm);
@@ -618,11 +622,11 @@ test('«Retter»: «Print» i hver række og «Print hele kogebogen» over liste
   assert.equal(printHref(skaerm, 'print-flere'), 'print.html?retter=' + jul.join(','));
   assert.equal(tekstAf(medFokusNavn(skaerm, 'print-flere')), 'Print de ' + jul.length + ' viste');
   // Review L4 (15-11): navnet, skærmlæseren siger, begynder med den tekst, man ser (så stemmestyring finder knappen)
-  assert.equal(medFokusNavn(skaerm, 'print-flere').attr['aria-label'], 'Print de ' + jul.length + ' viste retter, én pr. side');
+  assert.equal(medFokusNavn(skaerm, 'print-flere').attr['aria-label'], 'Print de ' + jul.length + ' viste retter, hver på en ny side');
   const enRet = S.ids.map((id) => S.retter.get(id).navn.replace(/\u00ad/g, '')).find((navn) => { skriv(skaerm, navn); return raekkerI(skaerm).length === 1; });
   assert.ok(enRet, 'mindst én ret kan søges frem alene');
   assert.equal(tekstAf(medFokusNavn(skaerm, 'print-flere')), 'Print den viste ret');
-  assert.equal(medFokusNavn(skaerm, 'print-flere').attr['aria-label'], 'Print den viste ret, én pr. side');
+  assert.equal(medFokusNavn(skaerm, 'print-flere').attr['aria-label'], 'Print den viste ret');
   // Husstand og mere grønt: n og groen=1 på alle links
   V.rute('#/');
   lageret.clear();

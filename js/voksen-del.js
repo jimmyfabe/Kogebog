@@ -911,14 +911,15 @@ function printLink(tekst, href, label, fokus, { kunIkonSmal = false } = {}) {
 
 // Over listen: hele kogebogen, eller de retter, søgningen og filtrene viser. Står i listens boks, så den følger med ved
 // hvert tegn (soegeListe tegner kun tallet og listen om)
-// Navnet til skærmlæseren begynder med den tekst, man ser, så stemmestyring finder knappen (review L4)
+// Navnet til skærmlæseren begynder med den tekst, man ser, så stemmestyring finder knappen (review L4). Mange retter fylder
+// mere end én A4-side, så teksten lover kun, at hver ret begynder på en ny side (print.css, review U4)
 function printFlere(vist, iAlt, f) {
   const tekst = vist.length === 1 ? 'Print den viste ret' : 'Print de ' + vist.length + ' viste';
   const link = vist.length === iAlt
-    ? printLink('Print hele kogebogen', printAdresse(f), 'Print hele kogebogen: ' + flertal(iAlt, 'ret', 'retter') + ', én pr. side', 'print-flere')
-    : printLink(tekst, printAdresse(f, { retter: vist.map((p) => p.m.id) }), tekst + (vist.length === 1 ? '' : ' retter') + ', én pr. side', 'print-flere');
+    ? printLink('Print hele kogebogen', printAdresse(f), 'Print hele kogebogen: ' + flertal(iAlt, 'ret', 'retter') + ', hver på en ny side', 'print-flere')
+    : printLink(tekst, printAdresse(f, { retter: vist.map((p) => p.m.id) }), vist.length === 1 ? tekst : tekst + ' retter, hver på en ny side', 'print-flere');
   return el('div', { class: 'voksen-print' }, link,
-    el('p', { class: 'voksen-print-hjaelp', tekst: 'Én ret pr. A4-side. Vælg «Gem som PDF» i printet for at få en PDF.' }));
+    el('p', { class: 'voksen-print-hjaelp', tekst: 'Hver ret begynder på en ny side. Vælg «Gem som PDF» i printet for at få en PDF.' }));
 }
 
 // En ret i kataloget: «Med» (kun retter til ugeplanen) først, så hjertet, «Åbn» og «Print» altid står samme sted. På
