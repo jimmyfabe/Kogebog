@@ -2,7 +2,7 @@
 // print.html?ret=<id>&n=<1-12> regner mængderne om til n portioner (retten på skærmen, når husstanden er sat).
 // print.html?ret=<id>&groen=1 er retten med mere grønt (js/groent.js), som retten på skærmen, når kontakten er slået til.
 // print.html?uge er ugeplanen og indkøbslisten (js/print-uge.js).
-// print.html?retter=<id>,<id> og print.html?alle er flere retter, én pr. side (js/print-flere.js), også med n og groen.
+// print.html?retter=<id>,<id> og print.html?alle er flere retter, hver på en ny side (js/print-flere.js), også med n og groen.
 import { el, ikon, sideTitel } from './dom.js';
 import { hentRet, ID_RE } from './data.js';
 import { VERBER, grafikVerbum } from './katalog.js';
