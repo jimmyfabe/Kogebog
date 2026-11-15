@@ -475,6 +475,7 @@ export function valider(rod = ROD) {
       const forurenet = new Set(); // trin, der allerede er meldt for at røre andet efter det rå
       let raaDej = null; // { trin, ikoner }: det seneste trin, der blandede noget råt i dejen, indtil der æltes, steges eller bages
       let raaPensling = null; // { trin, ikoner }: det seneste trin, der penslede med råt æg, indtil der steges eller bages
+      let raaKoed = null; // { trin, ikoner }: det seneste trin med råt kød, indtil der bages, steges eller koges
       trin.forEach((s, i) => {
         const hvor = 'trin ' + (i + 1);
         taelt.trin++;
@@ -538,12 +539,21 @@ export function valider(rod = ROD) {
           raa = [...new Set([...raa, ...raaPensling.ikoner])];
           hvorfra += ' (' + liste(raaPensling.ikoner) + ' fra penslingen i trin ' + raaPensling.trin + ' er stadig råt)';
         }
+        // At pensle noget med råt kød i rører det rå kød igen: penslen og hånden, der holder bidden (review K1 15-11:
+        // nuggets-bidderne blev penslet efter håndvasken). «koge» tæller her, modsat dejen: det er kødet, der koges
+        // (juleskinken, før den glaseres)
+        if (st.verbum === 'pensle' && raaKoed && !egneRaa.includes('koed')) {
+          raa = [...new Set([...raa, ...raaKoed.ikoner])];
+          hvorfra += ' (' + liste(raaKoed.ikoner) + ' fra trin ' + raaKoed.trin + ' er stadig råt)';
+        }
         // Efter æltningen er det rå indarbejdet, og efter stegningen eller bagningen er dejen ikke rå. «koge» med vilje ikke:
         // det er ofte noget andet, der varmes (smør eller mælk i en lille gryde), mens dejen er rå
         if (['aelte', 'bage', 'stege'].includes(st.verbum)) raaDej = null;
         // «Lad bollerne bage» er også ovnen: en pause med varme (verbet «vente», voksen og varme) bager ægget
         if (['bage', 'stege'].includes(st.verbum) || (st.verbum === 'vente' && st.voksen_hjaelp === 'varme')) raaPensling = null;
         if (st.verbum === 'pensle' && egneRaa.length) raaPensling = { trin: i + 1, ikoner: egneRaa };
+        if (['bage', 'stege', 'koge'].includes(st.verbum) || (st.verbum === 'vente' && st.voksen_hjaelp === 'varme')) raaKoed = null;
+        if (egneRaa.includes('koed')) raaKoed = { trin: i + 1, ikoner: ['koed'] };
         if (BLANDER.includes(st.verbum) && egneRaa.length) raaDej = { trin: i + 1, ikoner: [...new Set([...(raaDej?.ikoner ?? []), ...egneRaa])] };
         const vask = trin.findIndex((x, k) => k > i && x && x.tumbi && x.tumbi.verbum === 'vaske-haender');
         // En timer på trinnet med det rå er også en pause: barnet venter ved timeren med råt på hænderne og trykker på

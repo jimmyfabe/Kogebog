@@ -543,6 +543,25 @@ test('en pensling med æg skal bages eller steges bagefter', () => {
 // Efter stegningen eller bagningen er dejen ikke rå længere (code review 3, 19-10): at rulle pandekagen sammen eller
 // bollerne i et viskestykke rører ikke råt æg. «koge» tæller med vilje ikke: det er ofte noget andet, der varmes
 // (smør eller mælk i en lille gryde), mens dejen er rå
+// Review K1 (15-11): nuggets-bidderne blev penslet med olie efter håndvasken, men kyllingen i dem er rå, til de er bagt.
+// Penslen og hånden, der holder bidden, rører det rå kød igen, så hænderne vaskes igen før ovnen
+test('pensle efter råt kød rører det rå kød, indtil det er bagt, stegt eller kogt', () => {
+  const fil = 'opskrifter/kyllingenuggets-i-rispapir.json';
+  const pensl = (r) => r.findIndex((s) => s.tumbi.verbum === 'pensle');
+  const udenNyVask = (r) => { const p = pensl(r); if (r[p + 1].tumbi.verbum === 'vaske-haender') r.splice(p + 1, 1); };
+  forventFejl(fil, (d) => udenNyVask(d.recipeInstructions),
+    'trin 15: rører råt kød eller æg (koed) (koed fra trin 13 er stadig råt), men der kommer ikke et «vaske-haender»-trin bagefter');
+  // Efter bagningen er kødet ikke råt: de bagte bidder kan pensles uden en ny håndvask
+  forventGyldig(fil, (d) => {
+    const r = d.recipeInstructions;
+    udenNyVask(r);
+    const [p] = r.splice(pensl(r), 1);
+    r.splice(r.findIndex((s) => s.tumbi.verbum === 'tage-ud') + 1, 0, p);
+  });
+  // Juleskinken er kogt, før den glaseres
+  forventGyldig('opskrifter/glaseret-juleskinke-af-hamburgerryg.json', () => {});
+});
+
 test('dejen er ikke rå efter stegning eller bagning', () => {
   const rul = (text) => ({ '@type': 'HowToStep', text, tumbi: { verbum: 'rulle' } });
   forventGyldig('opskrifter/pandekager.json', (d) => { d.recipeInstructions.splice(10, 0, rul('Rul pandekagen sammen.')); });
