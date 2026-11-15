@@ -9,7 +9,7 @@
    Svarer nettet ikke inden for HENT_MS (4 s), kommer en opskrift (også index.json) fra cachen, og nettets svar gemmes
    til næste gang. De næste LANGSOM_MS (30 s) tager opskrifterne cachen med det samme (code review U3 og F2, 23-10). */
 const PRAEFIKS = 'kog-';
-const INDHOLD = '6d03933f02f6dab1'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = '3a4e2e8b65aef150'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '525d7f9f97af0047'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
@@ -413,6 +413,10 @@ const FILER = [
   'grafik/ret-kyllingenuggets-i-rispapir.webp', 'grafik/ret-hjemmelavet-kebab.webp',
   'grafik/verbum-dyppe-vand.svg', 'grafik/verbum-drysse-skaal.svg',
   'grafik/gruppe-gris.svg', 'grafik/gruppe-ko.svg',
+  'opskrifter/lynpizza-med-yoghurtdej.json', 'opskrifter/pizzabroed-med-hvidloeg-og-ost.json',
+  'opskrifter/naan-paa-panden.json', 'opskrifter/hvidloegsnaan.json', 'opskrifter/ostenaan.json',
+  'grafik/ret-lynpizza-med-yoghurtdej.webp', 'grafik/ret-pizzabroed-med-hvidloeg-og-ost.webp',
+  'grafik/ret-naan-paa-panden.webp', 'grafik/ret-hvidloegsnaan.webp', 'grafik/ret-ostenaan.webp',
 ];
 
 const iScope = (url) => url.href.startsWith(self.registration.scope);
