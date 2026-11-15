@@ -23,7 +23,7 @@
     "¼ tsk cayennepeber",
     "1 tsk salt",
     "1 tsk peber",
-    "500 g hakket oksekød",
+    "600 g hakket oksekød",
     "6 pitabrød",
     "hvidløgsdressing",
     "sød chilisauce"
@@ -55,7 +55,7 @@
     "id": "hjemmelavet-kebab",
     "version": 1,
     "afproevet": false,
-    "kilde": "Idé og metode fra en reel af Louis Howard (personlig træner) på Instagram, oprindelig fra Meals with Max. Teksten er skrevet om med egne ord. Kilden siger hakket lam eller okse. Kødmængden er skåret af i kildens billede: 500 g (én bakke) er et gæt. «Krydderippe» er tolket som spidskommen og cayennepeber. Salt, peber og cayenne er sat ned fra 1 spsk af hver til 1 tsk, 1 tsk og ¼ tsk til børn. Saucerne er købte, og salat, rødløg og agurk har ingen mængde i kilden. Kilden bager 20-25 min ved 180 °C (ikke afprøvet).",
+    "kilde": "Idé og metode fra en reel af Louis Howard (personlig træner) på Instagram, oprindelig fra Meals with Max. Teksten er skrevet om med egne ord. Kilden siger hakket lam eller okse. Kødmængden er skåret af i kildens billede (tre cifre). 600 g er regnet ud fra kildens egne næringstal for hele retten (117 g protein, 87 g fedt og ca. 1.370 kcal svarer til ca. 600 g hakket oksekød 8-12 %) og giver 100 g kød pr. pitabrød. «Krydderippe» er tolket som spidskommen og cayennepeber. Salt, peber og cayenne er sat ned fra 1 spsk af hver til 1 tsk, 1 tsk og ¼ tsk til børn. Saucerne er købte, og salat, rødløg og agurk har ingen mængde i kilden. Kilden bager 20-25 min ved 180 °C (ikke afprøvet).",
     "ingredienser": [
       { "ikon": "loeg", "maengde": "1" },
       { "ikon": "kaal", "maengde": "¼" },
@@ -70,7 +70,7 @@
       { "ikon": "krydderurt", "maengde": "¼ tsk" },
       { "ikon": "salt", "maengde": "1 tsk" },
       { "ikon": "peber", "maengde": "1 tsk" },
-      { "ikon": "koed", "maengde": "500 g" },
+      { "ikon": "koed", "maengde": "600 g" },
       { "ikon": "broed", "maengde": "6" },
       { "ikon": "mayonnaise", "maengde": "" },
       { "ikon": "ketchup", "maengde": "" }
