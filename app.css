@@ -221,7 +221,9 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 }
 .status-boks h1 { font-size: 34px; }
 .status-boks h2 { font-size: 28px; }
-.status-dyr { width: 140px; }
+/* aspect-ratio: pladsen er sat af, før billedet kommer. Ellers rykkede «Voksne: hold» ned midt i et hold, når dyret blev
+   hentet sent (første start), og holdet stoppede (e2e «uden net» 15-11). Dyrene er kvadratiske (viewBox 256 × 256) */
+.status-dyr { width: 140px; aspect-ratio: 1 / 1; }
 .status-knapper { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; margin-top: 8px; }
 @media (prefers-reduced-motion: no-preference) {
   .henter .status-dyr { animation: vip 1.6s ease-in-out infinite; }

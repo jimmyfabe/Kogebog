@@ -286,6 +286,18 @@ test('lupen er mindst 48 px på alle skærme, og Rosa og Bo giver plads til den 
   for (let b = 360; b <= 559; b++) assert.equal(gaeldende(rod, '.forside-top > .forside-dyr', b, 1000).display, 'none', b + ' px');
 });
 
+// Dyret på statusskærmene havde kun en bredde. Kom billedet sent (første start, mens service workeren gemmer alle filer),
+// voksede det fra 0 til 140 px, og alt under det rykkede ned: «Voksne: hold» flyttede sig under musen midt i holdet, og
+// holdet stoppede (e2e «uden net» 15-11, målt mod en HTTP/1.0-server). Pladsen er derfor sat af, før billedet kommer
+test('dyret på statusskærmene har sin højde, før billedet er hentet (aspect-ratio), på alle skærme', () => {
+  const rod = blokke(CSS);
+  for (const [b, h] of [[1180, 820], [820, 1180], [390, 844], [360, 640], [844, 390], [667, 375]]) {
+    const d = gaeldende(rod, '.status-dyr', b, h);
+    assert.ok(pxTal(d.width) > 0, b + '×' + h + ': bredden er ' + d.width);
+    assert.equal(ens(d['aspect-ratio'] || ''), '1/1', b + '×' + h + ': dyrene er kvadratiske (viewBox 256 × 256)');
+  }
+});
+
 test('hovedknappen på statusskærmene (.knap.primaer) er mindst 48 px på alle skærme (regel 9)', () => {
   const rod = blokke(CSS);
   for (const [b, h] of [[1180, 820], [820, 1180], [390, 844], [360, 640], [844, 390], [667, 375]]) {
