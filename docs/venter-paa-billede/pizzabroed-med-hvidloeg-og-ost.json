@@ -1,0 +1,57 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Pizzabrød med hvidløg og ost",
+  "description": "Gærdej rullet ud på en plade, pensles med hvidløgsolie og bages med ost og oregano. Skæres i stave og spises lune. Allergener: gluten og mælk.",
+  "image": "grafik/ret-pizzabroed-med-hvidloeg-og-ost.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT20M",
+  "cookTime": "PT15M",
+  "totalTime": "PT1H10M",
+  "recipeIngredient": [
+    "25 g gær",
+    "2,5 dl lunkent vand",
+    "1 tsk salt",
+    "5 spsk olie (2 til dejen og 3 til hvidløgsolien)",
+    "375 g hvedemel og lidt til bordet",
+    "1 tsk hvidløgspulver",
+    "175 g revet ost",
+    "1 tsk tørret oregano"
+  ],
+  "tool": ["stor skål", "lille skål", "grydeske", "dl-mål", "køkkenvægt", "viskestykke", "kagerulle", "bagepapir", "bageplade", "kop", "ske", "skarp kniv eller pizzahjul", "grydelapper"],
+  "recipeInstructions": [
+    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Retten indeholder gluten og mælk."}},
+    {"@type": "HowToStep", "text": "Smuldr gæren ned i en stor skål.", "tumbi": {"verbum": "smuldre", "ikoner": ["gaer"], "note": "25 g gær, det er en halv pakke."}},
+    {"@type": "HowToStep", "text": "Hæld 2,5 dl lunkent vand over gæren.", "tumbi": {"verbum": "haelde", "ikoner": ["vand", "gaer"], "note": "Lunkent er ca. 37 °C: det føles lunt på en finger. Rør, til gæren er opløst."}},
+    {"@type": "HowToStep", "text": "Hæld salt og olie i.", "tumbi": {"verbum": "haelde", "ikoner": ["salt", "olie"], "note": "1 tsk salt og 2 spsk olie."}},
+    {"@type": "HowToStep", "text": "Mål 375 g mel.", "tumbi": {"verbum": "maale", "ikoner": ["mel"], "note": "Brug køkkenvægten. Gem ca. 1 dl af melet i en lille skål til at ælte med."}},
+    {"@type": "HowToStep", "text": "Rør melet i lidt ad gangen.", "tumbi": {"verbum": "roere", "ikoner": ["mel"], "note": "Til dejen samler sig."}},
+    {"@type": "HowToStep", "text": "Ælt dejen i 5 minutter.", "tumbi": {"verbum": "aelte", "timer_sek": 300, "note": "Drys melet fra den lille skål på bordet. Dejen skal være glat og blød."}},
+    {"@type": "HowToStep", "text": "Lad dejen hæve i 30 minutter.", "tumbi": {"verbum": "vente", "timer_sek": 1800, "note": "Dæk skålen med et viskestykke. Tænd ovnen på 225 °C almindelig ovn (200 °C varmluft), når der er 15 minutter tilbage."}},
+    {"@type": "HowToStep", "text": "Rul dejen ud på bagepapir.", "tumbi": {"verbum": "kagerulle", "ikoner": ["mel"], "note": "Ca. 30 × 40 cm. Drys lidt mel på dejen og kagerullen. Træk papiret over på en bageplade."}},
+    {"@type": "HowToStep", "text": "Rør olie og hvidløgspulver sammen i en kop.", "tumbi": {"verbum": "roere", "ikoner": ["olie", "hvidloeg"], "note": "3 spsk olie og 1 tsk hvidløgspulver."}},
+    {"@type": "HowToStep", "text": "Smør hvidløgsolien ud på dejen.", "tumbi": {"verbum": "smoere", "ikoner": ["olie", "hvidloeg"], "note": "Med bagsiden af en ske, helt ud til kanten."}},
+    {"@type": "HowToStep", "text": "Drys osten over.", "tumbi": {"verbum": "drysse", "ikoner": ["ost"], "note": "175 g revet ost."}},
+    {"@type": "HowToStep", "text": "Drys oregano over.", "tumbi": {"verbum": "drysse", "ikoner": ["krydderurt"], "note": "1 tsk tørret oregano."}},
+    {"@type": "HowToStep", "text": "Bag pizzabrødet i 12 minutter.", "tumbi": {"verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 720, "note": "225 °C almindelig ovn (200 °C varmluft), til osten er gylden og bunden sprød."}},
+    {"@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": {"verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme", "note": "Pladen er meget varm."}},
+    {"@type": "HowToStep", "text": "Skær pizzabrødet i stave.", "tumbi": {"verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "note": "Den voksne skærer med en skarp kniv eller et pizzahjul. Osten er meget varm: lad det køle et par minutter."}}
+  ],
+  "tumbi": {
+    "id": "pizzabroed-med-hvidloeg-og-ost",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er egne og ikke afprøvet. Gærdejen er en almindelig pizzadej som hos Arla, «Pizzadej» (arla.dk/opskrifter/pizzadej/), og Valdemarsro, «Hjemmelavet pizza» (valdemarsro.dk/hjemmelavet-pizza/). Her pensles dejen med olie og hvidløgspulver og bages med ost og oregano som et pizzabrød. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      {"ikon": "gaer", "maengde": "25 g"},
+      {"ikon": "vand", "maengde": "2,5 dl"},
+      {"ikon": "salt", "maengde": "1 tsk"},
+      {"ikon": "olie", "maengde": "5 spsk"},
+      {"ikon": "mel", "maengde": "375 g"},
+      {"ikon": "hvidloeg", "maengde": "1 tsk"},
+      {"ikon": "ost", "maengde": "175 g"},
+      {"ikon": "krydderurt", "maengde": "1 tsk"}
+    ]
+  }
+}

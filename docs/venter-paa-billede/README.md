@@ -4,7 +4,13 @@ Validatoren kræver `grafik/ret-<id>.webp` for hver ret i `opskrifter/`, så en 
 her som `<id>.json` (med katalog, ikoner og varerne til indkøbslisten på plads), indtil billedet er tegnet. Skriv dens
 gruppe her, og hvad billedet skal vise.
 
-Der venter ingen retter nu (09-11-2026).
+Disse retter venter fra 15-11-2026 (v11, `afproevet: false`):
+
+| Ret (id) | Gruppe | Billedet skal vise |
+|---|---|---|
+| `lynpizza-med-yoghurtdej` | `broed-og-pizza` | En firkantet pizza på bagepapir, skåret i stykker, med tomat, skinketern, majs og smeltet ost; agurkestave ved siden af |
+| `pizzabroed-med-hvidloeg-og-ost` | `broed-og-pizza` | Pizzabrød skåret i lange stave på et bræt, gylden smeltet ost og lidt grønt oregano ovenpå, ingen tomat |
+| `naan-paa-panden` | `broed-og-pizza` | En stak ovale, bløde naan med brune pletter fra panden, på en tallerken |
 
 Sådan kommer de tilbage (Git Bash i Kogebog). Det kan gøres for de retter, der har fået et billede, resten bliver her:
 

@@ -449,5 +449,6 @@ export const VARER = {
   'ketchup': { navn: 'Ketchup', afd: 'basis', enhed: 'ml', ikon: 'ketchup', basis: true },
   'mayonnaise': { navn: 'Mayonnaise', afd: 'basis', enhed: 'ml', ikon: 'mayonnaise', basis: true },
   'ribsgele': { navn: 'Ribsgelé', afd: 'basis', enhed: 'ml', ikon: 'syltetoej', basis: true },
+  'bagepulver': { navn: 'Bagepulver', afd: 'basis', enhed: 'ml', ikon: 'bagepulver', basis: true },
   'vand': { navn: 'Vand', afd: 'basis', enhed: 'ml', ikon: 'vand', basis: true, skjul: true },
 };
