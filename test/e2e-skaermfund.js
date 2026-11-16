@@ -51,7 +51,7 @@ async function gaa(side, hash, klar, vent) {
   await vent(60);
 }
 
-// Som gaa, til ugeplanens skærme til den voksne (#/uge og #/uge/dag/<n>): de ligger bag voksendelens lås (laasFor i
+// Som gaa, til ugeplanens skærme til den voksne (forsiden #/voksen og #/voksen/dag/<n>): de ligger bag voksendelens lås (laasFor i
 // js/voksen-del.js), så efter en ny indlæsning, forsiden eller en ret kommer holdet først. Står det der, holdes det, og
 // appen tegner den samme adresse
 async function gaaForbi(side, H, hash, klar) {
@@ -81,7 +81,8 @@ async function frisk(side) {
 const tegnet = (side) => side.evaluate(() => new Promise((ok) => requestAnimationFrame(() => requestAnimationFrame(ok))));
 
 // ---------- 1. Ugeplanens række uden billede ----------
-// Rækken uden billede havde teksten i billedets kolonne (64-84 px): «Ukend | t ret», og «internetforbindelsen.» løb ud
+// Rækken uden billede havde teksten i billedets kolonne (64-84 px): «Ukend | t ret», og «internetforbindelsen.» løb ud.
+// Fra v11 er det forsidens dage (#/voksen): teksten står mellem dagen til venstre og pilen til højre
 async function raekkeUdenBillede(browser, H) {
   const { RETTER, tjek, foto, vent, maal } = H;
   const ude = Object.keys(RETTER).find((id) => RETTER[id].tumbi.ugeplan !== true);
@@ -93,15 +94,15 @@ async function raekkeUdenBillede(browser, H) {
     await side.route('**/opskrifter/koedsovs.json*', (r) => r.abort());
     await side.reload();
     await side.waitForSelector('.gruppe-knap');
-    await gaaForbi(side, H, '#/uge', '.uge-dage .dag-meta');
-    await side.waitForFunction(() => document.querySelector('.dag-billede') && /internetforbindelsen/.test(document.querySelector('.uge-dage').textContent), null, { timeout: 10000 });
-    const r = await side.evaluate(() => [...document.querySelectorAll('.dag:not(.fri)')].map((d) => {
-      const ret = d.querySelector('.dag-ret');
-      const rk = d.getBoundingClientRect();
+    await gaaForbi(side, H, '#/voksen', '.voksen-uge');
+    await side.waitForFunction(() => document.querySelector('.voksen-dag-billede') && /internetforbindelsen/.test(document.querySelector('.voksen-uge').textContent), null, { timeout: 10000 });
+    const r = await side.evaluate(() => [...document.querySelectorAll('.voksen-dag:not(.voksen-dag-tom)')].map((d) => {
+      const ret = d.querySelector('.voksen-dag-ret');
+      const rk = d.querySelector('.voksen-dag-knap').getBoundingClientRect();
       const k = ret.getBoundingClientRect();
-      const hoved = d.querySelector('.dag-hoved').getBoundingClientRect();
-      const knapper = d.querySelector('.dag-knapper').getBoundingClientRect();
-      // Det, teksten kan bruge: rækken minus dagens hoved til venstre og knapperne til højre, hvis de står ved siden af
+      const hoved = d.querySelector('.voksen-dag-hvornaar').getBoundingClientRect();
+      const knapper = d.querySelector('.voksen-dag-pil').getBoundingClientRect();
+      // Det, teksten kan bruge: rækken minus dagen til venstre og pilen til højre, hvis de står ved siden af
       const fra = hoved.bottom > k.top + 1 ? hoved.right : rk.left;
       const til = knapper.top < k.bottom - 1 ? knapper.left : rk.right;
       const delt = [];
@@ -123,18 +124,18 @@ async function raekkeUdenBillede(browser, H) {
           }
         }
       }
-      return { dag: d.dataset.dag, billede: Boolean(d.querySelector('.dag-billede')), bredde: Math.round(k.width), ledig: Math.round(til - fra), hoejde: Math.round(rk.height), delt, ude };
+      return { dag: d.dataset.dag, billede: Boolean(d.querySelector('.voksen-dag-billede')), bredde: Math.round(k.width), ledig: Math.round(til - fra), hoejde: Math.round(rk.height), delt, ude };
     }));
     for (const x of r.filter((y) => !y.billede)) {
       const hvor = n + ' ugeplanens række uden billede (dag ' + x.dag + ')';
       tjek(x.bredde >= 0.85 * x.ledig, hvor + ': teksten skal bruge rækkens bredde (' + x.bredde + ' af ' + x.ledig + ' px)');
       tjek(!x.delt.length, hvor + ': ord delt uden tegn: ' + x.delt.join(', '));
-      tjek(!x.ude.length, hvor + ': tekst uden for rækken eller ind over knapperne: ' + x.ude.join(', '));
+      tjek(!x.ude.length, hvor + ': tekst uden for rækken eller ind over pilen: ' + x.ude.join(', '));
     }
     tjek(r.filter((y) => !y.billede).length === 2, n + ': to rækker uden billede (' + JSON.stringify(r) + ')');
     tjek(r.filter((y) => y.billede).length === 1, n + ': rækken med billede står der stadig');
     maal.push(n + ' række uden billede: ' + r.map((x) => (x.billede ? 'med ' : 'uden ') + x.bredde + '/' + x.ledig + ' px, ' + x.hoejde + ' høj').join(' · '));
-    await side.evaluate(() => document.querySelector('.uge-dage').scrollIntoView({ block: 'start' }));
+    await side.evaluate(() => document.querySelector('.voksen-uge').scrollIntoView({ block: 'start' }));
     await foto(side, n + '-fund1-raekke');
     await ctx.close();
   }
@@ -307,17 +308,17 @@ async function venstrekant(browser, H) {
   await side.waitForSelector('.voksen-knap');
   await side.locator('.voksen-knap').scrollIntoViewIfNeeded(); // under folden på en lav skærm
   await hold(side, '.voksen-knap');
-  await side.waitForSelector('.voksen-menu');
+  await side.waitForSelector('.voksen-uge');
   // Indkøbslisten nås gennem linket (#/hent/<kode> gemmer listen og viser #/indkoeb)
   const liste = '#/hent/' + kod(planMandag(new Date()), [{ ret: 'koedsovs', n: 4 }, null, null, null, null, null, null]);
   const SIDER = [
-    ['#/voksen', '.voksen-menu', ['.voksen-hoved h1', '.voksen-menu']],
+    ['#/voksen', '.voksen-uge', ['.voksen-hoved h1', '.voksen-uge']],
+    ['#/voksen/mere', '.voksen-menu', ['.voksen-hoved h1', '.voksen-menu']],
     ['#/voksen/husstand', '.husstand', ['h1', '.husstand']],
     ['#/voksen/udvalg', '.voksen-liste', ['h1', '.voksen-liste']],
     ['#/voksen/favoritter', 'h1', ['h1']],
     ['#/voksen/katalog', '.voksen-liste', ['h1', '.voksen-liste']],
-    ['#/uge', '.uge-dage', ['h1', '.uge-dage']],
-    ['#/uge/dag/1', '.ret-valg', ['h1', '.ret-valg']],
+    ['#/voksen/dag/1', '.voksen-liste', ['h1', '.voksen-liste']],
     ['#/indkoeb', '.liste', ['h1'], liste],
     ['#/ret/koedsovs', '.start', ['.ret-hoved', '.handlinger > .knap']],
     ['#/ret/koedsovs/trin/2', '.scene', ['.scene', '.handlinger > .knap']],
@@ -365,7 +366,7 @@ const vedKant = (side) => side.evaluate(({ sel, s }) => {
 }, { sel: SKILLE, s: nuSkaerm });
 
 async function adskiller(browser, H) {
-  const { RETTER, tjek, foto, vent, maal } = H;
+  const { RETTER, tjek, foto, tryk, vent, maal } = H;
   const ids = Object.keys(RETTER);
   const plan = IPLAN(RETTER);
   const mandag = planMandag(new Date());
@@ -407,12 +408,18 @@ async function adskiller(browser, H) {
     tjek(!forkertSkaleret.length, n + ' med husstand: ' + forkertSkaleret.length + ' retter viser ikke den rigtige «Til N portioner», fx ' + forkertSkaleret.slice(0, 4).join(' | '));
     maal.push(n + ' med husstand: «Til N portioner» på ' + skaleres + ' af ' + ids.length + ' retter, ' + forkertSkaleret.length + ' forkerte');
     await side.evaluate(() => localStorage.removeItem('kog-familie-v1'));
-    await gaaForbi(side, H, '#/uge', '.uge-dage');
-    await side.waitForFunction((a) => document.querySelectorAll('.dag:not(.fri) .dag-meta').length === a, 7, { timeout: 20000 });
+    await gaaForbi(side, H, '#/voksen', '.voksen-uge');
+    await side.waitForFunction(() => document.querySelectorAll('.voksen-dag:not(.voksen-dag-tom):not(.voksen-dag-ukendt)').length === 7 && document.querySelector('.uge-sum'), null, { timeout: 20000 });
     await se('ugeplanen');
     await foto(side, n + '-fund7-uge');
-    await gaaForbi(side, H, '#/uge/dag/1', '.ret-valg');
-    await side.waitForFunction((a) => document.querySelectorAll('.ret-valg .dag-meta').length === a, plan.length, { timeout: 30000 });
+    // Metalinjen står i arket under dagen (v11): hver dag foldes ud for sig
+    for (let i = 0; i < 7; i++) {
+      await tryk(side, nuSkaerm + '[data-fokus="dag-' + i + '"]');
+      await side.waitForSelector(nuSkaerm + '#dag-ark-' + i + ' .dag-meta');
+      await se('ugeplanen, dag ' + i);
+    }
+    await gaaForbi(side, H, '#/voksen/dag/1', '.voksen-liste');
+    await side.waitForFunction((a) => document.querySelectorAll('.voksen-vaelg .voksen-liste .dag-meta').length === a, plan.length, { timeout: 30000 });
     await se('vælg ret');
     await side.evaluate((h) => { location.hash = h; }, '#/hent/' + kod(mandag, længst.map((ret) => ({ ret, n: 4 }))));
     await side.waitForFunction(() => location.hash === '#/indkoeb' && document.querySelector('.vare-maengde'), null, { timeout: 8000 });
@@ -428,7 +435,8 @@ async function adskiller(browser, H) {
 }
 
 // Observeren afmelder linjerne, når de er væk fra siden, også dem, der aldrig blev målt (code review 05-11-2026).
-// 50 tryk på en stepper på #/uge tegner oversigten 50 gange, og bagefter vises et trin uden linjer. Testen følger
+// 50 tryk på portionerne i arket under mandag på forsiden (#/voksen) tegner forsiden 50 gange, og bagefter vises et trin
+// uden linjer. Testen følger
 // ResizeObservers observe og unobserve
 async function afmeldes(browser, H, uge) {
   const { tjek, tryk, vent, maal } = H;
@@ -444,8 +452,10 @@ async function afmeldes(browser, H, uge) {
   });
   const { ctx, side } = await aabn(browser, H, 'se-land', { lager: { 'kog-uge-v1': uge }, foer: spor });
   await side.waitForSelector('.gruppe-knap');
-  await gaaForbi(side, H, '#/uge', '.uge-dage');
-  await side.waitForFunction((a) => document.querySelectorAll('.dag:not(.fri) .dag-meta').length === a, 7, { timeout: 20000 });
+  await gaaForbi(side, H, '#/voksen', '.voksen-uge');
+  await side.waitForFunction(() => document.querySelectorAll('.voksen-dag:not(.voksen-dag-tom):not(.voksen-dag-ukendt)').length === 7 && document.querySelector('.uge-sum'), null, { timeout: 20000 });
+  await tryk(side, nuSkaerm + '[data-fokus="dag-0"]');
+  await side.waitForSelector(nuSkaerm + '#dag-ark-0 .dag-meta');
   const status = async () => {
     await tegnet(side);
     await vent(100);
@@ -460,7 +470,7 @@ async function afmeldes(browser, H, uge) {
   const efterTryk = await status();
   await gaa(side, '#/ret/koedsovs/trin/1', '.scene', vent);
   const efterTrin = await status();
-  tjek(efterTryk.observe - foer.observe >= 50, 'se-land 50 tryk på steppers: oversigten skal tegnes igen hver gang (' + JSON.stringify([foer, efterTryk]) + ')');
+  tjek(efterTryk.observe - foer.observe >= 50, 'se-land 50 tryk på steppers: forsiden skal tegnes igen hver gang (' + JSON.stringify([foer, efterTryk]) + ')');
   tjek(efterTryk.vaek === 0, 'se-land 50 tryk på steppers: ' + efterTryk.vaek + ' linjer, der er væk fra siden, følges stadig ' + JSON.stringify(efterTryk));
   tjek(efterTrin.vaek === 0, 'se-land trin uden linjer: ' + efterTrin.vaek + ' linjer, der er væk fra siden, følges stadig ' + JSON.stringify(efterTrin));
   // En linje i en skjult beholder er 0 × 0. Fjernes den, ændrer størrelsen sig ikke, så observeren melder den ikke (de 50
@@ -547,7 +557,8 @@ async function gruppeKolonner(browser, H) {
 
 // ---------- 9. «Vælg ret» på lave skærme ----------
 // Tilbage og filtrene fyldte tre rækker: den første ret stod ved y=338 af 375, og «Vis alle retter» ved et tomt filter lå
-// under kanten. Kun kødsovs i index.json giver det tomme filter («Vegetar»)
+// under kanten. Kun kødsovs i index.json giver det tomme filter («Vegetar»). Fra v11 er det vælg-tilstanden
+// (#/voksen/dag/<n>), hvor filtrene er foldet sammen på en lav skærm, og vejen ud af et tomt filter er «Fjern filtrene»
 async function vaelgRet(browser, H) {
   const { tjek, foto, tryk, vent, maal } = H;
   const enRet = async (c) => {
@@ -557,10 +568,10 @@ async function vaelgRet(browser, H) {
     console.log('[' + n + '] fund 9: vælg ret');
     const a = await aabn(browser, H, n);
     await a.side.waitForSelector('.gruppe-knap');
-    await gaaForbi(a.side, H, '#/uge/dag/1', '.ret-valg');
+    await gaaForbi(a.side, H, '#/voksen/dag/1', '.voksen-raekke-billede');
     const f = await a.side.evaluate(() => {
-      const r = document.querySelector('.ret-valg-raekke').getBoundingClientRect();
-      return { H: innerHeight, raekke: Math.round(r.top), billede: Math.round(document.querySelector('.ret-valg-raekke .dag-billede').getBoundingClientRect().bottom) };
+      const r = document.querySelector('.voksen-vaelg .voksen-raekke').getBoundingClientRect();
+      return { H: innerHeight, raekke: Math.round(r.top), billede: Math.round(document.querySelector('.voksen-vaelg .voksen-raekke .voksen-raekke-billede').getBoundingClientRect().bottom) };
     });
     tjek(f.billede <= f.H, n + ' vælg ret: billedet i den første række skal kunne ses ' + JSON.stringify(f));
     maal.push(n + ' vælg ret: første ret ved y=' + f.raekke + ' af ' + f.H);
@@ -568,12 +579,13 @@ async function vaelgRet(browser, H) {
     await a.ctx.close();
     const b = await aabn(browser, H, n, { foer: enRet });
     await b.side.waitForSelector('.gruppe-knap');
-    await gaaForbi(b.side, H, '#/uge/dag/1', '.ret-valg');
-    await tryk(b.side, nuSkaerm + '.filtre .filter:has-text("Vegetar")'); // tryk venter, til appen tager imod tryk efter skiftet
-    await b.side.waitForSelector('[data-fokus="vis-alle"]');
-    const t = await b.side.evaluate(() => ({ H: innerHeight, bund: Math.round(document.querySelector('[data-fokus="vis-alle"]').getBoundingClientRect().bottom + 5) }));
-    tjek(t.bund <= t.H, n + ' tomt filter: «Vis alle retter» skal ses helt uden at rulle ' + JSON.stringify(t));
-    maal.push(n + ' tomt filter: «Vis alle retter» slutter ved y=' + t.bund + ' af ' + t.H);
+    await gaaForbi(b.side, H, '#/voksen/dag/1', '.voksen-raekke');
+    if (!await b.side.evaluate((s) => document.querySelector(s).open, nuSkaerm + '.voksen-filtre')) await tryk(b.side, nuSkaerm + '.voksen-filtre > summary');
+    await tryk(b.side, nuSkaerm + '[data-fokus="filter-vegetar"]'); // tryk venter, til appen tager imod tryk efter skiftet
+    await b.side.waitForSelector(nuSkaerm + '[data-fokus="fjern-filtre"]');
+    const t = await b.side.evaluate((s) => ({ H: innerHeight, bund: Math.round(document.querySelector(s).getBoundingClientRect().bottom + 5) }), nuSkaerm + '[data-fokus="fjern-filtre"]');
+    tjek(t.bund <= t.H, n + ' tomt filter: «Fjern filtrene» skal ses helt uden at rulle ' + JSON.stringify(t));
+    maal.push(n + ' tomt filter: «Fjern filtrene» slutter ved y=' + t.bund + ' af ' + t.H);
     await foto(b.side, n + '-fund9-tom');
     await b.ctx.close();
   }

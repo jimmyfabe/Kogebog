@@ -261,6 +261,47 @@ async function tjekLayout(side, hvor, { knapperSes = false } = {}) {
   tjek(!r.udenAlt.length, hvor + ': billeder uden alt: ' + r.udenAlt.join(', '));
 }
 
+// Intet ord alene på en linje i en knap (v11-briefen, 16-11): bryder en knaps tekst, skal hver linje have mindst to ord,
+// og et ord må ikke selv være delt over to linjer. Ord på samme linje er ord, hvis midte står højst en halv linjehøjde fra
+// linjens første ord (et tal i en pille med en anden skriftstørrelse står lidt højere). Hårde mellemrum (som i «Ny uge»)
+// tæller som mellemrum, så de to ord tælles hver for sig. sel: knapperne, der måles
+async function tjekKnapOrd(side, sel, hvor) {
+  const r = await side.evaluate((s) => {
+    const alene = [];
+    let antal = 0;
+    for (const k of document.querySelectorAll(s)) {
+      const kb = k.getBoundingClientRect();
+      if (!kb.width || !kb.height) continue;
+      antal++;
+      const ord = [];
+      const w = document.createTreeWalker(k, NodeFilter.SHOW_TEXT);
+      for (let t; (t = w.nextNode());) {
+        if (t.parentElement.closest('.sr-kun')) continue;
+        for (const m of t.data.matchAll(/\S+/g)) {
+          const r = document.createRange();
+          r.setStart(t, m.index);
+          r.setEnd(t, m.index + m[0].length);
+          const rects = [...r.getClientRects()].filter((x) => x.width > 0);
+          if (rects.length) ord.push({ ord: m[0], midt: (rects[0].top + rects[0].bottom) / 2, h: rects[0].height, delt: new Set(rects.map((x) => Math.round(x.top))).size > 1 });
+        }
+      }
+      ord.sort((a, b) => a.midt - b.midt);
+      const linjer = [];
+      for (const o of ord) {
+        const sidst = linjer.at(-1);
+        if (sidst && Math.abs(o.midt - sidst[0].midt) <= sidst[0].h / 2) sidst.push(o);
+        else linjer.push([o]);
+      }
+      const tekst = ord.map((o) => o.ord).join(' ');
+      if (ord.some((o) => o.delt)) alene.push('«' + tekst + '» (et ord er delt)');
+      else if (linjer.length > 1 && linjer.some((l) => l.length < 2)) alene.push('«' + tekst + '» (' + linjer.map((l) => l.map((o) => o.ord).join(' ')).join(' | ') + ')');
+    }
+    return { alene, antal };
+  }, sel);
+  tjek(r.antal > 0, hvor + ': ingen knapper at måle i ' + sel);
+  tjek(!r.alene.length, hvor + ': et ord står alene på en linje i en knap: ' + r.alene.join(', '));
+}
+
 // Verbum-billedet er firkantet i en rund ramme: enten ligger hele billedet inden for cirklen, eller rammen klipper det
 async function tjekVerbum(side, hvor) {
   const r = await side.evaluate(() => {
@@ -2284,7 +2325,7 @@ async function titlerHoejkant(browser) {
 
 // ---------- ⚡ på de lynhurtige retter, og navnene uden blød bindestreg (iPad) ----------
 // ⚡ (lynMaerke i app.js) står på kortet eller rækken for hver ret på højst LYN_MIN minutter, hvor retterne vælges:
-// forsiden, børnenes valg (#/uge/vaelg/<dyr>) og den voksnes valg til en dag (#/uge/dag/<n>). Skærmlæseren får teksten
+// forsiden, børnenes valg (#/uge/vaelg/<dyr>) og den voksnes valg til en dag (#/voksen/dag/<n>). Skærmlæseren får teksten
 // præcis én gang (.sr-kun), og printet nævner det ikke (code review 31-10). Det forventede regnes af appens erLynhurtig,
 // og wok-med-nudler (20 min) med og pandekager og kødsovs uden ⚡ holder testen ærlig, hvis retterne skifter.
 // Navnene, skærmlæseren siger (aria-label og alt), timer-pillens navn og printets titel har ingen blød bindestreg
@@ -2461,26 +2502,26 @@ async function lynOgNavne(browser) {
   tjek(tidBoern === 0, n + ' minuttal: børnenes valg har intet minuttal (' + tidBoern + ' .kort-tid)');
   maal.push(n + ' ⚡ børnenes valg: ' + boern.length + ' kort på ' + Math.ceil(boern.length / 4) + ' sider, ⚡ på ' + boern.filter((k) => k.lyn).map((k) => k.id).join(', '));
 
-  // 3. Den voksnes valg til mandag, på iPad og ved 800 px, hvor billedet er 72 px i en kolonne på 84 px (a65829f)
+  // 3. Den voksnes valg til mandag (vælg-tilstanden, v11), på iPad og ved 800 px, hvor billedet er 72 px
   for (const [b, h] of [[skaerm.viewport.width, skaerm.viewport.height], [800, 1000]]) {
     await side.setViewportSize({ width: b, height: h });
     await side.goto('about:blank');
-    await side.goto(BASE + '/index.html#/uge/dag/1');
-    // #/uge/dag/<n> ligger bag voksendelens lås (laasFor i js/voksen-del.js): et nyt dokument viser holdet først
+    await side.goto(BASE + '/index.html#/voksen/dag/1');
+    // #/voksen/dag/<n> ligger bag voksendelens lås (laasFor i js/voksen-del.js): et nyt dokument viser holdet først
     await side.waitForSelector('.voksen-vagt');
     await hold(side, '.voksen-vagt');
-    await side.waitForSelector('li.ret-valg-raekke[data-ret]');
+    await side.waitForSelector('.voksen-vaelg li.voksen-raekke[data-ret]');
     await side.waitForFunction(() => [...document.images].every((i) => i.complete));
-    const dag = await lynPaa(side, 'li.ret-valg-raekke[data-ret]');
+    const dag = await lynPaa(side, '.voksen-vaelg li.voksen-raekke[data-ret]');
     tjek(dag.length === IPLAN.length, n + ' ⚡ ' + b + ' px dagens valg: alle ' + IPLAN.length + ' retter (' + dag.length + ')');
     tjekLyn(dag, n + ' ⚡ ' + b + ' px dagens valg', 'koedsovs');
     const tidDag = await tidTal(side);
     tjek(tidDag === 0, n + ' minuttal: ' + b + ' px dagens valg har intet minuttal (' + tidDag + ' .kort-tid)');
     await samlBloede(side);
     const hj = await side.evaluate(() => {
-      const r = document.querySelector('li.ret-valg-raekke[data-ret="wok-med-nudler"]');
-      const l = r && r.querySelector('.lyn');
-      const i = r && r.querySelector('.dag-billede');
+      const r = document.querySelector('.voksen-vaelg li.voksen-raekke[data-ret="wok-med-nudler"]');
+      const l = r && r.querySelector('.voksen-raekke-ramme .lyn');
+      const i = r && r.querySelector('.voksen-raekke-billede');
       if (!l || !i) return null;
       const a = l.getBoundingClientRect();
       const c = i.getBoundingClientRect();
@@ -2489,7 +2530,7 @@ async function lynOgNavne(browser) {
     });
     tjek(hj && Math.abs(hj.hoejre) <= 1 && Math.abs(hj.bund) <= 1, n + ' ⚡ ' + b + ' px dagens valg: ⚡ sidder på billedets nederste højre hjørne ±1 px (' + JSON.stringify(hj) + ')');
     maal.push(n + ' ⚡ ' + b + ' px dagens valg: ⚡ i forhold til billedets hjørne ' + JSON.stringify(hj));
-    await side.locator('li.ret-valg-raekke[data-ret="wok-med-nudler"]').scrollIntoViewIfNeeded();
+    await side.locator('.voksen-vaelg li.voksen-raekke[data-ret="wok-med-nudler"]').scrollIntoViewIfNeeded();
     await foto(side, n + '-lyn-dag-' + b);
   }
   await side.setViewportSize(skaerm.viewport);
@@ -2550,11 +2591,11 @@ if (DELE.includes('titler')) KOERSEL.push(['rettens navn på højkant', (b) => t
 if (DELE.includes('lyn')) KOERSEL.push(['⚡ og navnene', (b) => lynOgNavne(b)]);
 // Ugeplanen står i sin egen fil (test/e2e-ugeplan.js) og får hjælperne herfra
 if (DELE.includes('ugeplan')) {
-  KOERSEL.push(['ugeplan', (b) => ugeplan(b, { BASE, UD, ROD, RETTER, SKAERME, nySide, tjek, tjekLayout, foto, tryk, hold, vent, venterPaa, h1, maal, forfalskninger, LYD_TEKSTER })]);
+  KOERSEL.push(['ugeplan', (b) => ugeplan(b, { BASE, UD, ROD, RETTER, SKAERME, nySide, tjek, tjekLayout, tjekKnapOrd, foto, tryk, hold, vent, venterPaa, h1, maal, forfalskninger, LYD_TEKSTER })]);
 }
 // Forældredelen (docs/foraeldredel.md) står i test/e2e-voksen.js og kører på de valgte skærme
 if (DELE.includes('voksen')) {
-  KOERSEL.push(['voksen', (b) => voksen(b, { BASE, UD, ROD, RETTER, SKAERME, VALGTE, nySide, tjek, tjekLayout, foto, tryk, hold, vent, venterPaa, h1, maal, forfalskninger, LYD_TEKSTER })]);
+  KOERSEL.push(['voksen', (b) => voksen(b, { BASE, UD, ROD, RETTER, SKAERME, VALGTE, nySide, tjek, tjekLayout, tjekKnapOrd, foto, tryk, hold, vent, venterPaa, h1, maal, forfalskninger, LYD_TEKSTER })]);
 }
 
 // De visuelle fund fra UI-gennemgangen 05-11 står i test/e2e-skaermfund.js. E2E_FUND=1,3 begrænser til nogle af dem

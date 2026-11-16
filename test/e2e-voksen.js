@@ -4,9 +4,10 @@
 // På hver skærm i E2E_SKAERME (390×844, 1180×820, 1280×800): 1. holdet på forsiden og vagten ved et dybt link,
 // 2. husstanden og portionerne i ugeplanen, 4. retten og printet ved 6 portioner, 3. ugens udvalg med «Fyld op med nye»
 // og børnenes valg på to sider, 6. hjertet på færdig-skærmen (❤️ i børnenes valg, favoritterne), 7. genindlæsning og
-// 9. knapperne (børn 64 px, voksne 48 px) og ingen vandret rulning. Én gang: 4b. printets strenge n (desktop),
+// 9. knapperne (børn 64 px, voksne 48 px) og ingen vandret rulning. v11: forsiden er ugeplanen, så 1b. boblerne og ugens
+// dage, en tom dag → vælg-tilstanden → dagen er udfyldt → indkøbslisten har rettens varer, også på hver skærm. Én gang: 4b. printets strenge n (desktop),
 // 5. «Send til telefon» og listen på telefonen, 8. data fra v3 (kun kog-uge-v1 og kog-liste-v1) indlæses uden tab og
-// 10. kog-familie-v1 fra en nyere udgave (oversigten står, siderne og hjertet er låst), 11. loftet på 12 portioner og
+// 10. kog-familie-v1 fra en nyere udgave (forsiden og «Mere» står, siderne og hjertet er låst), 11. loftet på 12 portioner og
 // 12. holdet først, når opskrifterne er hentet. 13. Kataloget og søgefeltet (også på udvalget og favoritterne) på hver
 // skærm: feltet tegnes ikke om, mens der skrives, «jul» giver juleretterne, grupperne, ingen træf, hjertet og «Med».
 // 14. «Mere grønt i maden» på iPad'en og telefonen: kontakten, retten, trinnet og printet (strengt groen=1), ugeplanens
@@ -92,15 +93,17 @@ function forventetLinjer(RETTER, id, faktor) {
   }));
 }
 
-// Ugeplanens skærme til den voksne (#/uge og #/uge/dag/<n>) ligger bag voksendelens lås (laasFor i js/voksen-del.js).
-// Står holdet der (låsen lukker på forsiden, en ret og børnenes valg), holdes det
+// Ugeplanen er voksendelens forside (#/voksen, v11). De gamle adresser #/uge og #/uge/dag/<n> sendes videre dertil og
+// ligger bag voksendelens lås (laasFor i js/voksen-del.js). Står holdet der (låsen lukker på forsiden, en ret og
+// børnenes valg), holdes det
 async function tilUgen(H, side, h) {
   await gaaTil(side, h);
   if (await side.locator('main .voksen-vagt').count()) await holdHer(H, side, '.voksen-vagt');
 }
 
 // Voksendelen på adressen #/voksen<del>: står holdet der (låsen lukker, når man går ud af #/voksen…), holdes det.
-const VOKSEN_SKAERM = { '': 'voksen-hub', '/husstand': 'voksen-husstand', '/udvalg': 'voksen-udvalg', '/favoritter': 'voksen-favoritter', '/katalog': 'voksen-katalog' };
+const VOKSEN_SKAERM = { '': 'voksen-forside', '/mere': 'voksen-mere-side', '/husstand': 'voksen-husstand', '/udvalg': 'voksen-udvalg',
+  '/favoritter': 'voksen-favoritter', '/katalog': 'voksen-katalog' };
 async function aabnVoksen(H, side, del, hvor) {
   const til = '#/voksen' + del;
   await gaaTil(side, til);
@@ -115,8 +118,42 @@ const mindsteSide = (side, sel) => side.evaluate((s) => {
   return b ? Math.round(Math.min(b.width, b.height)) : 0;
 }, sel);
 
+// Voksendelens forside (v11): boblerne Indkøbsliste · Retter · Mere øverst, mindst 48 px høje og uden et ord alene på en
+// linje, og ugens syv dage under dem, lige brede, mindst 48 px høje og med ugedagen i samme kolonne. På telefonen (højst
+// 700 px) står Indkøbsliste alene på den første linje og Retter og Mere ved siden af hinanden, ellers alle tre på én linje
+async function tjekForside(H, side, hvor) {
+  const f = await side.evaluate(() => {
+    const r = (e) => e.getBoundingClientRect();
+    return {
+      bobler: [...document.querySelectorAll('.voksen-bobler .knap')].map((b) => ({ fokus: b.dataset.fokus, top: Math.round(r(b).top), h: Math.round(r(b).height), w: Math.round(r(b).width) })),
+      raekke: Math.round(r(document.querySelector('.voksen-bobler')).width),
+      dage: [...document.querySelectorAll('.voksen-uge > .voksen-dag')].map((d) => ({ w: Math.round(r(d).width),
+        h: Math.round(r(d.querySelector('.voksen-dag-knap')).height), ugedag: Math.round(r(d.querySelector('.voksen-dag-ugedag')).left) })),
+      W: innerWidth,
+    };
+  });
+  const b = f.bobler;
+  H.tjek(b.map((x) => x.fokus).join() === 'indkoeb,katalog,mere' && b.every((x) => x.h >= 48),
+    hvor + ': boblerne Indkøbsliste, Retter og Mere er mindst 48 px høje (' + JSON.stringify(b) + ')');
+  const telefon = f.W <= 700;
+  const ok = b.length === 3 && (telefon ? b[1].top === b[2].top && b[0].top < b[1].top && Math.abs(b[0].w - f.raekke) <= 1 : b.every((x) => x.top === b[0].top));
+  H.tjek(ok, hvor + ': ' + (telefon ? 'Indkøbsliste står alene øverst, Retter og Mere ved siden af hinanden' : 'de tre bobler står på én linje')
+    + ' (' + JSON.stringify(b) + ', rækken ' + f.raekke + ' px)');
+  H.tjek(f.dage.length === 7 && f.dage.every((d) => Math.abs(d.w - f.dage[0].w) <= 1 && d.h >= 48 && d.ugedag === f.dage[0].ugedag),
+    hvor + ': ugens syv dage er lige brede, mindst 48 px høje og har ugedagen i samme kolonne (' + JSON.stringify(f.dage) + ')');
+  await H.tjekLayout(side, hvor);
+  await H.tjekKnapOrd(side, '.voksen-bobler .knap, .voksen-dag-vaelg, .voksen-boern, .voksen-bund .knap', hvor);
+}
+
+// Indkøbslisten, som den står på skærmen (uden «Har vi»): varernes id og mængde, i listens rækkefølge
+const listeVist = (side) => side.evaluate(() => [...document.querySelectorAll('.liste-krop .afd:not(.har-vi-afd) li[data-vare]')]
+  .map((li) => [li.dataset.vare, (li.querySelector('.vare-maengde')?.textContent || '').replace(/\s+/g, ' ')]));
+// Det, listen skal vise for dagene: grupper(saml(...)) uden basisvarerne, som telefonen viser dem
+const listeForventet = (RETTER, dage) => grupper(saml(dage.filter(Boolean).map((d) => ({ ret: RETTER[d.ret], n: d.n }))))
+  .filter((g) => g.afd !== 'basis').flatMap((g) => g.varer.map((v) => [v.id, (v.maengde || '').replace(/\s+/g, ' ')]));
+
 async function forloeb(browser, H, skaerm) {
-  const { BASE, RETTER, nySide, tjek, tjekLayout, foto, tryk, vent, venterPaa, h1 } = H;
+  const { BASE, RETTER, nySide, tjek, tjekLayout, tjekKnapOrd, foto, tryk, vent, venterPaa, h1 } = H;
   const hold = (s, sel, ms) => holdHer(H, s, sel, ms);
   const n = skaerm.navn;
   const bred = n !== 'iphone';
@@ -142,17 +179,21 @@ async function forloeb(browser, H, skaerm) {
   await hold(side, '.voksen-vagt');
   await venterPaa(side, () => location.hash === '#/voksen/udvalg' && document.querySelector('.voksen-udvalg'), null, n + ': holdet skal åbne udvalget');
 
-  // … og forsiden: et kort tryk bliver der, et hold åbner oversigten, og «Luk» lukker igen
+  // … og forsiden: et kort tryk bliver der, et hold åbner voksendelens forside (ugeplanen), og «Luk» lukker igen
   await gaaTil(side, '#/');
   await side.waitForSelector('.voksen-knap');
   tjek(await tekstAf(side, '.voksen-knap') === 'Voksne: hold', n + ': forsidens knap hedder «Voksne: hold» (' + await tekstAf(side, '.voksen-knap') + ')');
   await tryk(side, '.voksen-knap');
   tjek(await hash(side) === '#/' && await side.locator('.voksen-knap.mind').count() === 1, n + ': et kort tryk på «Voksne» bliver på forsiden og viser, at knappen skal holdes');
   await hold(side, '.voksen-knap');
-  await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('.voksen-menu'), null, n + ': holdet på «Voksne» skal åbne voksendelen');
-  tjek(await h1(side) === 'Voksne', n + ': voksendelens overskrift (' + await h1(side) + ')');
-  await tjekLayout(side, n + ' voksendelen');
-  await foto(side, n + '-voksen-oversigt');
+  await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('main.voksen-forside .voksen-uge'), null, n + ': holdet på «Voksne» skal åbne voksendelens forside med ugeplanen');
+  tjek(await h1(side) === 'Ugeplan', n + ': voksendelens overskrift (' + await h1(side) + ')');
+  const dagNu = await side.evaluate(() => [...document.querySelectorAll('.voksen-uge > .voksen-dag')].map((d) => (d.classList.contains('voksen-dag-tom')
+    ? (d.querySelector('.voksen-dag-vaelg')?.textContent || '').trim() : d.dataset.ret + ': ' + (d.querySelector('.voksen-dag-under')?.textContent || '').replace(/\s+/g, ' '))));
+  tjek(JSON.stringify(dagNu) === JSON.stringify([mandag.ret + ': 3 portioner', ...Array(6).fill('Vælg ret')]),
+    n + ': forsiden viser mandagens ret med 3 portioner og «+ Vælg ret» på de seks tomme dage (' + JSON.stringify(dagNu) + ')');
+  await tjekForside(H, side, n + ' voksendelens forside');
+  await foto(side, n + '-voksen-forside');
   await tryk(side, '[data-fokus="luk"]');
   await venterPaa(side, () => location.hash === '#/' && document.querySelector('.voksen-knap'), null, n + ': «Luk» skal gå til forsiden');
   await gaaTil(side, '#/voksen');
@@ -178,15 +219,48 @@ async function forloeb(browser, H, skaerm) {
   await tryk(side, '[data-fokus="gem"]');
   p = await laesLager(side, UGE);
   tjek(p && p.n === 6 && JSON.stringify(p.dage[0]) === JSON.stringify(mandag), n + ': 6 voksne giver ugeplanen 6 portioner, og mandag er uændret (' + JSON.stringify(p) + ')');
-  // Fra voksendelen til ugeplanen uden et nyt hold: låsen dækker begge (fase 1 c)
-  await gaaTil(side, '#/uge/dag/2');
-  await venterPaa(side, () => location.hash === '#/uge/dag/2' && document.querySelector('.ret-valg'), null, n + ': valget til tirsdag');
-  tjek(await side.locator('.voksen-vagt').count() === 0, n + ': fra husstanden til «Vælg ret til tirsdag» uden et nyt hold');
+  // 1b. Forsiden viser ugen → tryk på den tomme tirsdag → vælg ret → tirsdag er udfyldt → indkøbslisten har rettens
+  //     varer (v11). Fra husstanden til forsiden og vælg-tilstanden uden et nyt hold: låsen dækker hele voksendelen
+  await gaaTil(side, '#/voksen');
+  await venterPaa(side, () => document.querySelector('main.voksen-forside .voksen-uge, .voksen-vagt'), null, n + ': forsiden efter husstanden');
+  tjek(await side.locator('.voksen-vagt').count() === 0, n + ': fra husstanden til forsiden uden et nyt hold');
+  tjek(await side.locator('.voksen-dag[data-dag="1"].voksen-dag-tom').count() === 1, n + ': tirsdag er tom');
+  await tryk(side, '[data-fokus="dag-1"]');
+  await venterPaa(side, () => location.hash === '#/voksen/dag/2' && document.querySelector('main.voksen-vaelg .voksen-raekke'), null, n + ': den tomme tirsdag åbner vælg-tilstanden');
+  const vaelgHoved = await h1(side) + ' · ' + await tekstAf(side, '.voksen-undertitel');
+  tjek(/^Vælg ret til tirsdag · Tirsdag \d{1,2}\/\d{1,2} · 6 portioner$/.test(vaelgHoved),
+    n + ': vælg-tilstandens overskrift og dagen med husstandens 6 portioner (' + vaelgHoved + ')');
+  tjek(await side.locator('main .knap[aria-label="Tilbage til voksendelen"]').count() === 1, n + ': vælg-tilstanden har «Tilbage»');
+  const vaelgRetter = await raekker(side);
+  tjek(vaelgRetter.length === IPLAN.length && IPLAN.every((id) => vaelgRetter.includes(id)),
+    n + ': vælg-tilstanden viser alle ' + IPLAN.length + ' retter i ugeplanen (' + vaelgRetter.length + ')');
+  await tjekLayout(side, n + ' vælg ret til tirsdag');
+  await tjekKnapOrd(side, '.voksen-vaelg .vaelg-ret, .voksen-vaelg .voksen-knapper .knap', n + ' vælg ret til tirsdag');
+  await foto(side, n + '-voksen-vaelg');
   await tryk(side, 'li[data-ret="' + RET + '"] .vaelg-ret');
-  await venterPaa(side, () => location.hash === '#/uge' && document.querySelector('.uge-dage'), null, n + ': «Vælg» skal gå til oversigten');
+  await venterPaa(side, (id) => location.hash === '#/voksen' && document.querySelector('.voksen-dag[data-dag="1"][data-ret="' + id + '"]'), RET, n + ': «Vælg» går til forsiden med tirsdag udfyldt');
   p = await laesLager(side, UGE);
   tjek(p && JSON.stringify(p.dage[1]) === JSON.stringify({ ret: RET, af: 'bo', n: 6 }) && p.dage[0].n === 3,
     n + ': en ny dag får husstandens 6 portioner, mandag har stadig 3 (' + JSON.stringify(p && p.dage.slice(0, 2)) + ')');
+  const tirsdag = await side.evaluate(() => ({
+    navn: document.querySelector('.voksen-dag[data-dag="1"] .voksen-dag-ret-navn')?.textContent || '',
+    under: (document.querySelector('.voksen-dag[data-dag="1"] .voksen-dag-under')?.textContent || '').replace(/\s+/g, ' '),
+    billede: Boolean(document.querySelector('.voksen-dag[data-dag="1"] img.voksen-dag-billede')),
+    fokus: document.activeElement?.dataset.fokus || '',
+  }));
+  tjek(tirsdag.navn === RETTER[RET].name && tirsdag.under === '6 portioner' && tirsdag.billede && tirsdag.fokus === 'dag-1',
+    n + ': tirsdag viser billedet, navnet og 6 portioner, og fokus står på dagen (' + JSON.stringify(tirsdag) + ')');
+  const ventetListe = listeForventet(RETTER, p.dage);
+  tjek(await tekstAf(side, '.voksen-boble-tal') === ventetListe.length + ' varer', n + ': «Indkøbsliste» har tallet ' + ventetListe.length + ' varer (' + await tekstAf(side, '.voksen-boble-tal') + ')');
+  await tjekForside(H, side, n + ' forsiden med tirsdag');
+  await foto(side, n + '-voksen-forside-tirsdag');
+  await tryk(side, '[data-fokus="indkoeb"]');
+  await venterPaa(side, () => location.hash === '#/indkoeb' && document.querySelector('.liste-tal'), null, n + ': «Indkøbsliste» åbner listen til ugens plan');
+  const liste = await listeVist(side);
+  const retVarer = listeForventet(RETTER, [{ ret: RET, n: 6 }]).map(([id]) => id);
+  tjek(ens(liste, ventetListe) && retVarer.length > 0 && retVarer.every((id) => liste.some(([v]) => v === id)),
+    n + ': indkøbslisten har mandagens og tirsdagens varer, også de ' + retVarer.length + ' fra ' + RET + ' (' + JSON.stringify(liste.slice(0, 4)) + ')');
+  await tjekLayout(side, n + ' indkøbslisten fra forsiden');
 
   // 4a. Dagens n før husstandens: mandagens ret står til mandagens 3 portioner, selvom husstanden er 6
   const mandagFaktor = faktorFor(lavModel(RETTER[IPLAN[0]]), 3);
@@ -367,11 +441,11 @@ async function forloeb(browser, H, skaerm) {
   await hold(side, '.voksen-vagt');
   await venterPaa(side, () => document.querySelector('.voksen-udvalg'), null, n + ': udvalget efter genindlæsning');
   tjek(await tekstAf(side, '.udvalg-tal') === '12 af 24 valgt', n + ': udvalget efter genindlæsning (' + await tekstAf(side, '.udvalg-tal') + ')');
-  await aabnVoksen(H, side, '', n + ' oversigten efter genindlæsning');
+  await aabnVoksen(H, side, '/mere', n + ' «Mere» efter genindlæsning');
   const status = await side.evaluate(() => Object.fromEntries([...document.querySelectorAll('[data-fokus]')]
     .map((b) => [b.dataset.fokus, (b.querySelector('.voksen-punkt-status')?.textContent || '').replace(/\s+/g, ' ')])));
   tjek(status.husstand === '6 voksne = 6 portioner' && status.udvalg === '12 retter at vælge mellem' && status.favoritter === '1 ret',
-    n + ': oversigten efter genindlæsning (' + JSON.stringify(status) + ')');
+    n + ': «Mere» efter genindlæsning (' + JSON.stringify(status) + ')');
   tjek(JSON.stringify(await raatLager(side)) === JSON.stringify(foer), n + ': genindlæsningen ændrer intet i lageret');
   await gaaTil(side, '#/ret/' + RET);
   await venterPaa(side, () => document.querySelector('.ret h1'), null, n + ': retten efter genindlæsning');
@@ -437,7 +511,7 @@ async function skrivTegnForTegn(H, side, sel, tekst, hvor, forventet) {
 }
 
 async function katalog(browser, H, skaerm) {
-  const { BASE, RETTER, ROD, nySide, tjek, tjekLayout, foto, tryk, vent, venterPaa, h1 } = H;
+  const { BASE, RETTER, ROD, nySide, tjek, tjekLayout, tjekKnapOrd, foto, tryk, vent, venterPaa, h1 } = H;
   const n = skaerm.navn;
   // Smal eller lav skærm (KOMPAKT i js/voksen-del.js): filtrene starter foldet sammen og foldes sammen efter et valg.
   // Det gælder alle tre skærme i testen (iPad og desktop er lavere end 900 px)
@@ -460,27 +534,26 @@ async function katalog(browser, H, skaerm) {
   await side.goto(BASE + '/index.html');
   await side.waitForSelector('.gruppe-knap');
 
-  // Oversigten i den rækkefølge, den voksne bruger den: Ugeplan · Indkøbsliste · Retter, og under «Mere» husstand, udvalg og
-  // favoritter (fase 1 d). «Retter» siger, hvor mange retter der kan søges i og printes
-  await aabnVoksen(H, side, '', n + ' katalog: oversigten');
+  // Forsiden (v11): boblerne Indkøbsliste · Retter · Mere. «Mere» har ugeplanens handlinger og familien: husstand, udvalg
+  // og favoritter, lige høje, og kontakten «Mere grønt i maden» er som dem (review F5, 15-11)
+  await aabnVoksen(H, side, '', n + ' katalog: forsiden');
+  await tryk(side, '[data-fokus="mere"]');
+  await venterPaa(side, () => location.hash === '#/voksen/mere' && document.querySelector('main.voksen-mere-side'), null, n + ': «Mere» åbner ugeplanens handlinger og familien');
   const menu = await side.evaluate(() => ({
-    punkter: [...document.querySelectorAll('.voksen-punkt')].map((b) => b.dataset.fokus),
+    afsnit: [...document.querySelectorAll('main .voksen-afsnit')].map((h) => h.textContent),
     mere: [...document.querySelectorAll('.voksen-mere .voksen-punkt')].map((b) => b.dataset.fokus),
-    afsnit: document.querySelector('nav .voksen-afsnit')?.textContent || '',
-    hoejder: [...document.querySelectorAll('.voksen-punkt')].map((b) => Math.round(b.getBoundingClientRect().height)),
+    hoejder: [...document.querySelectorAll('.voksen-mere .voksen-punkt')].map((b) => Math.round(b.getBoundingClientRect().height)),
     kontakt: Math.round(document.querySelector('.voksen-kontakt')?.getBoundingClientRect().height || 0),
   }));
-  const status = await tekstAf(side, '[data-fokus="katalog"] .voksen-punkt-status');
-  tjek(menu.punkter.join() === 'ugeplan,indkoeb,katalog,husstand,udvalg,favoritter' && menu.mere.join() === 'husstand,udvalg,favoritter' && menu.afsnit === 'Mere'
-    && status === 'Søg og print i alle ' + retter(ALLE.length), n + ': oversigten er Ugeplan, Indkøbsliste, Retter og under «Mere» husstand, udvalg og favoritter (' + JSON.stringify(menu) + ' · ' + status + ')');
-  tjek(menu.hoejder.every((h) => h >= 48), n + ': punkterne på oversigten er mindst 48 px høje (' + menu.hoejder.join(', ') + ')');
-  // Review F5 (15-11): de tre øverst er højere end «Mere», kortene i «Mere» er lige høje, og kontakten «Mere grønt» er som dem
-  const oeverst = menu.hoejder.slice(0, 3);
-  const mereH = menu.hoejder.slice(3);
-  tjek(Math.min(...oeverst) > Math.max(...mereH) && Math.max(...mereH) - Math.min(...mereH) <= 1 && Math.abs(menu.kontakt - Math.max(...mereH)) <= 2,
-    n + ': de tre øverst er højest, «Mere» og kontakten lige høje (' + menu.hoejder.join(', ') + ' · kontakt ' + menu.kontakt + ')');
-  await tjekLayout(side, n + ' oversigten');
-  await foto(side, n + '-voksen-oversigt');
+  tjek(await h1(side) === 'Mere' && menu.afsnit.join() === 'Ugeplanen,Familien' && menu.mere.join() === 'husstand,udvalg,favoritter',
+    n + ': «Mere» har afsnittene Ugeplanen og Familien med husstand, udvalg og favoritter (' + JSON.stringify(menu) + ')');
+  tjek(menu.hoejder.every((h) => h >= 48) && Math.max(...menu.hoejder) - Math.min(...menu.hoejder) <= 1 && Math.abs(menu.kontakt - Math.max(...menu.hoejder)) <= 2,
+    n + ': kortene under «Mere» er mindst 48 px og lige høje, og kontakten er som dem (' + menu.hoejder.join(', ') + ' · kontakt ' + menu.kontakt + ')');
+  await tjekLayout(side, n + ' «Mere»');
+  await tjekKnapOrd(side, '.voksen-mere-side .voksen-knapper .knap, .voksen-mere-side .boern-vaelger', n + ' «Mere»');
+  await foto(side, n + '-voksen-mere', { fullPage: true });
+  await tryk(side, 'main .knap[aria-label="Tilbage til voksendelen"]');
+  await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('main.voksen-forside'), null, n + ': «Tilbage» fra «Mere» går til forsiden');
   await tryk(side, '[data-fokus="katalog"]');
   await venterPaa(side, () => location.hash === '#/voksen/katalog' && document.querySelector('main.voksen-katalog'), null, n + ': «Retter» åbner kataloget');
   tjek(await h1(side) === 'Retter', n + ': katalogets overskrift (' + await h1(side) + ')');
@@ -640,14 +713,14 @@ async function katalog(browser, H, skaerm) {
     n + ': overskriften siger «Ugens udvalg: 1 af 24», og søgningen står der stadig (' + await tekstAf(side, '.voksen-undertitel') + ')');
 
   // Grænsen: med 24 retter i udvalget er «Med» aria-disabled, og et tryk siger det i rækken, som på udvalgssiden. Søgningen
-  // og gruppen huskes, når man går til oversigten og tilbage (låsen er ikke lukket)
+  // og gruppen huskes, når man går til forsiden og tilbage (låsen er ikke lukket)
   const anden = kyllingUge[1];
   const fyldte = UGEPLAN.map((p) => p.id).filter((id) => id !== anden).slice(0, 24);
   await saetLager(side, FAMILIE, { ...f, udvalg: { ids: fyldte, rettet: f.udvalg.rettet } });
   await tryk(side, 'main .knap[aria-label="Tilbage til voksendelen"]');
-  await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('main.voksen-hub'), null, n + ': «Tilbage» fra kataloget går til oversigten');
+  await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('main.voksen-forside'), null, n + ': «Tilbage» fra kataloget går til forsiden');
   await tryk(side, '[data-fokus="katalog"]');
-  await venterPaa(side, () => document.querySelector('main.voksen-katalog'), null, n + ': kataloget igen fra oversigten');
+  await venterPaa(side, () => document.querySelector('main.voksen-katalog'), null, n + ': kataloget igen fra forsiden');
   const husket = await side.evaluate(() => ({ soegning: document.getElementById('soeg-katalog').value, gruppe: document.querySelector('[data-fokus="gruppe-aftensmad"]').getAttribute('aria-pressed') }));
   tjek(husket.soegning === 'kylling' && husket.gruppe === 'true', n + ': søgningen og gruppen huskes mellem voksendelens sider (' + JSON.stringify(husket) + ')');
   tjek(await side.locator('[data-fokus="ret-' + anden + '"]').getAttribute('aria-disabled') === 'true', n + ': «Med» er aria-disabled, når udvalget er fuldt');
@@ -724,7 +797,7 @@ async function katalog(browser, H, skaerm) {
   }
 
   // «Luk» glemmer søgningen
-  await aabnVoksen(H, side, '', n + ' oversigten før «Luk»');
+  await aabnVoksen(H, side, '', n + ' forsiden før «Luk»');
   await tryk(side, '[data-fokus="luk"]');
   await venterPaa(side, () => location.hash === '#/' && document.querySelector('.voksen-knap'), null, n + ': «Luk» går til forsiden');
   await aabnVoksen(H, side, '/udvalg', n + ' udvalget efter «Luk»');
@@ -797,30 +870,28 @@ async function telefon(browser, H) {
   await side.waitForSelector('.gruppe-knap');
   await saetLager(side, FAMILIE, { v: 1, voksne: 6, boern: 0, barnAndel: 0.7, udvalg: null, favoritter: [], lavet: {} });
   await saetLager(side, UGE, { v: 1, uge, dage, n: 6, prBarn: 1, rettet: null });
-  // Ugeplanen ligger bag låsen (fase 1 c): fra forsiden kommer holdet først, og efter det står «Voksne» i topbaren og
-  // husstanden i hovedet. Begge fører til voksendelen uden et nyt hold
+  // Ugeplanen er voksendelens forside (v11) og ligger bag låsen: den gamle adresse #/uge fra forsiden sendes videre til
+  // #/voksen, og holdet kommer først. «Send til telefon» og husstanden står under «Mere», uden et nyt hold
   await gaaTil(side, '#/uge');
   await venterPaa(side, () => document.querySelector('.voksen-vagt'), null, 'ipad: #/uge fra forsiden viser holdet');
-  tjek(await H.h1(side) === 'Til de voksne' && await side.locator('.uge-dage').count() === 0, 'ipad: ugeplanen er låst, til holdet er holdt');
+  tjek(await H.h1(side) === 'Til de voksne' && await side.locator('.voksen-uge').count() === 0 && await hash(side) === '#/voksen',
+    'ipad: ugeplanen er låst, til holdet er holdt, og adressen er skiftet til #/voksen (' + await hash(side) + ')');
   await holdHer(H, side, '.voksen-vagt');
-  await venterPaa(side, () => location.hash === '#/uge' && document.querySelector('.uge-dage'), null, 'ipad: ugeplanen efter holdet');
-  const hoved = await side.evaluate(() => ({
-    voksne: document.querySelector('.topbar .topbar-tilbage')?.textContent.trim() || '',
-    husstand: (document.querySelector('.knap.uge-husstand')?.textContent || '').replace(/\s+/g, ' ').trim(),
-    hoejde: Math.round(document.querySelector('.knap.uge-husstand')?.getBoundingClientRect().height || 0),
-  }));
-  tjek(hoved.voksne === 'Voksne' && hoved.husstand === '6 voksne = 6 portioner' && hoved.hoejde >= 48,
-    'ipad: «Voksne» i topbaren og husstanden (mindst 48 px) i ugeplanens hoved (' + JSON.stringify(hoved) + ')');
-  await H.tjekLayout(side, 'ipad ugeplanen bag låsen');
+  await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('main.voksen-forside .voksen-uge'), null, 'ipad: forsiden med ugeplanen efter holdet');
+  await tryk(side, '[data-fokus="mere"]');
+  await venterPaa(side, () => location.hash === '#/voksen/mere' && document.querySelector('main.voksen-mere-side'), null, 'ipad: «Mere» uden et nyt hold');
+  const husstand = await tekstAf(side, '[data-fokus="husstand"] .voksen-punkt-status');
+  tjek(husstand === '6 voksne = 6 portioner', 'ipad: husstanden under «Mere» (' + husstand + ')');
+  await H.tjekLayout(side, 'ipad «Mere» bag låsen');
   await H.foto(side, 'ipad-uge-laas-aaben');
   await tryk(side, 'button:has-text("Send til telefon")');
   await venterPaa(side, () => window.__delt.length === 1, null, 'ipad: «Send til telefon» skal åbne delearket');
   const delt = await side.evaluate(() => window.__delt[0] || {});
   const kode = kod(uge, dage.map((d) => (d ? { ret: d.ret, n: d.n } : null)));
   tjek(kode.startsWith('v1.') && delt.url === BASE + '/index.html#/hent/' + kode, 'ipad: linket er det samme v1-link med dagenes portioner (' + delt.url + ')');
-  // «Voksne» går til voksendelens oversigt uden et nyt hold, og forsiden lukker låsen igen
-  await tryk(side, '.topbar .topbar-tilbage');
-  await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('main.voksen-hub'), null, 'ipad: «Voksne» åbner oversigten uden holdet');
+  // «Tilbage» går til voksendelens forside uden et nyt hold, og børnenes forside lukker låsen igen
+  await tryk(side, 'main .knap[aria-label="Tilbage til voksendelen"]');
+  await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('main.voksen-forside'), null, 'ipad: «Tilbage» åbner forsiden uden holdet');
   await gaaTil(side, '#/');
   await gaaTil(side, '#/uge');
   await venterPaa(side, () => document.querySelector('.voksen-vagt'), null, 'ipad: efter forsiden er ugeplanen låst igen');
@@ -862,8 +933,8 @@ async function migrering(browser, H) {
   await side.reload();
   await side.waitForSelector('.gruppe-knap');
   await tilUgen(H, side, '#/uge');
-  await venterPaa(side, () => document.querySelector('.uge-dage'), null, n + ': ugeplanen fra v3');
-  tjek(await side.locator('.uge-dage > .dag:not(.fri)').count() === 2, n + ': ugeplanen fra v3 har sine 2 retter');
+  await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('.voksen-uge'), null, n + ': ugeplanen fra v3 (#/uge sendes til #/voksen)');
+  tjek(await side.locator('.voksen-uge > .voksen-dag:not(.voksen-dag-tom)').count() === 2, n + ': ugeplanen fra v3 har sine 2 retter');
   await gaaTil(side, '#/indkoeb');
   await venterPaa(side, () => document.querySelector('.liste-tal'), null, n + ': indkøbslisten fra v3');
   tjek(await side.locator('li.koebt[data-vare="' + varer[0].id + '"]').count() === 1, n + ': listen fra v3 har stadig den købte vare');
@@ -871,7 +942,7 @@ async function migrering(browser, H) {
   await gaaTil(side, '#/uge/vaelg/rosa');
   await venterPaa(side, () => location.hash === '#/uge/vaelg/rosa' && document.querySelector('.ret-gitter'), null, n + ': børnenes valg med data fra v3');
   tjek(await side.locator('.maerke-ny').count() === 0, n + ': uden noget lavet har ingen ret ✨ i børnenes valg');
-  await aabnVoksen(H, side, '', n + ' voksendelen med data fra v3');
+  await aabnVoksen(H, side, '/mere', n + ' «Mere» med data fra v3');
   const status = await side.evaluate(() => (document.querySelector('[data-fokus="husstand"] .voksen-punkt-status')?.textContent || '').replace(/\s+/g, ' '));
   tjek(status === 'Ikke sat. Nye retter er til 4 portioner', n + ': uden kog-familie-v1 er husstanden ikke sat (' + status + ')');
   await gaaTil(side, '#/ret/' + RET);
@@ -896,8 +967,8 @@ async function migrering(browser, H) {
   await ctx.close();
 }
 
-// 10. En nyere udgave har gemt kog-familie-v1: oversigten står stadig med vejen til ugeplanen, men husstand, udvalg og
-// favoritter kan ikke åbnes, og færdig-skærmen siger, hvorfor hjertet ikke kunne gemmes. Familien røres ikke
+// 10. En nyere udgave har gemt kog-familie-v1: forsiden (ugeplanen), vælg-tilstanden og «Mere» står stadig, men husstand,
+// udvalg og favoritter kan ikke åbnes, og færdig-skærmen siger, hvorfor hjertet ikke kunne gemmes. Familien røres ikke
 async function nyereFamilie(browser, H) {
   const { BASE, SKAERME, nySide, tjek, tryk, venterPaa } = H;
   const n = SKAERME[0].navn;
@@ -910,27 +981,28 @@ async function nyereFamilie(browser, H) {
   await saetLager(side, FAMILIE, nyere);
   await side.reload();
   await side.waitForSelector('.gruppe-knap');
-  await aabnVoksen(H, side, '', n + ' voksendelen med en nyere familie');
+  await aabnVoksen(H, side, '/mere', n + ' «Mere» med en nyere familie');
   const punkter = await side.evaluate(() => Object.fromEntries([...document.querySelectorAll('.voksen-punkt')]
     .map((b) => [b.dataset.fokus, (b.disabled ? 'låst: ' : '') + (b.querySelector('.voksen-punkt-status')?.textContent || '').replace(/\s+/g, ' ')])));
-  tjek(['husstand', 'udvalg', 'favoritter'].every((k) => punkter[k] === 'låst: Lavet med en nyere udgave') && !/låst/.test(punkter.ugeplan + punkter.indkoeb),
-    n + ': husstand, udvalg og favoritter er låst, ugeplanen og listen ikke (' + JSON.stringify(punkter) + ')');
+  const boernKnap = await side.evaluate(() => { const b = document.querySelector('.boern-vaelger'); return b ? !b.disabled : null; });
+  tjek(['husstand', 'udvalg', 'favoritter'].every((k) => punkter[k] === 'låst: Lavet med en nyere udgave') && Object.keys(punkter).length === 3 && boernKnap === true,
+    n + ': husstand, udvalg og favoritter er låst, ugeplanens handlinger ikke (' + JSON.stringify(punkter) + ', børnene vælger: ' + boernKnap + ')');
   const groen = await side.evaluate(() => {
     const b = document.querySelector('[data-fokus="groent"]');
     return b ? (b.disabled ? 'låst: ' : '') + (document.getElementById('groent-status')?.textContent || '') : null;
   });
   tjek(groen === 'låst: Lavet med en nyere udgave', n + ': «Mere grønt i maden» er låst med en nyere familie (' + groen + ')');
-  await tryk(side, '[data-fokus="ugeplan"]');
-  await venterPaa(side, () => location.hash === '#/uge' && document.querySelector('.uge-dage'), null, n + ': ugeplanen kan nås fra oversigten');
-  // Husstanden i ugeplanens hoved er tekst uden knap, når familien er fra en nyere udgave
-  const husstand = await side.evaluate(() => ({ knap: document.querySelectorAll('button.uge-husstand').length, tekst: document.querySelector('p.uge-husstand')?.textContent || '' }));
-  tjek(husstand.knap === 0 && husstand.tekst === 'Husstand: Lavet med en nyere udgave', n + ': husstanden i ugeplanens hoved kan ikke ændres (' + JSON.stringify(husstand) + ')');
-  // Låsen er stadig åben fra ugeplanen til voksendelen
+  // Forsiden og vælg-tilstanden kan bruges: ugeplanen hører ikke til familien
+  await tryk(side, 'main .knap[aria-label="Tilbage til voksendelen"]');
+  await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('main.voksen-forside .voksen-uge'), null, n + ': forsiden med ugeplanen med en nyere familie');
+  await tryk(side, '[data-fokus="dag-0"]');
+  await venterPaa(side, () => location.hash === '#/voksen/dag/1' && document.querySelector('main.voksen-vaelg .voksen-raekke'), null, n + ': vælg-tilstanden kan nås med en nyere familie');
+  // Låsen er stadig åben fra vælg-tilstanden til husstanden
   await gaaTil(side, '#/voksen/husstand');
   await venterPaa(side, () => document.querySelector('main h1')?.textContent === 'Voksendelen er gemt med en nyere udgave', null, n + ': husstanden siger, at familien er gemt med en nyere udgave');
-  tjek(await side.locator('.voksen-vagt').count() === 0, n + ': fra ugeplanen til husstanden uden et nyt hold');
+  tjek(await side.locator('.voksen-vagt').count() === 0, n + ': fra vælg-tilstanden til husstanden uden et nyt hold');
   await tryk(side, 'main .knap[aria-label="Tilbage til voksendelen"]');
-  await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('main.voksen-hub'), null, n + ': «Tilbage» går til oversigten');
+  await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('main.voksen-forside'), null, n + ': «Tilbage» går til forsiden');
   await gaaTil(side, '#/ret/' + RET + '/faerdig');
   await venterPaa(side, () => document.querySelector('main.faerdig h1'), null, n + ': færdig-skærmen med en nyere familie');
   await tryk(side, '.hjerte-knap');
@@ -942,7 +1014,7 @@ async function nyereFamilie(browser, H) {
   await ctx.close();
 }
 
-// 11. Husstanden 8 + 8 (13,6 portioner): loftet på 12 står i summen og på oversigten, så ingen tror, der er nok til 14.
+// 11. Husstanden 8 + 8 (13,6 portioner): loftet på 12 står i summen og under «Mere», så ingen tror, der er nok til 14.
 // Og ved 8 siger «Flere» grænsen
 async function husstandLoft(browser, H) {
   const { BASE, SKAERME, nySide, tjek, tjekLayout, tryk, venterPaa } = H;
@@ -954,10 +1026,10 @@ async function husstandLoft(browser, H) {
   await side.waitForSelector('.gruppe-knap');
   await side.evaluate(() => localStorage.clear());
   await saetLager(side, FAMILIE, { v: 1, voksne: 8, boern: 8, barnAndel: 0.7, udvalg: null, favoritter: [], lavet: {} });
-  await aabnVoksen(H, side, '', n + ' voksendelen med 8 + 8');
+  await aabnVoksen(H, side, '/mere', n + ' «Mere» med 8 + 8');
   const status = await tekstAf(side, '[data-fokus="husstand"] .voksen-punkt-status');
-  tjek(status === '8 voksne og 8 børn = ' + LOFT, n + ': oversigten siger, at 8 + 8 er skåret ned til 12 (' + status + ')');
-  await tjekLayout(side, n + ' oversigten med loftet');
+  tjek(status === '8 voksne og 8 børn = ' + LOFT, n + ': «Mere» siger, at 8 + 8 er skåret ned til 12 (' + status + ')');
+  await tjekLayout(side, n + ' «Mere» med loftet');
   await aabnVoksen(H, side, '/husstand', n + ' husstanden 8 + 8');
   const sum = await tekstAf(side, '.husstand-sum');
   tjek(sum === '= ' + LOFT, n + ': husstanden siger, at 8 + 8 er skåret ned til 12 (' + sum + ')');
@@ -984,7 +1056,7 @@ async function henterFoerHoldet(browser, H) {
   tjek(await side.locator('.voksen-vagt').count() === 0, n + ': holdet står der ikke, mens opskrifterne hentes');
   await venterPaa(side, () => document.querySelector('.voksen-vagt'), null, n + ': holdet, når opskrifterne er hentet');
   await holdHer(H, side, '.voksen-vagt');
-  await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('main.voksen-hub'), null, n + ': holdet åbner oversigten');
+  await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('main.voksen-forside'), null, n + ': holdet åbner forsiden');
   tjek(side.fejl.length === 0, n + ' (henter før holdet): ' + side.fejl.join(' | '));
   await ctx.close();
 }
@@ -1019,7 +1091,7 @@ const kortTid = (side) => side.evaluate((id) => {
 const tidFor = (m) => ({ tal: minutterTekst(m.minutter), tale: '. ' + varighedTale(m.minutter * 60) + '.' });
 
 async function skiftGroent(H, side, til, hvor) {
-  await aabnVoksen(H, side, '', hvor + ': oversigten');
+  await aabnVoksen(H, side, '/mere', hvor + ': «Mere»');
   await H.tryk(side, '[data-fokus="groent"]');
   await H.venterPaa(side, (x) => document.querySelector('[data-fokus="groent"]')?.getAttribute('aria-checked') === x, String(til), hvor + ': kontakten slås ' + (til ? 'til' : 'fra'));
   return groenKontakt(side);
@@ -1060,7 +1132,7 @@ async function mereGroent(browser, H, skaerm) {
   await tjekKortTid(tidRet, 'kontakten fra');
 
   // Kontakten: slået fra som standard, og slået til gemmes i familien
-  await aabnVoksen(H, side, '', n + ' oversigten');
+  await aabnVoksen(H, side, '/mere', n + ' «Mere»');
   let k = await groenKontakt(side);
   tjek(k && k.rolle === 'switch' && k.til === 'false' && !k.laast && k.status === 'Slået fra' && k.hoejde >= 48,
     n + ': kontakten står slået fra, er mindst 48 px og har role="switch" (' + JSON.stringify(k) + ')');
@@ -1071,12 +1143,16 @@ async function mereGroent(browser, H, skaerm) {
   // Kortet er lige højt i begge tilstande: før voksede det, og «Luk» under det rykkede (UI-review 02-11)
   tjek(k.hoejde === hoejdeFra, n + ': kontakten er lige høj slået fra og til (' + hoejdeFra + ' og ' + k.hoejde + ' px)');
   tjek((await laesLager(side, FAMILIE) || {}).mereGroent === true, n + ': valget er gemt i familien');
-  await tjekLayout(side, n + ' oversigten med «Mere grønt i maden»');
+  await tjekLayout(side, n + ' «Mere» med «Mere grønt i maden»');
   await foto(side, n + '-voksen-groent');
 
   // Gruppens kort: tallet følger kontakten begge veje, når man går tilbage med «Luk». Før stod hyrdetærten til 50 min på
-  // kortet og 1 t på retten og i ugeplanen (UI-review 02-11)
+  // kortet og 1 t på retten og i ugeplanen (UI-review 02-11). «Luk» står på voksendelens forside (v11), ikke under «Mere»
   const tilForsiden = async () => {
+    if (await side.locator('main.voksen-mere-side').count()) {
+      await tryk(side, 'main .knap[aria-label="Tilbage til voksendelen"]');
+      await side.waitForSelector('main.voksen-forside [data-fokus="luk"]');
+    }
     await tryk(side, '[data-fokus="luk"]');
     await venterPaa(side, () => document.querySelector('.gruppe-knap'), null, n + ': «Luk» skal føre til forsiden');
   };
@@ -1143,12 +1219,17 @@ async function mereGroent(browser, H, skaerm) {
     const uge = planMandag(new Date());
     const dage = [{ ret: GROEN_RET, af: 'bo', n: 4 }, null, null, null, null, null, null];
     await saetLager(side, UGE, { v: 1, uge, dage, n: 4, prBarn: 1, rettet: null });
-    await tilUgen(H, side, '#/uge');
-    await venterPaa(side, () => document.querySelector('.uge-dage'), null, n + ': ugeplanen');
+    await tilUgen(H, side, '#/voksen');
+    await venterPaa(side, () => document.querySelector('.voksen-uge'), null, n + ': ugeplanen');
     const kr = Math.round((groen.uge.prisKr * 4) / groen.uge.portioner);
-    const meta = await tekstAf(side, '.dag-meta');
+    // Metalinjen står i arket under dagen, der folder ud ved et tryk
+    await tryk(side, '[data-fokus="dag-0"]');
+    await venterPaa(side, () => document.querySelector('.voksen-dag-ark .dag-meta'), null, n + ': arket under mandag');
+    const meta = await tekstAf(side, '.voksen-dag-ark .dag-meta');
     tjek(meta.includes('ca. ' + kr + ' kr.') && kr < Math.round((grund.uge.prisKr * 4) / grund.uge.portioner), n + ': ugeplanen regner med prisen med mere grønt (' + meta + ')');
     tjek((await tekstAf(side, '.uge-sum')).startsWith('Ca. ' + Math.round(kr / 10) * 10 + ' kr.'), n + ': summen (' + await tekstAf(side, '.uge-sum') + ')');
+    await tryk(side, '[data-fokus="mere"]');
+    await venterPaa(side, () => document.querySelector('main.voksen-mere-side'), null, n + ': «Mere»');
     await tryk(side, 'button:has-text("Send til telefon")');
     await venterPaa(side, () => window.__delt.length === 1, null, n + ': «Send til telefon» skal åbne delearket');
     const delt = await side.evaluate(() => window.__delt[0] || {});
