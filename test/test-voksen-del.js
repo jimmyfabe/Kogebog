@@ -943,6 +943,8 @@ test('vælg-tilstanden: «Behold» på dagens ret, portionerne bliver, og den ga
   assert.equal(tekstAf(medFokusNavn(skaerm, 'vaelg-' + a)), 'Behold');
   assert.equal(medFokusNavn(skaerm, 'vaelg-' + a).attr['aria-label'], 'Behold ' + S.retter.get(a).navn + ' til fredag');
   assert.match(tekstAf(medKlasse(skaerm, 'voksen-undertitel')[0]), / · 6 portioner$/);
+  // «nu» står ikke alene på sin linje på 360 px: hårdt mellemrum efter dagen (review U10)
+  assert.equal(tekstAf(medKlasse(skaerm, 'voksen-raekke-nu')[0]), 'Står på fredag\u00a0nu');
   send(medFokusNavn(skaerm, 'vaelg-' + b), 'click');
   assert.deepEqual(gemtUge().dage[4], { ret: b, af: 'rosa', n: 6 });
 });

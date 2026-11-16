@@ -1127,7 +1127,7 @@ function vaelgRaekke(p, i, nu, n) {
   return raekke(m, {
     valgt,
     lyn: true,
-    under: [K.lynTekst(m), metaLinje(m, n), valgt ? el('span', { class: 'voksen-raekke-nu', tekst: 'Står på ' + dag + ' nu' }) : null],
+    under: [K.lynTekst(m), metaLinje(m, n), valgt ? el('span', { class: 'voksen-raekke-nu', tekst: 'Står på ' + dag + '\u00a0nu' }) : null],
     knap: medFokus(K.knap(valgt ? 'Behold' : 'Vælg', { klasse: 'lille vaelg-ret', ikonNavn: 'tjek', label: (valgt ? 'Behold ' : 'Vælg ') + m.navn + ' til ' + dag,
       onclick: () => vaelgRet(m, i) }), 'vaelg-' + m.id),
   });
