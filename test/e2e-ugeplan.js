@@ -615,6 +615,12 @@ async function oversigtIpad(browser, H) {
   await chip('filter-hurtig');
   await chip('sorter-billig');
   tjek((await ids()).length === IPLAN.length, n + ': uden filtre står alle retter der igen');
+  // «Højst 40 min» fra den gamle «Vælg ret» (review F1, 16-11): kun retterne på højst 40 minutter i alt
+  await chip('sorter-hverdag');
+  const hverdag = IPLAN.filter((id) => { const t = lavModel(RETTER[id]).minutter; return t > 0 && t <= 40; });
+  tjek(hverdag.length > hurtige.length && sorteret(await ids()) === sorteret(hverdag), n + ': «Højst 40 min» viser de ' + hverdag.length + ' retter på højst 40 min (' + (await ids()).length + ')');
+  await chip('sorter-hverdag');
+  tjek((await ids()).length === IPLAN.length, n + ': uden «Højst 40 min» står alle retter der igen');
   await tryk(side, 'li[data-ret="koedsovs"] .vaelg-ret');
   await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('.voksen-dag[data-dag="0"][data-ret="koedsovs"]'), null, n + ': «Vælg» skal gå til forsiden med mandag udfyldt');
   const uge = planMandag(new Date());

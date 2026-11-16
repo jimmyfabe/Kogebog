@@ -857,6 +857,47 @@ test('vælg-tilstanden: «Vælg ret til tirsdag» viser ugeplanens retter, og «
   assert.match(location.hash, /^#\/hent\/v1\.[0-9]{8}\./, 'listen følger planen: linket har tirsdagens ret');
 });
 
+test('vælg-tilstanden: «Højst 40 min» viser kun retter på højst 40 minutter, huskes fra dag til dag og glemmes ved låsen (review F1)', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  let skaerm = aabnSide('dag/2');
+  // Det forventede regnes her af opskrifternes totalTime (PT…H…M), ikke af appens model
+  const minutter = (id) => {
+    const m = /^PT(?:(\d+)H)?(?:(\d+)M)?$/.exec(JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8')).totalTime || '');
+    return m ? Number(m[1] || 0) * 60 + Number(m[2] || 0) : null;
+  };
+  const korte = ugensRetter().filter((id) => minutter(id) > 0 && minutter(id) <= 40);
+  assert.ok(korte.length >= 20 && korte.length < ugensRetter().length, 'både korte og lange retter i ugeplanen (' + korte.length + ' af ' + ugensRetter().length + ')');
+  const chip = () => medFokusNavn(vist.at(-1), 'sorter-hverdag');
+  assert.equal(tekstAf(chip()), 'Højst 40 min');
+  assert.equal(chip().attr['aria-pressed'], 'false');
+  assert.deepEqual(raekkerI(skaerm), ugensRetter());
+  send(chip(), 'click');
+  skaerm = vist.at(-1);
+  assert.equal(chip().attr['aria-pressed'], 'true');
+  assert.deepEqual(raekkerI(skaerm), korte, 'kun retterne på højst 40 minutter, i samme rækkefølge');
+  assert.ok(tekstAf(skaerm).includes('Højst 40 min'), 'linjen over filtrene siger, at den er valgt');
+  // Huskes fra dag til dag
+  location.hash = '#/voksen/dag/5';
+  V.rute(location.hash);
+  assert.deepEqual(raekkerI(vist.at(-1)), korte, 'også fredag');
+  // Ingen træf med kun «Højst 40 min» valgt: «Fjern filtrene» står der og slår den fra (søgningen bliver)
+  skriv(vist.at(-1), 'xyzzy');
+  const fjern = medFokusNavn(vist.at(-1), 'fjern-filtre');
+  assert.ok(fjern, '«Fjern filtrene», når kun tiden er valgt');
+  send(fjern, 'click');
+  assert.equal(chip().attr['aria-pressed'], 'false', '«Fjern filtrene» fjerner også «Højst 40 min»');
+  skriv(vist.at(-1), '');
+  assert.deepEqual(raekkerI(vist.at(-1)), ugensRetter());
+  send(chip(), 'click');
+  // Låsen glemmer den
+  V.rute('#/');
+  V.aabn('#/voksen/dag/2');
+  V.rute(location.hash);
+  assert.equal(chip().attr['aria-pressed'], 'false');
+  assert.deepEqual(raekkerI(vist.at(-1)), ugensRetter());
+});
+
 test('vælg-tilstanden: «Behold» på dagens ret, portionerne bliver, og den gamle rets dyr følger med', (t) => {
   t.after(() => V.rute('#/'));
   medOpskrifter();

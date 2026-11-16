@@ -249,9 +249,9 @@ const filtre = new Set(); // udvalgets filterchips (nøgler fra MAERKER): huskes
 // Kun i hukommelsen, og glemt, når voksendelen låses
 const soegning = new Map();
 const katalogValg = { gruppe: null, maerker: new Set() };
-// Vælg-tilstandens filtre og rækkefølge (sorterValg i js/ugeplan.js). Huskes fra dag til dag, til voksendelen låses, så
-// «Vegetar» gælder hele ugen; søgningen glemmes, når en ret er valgt
-const vaelgValg = { gruppe: null, maerker: new Set(), billig: false, kniv: false };
+// Vælg-tilstandens filtre, «Højst 40 min» og rækkefølgen (sorterValg i js/ugeplan.js). Huskes fra dag til dag, til
+// voksendelen låses, så «Vegetar» gælder hele ugen; søgningen glemmes, når en ret er valgt
+const vaelgValg = { gruppe: null, maerker: new Set(), hverdag: false, billig: false, kniv: false };
 // Om filtrene er foldet ud ('udvalg', 'katalog'; ingen værdi = efter skærmen). Glemt, når man går til en anden side, så
 // en kompakt skærm (KOMPAKT) altid starter med listen lige under søgefeltet
 const filterAaben = new Map();
@@ -261,7 +261,7 @@ function glemSoegning() {
     v.gruppe = null;
     v.maerker.clear();
   }
-  vaelgValg.billig = vaelgValg.kniv = false;
+  vaelgValg.hverdag = vaelgValg.billig = vaelgValg.kniv = false;
   filterAaben.clear();
 }
 
@@ -973,8 +973,14 @@ function gruppeChip(id, navn, antal, v, side) {
   return b;
 }
 
-// Vælg-tilstandens rækkefølge: to kontakter, som før på #/uge/dag/<n> (sorterValg i js/ugeplan.js)
+// Vælg-tilstandens tid og rækkefølge, som før på #/uge/dag/<n>: «Højst 40 min» fjerner de lange retter (en hverdag;
+// mærket «Hurtig» er kun ⚡ op til 20 min, og det har kun få retter i ugeplanen, review F1 16-11), og de to andre sorterer
+// (sorterValg i js/ugeplan.js)
+export const HVERDAG_MIN = 40;
+const TID = [['hverdag', 'Højst ' + HVERDAG_MIN + ' min']];
 const RAEKKEFOELGE = [['billig', 'Billigst først'], ['kniv', 'Mindst kniv først']];
+// En ret til en hverdag: tiden i alt er kendt og højst HVERDAG_MIN minutter
+export const tilHverdag = (m) => Number.isFinite(m.minutter) && m.minutter > 0 && m.minutter <= HVERDAG_MIN;
 function sorterChip(k, navn, v, side) {
   const fokus = 'sorter-' + k;
   const b = medFokus(K.knap(navn, { klasse: 'filter-chip', onclick: () => {
@@ -990,7 +996,7 @@ function sorterChip(k, navn, v, side) {
 function katalogFiltre(alle, v = katalogValg, side = 'katalog') {
   const vaelg = side === 'vaelg';
   const gruppeNavn = v.gruppe === AFTENSMAD ? AFTENSMAD_NAVN : GRUPPER[v.gruppe];
-  const sorter = vaelg ? RAEKKEFOELGE.filter(([k]) => v[k]).map(([, navn]) => navn) : [];
+  const sorter = vaelg ? [...TID, ...RAEKKEFOELGE].filter(([k]) => v[k]).map(([, navn]) => navn) : [];
   const valgte = [v.gruppe ? gruppeNavn : null, ...[...v.maerker].map((k) => MAERKER[k].navn), ...sorter].filter(Boolean);
   const aftensmad = alle.filter((p) => iGruppe(p, AFTENSMAD)).length;
   const grupper = K.S.grupper.filter((g) => Object.hasOwn(GRUPPER, g.id))
@@ -1002,8 +1008,8 @@ function katalogFiltre(alle, v = katalogValg, side = 'katalog') {
       grupper.map(([id, n]) => gruppeChip(id, GRUPPER[id], n, v, side))),
     el('div', { class: 'filter-chips', role: 'group', 'aria-label': 'Mærker' },
       Object.keys(MAERKER).map((k) => filterChip(k, alle.filter((p) => p.noegler.includes(k)).length, v.maerker, side))),
-    vaelg ? el('div', { class: 'filter-chips', role: 'group', 'aria-label': 'Rækkefølge' },
-      RAEKKEFOELGE.map(([k, navn]) => sorterChip(k, navn, v, side))) : null);
+    vaelg ? el('div', { class: 'filter-chips', role: 'group', 'aria-label': 'Tid og rækkefølge' },
+      [...TID, ...RAEKKEFOELGE].map(([k, navn]) => sorterChip(k, navn, v, side))) : null);
 }
 
 // Viser kataloget kun en del af retterne? Låsen glemmer søgning og filtre, når en ret åbnes (laas), så listen efter holdet
@@ -1142,14 +1148,15 @@ function vaelgSkaerm(f, i) {
   const fjernFiltre = () => {
     v.gruppe = null;
     v.maerker.clear();
+    v.hverdag = false;
     tegnIgen(kompakt() ? 'filtre-vaelg' : 'gruppe-alle');
   };
   const filtreEl = katalogFiltre(alle, v, 'vaelg');
   const s = soegeListe('vaelg', alle, {
-    passer: (tekst) => sorterPoster(filtrer(alle, { gruppe: v.gruppe, maerker: [...v.maerker], tekst }), v),
+    passer: (tekst) => sorterPoster(filtrer(alle, { gruppe: v.gruppe, maerker: [...v.maerker], tekst }).filter((p) => !v.hverdag || tilHverdag(p.m)), v),
     naarSkrevet: () => foldVedSoegning('vaelg', filtreEl),
     tom: 'Der er ingen retter i ugeplanen endnu.',
-    ingen: (tekst, ryd) => ingenTraef(tekst, { ryd, fjernFiltre: v.gruppe || v.maerker.size ? fjernFiltre : null }),
+    ingen: (tekst, ryd) => ingenTraef(tekst, { ryd, fjernFiltre: v.gruppe || v.maerker.size || v.hverdag ? fjernFiltre : null }),
     liste: (vist) => el('ul', { class: 'voksen-liste', 'aria-label': 'Retter i ugeplanen' }, vist.map((x) => vaelgRaekke(x, i, nu, n))),
   });
   return voksenSkaerm('voksen-vaelg', 'Vælg ret til ' + DAGE[i].toLowerCase(),
