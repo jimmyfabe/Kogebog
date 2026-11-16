@@ -35,8 +35,8 @@
     {"@type": "HowToStep", "text": "Brun kødet, og del det i små stykker.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Den voksne rører og deler kødet med grydeskeen."}},
     {"@type": "HowToStep", "text": "Drys karry og mel over kødet.", "tumbi": {"verbum": "drysse", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["krydderurt", "mel"], "note": "2 tsk mild karry og 1 spsk mel. Panden er varm: barnet drysser fra kanten. Den voksne rører rundt i 1 min."}},
     {"@type": "HowToStep", "text": "Hæld sovsen og grøntsagerne på panden.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ketchup", "soja", "aerter"], "note": "Ærter og gulerødder direkte fra frost. Den voksne hælder."}},
-    {"@type": "HowToStep", "text": "Lad karryen småkoge i 8 minutter.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 480, "note": "Under låg ved svag varme. Rør af og til. Bliver den for tør, så lidt mere vand. Den skal være tyk, ikke suppet."}},
-    {"@type": "HowToStep", "text": "Smag på karryen.", "tumbi": {"verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne giver barnet en lille skefuld, der har fået lov at køle af. Mangler der smag, så lidt mere soja. Kødet skal være gennemstegt uden noget lyserødt. Server karryen over risene."}}
+    {"@type": "HowToStep", "text": "Lad karryen småkoge i 8 minutter.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 480, "note": "Under låg ved svag varme. Rør af og til. Bliver den for tør, så lidt mere vand. Den skal være tyk, ikke suppet. Kødet skal være gennemstegt uden noget lyserødt."}},
+    {"@type": "HowToStep", "text": "Smag på karryen.", "tumbi": {"verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne giver barnet en lille skefuld, der har fået lov at køle af. Mangler der smag, så lidt mere soja. Server karryen over risene."}}
   ],
   "tumbi": {
     "id": "japansk-keema-karry",

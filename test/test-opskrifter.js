@@ -517,6 +517,8 @@ export function valider(rod = ROD) {
           else { timerSek += st.timer_sek; taelt.timere++; }
         }
         if ('note' in st && !erTekst(st.note)) f(hvor + ': «note» skal være en tekst, der ikke er tom');
+        // Kødet tjekkes, før barnet smager: tjekket hører til i trinnet, der steger eller koger (review F7 17-11: keema-karryen)
+        if (st.verbum === 'smage' && typeof st.note === 'string' && /gennemstegt|lyserød/u.test(st.note)) f(hvor + ': barnet smager her, så tjekket af kødet hører til i trinnet før, der steger eller koger: «' + st.note + '»');
         redaktion(hvor + ' (noten)', st.note);
         if ('ikoner' in st) {
           if (!Array.isArray(st.ikoner) || !st.ikoner.length) f(hvor + ': «ikoner» skal være en liste med mindst ét ikon');
