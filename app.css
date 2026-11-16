@@ -632,7 +632,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .trin-ikoner { display: flex; flex-wrap: wrap; gap: 10px; }
 .trin-ikoner img { width: 66px; height: 66px; padding: 5px; border: var(--kant); border-radius: 18px; background: var(--hvid); }
 .trin-knapper { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 22px; }
-.note { font-size: 17px; color: var(--kakao-blid); max-width: 34em; padding-left: 12px; border-left: 4px solid var(--dej); }
+.note { font-size: 17px; color: var(--kakao-blid); max-width: 34em; padding-left: 12px; border-left: 4px solid var(--dej); text-wrap: pretty; }
 .voksen .note { border-left-color: var(--raev); }
 .note-hvem { font-weight: 750; }
 

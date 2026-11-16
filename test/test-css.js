@@ -333,6 +333,15 @@ test('trinteksten brydes i lige lange linjer på alle skærme (text-wrap: balanc
   }
 });
 
+// Review U12 (17-11): 492 af 3044 trin-noter endte med ét ord alene på sidste linje på 390 px (271 på 1180 px), målt i
+// WebKit. Med text-wrap: pretty var det 0 og 2 linjer mere i alt. Ældre Safari bryder som før
+test('trin-noterne ender ikke med ét ord alene på sidste linje (text-wrap: pretty)', () => {
+  const rod = blokke(CSS);
+  for (const [b, h] of [[390, 844], [844, 390], [768, 1024], [1180, 820], [1280, 800]]) {
+    assert.equal(gaeldende(rod, '.note', b, h)['text-wrap'], 'pretty', b + '×' + h);
+  }
+});
+
 test('lupen er mindst 48 px på alle skærme, og Rosa og Bo giver plads til den på smalle skærme', () => {
   const rod = blokke(CSS);
   for (const [b, h] of [[1180, 820], [820, 1180], [390, 844], [360, 640], [844, 390], [667, 375]]) {
