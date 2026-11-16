@@ -2,6 +2,13 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
+## 16-11-2026 kl. 02:23: v11 halvvejs på grenen `v10-foraeldre` (Saga)
+
+**Gjort (15-11, efter Jimmys «ja» til v11):** v10-reviewets R1–R6 og U1–U8 er rettet med test (`ace1807`…`0a1f2ae`). «Kød» er delt i **Gris** (8) og **Ko** (6) på forsiden, så der nu er 12 knapper (`762f368`). Der er ingen Lam, fordi appen har 0 retter med lam. 5 nye brødretter med billede og Røst: lynpizza med yoghurtdej, pizzabrød med hvidløg og ost, naan på panden, hvidløgsnaan og ostenaan (`6760fbb`…`b248f95`, `afproevet: false`). `UDGAVE = 'v11 · 15-11-2026'`. Planen ligger i Saga-sessionens scratchpad (`tumbi-v11/plan.md`).
+**Tests 16-11 kl. 02:13:** 17 af 18 node-filer er grønne. `test-lyd` fejler kun på mp3-filer uden for listen (de gamle gruppelyde, nu også `gruppe-koed.mp3`). E2e er ikke kørt efter brødretterne.
+**Mangler:** de 7 ris- og pastaretter fra planen (honningkylling, japansk keema-karry, onigiri, tomatris, kyllingepasta, tortellini, pizzapasta) med billede og stemme, review + rettelser, og fuld e2e. Workflowet stoppede to gange ved 5-timers-loftet, og to kørsler arbejdede samtidig (to commits med samme titel, 848245c/7d97f93; README er ryddet i 1a73f0f).
+**Afventer Jimmy (15-11):** (1) Lam senere? (2) Må `gruppe-koed.mp3` slettes sammen med de to gamle gruppelyde? (3) Nyt ønske 15-11 kl. 17: voksendelens forside skal være selve ugeplanen, med bobler øverst (Indkøbsliste · Retter · Mere), og et tryk på en dag skal åbne kataloget som «Vælg ret til …». Venter på «ja». (4) Resten fordeles over ugen, så ugekvoten (66 %) ikke tømmes.
+
 ## 15-11-2026 kl. 07:31: v10 er klar på grenen `v10-foraeldre`, ikke flettet og ikke udgivet (Saga)
 
 Bygget efter Jimmys «ja» 14-11 kl. 20:18 (`docs/brief-2026-11-13.md`, «Startet 14-11-2026»). 22 commits over `main` før denne STATUS-commit (den sidste er `9c34fa9`). `UDGAVE = 'v10 · 14-11-2026'`. Ingen ændring af gemte data (ingen nye nøgler eller felter).
