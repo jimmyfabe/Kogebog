@@ -11,6 +11,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import * as lager from '../js/lager.js';
 import { lavModel } from '../js/model.js';
+import { saml, grupper } from '../js/indkoeb.js';
 
 // Et lille falsk DOM: nok til, at voksendelens skærme kan tegnes og trykkes på. Elementerne husker deres børn, attributter
 // og lyttere; send(e, 'click') kalder lytterne. querySelector kender kun '[data-fokus="…"]' og 'main h1' på den viste skærm
@@ -852,7 +853,12 @@ test('vælg-tilstanden: «Vælg ret til tirsdag» viser ugeplanens retter, og «
   assert.equal(medKlasse(forside, 'voksen-uge-tom').length, 0, 'ugen er ikke tom længere');
   const tal = tekstAf(medKlasse(forside, 'voksen-boble-tal')[0]);
   assert.match(tal, /^[1-9]\d*\u00a0varer?$/, 'Indkøbsliste siger antallet af varer (' + tal + ')');
-  assert.equal(Number.parseInt(tal, 10), U.antalVarer());
+  // Regnet her af tirsdagens opskrift og indkøbslisten (saml, grupper) uden basisvarerne, ikke af U.antalVarer (review F4)
+  const ret = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8'));
+  const afd = grupper(saml([{ ret, n: 4 }]));
+  const forvent = afd.filter((g) => g.afd !== 'basis').reduce((sum, g) => sum + g.varer.length, 0);
+  assert.ok(afd.some((g) => g.afd === 'basis' && g.varer.length), 'retten har basisvarer, som ikke tæller');
+  assert.equal(Number.parseInt(tal, 10), forvent);
   send(medFokusNavn(forside, 'indkoeb'), 'click');
   assert.match(location.hash, /^#\/hent\/v1\.[0-9]{8}\./, 'listen følger planen: linket har tirsdagens ret');
 });
@@ -896,6 +902,32 @@ test('vælg-tilstanden: «Højst 40 min» viser kun retter på højst 40 minutte
   V.rute(location.hash);
   assert.equal(chip().attr['aria-pressed'], 'false');
   assert.deepEqual(raekkerI(vist.at(-1)), ugensRetter());
+});
+
+test('vælg-tilstanden: «Vælg» læser planen lige før, så en dag, der er lagt imens (en anden fane), bliver (M1, review F2)', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  const [a, b] = ugensRetter();
+  const skaerm = aabnSide('dag/2');
+  assert.equal(lageret.has('kog-uge-v1'), false, 'skærmen er tegnet med en tom plan');
+  lageret.set('kog-uge-v1', planMed([{ ret: a, n: 3, af: 'pip' }, null, null, null, null, null, null]));
+  send(medFokusNavn(skaerm, 'vaelg-' + b), 'click');
+  assert.deepEqual(gemtUge().dage[0], { ret: a, n: 3, af: 'pip' }, 'mandag fra den anden fane er der stadig');
+  assert.deepEqual(gemtUge().dage[1], { ret: b, af: 'bo', n: 4 });
+});
+
+test('saetDag: kun dag 0-6 som heltal; alt andet ændrer intet (review F5)', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  aabnSide('');
+  const [a, b] = ugensRetter();
+  lageret.set('kog-uge-v1', planMed([{ ret: a, n: 4, af: 'bo' }, null, null, null, null, null, null]));
+  const foer = lageret.get('kog-uge-v1');
+  for (const i of [-1, 7, 1.5, '1', NaN, null, undefined, Infinity]) {
+    assert.equal(U.saetDag(i, b), null, String(i));
+    assert.equal(lageret.get('kog-uge-v1'), foer, String(i) + ': planen er ikke skrevet');
+  }
+  assert.equal(U.saetDag(6, b).dage[6].ret, b, 'søndag (6) er en dag');
 });
 
 test('vælg-tilstanden: «Behold» på dagens ret, portionerne bliver, og den gamle rets dyr følger med', (t) => {
