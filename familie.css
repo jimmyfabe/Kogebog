@@ -161,6 +161,8 @@
 .knap.voksen-boble { min-height: 60px; padding: 0 24px; gap: 10px; font-size: 21px; white-space: nowrap; }
 .voksen-boble .ikon { width: 26px; height: 26px; }
 .knap.voksen-boble-liste { background: var(--sennep); }
+/* En tom uge har ingen liste: boblen er hvid som de andre, og et tryk siger, hvad man gør (review U3, 16-11) */
+.knap.voksen-boble-liste.voksen-boble-tom { background: var(--hvid); }
 .voksen-boble-tal { padding: 3px 10px; border: 2px solid var(--kakao); border-radius: 999px; background: var(--hvid); font-size: 16px; font-weight: 800; font-variant-numeric: tabular-nums; }
 
 /* Ugens dage: ét hvidt ark, en række pr. dag, og hele rækken er én knap (mindst 68 px høj). Dagens navn og dato står i

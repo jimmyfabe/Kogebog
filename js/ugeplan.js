@@ -26,7 +26,8 @@ import * as Tale from './tale.js';
 import * as R from './replikker.js';
 
 // app.js: { S, knap, klik, billede, lynMaerke, lynTekst, topbar, statusSkaerm, naviger, annoncer, indlaes, vis, huskFra,
-// voksne }. voksne(hash) låser voksendelen op og går til hash (js/voksen-del.js)
+// voksne, fraVoksne }. voksne(hash) låser voksendelen op og går til hash, og fraVoksne() siger, om listen er åbnet fra
+// voksendelens forside (js/voksen-del.js)
 let K = null;
 export function init(k) {
   K = k;
@@ -237,6 +238,12 @@ function erstatSkaerm(gl, ny) {
 
 // ---------- #/indkoeb ----------
 
+// Listens top: huset til børnenes forside, eller «Til ugeplanen», når listen er åbnet med boblen på voksendelens forside,
+// og låsen stadig er åben (fraVoksne i js/voksen-del.js, review U2, 16-11)
+const listeTopbar = () => (K.fraVoksne?.()
+  ? K.topbar(null, '#/voksen', { tekst: 'Til ugeplanen', label: 'Til ugeplanen' })
+  : K.topbar());
+
 // Varerne, der skal købes (ikke basisvarerne og ikke «Har vi»), og hvor mange af dem, der er købt
 function optaelling(afd, koebt, harVi) {
   const ids = afd.filter((g) => g.afd !== 'basis').flatMap((g) => g.varer.map((v) => v.id)).filter((id) => !harVi.has(id));
@@ -413,7 +420,7 @@ function listeSkaerm(liste) {
   tegn();
 
   return el('main', { class: 'skaerm indkoeb' },
-    K.topbar(),
+    listeTopbar(),
     el('div', { class: 'liste' },
       el('header', { class: 'liste-hoved' },
         el('h1', { tabindex: '-1', tekst: 'Indkøbsliste' }),

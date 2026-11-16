@@ -90,10 +90,10 @@ export function nyAdresse(hash) {
 // Hvad adressen gør ved låsen. 'bag': voksendelen (også vælg-tilstanden og «Mere») og ugeplanens gamle adresser til den
 // voksne (#/uge og #/uge/dag/<n>, som rute sender videre), der kræver holdet. 'fri': indkøbslisten og linket til den
 // (#/indkoeb, #/hent/…), som telefonen også åbner, og som ikke kræver låsen. 'luk': resten, også børnenes valg
-// (#/uge/vaelg…), så iPad'en kan gives videre. Både 'fri' og 'luk' lukker låsen (rute): listen har kun «Til forsiden»,
-// og en åben lås gav et barn vejen ind med browserens «tilbage» (review L2, 15-11). Koden spørger kun, om svaret er
-// 'bag', så 'fri' og 'luk' gør det samme; de to navne står kun for at vise, hvilke adresser telefonen må åbne uden hold
-// (review R4, 15-11).
+// (#/uge/vaelg…), så iPad'en kan gives videre. Både 'fri' og 'luk' lukker låsen (rute): en åben lås gav et barn vejen
+// ind med browserens «tilbage» (review L2, 15-11). Undtagelsen er listen, åbnet med boblen på voksendelens forside
+// (fraVoksne, review U2, 16-11): den har «Til ugeplanen», og låsen bliver åben. De to navne står for at vise, hvilke
+// adresser telefonen må åbne uden hold (review R4, 15-11).
 // Ugeplanens adresser læses af dens egen rute(), så låsen og skærmen aldrig er uenige om, hvad adressen er
 export function laasFor(hash) {
   if (voksenSide(hash)) return 'bag';
@@ -194,9 +194,17 @@ function laasOp() {
 
 function laas() {
   aaben = false;
+  listeFraVoksen = false;
   clearTimeout(lukTid);
   glemSoegning();
 }
+
+// Indkøbslisten, åbnet med boblen på voksendelens forside, hører til den voksnes vej: låsen bliver åben på listen
+// (#/hent/… og #/indkoeb), og listen får «Til ugeplanen» i stedet for huset til børnenes forside (review U2, 16-11).
+// Glemt, så snart man går et andet sted hen, og når låsen lukker. Åbnes listen på anden vis (telefonens link, browserens
+// «tilbage»), lukker den låsen som før (review L2)
+let listeFraVoksen = false;
+export const fraVoksne = () => listeFraVoksen && erLaastOp();
 
 // Er tiden gået, lukker voksendelen, og står den (eller ugeplanen) fremme, bliver skærmen til holdet
 function lukOgVis() {
@@ -267,7 +275,9 @@ export function rute(hash) {
     hash = ny;
   }
   const zone = laasFor(hash);
-  if (zone !== 'bag') laas();
+  const fraListe = zone === 'fri' && fraVoksne();
+  if (zone !== 'fri') listeFraVoksen = false;
+  if (zone !== 'bag' && !fraListe) laas();
   const side = zone === 'bag' ? voksenSide(hash) : null;
   if (!side) sidsteSide = null;
   if (side) {
@@ -643,22 +653,36 @@ function husstandStatus(f, p) {
 // ---------- #/voksen: forsiden er ugeplanen ----------
 
 // Boblerne øverst: Indkøbsliste (med antal varer, når linket til planen kan laves), Retter og Mere. Indkøbslisten regnes
-// først ved trykket (listeHash), så den altid følger planen
+// først ved trykket (listeHash), så den altid følger planen. Er ugen tom, er der ingen liste at vise: boblen er hvid som de
+// andre, og et tryk siger, hvad man gør, i stedet for at åbne telefonens tomme liste «Sæt linket ind» (review U3, 16-11)
+const TOM_LISTE = 'Der er ingen varer endnu. Vælg en ret til en dag, så kommer varerne på listen.';
 function bobler() {
-  const n = listeHash().startsWith('#/hent/') ? antalVarer() : 0;
-  const liste = medFokus(K.knap('Indkøbsliste', { klasse: 'voksen-boble voksen-boble-liste', ikonNavn: 'kurv', onclick: () => K.naviger(listeHash()) }), 'indkoeb');
+  const p = Lager.hentUge(K.S.ids);
+  const tom = !p.laast && !p.dage.some(Boolean);
+  const n = !tom && listeHash().startsWith('#/hent/') ? antalVarer() : 0;
+  const tilListe = () => {
+    listeFraVoksen = true;
+    K.naviger(listeHash());
+  };
+  const tomTryk = () => {
+    besked = { liste: true, tekst: TOM_LISTE };
+    tegnIgen('indkoeb');
+    K.annoncer(TOM_LISTE);
+  };
+  const liste = medFokus(K.knap('Indkøbsliste', { klasse: 'voksen-boble voksen-boble-liste' + (tom ? ' voksen-boble-tom' : ''), ikonNavn: 'kurv', onclick: tom ? tomTryk : tilListe }), 'indkoeb');
   if (n) liste.append(el('span', { class: 'voksen-boble-tal', tekst: flertal(n, 'vare', 'varer') }));
-  return el('nav', { class: 'voksen-bobler', 'aria-label': 'Voksendelen' },
+  return [el('nav', { class: 'voksen-bobler', 'aria-label': 'Voksendelen' },
     liste,
     medFokus(K.knap('Retter', { klasse: 'voksen-boble', ikonNavn: 'lup', onclick: () => K.naviger('#/voksen/katalog') }), 'katalog'),
-    medFokus(K.knap('Mere', { klasse: 'voksen-boble', ikonNavn: 'mere', onclick: () => K.naviger('#/voksen/mere') }), 'mere'));
+    medFokus(K.knap('Mere', { klasse: 'voksen-boble', ikonNavn: 'mere', onclick: () => K.naviger('#/voksen/mere') }), 'mere')),
+  tom && besked && besked.liste ? beskedEl(besked) : null];
 }
 
 function forsideSkaerm() {
   const p = Lager.hentUge(K.S.ids);
   const uge = (!p.laast && p.uge) || planMandag();
   return voksenSkaerm('voksen-forside', 'Ugeplan', 'Uge\u00a0' + ugeNr(uge) + ' · ' + dagDato(uge, 0) + '–' + dagDato(uge, 6),
-    bobler(),
+    ...bobler(),
     ...ugeIndhold(),
     fejlLinje(),
     el('div', { class: 'voksen-bund' },

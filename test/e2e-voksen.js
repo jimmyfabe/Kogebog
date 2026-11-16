@@ -294,6 +294,12 @@ async function forloeb(browser, H, skaerm) {
   tjek(ens(liste, ventetListe) && retVarer.length > 0 && retVarer.every((id) => liste.some(([v]) => v === id)),
     n + ': indkøbslisten har mandagens og tirsdagens varer, også de ' + retVarer.length + ' fra ' + RET + ' (' + JSON.stringify(liste.slice(0, 4)) + ')');
   await tjekLayout(side, n + ' indkøbslisten fra forsiden');
+  // Listen fra forsidens boble har «Til ugeplanen» i stedet for huset, og forsiden kommer uden et nyt hold (review U2)
+  tjek(await side.locator('.topbar .topbar-tilbage').count() === 1 && await side.locator('.topbar [aria-label="Til forsiden"]').count() === 0,
+    n + ': listen fra forsiden har «Til ugeplanen» øverst, ikke huset');
+  await tryk(side, '.topbar .topbar-tilbage');
+  await venterPaa(side, () => location.hash === '#/voksen' && document.querySelector('main.voksen-forside, .voksen-vagt'), null, n + ': «Til ugeplanen» fra listen');
+  tjek(await side.locator('.voksen-vagt').count() === 0, n + ': «Til ugeplanen» går til forsiden uden et nyt hold');
 
   // 4a. Dagens n før husstandens: mandagens ret står til mandagens 3 portioner, selvom husstanden er 6
   const mandagFaktor = faktorFor(lavModel(RETTER[IPLAN[0]]), 3);

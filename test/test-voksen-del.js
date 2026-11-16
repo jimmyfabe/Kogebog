@@ -24,6 +24,7 @@ const lavEl = (tag) => ({
   append(...b) { this.born.push(...b); }, prepend(...b) { this.born.unshift(...b); }, replaceChildren(...b) { this.born = b; },
   addEventListener(type, fn) { (this.lyt[type] ??= []).push(fn); },
   focus() { fokus = this; }, blur() { if (fokus === this) fokus = null; }, scrollIntoView() {},
+  querySelectorAll() { return []; }, querySelector() { return null; },
 });
 const alleI = (e) => (e && typeof e === 'object' ? [e, ...(e.born || []).flatMap(alleI)] : []);
 const find = (rod, f) => alleI(rod).filter((e) => e.tag && f(e));
@@ -91,14 +92,15 @@ const K = {
   billede: () => lavEl('img'),
   lynMaerke: () => null,
   lynTekst: () => null,
-  topbar: () => lavEl('header'),
+  // Toppen husker sin pil (adressen) og dens tekst, så listens «Til ugeplanen» kan ses (review U2)
+  topbar: (midte, tilbage = null, valg = {}) => Object.assign(lavEl('header'), { topbar: { tilbage, ...valg } }),
   annoncer: (tekst) => { annonceret.push(tekst); },
   indlaes: () => {},
   huskFra: (ret, y) => { huskede.push({ ret, y }); },
 };
 V.init(K);
 // Forsidens dage og «Mere»s handlinger kommer fra ugeplanen, som app.js også giver sine hjælpere
-U.init({ ...K, voksne: (hash) => V.aabn(hash) });
+U.init({ ...K, voksne: (hash) => V.aabn(hash), fraVoksne: () => V.fraVoksne() });
 const tryk = () => { for (const fn of lyttere.pointerdown) fn(); };
 const MIN = 60 * 1000;
 
@@ -723,6 +725,67 @@ test('forsiden: boblerne Indkøbsliste, Retter og Mere øverst, og ugens 7 dage 
   aabnSide('');
   send(medFokusNavn(vist.at(-1), 'katalog'), 'click');
   assert.equal(location.hash, '#/voksen/katalog');
+});
+
+const topI = (rod) => find(rod, (e) => e.tag === 'header' && e.topbar)[0].topbar;
+test('indkøbslisten fra forsidens boble: låsen bliver åben, og listen har «Til ugeplanen» i stedet for huset (review U2)', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  aabnSide('');
+  lageret.set('kog-uge-v1', planMed([{ ret: ugensRetter()[0], n: 4, af: 'bo' }, null, null, null, null, null, null]));
+  V.rute('#/voksen');
+  send(medFokusNavn(vist.at(-1), 'indkoeb'), 'click');
+  assert.match(location.hash, /^#\/hent\/v1\./);
+  assert.equal(V.rute(location.hash), false, 'listen tegnes af ugeplanen, ikke af voksendelen');
+  assert.ok(V.erLaastOp() && V.fraVoksne(), 'låsen er stadig åben på listen');
+  const liste = U.skaerm(U.rute(location.hash));
+  assert.equal(location.hash, '#/indkoeb', '#/hent gemmer listen og skifter adressen');
+  assert.deepEqual(topI(liste), { tilbage: '#/voksen', tekst: 'Til ugeplanen', label: 'Til ugeplanen' });
+  V.rute(location.hash);
+  assert.ok(V.erLaastOp(), 'også på #/indkoeb');
+  // «Til ugeplanen»: forsiden uden et nyt hold, og listen er forladt
+  vist.length = 0;
+  assert.equal(V.rute('#/voksen'), true);
+  assert.equal(h1I(vist.at(-1)), 'Ugeplan', 'forsiden, ikke holdet');
+  assert.equal(V.fraVoksne(), false);
+  // Den samme liste åbnet på anden vis (browserens «tilbage», telefonens link) lukker låsen og har huset (review L2)
+  assert.equal(V.rute('#/indkoeb'), false);
+  assert.equal(V.erLaastOp(), false);
+  assert.equal(topI(U.skaerm(U.rute('#/indkoeb'))).tilbage, null, 'huset til børnenes forside');
+  // Fra listen til børnenes forside lukker låsen
+  V.aabn();
+  send(medFokusNavn(vist.at(-1), 'indkoeb'), 'click');
+  V.rute(location.hash);
+  assert.ok(V.erLaastOp());
+  V.rute('#/');
+  assert.ok(!V.erLaastOp() && !V.fraVoksne());
+});
+
+test('forsiden: en tom uge har en hvid «Indkøbsliste», og et tryk siger, hvad man gør, i stedet for at åbne listen (review U3)', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  const skaerm = aabnSide('');
+  const foer = location.hash;
+  assert.ok(harKlasse(medFokusNavn(skaerm, 'indkoeb'), 'voksen-boble-tom'));
+  assert.equal(medKlasse(skaerm, 'uge-besked').length, 0, 'ingen besked før trykket');
+  annonceret.length = 0;
+  send(medFokusNavn(skaerm, 'indkoeb'), 'click');
+  assert.equal(location.hash, foer, 'bliver på forsiden');
+  const ny = vist.at(-1);
+  const TEKST = 'Der er ingen varer endnu. Vælg en ret til en dag, så kommer varerne på listen.';
+  assert.equal(tekstAf(medKlasse(ny, 'uge-besked')[0]), TEKST);
+  assert.equal(fokus, medFokusNavn(ny, 'indkoeb'), 'fokus bliver på boblen');
+  assert.deepEqual(annonceret, [TEKST]);
+  assert.ok(!V.fraVoksne(), 'ingen liste er åbnet');
+  // Med en ret i ugen er boblen gul og åbner listen
+  lageret.set('kog-uge-v1', planMed([null, null, { ret: ugensRetter()[1], n: 4, af: 'bo' }, null, null, null, null]));
+  V.rute('#/voksen/dag/1');
+  V.rute('#/voksen');
+  const fyldt = vist.at(-1);
+  assert.ok(!harKlasse(medFokusNavn(fyldt, 'indkoeb'), 'voksen-boble-tom'));
+  assert.equal(medKlasse(fyldt, 'uge-besked').length, 0);
+  send(medFokusNavn(fyldt, 'indkoeb'), 'click');
+  assert.match(location.hash, /^#\/hent\//);
 });
 
 test('«Mere»: ugeplanens handlinger og familiens husstand, udvalg, favoritter og «Mere grønt i maden»', (t) => {

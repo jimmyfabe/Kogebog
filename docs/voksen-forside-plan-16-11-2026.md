@@ -17,6 +17,6 @@ Jimmys ønske 15-11: forældredelen skal være lettere. Forsiden viser ugen, og 
 ## Det, der ikke ændres
 
 - Gemte data: samme `kog-uge-v1`, `kog-liste-v1`, `kog-familie-v1`. Kun nye ruter og skærme.
-- Låsen: alt under `#/voksen/…` er bag låsen (`laasFor`), også vælg-tilstanden og Mere. `#/indkoeb` og `#/hent` kræver den ikke.
+- Låsen: alt under `#/voksen/…` er bag låsen (`laasFor`), også vælg-tilstanden og Mere. `#/indkoeb` og `#/hent` kræver den ikke. Tilføjet efter reviewet 16-11 (U2): åbnes listen med boblen, bliver låsen åben, og listen har «Til ugeplanen» i stedet for huset. En tom uge åbner ingen liste (U3).
 - Børnenes del og `#/uge/vaelg…`. Voksendelen taler ikke.
 - Den gamle hub og ugeoversigten (`#/uge`) forsvinder som skærme; deres knapper står på forsiden eller under Mere.

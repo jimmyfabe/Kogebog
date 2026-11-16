@@ -871,7 +871,7 @@ async function indlaes() {
 }
 
 Ugeplan.init({ S, knap, klik, billede, lynMaerke, lynTekst, topbar, statusSkaerm, naviger, annoncer, indlaes, vis, huskFra,
-  voksne: (hash) => VoksenDel.aabn(hash) });
+  voksne: (hash) => VoksenDel.aabn(hash), fraVoksne: () => VoksenDel.fraVoksne() });
 VoksenDel.init({ S, knap, klik, billede, lynMaerke, lynTekst, topbar, statusSkaerm, naviger, annoncer, indlaes, vis, visSkaerm, huskFra });
 Timer.gendan();
 Tale.hentLydListe();
