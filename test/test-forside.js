@@ -347,6 +347,8 @@ globalThis.document = {
 };
 const lokation = { hash: '#/', search: '', protocol: 'http:' };
 globalThis.location = lokation;
+// En gammel adresse (#/uge) skiftes til den nye med history.replaceState (js/voksen-del.js): her skifter den kun hash
+globalThis.history = { replaceState: (s, t, url) => { lokation.hash = url; } };
 globalThis.window = {
   scrollY: 0,
   addEventListener: (type, fn) => { (vinduesLyttere[type] ??= []).push(fn); },
@@ -1004,22 +1006,26 @@ test('«I dag» står der ikke uden en plan, på en tom dag, med en plan til en 
   }
 });
 
-test('ugeplanen ligger bag låsen: #/uge viser holdet, holdet åbner oversigten, og indkøbslisten kræver det ikke', async () => {
+// v11 (16-11): ugeplanen er voksendelens forside. Den gamle adresse #/uge (et bogmærke, et gammelt link) sendes videre til
+// #/voksen med history.replaceState, og holdet åbner forsiden med ugens dage
+test('ugeplanen ligger bag låsen: #/uge viser holdet, holdet åbner voksendelens forside, og indkøbslisten kræver det ikke', async () => {
   await start('#/uge');
   try {
     assert.equal(overskrift(), 'Til de voksne');
+    assert.equal(location.hash, '#/voksen', 'den gamle adresse er skiftet til den nye');
     // Review R2 (15-11): også vagtens hold hedder det, man ser
     assert.match(rod.querySelector('.voksen-vagt').getAttribute('aria-label'), /^Voksne: hold\b/);
     holdInde(rod.querySelector('.voksen-vagt'));
-    assert.equal(location.hash, '#/uge');
-    assert.ok(rod.querySelector('main.uge-oversigt'), 'ugeplanens oversigt efter holdet');
-    // «Voksne» i topbaren og husstanden i hovedet fører til voksendelen, uden et nyt hold
-    assert.ok(rod.querySelector('.uge-husstand'), 'husstanden står i hovedet');
-    // Review L4 (15-11): navnet begynder med den tekst, man ser («Voksne»), så stemmestyring finder knappen
-    assert.match(rod.querySelector('.topbar-tilbage').getAttribute('aria-label'), /^Voksne\b/);
-    tryk(rod.querySelector('.topbar-tilbage'));
-    gaaTil(location.hash);
     assert.equal(location.hash, '#/voksen');
+    assert.ok(rod.querySelector('main.voksen-forside'), 'voksendelens forside efter holdet');
+    assert.equal(overskrift(), 'Ugeplan');
+    assert.equal(rod.querySelectorAll('.voksen-uge .voksen-dag').length, 7, 'ugens syv dage');
+    assert.deepEqual(rod.querySelectorAll('.voksen-bobler button').map((b) => b.dataset.fokus), ['indkoeb', 'katalog', 'mere']);
+    // En tom dag åbner vælg-tilstanden, uden et nyt hold
+    tryk(rod.querySelector('[data-fokus="dag-0"]'));
+    gaaTil(location.hash);
+    assert.equal(location.hash, '#/voksen/dag/1');
+    assert.equal(overskrift(), 'Vælg ret til mandag');
     assert.equal(rod.querySelector('.voksen-vagt'), null, 'låsen er stadig åben');
   } finally {
     gaaTil('#/');
@@ -1045,12 +1051,12 @@ test('statusskærmens dyr skjules, hvis billedet ikke kan hentes', async () => {
 
 // Review F2 (15-11): Safari (og WebKit) springer et link over med Tab, medmindre det har tabindex. «Print» ligner en knap og
 // skal kunne nås med tastaturet, også på iPad med tastaturcover
-test('ugeplanens oversigt: «Print» kan nås med Tab (tabindex="0")', async () => {
-  await start('#/uge', { foer: planMed(denneMandag(), dagNr(), UGE[3]) });
+test('«Mere» → «Ugeplanen»: «Print» kan nås med Tab (tabindex="0")', async () => {
+  await start('#/voksen/mere', { foer: planMed(denneMandag(), dagNr(), UGE[3]) });
   try {
     holdInde(rod.querySelector('.voksen-vagt'));
     const print = rod.querySelector('.print-link');
-    assert.ok(print, '«Print» står på oversigten med en ret i planen');
+    assert.ok(print, '«Print» står under «Mere» med en ret i planen');
     assert.equal(print.getAttribute('tabindex'), '0');
     // Review R5 (15-11): samme printLink som voksendelen: navnet begynder med «Print» og siger, hvad der kommer på papir,
     // og fokus kommer tilbage til den, når skærmen tegnes igen
@@ -1073,7 +1079,7 @@ async function ugeAdvarselDen(iso, uge) {
   globalThis.Date = falskDag(iso);
   await start('#/uge', { foer: planMed(uge, 6, UGE[3]) });
   holdInde(rod.querySelector('.voksen-vagt'));
-  assert.ok(rod.querySelector('main.uge-oversigt'), iso + ': ugeplanens oversigt efter holdet');
+  assert.ok(rod.querySelector('main.voksen-forside'), iso + ': voksendelens forside med ugeplanen efter holdet');
   return rod.querySelector('.uge-advarsel')?.textContent || '';
 }
 test('ugeplanen siger ikke «er gået» om søndagen i ugen, men gør det mandagen efter', async () => {

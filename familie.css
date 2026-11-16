@@ -24,14 +24,6 @@
 /* Hjertet står midt i færdig-skærmens topbar, som .ret .topbar-midte i app.css */
 .faerdig .topbar-midte { display: flex; justify-content: center; }
 
-/* Ugeplanens oversigt (#/uge) ligger bag voksendelens lås: «Voksne» i topbaren fører tilbage til menuen, og husstanden
-   står som en stille knap på sin egen linje under overskriften (husstandKnap i js/voksen-del.js). 48 px som filterchips */
-.uge-husstand-linje { flex-basis: 100%; }
-.knap.uge-husstand { min-height: 48px; max-width: 100%; padding: 6px 18px 6px 14px; gap: 10px; border-width: 2px; box-shadow: 0 3px 0 var(--kakao); font-size: 17px; text-align: left; }
-.knap.uge-husstand:active { transform: translateY(2px); box-shadow: 0 1px 0 var(--kakao); }
-.uge-husstand .ikon { width: 24px; height: 24px; }
-p.uge-husstand { font-size: 17px; font-weight: 750; color: var(--kakao-blid); }
-
 /* En mængde, der er regnet om til husstanden («450 g» i stedet for «300 g»): sennepsgul bund, så den voksne kan se, at
    den ikke står sådan i opskriften */
 .skaleret { padding: 0 6px; border-radius: 8px; background: var(--sennep-lys); -webkit-box-decoration-break: clone; box-decoration-break: clone; }
@@ -56,7 +48,6 @@ p.uge-husstand { font-size: 17px; font-weight: 750; color: var(--kakao-blid); }
 .voksen-undertitel { font-size: 20px; font-weight: 750; color: var(--kakao-blid); }
 .voksen-hjaelp { max-width: 40em; font-size: 18px; color: var(--kakao-blid); }
 .voksen-knapper { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
-.voksen-bund { justify-content: flex-end; }
 .voksen-tom { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; font-size: 18px; color: var(--kakao-blid); }
 /* Teksten gentager søgningen, som kan være ét langt ord (op til 60 tegn): det brydes ved kanten i stedet for at løbe ud */
 .voksen-tom p { overflow-wrap: anywhere; }
@@ -65,8 +56,9 @@ p.uge-husstand { font-size: 17px; font-weight: 750; color: var(--kakao-blid); }
 .voksen-del .knap:disabled, .voksen-del .knap[aria-disabled="true"] { background: var(--creme-moerk); color: var(--kakao-blid); border-color: var(--kakao-blid); box-shadow: 0 3px 0 var(--kakao-blid); cursor: default; }
 .voksen-del .knap:disabled { transform: none; }
 
-/* Oversigten: et kort pr. emne med navnet og hvordan det står til lige nu. To kolonner på iPad og desktop, én på telefonen.
-   Kontakten «Mere grønt i maden» står under menuen i samme gitter, så den er lige så bred som et kort */
+/* «Mere» → «Familien»: et kort pr. emne med navnet og hvordan det står til lige nu. To kolonner på iPad og desktop, én på
+   telefonen. Kontakten «Mere grønt i maden» står under kortene i samme gitter, så den er lige så bred som et kort.
+   .knap.voksen-punkt alene (96 px) er fra den gamle oversigt med tre store kort øverst; nu står kortene kun i .voksen-mere */
 .voksen-menu, .voksen-groent { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 16px 20px; }
 .voksen-menu > li { display: flex; min-width: 0; }
 .knap.voksen-punkt { width: 100%; min-height: 96px; padding: 14px 22px; justify-content: flex-start; gap: 16px; border-radius: 24px; text-align: left; }
@@ -75,8 +67,8 @@ p.uge-husstand { font-size: 17px; font-weight: 750; color: var(--kakao-blid); }
 .voksen-punkt-navn { font-size: 24px; font-weight: 800; }
 .voksen-punkt-status { font-size: 17px; font-weight: 700; color: var(--kakao-blid); overflow-wrap: anywhere; }
 /* «Mere»: det, man sætter én gang og sjældent ændrer (husstand, udvalg, favoritter og kontakten «Mere grønt i maden»).
-   Lavere kort og mindre navne end de tre øverst (Ugeplan, Indkøbsliste, Retter), så rækkefølgen også ses. To linjer
-   status, så kortene er lige høje, også «Ingen endnu» (review F5: 72 mod 87 px på iPhone) */
+   Lave kort med mindre navne. To linjer status, så kortene er lige høje, også «Ingen endnu» (review F5: 72 mod 87 px på
+   iPhone) */
 .voksen-afsnit { margin-top: 10px; margin-bottom: 12px; font-size: 22px; font-weight: 800; color: var(--kakao-blid); }
 .voksen-mere .knap.voksen-punkt { min-height: 76px; padding: 10px 20px; border-width: 2px; box-shadow: 0 3px 0 var(--kakao); }
 .voksen-mere .voksen-punkt-navn { font-size: 20px; }
@@ -161,9 +153,75 @@ p.uge-husstand { font-size: 17px; font-weight: 750; color: var(--kakao-blid); }
 .voksen-print { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
 .voksen-print-hjaelp { font-size: 16px; font-weight: 650; color: var(--kakao-blid); }
 
+/* ---------- #/voksen: forsiden er ugeplanen (docs/voksen-forside-plan-16-11-2026.md) ---------- */
+
+/* Boblerne øverst: Indkøbsliste, Retter og Mere. Indkøbslisten er sennep som de store knapper (det, man oftest skal
+   videre til), de to andre hvide. Antallet af varer står i en hvid pille i boblen. Ingen tekst brydes inde i en boble */
+.voksen-bobler { display: flex; flex-wrap: wrap; gap: 12px 14px; }
+.knap.voksen-boble { min-height: 60px; padding: 0 24px; gap: 10px; font-size: 21px; white-space: nowrap; }
+.voksen-boble .ikon { width: 26px; height: 26px; }
+.knap.voksen-boble-liste { background: var(--sennep); }
+.voksen-boble-tal { padding: 3px 10px; border: 2px solid var(--kakao); border-radius: 999px; background: var(--hvid); font-size: 16px; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+/* Ugens dage: ét hvidt ark, en række pr. dag, og hele rækken er én knap (mindst 68 px høj). Dagens navn og dato står i
+   dagens farve ([data-dag] i app.css) til venstre, så billedet, rettens navn og portionerne, og en vinkel, der peger ned
+   og vender, når arket under dagen er foldet ud. Fokusringen står inden for rækken: arket skærer alt uden for kanten væk */
+.voksen-uge { margin: 0; padding: 0; list-style: none; border: var(--kant); border-radius: 22px; background: var(--hvid); overflow: hidden; }
+.voksen-dag + .voksen-dag { border-top: 2px solid var(--creme-moerk); }
+.voksen-dag-knap { display: grid; grid-template-columns: 8.5rem 64px minmax(0, 1fr) auto; align-items: center; gap: 0 16px; width: 100%; min-height: 80px; margin: 0; padding: 0 18px 0 0; border: 0; border-radius: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.voksen-dag-knap:focus-visible { outline-offset: -5px; }
+.voksen-dag-hvornaar { align-self: stretch; display: flex; flex-direction: column; justify-content: center; gap: 2px; padding: 10px 16px; background: var(--dag, var(--creme)); }
+.voksen-dag-ugedag { font-size: 20px; font-weight: 800; line-height: 1.1; }
+.voksen-dag-dato { font-size: 16px; font-weight: 650; color: var(--kakao-blid); }
+.voksen-dag-billede { width: 64px; height: 64px; object-fit: contain; }
+.voksen-dag-ret { min-width: 0; display: flex; flex-direction: column; gap: 2px; padding: 10px 0; }
+/* Lange ord deles med bindestreg (lang="da"), ikke midt i ordet uden tegn (som .kort-navn i app.css) */
+.voksen-dag-ret-navn { font-size: 20px; font-weight: 800; line-height: 1.2; overflow-wrap: break-word; -webkit-hyphens: auto; hyphens: auto; }
+.voksen-dag-under { font-size: 16px; font-weight: 700; color: var(--kakao-blid); }
+/* Uden billede (retten er ikke længere i ugeplanen, eller opskriften kunne ikke hentes) bruger teksten billedets kolonne */
+.voksen-dag-ukendt .voksen-dag-ret { grid-column: 2 / span 2; }
+.voksen-dag-pil { width: 24px; height: 24px; transform: rotate(90deg); transition: transform .15s ease-out; }
+.voksen-dag-knap[aria-expanded="true"] .voksen-dag-pil { transform: rotate(-90deg); }
+/* En tom dag: «+ Vælg ret» som en stiplet pille, ligesom børnenes tomme tallerken */
+.voksen-dag-tom .voksen-dag-knap { grid-template-columns: 8.5rem minmax(0, 1fr); min-height: 68px; }
+.voksen-dag-vaelg { justify-self: start; display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 20px 0 14px; border: 2px dashed var(--kakao-blid); border-radius: 999px; font-size: 19px; font-weight: 800; white-space: nowrap; }
+.voksen-dag-vaelg .ikon { width: 22px; height: 22px; }
+.voksen-dag-knap:active { background: var(--creme); }
+@media (hover: hover) {
+  .voksen-dag-knap:hover { background: var(--creme); }
+  .voksen-dag-tom .voksen-dag-knap:hover .voksen-dag-vaelg { border-style: solid; background: var(--sennep-lys); }
+}
+/* Arket under en udfyldt dag: tid, pris og kniv, hvem der valgte, portionerne og tre knapper. Rykket ind under billedet,
+   og dagen og arket står på creme, så de ses som ét */
+.voksen-dag-aaben, .voksen-dag-aaben .voksen-dag-knap { background: var(--creme); }
+.voksen-dag-ark { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; padding: 2px 18px 16px calc(8.5rem + 16px); font-size: 17px; }
+.voksen-dag-ark > .uge-besked { align-self: stretch; }
+.voksen-dag-handlinger { display: flex; flex-wrap: wrap; gap: 10px; }
+.voksen-dag-handlinger .knap { white-space: nowrap; }
+
+/* Hele ugen er tom: en linje hjælp og «Lad børnene vælge» (Rosa i knappen) */
+.voksen-uge-tom { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; font-size: 18px; }
+.voksen-uge-tom p { max-width: 36em; }
+.knap.voksen-boern { padding-left: 18px; }
+
+/* Nederst: hvornår voksendelen lukker, og «Luk» */
+.voksen-bund { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; }
+.voksen-luk-tekst { font-size: 16px; font-weight: 700; color: var(--kakao-blid); }
+
+/* «Mere»: to afsnit, «Ugeplanen» og «Familien», med samme luft som resten */
+.voksen-sektion { display: flex; flex-direction: column; gap: 14px; }
+.voksen-sektion > .voksen-afsnit { margin: 8px 0 0; }
+
+/* Vælg-tilstanden (#/voksen/dag/<n>): ⚡ på billedets hjørne som på børnenes kort. Rammen er lige så bred som billedet.
+   position: relative holder skærmlæserens tekst til ⚡ inde i rækken */
+.voksen-vaelg .voksen-raekke { position: relative; }
+.voksen-raekke-ramme { position: relative; display: block; justify-self: start; }
+.voksen-raekke-nu { font-size: 16px; font-weight: 800; }
+
 @media (prefers-reduced-motion: reduce) {
   .voksen-filtre > summary::before { transition: none; }
   .voksen-kontakt-spor, .voksen-kontakt-prik { transition: none; }
+  .voksen-dag-pil { transition: none; }
 }
 
 /* Telefonen: mindre luft og billeder, så navnet har plads ved siden af knappen på 360-390 px */
@@ -175,8 +233,6 @@ p.uge-husstand { font-size: 17px; font-weight: 750; color: var(--kakao-blid); }
   .udvalg-tal { margin: 0 -12px; padding: 8px 12px; font-size: 18px; }
   .voksen-raekke { grid-template-columns: 56px minmax(0, 1fr) auto; gap: 0 10px; padding: 8px 10px; }
   .voksen-raekke-billede { width: 56px; height: 56px; }
-  /* De tre øverst er højere end «Mere» med to linjer status (87 px), også her (review F5) */
-  .knap.voksen-punkt { min-height: 96px; padding: 12px 18px; }
   .voksen-mere .knap.voksen-punkt, .knap.voksen-kontakt { min-height: 72px; padding: 10px 16px; }
   /* Kataloget: knapperne får deres egen linje under billedet og navnet (fire knapper ved navnet gav det under 80 px), og
      «Med i udvalget» bliver til «Med» og «Print» til printikonet, så de står på én linje (review F4). Hjertet er 48 px som
@@ -188,6 +244,22 @@ p.uge-husstand { font-size: 17px; font-weight: 750; color: var(--kakao-blid); }
   .voksen-raekke-knapper .knap.hjerte-knap { width: 48px; min-width: 48px; min-height: 48px; }
   .voksen-raekke-knapper .hjerte-knap .ikon { width: 26px; height: 26px; }
   .kun-bred { display: none; }
+  /* Forsiden: Indkøbsliste alene på første linje, Retter og Mere deler den næste */
+  .voksen-bobler { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .knap.voksen-boble-liste { grid-column: 1 / -1; }
+  .knap.voksen-boble { padding: 0 16px; }
+  /* Dagene: smallere kolonne til dagens navn og mindre billede, så rettens navn har plads på 360 px */
+  .voksen-dag-knap { grid-template-columns: 5.8rem 52px minmax(0, 1fr) 20px; gap: 0 10px; min-height: 72px; padding-right: 10px; }
+  .voksen-dag-tom .voksen-dag-knap { grid-template-columns: 5.8rem minmax(0, 1fr); min-height: 64px; }
+  .voksen-dag-hvornaar { padding: 8px 8px 8px 10px; }
+  .voksen-dag-ugedag { font-size: 17px; }
+  .voksen-dag-dato { font-size: 15px; }
+  .voksen-dag-billede { width: 52px; height: 52px; }
+  .voksen-dag-ret-navn { font-size: 18px; }
+  .voksen-dag-under { font-size: 15px; }
+  .voksen-dag-pil { width: 20px; height: 20px; }
+  .voksen-dag-vaelg { padding: 0 16px 0 10px; font-size: 18px; }
+  .voksen-dag-ark { padding: 2px 12px 14px; }
 }
 
 /* 667×375: samme kant som topbaren (24 px), som .uge i app.css */

@@ -1,10 +1,10 @@
 // ugeplan.js — skærmene til ugeplanen og indkøbslisten (docs/ugeplan-plan.md, afsnit 1-3):
 //   #/hent/<kode>  telefonen: gemmer listen fra linket og skifter adressen til #/indkoeb (history.replaceState)
 //   #/indkoeb      telefonen: listen, der krydses af i butikken. Er den tom, kan linket sættes ind i et felt
-//   #/uge          iPad og desktop: den voksnes oversigt over ugen, Send til telefon, Del som tekst, Print og Ny uge.
-//                  #/uge og #/uge/dag/<n> ligger bag voksendelens lås (laasFor i js/voksen-del.js), #/uge/vaelg ikke
-//   #/uge/dag/<n>  den voksne vælger en ret til dag n (1 = mandag) med filtrene højst 40 min, vegetar, masser af grønt,
-//                  billigst og mindst kniv
+//   #/uge          gammel adresse: js/voksen-del.js sender den videre til #/voksen (voksendelens forside er ugeplanen),
+//                  og #/uge/dag/<n> til #/voksen/dag/<n> (vælg en ret til dagen). Her står ugens dage og arket under en
+//                  dag (ugeIndhold), handlingerne under «Mere» (ugeHandlinger: Send til telefon, Del som tekst, Print,
+//                  Ny uge) og saetDag. Det hele ligger bag voksendelens lås (laasFor), #/uge/vaelg ikke
 //   #/uge/vaelg    iPad: børnene vælger med dyrene, billederne og stemmen (hvem → ret → dag) blandt ugens udvalg fra
 //                  voksendelen (favoritterne og nye retter, højst 12, når der intet udvalg er: retterTilBoern)
 // Koden i linket kommer udefra. Den går kun gennem afkod() i js/plankode.js, og intet fra adressen kommer i DOM'en: fejlene
@@ -26,8 +26,7 @@ import * as Tale from './tale.js';
 import * as R from './replikker.js';
 
 // app.js: { S, knap, klik, billede, lynMaerke, lynTekst, topbar, statusSkaerm, naviger, annoncer, indlaes, vis, huskFra,
-// voksne, husstand }. voksne(hash) låser voksendelen op og går til hash; husstand() er knappen med husstanden
-// (js/voksen-del.js)
+// voksne }. voksne(hash) låser voksendelen op og går til hash (js/voksen-del.js)
 let K = null;
 export function init(k) {
   K = k;
@@ -60,9 +59,9 @@ export function skaerm(r) {
   // Beskederne under oversigtens knapper («Linket er kopieret») hører til den skærm, de kom på
   if (r.side !== sidsteSide) oversigtBesked = null;
   sidsteSide = r.side;
+  // #/uge og #/uge/dag/<n> når aldrig hertil: js/voksen-del.js sender dem videre til #/voksen og #/voksen/dag/<n>
+  // (nyAdresse), før app.js spørger her
   if (r.side === 'hent') return hentSkaerm(r.kode);
-  if (r.side === 'oversigt') return oversigtSkaerm();
-  if (r.side === 'dag') return dagSkaerm(r.i);
   if (r.side === 'vaelg') return vaelgSkaerm(r);
   return indkoebSkaerm();
 }
@@ -441,8 +440,9 @@ export function knivTekst(m) {
   return kniv ? kniv + ' knivtrin' : 'ingen kniv';
 }
 
-// Rækkefølgen i «Vælg ret» (dagSkaerm): «Mindst kniv først» efter knivtrin (som «N knivtrin»), «Billigst først» efter
-// pris pr. portion, begge valgt: kniv først og så pris. Ellers som i planen. Giver en ny liste
+// Rækkefølgen i vælg-tilstanden (#/voksen/dag/<n> i js/voksen-del.js): «Mindst kniv først» efter knivtrin (som «N
+// knivtrin»), «Billigst først» efter pris pr. portion, begge valgt: kniv først og så pris. Ellers som i planen. Giver en
+// ny liste
 export function sorterValg(retter, { kniv = false, billig = false } = {}) {
   const prisPP = (m) => m.uge.prisKr / m.uge.portioner;
   return [...retter].sort((a, b) => (kniv ? knivtrin(a) - knivtrin(b) : 0) || (billig ? prisPP(a) - prisPP(b) : 0));
@@ -452,7 +452,7 @@ export function sorterValg(retter, { kniv = false, billig = false } = {}) {
 // holdes sammen med hårde mellemrum, så linjen kun brydes mellem leddene: før stod der «268 g grønt pr. | person» og
 // «· 2 knivtrin» alene (UI-review V5, 23-10). Prikken skjules, hvor linjen brydes (ledLinje i js/dom.js)
 const SKILLE_HEL = '\u00a0· ';
-function metaLinje(m, n) {
+export function metaLinje(m, n) {
   return ledLinje('span', { class: 'dag-meta' }, [
     m.minutter ? minutterTekst(m.minutter) : '',
     'ca. ' + Math.round(prisFor(m, n)) + ' kr.',
@@ -507,7 +507,19 @@ function ugensData(p) {
   return { uge, kode: kod(uge, dage, { mereGroent: groen }), varer: saml(valg), antal: valg.length, mangler: manglerTekst(ikkeHentet, udenfor.length - ikkeHentet) };
 }
 
-// ---------- #/uge: den voksnes oversigt ----------
+// ---------- #/voksen: ugen på voksendelens forside (js/voksen-del.js bygger skærmen) ----------
+// voksen-del.js står for boblerne øverst, «Luk», låsen og #/voksen/dag/<n> (kataloget i vælg-tilstand). Her står ugens
+// dage, summen, advarslen og hjælpen til en tom uge (ugeIndhold), handlingerne under «Mere» (ugeHandlinger) og det, der
+// lægger en ret på en dag (saetDag). Et tryk på en tom dag går til vælg-tilstanden; et tryk på en udfyldt dag folder et
+// lille ark ud under den med portionerne, «Byt ret», «Fjern» og «Åbn retten». Ét ark ad gangen, og kun i hukommelsen
+
+let aabenDag = null; // dagen (0-6), hvis ark er foldet ud, eller null
+
+// En ny side i voksendelen: beskeden og arket hørte til den side, de kom på
+export function glemVisning() {
+  oversigtBesked = null;
+  aabenDag = null;
+}
 
 function medFokus(b, noegle) {
   b.dataset.fokus = noegle;
@@ -517,44 +529,210 @@ function medFokus(b, noegle) {
 function stepper({ vaerdi, navn, enhed, fokus, saet }) {
   return el('div', { class: 'stepper', role: 'group', 'aria-label': navn },
     medFokus(K.knap('', { klasse: 'rund trin-knap', ikonNavn: 'minus', label: 'Færre: ' + navn, onclick: () => saet(vaerdi - 1, fokus + '-minus') }), fokus + '-minus'),
-    el('output', { class: 'stepper-tal', tekst: vaerdi + ' ' + enhed }),
+    el('output', { class: 'stepper-tal', tekst: vaerdi + '\u00a0' + enhed }),
     medFokus(K.knap('', { klasse: 'rund trin-knap', ikonNavn: 'plus', label: 'Flere: ' + navn, onclick: () => saet(vaerdi + 1, fokus + '-plus') }), fokus + '-plus'));
 }
 
-function dagRaekke(p, d, i) {
+// Lægger retten id på dag i (0 = mandag) gennem gemPlan, som læser hele planen lige før (M1). Den voksnes valg står som
+// Bos (afsnit 1). Byttes en ret, beholder dagen dyret og portionerne. Svar: den gemte plan eller null
+export function saetDag(i, id) {
+  if (!Number.isInteger(i) || i < 0 || i >= DAGE.length) return null;
+  return gemPlan((q) => {
+    const gl = q.dage[i];
+    q.dage[i] = { ret: id, af: gl ? gl.af : 'bo', n: gl ? gl.n : q.n };
+    return { dage: q.dage };
+  });
+}
+
+// Varerne, der skal købes til ugens plan (uden basisvarerne: salt, peber, olie), til boblen «Indkøbsliste». 0 uden plan
+export function antalVarer() {
+  if (!klar()) return 0;
+  const p = hentPlan();
+  if (p.laast) return 0;
+  return grupper(ugensData(p).varer).filter((g) => g.afd !== 'basis').reduce((s, g) => s + g.varer.length, 0);
+}
+
+const LAAST_TEKST = 'Ugeplanen er lavet med en nyere udgave af Tumbi Køkken, så den kan ikke ændres her. Genindlæs siden, så hentes den nye udgave.';
+// Børnenes valg med en plan fra en nyere udgave
+const laastPlanSkaerm = () => K.statusSkaerm({
+  titel: 'Ugeplanen er lavet med en nyere udgave',
+  tekst: 'Denne enhed har en ældre udgave af Tumbi Køkken, som ikke må ændre planen. Genindlæs siden, så hentes den nye udgave.',
+  handling: K.knap('Til forsiden', { ikonNavn: 'hjem', onclick: () => K.naviger('#/') }),
+});
+
+// Et link til en uge mere end 8 uger fra i dag afviser afkod (på telefonen og på #/hent/ her). Så går «Indkøbsliste» til
+// den gemte liste, og advarslen siger, hvad den voksne gør; «Del som tekst» og «Print» virker stadig (U4, 23-10).
+// «Ny uge» og «uge 44» har hårde mellemrum: på 390 px brød de som «Ny | uge» (UI-review 2, 23-10)
+const kanSendes = (p, data) => !p.dage.some(Boolean) || afkod(data.kode, { retter: K.S.ids, idag: new Date() }).ok;
+function advarselFor(p, data) {
+  const uge = p.uge || planMandag();
+  const hold = 'hold «Ny\u00a0uge» under «Mere» for at tømme planen';
+  const nyPlan = ' og lave en plan til uge\u00a0' + ugeNr(planMandag()) + '.';
+  if (!kanSendes(p, data) && ugenErGaaet(p.uge)) return 'Uge\u00a0' + ugeNr(uge) + ' er mere end 8 uger siden, så listen kan ikke sendes til telefonen. H' + hold.slice(1) + nyPlan;
+  if (!kanSendes(p, data)) return 'Uge\u00a0' + ugeNr(uge) + ' ligger mere end 8 uger fremme, så listen kan ikke sendes til telefonen. Tjek datoen på iPad\'en, eller ' + hold + '.';
+  if (ugenErGaaet(p.uge)) return 'Uge\u00a0' + ugeNr(p.uge) + ' er gået. H' + hold.slice(1) + nyPlan;
+  return null;
+}
+
+// Arket under en udfyldt dag: tid, pris og kniv, hvem der valgte, portionerne og de tre handlinger
+function dagArk(d, i, m, id) {
   const navn = DAGE[i];
   const lille = navn.toLowerCase();
-  const hoved = el('div', { class: 'dag-hoved' }, el('span', { class: 'dag-navn', tekst: navn }),
-    el('span', { class: 'dag-dato', tekst: dagDato(p.uge || planMandag(), i) }));
-  const li = (klasse, ...born) => el('li', { class: 'dag' + klasse, 'data-dag': String(i) }, hoved, ...born);
-  if (!d) {
-    return li(' fri', el('div', { class: 'dag-ret' }, el('span', { class: 'dag-ret-navn', tekst: 'Fri aften' })),
-      el('div', { class: 'dag-knapper' },
-        medFokus(K.knap('Vælg ret', { klasse: 'lille', ikonNavn: 'plus', label: 'Vælg ret til ' + lille, onclick: () => K.naviger('#/uge/dag/' + (i + 1)) }), 'dag-' + i + '-vaelg')));
-  }
-  const m = udgaveAf(K.S.retter.get(d.ret), mereGroent());
-  const fjern = medFokus(K.knap('Fjern', { klasse: 'lille', ikonNavn: 'kryds', label: 'Fjern retten fra ' + lille, onclick: () => {
-    if (gemPlan((q) => { q.dage[i] = null; return { dage: q.dage }; })) K.annoncer(navn + ' er en fri aften.');
-    tegnIgen('dag-' + i + '-vaelg');
-  } }), 'dag-' + i + '-fjern');
-  const byt = medFokus(K.knap('Byt ret', { klasse: 'lille', label: 'Byt retten ' + lille, onclick: () => K.naviger('#/uge/dag/' + (i + 1)) }), 'dag-' + i + '-byt');
-  if (!m || m instanceof Error || !m.uge) {
-    const tekst = m instanceof Error ? 'Opskriften kunne ikke hentes. Tjek internetforbindelsen.' : 'Retten er ikke længere i ugeplanen.';
-    return li(' uden-billede', el('div', { class: 'dag-ret' }, el('span', { class: 'dag-ret-navn', tekst: m && !(m instanceof Error) ? m.navn : 'Ukendt ret' }),
-      el('span', { class: 'dag-meta', tekst })), el('div', { class: 'dag-knapper' }, byt, fjern));
-  }
-  const portioner = stepper({ vaerdi: d.n, navn: 'portioner ' + lille, enhed: 'pers.', fokus: 'dag-' + i, saet: (n, fokus) => {
+  const kendt = Boolean(m && m.uge);
+  const fejlVed = () => { if (oversigtBesked) oversigtBesked.dag = i; };
+  const portioner = kendt ? stepper({ vaerdi: d.n, navn: 'portioner ' + lille, enhed: 'pers.', fokus: 'dag-' + i, saet: (n, fokus) => {
     if (n < 1 || n > 12) return;
     if (gemPlan((q) => { if (q.dage[i]) q.dage[i] = { ...q.dage[i], n }; return { dage: q.dage }; })) K.annoncer(navn + ': ' + n + ' personer.');
+    else fejlVed();
     tegnIgen(fokus);
-  } });
-  return li('',
-    K.billede(grafikRet(m.id), '', 'dag-billede'),
-    el('div', { class: 'dag-ret' },
-      el('span', { class: 'dag-ret-navn', tekst: m.navn }),
-      metaLinje(m, d.n),
-      el('span', { class: 'dag-af' }, K.billede(grafikDyr(d.af), '', 'dag-dyr'), el('span', { tekst: 'Valgt af ' + dyrNavn(d.af) }))),
-    el('div', { class: 'dag-knapper' }, portioner, byt, fjern));
+  } }) : null;
+  const byt = medFokus(K.knap('Byt ret', { klasse: 'lille', ikonNavn: 'igen', label: 'Byt retten ' + lille, onclick: () => K.naviger('#/voksen/dag/' + (i + 1)) }), 'dag-' + i + '-byt');
+  const fjern = medFokus(K.knap('Fjern', { klasse: 'lille', ikonNavn: 'kryds', label: 'Fjern retten fra ' + lille, onclick: () => {
+    if (gemPlan((q) => { q.dage[i] = null; return { dage: q.dage }; })) {
+      aabenDag = null;
+      K.annoncer('Retten er fjernet fra ' + lille + '.');
+    } else fejlVed();
+    tegnIgen('dag-' + i);
+  } }), 'dag-' + i + '-fjern');
+  // Pilen fra retten fører tilbage hertil (huskFra i app.js). Retten ligger uden for låsen, så holdet kommer først
+  const aabn = kendt ? medFokus(K.knap('Åbn retten', { klasse: 'lille', label: 'Åbn retten ' + m.navn, onclick: () => {
+    K.huskFra(m.id);
+    K.naviger('#/ret/' + m.id);
+  } }), 'dag-' + i + '-aabn') : null;
+  return el('div', { class: 'voksen-dag-ark', id, role: 'group', 'aria-label': navn },
+    kendt ? metaLinje(m, d.n) : null,
+    kendt && dyrNavn(d.af) ? el('span', { class: 'dag-af' }, K.billede(grafikDyr(d.af), '', 'dag-dyr'), el('span', { tekst: 'Valgt af ' + dyrNavn(d.af) })) : null,
+    portioner ? el('div', { class: 'indstilling' }, el('span', { class: 'indstilling-navn', 'aria-hidden': 'true', tekst: 'Portioner' }), portioner) : null,
+    el('div', { class: 'voksen-dag-handlinger' }, byt, fjern, aabn),
+    oversigtBesked && oversigtBesked.dag === i ? oversigtBeskedEl() : null);
+}
+
+// Arket under dagen ud eller ind. Fokus bliver på dagen, og et udfoldet ark rulles frem, hvis det står under kanten
+function skiftArk(i) {
+  aabenDag = aabenDag === i ? null : i;
+  tegnIgen('dag-' + i);
+  if (aabenDag === i) document.querySelector('.voksen-dag-ark')?.scrollIntoView({ block: 'nearest', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+}
+
+// En dag på forsiden: hele rækken er én knap. Tom: «+ Vælg ret» (vælg-tilstanden). Udfyldt: billedet, navnet og
+// portionerne, og et tryk folder arket ud. Navnet til skærmlæseren er det, der står («Tirsdag 17/11 Vælg ret»)
+function forsideDag(p, d, i) {
+  const hvornaar = el('span', { class: 'voksen-dag-hvornaar' },
+    el('span', { class: 'voksen-dag-ugedag', tekst: DAGE[i] }),
+    el('span', { class: 'voksen-dag-dato', tekst: dagDato(p.uge || planMandag(), i) }));
+  if (!d) {
+    return el('li', { class: 'voksen-dag voksen-dag-tom', 'data-dag': String(i) },
+      medFokus(el('button', { type: 'button', class: 'voksen-dag-knap', onclick: K.klik(() => K.naviger('#/voksen/dag/' + (i + 1))) },
+        hvornaar, el('span', { class: 'voksen-dag-vaelg' }, ikon('plus'), el('span', { tekst: 'Vælg ret' }))), 'dag-' + i));
+  }
+  const raa = K.S.retter.get(d.ret);
+  const m = model(d.ret);
+  const kendt = Boolean(m && m.uge);
+  const aaben = aabenDag === i;
+  const arkId = 'dag-ark-' + i;
+  const under = kendt ? d.n + '\u00a0' + (d.n === 1 ? 'portion' : 'portioner')
+    : raa instanceof Error ? 'Opskriften kunne ikke hentes. Tjek internetforbindelsen.' : 'Retten er ikke længere i ugeplanen.';
+  const knap = medFokus(el('button', {
+    type: 'button',
+    class: 'voksen-dag-knap',
+    'aria-expanded': String(aaben),
+    'aria-controls': aaben ? arkId : null,
+    onclick: K.klik(() => skiftArk(i)),
+  }, hvornaar,
+  kendt ? K.billede(grafikRet(m.id), '', 'voksen-dag-billede') : null,
+  el('span', { class: 'voksen-dag-ret' },
+    el('span', { class: 'voksen-dag-ret-navn', tekst: m ? m.navn : 'Ukendt ret' }),
+    el('span', { class: 'voksen-dag-under', tekst: under })),
+  ikon('frem', 'ikon voksen-dag-pil')), 'dag-' + i);
+  const li = el('li', { class: 'voksen-dag' + (kendt ? '' : ' voksen-dag-ukendt') + (aaben ? ' voksen-dag-aaben' : ''), 'data-dag': String(i), 'data-ret': d.ret },
+    knap, aaben ? dagArk(d, i, m, arkId) : null);
+  // Escape lukker arket, både fra dagen og fra knapperne i arket, og fokus står på dagen igen
+  if (aaben) {
+    li.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      e.preventDefault();
+      aabenDag = null;
+      tegnIgen('dag-' + i);
+    });
+  }
+  return li;
+}
+
+// Forsidens indhold under boblerne: advarslen, hjælpen til en tom uge, de syv dage, summen og en besked. En plan fra en
+// nyere udgave vises ikke (den kan ikke læses her): kun en fast tekst
+export function ugeIndhold() {
+  const p = hentPlan();
+  if (p.laast) return [el('p', { class: 'uge-advarsel', role: 'status', tekst: LAAST_TEKST })];
+  const data = ugensData(p);
+  const harRetter = p.dage.some(Boolean);
+  const advarsel = advarselFor(p, data);
+  // Summen: prisen for de valgte portioner og dagene med grønt (ud af alle syv; en tom dag tæller som uden). Hårde
+  // mellemrum i begge led: på 360 px stod «dage» alene på næste linje (UI-review V6, 23-10)
+  let kr = 0;
+  let groent = 0;
+  for (const d of p.dage) {
+    const m = d && model(d.ret);
+    if (!m || !m.uge) continue;
+    kr += prisFor(m, d.n);
+    if (m.uge.groentG > 0) groent++;
+  }
+  const tom = harRetter ? null : el('div', { class: 'voksen-uge-tom' },
+    el('p', { tekst: 'Ugen er tom. Tryk på en dag for at vælge en ret, eller lad børnene vælge på iPad\'en.' }),
+    medFokus(boernKnap('Lad børnene vælge', 'voksen-boern'), 'boern'));
+  return [
+    advarsel ? el('p', { class: 'uge-advarsel', role: 'status', tekst: advarsel }) : null,
+    tom,
+    el('ol', { class: 'voksen-uge', role: 'list', 'aria-label': 'Ugens dage' }, p.dage.map((d, i) => forsideDag(p, d, i))),
+    harRetter ? ledLinje('p', { class: 'uge-sum' }, ['Ca.\u00a0' + Math.round(kr / 10) * 10 + '\u00a0kr.', 'grønt\u00a0' + groent + '\u00a0af\u00a07\u00a0dage'], SKILLE_HEL) : null,
+    oversigtBesked && oversigtBesked.dag == null ? oversigtBeskedEl() : null,
+  ];
+}
+
+// «Mere» → «Ugeplanen»: send, del og print listen, portioner til nye retter, retter pr. barn, børnene vælger og «Ny uge»
+export function ugeHandlinger() {
+  const p = hentPlan();
+  if (p.laast) return [el('p', { class: 'uge-advarsel', role: 'status', tekst: LAAST_TEKST })];
+  const data = ugensData(p);
+  const harRetter = p.dage.some(Boolean);
+  const knapper = harRetter ? el('div', { class: 'voksen-knapper' },
+    kanSendes(p, data) ? medFokus(K.knap('Send til telefon', { klasse: 'lille', ikonNavn: 'telefon', onclick: () => sendLink(data) }), 'send') : null,
+    medFokus(K.knap('Del som tekst', { klasse: 'lille', ikonNavn: 'liste', onclick: () => delTekst(data) }), 'del'),
+    // Samme printLink som voksendelen: tabindex til Safari (F2), navnet begynder med «Print» (L4), og fokus kommer
+    // tilbage, når skærmen tegnes igen (review R5, 15-11)
+    medFokus(printLink('Print', 'print.html?uge', 'Print ugeplanen og indkøbslisten', { klasse: 'lille' }), 'print'))
+    : el('p', { class: 'voksen-hjaelp', tekst: 'Vælg mindst én ret på ugeplanen, så kan listen sendes til telefonen, deles og printes.' });
+
+  const indstillinger = el('div', { class: 'uge-indstillinger' },
+    el('div', { class: 'indstilling' }, el('span', { class: 'indstilling-navn', tekst: 'Portioner til nye retter' }),
+      stepper({ vaerdi: p.n, navn: 'portioner til nye retter', enhed: 'pers.', fokus: 'plan-n', saet: (n, fokus) => {
+        if (n < 1 || n > 12) return;
+        gemPlan(() => ({ n }));
+        tegnIgen(fokus);
+      } })),
+    el('div', { class: 'indstilling' }, el('span', { class: 'indstilling-navn', id: 'ind-pr-barn', tekst: 'Retter pr. barn' }),
+      el('div', { class: 'valg-par', role: 'group', 'aria-labelledby': 'ind-pr-barn' }, [1, 2].map((x) => {
+        const b = medFokus(K.knap(String(x), { klasse: 'lille valg', label: x === 1 ? 'Én ret pr. barn' : 'To retter pr. barn', onclick: () => {
+          gemPlan(() => ({ prBarn: x }));
+          tegnIgen('pr-barn-' + x);
+        } }), 'pr-barn-' + x);
+        b.setAttribute('aria-pressed', String(p.prBarn === x));
+        return b;
+      }))),
+    medFokus(boernKnap('Børnene vælger'), 'boern'));
+
+  const ny = harRetter || p.uge ? medFokus(holdKnap({
+    klasse: 'lille voksen-hold ny-uge',
+    label: 'Ny uge: tømmer planen. Hold knappen inde i 2 sekunder.',
+    indhold: [ikon('igen'), el('span', { tekst: 'Ny\u00a0uge: hold' })],
+    naarFaerdig: () => {
+      if (gemPlan(() => ({ dage: [null, null, null, null, null, null, null], uge: planMandag() }))) {
+        oversigtBesked = { tekst: 'Planen er tømt. Den nye plan er til uge\u00a0' + ugeNr(planMandag()) + '.' };
+      }
+      tegnIgen('ny-uge');
+    },
+  }), 'ny-uge') : null;
+
+  return [knapper, oversigtBeskedEl(), indstillinger, ny ? el('div', { class: 'voksen-knapper' }, ny) : null];
 }
 
 // Delearket (AirDrop eller Beskeder), ellers udklipsholderen, ellers et felt, man selv kopierer fra.
@@ -613,202 +791,15 @@ function oversigtBeskedEl() {
   return el('div', { class: 'uge-besked' + (b.fejl ? ' fejl' : ''), role: b.fejl ? 'alert' : 'status' }, el('p', { tekst: b.tekst }), felt);
 }
 
-function oversigtSkaerm() {
-  if (K.S.indexFejl) return hentFejl();
-  if (!klar()) return henter('Henter ugeplanen …');
-  const p = hentPlan();
-  if (p.laast) {
-    return K.statusSkaerm({
-      titel: 'Ugeplanen er lavet med en nyere udgave',
-      tekst: 'Denne enhed har en ældre udgave af Tumbi Køkken, som ikke må ændre planen. Genindlæs siden, så hentes den nye udgave.',
-      handling: K.knap('Til forsiden', { ikonNavn: 'hjem', onclick: () => K.naviger('#/') }),
-    });
-  }
-  const uge = p.uge || planMandag();
-  const data = ugensData(p);
-  const harRetter = p.dage.some(Boolean);
-  // Summen: prisen for de valgte portioner og dagene med grønt (ud af alle syv; en fri aften tæller som uden)
-  let kr = 0;
-  let groent = 0;
-  for (const d of p.dage) {
-    const m = d && model(d.ret);
-    if (!m || !m.uge) continue;
-    kr += prisFor(m, d.n);
-    if (m.uge.groentG > 0) groent++;
-  }
-  // Hårde mellemrum i begge led: på 360 px stod «dage» alene på næste linje (UI-review V6, 23-10)
-  const sum = harRetter ? ['Ca.\u00a0' + Math.round(kr / 10) * 10 + '\u00a0kr.', 'grønt\u00a0' + groent + '\u00a0af\u00a07\u00a0dage'] : ['Ingen retter endnu'];
-  // Et link til en uge mere end 8 uger fra i dag afviser afkod (på telefonen og på #/hent/ her). Så er «Indkøbsliste» og
-  // «Send til telefon» væk, og advarslen siger, hvad den voksne gør; «Del som tekst» og «Print» virker stadig (U4, 23-10)
-  const kanSendes = !harRetter || afkod(data.kode, { retter: K.S.ids, idag: new Date() }).ok;
-  let advarsel = null;
-  // Advarslen siger, hvor «Ny uge» står (sidst i .uge-knapper nederst på siden), og at den tømmer planen (UI-review V7, 23-10).
-  // «Ny uge» og «uge 44» har hårde mellemrum: på 390 px brød de som «Ny | uge» (UI-review 2, 23-10)
-  if (!kanSendes && ugenErGaaet(p.uge)) advarsel = 'Uge\u00a0' + ugeNr(uge) + ' er mere end 8 uger siden, så listen kan ikke sendes til telefonen. Hold «Ny\u00a0uge» nederst for at tømme planen og lave en plan til uge\u00a0' + ugeNr(planMandag()) + '.';
-  else if (!kanSendes) advarsel = 'Uge\u00a0' + ugeNr(uge) + ' ligger mere end 8 uger fremme, så listen kan ikke sendes til telefonen. Tjek datoen på iPad\'en, eller hold «Ny\u00a0uge» nederst for at tømme planen.';
-  else if (ugenErGaaet(p.uge)) advarsel = 'Uge\u00a0' + ugeNr(p.uge) + ' er gået. Hold «Ny\u00a0uge» nederst for at tømme planen og lave en plan til uge\u00a0' + ugeNr(planMandag()) + '.';
-
-  const indstillinger = el('div', { class: 'uge-indstillinger' },
-    el('div', { class: 'indstilling' }, el('span', { class: 'indstilling-navn', tekst: 'Portioner til nye retter' }),
-      stepper({ vaerdi: p.n, navn: 'portioner til nye retter', enhed: 'pers.', fokus: 'plan-n', saet: (n, fokus) => {
-        if (n < 1 || n > 12) return;
-        gemPlan(() => ({ n }));
-        tegnIgen(fokus);
-      } })),
-    el('div', { class: 'indstilling' }, el('span', { class: 'indstilling-navn', id: 'ind-pr-barn', tekst: 'Retter pr. barn' }),
-      el('div', { class: 'valg-par', role: 'group', 'aria-labelledby': 'ind-pr-barn' }, [1, 2].map((x) => {
-        const b = medFokus(K.knap(String(x), { klasse: 'lille valg', label: x === 1 ? 'Én ret pr. barn' : 'To retter pr. barn', onclick: () => {
-          gemPlan(() => ({ prBarn: x }));
-          tegnIgen('pr-barn-' + x);
-        } }), 'pr-barn-' + x);
-        b.setAttribute('aria-pressed', String(p.prBarn === x));
-        return b;
-      }))),
-    medFokus(boernKnap(), 'boern'));
-
-  const ny = medFokus(holdKnap({
-    klasse: 'lille voksen-hold ny-uge',
-    label: 'Ny uge: tømmer planen. Hold knappen inde i 2 sekunder.',
-    indhold: [ikon('igen'), el('span', { tekst: 'Ny\u00a0uge: hold' })],
-    naarFaerdig: () => {
-      if (gemPlan(() => ({ dage: [null, null, null, null, null, null, null], uge: planMandag() }))) {
-        oversigtBesked = { tekst: 'Planen er tømt. Den nye plan er til uge\u00a0' + ugeNr(planMandag()) + '.' };
-      }
-      tegnIgen('ny-uge');
-    },
-  }), 'ny-uge');
-
-  // «Indkøbsliste» og «Send til telefon» står i deres egen række, som på iPad og desktop står fast i bunden (app.css): på
-  // iPad'en på langs lå de under kanten (UI-review V8, 27-10). Resten står under den, så den faste bund holder sig til én
-  // række. Rækken skal være et barn af .uge: en fast bund kan ikke komme uden for sin forælder
-  const hoved = harRetter && kanSendes ? [
-    medFokus(K.knap('Indkøbsliste', { klasse: 'primaer', ikonNavn: 'kurv', onclick: () => K.naviger('#/hent/' + data.kode) }), 'liste'),
-    medFokus(K.knap('Send til telefon', { ikonNavn: 'telefon', onclick: () => sendLink(data) }), 'send'),
-  ] : [];
-  const andre = [
-    harRetter ? medFokus(K.knap('Del som tekst', { ikonNavn: 'liste', onclick: () => delTekst(data) }), 'del') : null,
-    // Samme printLink som voksendelen: tabindex til Safari (F2), navnet begynder med «Print» (L4), og fokus kommer
-    // tilbage, når skærmen tegnes igen (review R5, 15-11)
-    harRetter ? medFokus(printLink('Print', 'print.html?uge', 'Print ugeplanen og indkøbslisten'), 'print') : null,
-    harRetter || p.uge ? ny : null,
-  ].filter(Boolean);
-
-  // «Voksne» fører tilbage til voksendelens menu (ugeplanen ligger bag samme lås), og husstanden står i hovedet, så den
-  // voksne kan se, hvem portionerne er regnet til, uden at gå derind
-  return el('main', { class: 'skaerm uge-oversigt' },
-    K.topbar(null, '#/voksen', { tekst: 'Voksne', label: 'Voksne: tilbage til voksendelen' }),
-    el('div', { class: 'uge' },
-      el('header', { class: 'uge-hoved' },
-        el('h1', { tabindex: '-1', tekst: 'Ugeplan' }),
-        ledLinje('p', { class: 'uge-nr' }, ['Uge ' + ugeNr(uge), dagDato(uge, 0) + '–' + dagDato(uge, 6)]),
-        el('div', { class: 'uge-husstand-linje' }, medFokus(K.husstand(), 'husstand'))),
-      advarsel ? el('p', { class: 'uge-advarsel', role: 'status', tekst: advarsel }) : null,
-      indstillinger,
-      el('ol', { class: 'uge-dage', role: 'list', 'aria-label': 'Ugens dage' }, p.dage.map((d, i) => dagRaekke(p, d, i))),
-      el('div', { class: 'uge-bund' },
-        ledLinje('p', { class: 'uge-sum' }, sum, SKILLE_HEL),
-        harRetter ? null : el('p', { class: 'uge-tom', tekst: 'Vælg mindst én ret, så kan listen sendes til telefonen.' })),
-      hoved.length ? el('div', { class: 'uge-knapper uge-handlinger' }, hoved) : null,
-      andre.length ? el('div', { class: 'uge-knapper' }, andre) : null,
-      oversigtBeskedEl()));
-}
-
-// Giver iPad'en til børnene: de vælger med dyrene (#/uge/vaelg), og stemmen spørger, hvem der skal vælge
-function boernKnap() {
-  const b = K.knap('Børnene vælger', { klasse: 'boern-vaelger', onclick: () => {
+// Giver iPad'en til børnene: de vælger med dyrene (#/uge/vaelg), og stemmen spørger, hvem der skal vælge. klasse:
+// 'boern-vaelger' (app.css) i rækken med indstillingerne under «Mere», 'voksen-boern' (familie.css) på forsiden
+function boernKnap(tekst, klasse = 'boern-vaelger') {
+  const b = K.knap(tekst, { klasse, onclick: () => {
     nulstilBarn();
     K.naviger('#/uge/vaelg', () => Tale.sig(R.UGE_HVEM));
   } });
   b.prepend(K.billede(grafikDyr('rosa'), '', 'knap-dyr'));
   return b;
-}
-
-// ---------- #/uge/dag/<n>: den voksne vælger en ret til en dag ----------
-
-const filtre = { hurtig: false, vegetar: false, groent: false, billig: false, kniv: false }; // huskes, til siden lukkes
-// Vegetar og masser af grønt er mærkerne fra js/maerker.js med deres navn. De tre første fjerner retter, de to sidste sorterer
-const MAERKE_FILTRE = ['vegetar', 'groent'];
-const FRAVALG = ['hurtig', ...MAERKE_FILTRE];
-const FILTRE = [
-  ['hurtig', 'Højst 40 min'],
-  ...MAERKE_FILTRE.map((k) => [k, MAERKER[k].navn]),
-  ['billig', 'Billigst først'],
-  ['kniv', 'Mindst kniv først'],
-];
-const passer = (m) => (!filtre.hurtig || (m.minutter != null && m.minutter <= 40))
-  && MAERKE_FILTRE.every((k) => !filtre[k] || maerkerFor(m).includes(k));
-
-function dagSkaerm(i) {
-  if (K.S.indexFejl) return hentFejl();
-  if (!klar()) return henter('Henter retterne …');
-  const p = hentPlan();
-  if (p.laast) return oversigtSkaerm();
-  const navn = DAGE[i].toLowerCase();
-  const nu = p.dage[i];
-  const n = nu ? nu.n : p.n;
-  const alle = iPlanen();
-  const retter = sorterValg(alle.filter(passer), filtre);
-
-  const chips = el('div', { class: 'filtre', role: 'group', 'aria-label': 'Filtre' }, FILTRE.map(([k, tekst]) => {
-    const b = medFokus(K.knap(tekst, { klasse: 'lille filter', onclick: () => { filtre[k] = !filtre[k]; tegnIgen('filter-' + k); } }), 'filter-' + k);
-    b.setAttribute('aria-pressed', String(filtre[k]));
-    return b;
-  }));
-
-  // Den voksnes valg står som Bos (afsnit 1). Byttes en ret, beholder dagen dyret og portionerne. Kunne valget ikke
-  // gemmes, bliver man her, og beskeden står ved retten (på oversigten ville den forsvinde: code review U2, 23-10)
-  const vaelg = (m) => {
-    const gemt = gemPlan((q) => {
-      const gl = q.dage[i];
-      q.dage[i] = { ret: m.id, af: gl ? gl.af : 'bo', n: gl ? gl.n : q.n };
-      return { dage: q.dage };
-    });
-    if (!gemt) {
-      if (oversigtBesked) oversigtBesked.ret = m.id;
-      tegnIgen('vaelg-' + m.id);
-      return;
-    }
-    K.annoncer(m.navn + ' står nu på ' + navn + '.');
-    K.naviger('#/uge');
-  };
-
-  let indhold;
-  if (!alle.length) {
-    indhold = el('p', { class: 'uge-tom', tekst: 'Der er ingen retter i ugeplanen endnu.' });
-  } else if (!retter.length) {
-    indhold = el('div', { class: 'uge-tom' },
-      el('p', { tekst: 'Ingen af retterne passer til de valgte filtre.' }),
-      medFokus(K.knap('Vis alle retter', { klasse: 'lille', onclick: () => {
-        for (const k of FRAVALG) filtre[k] = false;
-        tegnIgen('filter-hurtig');
-      } }), 'vis-alle'));
-  } else {
-    indhold = el('ul', { class: 'ret-valg', 'aria-label': 'Retter i ugeplanen' }, retter.map((m) => {
-      const valgt = Boolean(nu) && nu.ret === m.id;
-      // ⚡ på billedet som på børnenes kort (K.lynMaerke): billedet står i en ramme, som mærket kan sidde i
-      return el('li', { class: 'ret-valg-raekke' + (valgt ? ' valgt' : ''), 'data-ret': m.id },
-        el('span', { class: 'dag-billede-ramme' }, K.billede(grafikRet(m.id), '', 'dag-billede'), K.lynMaerke(m)),
-        el('div', { class: 'dag-ret' },
-          el('span', { class: 'dag-ret-navn', tekst: m.navn }),
-          K.lynTekst(m),
-          metaLinje(m, n),
-          valgt ? el('span', { class: 'dag-af', tekst: 'Står på ' + navn + ' nu' }) : null),
-        medFokus(K.knap(valgt ? 'Behold' : 'Vælg', { klasse: 'lille vaelg-ret', ikonNavn: 'tjek', label: (valgt ? 'Behold ' : 'Vælg ') + m.navn + ' til ' + navn,
-          onclick: () => vaelg(m) }), 'vaelg-' + m.id),
-        oversigtBesked && oversigtBesked.ret === m.id ? oversigtBeskedEl() : null);
-    }));
-  }
-
-  return el('main', { class: 'skaerm uge-oversigt' },
-    K.topbar(),
-    el('div', { class: 'uge' },
-      el('header', { class: 'uge-hoved' },
-        el('h1', { tabindex: '-1', tekst: 'Vælg ret til ' + navn }),
-        ledLinje('p', { class: 'uge-nr' }, [DAGE[i] + ' ' + dagDato(p.uge || planMandag(), i), n + ' pers.'])),
-      el('div', { class: 'dag-vaerktoej' },
-        K.knap('Tilbage til ugeplanen', { klasse: 'lille', ikonNavn: 'tilbage', onclick: () => K.naviger('#/uge') }),
-        chips),
-      indhold));
 }
 
 // ---------- #/uge/vaelg: børnene vælger ugens mad (iPad på langs) ----------
@@ -893,7 +884,7 @@ function vaelgSkaerm(r) {
   if (K.S.indexFejl) return hentFejl();
   if (!klar()) return henter('Henter retterne …');
   const p = hentPlan();
-  if (p.laast) return oversigtSkaerm();
+  if (p.laast) return laastPlanSkaerm();
   if (barnFejl) return barnGemFejl();
   const dyr = r.dyr && Object.hasOwn(DYR, r.dyr) ? r.dyr : null;
   if (!dyr || ugenErFuld(p) || harValgt(p, dyr)) return hvemSkaerm(p);
@@ -915,13 +906,13 @@ function valgSide(klasse, hoved, indhold, ...bund) {
     el('footer', { class: 'handlinger valg-bund' }, bund));
 }
 
-// Den voksnes vej tilbage til oversigten: bag et hold, så et barn ikke kommer derud ved et tilfælde. Holdet låser
-// voksendelen op igen (børnenes valg lukkede den), så oversigten ikke beder om et hold mere
+// Den voksnes vej tilbage til ugeplanen (voksendelens forside): bag et hold, så et barn ikke kommer derud ved et
+// tilfælde. Holdet låser voksendelen op igen (børnenes valg lukkede den), så oversigten ikke beder om et hold mere
 const tilUgeplanen = () => holdKnap({
   klasse: 'lille voksen-hold til-ugeplan',
   label: 'Ugeplan til den voksne. Hold knappen inde i 2 sekunder.',
   indhold: [ikon('kalender'), el('span', { tekst: 'Ugeplan: hold' })],
-  naarFaerdig: () => K.voksne('#/uge'),
+  naarFaerdig: () => K.voksne('#/voksen'),
 });
 
 // Dagens navn, tallerkenen (rettens billede, eller tom) og dyret, der har valgt. ny: retten, der vises på en fri dag,
@@ -989,7 +980,7 @@ function fuldSkaerm(p) {
 
 // Trin 2: fire retter pr. side. Første tryk siger navnet og markerer retten, fluebenet («Vælg») går videre til dagene.
 // Retterne og rækkefølgen kommer fra retterTilBoern (et udvalg blandet over grupperne, ellers favoritterne først). Den
-// voksnes «Vælg ret» (dagSkaerm) har filtre og står som i planen
+// voksnes vælg-tilstand (#/voksen/dag/<n>) har søgning og filtre
 function retValgSkaerm(p, dyr) {
   const familie = Lager.hentFamilie(K.S.ids);
   const alle = retterTilBoern(iPlanen(), familie, K.S.grupper);

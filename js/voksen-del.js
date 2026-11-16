@@ -1,6 +1,12 @@
-// voksen-del.js — voksendelen (docs/foraeldredel.md, afsnit 2-5): den voksnes hjørne bag et hold på 2 s.
-//   #/voksen             menuen i rækkefølgen Ugeplan · Indkøbsliste · Retter, og under «Mere» husstand, ugens udvalg,
-//                        favoritter og kontakten «Mere grønt i maden» (js/groent.js). Nederst «Luk»
+// voksen-del.js — voksendelen (docs/foraeldredel.md, afsnit 2-5, og docs/voksen-forside-plan-16-11-2026.md): den voksnes
+// hjørne bag et hold på 2 s.
+//   #/voksen             forsiden er ugeplanen: tre bobler øverst (Indkøbsliste med antal varer, Retter, Mere), ugens
+//                        syv dage (ugeIndhold i js/ugeplan.js) og nederst «Luk»
+//   #/voksen/dag/<1-7>   vælg en ret til dagen: kataloget i vælg-tilstand, kun retter fra ugeplanen. Andet end 1-7 giver
+//                        en fast fejltekst. #/uge og #/uge/dag/<n> sendes hertil med history.replaceState (nyAdresse)
+//   #/voksen/mere        ugens handlinger (Send til telefon, Del som tekst, Print, Ny uge, portioner, retter pr. barn,
+//                        børnene vælger: ugeHandlinger i js/ugeplan.js) og familien: husstand, ugens udvalg, favoritter
+//                        og kontakten «Mere grønt i maden» (js/groent.js)
 //   #/voksen/husstand    antal voksne og børn → portioner til nye retter i ugeplanen (eller til hele ugen)
 //   #/voksen/udvalg      ugens udvalg: de retter, børnene vælger imellem i ugeplanen (højst 24; intet udvalg =
 //                        favoritterne og nye retter, højst 12: retterTilBoern i js/ugeplan.js)
@@ -10,11 +16,11 @@
 // Udvalget, favoritterne og kataloget har samme søgefelt (js/soeg.js). Det tegnes aldrig om, mens der skrives: kun listen
 // og tallet under det (et nyt input-element lukker tastaturet i Safari på iPad og iPhone).
 // Låsen er en børnelås, ikke sikkerhed. Den ligger kun i hukommelsen (en modulvariabel, ingen sessionStorage) og dækker
-// #/voksen… og ugeplanen (#/uge og #/uge/dag/<n>, laasFor). Den lukker på børnenes adresser (også #/uge/vaelg…), efter
-// 10 minutter uden tryk og med «Luk». Indkøbslisten (#/indkoeb, #/hent/…) kræver den ikke, men lukker den. Åbnes en
-// adresse bag låsen uden låsen (et bogmærke, eller tilbage fra printet), kommer holdet først. Kun ANTAL voksne og børn
-// gemmes, aldrig hvem (regel 6). Lageret røres kun gennem js/lager.js, og al tekst sættes som tekst (js/dom.js).
-// Udseendet står i familie.css.
+// #/voksen… (også vælg-tilstanden og «Mere») og ugeplanens gamle adresser (#/uge og #/uge/dag/<n>, laasFor). Den lukker
+// på børnenes adresser (også #/uge/vaelg…), efter 10 minutter uden tryk og med «Luk». Indkøbslisten (#/indkoeb,
+// #/hent/…) kræver den ikke, men lukker den. Åbnes en adresse bag låsen uden låsen (et bogmærke, eller tilbage fra
+// printet), kommer holdet først. Kun ANTAL voksne og børn gemmes, aldrig hvem (regel 6). Lageret røres kun gennem
+// js/lager.js, og al tekst sættes som tekst (js/dom.js). Udseendet står i familie.css.
 import { el, ikon, svgEl, printLink as printLinkDom } from './dom.js';
 import * as Lager from './lager.js';
 import { MAKS_PERSONER, MAKS_PORTIONER, MAKS_UDVALG as UDVALG_MAKS } from './lager.js';
@@ -23,24 +29,25 @@ import { portionerFraHusstand } from './skaler.js';
 import { MAERKER, maerkerFor } from './maerker.js';
 import { kod, afkod } from './plankode.js';
 import { grafikRet, grafikGruppe, GRUPPER, AFTENSMAD, AFTENSMAD_NAVN, AFTENSMAD_GRUPPER, gruppeSoegeord } from './katalog.js';
-import { planMandag, idag } from './tid.js';
+import { planMandag, idag, ugeNr, dagDato, DAGE } from './tid.js';
 import { soeg, soegeord } from './soeg.js';
 import { valgt } from './groent.js';
 import { blandet } from './grupper.js';
-import { rute as ugeRute, retterTilBoern, BOERN_KORT } from './ugeplan.js';
+import { rute as ugeRute, retterTilBoern, BOERN_KORT, glemVisning, ugeIndhold, ugeHandlinger, antalVarer, saetDag, metaLinje, sorterValg } from './ugeplan.js';
 
 export const LUK_MS = 10 * 60 * 1000;   // voksendelen lukker efter 10 minutter uden tryk
 export { MAKS_PERSONER, UDVALG_MAKS };   // voksne og børn hver, og retter i udvalget: grænserne fra js/lager.js
 export const BARN_VALG = [0.5, 0.7, 1];  // et barn spiser som … voksen (standarden BARN_ANDEL står i js/lager.js)
 export const UDVALG_STANDARD = 8;        // «Fyld op med nye» uden et udvalg: 8 retter (to sider i børnenes valg)
 export const FYLD_OP = 4;                // «Fyld op med nye» med et udvalg: 4 retter mere
-const SIDER = ['husstand', 'udvalg', 'favoritter', 'katalog'];
+const SIDER = ['husstand', 'udvalg', 'favoritter', 'katalog', 'mere'];
 export const SOEG_MAKS = 60;             // tegn i søgefeltet
 const SOEG_EKSEMPEL = 'fx kylling eller jul';
 const LAGER_FEJL = 'Måske er privat browsing slået til, eller lageret er fuldt.';
 const NYERE = 'Lavet med en nyere udgave';
 
-// app.js: { S, knap, klik, billede, topbar, statusSkaerm, naviger, annoncer, indlaes, vis, visSkaerm, huskFra }.
+// app.js: { S, knap, klik, billede, lynMaerke, lynTekst, topbar, statusSkaerm, naviger, annoncer, indlaes, vis, visSkaerm,
+// huskFra }.
 // vis() kalder rute(location.hash) først og stopper, når den svarer true. visSkaerm(skaerm) viser en færdig skærm, som
 // vis() selv gør det (vistHash, tastatur, spærretid, rul op og fokus på h1 ved en ny adresse)
 let K = null;
@@ -51,21 +58,42 @@ export function init(k) {
 
 // ---------- Ren logik (test/test-voksen-del.js) ----------
 
-// Siden i voksendelen, som adressen peger på ('hub', 'husstand', 'udvalg', 'favoritter' eller 'katalog'), eller null,
-// når adressen ikke er voksendelens. En ukendt side herinde er oversigten
+// Siden i voksendelen, som adressen peger på ('hub' = forsiden med ugeplanen, 'dag', 'mere', 'husstand', 'udvalg',
+// 'favoritter' eller 'katalog'), eller null, når adressen ikke er voksendelens. En ukendt side herinde er forsiden. 'dag'
+// er alt under #/voksen/dag: om dagen findes, siger voksenDag
 export function voksenSide(hash) {
   const raa = String(hash).replace(/^#\/?/, '');
   if (raa !== 'voksen' && !raa.startsWith('voksen/')) return null;
   const side = raa.slice('voksen/'.length);
+  if (side === 'dag' || side.startsWith('dag/')) return 'dag';
   return SIDER.includes(side) ? side : 'hub';
 }
 
-// Hvad adressen gør ved låsen. 'bag': voksendelen og ugeplanens skærme til den voksne (oversigten og «Vælg ret til
-// dagen»), der kræver holdet. 'fri': indkøbslisten og linket til den (#/indkoeb, #/hent/…), som telefonen også åbner, og
-// som ikke kræver låsen. 'luk': resten, også børnenes valg (#/uge/vaelg…), så iPad'en kan gives videre. Både 'fri' og
-// 'luk' lukker låsen (rute): listen har kun «Til forsiden», og en åben lås gav et barn vejen ind med browserens
-// «tilbage» (review L2, 15-11). Koden spørger kun, om svaret er 'bag', så 'fri' og 'luk' gør det samme; de to navne
-// står kun for at vise, hvilke adresser telefonen må åbne uden hold (review R4, 15-11).
+// Dagen i vælg-tilstanden: #/voksen/dag/1 (mandag) til #/voksen/dag/7 (søndag) giver 0-6. Alt andet (0, 8, 01, 3x, en
+// tom dag) giver null, og skærmen viser en fast tekst: intet fra adressen kommer i DOM'en
+export function voksenDag(hash) {
+  const m = /^voksen\/dag\/([1-7])$/.exec(String(hash).replace(/^#\/?/, ''));
+  return m ? Number(m[1]) - 1 : null;
+}
+
+// Ugeplanens gamle adresser til den voksne, som links på telefoner og bogmærker kan have: #/uge (og en ukendt #/uge/…)
+// er nu forsiden, og #/uge/dag/<n> vælg-tilstanden. Dagen læses af ugeplanens egen rute(), der kun kender 1-7.
+// Svar: den nye adresse, eller null, når adressen ikke er en af dem (også #/uge/vaelg…, børnenes valg)
+export function nyAdresse(hash) {
+  const u = ugeRute(String(hash));
+  if (!u) return null;
+  if (u.side === 'oversigt') return '#/voksen';
+  if (u.side === 'dag') return '#/voksen/dag/' + (u.i + 1);
+  return null;
+}
+
+// Hvad adressen gør ved låsen. 'bag': voksendelen (også vælg-tilstanden og «Mere») og ugeplanens gamle adresser til den
+// voksne (#/uge og #/uge/dag/<n>, som rute sender videre), der kræver holdet. 'fri': indkøbslisten og linket til den
+// (#/indkoeb, #/hent/…), som telefonen også åbner, og som ikke kræver låsen. 'luk': resten, også børnenes valg
+// (#/uge/vaelg…), så iPad'en kan gives videre. Både 'fri' og 'luk' lukker låsen (rute): listen har kun «Til forsiden»,
+// og en åben lås gav et barn vejen ind med browserens «tilbage» (review L2, 15-11). Koden spørger kun, om svaret er
+// 'bag', så 'fri' og 'luk' gør det samme; de to navne står kun for at vise, hvilke adresser telefonen må åbne uden hold
+// (review R4, 15-11).
 // Ugeplanens adresser læses af dens egen rute(), så låsen og skærmen aldrig er uenige om, hvad adressen er
 export function laasFor(hash) {
   if (voksenSide(hash)) return 'bag';
@@ -191,10 +219,11 @@ function tryk() {
   else sidstTryk = Date.now();
 }
 
-// Et hold (forsidens «Voksne», børnenes «Ugeplan»): lås op, og gå til oversigten eller til hash, når den ligger bag låsen
+// Et hold (forsidens «Voksne», børnenes «Ugeplan»): lås op, og gå til forsiden eller til hash, når den ligger bag låsen
+// (en gammel adresse som dens nye)
 export function aabn(hash = '#/voksen') {
   laasOp();
-  K.naviger(laasFor(hash) === 'bag' ? hash : '#/voksen');
+  K.naviger(laasFor(hash) === 'bag' ? nyAdresse(hash) || hash : '#/voksen');
 }
 
 function luk() {
@@ -212,25 +241,37 @@ const filtre = new Set(); // udvalgets filterchips (nøgler fra MAERKER): huskes
 // Kun i hukommelsen, og glemt, når voksendelen låses
 const soegning = new Map();
 const katalogValg = { gruppe: null, maerker: new Set() };
+// Vælg-tilstandens filtre og rækkefølge (sorterValg i js/ugeplan.js). Huskes fra dag til dag, til voksendelen låses, så
+// «Vegetar» gælder hele ugen; søgningen glemmes, når en ret er valgt
+const vaelgValg = { gruppe: null, maerker: new Set(), billig: false, kniv: false };
 // Om filtrene er foldet ud ('udvalg', 'katalog'; ingen værdi = efter skærmen). Glemt, når man går til en anden side, så
 // en kompakt skærm (KOMPAKT) altid starter med listen lige under søgefeltet
 const filterAaben = new Map();
 function glemSoegning() {
   soegning.clear();
-  katalogValg.gruppe = null;
-  katalogValg.maerker.clear();
+  for (const v of [katalogValg, vaelgValg]) {
+    v.gruppe = null;
+    v.maerker.clear();
+  }
+  vaelgValg.billig = vaelgValg.kniv = false;
   filterAaben.clear();
 }
 
-// Viser voksendelens skærm og svarer true, når adressen er voksendelens. Ugeplanens skærme bag låsen viser den kun holdet
-// til (svar true), når låsen er lukket; ellers tegner js/ugeplan.js dem (svar false). Børnenes adresser lukker låsen
+// Viser voksendelens skærm og svarer true, når adressen er voksendelens. En gammel adresse til ugeplanen (#/uge,
+// #/uge/dag/<n>) skiftes først til den nye med history.replaceState (intet nyt punkt i historikken, og ingen hashchange).
+// Børnenes adresser og indkøbslisten lukker låsen og svarer false: app.js og js/ugeplan.js tegner dem
 export function rute(hash) {
+  const ny = nyAdresse(hash);
+  if (ny) {
+    history.replaceState(null, '', ny);
+    hash = ny;
+  }
   const zone = laasFor(hash);
   if (zone !== 'bag') laas();
   const side = zone === 'bag' ? voksenSide(hash) : null;
   if (!side) sidsteSide = null;
   if (side) {
-    K.visSkaerm(skaerm(side));
+    K.visSkaerm(skaerm(side, hash));
     return true;
   }
   if (zone !== 'bag' || erLaastOp()) return false;
@@ -238,19 +279,23 @@ export function rute(hash) {
   return true;
 }
 
-function skaerm(side) {
-  // Beskeden, husstandens kladde og filtrenes foldning hører til den side, de kom på
-  if (side !== sidsteSide) { besked = null; kladde = null; filterAaben.clear(); }
-  sidsteSide = side;
+function skaerm(side, hash) {
+  const dag = side === 'dag' ? voksenDag(hash) : null;
+  // Beskeden, husstandens kladde, filtrenes foldning og ugeplanens besked og ark hører til den side (og dag), de kom på
+  const noegle = side === 'dag' ? 'dag-' + dag : side;
+  if (noegle !== sidsteSide) { besked = null; kladde = null; filterAaben.clear(); glemVisning(); }
+  sidsteSide = noegle;
   if (!erLaastOp() || !klar()) return vagtFoerst();
   const f = Lager.hentFamilie(K.S.ids);
-  // En nyere udgave har gemt familien: oversigten står stadig (vejen til ugeplanen og indkøbslisten), siderne ikke
-  if (f.laast && side !== 'hub') return laastSkaerm();
+  if (side === 'hub') return forsideSkaerm();
+  if (side === 'dag') return dag === null ? ukendtDag() : vaelgSkaerm(f, dag);
+  if (side === 'mere') return mereSkaerm(f);
+  // En nyere udgave har gemt familien: ugeplanen (forsiden, vælg-tilstanden og «Mere») står stadig, siderne med familien ikke
+  if (f.laast) return laastSkaerm();
   if (side === 'husstand') return husstandSkaerm(f);
   if (side === 'udvalg') return udvalgSkaerm(f);
   if (side === 'favoritter') return favoritSkaerm(f);
-  if (side === 'katalog') return katalogSkaerm(f);
-  return hubSkaerm(f);
+  return katalogSkaerm(f);
 }
 
 // ---------- Fælles ----------
@@ -315,17 +360,20 @@ function voksenSkaerm(klasse, titel, undertitel, ...indhold) {
       indhold));
 }
 
-const tilbage = () => K.knap('Tilbage', { klasse: 'lille', ikonNavn: 'tilbage', label: 'Tilbage til voksendelen', onclick: () => K.naviger('#/voksen') });
+// «Tilbage» til forsiden (kataloget, vælg-tilstanden og «Mere») eller til «Mere» (husstand, udvalg og favoritter, som står dér)
+const tilbage = (til = '#/voksen') => K.knap('Tilbage', { klasse: 'lille', ikonNavn: 'tilbage', label: til === '#/voksen' ? 'Tilbage til voksendelen' : 'Tilbage til Mere', onclick: () => K.naviger(til) });
 
 const fejlLinje = () => {
   const n = fejlede();
   return n ? el('p', { class: 'fejl-linje', role: 'status', tekst: (n === 1 ? 'Én opskrift' : n + ' opskrifter') + ' kunne ikke hentes og står ikke her. Prøv at genindlæse siden.' }) : null;
 };
 
-// En ret i en liste: billedet, navnet, en linje under (mærkerne) og knappen. En besked til netop den ret står i rækken
-function raekke(m, { valgt = false, under = null, knap }) {
+// En ret i en liste: billedet, navnet, en linje under (mærkerne) og knappen. En besked til netop den ret står i rækken.
+// lyn: ⚡ på billedets hjørne, som på børnenes kort (vælg-tilstanden), i en ramme, som mærket kan sidde i
+function raekke(m, { valgt = false, under = null, knap, lyn = false }) {
+  const billede = K.billede(grafikRet(m.id), '', 'voksen-raekke-billede');
   return el('li', { class: 'voksen-raekke' + (valgt ? ' valgt' : ''), 'data-ret': m.id },
-    K.billede(grafikRet(m.id), '', 'voksen-raekke-billede'),
+    lyn ? el('span', { class: 'voksen-raekke-ramme' }, billede, K.lynMaerke(m)) : billede,
     el('div', { class: 'voksen-raekke-tekst' }, el('span', { class: 'voksen-raekke-navn', tekst: m.navn }), under),
     knap,
     besked && besked.ret === m.id ? beskedEl(besked) : null);
@@ -495,6 +543,26 @@ function hentFejl() {
   });
 }
 
+// #/voksen/dag/<andet end 1-7>: en fast tekst, intet fra adressen
+function ukendtDag() {
+  return K.statusSkaerm({
+    titel: 'Den dag findes ikke',
+    tekst: 'Adressen peger ikke på en af ugens syv dage. Vælg dagen på ugeplanen.',
+    handling: el('div', { class: 'status-knapper' },
+      K.knap('Til ugeplanen', { klasse: 'primaer', ikonNavn: 'kalender', onclick: () => K.naviger('#/voksen') })),
+  });
+}
+
+// Planen er gemt med en nyere udgave: vælg-tilstanden kan ikke lægge en ret på den
+function ugeLaastSkaerm() {
+  return K.statusSkaerm({
+    titel: 'Ugeplanen er lavet med en nyere udgave',
+    tekst: 'Denne enhed har en ældre udgave af Tumbi Køkken, som ikke må ændre planen. Genindlæs siden, så hentes den nye udgave.',
+    handling: el('div', { class: 'status-knapper' },
+      K.knap('Tilbage', { ikonNavn: 'tilbage', label: 'Tilbage til voksendelen', onclick: () => K.naviger('#/voksen') })),
+  });
+}
+
 function laastSkaerm() {
   return K.statusSkaerm({
     titel: 'Voksendelen er gemt med en nyere udgave',
@@ -505,9 +573,9 @@ function laastSkaerm() {
   });
 }
 
-// ---------- #/voksen: oversigten ----------
+// ---------- Forsidens og «Mere»s dele ----------
 
-// Indkøbslisten til ugens plan, som ugeplanens «Indkøbsliste» laver den (#/hent/<kode>). Uden en plan, eller når linket
+// Indkøbslisten til ugens plan (#/hent/<kode>), som boblen «Indkøbsliste» åbner. Uden en plan, eller når linket
 // ikke kan læses (ugen er mere end 8 uger væk), den gemte liste
 function listeHash() {
   const p = Lager.hentUge(K.S.ids);
@@ -517,7 +585,7 @@ function listeHash() {
   return afkod(kode, { retter: K.S.ids, idag: new Date() }).ok ? '#/hent/' + kode : '#/indkoeb';
 }
 
-// «Mere grønt i maden» (js/groent.js): én kontakt på oversigten. Slået til får retter med hakket kød halvt kød og halvt
+// «Mere grønt i maden» (js/groent.js): én kontakt under «Mere». Slået til får retter med hakket kød halvt kød og halvt
 // røde linser i retten, ugeplanen, indkøbslisten og printet. Valget gemmes i familien på denne enhed (js/lager.js). En
 // indkøbsliste, telefonen allerede har hentet, bliver, som den er: kun et nyt link giver en ny liste
 const GROENT_NAVN = 'Mere grønt i maden';
@@ -566,40 +634,48 @@ function punkt({ navn, status, ikonEl, til, fokus, laast = false }) {
     el('span', { class: 'voksen-punkt-status', tekst: status }))), fokus));
 }
 
-// Husstanden som kort tekst: «2 voksne og 1 barn = 3 portioner», eller hvad nye retter er til, når den ikke er sat
+// Husstanden som kort tekst på «Mere»: «2 voksne og 1 barn = 3 portioner», eller hvad nye retter er til, når den ikke er sat
 function husstandStatus(f, p) {
   const sum = husstandSum(f.voksne, f.boern, f.barnAndel);
   return sum.n ? husstandTekst(f.voksne, f.boern) + ' = ' + sumTekst(sum) : 'Ikke sat. Nye retter er til ' + portionerTekst(p.n);
 }
 
-// Knappen med husstanden i ugeplanens hoved (js/ugeplan.js får den gennem app.js): den voksne kan se, hvem portionerne er
-// regnet til, og ændre det med ét tryk. Familien fra en nyere udgave kan ikke ændres her, så står den uden knap
-export function husstandKnap() {
-  const f = Lager.hentFamilie(K.S.ids);
-  const p = Lager.hentUge(K.S.ids);
-  if (f.laast) return el('p', { class: 'uge-husstand', tekst: 'Husstand: ' + NYERE });
-  const b = K.knap('', { klasse: 'lille uge-husstand', label: 'Husstand: ' + husstandStatus(f, p) + '. Ændr husstanden', onclick: () => K.naviger('#/voksen/husstand') });
-  b.append(stregIkon(PERSONER), el('span', { tekst: husstandStatus(f, p) }));
-  return b;
+// ---------- #/voksen: forsiden er ugeplanen ----------
+
+// Boblerne øverst: Indkøbsliste (med antal varer, når linket til planen kan laves), Retter og Mere. Indkøbslisten regnes
+// først ved trykket (listeHash), så den altid følger planen
+function bobler() {
+  const n = listeHash().startsWith('#/hent/') ? antalVarer() : 0;
+  const liste = medFokus(K.knap('Indkøbsliste', { klasse: 'voksen-boble voksen-boble-liste', ikonNavn: 'kurv', onclick: () => K.naviger(listeHash()) }), 'indkoeb');
+  if (n) liste.append(el('span', { class: 'voksen-boble-tal', tekst: flertal(n, 'vare', 'varer') }));
+  return el('nav', { class: 'voksen-bobler', 'aria-label': 'Voksendelen' },
+    liste,
+    medFokus(K.knap('Retter', { klasse: 'voksen-boble', ikonNavn: 'lup', onclick: () => K.naviger('#/voksen/katalog') }), 'katalog'),
+    medFokus(K.knap('Mere', { klasse: 'voksen-boble', ikonNavn: 'mere', onclick: () => K.naviger('#/voksen/mere') }), 'mere'));
 }
 
-function hubSkaerm(f) {
+function forsideSkaerm() {
+  const p = Lager.hentUge(K.S.ids);
+  const uge = (!p.laast && p.uge) || planMandag();
+  return voksenSkaerm('voksen-forside', 'Ugeplan', 'Uge\u00a0' + ugeNr(uge) + ' · ' + dagDato(uge, 0) + '–' + dagDato(uge, 6),
+    bobler(),
+    ...ugeIndhold(),
+    fejlLinje(),
+    el('div', { class: 'voksen-bund' },
+      el('p', { class: 'voksen-luk-tekst', tekst: 'Lukker efter ' + LUK_MS / 60000 + ' minutter uden tryk' }),
+      medFokus(K.knap('Luk', { klasse: 'lille', ikonNavn: 'kryds', label: 'Luk voksendelen', onclick: luk }), 'luk')));
+}
+
+// ---------- #/voksen/mere ----------
+
+// Ugeplanens handlinger (js/ugeplan.js) og familien: det, man sætter én gang og sjældent ændrer
+function mereSkaerm(f) {
   const p = Lager.hentUge(K.S.ids);
   const alle = iPlanen();
   const valgt = f.udvalg ? alle.filter((m) => f.udvalg.ids.includes(m.id)).length : 0;
-  // Familien er gemt med en nyere udgave: husstand, udvalg, favoritter og kataloget kan ikke åbnes, ugeplanen og
-  // listen kan
+  // Familien er gemt med en nyere udgave: husstand, udvalg og favoritter kan ikke åbnes, ugeplanens handlinger kan
   const nyere = f.laast ? { status: NYERE, laast: true } : {};
-  // Ugen, så indkøbet, så retterne: rækkefølgen, den voksne bruger dem i (docs/fable-foraeldrekogebog-2026-11-10.md,
-  // fase 1 d). Det, man sætter én gang og sjældent ændrer, står under «Mere»
-  const punkter = [
-    { navn: 'Ugeplan', ikonEl: ikon('kalender'), til: '#/uge', fokus: 'ugeplan',
-      status: p.laast ? NYERE : p.dage.filter(Boolean).length + ' af 7 dage har en ret' },
-    { navn: 'Indkøbsliste', ikonEl: ikon('kurv'), til: listeHash, fokus: 'indkoeb', status: 'Listen til butikken og telefonen' },
-    { navn: 'Retter', ikonEl: ikon('lup'), til: '#/voksen/katalog', fokus: 'katalog',
-      status: 'Søg og print i alle ' + flertal(alleRetter().length, 'ret', 'retter'), ...nyere },
-  ];
-  const mere = [
+  const familie = [
     { navn: 'Husstand', ikonEl: stregIkon(PERSONER), til: '#/voksen/husstand', fokus: 'husstand', status: husstandStatus(f, p), ...nyere },
     { navn: 'Ugens udvalg', ikonEl: ikon('liste'), til: '#/voksen/udvalg', fokus: 'udvalg',
       status: f.udvalg ? flertal(valgt, 'ret', 'retter') + ' at vælge mellem'
@@ -607,14 +683,15 @@ function hubSkaerm(f) {
     { navn: 'Favoritter', ikonEl: hjerteIkon(), til: '#/voksen/favoritter', fokus: 'favoritter',
       status: f.favoritter.length ? flertal(f.favoritter.length, 'ret', 'retter') : 'Ingen endnu', ...nyere },
   ];
-  return voksenSkaerm('voksen-hub', 'Voksne', 'Lukker efter ' + LUK_MS / 60000 + ' minutter uden tryk',
-    el('nav', { 'aria-label': 'Voksendelen' },
-      el('ul', { class: 'voksen-menu' }, punkter.map(punkt)),
-      el('h2', { class: 'voksen-afsnit', id: 'voksen-mere', tekst: 'Mere' }),
-      el('ul', { class: 'voksen-menu voksen-mere', 'aria-labelledby': 'voksen-mere' }, mere.map(punkt))),
-    groentKontakt(f),
-    el('div', { class: 'voksen-knapper voksen-bund' },
-      medFokus(K.knap('Luk', { ikonNavn: 'kryds', label: 'Luk voksendelen', onclick: luk }), 'luk')));
+  return voksenSkaerm('voksen-mere-side', 'Mere', null,
+    el('div', { class: 'voksen-knapper' }, tilbage()),
+    el('section', { class: 'voksen-sektion', 'aria-labelledby': 'mere-uge' },
+      el('h2', { class: 'voksen-afsnit', id: 'mere-uge', tekst: 'Ugeplanen' }),
+      ugeHandlinger()),
+    el('section', { class: 'voksen-sektion', 'aria-labelledby': 'mere-familie' },
+      el('h2', { class: 'voksen-afsnit', id: 'mere-familie', tekst: 'Familien' }),
+      el('ul', { class: 'voksen-menu voksen-mere', 'aria-labelledby': 'mere-familie' }, familie.map(punkt)),
+      groentKontakt(f)));
 }
 
 // ---------- #/voksen/husstand ----------
@@ -694,7 +771,7 @@ function husstandSkaerm(f) {
 
   return voksenSkaerm('voksen-husstand', 'Husstand', null,
     el('p', { class: 'voksen-hjaelp', tekst: 'Kun antallet gemmes. Det bestemmer, hvor mange portioner ugeplanen og indkøbslisten regner med.' }),
-    el('div', { class: 'voksen-knapper' }, tilbage()),
+    el('div', { class: 'voksen-knapper' }, tilbage('#/voksen/mere')),
     el('div', { class: 'husstand' },
       el('div', { class: 'husstand-raekke' }, el('span', { class: 'husstand-navn', tekst: 'Voksne' }),
         stepper({ vaerdi: k.voksne, navn: 'voksne', tekst: flertal(k.voksne, 'voksen', 'voksne'), fokus: 'voksne', saet: saet('voksne') })),
@@ -824,7 +901,7 @@ function udvalgSkaerm(f) {
   return voksenSkaerm('voksen-udvalg', 'Ugens udvalg', null,
     el('p', { class: 'voksen-hjaelp', tekst: 'Når børnene vælger ugens mad, ser de kun retterne i udvalget. Uden et udvalg ser de favoritterne og nye retter, højst ' + BOERN_KORT + '.' }),
     el('div', { class: 'voksen-knapper' },
-      tilbage(),
+      tilbage('#/voksen/mere'),
       medFokus(K.knap('Fyld op med nye', { klasse: 'lille', ikonNavn: 'plus', onclick: fyld }), 'fyld-op'),
       alleKnap),
     besked && !besked.ret ? beskedEl(besked) : null,
@@ -849,7 +926,7 @@ function favoritSkaerm(f) {
   return voksenSkaerm('voksen-favoritter', 'Favoritter',
     f.favoritter.length ? flertal(f.favoritter.length, 'favorit', 'favoritter') : 'Ingen endnu',
     el('p', { class: 'voksen-hjaelp', tekst: 'Tryk på hjertet ved de retter, familien er glad for. Favoritterne får et ' + MAERKER.favorit.ikon + ', når børnene vælger ugens mad.' }),
-    el('div', { class: 'voksen-knapper' }, tilbage()),
+    el('div', { class: 'voksen-knapper' }, tilbage('#/voksen/mere')),
     s.form,
     s.tal,
     s.boks,
@@ -858,33 +935,51 @@ function favoritSkaerm(f) {
 
 // ---------- #/voksen/katalog ----------
 
-// En gruppe-chip i kataloget: én gruppe ad gangen, og «Alle» (id null) er ingen gruppe. Et tryk på den valgte gruppe
-// viser alle igen. Gruppens billede fra forsiden står foran navnet
-function gruppeChip(id, navn, antal) {
-  const valgt = katalogValg.gruppe === id;
+// En gruppe-chip i kataloget og vælg-tilstanden (v: deres valg, side: filtrenes side): én gruppe ad gangen, og «Alle»
+// (id null) er ingen gruppe. Et tryk på den valgte gruppe viser alle igen. Gruppens billede fra forsiden står foran navnet
+function gruppeChip(id, navn, antal, v, side) {
+  const valgt = v.gruppe === id;
   const fokus = 'gruppe-' + (id || 'alle');
   const b = medFokus(K.knap(navn + ' (' + antal + ')', { klasse: 'filter-chip', onclick: () => {
-    katalogValg.gruppe = valgt ? null : id;
-    efterFilterValg('katalog', fokus);
+    v.gruppe = valgt ? null : id;
+    efterFilterValg(side, fokus);
   } }), fokus);
   if (id) b.prepend(K.billede(grafikGruppe(id), '', 'filter-chip-billede'));
   b.setAttribute('aria-pressed', String(valgt));
   return b;
 }
 
-// Grupper og mærker i filterBoks. «Aftensmad» samler de seks grupper, Aftensmad blev delt i, og står kun, når den har retter
-function katalogFiltre(alle) {
-  const v = katalogValg;
+// Vælg-tilstandens rækkefølge: to kontakter, som før på #/uge/dag/<n> (sorterValg i js/ugeplan.js)
+const RAEKKEFOELGE = [['billig', 'Billigst først'], ['kniv', 'Mindst kniv først']];
+function sorterChip(k, navn, v, side) {
+  const fokus = 'sorter-' + k;
+  const b = medFokus(K.knap(navn, { klasse: 'filter-chip', onclick: () => {
+    v[k] = !v[k];
+    efterFilterValg(side, fokus);
+  } }), fokus);
+  b.setAttribute('aria-pressed', String(v[k]));
+  return b;
+}
+
+// Grupper og mærker i filterBoks. «Aftensmad» samler de seks grupper, Aftensmad blev delt i, og står kun, når den har
+// retter. I vælg-tilstanden (side 'vaelg') står kun grupper med retter fra ugeplanen, og rækkefølgen kommer til sidst
+function katalogFiltre(alle, v = katalogValg, side = 'katalog') {
+  const vaelg = side === 'vaelg';
   const gruppeNavn = v.gruppe === AFTENSMAD ? AFTENSMAD_NAVN : GRUPPER[v.gruppe];
-  const valgte = [v.gruppe ? gruppeNavn : null, ...[...v.maerker].map((k) => MAERKER[k].navn)].filter(Boolean);
+  const sorter = vaelg ? RAEKKEFOELGE.filter(([k]) => v[k]).map(([, navn]) => navn) : [];
+  const valgte = [v.gruppe ? gruppeNavn : null, ...[...v.maerker].map((k) => MAERKER[k].navn), ...sorter].filter(Boolean);
   const aftensmad = alle.filter((p) => iGruppe(p, AFTENSMAD)).length;
-  return filterBoks('katalog', 'Grupper og mærker', valgte,
+  const grupper = K.S.grupper.filter((g) => Object.hasOwn(GRUPPER, g.id))
+    .map((g) => [g.id, alle.filter((p) => p.gruppeId === g.id).length]).filter(([, n]) => n || !vaelg);
+  return filterBoks(side, vaelg ? 'Grupper, mærker og rækkefølge' : 'Grupper og mærker', valgte,
     el('div', { class: 'filter-chips', role: 'group', 'aria-label': 'Grupper' },
-      gruppeChip(null, 'Alle', alle.length),
-      aftensmad ? gruppeChip(AFTENSMAD, AFTENSMAD_NAVN, aftensmad) : null,
-      K.S.grupper.filter((g) => Object.hasOwn(GRUPPER, g.id)).map((g) => gruppeChip(g.id, GRUPPER[g.id], alle.filter((p) => p.gruppeId === g.id).length))),
+      gruppeChip(null, 'Alle', alle.length, v, side),
+      aftensmad ? gruppeChip(AFTENSMAD, AFTENSMAD_NAVN, aftensmad, v, side) : null,
+      grupper.map(([id, n]) => gruppeChip(id, GRUPPER[id], n, v, side))),
     el('div', { class: 'filter-chips', role: 'group', 'aria-label': 'Mærker' },
-      Object.keys(MAERKER).map((k) => filterChip(k, alle.filter((p) => p.noegler.includes(k)).length, v.maerker, 'katalog'))));
+      Object.keys(MAERKER).map((k) => filterChip(k, alle.filter((p) => p.noegler.includes(k)).length, v.maerker, side))),
+    vaelg ? el('div', { class: 'filter-chips', role: 'group', 'aria-label': 'Rækkefølge' },
+      RAEKKEFOELGE.map(([k, navn]) => sorterChip(k, navn, v, side))) : null);
 }
 
 // Viser kataloget kun en del af retterne? Låsen glemmer søgning og filtre, når en ret åbnes (laas), så listen efter holdet
@@ -961,6 +1056,80 @@ function katalogSkaerm(f) {
     el('p', { class: 'voksen-hjaelp', tekst: 'Hjertet gør en ret til favorit. «Med» sætter en ret til ugeplanen i ugens udvalg. ' + (f.udvalg
       ? 'Børnene vælger kun mellem de retter, der er med.'
       : 'Nu vælger børnene mellem favoritterne og nye retter, højst ' + BOERN_KORT + '. Efter det første «Med» vælger de kun mellem dem, der er med.') }),
+    el('div', { class: 'voksen-knapper' }, tilbage()),
+    s.form,
+    filtreEl,
+    s.tal,
+    s.boks,
+    fejlLinje());
+}
+
+// ---------- #/voksen/dag/<1-7>: vælg en ret til dagen ----------
+// Kataloget i vælg-tilstand: kun retter fra ugeplanen, med søgning, grupper, mærker og rækkefølge. Hver række har tid,
+// pris, grønt og kniv (metaLinje i js/ugeplan.js) og «Vælg». Retten lægges på dagen gennem saetDag (gemPlan, der læser
+// hele planen lige før, M1), og så går det tilbage til forsiden med fokus på dagen. Kunne den ikke gemmes, bliver man
+// her, og beskeden står ved retten
+
+// Posterne i den rækkefølge, de to kontakter siger (ellers som filtrer gav dem)
+function sorterPoster(vist, v) {
+  if (!v.billig && !v.kniv) return vist;
+  const post = new Map(vist.map((p) => [p.m, p]));
+  return sorterValg(vist.map((p) => p.m), { billig: v.billig, kniv: v.kniv }).map((m) => post.get(m));
+}
+
+function vaelgRet(m, i) {
+  const dag = DAGE[i].toLowerCase();
+  if (!saetDag(i, m.id)) {
+    besked = Lager.hentUge(K.S.ids).laast
+      ? { fejl: true, ret: m.id, tekst: 'Ugeplanen er lavet med en nyere udgave af Tumbi Køkken og kan ikke ændres her. Genindlæs siden.' }
+      : gemFejl('Planen', m.id);
+    tegnIgen('vaelg-' + m.id);
+    return;
+  }
+  soegning.delete('vaelg');
+  K.annoncer(m.navn + ' står nu på ' + dag + '.');
+  K.naviger('#/voksen', () => {
+    const b = document.querySelector('[data-fokus="dag-' + i + '"]');
+    b?.focus({ preventScroll: true });
+    b?.scrollIntoView({ block: 'nearest' });
+  });
+}
+
+function vaelgRaekke(p, i, nu, n) {
+  const m = p.m;
+  const dag = DAGE[i].toLowerCase();
+  const valgt = Boolean(nu) && nu.ret === m.id;
+  return raekke(m, {
+    valgt,
+    lyn: true,
+    under: [K.lynTekst(m), metaLinje(m, n), valgt ? el('span', { class: 'voksen-raekke-nu', tekst: 'Står på ' + dag + ' nu' }) : null],
+    knap: medFokus(K.knap(valgt ? 'Behold' : 'Vælg', { klasse: 'lille vaelg-ret', ikonNavn: 'tjek', label: (valgt ? 'Behold ' : 'Vælg ') + m.navn + ' til ' + dag,
+      onclick: () => vaelgRet(m, i) }), 'vaelg-' + m.id),
+  });
+}
+
+function vaelgSkaerm(f, i) {
+  const p = Lager.hentUge(K.S.ids);
+  if (p.laast) return ugeLaastSkaerm();
+  const nu = p.dage[i];
+  const n = nu ? nu.n : p.n;
+  const alle = poster(iPlanen(), f);
+  const v = vaelgValg;
+  const fjernFiltre = () => {
+    v.gruppe = null;
+    v.maerker.clear();
+    tegnIgen(kompakt() ? 'filtre-vaelg' : 'gruppe-alle');
+  };
+  const filtreEl = katalogFiltre(alle, v, 'vaelg');
+  const s = soegeListe('vaelg', alle, {
+    passer: (tekst) => sorterPoster(filtrer(alle, { gruppe: v.gruppe, maerker: [...v.maerker], tekst }), v),
+    naarSkrevet: () => foldVedSoegning('vaelg', filtreEl),
+    tom: 'Der er ingen retter i ugeplanen endnu.',
+    ingen: (tekst, ryd) => ingenTraef(tekst, { ryd, fjernFiltre: v.gruppe || v.maerker.size ? fjernFiltre : null }),
+    liste: (vist) => el('ul', { class: 'voksen-liste', 'aria-label': 'Retter i ugeplanen' }, vist.map((x) => vaelgRaekke(x, i, nu, n))),
+  });
+  return voksenSkaerm('voksen-vaelg', 'Vælg ret til ' + DAGE[i].toLowerCase(),
+    DAGE[i] + ' ' + dagDato(p.uge || planMandag(), i) + ' · ' + portionerTekst(n),
     el('div', { class: 'voksen-knapper' }, tilbage()),
     s.form,
     filtreEl,

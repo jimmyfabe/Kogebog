@@ -1,5 +1,6 @@
 // test-voksen-del.js — voksendelens logik (js/voksen-del.js, docs/foraeldredel.md afsnit 2-5): adresserne, låsen (hold,
-// 10 minutter uden tryk, ugeplanen bag den, børnenes adresser lukker den), oversigtens rækkefølge, «Print» i «Retter»,
+// 10 minutter uden tryk, ugeplanen bag den, børnenes adresser lukker den), forsiden med ugens dage og boblerne, «Mere»,
+// vælg-tilstanden (#/voksen/dag/<1-7>), de gamle adresser (#/uge), «Print» i «Retter»,
 // «Fyld op med nye», afkrydsningen og filtrene i udvalget. Skærmene selv
 // prøves i WebKit. js/hold.js lytter på document, når den indlæses, så testen giver et lille falsk document først.
 // Kør:  node test/test-voksen-del.js
@@ -22,7 +23,7 @@ const lavEl = (tag) => ({
   getAttribute(k) { return Object.hasOwn(this.attr, k) ? this.attr[k] : null; },
   append(...b) { this.born.push(...b); }, prepend(...b) { this.born.unshift(...b); }, replaceChildren(...b) { this.born = b; },
   addEventListener(type, fn) { (this.lyt[type] ??= []).push(fn); },
-  focus() { fokus = this; }, blur() { if (fokus === this) fokus = null; },
+  focus() { fokus = this; }, blur() { if (fokus === this) fokus = null; }, scrollIntoView() {},
 });
 const alleI = (e) => (e && typeof e === 'object' ? [e, ...(e.born || []).flatMap(alleI)] : []);
 const find = (rod, f) => alleI(rod).filter((e) => e.tag && f(e));
@@ -44,7 +45,11 @@ globalThis.document = {
   get activeElement() { return fokus; },
 };
 globalThis.location = { hash: '#/' };
-// Skærmens størrelse til matchMedia: kun (max-width: …), (max-height: …) og (pointer: coarse), som voksendelen bruger
+// rute() skifter en gammel adresse (#/uge) til den nye med history.replaceState: her skifter den kun hash
+const erstattet = [];
+globalThis.history = { replaceState: (s, t, url) => { erstattet.push(url); location.hash = url; } };
+// Skærmens størrelse til matchMedia: kun (max-width: …), (max-height: …), (pointer: coarse) og «mindre bevægelse» (aldrig
+// slået til her), som voksendelen og ugeplanen bruger
 const skaermMaal = { b: 1280, h: 800, groft: false };
 globalThis.matchMedia = (q) => ({
   matches: q.split(',').some((alt) => alt.trim().split(/\s+and\s+/).every((del) => {
@@ -53,6 +58,7 @@ globalThis.matchMedia = (q) => ({
     if (m[1] === 'max-width') return skaermMaal.b <= parseFloat(m[2]);
     if (m[1] === 'max-height') return skaermMaal.h <= parseFloat(m[2]);
     if (m[1] === 'pointer') return (m[2] === 'coarse') === skaermMaal.groft;
+    if (m[1] === 'prefers-reduced-motion') return false;
     throw new Error('matchMedia i testen kender ikke ' + del);
   })),
 });
@@ -64,6 +70,7 @@ globalThis.localStorage = {
 };
 
 const V = await import('../js/voksen-del.js');
+const U = await import('../js/ugeplan.js');
 const { el } = await import('../js/dom.js');
 
 // app.js' hjælpere, så tyndt som muligt: statusSkaerm giver sine valg tilbage, så vagten kan genkendes. vis() tegner
@@ -72,34 +79,62 @@ let visKald = 0;
 const annonceret = []; // det, skærmlæseren får at vide (K.annoncer)
 const S = { ids: [], retter: new Map(), grupper: [] };
 const huskede = []; // K.huskFra: den ret og den plads, «Åbn» vil vende tilbage til
-V.init({
+const efterNavigering = []; // naviger(hash, efter): det, der skal ske på den nye skærm (fokus på dagen efter et valg)
+const K = {
   S,
-  naviger: (hash) => { location.hash = hash; },
+  naviger: (hash, efter) => { location.hash = hash; if (efter) efterNavigering.push(efter); },
   vis: () => { visKald++; V.rute(location.hash); },
   visSkaerm: (s) => { vist.push(s); },
   statusSkaerm: (valg) => ({ status: valg }),
   knap: (tekst, { klasse = '', label, onclick } = {}) => el('button', { type: 'button', class: 'knap ' + klasse, 'aria-label': label, onclick }, tekst ? el('span', { tekst }) : null),
   klik: (fn) => fn,
   billede: () => lavEl('img'),
+  lynMaerke: () => null,
+  lynTekst: () => null,
   topbar: () => lavEl('header'),
   annoncer: (tekst) => { annonceret.push(tekst); },
   indlaes: () => {},
   huskFra: (ret, y) => { huskede.push({ ret, y }); },
-});
+};
+V.init(K);
+// Forsidens dage og «Mere»s handlinger kommer fra ugeplanen, som app.js også giver sine hjælpere
+U.init({ ...K, voksne: (hash) => V.aabn(hash) });
 const tryk = () => { for (const fn of lyttere.pointerdown) fn(); };
 const MIN = 60 * 1000;
 
-test('adresserne: kun #/voksen og #/voksen/… er voksendelens, og en ukendt side er oversigten', () => {
+test('adresserne: kun #/voksen og #/voksen/… er voksendelens, og en ukendt side er forsiden', () => {
   const tabel = [
     ['#/voksen', 'hub'], ['#voksen', 'hub'], ['#/voksen/', 'hub'], ['#/voksen/husstand', 'husstand'],
     ['#/voksen/udvalg', 'udvalg'], ['#/voksen/favoritter', 'favoritter'], ['#/voksen/katalog', 'katalog'], ['#/voksen/ukendt', 'hub'],
-    ['#/voksen/katalog/x', 'hub'],
+    ['#/voksen/katalog/x', 'hub'], ['#/voksen/mere', 'mere'], ['#/voksen/mere/x', 'hub'],
+    ['#/voksen/dag', 'dag'], ['#/voksen/dag/3', 'dag'], ['#/voksen/dag/9', 'dag'], ['#/voksen/dagx', 'hub'],
     ['#/voksenx', null], ['#/uge', null], ['#/', null], ['', null], ['#/ret/voksen', null], ['#/uge/voksen', null],
   ];
   for (const [hash, side] of tabel) assert.equal(V.voksenSide(hash), side, hash);
 });
 
-test('låst: en adresse herinde viser holdet først, og aabn() låser op og går til oversigten', () => {
+// Vælg-tilstandens dag: præcis 1-7 i adressen, ellers null (og skærmen siger en fast tekst, se nedenfor)
+test('voksenDag: #/voksen/dag/1 til /7 er mandag til søndag (0-6), og alt andet er ingen dag', () => {
+  const tabel = [
+    ['#/voksen/dag/1', 0], ['#/voksen/dag/2', 1], ['#/voksen/dag/7', 6], ['#voksen/dag/4', 3],
+    ['#/voksen/dag/0', null], ['#/voksen/dag/8', null], ['#/voksen/dag/01', null], ['#/voksen/dag/3x', null], ['#/voksen/dag/', null],
+    ['#/voksen/dag', null], ['#/voksen/dag/2/', null], ['#/voksen/dag/1e0', null], ['#/voksen/dag/ 3', null], ['#/voksen/dag/-1', null],
+    ['#/voksen/dag/٣', null], ['#/uge/dag/2', null], ['#/voksen', null], ['', null], [undefined, null],
+  ];
+  for (const [hash, dag] of tabel) assert.equal(V.voksenDag(hash), dag, String(hash));
+});
+
+test('nyAdresse: de gamle adresser til den voksne (#/uge, #/uge/dag/<n>) får deres nye, børnenes og listens gør ikke', () => {
+  const tabel = [
+    ['#/uge', '#/voksen'], ['#uge', '#/voksen'], ['#/uge/', '#/voksen'], ['#/uge/xyz', '#/voksen'], ['#/uge/dag/9', '#/voksen'],
+    ['#/uge/dag/1', '#/voksen/dag/1'], ['#/uge/dag/5', '#/voksen/dag/5'], ['#/uge/dag/7', '#/voksen/dag/7'],
+    ['#/uge/vaelg', null], ['#/uge/vaelg/rosa', null], ['#/uge/vaelg/rosa/koedsovs', null], ['#/indkoeb', null], ['#/hent/abc', null],
+    ['#/voksen', null], ['#/voksen/dag/2', null], ['#/', null], ['', null], ['#/ugex', null],
+  ];
+  for (const [hash, ny] of tabel) assert.equal(V.nyAdresse(hash), ny, hash);
+});
+
+test('låst: en adresse herinde viser holdet først, og aabn() låser op og går til forsiden', () => {
   assert.equal(V.erLaastOp(), false);
   vist.length = 0;
   assert.equal(V.rute('#/voksen/udvalg'), true);
@@ -112,17 +147,21 @@ test('låst: en adresse herinde viser holdet først, og aabn() låser op og går
 
 test('låsen dækker ugeplanen: laasFor siger bag, fri eller luk for hver adresse', () => {
   const tabel = [
-    ['#/voksen', 'bag'], ['#/voksen/katalog', 'bag'], ['#/uge', 'bag'], ['#/uge/', 'bag'], ['#/uge/dag/3', 'bag'],
+    ['#/voksen', 'bag'], ['#/voksen/katalog', 'bag'], ['#/voksen/mere', 'bag'], ['#/voksen/dag/3', 'bag'], ['#/voksen/dag/9', 'bag'],
+    ['#/uge', 'bag'], ['#/uge/', 'bag'], ['#/uge/dag/3', 'bag'],
     ['#/uge/xyz', 'bag'], ['#/uge/vaelg', 'luk'], ['#/uge/vaelg/rosa', 'luk'], ['#/indkoeb', 'fri'], ['#/hent/x', 'fri'],
     ['#/', 'luk'], ['', 'luk'], ['#/ret/x', 'luk'], ['#/gruppe/kylling', 'luk'], ['#/ugex', 'luk'],
   ];
   for (const [hash, zone] of tabel) assert.equal(V.laasFor(hash), zone, hash);
 });
 
-test('låsen holder på ugeplanen, og lukker på indkøbslisten, forsiden og børnenes valg', () => {
-  for (const hash of ['#/uge', '#/uge/dag/2']) {
+test('låsen holder på de gamle adresser til ugeplanen, og lukker på indkøbslisten, forsiden og børnenes valg', () => {
+  for (const [hash, ny] of [['#/uge', '#/voksen'], ['#/uge/dag/2', '#/voksen/dag/2']]) {
     V.aabn();
-    assert.equal(V.rute(hash), false, hash + ': ugeplanen tegner selv sin skærm');
+    erstattet.length = 0;
+    assert.equal(V.rute(hash), true, hash + ': voksendelen tegner den nye adresse');
+    assert.deepEqual(erstattet, [ny], hash + ': skiftet med history.replaceState');
+    assert.equal(location.hash, ny);
     assert.equal(V.erLaastOp(), true, hash + ': låsen er stadig åben');
   }
   // Review L2 (15-11): indkøbslisten har kun «Til forsiden», så låsen kan ikke bruges derfra. Står den åben, kommer et barn
@@ -134,12 +173,14 @@ test('låsen holder på ugeplanen, og lukker på indkøbslisten, forsiden og bø
   }
 });
 
-test('låst: #/uge og #/uge/dag/<n> viser holdet, indkøbslisten gør ikke', () => {
+test('låst: #/uge, #/uge/dag/<n>, vælg-tilstanden og «Mere» viser holdet, indkøbslisten gør ikke', () => {
   V.rute('#/');
-  for (const hash of ['#/uge', '#/uge/dag/4']) {
+  for (const [hash, ny] of [['#/uge', '#/voksen'], ['#/uge/dag/4', '#/voksen/dag/4'], ['#/voksen/dag/3', '#/voksen/dag/3'], ['#/voksen/mere', '#/voksen/mere']]) {
     vist.length = 0;
+    location.hash = hash;
     assert.equal(V.rute(hash), true, hash);
     assert.equal(vist.at(-1).status.titel, 'Til de voksne', hash + ': holdet, ikke ugeplanen');
+    assert.equal(location.hash, ny, hash + ': holdet står på den nye adresse, så det åbner den');
   }
   vist.length = 0;
   assert.equal(V.rute('#/indkoeb'), false);
@@ -160,12 +201,13 @@ test('tilbage fra indkøbslisten til voksendelen kræver holdet igen (review L2)
   V.rute('#/');
 });
 
-test('aabn(hash) går til en adresse bag låsen, og ellers til oversigten', () => {
-  V.aabn('#/uge');
-  assert.equal(location.hash, '#/uge');
-  assert.equal(V.erLaastOp(), true);
-  V.aabn('#/uge/dag/5');
-  assert.equal(location.hash, '#/uge/dag/5');
+test('aabn(hash) går til en adresse bag låsen (en gammel som dens nye), og ellers til forsiden', () => {
+  for (const [hash, ny] of [['#/uge', '#/voksen'], ['#/uge/dag/5', '#/voksen/dag/5'], ['#/voksen/dag/3', '#/voksen/dag/3'], ['#/voksen/mere', '#/voksen/mere']]) {
+    V.rute('#/');
+    V.aabn(hash);
+    assert.equal(location.hash, ny, hash);
+    assert.equal(V.erLaastOp(), true, hash);
+  }
   for (const hash of ['#/ret/koedsovs', '#/uge/vaelg', '#/indkoeb', 'javascript:alert(1)', undefined]) {
     V.rute('#/');
     V.aabn(hash);
@@ -189,10 +231,10 @@ test('låsen lukker efter 10 minutter uden tryk, og skærmen bliver til holdet',
 // Review T1 (15-11): ugeplanen ligger bag samme lås, så dens skærme skal også blive til holdet, når tiden løber ud.
 // Review R4 (15-11): det tegnede skal være holdet («Til de voksne»), ikke bare et kald til vis(). Indkøbslisten har ingen
 // åben lås at løbe ud (rute lukker den med det samme, L2), så den del er væk; det står i testen af laasFor og rute ovenfor
-test('efter 10 minutter bliver ugeplanen til holdet', (t) => {
+test('efter 10 minutter bliver forsiden, vælg-tilstanden og «Mere» til holdet', (t) => {
   t.after(() => mock.timers.reset());
   mock.timers.enable({ apis: ['setTimeout', 'Date'], now: 1_000_000 });
-  for (const hash of ['#/uge', '#/uge/dag/3']) {
+  for (const hash of ['#/voksen', '#/voksen/dag/3', '#/voksen/mere']) {
     V.aabn(hash);
     assert.equal(location.hash, hash);
     const foer = visKald;
@@ -644,22 +686,231 @@ test('«Retter»: «Print» i hver række og «Print hele kogebogen» over liste
   assert.equal(printHref(skaerm, 'print-flere'), 'print.html?alle&n=' + n + '&groen=1');
 });
 
-test('oversigten: Ugeplan, Indkøbsliste og Retter øverst, og husstand, udvalg og favoritter under «Mere»', (t) => {
+// ---------- Forsiden (#/voksen), «Mere» og vælg-tilstanden (docs/voksen-forside-plan-16-11-2026.md) ----------
+
+const h1I = (rod) => tekstAf(find(rod, (e) => e.tag === 'h1')[0]);
+const dageI = (rod) => find(rod, (e) => e.tag === 'li' && harKlasse(e, 'voksen-dag'));
+const gemtUge = () => JSON.parse(lageret.get('kog-uge-v1'));
+const ugensRetter = () => S.ids.filter((id) => S.retter.get(id).uge);
+const planMed = (dage) => JSON.stringify({ v: 1, uge: null, n: 4, dage, rettet: 1 });
+
+test('forsiden: boblerne Indkøbsliste, Retter og Mere øverst, og ugens 7 dage med «Vælg ret»', (t) => {
   t.after(() => V.rute('#/'));
   medOpskrifter();
   const skaerm = aabnSide('');
-  const lister = find(skaerm, (e) => e.tag === 'ul' && harKlasse(e, 'voksen-menu'));
-  assert.equal(lister.length, 2);
-  const punkterI = (ul) => find(ul, (e) => harKlasse(e, 'voksen-punkt')).map((b) => b.dataset.fokus);
-  assert.deepEqual(punkterI(lister[0]), ['ugeplan', 'indkoeb', 'katalog']);
-  assert.deepEqual(punkterI(lister[1]), ['husstand', 'udvalg', 'favoritter']);
+  assert.equal(h1I(skaerm), 'Ugeplan');
   const nav = find(skaerm, (e) => e.tag === 'nav')[0];
-  assert.deepEqual(nav.born.map((b) => b.tag), ['ul', 'h2', 'ul'], '«Mere» står mellem de to lister');
-  assert.equal(tekstAf(nav.born[1]), 'Mere');
-  assert.equal(lister[1].attr['aria-labelledby'], nav.born[1].attr.id);
-  assert.match(tekstAf(medFokusNavn(skaerm, 'katalog')), /^Retter/);
+  assert.ok(harKlasse(nav, 'voksen-bobler'));
+  assert.deepEqual(find(nav, (e) => e.tag === 'button').map((b) => b.dataset.fokus), ['indkoeb', 'katalog', 'mere']);
+  assert.deepEqual(find(nav, (e) => e.tag === 'button').map(tekstAf), ['Indkøbsliste', 'Retter', 'Mere'], 'en tom uge: intet antal varer');
+  const dage = dageI(skaerm);
+  assert.equal(dage.length, 7);
+  assert.deepEqual(dage.map((d) => d.attr['data-dag']), ['0', '1', '2', '3', '4', '5', '6']);
+  assert.ok(dage.every((d) => harKlasse(d, 'voksen-dag-tom')), 'alle dage er tomme');
+  assert.match(tekstAf(medFokusNavn(skaerm, 'dag-1')), /^Tirsdag\d{1,2}\/\d{1,2}Vælg ret$/);
+  // Hele ugen er tom: en linje hjælp og «Lad børnene vælge» (børnenes valg, uden for låsen)
+  assert.match(tekstAf(medKlasse(skaerm, 'voksen-uge-tom')[0]), /^Ugen er tom\. Tryk på en dag/);
+  assert.equal(tekstAf(medFokusNavn(skaerm, 'boern')), 'Lad børnene vælge');
+  send(medFokusNavn(skaerm, 'boern'), 'click');
+  assert.equal(location.hash, '#/uge/vaelg');
+  // Et tryk på en tom dag åbner vælg-tilstanden til den dag
+  aabnSide('');
+  send(medFokusNavn(vist.at(-1), 'dag-3'), 'click');
+  assert.equal(location.hash, '#/voksen/dag/4');
+  aabnSide('');
+  send(medFokusNavn(vist.at(-1), 'mere'), 'click');
+  assert.equal(location.hash, '#/voksen/mere');
+  aabnSide('');
+  send(medFokusNavn(vist.at(-1), 'katalog'), 'click');
+  assert.equal(location.hash, '#/voksen/katalog');
+});
+
+test('«Mere»: ugeplanens handlinger og familiens husstand, udvalg, favoritter og «Mere grønt i maden»', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  let skaerm = aabnSide('mere');
+  assert.equal(h1I(skaerm), 'Mere');
+  assert.deepEqual(find(skaerm, (e) => e.tag === 'h2').map(tekstAf), ['Ugeplanen', 'Familien']);
+  const lister = find(skaerm, (e) => e.tag === 'ul' && harKlasse(e, 'voksen-menu'));
+  assert.equal(lister.length, 1);
+  assert.deepEqual(find(lister[0], (e) => harKlasse(e, 'voksen-punkt')).map((b) => b.dataset.fokus), ['husstand', 'udvalg', 'favoritter']);
   // Uden udvalg siger «Ugens udvalg», hvor mange børnene vælger mellem (højst 12; hårdt mellemrum før «retter»)
   assert.match(tekstAf(medFokusNavn(skaerm, 'udvalg')), /Ikke sat: børnene vælger mellem 12\u00a0retter$/);
+  assert.ok(medFokusNavn(skaerm, 'groent'), '«Mere grønt i maden» står under «Familien»');
+  assert.ok(medFokusNavn(skaerm, 'boern') && medFokusNavn(skaerm, 'plan-n-plus'), '«Børnene vælger» og portionerne står der altid');
+  assert.equal(medFokusNavn(skaerm, 'ny-uge'), undefined, 'en ny, tom plan: intet at tømme');
+  assert.equal(medFokusNavn(skaerm, 'del'), undefined, 'en tom uge: intet at dele');
+  send(medFokusNavn(skaerm, 'husstand'), 'click');
+  assert.equal(location.hash, '#/voksen/husstand');
+  // Med en ret i planen: Del som tekst og Print
+  lageret.set('kog-uge-v1', planMed([{ ret: ugensRetter()[0], n: 4, af: 'bo' }, null, null, null, null, null, null]));
+  location.hash = '#/voksen/mere';
+  V.rute(location.hash);
+  skaerm = vist.at(-1);
+  assert.equal(tekstAf(medFokusNavn(skaerm, 'del')), 'Del som tekst');
+  assert.equal(medFokusNavn(skaerm, 'print').attr.href, 'print.html?uge');
+  assert.ok(medFokusNavn(skaerm, 'ny-uge'), '«Ny uge» med en ret i planen');
+  // Husstand, udvalg og favoritter går tilbage til «Mere», ikke til forsiden
+  location.hash = '#/voksen/husstand';
+  V.rute(location.hash);
+  const tilbage = find(vist.at(-1), (e) => e.tag === 'button' && e.attr['aria-label'] === 'Tilbage til Mere');
+  assert.equal(tilbage.length, 1);
+  send(tilbage[0], 'click');
+  assert.equal(location.hash, '#/voksen/mere');
+});
+
+test('vælg-tilstanden: «Vælg ret til tirsdag» viser ugeplanens retter, og «Vælg» lægger retten på dagen og går til forsiden', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  const skaerm = aabnSide('dag/2');
+  assert.equal(h1I(skaerm), 'Vælg ret til tirsdag');
+  assert.match(tekstAf(medKlasse(skaerm, 'voksen-undertitel')[0]), /^Tirsdag \d{1,2}\/\d{1,2} · 4 portioner$/);
+  assert.deepEqual(raekkerI(skaerm), ugensRetter(), 'kun retterne i ugeplanen, i index.json-rækkefølgen');
+  const id = ugensRetter()[2];
+  const navn = S.retter.get(id).navn;
+  annonceret.length = 0;
+  efterNavigering.length = 0;
+  send(medFokusNavn(skaerm, 'vaelg-' + id), 'click');
+  assert.deepEqual(gemtUge().dage[1], { ret: id, af: 'bo', n: 4 }, 'retten står på tirsdag med planens portioner');
+  assert.deepEqual(gemtUge().dage.filter(Boolean).length, 1, 'kun tirsdag er ændret');
+  assert.equal(location.hash, '#/voksen', 'tilbage på forsiden');
+  assert.deepEqual(annonceret, [navn + ' står nu på tirsdag.']);
+  assert.equal(efterNavigering.length, 1, 'fokus på dagen, når forsiden er tegnet');
+  // Forsiden: tirsdag er udfyldt, og indkøbslisten har varer
+  V.rute(location.hash);
+  const forside = vist.at(-1);
+  efterNavigering[0]();
+  assert.equal(fokus, medFokusNavn(forside, 'dag-1'), 'fokus står på tirsdag');
+  const tirsdag = dageI(forside)[1];
+  assert.equal(tirsdag.attr['data-ret'], id);
+  assert.ok(!harKlasse(tirsdag, 'voksen-dag-tom'));
+  assert.equal(tekstAf(medKlasse(tirsdag, 'voksen-dag-ret-navn')[0]), navn);
+  assert.equal(tekstAf(medKlasse(tirsdag, 'voksen-dag-under')[0]), '4 portioner');
+  assert.equal(medKlasse(forside, 'voksen-uge-tom').length, 0, 'ugen er ikke tom længere');
+  const tal = tekstAf(medKlasse(forside, 'voksen-boble-tal')[0]);
+  assert.match(tal, /^[1-9]\d*\u00a0varer?$/, 'Indkøbsliste siger antallet af varer (' + tal + ')');
+  assert.equal(Number.parseInt(tal, 10), U.antalVarer());
+  send(medFokusNavn(forside, 'indkoeb'), 'click');
+  assert.match(location.hash, /^#\/hent\/v1\.[0-9]{8}\./, 'listen følger planen: linket har tirsdagens ret');
+});
+
+test('vælg-tilstanden: «Behold» på dagens ret, portionerne bliver, og den gamle rets dyr følger med', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  const [a, b] = ugensRetter();
+  lageret.clear();
+  V.aabn();
+  lageret.set('kog-uge-v1', planMed([null, null, null, null, { ret: a, n: 6, af: 'rosa' }, null, null]));
+  location.hash = '#/voksen/dag/5';
+  V.rute(location.hash);
+  const skaerm = vist.at(-1);
+  assert.equal(tekstAf(medFokusNavn(skaerm, 'vaelg-' + a)), 'Behold');
+  assert.equal(medFokusNavn(skaerm, 'vaelg-' + a).attr['aria-label'], 'Behold ' + S.retter.get(a).navn + ' til fredag');
+  assert.match(tekstAf(medKlasse(skaerm, 'voksen-undertitel')[0]), / · 6 portioner$/);
+  send(medFokusNavn(skaerm, 'vaelg-' + b), 'click');
+  assert.deepEqual(gemtUge().dage[4], { ret: b, af: 'rosa', n: 6 });
+});
+
+test('vælg-tilstanden: en dag uden for 1-7 giver en fast tekst, og intet fra adressen kommer på skærmen', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  for (const dag of ['0', '8', '9', '01', '%3Cb%3E', '<img src=x>', '']) {
+    const skaerm = aabnSide('dag/' + dag);
+    assert.equal(skaerm.status?.titel, 'Den dag findes ikke', dag);
+    assert.equal(skaerm.status.tekst, 'Adressen peger ikke på en af ugens syv dage. Vælg dagen på ugeplanen.');
+    send(find(skaerm.status.handling, (e) => e.tag === 'button')[0], 'click');
+    assert.equal(location.hash, '#/voksen', dag + ': «Til ugeplanen»');
+    V.rute('#/');
+  }
+});
+
+test('vælg-tilstanden: kan planen ikke gemmes, bliver man på listen med en besked ved retten', (t) => {
+  const setItem = globalThis.localStorage.setItem;
+  t.after(() => { globalThis.localStorage.setItem = setItem; V.rute('#/'); });
+  medOpskrifter();
+  aabnSide('dag/1');
+  const id = ugensRetter()[0];
+  globalThis.localStorage.setItem = () => { throw new Error('lageret er fuldt'); };
+  send(medFokusNavn(vist.at(-1), 'vaelg-' + id), 'click');
+  assert.equal(location.hash, '#/voksen/dag/1', 'bliver i vælg-tilstanden');
+  const raekke = find(vist.at(-1), (e) => e.tag === 'li' && e.attr['data-ret'] === id)[0];
+  assert.match(tekstAf(find(raekke, (e) => e.attr.role === 'alert')[0]), /^Planen kunne ikke gemmes på denne enhed\./);
+  assert.equal(fokus, medFokusNavn(vist.at(-1), 'vaelg-' + id), 'fokus bliver på knappen');
+});
+
+test('forsiden: en udfyldt dag folder et ark ud med portioner, «Byt ret», «Fjern» og «Åbn retten»', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  const id = ugensRetter()[1];
+  aabnSide('');
+  lageret.set('kog-uge-v1', planMed([null, null, { ret: id, n: 4, af: 'pip' }, null, null, null, null]));
+  V.rute(location.hash);
+  const knap = medFokusNavn(vist.at(-1), 'dag-2');
+  assert.equal(knap.attr['aria-expanded'], 'false');
+  send(knap, 'click');
+  let dag = medFokusNavn(vist.at(-1), 'dag-2');
+  assert.equal(dag.attr['aria-expanded'], 'true');
+  assert.equal(dag.attr['aria-controls'], 'dag-ark-2');
+  assert.equal(fokus, dag, 'fokus bliver på dagen');
+  const ark = find(vist.at(-1), (e) => e.attr.id === 'dag-ark-2')[0];
+  assert.equal(ark.attr.role, 'group');
+  assert.match(tekstAf(ark), /Valgt af Pip/);
+  assert.deepEqual(['dag-2-byt', 'dag-2-fjern', 'dag-2-aabn'].map((n) => Boolean(medFokusNavn(ark, n))), [true, true, true]);
+  // Portionerne gemmes gennem gemPlan
+  const plus = find(ark, (e) => e.tag === 'button' && /^Flere/.test(e.attr['aria-label'] || ''))[0];
+  assert.ok(plus, 'arket har en knap til flere portioner');
+  send(plus, 'click');
+  assert.equal(gemtUge().dage[2].n, 5);
+  assert.equal(tekstAf(medKlasse(medFokusNavn(vist.at(-1), 'dag-2'), 'voksen-dag-under')[0]), '5 portioner');
+  // «Byt ret» åbner vælg-tilstanden til dagen
+  send(medFokusNavn(vist.at(-1), 'dag-2-byt'), 'click');
+  assert.equal(location.hash, '#/voksen/dag/3');
+  V.rute(location.hash);
+  assert.equal(h1I(vist.at(-1)), 'Vælg ret til onsdag');
+  // Tilbage på forsiden er arket lukket (siden er skiftet), og «Fjern» tømmer dagen
+  location.hash = '#/voksen';
+  V.rute(location.hash);
+  assert.equal(medFokusNavn(vist.at(-1), 'dag-2').attr['aria-expanded'], 'false', 'arket er lukket efter et sideskift');
+  send(medFokusNavn(vist.at(-1), 'dag-2'), 'click');
+  annonceret.length = 0;
+  send(medFokusNavn(vist.at(-1), 'dag-2-fjern'), 'click');
+  assert.equal(gemtUge().dage[2], null);
+  assert.deepEqual(annonceret, ['Retten er fjernet fra onsdag.']);
+  dag = medFokusNavn(vist.at(-1), 'dag-2');
+  assert.equal(fokus, dag, 'fokus står på den tomme dag');
+  assert.ok(harKlasse(dageI(vist.at(-1))[2], 'voksen-dag-tom'));
+});
+
+test('forsiden: Escape lukker arket, og «Åbn retten» husker dagen og åbner retten', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  const id = ugensRetter()[0];
+  aabnSide('');
+  lageret.set('kog-uge-v1', planMed([{ ret: id, n: 4, af: 'bo' }, null, null, null, null, null, null]));
+  V.rute(location.hash);
+  send(medFokusNavn(vist.at(-1), 'dag-0'), 'click');
+  const li = dageI(vist.at(-1))[0];
+  for (const fn of li.lyt.keydown || []) fn({ key: 'Escape', preventDefault() {} });
+  assert.equal(medFokusNavn(vist.at(-1), 'dag-0').attr['aria-expanded'], 'false');
+  assert.equal(fokus, medFokusNavn(vist.at(-1), 'dag-0'));
+  send(medFokusNavn(vist.at(-1), 'dag-0'), 'click');
+  huskede.length = 0;
+  send(medFokusNavn(vist.at(-1), 'dag-0-aabn'), 'click');
+  assert.equal(location.hash, '#/ret/' + id);
+  assert.equal(huskede.at(-1).ret, id);
+});
+
+test('forsiden: en plan fra en nyere udgave viser en fast tekst, og vælg-tilstanden kan ikke ændre den', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  aabnSide('');
+  lageret.set('kog-uge-v1', JSON.stringify({ v: 99, dage: [] }));
+  V.rute(location.hash);
+  assert.equal(dageI(vist.at(-1)).length, 0);
+  assert.match(tekstAf(medKlasse(vist.at(-1), 'uge-advarsel')[0]), /^Ugeplanen er lavet med en nyere udgave/);
+  location.hash = '#/voksen/dag/2';
+  V.rute(location.hash);
+  assert.equal(vist.at(-1).status?.titel, 'Ugeplanen er lavet med en nyere udgave');
 });
 
 // Review 02-11 (fund 3): på en kompakt skærm står «Alle» i den lukkede boks, så «Fjern filtrene» gav fokus til
@@ -690,7 +941,7 @@ test('«Mere grønt i maden»: kontakten slår til og fra, gemmer i familien og 
   medOpskrifter();
   const n = S.ids.filter((id) => S.retter.get(id).groen).length;
   assert.ok(n >= 1, 'mindst én ret har mere grønt (kødsovsen)');
-  aabnSide('');
+  aabnSide('mere');
   const k = groentKontakt();
   assert.equal(k.tag, 'button');
   assert.equal(k.attr.role, 'switch');
@@ -698,7 +949,7 @@ test('«Mere grønt i maden»: kontakten slår til og fra, gemmer i familien og 
   assert.equal(tekstAf(find(vist.at(-1), (e) => e.attr.id === k.attr['aria-labelledby'])[0]), 'Mere grønt i maden');
   assert.equal(k.attr['aria-describedby'], 'groent-status');
   assert.equal(groentStatus(), 'Slået fra');
-  assert.equal(lageret.has('kog-familie-v1'), false, 'at vise oversigten gemmer intet');
+  assert.equal(lageret.has('kog-familie-v1'), false, 'at vise «Mere» gemmer intet');
   annonceret.length = 0;
   send(groentKontakt(), 'click');
   assert.equal(gemtFamilie().mereGroent, true);
@@ -717,7 +968,7 @@ test('«Mere grønt i maden»: valget rører ikke resten af familien, og en fejl
   const setItem = globalThis.localStorage.setItem;
   t.after(() => { globalThis.localStorage.setItem = setItem; V.rute('#/'); });
   medOpskrifter();
-  aabnSide('');
+  aabnSide('mere');
   lageret.set('kog-familie-v1', JSON.stringify({ v: 1, voksne: 2, boern: 1, barnAndel: 0.7, udvalg: null, favoritter: [S.ids[0]], lavet: {} }));
   V.rute(location.hash);
   send(groentKontakt(), 'click');
@@ -736,14 +987,14 @@ test('«Mere grønt i maden»: valget rører ikke resten af familien, og en fejl
 test('«Mere grønt i maden»: en familie fra en nyere udgave giver en kontakt, der ikke kan trykkes på', (t) => {
   t.after(() => V.rute('#/'));
   medOpskrifter();
-  aabnSide('');
+  aabnSide('mere');
   lageret.set('kog-familie-v1', JSON.stringify({ v: 99, mereGroent: true }));
   V.rute(location.hash);
   assert.equal(groentKontakt().attr.disabled, '');
   assert.equal(groentStatus(), 'Lavet med en nyere udgave');
 });
 
-test('«Mere grønt i maden»: «Indkøbsliste» på oversigten giver et link med g, præcis når den er slået til', (t) => {
+test('«Mere grønt i maden»: «Indkøbsliste» på forsiden giver et link med g, præcis når den er slået til', (t) => {
   t.after(() => V.rute('#/'));
   medOpskrifter();
   aabnSide('');

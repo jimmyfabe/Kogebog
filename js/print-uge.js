@@ -17,7 +17,7 @@ const dyrNavn = (af) => DYR[af].split(',')[0];
 
 // ark, printKnap og tilbage er print.html's elementer, besked(titel, tekst) print.js' fejlside
 export async function printUge({ ark, printKnap, tilbage, besked }) {
-  tilbage.href = 'index.html#/uge';
+  tilbage.href = 'index.html#/voksen';
   tilbage.textContent = 'Tilbage til ugeplanen';
   printKnap.textContent = 'Print ugeplanen';
   sideTitel('Ugeplan · Tumbi Køkken');

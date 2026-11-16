@@ -469,7 +469,8 @@ test('katalogets knaprække på telefonen: «Med» i venstre side, de andre til 
 // Review F5 (15-11): på iPhone var de tre øverst (84 px) lavere end «Mere» (87 px med to linjer status), Favoritter 72 px
 // (én linje), og kontakten «Mere grønt i maden» den største (98-128 px, navnet på to linjer i 24 px). Kontakten er noget,
 // man sætter én gang, så den ligner «Mere». e2e måler højderne i WebKit
-test('voksendelens oversigt: de tre øverst er højest, «Mere» er lige høje, og kontakten ligner «Mere» (familie.css)', () => {
+// v11 (16-11): de tre store kort øverst på oversigten er væk (forsiden er ugeplanen), så kun «Mere» og kontakten måles
+test('voksendelens «Mere»: kortene er lige høje, og kontakten ligner dem (familie.css)', () => {
   const FAM = fs.readFileSync(path.join(ROD, 'familie.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
   const trae = blokke(FAM).regler;
   const telefon = trae.filter((b) => /^@media\s*\(max-width:\s*700px\)$/.test(b.hoved)).flatMap((b) => b.regler);
@@ -486,7 +487,6 @@ test('voksendelens oversigt: de tre øverst er højest, «Mere» er lige høje, 
     assert.equal(vaerdi(trae, '.knap.voksen-kontakt', egenskab), vaerdi(trae, '.voksen-mere .knap.voksen-punkt', egenskab), 'kontakten som «Mere»: ' + egenskab);
   }
   assert.equal(vaerdi(trae, '.voksen-kontakt .voksen-punkt-navn', 'font-size'), vaerdi(trae, '.voksen-mere .voksen-punkt-navn', 'font-size'), 'kontaktens navn som «Mere»');
-  assert.ok(parseFloat(vaerdi(telefon, '.knap.voksen-punkt', 'min-height')) >= 96, 'de tre øverst er mindst 96 px på telefonen (' + vaerdi(telefon, '.knap.voksen-punkt', 'min-height') + ')');
   assert.equal(vaerdi(telefon, '.knap.voksen-kontakt', 'min-height'), vaerdi(telefon, '.voksen-mere .knap.voksen-punkt', 'min-height'), 'kontakten som «Mere» på telefonen');
 });
 
