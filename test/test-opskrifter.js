@@ -463,6 +463,16 @@ export function valider(rod = ROD) {
       }
     }
 
+    // Karry kan have selleri og sennep. Nævner retten sine allergener, skal karryen være med (review F8 17-11: kylling i karry)
+    const ingrTekst = Array.isArray(r.recipeIngredient) ? r.recipeIngredient.join(' ') : '';
+    const trin1Note = Array.isArray(r.recipeInstructions) && r.recipeInstructions[0] && r.recipeInstructions[0].tumbi ? r.recipeInstructions[0].tumbi.note : '';
+    if (/karry/iu.test(ingrTekst)) {
+      const allergener = typeof r.description === 'string' ? (/Allergener:.*/u.exec(r.description) || [''])[0] : '';
+      for (const [hvor, tekst] of [['«description»', allergener], ['noten i trin 1', trin1Note]]) {
+        if (typeof tekst === 'string' && /Allergener:|Retten (?:kan )?indeholde/u.test(tekst) && !/karry/iu.test(tekst)) f(hvor + ' nævner allergenerne, men ikke karryen (den kan have selleri, sennep eller gluten): «' + tekst + '»');
+      }
+    }
+
     // Trinene
     const trin = r.recipeInstructions;
     if (!('recipeInstructions' in r)) { /* allerede meldt */ } else if (!Array.isArray(trin) || trin.length < 3) f('«recipeInstructions» skal være en liste med mindst 3 trin');
