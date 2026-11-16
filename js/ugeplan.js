@@ -559,12 +559,14 @@ export function antalVarer() {
   return grupper(ugensData(p).varer).filter((g) => g.afd !== 'basis').reduce((s, g) => s + g.varer.length, 0);
 }
 
+// En plan fra en nyere udgave: linjen på forsiden og «Mere», og statusskærmen til børnenes valg og vælg-tilstanden.
+// Teksterne står kun her (review F6, 16-11)
 const LAAST_TEKST = 'Ugeplanen er lavet med en nyere udgave af Tumbi Køkken, så den kan ikke ændres her. Genindlæs siden, så hentes den nye udgave.';
-// Børnenes valg med en plan fra en nyere udgave
-const laastPlanSkaerm = () => K.statusSkaerm({
+// handling: knappen væk fra skærmen (børnenes valg: huset; vælg-tilstanden: «Tilbage» til voksendelen)
+export const laastPlanSkaerm = (handling = K.knap('Til forsiden', { ikonNavn: 'hjem', onclick: () => K.naviger('#/') })) => K.statusSkaerm({
   titel: 'Ugeplanen er lavet med en nyere udgave',
   tekst: 'Denne enhed har en ældre udgave af Tumbi Køkken, som ikke må ændre planen. Genindlæs siden, så hentes den nye udgave.',
-  handling: K.knap('Til forsiden', { ikonNavn: 'hjem', onclick: () => K.naviger('#/') }),
+  handling,
 });
 
 // Et link til en uge mere end 8 uger fra i dag afviser afkod (på telefonen og på #/hent/ her). Så går «Indkøbsliste» til

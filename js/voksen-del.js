@@ -33,7 +33,8 @@ import { planMandag, idag, ugeNr, dagDato, DAGE } from './tid.js';
 import { soeg, soegeord } from './soeg.js';
 import { valgt } from './groent.js';
 import { blandet } from './grupper.js';
-import { rute as ugeRute, retterTilBoern, BOERN_KORT, glemVisning, ugeIndhold, ugeHandlinger, antalVarer, saetDag, metaLinje, sorterValg } from './ugeplan.js';
+import { rute as ugeRute, retterTilBoern, BOERN_KORT, glemVisning, ugeIndhold, ugeHandlinger, antalVarer, saetDag, metaLinje, sorterValg,
+  laastPlanSkaerm } from './ugeplan.js';
 
 export const LUK_MS = 10 * 60 * 1000;   // voksendelen lukker efter 10 minutter uden tryk
 export { MAKS_PERSONER, UDVALG_MAKS };   // voksne og børn hver, og retter i udvalget: grænserne fra js/lager.js
@@ -563,15 +564,9 @@ function ukendtDag() {
   });
 }
 
-// Planen er gemt med en nyere udgave: vælg-tilstanden kan ikke lægge en ret på den
-function ugeLaastSkaerm() {
-  return K.statusSkaerm({
-    titel: 'Ugeplanen er lavet med en nyere udgave',
-    tekst: 'Denne enhed har en ældre udgave af Tumbi Køkken, som ikke må ændre planen. Genindlæs siden, så hentes den nye udgave.',
-    handling: el('div', { class: 'status-knapper' },
-      K.knap('Tilbage', { ikonNavn: 'tilbage', label: 'Tilbage til voksendelen', onclick: () => K.naviger('#/voksen') })),
-  });
-}
+// Planen er gemt med en nyere udgave: vælg-tilstanden kan ikke lægge en ret på den (skærmen står i js/ugeplan.js)
+const ugeLaastSkaerm = () => laastPlanSkaerm(el('div', { class: 'status-knapper' },
+  K.knap('Tilbage', { ikonNavn: 'tilbage', label: 'Tilbage til voksendelen', onclick: () => K.naviger('#/voksen') })));
 
 function laastSkaerm() {
   return K.statusSkaerm({
@@ -1110,9 +1105,9 @@ function sorterPoster(vist, v) {
 function vaelgRet(m, i) {
   const dag = DAGE[i].toLowerCase();
   if (!saetDag(i, m.id)) {
-    besked = Lager.hentUge(K.S.ids).laast
-      ? { fejl: true, ret: m.id, tekst: 'Ugeplanen er lavet med en nyere udgave af Tumbi Køkken og kan ikke ændres her. Genindlæs siden.' }
-      : gemFejl('Planen', m.id);
+    // Er planen låst af en nyere udgave imens, bliver skærmen til ugeLaastSkaerm, og den siger det. Ellers står beskeden
+    // ved retten (review F6, 16-11: før stod en tredje udgave af teksten her, som skærmen aldrig viste)
+    if (!Lager.hentUge(K.S.ids).laast) besked = gemFejl('Planen', m.id);
     tegnIgen('vaelg-' + m.id);
     return;
   }

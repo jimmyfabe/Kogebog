@@ -1047,6 +1047,25 @@ test('forsiden: en plan fra en nyere udgave viser en fast tekst, og vælg-tilsta
   location.hash = '#/voksen/dag/2';
   V.rute(location.hash);
   assert.equal(vist.at(-1).status?.titel, 'Ugeplanen er lavet med en nyere udgave');
+  // Samme skærm og tekst som børnenes valg (js/ugeplan.js), kun knappen er en anden: «Tilbage» til voksendelen (review F6)
+  const boernenes = U.laastPlanSkaerm().status;
+  assert.equal(vist.at(-1).status.tekst, boernenes.tekst);
+  assert.equal(find(boernenes.handling, (e) => e.tag === 'button').map(tekstAf).join(), 'Til forsiden');
+  const tilbage = find(vist.at(-1).status.handling, (e) => e.tag === 'button');
+  assert.deepEqual(tilbage.map(tekstAf), ['Tilbage']);
+  send(tilbage[0], 'click');
+  assert.equal(location.hash, '#/voksen');
+});
+
+test('vælg-tilstanden: bliver planen låst af en nyere udgave, før der trykkes «Vælg», bliver skærmen til ugeplanens låste skærm (review F6)', (t) => {
+  t.after(() => V.rute('#/'));
+  medOpskrifter();
+  const skaerm = aabnSide('dag/2');
+  const id = ugensRetter()[0];
+  lageret.set('kog-uge-v1', JSON.stringify({ v: 99, dage: [] }));
+  send(medFokusNavn(skaerm, 'vaelg-' + id), 'click');
+  assert.equal(vist.at(-1).status?.tekst, U.laastPlanSkaerm().status.tekst);
+  assert.equal(lageret.get('kog-uge-v1'), JSON.stringify({ v: 99, dage: [] }), 'den nyere plan er ikke skrevet over');
 });
 
 // Review 02-11 (fund 3): på en kompakt skærm står «Alle» i den lukkede boks, så «Fjern filtrene» gav fokus til
