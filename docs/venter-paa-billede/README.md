@@ -4,7 +4,18 @@ Validatoren kræver `grafik/ret-<id>.webp` for hver ret i `opskrifter/`, så en 
 her som `<id>.json` (med katalog, ikoner og varerne til indkøbslisten på plads), indtil billedet er tegnet. Skriv dens
 gruppe her, og hvad billedet skal vise.
 
-Der venter ingen retter nu (15-11-2026: de fem brød- og naanretter fra v11 har fået billede og står i `opskrifter/`).
+Der venter syv retter fra v11 (skrevet 16-11-2026, `afproevet: false`). De fem brød- og naanretter fra v11 fik billede 15-11-2026.
+Retter med `ugeplan: true` skal i `UGEPLAN` i `test/test-indkoeb.js`, når de flyttes ind (trin 4): alle undtagen risbollerne.
+
+| Ret | Gruppe | Billedet viser |
+|---|---|---|
+| `honningkylling-med-sesam-og-ris` | kylling | Sprøde kyllingestykker i blank, brun honningsovs med sesam, hvide ris og agurkeskiver ved siden af |
+| `japansk-keema-karry` | ko | Tyk, brun karrysovs med hakket oksekød, grønne ærter og orange gulerodstern ved siden af hvide ris |
+| `risboller-med-tun-og-majs` | madpakke | Tre trekantede, hvide risboller med sesam udenpå i en madkasse; i én ses lidt tun og gule majs |
+| `tomatris-fra-riskogeren` | groent | Orange tomatris i en skål med grønne ærter, røde kidneybønner og gule majs og revet ost på toppen |
+| `cremet-kyllingepasta-med-broccoli` | pasta-og-nudler | Penne i hvid, cremet sovs med lyse kyllingestykker og grøn broccoli |
+| `tortellini-i-cremet-tomatsovs` | pasta-og-nudler | Gule, ringformede tortellini i orange tomatflødesovs med grøn spinat |
+| `pizzapasta-i-fad` | pasta-og-nudler | Et ovnfast fad med penne i rød tomatsovs, gyldenbrun smeltet ost, lyserøde skinketern og gule majs |
 
 Sådan kommer de tilbage (Git Bash i Kogebog). Det kan gøres for de retter, der har fået et billede, resten bliver her:
 

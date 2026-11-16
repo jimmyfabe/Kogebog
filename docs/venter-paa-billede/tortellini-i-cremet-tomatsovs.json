@@ -1,0 +1,57 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Tortellini i cremet tomatsovs med spinat",
+  "description": "Frisk tortellini med skinke og ost i en mild tomatsovs med spinat og fløde. Klar på cirka 20 minutter. Allergener: gluten, æg og mælk (tjek pakken); fyldet er med svinekød.",
+  "image": "grafik/ret-tortellini-i-cremet-tomatsovs.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT5M",
+  "cookTime": "PT15M",
+  "totalTime": "PT20M",
+  "recipeIngredient": [
+    "2 l vand og 1 tsk salt til pastaen",
+    "500 g tomatpassata",
+    "300 g frossen hakket spinat",
+    "1 tsk tørret oregano",
+    "½ tsk hvidløgspulver",
+    "500 g frisk tortellini med skinke og ost",
+    "2,5 dl madlavningsfløde",
+    "½ tsk salt"
+  ],
+  "tool": ["gryde med låg", "gryde med låg til sovsen", "dørslag", "grydeske"],
+  "recipeInstructions": [
+    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Retten indeholder gluten, æg og mælk, og fyldet er med svinekød. Tjek tortellini-pakken."}},
+    {"@type": "HowToStep", "text": "Kog vand til pastaen.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "2 l vand og 1 tsk salt i en gryde med låg på en bagerste plade, med håndtaget ind."}},
+    {"@type": "HowToStep", "text": "Hæld passata og spinat i en anden gryde.", "tumbi": {"verbum": "haelde", "ikoner": ["tomat", "spinat"], "note": "Spinaten direkte fra frost. Gryden er ikke tændt endnu. Barnet kan selv."}},
+    {"@type": "HowToStep", "text": "Drys oregano og hvidløgspulver i.", "tumbi": {"verbum": "drysse", "ikoner": ["krydderurt", "hvidloeg"], "note": "1 tsk oregano og ½ tsk hvidløgspulver."}},
+    {"@type": "HowToStep", "text": "Lad sovsen småkoge i 6 minutter.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 360, "note": "Under låg ved middel varme. Rør af og til, til spinaten er tøet og rørt ud i sovsen."}},
+    {"@type": "HowToStep", "text": "Kom pastaen i det kogende vand.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "ikoner": ["tortellini"], "note": "Kogetiden står på pakken, ofte 2-3 min. Rør forsigtigt én gang."}},
+    {"@type": "HowToStep", "text": "Hæld vandet fra pastaen.", "tumbi": {"verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["tortellini"], "note": "Den voksne hælder gennem dørslaget i vasken. Pas på dampen."}},
+    {"@type": "HowToStep", "text": "Rør fløden i sovsen.", "tumbi": {"verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["flode"], "note": "2,5 dl madlavningsfløde. Lad sovsen lige koge op."}},
+    {"@type": "HowToStep", "text": "Vend pastaen forsigtigt i sovsen.", "tumbi": {"verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["tortellini"], "note": "Den voksne hælder pastaen i. Barnet vender forsigtigt med grydeskeen."}},
+    {"@type": "HowToStep", "text": "Smag sovsen til med salt.", "tumbi": {"verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt"], "note": "Pust først: tortellini er meget varme indeni."}}
+  ],
+  "tumbi": {
+    "id": "tortellini-i-cremet-tomatsovs",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er egne og ikke afprøvet. Idé fra tortellini i fad (Valdemarsro, valdemarsro.dk/tortellini-i-fad/) og pasta i tomatfløde (Madens Verden, madensverden.dk/pasta-i-tomatfloede/). Her uden ovn: tortellini fra kølen koges for sig og vendes i en sovs af passata, frossen spinat og madlavningsfløde. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 61,
+    "pris_dato": "2026-11",
+    "groent_g": 800,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, nov. 2026: REMA 1000's priser på shop.rema1000.dk 31-10, 15-11 og 16-11-2026 for den brugte mængde (tortellini med bacon, skinke og ost 250 g 13,16 kr. × 2; tomatpassata 500 g 8,69 kr.; madlavningsfløde 8 % 250 ml 13,95 kr.; hakket spinat frost 750 g 9,95 kr.), i alt 52,94 kr., ganget med 1,09 plus 3 kr. til oregano, hvidløgspulver og salt. Grønt er også et skøn (ikke vejet): passata 500 g og spinat 300 g.",
+    "ingredienser": [
+      {"ikon": "vand", "maengde": "2 l", "vare": "vand"},
+      {"ikon": "tomat", "maengde": "500 g", "vare": "passata", "antal": 500, "enhed": "g"},
+      {"ikon": "spinat", "maengde": "300 g", "vare": "hakket-spinat", "antal": 300, "enhed": "g"},
+      {"ikon": "krydderurt", "maengde": "1 tsk", "vare": "oregano"},
+      {"ikon": "hvidloeg", "maengde": "½ tsk", "vare": "hvidloegspulver"},
+      {"ikon": "tortellini", "maengde": "500 g", "vare": "tortellini", "antal": 500, "enhed": "g"},
+      {"ikon": "flode", "maengde": "2,5 dl", "vare": "madlavningsflode", "antal": 250, "enhed": "ml"},
+      {"ikon": "salt", "maengde": "½ tsk", "vare": "salt"}
+    ]
+  }
+}

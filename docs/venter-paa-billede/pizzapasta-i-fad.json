@@ -1,0 +1,55 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Pizzapasta i fad med skinke og majs",
+  "description": "Penne i tomatsovs med skinketern, majs og oregano, bagt i ovnen med ost på toppen, som en pizza i et fad. Allergener: gluten (pastaen) og mælk (osten).",
+  "image": "grafik/ret-pizzapasta-i-fad.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT10M",
+  "cookTime": "PT30M",
+  "totalTime": "PT40M",
+  "recipeIngredient": [
+    "3 l vand og 1 tsk salt til pastaen",
+    "300 g penne",
+    "1 dåse majs",
+    "500 g tomatpassata",
+    "150 g skinketern",
+    "1 tsk tørret oregano",
+    "175 g revet ost"
+  ],
+  "tool": ["stor gryde med låg", "dørslag", "si", "dåseåbner", "ovnfast fad", "grydeske", "grydelapper"],
+  "recipeInstructions": [
+    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Retten indeholder gluten (pastaen) og mælk (osten). Skinketern er svinekød."}},
+    {"@type": "HowToStep", "text": "Kog vand til pastaen.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "Tænd ovnen på 220 °C varmluft først. 3 l vand og 1 tsk salt i en stor gryde med låg på en bagerste plade, med håndtagene ind."}},
+    {"@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad majsen dryppe af i vasken."}},
+    {"@type": "HowToStep", "text": "Rør passata, skinke, majs og oregano sammen.", "tumbi": {"verbum": "roere", "ikoner": ["tomat", "skinke", "majs", "krydderurt"], "note": "Direkte i et ovnfast fad: 500 g passata, 150 g skinketern, majsen og 1 tsk oregano. Fadet er koldt, så barnet kan selv."}},
+    {"@type": "HowToStep", "text": "Kom pastaen i vandet.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 480, "ikoner": ["spaghetti"], "note": "Når vandet koger. Kog den kun 8 min: den bliver færdig i ovnen. Rør lidt i starten."}},
+    {"@type": "HowToStep", "text": "Hæld vandet fra pastaen.", "tumbi": {"verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spaghetti"], "note": "Den voksne hælder gennem dørslaget i vasken. Pas på dampen."}},
+    {"@type": "HowToStep", "text": "Hæld pastaen i fadet, og rør rundt.", "tumbi": {"verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spaghetti"], "note": "Pastaen er varm: den voksne hælder, og barnet rører forsigtigt, til al pastaen er dækket af sovs."}},
+    {"@type": "HowToStep", "text": "Drys osten over.", "tumbi": {"verbum": "drysse", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ost"], "note": "Pastaen i fadet er varm: barnet drysser fra kanten."}},
+    {"@type": "HowToStep", "text": "Bag pastaen i ovnen i 15 minutter.", "tumbi": {"verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 900, "note": "220 °C varmluft, midt i ovnen. Osten skal være gylden, og sovsen skal boble i kanten."}},
+    {"@type": "HowToStep", "text": "Tag fadet ud af ovnen.", "tumbi": {"verbum": "tage-ud-form", "voksen": true, "voksen_hjaelp": "varme", "note": "Fadet er meget varmt. Lad retten stå et par minutter, før den serveres."}}
+  ],
+  "tumbi": {
+    "id": "pizzapasta-i-fad",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er egne og ikke afprøvet. Idé fra pasta i fad (Arla, arla.dk/opskrifter/pasta-i-fad/) og pastafad (Madens Verden, madensverden.dk/pastafad/). Her som pizza i et fad: tomatsovs med skinketern, majs og oregano blandes kold i fadet, og pastaen koges kort og bages færdig med ost. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 51,
+    "pris_dato": "2026-11",
+    "groent_g": 700,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, nov. 2026: REMA 1000's priser på shop.rema1000.dk 31-10 og 15-11-2026 for den brugte mængde (penne rigate 500 g 8,72 kr.; tomatpassata 500 g 8,69 kr.; skinketern 150 g 13,59 kr.; majs 285 g 7,91 kr.; revet pizzatopping 500 g 24,95 kr.), i alt 44,15 kr., ganget med 1,09 plus 3 kr. til oregano og salt. Grønt er også et skøn (ikke vejet): passata 500 g og majs ca. 200 g.",
+    "ingredienser": [
+      {"ikon": "vand", "maengde": "3 l", "vare": "vand"},
+      {"ikon": "spaghetti", "maengde": "300 g", "vare": "penne", "antal": 300, "enhed": "g"},
+      {"ikon": "majs", "maengde": "1 dåse", "vare": "majs", "antal": 1, "enhed": "stk"},
+      {"ikon": "tomat", "maengde": "500 g", "vare": "passata", "antal": 500, "enhed": "g"},
+      {"ikon": "skinke", "maengde": "150 g", "vare": "skinketern", "antal": 150, "enhed": "g"},
+      {"ikon": "krydderurt", "maengde": "1 tsk", "vare": "oregano"},
+      {"ikon": "ost", "maengde": "175 g", "vare": "revet-ost", "antal": 175, "enhed": "g"}
+    ]
+  }
+}

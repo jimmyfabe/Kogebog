@@ -1,0 +1,63 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Cremet kyllingepasta med broccoli",
+  "description": "Penne, kylling og broccoli kogt i én gryde og vendt med fløde og ost til en mild, cremet sovs. Allergener: gluten (pastaen) og mælk; tjek bouillonen for selleri.",
+  "image": "grafik/ret-cremet-kyllingepasta-med-broccoli.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT10M",
+  "cookTime": "PT20M",
+  "totalTime": "PT30M",
+  "recipeIngredient": [
+    "450 g kyllingebryst",
+    "1 spsk olie",
+    "7 dl vand",
+    "1 grøntsagsbouillonterning",
+    "300 g penne",
+    "400 g frossen broccoli",
+    "2,5 dl madlavningsfløde",
+    "75 g revet ost",
+    "½ tsk salt",
+    "1 knivspids peber"
+  ],
+  "tool": ["kniv", "skærebræt", "stor gryde med låg", "grydeske"],
+  "recipeInstructions": [
+    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Retten indeholder gluten (pastaen) og mælk. Tjek bouillonen for selleri."}},
+    {"@type": "HowToStep", "text": "Skær kyllingen i små stykker.", "tumbi": {"verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["koed"], "note": "Et rent skærebræt til den rå kylling."}},
+    {"@type": "HowToStep", "text": "Læg kyllingen i gryden.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["koed"], "note": "1 spsk olie i en stor gryde ved høj varme. Timeren startes efter håndvasken."}},
+    {"@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": {"verbum": "vaske-haender", "note": "Med sæbe: rå kylling kan give maveonde. Vask også skærebrættet og kniven."}},
+    {"@type": "HowToStep", "text": "Steg kyllingen i 4 minutter.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 240, "note": "Den voksne rører, til kyllingen er hvid udenpå."}},
+    {"@type": "HowToStep", "text": "Hæld vand, bouillon og pasta i gryden.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand", "bouillon", "spaghetti"], "note": "7 dl vand, bouillonterningen smuldret og 300 g penne. Den voksne hælder: det syder."}},
+    {"@type": "HowToStep", "text": "Lad pastaen koge i 6 minutter.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 360, "note": "Låg på og middel varme. Rør et par gange, så pastaen ikke sætter sig fast i bunden."}},
+    {"@type": "HowToStep", "text": "Hæld broccolien i gryden.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["broccoli"], "note": "Direkte fra frost. Den voksne hælder."}},
+    {"@type": "HowToStep", "text": "Kog videre i 5 minutter.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "note": "Rør tit. Pastaen skal være mør og broccolien varm hele vejen igennem. Bliver det for tørt, så lidt mere vand."}},
+    {"@type": "HowToStep", "text": "Rør fløde og det meste af osten i.", "tumbi": {"verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["flode", "ost"], "note": "Skru ned. 2,5 dl madlavningsfløde. Rør i 1 min, til sovsen er cremet. Den voksne skærer et stykke kylling over: det skal være hvidt hele vejen igennem."}},
+    {"@type": "HowToStep", "text": "Smag til med salt og peber.", "tumbi": {"verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt", "peber"], "note": "Den voksne giver barnet en lille skefuld, der har fået lov at køle af."}},
+    {"@type": "HowToStep", "text": "Drys resten af osten over.", "tumbi": {"verbum": "drysse", "ikoner": ["ost"], "note": "På tallerkenerne."}}
+  ],
+  "tumbi": {
+    "id": "cremet-kyllingepasta-med-broccoli",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er egne og ikke afprøvet. Idé fra one pot pasta med kylling (Madens Verden, madensverden.dk/one-pot-pasta-med-kylling/), hvor pastaen koger i gryden sammen med resten. Her med kyllingebryst, grøntsagsbouillon, frossen broccoli, madlavningsfløde og revet ost. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 81,
+    "pris_dato": "2026-11",
+    "groent_g": 400,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, nov. 2026: REMA 1000's priser på shop.rema1000.dk 31-10 og 15-11-2026 for den brugte mængde (penne rigate 500 g 8,72 kr.; kyllingebrystfilet 450 g 34,95 kr.; broccoli frost 400 g 13,95 kr.; madlavningsfløde 8 % 250 ml 13,95 kr.; revet pizzatopping 500 g 24,95 kr.), i alt 71,82 kr., ganget med 1,09 plus 3 kr. til olie, bouillon, salt og peber. Grønt er også et skøn (ikke vejet): broccoli 400 g.",
+    "ingredienser": [
+      {"ikon": "koed", "maengde": "450 g", "vare": "kyllingebryst", "antal": 450, "enhed": "g"},
+      {"ikon": "olie", "maengde": "1 spsk", "vare": "olie"},
+      {"ikon": "vand", "maengde": "7 dl", "vare": "vand"},
+      {"ikon": "bouillon", "maengde": "1", "vare": "bouillonterninger", "antal": 1, "enhed": "stk"},
+      {"ikon": "spaghetti", "maengde": "300 g", "vare": "penne", "antal": 300, "enhed": "g"},
+      {"ikon": "broccoli", "maengde": "400 g", "vare": "broccoliblanding", "antal": 400, "enhed": "g"},
+      {"ikon": "flode", "maengde": "2,5 dl", "vare": "madlavningsflode", "antal": 250, "enhed": "ml"},
+      {"ikon": "ost", "maengde": "75 g", "vare": "revet-ost", "antal": 75, "enhed": "g"},
+      {"ikon": "salt", "maengde": "½ tsk", "vare": "salt"},
+      {"ikon": "peber", "maengde": "1 knivspids", "vare": "peber"}
+    ]
+  }
+}
