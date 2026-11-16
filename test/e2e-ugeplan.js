@@ -1543,6 +1543,12 @@ async function ugePrint(browser, H) {
   await ark(() => document.querySelectorAll('.uge-dag').length === 7 && !document.querySelector('#print').disabled, 'printet med en ret, der ikke er i ugeplanen');
   const note = (await side.locator('.liste-note').allTextContents()).join(' | ');
   tjek(note === 'Én dag mangler på listen, fordi retten ikke længere er i ugeplanen.', n + ': listen siger, at retten ikke er i ugeplanen (' + note + ')');
+  // Dagen siger det også selv, som på voksendelens forside: intet billede og grunden under navnet (review U14)
+  const soendag = await side.evaluate(() => {
+    const li = document.querySelectorAll('.uge-dag')[6];
+    return { billede: Boolean(li.querySelector('img.uge-billede')), meta: li.querySelector('.uge-ret .meta')?.textContent || '' };
+  });
+  tjek(!soendag.billede && soendag.meta === 'Retten er ikke længere i ugeplanen.', n + ': dagen med retten uden for ugeplanen siger det (' + JSON.stringify(soendag) + ')');
   tjek(JSON.stringify(await printListe(side)) === JSON.stringify(listeFor(H, dage)), n + ': listen har kun ugeplanens retter');
 
   // 6. Begge grunde på én gang: «Genindlæs siden» står efter sætningen om opskriften, der ikke kunne hentes, ikke efter

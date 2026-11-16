@@ -55,12 +55,16 @@ function tegn(ark, p, hentet) {
   const dage = p.dage.map((d, i) => {
     const m = d ? hentet.get(d.ret) : null;
     const navn = !d ? 'Fri aften' : m ? m.navn : 'Opskriften kunne ikke hentes';
+    // En ret uden for ugeplanen står som på voksendelens forside: intet billede og grunden under navnet (review U14)
+    const kendt = Boolean(m && m.uge);
+    const meta = !m ? null : kendt ? [m.minutter ? minutterTekst(m.minutter) : '', d.n + ' pers.', m.erGroen ? 'mere grønt' : ''].filter(Boolean).join(' · ')
+      : 'Retten er ikke længere i ugeplanen.';
     return el('li', { class: 'uge-dag' + (d ? '' : ' fri') },
       el('p', { class: 'uge-dag-navn' }, el('span', { tekst: DAGE[i] }), el('span', { class: 'uge-dato', tekst: dagDato(uge, i) })),
-      m ? el('img', { class: 'uge-billede', src: grafikRet(m.id), alt: '' }) : el('span', { class: 'uge-billede tom', 'aria-hidden': 'true' }),
+      kendt ? el('img', { class: 'uge-billede', src: grafikRet(m.id), alt: '' }) : el('span', { class: 'uge-billede tom', 'aria-hidden': 'true' }),
       el('div', { class: 'uge-ret' },
         el('p', { class: 'uge-ret-navn', tekst: navn }),
-        m ? el('p', { class: 'meta', tekst: [m.minutter ? minutterTekst(m.minutter) : '', d.n + ' pers.', m.erGroen ? 'mere grønt' : ''].filter(Boolean).join(' · ') }) : null),
+        meta ? el('p', { class: 'meta', tekst: meta }) : null),
       d && Object.hasOwn(DYR, d.af)
         ? el('p', { class: 'uge-af' }, el('img', { src: grafikDyr(d.af), alt: '' }), el('span', { tekst: 'Valgt af ' + dyrNavn(d.af) }))
         : null);
