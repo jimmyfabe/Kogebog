@@ -4,8 +4,8 @@ Validatoren kræver `grafik/ret-<id>.webp` for hver ret i `opskrifter/`, så en 
 her som `<id>.json` (med katalog, ikoner og varerne til indkøbslisten på plads), indtil billedet er tegnet. Skriv dens
 gruppe her, og hvad billedet skal vise.
 
-Der venter syv retter fra v11 (skrevet 16-11-2026, `afproevet: false`). De fem brød- og naanretter fra v11 fik billede 15-11-2026.
-Retter med `ugeplan: true` skal i `UGEPLAN` i `test/test-indkoeb.js`, når de flyttes ind (trin 4): alle undtagen risbollerne.
+Der venter ni retter fra v11 (skrevet 16-11-2026, `afproevet: false`). De fem brød- og naanretter fra v11 fik billede 15-11-2026.
+Retter med `ugeplan: true` skal i `UGEPLAN` i `test/test-indkoeb.js`, når de flyttes ind (trin 4): alle undtagen risbollerne. Boller i karry og kylling i karry kom til 16-11-2026 kl. 12:25 (Jimmys ønske).
 
 | Ret | Gruppe | Billedet viser |
 |---|---|---|
@@ -16,6 +16,8 @@ Retter med `ugeplan: true` skal i `UGEPLAN` i `test/test-indkoeb.js`, når de fl
 | `cremet-kyllingepasta-med-broccoli` | pasta-og-nudler | Penne i hvid, cremet sovs med lyse kyllingestykker og grøn broccoli |
 | `tortellini-i-cremet-tomatsovs` | pasta-og-nudler | Gule, ringformede tortellini i orange tomatflødesovs med grøn spinat |
 | `pizzapasta-i-fad` | pasta-og-nudler | Et ovnfast fad med penne i rød tomatsovs, gyldenbrun smeltet ost, lyserøde skinketern og gule majs |
+| `boller-i-karry` | gris | Små lyse kødboller i gul karrysovs med æbletern og grønne ærter, hvide ris ved siden af |
+| `kylling-i-karry` | kylling | Kyllingestykker, porreringe og æbletern i gul karrysovs, hvide ris ved siden af |
 
 Sådan kommer de tilbage (Git Bash i Kogebog). Det kan gøres for de retter, der har fået et billede, resten bliver her:
 
@@ -24,6 +26,8 @@ Sådan kommer de tilbage (Git Bash i Kogebog). Det kan gøres for de retter, der
 2. `git mv docs/venter-paa-billede/<id>.json opskrifter/`, og skriv id'et i sin gruppe i `opskrifter/index.json`.
 3. Tilføj `opskrifter/<id>.json` og `grafik/ret-<id>.webp` i `FILER` i `sw.js`.
 4. Har retten `ugeplan: true`, så skriv id'et i `UGEPLAN`-listen i `test/test-indkoeb.js` (alfabetisk).
+   Hæv altid (også uden ugeplan) tallene i `test/test-forside.js`: `ANTAL_RETTER`, `ANTAL_PLANLAGTE` og retterne i «Aftensmad» (`/85/`) og
+   testnavnene med de samme tal (16-11-2026: med alle ni v11-retter fejler fire tests der, til tallene er hævet).
 5. Sæt den nye `UDGAVE_INDHOLD` først og derefter `INDHOLD` (`node test/test-version.js` og `node test/test-sw.js`
    viser dem; `js/version.js` ligger selv i `FILER`). Hæv `UDGAVE`, hvis udgaven allerede er udgivet.
 6. Lav stemmen til retterne (`CLAUDE.md`, «Stemmen»). `node test/test-lyd.js` viser de manglende replikker.
