@@ -1,0 +1,63 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Tomatris fra riskogeren med bønner og majs",
+  "description": "Ris kogt i tomat med paprika og spidskommen, med ærter, kidneybønner og majs og ost på toppen. Det meste laver riskogeren. Allergener: mælk (osten).",
+  "image": "grafik/ret-tomatris-fra-riskogeren.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT10M",
+  "cookTime": "PT35M",
+  "totalTime": "PT45M",
+  "recipeIngredient": [
+    "300 g jasminris",
+    "250 g tomatpassata",
+    "3 dl vand",
+    "1 tsk paprika",
+    "1 tsk stødt spidskommen",
+    "½ tsk hvidløgspulver",
+    "½ tsk salt",
+    "200 g frosne ærter",
+    "1 dåse kidneybønner",
+    "1 dåse majs",
+    "100 g revet ost"
+  ],
+  "tool": ["si", "kande", "riskoger (eller gryde med låg)", "dåseåbner", "lang ske"],
+  "recipeInstructions": [
+    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Retten indeholder mælk (osten)."}},
+    {"@type": "HowToStep", "text": "Skyl risene i en si.", "tumbi": {"verbum": "haelde", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er næsten klart. Barnet kan selv."}},
+    {"@type": "HowToStep", "text": "Rør passata, vand og krydderier sammen.", "tumbi": {"verbum": "roere", "ikoner": ["tomat", "vand", "krydderurt", "hvidloeg", "salt"], "note": "I en kande: 250 g passata, 3 dl vand, 1 tsk paprika, 1 tsk spidskommen, ½ tsk hvidløgspulver og ½ tsk salt. Barnet kan selv."}},
+    {"@type": "HowToStep", "text": "Hæld ris, tomatvand og ærter i riskogeren.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris", "tomat", "aerter"], "note": "Riskogeren er ikke tændt endnu: barnet hælder, og den voksne holder. Ærterne direkte fra frost, ovenpå. Rør én gang."}},
+    {"@type": "HowToStep", "text": "Tænd for riskogeren.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "note": "Risene er færdige efter ca. 25-30 min. Tomat kan brænde på i bunden: kan låget åbnes, så rør efter halv tid. Ingen riskoger: kog det hele under låg ved svag varme i ca. 20 min, og rør et par gange."}},
+    {"@type": "HowToStep", "text": "Hæld vandet fra bønnerne og majsen.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["boenner", "majs"], "note": "Den voksne åbner dåserne: kanten er skarp. Skyl bønnerne i en si under koldt vand. Lav det, mens risene koger."}},
+    {"@type": "HowToStep", "text": "Rør bønner og majs i risene.", "tumbi": {"verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["boenner", "majs"], "note": "Når riskogeren er færdig. Risene er varme: den voksne rører, eller barnet med en lang ske."}},
+    {"@type": "HowToStep", "text": "Lad risene trække i 10 minutter.", "tumbi": {"verbum": "vente", "timer_sek": 600, "note": "Med låget på, så bønner og majs bliver varme."}},
+    {"@type": "HowToStep", "text": "Smag til med salt.", "tumbi": {"verbum": "smage", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["salt"], "note": "Den voksne giver barnet en lille skefuld, der har fået lov at køle af. Er risene ikke møre, så lidt vand og 5 min mere."}},
+    {"@type": "HowToStep", "text": "Drys osten over risene.", "tumbi": {"verbum": "drysse", "ikoner": ["ost"], "note": "På tallerkenerne. Den smelter i de varme ris."}}
+  ],
+  "tumbi": {
+    "id": "tomatris-fra-riskogeren",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er egne og ikke afprøvet. Idé fra mexicansk tomatris i riskoger (Pinch and Swirl, «Rice Cooker Mexican Rice», pinchandswirl.com/rice-cooker-mexican-rice/, og Key to My Lime, «Rice Cooker Mexican Rice», keytomylime.com/rice-cooker-mexican-rice-recipe/), hvor risene koger i tomat og krydderier. Her med passata og vand som væsken, ærter i riskogeren og kidneybønner, majs og ost til sidst. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ugeplan": true,
+    "portioner": 4,
+    "pris_kr": 38,
+    "pris_dato": "2026-11",
+    "groent_g": 650,
+    "ugeplan_kilde": "Prisen er et skøn for 365discount, nov. 2026: REMA 1000's priser på shop.rema1000.dk 31-10 og 15-11-2026 for den brugte mængde (jasminris 1 kg 15,02 kr.; tomatpassata 500 g 8,69 kr.; kidneybønner 240 g 7,15 kr.; majs 285 g 7,91 kr.; fine ærter frost 600 g 10,36 kr.; revet pizzatopping 500 g 24,95 kr.), i alt 32,35 kr., ganget med 1,09 plus 3 kr. til krydderier og salt. Grønt er også et skøn (ikke vejet): passata 250 g, ærter 200 g og majs ca. 200 g, uden bønnerne.",
+    "ingredienser": [
+      {"ikon": "ris", "maengde": "300 g", "vare": "ris", "antal": 300, "enhed": "g"},
+      {"ikon": "tomat", "maengde": "250 g", "vare": "passata", "antal": 250, "enhed": "g"},
+      {"ikon": "vand", "maengde": "3 dl", "vare": "vand"},
+      {"ikon": "krydderurt", "maengde": "1 tsk", "vare": "paprika"},
+      {"ikon": "krydderurt", "maengde": "1 tsk", "vare": "spidskommen"},
+      {"ikon": "hvidloeg", "maengde": "½ tsk", "vare": "hvidloegspulver"},
+      {"ikon": "salt", "maengde": "½ tsk", "vare": "salt"},
+      {"ikon": "aerter", "maengde": "200 g", "vare": "aerter", "antal": 200, "enhed": "g"},
+      {"ikon": "boenner", "maengde": "1 dåse", "vare": "kidneyboenner", "antal": 1, "enhed": "stk"},
+      {"ikon": "majs", "maengde": "1 dåse", "vare": "majs", "antal": 1, "enhed": "stk"},
+      {"ikon": "ost", "maengde": "100 g", "vare": "revet-ost", "antal": 100, "enhed": "g"}
+    ]
+  }
+}

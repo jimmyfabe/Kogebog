@@ -209,6 +209,8 @@ export const INGREDIENSER = {
   'spegepoelse': 'spegepølse',
   // Kyllingenuggets i rispapir (v10, 14-11-2026): tørre ark af ris, der bliver bløde i lunkent vand
   'rispapir': 'rispapir',
+  // Tortellini i cremet tomatsovs (v11, 16-11-2026): fyldt pasta fra kølen
+  'tortellini': 'tortellini',
 };
 
 // Ikoner for råt kød og råt æg: efter dem skal der komme et trin med «vaske-haender».
@@ -379,6 +381,8 @@ export const VARER = {
   'ananas': { navn: 'Ananasringe', afd: 'toer', enhed: 'stk', ikon: 'ananas', pakke: [1, 'dåse', 'dåser'] },
   // Små poser à 40 g: den eneste størrelse, Rema 1000 har (discount-tilpasningen 01-11-2026)
   'hoisin': { navn: 'Hoisinsauce', afd: 'toer', enhed: 'g', ikon: 'soja', pakke: [40, 'pose', 'poser'] },
+  // v11 (16-11-2026): sesamfrø à 150 g (Rema 1000) til honningkyllingen og risbollerne
+  'sesam': { navn: 'Sesamfrø', afd: 'toer', enhed: 'g', ikon: 'kerner', pakke: [150, 'pose', 'poser'] },
   // Køl
   'hakket-oksekoed': { navn: 'Hakket oksekød', afd: 'koel', enhed: 'g', ikon: 'koed', pakke: [500, 'bakke', 'bakker'], slags: 'koed' },
   // Chorizo i skiver à 80 g (Rema 1000), som chorizo-pastaen bruger fra discount-tilpasningen 01-11-2026
@@ -411,6 +415,8 @@ export const VARER = {
   'skyr': { navn: 'Skyr naturel', afd: 'koel', enhed: 'g', ikon: 'yoghurt', pakke: [1000, 'bæger', 'bægre'] },
   'skinketern': { navn: 'Skinketern', afd: 'koel', enhed: 'g', ikon: 'skinke', pakke: [150, 'pakke', 'pakker'], slags: 'koed' },
   'gnocchi': { navn: 'Gnocchi', afd: 'koel', enhed: 'g', ikon: 'kartoffel', pakke: [500, 'pakke', 'pakker'] },
+  // v11 (16-11-2026): frisk tortellini à 250 g fra kølen. Rema 1000 har kun den med bacon, skinke og ost, så den er kød
+  'tortellini': { navn: 'Tortellini', afd: 'koel', enhed: 'g', ikon: 'tortellini', pakke: [250, 'pakke', 'pakker'], slags: 'koed' },
   // Færdig at spise, men «laks» i ingredienslinjen kræver ikonet «koed» og en håndvask. Uden pakke: 100 og 125 g findes
   'varmroeget-laks': { navn: 'Varmrøget laks', afd: 'koel', enhed: 'g', ikon: 'koed', slags: 'fisk' },
   // Frost. Uden pakke: posernes størrelse skifter mellem butikkerne, så listen viser gram

@@ -1,0 +1,50 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Recipe",
+  "name": "Risboller med tun og majs",
+  "description": "Japanske risboller (onigiri) af grødris med tun, majs og mayonnaise i midten og sesam udenpå. Til madpakken eller turen. Allergener: fisk, æg (i mayonnaisen) og sesam; tjek mayonnaisen for sennep.",
+  "image": "grafik/ret-risboller-med-tun-og-majs.webp",
+  "inLanguage": "da",
+  "recipeYield": "4 personer",
+  "prepTime": "PT25M",
+  "cookTime": "PT30M",
+  "totalTime": "PT55M",
+  "recipeIngredient": [
+    "300 g grødris",
+    "4 dl vand",
+    "½ tsk salt",
+    "1 dåse tun i vand",
+    "½ dåse majs",
+    "3 spsk mayonnaise",
+    "2 spsk sesamfrø"
+  ],
+  "tool": ["si", "riskoger (eller gryde med låg)", "stort fad", "dåseåbner", "skål", "ske", "skål med koldt vand", "husholdningsfilm eller madkasse"],
+  "recipeInstructions": [
+    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Retten indeholder fisk, æg (i mayonnaisen) og sesam. Mayonnaise kan indeholde sennep: tjek glasset. Børn bør højst få én dåse tun om ugen: vælg ikke en anden tunret samme uge."}},
+    {"@type": "HowToStep", "text": "Skyl risene i en si.", "tumbi": {"verbum": "haelde", "ikoner": ["ris"], "note": "Kort under koldt vand. Grødris klistrer, og det skal de: så kan de formes. Barnet kan selv."}},
+    {"@type": "HowToStep", "text": "Tænd for riskogeren.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris", "vand", "salt"], "note": "Ris, 4 dl vand og ½ tsk salt i riskogeren. Barnet kan hælde i, før den tændes. Risene er færdige efter ca. 25 min. Ingen riskoger: kog dem under låg ved svag varme i 15 min, og lad dem trække 10 min."}},
+    {"@type": "HowToStep", "text": "Hæld risene ud på et stort fad.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Risene er varme: den voksne hælder. Bred dem ud i et tyndt lag, så de køler hurtigt."}},
+    {"@type": "HowToStep", "text": "Lad risene køle af i 15 minutter.", "tumbi": {"verbum": "vente", "timer_sek": 900, "note": "Til de er lune og ikke brænder. Kogte ris må højst stå en time ved stuetemperatur. Lav fyldet imens."}},
+    {"@type": "HowToStep", "text": "Hæld vandet fra tunen.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["tun"], "note": "Den voksne åbner dåsen: kanten er skarp. Hold låget mod tunen, og hæld vandet i vasken."}},
+    {"@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen. Brug halvdelen, og gem resten i køleskabet."}},
+    {"@type": "HowToStep", "text": "Rør tun, majs og mayonnaise sammen.", "tumbi": {"verbum": "roere", "ikoner": ["tun", "majs", "mayonnaise"], "note": "I en skål, med 3 spsk mayonnaise. Barnet kan selv."}},
+    {"@type": "HowToStep", "text": "Form en risbolle med fyld i midten.", "tumbi": {"verbum": "forme", "ikoner": ["ris", "tun"], "note": "Dyp hænderne i koldt vand, så risene ikke klistrer. Tag 2 spsk ris, tryk et hul, kom 1 tsk fyld i, og luk med lidt flere ris. Tryk dem til en kugle eller en trekant. Det giver ca. 12."}},
+    {"@type": "HowToStep", "text": "Drys sesam på risbollerne.", "tumbi": {"verbum": "drysse", "ikoner": ["kerner"], "note": "Eller rul dem i sesam på en tallerken. Barnet kan selv."}},
+    {"@type": "HowToStep", "text": "Pak risbollerne ind.", "tumbi": {"verbum": "pakke-ind", "note": "Hver for sig i husholdningsfilm eller tæt i madkassen. Læg dem i køleskabet med det samme, og spis dem samme dag: kogte ris, der står lunt for længe, kan give maveonde."}}
+  ],
+  "tumbi": {
+    "id": "risboller-med-tun-og-majs",
+    "version": 1,
+    "afproevet": false,
+    "kilde": "Mængderne er egne og ikke afprøvet. Idé fra onigiri med tun og mayonnaise (Just One Cookbook, «Tuna Mayo Onigiri», justonecookbook.com/tuna-mayo-onigiri/). Her med dansk grødris fra riskogeren i stedet for japanske ris, majs i fyldet og sesam udenpå i stedet for tang. Trinene er egen tekst. Tiden er et skøn (ikke målt).",
+    "ingredienser": [
+      {"ikon": "ris", "maengde": "300 g", "vare": "groedris", "antal": 300, "enhed": "g"},
+      {"ikon": "vand", "maengde": "4 dl", "vare": "vand"},
+      {"ikon": "salt", "maengde": "½ tsk", "vare": "salt"},
+      {"ikon": "tun", "maengde": "1 dåse", "vare": "tun", "antal": 140, "enhed": "g"},
+      {"ikon": "majs", "maengde": "½ dåse", "vare": "majs", "antal": 0.5, "enhed": "stk"},
+      {"ikon": "mayonnaise", "maengde": "3 spsk", "vare": "mayonnaise"},
+      {"ikon": "kerner", "maengde": "2 spsk", "vare": "sesam", "antal": 18, "enhed": "g"}
+    ]
+  }
+}
