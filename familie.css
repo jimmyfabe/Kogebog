@@ -241,6 +241,10 @@
   /* «Med» i venstre side, de andre til højre: luften i begge sider er ens (før 21 og 10 px på 390), og hjertet står samme
      sted i rækker uden «Med» (review U7) */
   .voksen-katalog .voksen-raekke-knapper > .voksen-med { margin-right: auto; }
+  /* Vælg-tilstanden: «Vælg» og «Behold» på deres egen linje under billedet og navnet, som katalogets knapper. Ved siden af
+     navnet gik metalinjen («268 g grønt pr. person», bundet med hårde mellemrum) ind under knappen på 360-390 px, og
+     navnet blev delt over 3-5 linjer (UI-review U1, 16-11) */
+  .voksen-vaelg .voksen-raekke > .vaelg-ret { grid-column: 1 / -1; justify-self: end; margin-bottom: 8px; }
   .voksen-raekke-knapper .knap.hjerte-knap { width: 48px; min-width: 48px; min-height: 48px; }
   .voksen-raekke-knapper .hjerte-knap .ikon { width: 26px; height: 26px; }
   .kun-bred { display: none; }

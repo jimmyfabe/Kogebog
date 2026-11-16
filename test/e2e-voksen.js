@@ -145,6 +145,28 @@ async function tjekForside(H, side, hvor) {
   await H.tjekKnapOrd(side, '.voksen-bobler .knap, .voksen-dag-vaelg, .voksen-boern, .voksen-bund .knap', hvor);
 }
 
+// Vælg-tilstanden: ingen tekst i en række (navnet, ⚡ og metalinjen) må ligge under rækkens «Vælg» eller «Behold». Måles
+// på hver tekstlinje (Range), ikke på tekstens boks, som kan være bredere end teksten. På 360-390 px gik metalinjen ind
+// under knappen (UI-review U1, 16-11). Svar: rækkerne med overlap og hvor mange px
+const tekstUnderKnap = (side) => side.evaluate(() => {
+  const fund = [];
+  for (const li of document.querySelectorAll('main.voksen-vaelg li.voksen-raekke[data-ret]')) {
+    const k = li.querySelector('.vaelg-ret')?.getBoundingClientRect();
+    const tekst = li.querySelector('.voksen-raekke-tekst');
+    if (!k || !tekst) continue;
+    const r = document.createRange();
+    r.selectNodeContents(tekst);
+    let mest = 0;
+    for (const t of r.getClientRects()) {
+      const b = Math.min(t.right, k.right) - Math.max(t.left, k.left);
+      const h = Math.min(t.bottom, k.bottom) - Math.max(t.top, k.top);
+      if (b > 0.5 && h > 0.5) mest = Math.max(mest, Math.round(b));
+    }
+    if (mest) fund.push(li.dataset.ret + ' ' + mest + ' px');
+  }
+  return fund;
+});
+
 // Indkøbslisten, som den står på skærmen (uden «Har vi»): varernes id og mængde, i listens rækkefølge
 const listeVist = (side) => side.evaluate(() => [...document.querySelectorAll('.liste-krop .afd:not(.har-vi-afd) li[data-vare]')]
   .map((li) => [li.dataset.vare, (li.querySelector('.vare-maengde')?.textContent || '').replace(/\s+/g, ' ')]));
@@ -236,6 +258,17 @@ async function forloeb(browser, H, skaerm) {
     n + ': vælg-tilstanden viser alle ' + IPLAN.length + ' retter i ugeplanen (' + vaelgRetter.length + ')');
   await tjekLayout(side, n + ' vælg ret til tirsdag');
   await tjekKnapOrd(side, '.voksen-vaelg .vaelg-ret, .voksen-vaelg .voksen-knapper .knap', n + ' vælg ret til tirsdag');
+  const underKnap = await tekstUnderKnap(side);
+  tjek(!underKnap.length, n + ': ingen tekst under «Vælg» i vælg-tilstanden (' + underKnap.length + ' rækker: ' + underKnap.slice(0, 5).join(', ') + ')');
+  if (!bred) {
+    // Den smalleste telefon (360 px): her lå metalinjen 24-49 px inde under knappen på alle rækker
+    await side.setViewportSize({ width: 360, height: 780 });
+    await side.waitForFunction(() => innerWidth === 360);
+    const smal = await tekstUnderKnap(side);
+    tjek(!smal.length, n + ' 360 px: ingen tekst under «Vælg» i vælg-tilstanden (' + smal.length + ' rækker: ' + smal.slice(0, 5).join(', ') + ')');
+    await side.setViewportSize(skaerm.viewport);
+    await side.waitForFunction((b) => innerWidth === b, skaerm.viewport.width);
+  }
   await foto(side, n + '-voksen-vaelg');
   await tryk(side, 'li[data-ret="' + RET + '"] .vaelg-ret');
   await venterPaa(side, (id) => location.hash === '#/voksen' && document.querySelector('.voksen-dag[data-dag="1"][data-ret="' + id + '"]'), RET, n + ': «Vælg» går til forsiden med tirsdag udfyldt');
