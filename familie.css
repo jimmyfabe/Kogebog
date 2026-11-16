@@ -268,6 +268,21 @@
   .udvalg-tal { margin: 0 -24px; padding: 8px 24px; }
 }
 
+/* Vælg-tilstanden på lave skærme på langs (667×375 til 932×430): overskriften, «Tilbage», søgefeltet med etiketten,
+   filtrene og tallet fyldte hele skærmen, så den første ret stod ved y=419-446 af 375-390 (e2e fund 9, 16-11). Som før
+   v11 deler «Tilbage» en række: den står ved siden af søgefeltet. Etiketten er kun til skærmlæseren (feltet har luppen og
+   «fx kylling eller jul»), og luften er mindre */
+@media (max-height: 520px) and (orientation: landscape) {
+  .voksen-vaelg .voksen-indhold { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 8px 16px; }
+  .voksen-vaelg .voksen-indhold > * { grid-column: 1 / -1; }
+  .voksen-vaelg .voksen-indhold > .voksen-knapper { grid-column: 1; }
+  .voksen-vaelg .voksen-indhold > .soeg { grid-column: 2; }
+  .voksen-vaelg .voksen-hoved h1 { font-size: 30px; }
+  .voksen-vaelg .soeg-navn { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .voksen-vaelg .soeg-felt { min-height: 52px; }
+  .voksen-vaelg .voksen-filtre > summary { min-height: 48px; padding: 10px 0; }
+}
+
 /* Telefonen: lige så små og tæt på hjørnet som dyret (.kort-dyr i app.css) */
 @media (max-width: 700px) {
   .maerke { top: 6px; left: 6px; --maerke: 36px; font-size: 18px; }
