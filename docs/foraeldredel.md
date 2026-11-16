@@ -4,6 +4,8 @@
 > **Ureviewet.** Intet er bygget eller afprøvet. Tal i tabellerne er målt med et engangsscript på opskrifternes JSON (`scratchpad/foraeldredel/maal.mjs`). Linjenumre er fra r2-worktree'en.
 >
 > **Bygges 31-10-2026** på grenen `claude/foraeldredel-31-10` (fra runde 3, 101 retter) med de anbefalede standardvalg i afsnit 9: «4 personer» = 4 voksenportioner, barn = 0,7, hold 2 s, udvalg 8 (maks. 24), «Fyld op» tilføjer 4, «Masser af grønt» 250 g og billig 12 kr, ingen filter på forsiden. Hvert valg er én konstant, så det er let at ændre. Den nye nøgle `kog-familie-v1` flettes først efter Jimmys ja.
+>
+> **v11 (16-11-2026): forsiden er ugeplanen.** `#/voksen` viser ugens syv dage med tre bobler øverst: Indkøbsliste (med antal varer), Retter og Mere. Et tryk på en tom dag åbner kataloget i vælg-tilstand (`#/voksen/dag/<1-7>`, kun ugeplanens retter, søgning, grupper, mærker og rækkefølge), og «Vælg» lægger retten på dagen gennem `gemPlan`. En udfyldt dag folder et ark ud med portioner, «Byt ret», «Fjern» og «Åbn retten». `#/voksen/mere` har ugeplanens handlinger (Send til telefon, Del som tekst, Print, portioner til nye retter, retter pr. barn, Børnene vælger, Ny uge) og familien (husstand, ugens udvalg, favoritter, «Mere grønt i maden»). Den gamle oversigt med kort og ugeplanens egen skærm `#/uge` er væk; `#/uge` og `#/uge/dag/<n>` sendes videre til `#/voksen` og `#/voksen/dag/<n>` med `history.replaceState`. Gemte data er uændrede. Plan og begrundelser: `docs/voksen-forside-plan-16-11-2026.md`.
 
 ## 0. Anbefaling i én sætning
 
@@ -63,7 +65,7 @@
   - ukendte id'er (ikke i `S.ids`) fjernes;
   - tal klemmes ind i grænserne;
   - forkerte typer giver standardværdien;
-  - en højere `v` læses som tom og låses (`laast`), som de to andre nøgler gør. Voksendelens oversigt står stadig med vejen til ugeplanen og indkøbslisten, men husstand, udvalg og favoritter kan ikke åbnes, og færdig-skærmen siger, at hjertet ikke kunne gemmes, fordi en nyere udgave har gemt voksendelen.
+  - en højere `v` læses som tom og låses (`laast`), som de to andre nøgler gør. Voksendelens forside (ugeplanen) og «Mere» står stadig med vejen til indkøbslisten, men husstand, udvalg og favoritter kan ikke åbnes, og færdig-skærmen siger, at hjertet ikke kunne gemmes, fordi en nyere udgave har gemt voksendelen.
 - **Migrering:**
   - Den nye nøgle er rent additiv, så intet eksisterende ændres. `kog-v1` (`rens()` må ikke kopieres), `kog-uge-v1` og `kog-liste-v1` er uændrede.
   - En gammel udgave ignorerer nøglen.
@@ -82,7 +84,7 @@
 - **Dagens n før husstandens:** står retten i ugeplanen, bruger retten (og printet fra den) dagens `d.n` fra `kog-uge-v1`: dagen med dagens dato, hvis retten står dér, ellers den første dag med retten. Så passer retten til indkøbslisten. Husstanden er kun reserven for retter, der ikke står i planen.
 
 - Man runder op til hele portioner, så indkøbsliste, link (`n` er et heltal 1-12, plankode.js) og opskriftsskærm altid viser det samme. Rester er bedre end for lidt.
-- **Loftet siges:** skærer loftet husstanden ned (fx 8 + 8 = 13,6), står der «12 portioner (højst 12 — lav retten to gange til flere)» i husstandens sum og på oversigten (`husstandSum` i js/voksen-del.js).
+- **Loftet siges:** skærer loftet husstanden ned (fx 8 + 8 = 13,6), står der «12 portioner (højst 12 — lav retten to gange til flere)» i husstandens sum og under «Mere» (`husstandSum` i js/voksen-del.js).
 - **Barn = 0,7 voksen som standard.** Nordiske Næringsstofanbefalinger 2023 (NNR2023, Tabel 7 og 11) angiver energibehovet:
 
   | Hvem | Energibehov | I forhold til en voksen |
