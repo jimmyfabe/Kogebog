@@ -361,7 +361,7 @@ test('filtrer: gruppen, alle de valgte mærker og søgeteksten gælder sammen, o
 });
 
 // Aftensmad blev delt i fem grupper: chippen og søgeordet skal stadig samle dem (katalogFiltre og soegePost)
-test('filtrer: «Aftensmad» er de fem grupper, og søgeordene «aftensmad» og «bagning» finder dem', () => {
+test('filtrer: «Aftensmad» er de seks grupper (AFTENSMAD_GRUPPER; antallet tjekkes i test-forside.js), og søgeordene «aftensmad» og «bagning» finder dem', () => {
   const ids = (valg) => V.filtrer(POSTER, valg).map((p) => p.m.id);
   assert.deepEqual(ids({ gruppe: 'aftensmad' }), ['kylling', 'laks']);
   assert.deepEqual(ids({ gruppe: 'aftensmad', tekst: 'karry' }), ['kylling']);
