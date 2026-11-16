@@ -21,7 +21,7 @@
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mandler (marcipan) og mælk." } },
     { "@type": "HowToStep", "text": "Skær kernehuset ud af æblerne.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["aeble"], "note": "Tænd ovnen på 200 °C almindelig ovn (ca. 180 °C varmluft). Lav et hul ovenfra med en lille kniv og en teske. Lad bunden blive, så fyldet bliver i æblet. Vælter æblet, så skær en tynd skive af bunden." } },
     { "@type": "HowToStep", "text": "Smuldr marcipanen i en skål.", "tumbi": { "verbum": "smuldre", "ikoner": ["marcipan"], "note": "100 g. Små stykker gør det let at ælte." } },
-    { "@type": "HowToStep", "text": "Drys rosiner og kanel i skålen.", "tumbi": { "verbum": "drysse", "ikoner": ["rosiner", "krydderi"], "note": "2 spsk rosiner og ½ tsk kanel. Gem resten af kanelen." } },
+    { "@type": "HowToStep", "text": "Drys rosiner og kanel i skålen.", "tumbi": { "verbum": "drysse-skaal", "ikoner": ["rosiner", "krydderi"], "note": "2 spsk rosiner og ½ tsk kanel. Gem resten af kanelen." } },
     { "@type": "HowToStep", "text": "Ælt fyldet sammen med hænderne.", "tumbi": { "verbum": "aelte", "ikoner": ["marcipan"] } },
     { "@type": "HowToStep", "text": "Form fyldet til fire kugler.", "tumbi": { "verbum": "forme", "ikoner": ["marcipan"] } },
     { "@type": "HowToStep", "text": "Stil æblerne i et fad.", "tumbi": { "verbum": "pynte", "ikoner": ["aeble"], "note": "Et ovnfast fad." } },

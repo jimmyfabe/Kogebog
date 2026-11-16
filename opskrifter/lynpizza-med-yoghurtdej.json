@@ -26,7 +26,7 @@
   "recipeInstructions": [
     {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Retten indeholder gluten og mælk."}},
     {"@type": "HowToStep", "text": "Mål 350 g mel i en stor skål.", "tumbi": {"verbum": "maale", "ikoner": ["mel"], "note": "Brug køkkenvægten. Tænd ovnen på 225 °C almindelig ovn (200 °C varmluft) nu."}},
-    {"@type": "HowToStep", "text": "Drys bagepulver og salt i skålen.", "tumbi": {"verbum": "drysse", "ikoner": ["bagepulver", "salt"], "note": "3 tsk bagepulver og 1 tsk salt. Rør det rundt med en ske."}},
+    {"@type": "HowToStep", "text": "Drys bagepulver og salt i skålen.", "tumbi": {"verbum": "drysse-skaal", "ikoner": ["bagepulver", "salt"], "note": "3 tsk bagepulver og 1 tsk salt. Rør det rundt med en ske."}},
     {"@type": "HowToStep", "text": "Hæld yoghurt og olie i skålen.", "tumbi": {"verbum": "haelde", "ikoner": ["yoghurt", "olie"], "note": "350 g græsk yoghurt og 1 spsk olie."}},
     {"@type": "HowToStep", "text": "Rør, til det samler sig til en dej.", "tumbi": {"verbum": "roere", "note": "Først med skeen, til sidst med hænderne."}},
     {"@type": "HowToStep", "text": "Ælt dejen i 2 minutter.", "tumbi": {"verbum": "aelte", "timer_sek": 120, "ikoner": ["mel"], "note": "Drys lidt mel på bordet. Dejen skal være blød og ikke klistre. Klistrer den, så lidt mere mel."}},

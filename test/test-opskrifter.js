@@ -497,6 +497,8 @@ export function valider(rod = ROD) {
         if (krav && (st.voksen !== true || st.voksen_hjaelp !== krav)) f(hvor + ': verbet «' + st.verbum + '» skal have "voksen": true og "voksen_hjaelp": "' + krav + '"');
         // Piske, pensle, mose og drysse kan barnet selv; hjælper den voksne, er det for varmens skyld (varmt fedt, gryde, pande)
         if (KUN_VARME_HJAELP.includes(st.verbum) && 'voksen_hjaelp' in st && st.voksen_hjaelp !== 'varme') f(hvor + ': verbet «' + st.verbum + '» kan barnet selv. Hjælper den voksne, er det for varmens skyld: brug "voksen_hjaelp": "varme", fandt ' + JSON.stringify(st.voksen_hjaelp));
+        // Billedet til «drysse» er ost på en pizza. Drysses der i en skål, har det sit eget billede (review U4 17-11: bagepulver i naan-dejen)
+        if (st.verbum === 'drysse' && /(?<!\p{L})skål(?:en)?(?!\p{L})/u.test(s.text)) f(hvor + ': der drysses i en skål, så brug verbet "drysse-skaal" (billedet til «drysse» er en pizza): «' + s.text + '»');
         // Ordvagten: nævner teksten kniv, rivejern eller varme, er det den voksnes trin, uanset verbet, og hjælpen passer
         // til ordet. «voksen_hjaelp» er én værdi, så et trin med både kniv og varme skal deles i to
         const kniv = fund(KNIV_ORD, s.text);
