@@ -9,7 +9,7 @@
    Svarer nettet ikke inden for HENT_MS (4 s), kommer en opskrift (også index.json) fra cachen, og nettets svar gemmes
    til næste gang. De næste LANGSOM_MS (30 s) tager opskrifterne cachen med det samme (code review U3 og F2, 23-10). */
 const PRAEFIKS = 'kog-';
-const INDHOLD = '8908d926fcd886f0'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = '51ec8fc34d694295'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = 'c3b935014492b2a6'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
@@ -418,6 +418,15 @@ const FILER = [
   'grafik/ret-lynpizza-med-yoghurtdej.webp', 'grafik/ret-pizzabroed-med-hvidloeg-og-ost.webp',
   'grafik/ret-naan-paa-panden.webp', 'grafik/ret-hvidloegsnaan.webp', 'grafik/ret-ostenaan.webp',
   'grafik/ing-tortellini.svg',
+  'opskrifter/honningkylling-med-sesam-og-ris.json', 'grafik/ret-honningkylling-med-sesam-og-ris.webp',
+  'opskrifter/kylling-i-karry.json', 'grafik/ret-kylling-i-karry.webp',
+  'opskrifter/japansk-keema-karry.json', 'grafik/ret-japansk-keema-karry.webp',
+  'opskrifter/risboller-med-tun-og-majs.json', 'grafik/ret-risboller-med-tun-og-majs.webp',
+  'opskrifter/tomatris-fra-riskogeren.json', 'grafik/ret-tomatris-fra-riskogeren.webp',
+  'opskrifter/cremet-kyllingepasta-med-broccoli.json', 'grafik/ret-cremet-kyllingepasta-med-broccoli.webp',
+  'opskrifter/tortellini-i-cremet-tomatsovs.json', 'grafik/ret-tortellini-i-cremet-tomatsovs.webp',
+  'opskrifter/pizzapasta-i-fad.json', 'grafik/ret-pizzapasta-i-fad.webp',
+  'opskrifter/boller-i-karry.json', 'grafik/ret-boller-i-karry.webp',
 ];
 
 const iScope = (url) => url.href.startsWith(self.registration.scope);

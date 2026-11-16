@@ -26,8 +26,8 @@ const KOED_FOER_V11 = ['dino-vulkan', 'frikadeller', 'chili-con-carne', 'mediste
   'smash-burgere-med-ost', 'koteletter-med-aeble', 'hjemmelavet-kebab'];
 const VENTER_PAA_BILLEDER = [];
 const KNAPPER = GRUPPE_IDS.filter((id) => !VENTER_PAA_BILLEDER.includes(id)); // forsidens knapper nu
-const ANTAL_RETTER = 246;
-const ANTAL_PLANLAGTE = 84;
+const ANTAL_RETTER = 255;
+const ANTAL_PLANLAGTE = 92;
 
 const laesJson = (sti) => JSON.parse(fs.readFileSync(path.join(ROD, sti), 'utf8'));
 const INDEX = laesJson('opskrifter/index.json');
@@ -39,7 +39,7 @@ const UGE = INDEX.grupper.flatMap((g) => g.retter).filter((id) => JSONER.get(id)
 
 // ---------- Sorteringen i opskrifter/index.json ----------
 
-test('alle 246 retter står i præcis én af forsidens grupper, og alle opskriftsfiler har en plads', () => {
+test('alle 255 retter står i præcis én af forsidens grupper, og alle opskriftsfiler har en plads', () => {
   const alle = INDEX.grupper.flatMap((g) => g.retter);
   assert.equal(alle.length, ANTAL_RETTER);
   assert.equal(new Set(alle).size, alle.length, 'en ret står to steder');
@@ -54,7 +54,7 @@ test('grupperne står i forsidens rækkefølge, ingen er tom, og koden kender de
   assert.deepEqual(forsideGrupper(INDEX.grupper), { knapper: KNAPPER, ukendte: [] });
 });
 
-test('de 84 retter, der kan planlægges, er stadig 84 og står alle i en af grupperne', () => {
+test('de 92 retter, der kan planlægges, er stadig 92 og står alle i en af grupperne', () => {
   const planlagte = FILER.filter((id) => JSONER.get(id).tumbi && JSONER.get(id).tumbi.ugeplan === true);
   assert.equal(planlagte.length, ANTAL_PLANLAGTE);
   assert.equal(FILER.map((id) => lavModel(JSONER.get(id))).filter((m) => m.uge).length, ANTAL_PLANLAGTE, 'også sådan, som modellen læser dem');
@@ -436,7 +436,7 @@ const knapMed = (label) => rod.querySelectorAll('button').find((b) => b.getAttri
 const knapMedTekst = (tekst) => rod.querySelectorAll('button').find((b) => b.textContent === tekst);
 const overskrift = () => rod.querySelector('h1').textContent;
 
-test('forsiden: en rigtig knap pr. gruppe med navn til skærmlæseren, billede og navn og ingen af de 246 kort', async () => {
+test('forsiden: en rigtig knap pr. gruppe med navn til skærmlæseren, billede og navn og ingen af de 255 kort', async () => {
   await start();
   const b = knapper();
   assert.deepEqual(b.map((x) => x.dataset.gruppe), KNAPPER);
@@ -650,7 +650,7 @@ test('lupen: «is» og «aftensmad» på den rigtige skærm, og feltet tegnes ik
   assert.equal(rod.querySelector('.soeg-felt'), felt, 'Safari lukker tastaturet, hvis feltet tegnes om');
   skriv(felt, 'aftensmad');
   assert.deepEqual(kort().sort(), AFTENSMAD_GRUPPER.flatMap(retterI).sort());
-  assert.match(rod.querySelector('.soeg-tal').textContent, /85/);
+  assert.match(rod.querySelector('.soeg-tal').textContent, /93/);
 });
 
 test('lupen: mærkelige tegn giver «ingen træf» med en vej videre, ikke en fejl', async () => {
@@ -871,7 +871,7 @@ const alleSider = () => {
 };
 
 // Uden udvalg (fase 1 b i docs/fable-foraeldrekogebog-2026-11-10.md): favoritterne og nye retter, højst 12 på 3 sider,
-// ikke alle 84. Reglen selv prøves i test-udvalg.js
+// ikke alle 92. Reglen selv prøves i test-udvalg.js
 test('børnenes valg uden udvalg: 12 nye retter på 3 sider, første side blander grupperne, og kun retter til ugeplanen', async () => {
   await start('#/uge/vaelg/rosa');
   const sider = alleSider();
