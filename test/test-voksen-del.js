@@ -712,7 +712,8 @@ test('forsiden: boblerne Indkøbsliste, Retter og Mere øverst, og ugens 7 dage 
   assert.ok(dage.every((d) => harKlasse(d, 'voksen-dag-tom')), 'alle dage er tomme');
   assert.match(tekstAf(medFokusNavn(skaerm, 'dag-1')), /^Tirsdag\d{1,2}\/\d{1,2}Vælg ret$/);
   // Hele ugen er tom: en linje hjælp og «Lad børnene vælge» (børnenes valg, uden for låsen)
-  assert.match(tekstAf(medKlasse(skaerm, 'voksen-uge-tom')[0]), /^Ugen er tom\. Tryk på en dag/);
+  // Kort: knappen lige under siger resten (review U11)
+  assert.equal(tekstAf(medKlasse(skaerm, 'voksen-uge-tom')[0]).replace(/Lad børnene vælge$/, ''), 'Ugen er tom. Tryk på en dag, eller lad børnene vælge.');
   assert.equal(tekstAf(medFokusNavn(skaerm, 'boern')), 'Lad børnene vælge');
   send(medFokusNavn(skaerm, 'boern'), 'click');
   assert.equal(location.hash, '#/uge/vaelg');

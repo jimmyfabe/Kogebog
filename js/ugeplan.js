@@ -686,7 +686,7 @@ export function ugeIndhold() {
     if (m.uge.groentG > 0) groent++;
   }
   const tom = harRetter ? null : el('div', { class: 'voksen-uge-tom' },
-    el('p', { tekst: 'Ugen er tom. Tryk på en dag for at vælge en ret, eller lad børnene vælge på iPad\'en.' }),
+    el('p', { tekst: 'Ugen er tom. Tryk på en dag, eller lad børnene vælge.' }),
     medFokus(boernKnap('Lad børnene vælge', 'voksen-boern'), 'boern'));
   return [
     advarsel ? el('p', { class: 'uge-advarsel', role: 'status', tekst: advarsel }) : null,
