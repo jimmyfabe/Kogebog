@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "Recipe",
   "name": "Rød linse-dhal med spinat og naan",
-  "description": "Mild dhal af røde linser, kokosmælk, tomat og spinat. Naanbrød og yoghurt til.",
+  "description": "Mild dhal af røde linser, kokosmælk, tomat og spinat. Naanbrød og yoghurt til. Allergener: gluten (naanbrødet) og mælk (yoghurten); tjek karryen (den kan have selleri, sennep eller gluten).",
   "image": "grafik/ret-linse-dhal.webp",
   "inLanguage": "da",
   "recipeYield": "4 personer",
@@ -24,7 +24,7 @@
   ],
   "tool": ["kniv", "skærebræt", "si", "dåseåbner", "gryde med låg", "grydeske", "ske"],
   "recipeInstructions": [
-    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder gluten (naanbrødet) og mælk (yoghurten). Karryen kan have selleri, sennep eller gluten: tjek den." } },
     { "@type": "HowToStep", "text": "Skær løget i fire både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["loeg"], "note": "Pil løget først. Kun to snit, og bådene bliver bløde i dhalen." } },
     { "@type": "HowToStep", "text": "Hæld linserne i en si, og skyl dem.", "tumbi": { "verbum": "haelde", "ikoner": ["linser"], "note": "Under koldt vand, til vandet er klart. Barnet kan selv." } },
     { "@type": "HowToStep", "text": "Steg løget i olien.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "ikoner": ["olie", "loeg"], "note": "Gryden med låg ved middel varme." } },

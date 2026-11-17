@@ -471,6 +471,10 @@ export function valider(rod = ROD) {
     const trin1Note = Array.isArray(r.recipeInstructions) && r.recipeInstructions[0] && r.recipeInstructions[0].tumbi ? r.recipeInstructions[0].tumbi.note : '';
     if (/karry/iu.test(ingrTekst)) {
       const allergener = typeof r.description === 'string' ? (/Allergener:.*/u.exec(r.description) || [''])[0] : '';
+      // Og retten nævner altid sine allergener, også når karryen er den eneste (tillæg til review F8 17-11: tre karryretter
+      // nævnte ingen allergener, så reglen herunder fangede dem ikke)
+      if (!allergener) f('retten har karry, så «description» skal nævne allergenerne med «Allergener: …» (karryen kan have selleri, sennep eller gluten)');
+      if (typeof trin1Note !== 'string' || !/Retten (?:kan )?indeholde/u.test(trin1Note)) f('retten har karry, så noten i trin 1 skal nævne allergenerne med «Retten indeholder …» eller «Retten kan indeholde …»');
       for (const [hvor, tekst] of [['«description»', allergener], ['noten i trin 1', trin1Note]]) {
         if (typeof tekst === 'string' && /Allergener:|Retten (?:kan )?indeholde/u.test(tekst) && !/karry/iu.test(tekst)) f(hvor + ' nævner allergenerne, men ikke karryen (den kan have selleri, sennep eller gluten): «' + tekst + '»');
       }

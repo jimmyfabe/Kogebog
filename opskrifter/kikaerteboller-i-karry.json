@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "Recipe",
   "name": "Kikærteboller i karry med brune ris",
-  "description": "Små boller af kikærter og havregryn i en mild karrysovs med æble og ærter. Brune ris til.",
+  "description": "Små boller af kikærter og havregryn i en mild karrysovs med æble og ærter. Brune ris til. Allergener: æg, mælk og gluten (hvede i melet, havre); tjek bouillonen for selleri og karryen (den kan have selleri, sennep eller gluten).",
   "image": "grafik/ret-kikaerteboller-i-karry.webp",
   "inLanguage": "da",
   "recipeYield": "4 personer",
@@ -30,7 +30,7 @@
   ],
   "tool": ["gryde til risene", "gryde med låg", "kniv", "skærebræt", "grydeske", "dåseåbner", "si", "stor skål", "kartoffelmoser", "rivejern", "kop", "bageplade", "bagepapir", "grydelapper"],
   "recipeInstructions": [
-    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder æg, mælk og gluten (hvede i melet, havre). Tjek bouillonen for selleri. Karryen kan have selleri, sennep eller gluten: tjek den." } },
     { "@type": "HowToStep", "text": "Sæt risene over at koge.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Som der står på posen: brune ris tager 25-30 min. Tænd også ovnen på 200 °C varmluft." } },
     { "@type": "HowToStep", "text": "Skær løg, gulerødder og æble i små tern.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["loeg", "gulerod", "aeble"], "note": "Pil løget, og skræl æblet. Jo mindre ternene er, jo glattere bliver sovsen." } },
     { "@type": "HowToStep", "text": "Steg grøntsagerne og karryen i olien.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "ikoner": ["olie", "krydderi"], "note": "En gryde ved middel varme. Rør, så karryen ikke brænder på." } },
