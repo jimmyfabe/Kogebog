@@ -167,7 +167,8 @@ async function telefon(browser, H) {
   // 1. Ingen liste endnu: feltet «Sæt linket ind»
   await side.goto(BASE + '/index.html#/indkoeb');
   await side.waitForSelector('#link-felt');
-  tjek(await h1(side) === 'Der er ingen indkøbsliste endnu', n + ': tom liste skal sige «Der er ingen indkøbsliste endnu» (' + await h1(side) + ')');
+  // «endnu» hænger på ordet før med et hårdt mellemrum (review V14, 17-11)
+  tjek(await h1(side) === 'Der er ingen indkøbsliste\u00a0endnu', n + ': tom liste skal sige «Der er ingen indkøbsliste endnu» (' + await h1(side) + ')');
   tjek(await side.locator('label[for="link-felt"]').textContent() === 'Sæt linket ind', n + ': feltet skal hedde «Sæt linket ind»');
   await tjekLayout(side, n + ' tom indkøbsliste');
   await foto(side, n + '-ugeplan-tom-liste');

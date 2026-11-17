@@ -163,11 +163,22 @@ function linkFejl(fejl) {
   });
 }
 
+// «Prøv igen» genindlæser siden: en app på hjemmeskærmen har ingen genindlæs-knap, så «Genindlæs siden» kunne ikke
+// gøres (review K11, 17-11; samme knap som favoritterne i app.js)
+const proevIgen = (foer = null) => K.knap('Prøv igen', { klasse: 'primaer', ikonNavn: 'igen', onclick: () => {
+  if (foer) foer();
+  location.reload();
+} });
+
 const nyereListe = () => K.statusSkaerm({
   titel: 'Listen er lavet med en nyere udgave',
-  tekst: 'Telefonen har en ældre udgave af Tumbi Køkken, som ikke må skrive i listen. Genindlæs siden, så henter telefonen den nye udgave.',
-  handling: videreKnap(),
+  tekst: 'Telefonen har en ældre udgave af Tumbi Køkken, som ikke må skrive i listen. Tryk på «Prøv igen», så henter telefonen den nye udgave.',
+  handling: el('div', { class: 'status-knapper' }, proevIgen(), videreKnap()),
 });
+
+// Overskriften på listen uden varer. «endnu» hænger på ordet før, så det ikke står alene på tredje linje på 360 px
+// (review V14, 17-11)
+const INGEN_LISTE = 'Der er ingen indkøbsliste\u00a0endnu';
 
 const gemFejl = () => K.statusSkaerm({
   titel: 'Listen kunne ikke gemmes på telefonen',
@@ -261,17 +272,18 @@ function indkoebSkaerm() {
   if (liste.laast) return nyereListe();
   if (!liste.varer.length) {
     // Åbnet med boblen på voksendelens forside: ugeplanen kunne ikke blive til et link (en plan fra en nyere udgave, eller
-    // en uge mere end 8 uger væk). Teksten er til den voksne ved ugeplanen, og «Til ugeplanen» står før feltet, så den
-    // ses uden at rulle på 360×780 (review V6, 17-11)
+    // en uge mere end 8 uger væk). Teksten er til den voksne ved ugeplanen. Feltet «Sæt linket ind» er til telefonen og
+    // står ikke her (review K11, 17-11). «Prøv igen» genindlæser på #/voksen: låsen ligger kun i hukommelsen, så en
+    // genindlæsning på #/indkoeb ville vise telefonens skærm med feltet. Holdet åbner så ugeplanen igen
     if (K.fraVoksne?.()) {
       return K.statusSkaerm({
-        titel: 'Der er ingen indkøbsliste endnu',
-        tekst: 'Listen laves af ugeplanen, men den kunne ikke læses her. Genindlæs siden. Er ugen mere end 8 uger væk, så hold «Ny uge» under «Mere» for at tømme planen.',
-        handling: el('div', { class: 'status-handling' }, videreKnap(), linkForm()),
+        titel: INGEN_LISTE,
+        tekst: 'Listen laves af ugeplanen, men den kunne ikke læses her. Tryk på «Prøv igen», så hentes den nyeste udgave. Er ugen mere end 8 uger væk, så hold «Ny uge» under «Mere» for at tømme planen.',
+        handling: el('div', { class: 'status-knapper' }, proevIgen(() => history.replaceState(null, '', '#/voksen')), videreKnap()),
       });
     }
     return K.statusSkaerm({
-      titel: 'Der er ingen indkøbsliste endnu',
+      titel: INGEN_LISTE,
       tekst: 'Tryk på linket fra iPad\'en, så kommer listen her. Er Tumbi Køkken lagt på hjemmeskærmen, så kopiér linket, og sæt det ind herunder.',
       handling: el('div', { class: 'status-handling' }, linkForm(),
         videreKnap()),

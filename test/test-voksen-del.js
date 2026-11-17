@@ -786,13 +786,23 @@ test('listens statusskærme har «Til ugeplanen» i stedet for huset, når liste
   lageret.set('kog-uge-v1', JSON.stringify({ v: 99, dage: [] }));
   lageret.delete('kog-liste-v1');
   const tom = fraBoblen();
-  assert.equal(tom.status.titel, 'Der er ingen indkøbsliste endnu');
+  // «endnu» hænger på ordet før, så det ikke står alene på tredje linje på 360 px (review V14, 17-11)
+  assert.equal(tom.status.titel, 'Der er ingen indkøbsliste\u00a0endnu');
   assert.ok(knapperI(tom).includes('Til ugeplanen') && !knapperI(tom).includes('Til forsiden'), 'knapperne: ' + knapperI(tom));
-  // Teksten er til den voksne ved ugeplanen, ikke til telefonen, og «Til ugeplanen» står før feltet til linket, så den
-  // ses uden at rulle på 360×780 (review V6, 17-11: «Tryk på linket fra iPad'en» på iPad'en)
-  assert.doesNotMatch(tom.status.tekst, /iPad/);
+  // Teksten er til den voksne ved ugeplanen, ikke til telefonen (review V6, 17-11: «Tryk på linket fra iPad'en» på
+  // iPad'en). Feltet til linket er telefonens og står ikke her, og «Genindlæs siden» kan ikke gøres i en app på
+  // hjemmeskærmen: «Prøv igen» genindlæser på #/voksen, for låsen ligger kun i hukommelsen (review K11, 17-11)
+  assert.doesNotMatch(tom.status.tekst, /iPad|Genindlæs/);
   assert.match(tom.status.tekst, /ugeplanen/);
-  assert.deepEqual(knapperI(tom), ['Til ugeplanen', 'Hent listen']);
+  assert.match(tom.status.tekst, /«Prøv igen»/);
+  assert.deepEqual(knapperI(tom), ['Prøv igen', 'Til ugeplanen']);
+  assert.equal(find(tom.status.handling, (e) => e.tag === 'input' || e.tag === 'form').length, 0, 'intet felt til linket');
+  const genindlaest = [];
+  location.reload = () => genindlaest.push(location.hash);
+  t.after(() => { delete location.reload; });
+  send(find(tom.status.handling, (e) => e.tag === 'button' && tekstAf(e) === 'Prøv igen')[0], 'click');
+  assert.deepEqual(genindlaest, ['#/voksen']);
+  location.hash = '#/indkoeb';
   send(find(tom.status.handling, (e) => e.tag === 'button' && tekstAf(e) === 'Til ugeplanen')[0], 'click');
   assert.equal(location.hash, '#/voksen');
   assert.equal(V.rute(location.hash), true);
@@ -801,15 +811,22 @@ test('listens statusskærme har «Til ugeplanen» i stedet for huset, når liste
   lageret.set('kog-liste-v1', JSON.stringify({ v: 99, varer: [] }));
   const nyere = fraBoblen();
   assert.equal(nyere.status.titel, 'Listen er lavet med en nyere udgave');
-  assert.deepEqual(knapperI(nyere), ['Til ugeplanen']);
+  assert.deepEqual(knapperI(nyere), ['Prøv igen', 'Til ugeplanen']);
+  assert.doesNotMatch(nyere.status.tekst, /Genindlæs/);
+  genindlaest.length = 0;
+  send(find(nyere.status.handling, (e) => e.tag === 'button' && tekstAf(e) === 'Prøv igen')[0], 'click');
+  assert.deepEqual(genindlaest, ['#/indkoeb'], 'en liste fra en nyere udgave genindlæses, hvor den står');
   // Åbnet på anden vis (telefonens link, browserens «tilbage»): huset til børnenes forside som før
   V.rute('#/voksen');
   V.rute('#/indkoeb');
   assert.ok(!V.fraVoksne());
-  assert.deepEqual(knapperI(U.skaerm(U.rute('#/indkoeb'))), ['Til forsiden']);
+  assert.deepEqual(knapperI(U.skaerm(U.rute('#/indkoeb'))), ['Prøv igen', 'Til forsiden']);
   lageret.delete('kog-liste-v1');
   const tomTilBoern = U.skaerm(U.rute('#/indkoeb'));
   assert.ok(knapperI(tomTilBoern).includes('Til forsiden') && !knapperI(tomTilBoern).includes('Til ugeplanen'));
+  // Telefonen har feltet til linket, og samme overskrift
+  assert.equal(tomTilBoern.status.titel, 'Der er ingen indkøbsliste\u00a0endnu');
+  assert.equal(find(tomTilBoern.status.handling, (e) => e.tag === 'form').length, 1);
 });
 
 test('forsiden: en tom uge har en hvid «Indkøbsliste», og et tryk siger, hvad man gør, i stedet for at åbne listen (review U3)', (t) => {
