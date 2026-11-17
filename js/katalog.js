@@ -449,7 +449,7 @@ export const VARER = {
   'hvidloegspulver': { navn: 'Hvidløgspulver', afd: 'basis', enhed: 'ml', ikon: 'hvidloeg', basis: true },
   'paprika': { navn: 'Paprika', afd: 'basis', enhed: 'ml', ikon: 'krydderurt', basis: true },
   'spidskommen': { navn: 'Stødt spidskommen', afd: 'basis', enhed: 'ml', ikon: 'krydderurt', basis: true },
-  'karry': { navn: 'Karry (mild)', afd: 'basis', enhed: 'ml', ikon: 'krydderurt', basis: true },
+  'karry': { navn: 'Karry (mild)', afd: 'basis', enhed: 'ml', ikon: 'krydderi', basis: true },
   'soja': { navn: 'Soja', afd: 'basis', enhed: 'ml', ikon: 'soja', basis: true },
   'honning': { navn: 'Honning', afd: 'basis', enhed: 'ml', ikon: 'honning', basis: true },
   'ketchup': { navn: 'Ketchup', afd: 'basis', enhed: 'ml', ikon: 'ketchup', basis: true },

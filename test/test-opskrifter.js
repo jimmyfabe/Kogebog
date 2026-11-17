@@ -452,6 +452,8 @@ export function valider(rod = ROD) {
           if (!('vare' in x)) { if (ugeplan) f(hvor + ': mangler «vare» (retten er i ugeplanen; varerne står i VARER i js/katalog.js)'); return; }
           if (typeof x.vare !== 'string' || !Object.hasOwn(VARER, x.vare)) { f(hvor + ': ukendt vare ' + JSON.stringify(x.vare) + ' (står ikke i VARER i js/katalog.js)'); return; }
           const v = VARER[x.vare];
+          // Linjens billede er varens (review U8 17-11: karryen viste et bundt krydderurter, men varen er et krydderi)
+          if (Object.hasOwn(INGREDIENSER, x.ikon) && x.ikon !== v.ikon) f(hvor + ': ikonet skal være varens ikon i VARER, "' + v.ikon + '" for «' + x.vare + '», fandt ' + JSON.stringify(x.ikon));
           if (('antal' in x) !== ('enhed' in x)) f(hvor + ': «antal» og «enhed» følges ad');
           else if (!('antal' in x)) { if (v.basis !== true) f(hvor + ': mangler «antal» og «enhed» (kun basisvarer som salt og peber må undlade dem)'); }
           else {

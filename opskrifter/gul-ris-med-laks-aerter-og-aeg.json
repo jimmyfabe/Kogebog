@@ -25,7 +25,7 @@
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder æg og fisk. Tjek bouillonen for selleri. Karryen kan have selleri, sennep eller gluten: tjek den." } },
     { "@type": "HowToStep", "text": "Kog vand til æggene i en lille gryde.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "Ca. 1 liter vand. Det skal koge, før æggene kommer i." } },
     { "@type": "HowToStep", "text": "Mål 3½ dl ris.", "tumbi": { "verbum": "maale", "ikoner": ["ris"] } },
-    { "@type": "HowToStep", "text": "Rist karryen kort i olien på panden.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["olie", "krydderurt"], "note": "1 spsk olie og 2 tsk mild karry i en dyb pande ved middel varme. Kun et halvt minut, så den ikke brænder på." } },
+    { "@type": "HowToStep", "text": "Rist karryen kort i olien på panden.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["olie", "krydderi"], "note": "1 spsk olie og 2 tsk mild karry i en dyb pande ved middel varme. Kun et halvt minut, så den ikke brænder på." } },
     { "@type": "HowToStep", "text": "Rør risene rundt i karryolien.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Til alle risene er gule." } },
     { "@type": "HowToStep", "text": "Hæld vand og bouillon på risene.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand", "bouillon"], "note": "6 dl vand og 1 bouillonterning. Det syder, så den voksne hælder. Læg låg på, og skru ned, når det koger." } },
     { "@type": "HowToStep", "text": "Læg æggene ned i det kogende vand.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["aeg"], "note": "Med en ske, ét æg ad gangen, så de ikke slår revner." } },
@@ -54,7 +54,7 @@
     "ingredienser": [
       { "ikon": "ris", "maengde": "3½ dl", "vare": "ris", "antal": 300, "enhed": "g" },
       { "ikon": "olie", "maengde": "1 spsk", "vare": "olie" },
-      { "ikon": "krydderurt", "maengde": "2 tsk", "vare": "karry" },
+      { "ikon": "krydderi", "maengde": "2 tsk", "vare": "karry" },
       { "ikon": "vand", "maengde": "6 dl", "vare": "vand" },
       { "ikon": "vand", "maengde": "1 l", "vare": "vand" },
       { "ikon": "bouillon", "maengde": "1", "vare": "bouillonterninger", "antal": 1, "enhed": "stk" },

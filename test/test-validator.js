@@ -575,6 +575,14 @@ test('blade plukkes med «smuldre», ikke med æg-billedet til «pille»', () =>
   forventGyldig('opskrifter/regnbue-smoothie.json', (d) => { assert.equal(d.recipeInstructions[8].tumbi.verbum, 'pille'); });
 });
 
+// Review U8 (17-11): karryen viste et bundt krydderurter (ing-krydderurt), selvom varen er et krydderi. Linjens billede
+// er varens billede i VARER
+test('ingredienslinjens ikon er varens ikon i VARER (karry er et krydderi)', () => {
+  assert.equal(VARER.karry.ikon, 'krydderi', 'karry er et krydderi, ikke krydderurter');
+  forventFejl('opskrifter/boller-i-karry.json', (d) => { d.tumbi.ingredienser.find((x) => x.vare === 'karry').ikon = 'krydderurt'; },
+    'ingrediens 12: ikonet skal være varens ikon i VARER, "krydderi" for «karry», fandt "krydderurt"');
+});
+
 test('dejen er ikke rå efter stegning eller bagning', () => {
   const rul = (text) => ({ '@type': 'HowToStep', text, tumbi: { verbum: 'rulle' } });
   forventGyldig('opskrifter/pandekager.json', (d) => { d.recipeInstructions.splice(10, 0, rul('Rul pandekagen sammen.')); });
