@@ -51,6 +51,9 @@ const HAENDER_PAA_OVERFLADEN = ['pynte', 'pakke-ind', 'smuldre', ...HAENDER_I_DE
 const TIMER_MAALER_HAENDERNE = ['aelte'];
 const TAGE_UD = ['tage-ud', 'tage-ud-form']; // efter ovnen: en flad plade eller en dyb form
 const BLAD_IKONER = ['krydderurt', 'mynte', 'groenkaal']; // blade, der plukkes: «smuldre», ikke æg-billedet til «pille» (U5)
+// Købte varer i en ret med karry, hvis allergener afhænger af mærket: [varen i fejlbeskeden, ordet i teksten, ejefald i
+// eksemplet]. Teksten sender den voksne til pakken og slår ikke allergenerne fast (review K1 17-11: «gluten (naanbrødet)»)
+const PAKKE_VARER = [['naanbrødet', /naan/iu, 'naanbrødets']];
 const VENTER = 'docs/venter-paa-billede'; // færdige retter uden retbillede (docs/venter-paa-billede/README.md)
 // Ordvagten går efter stammen: hvert ord, der begynder med stammen (eller har den inde i sig, hvor det står), fanges med
 // alle bøjninger («smelte», «skære», «æggeblommer»). En liste over tilladte former mangler altid en form, og så slipper
@@ -477,6 +480,14 @@ export function valider(rod = ROD) {
       if (typeof trin1Note !== 'string' || !/Retten (?:kan )?indeholde/u.test(trin1Note)) f('retten har karry, så noten i trin 1 skal nævne allergenerne med «Retten indeholder …» eller «Retten kan indeholde …»');
       for (const [hvor, tekst] of [['«description»', allergener], ['noten i trin 1', trin1Note]]) {
         if (typeof tekst === 'string' && /Allergener:|Retten (?:kan )?indeholde/u.test(tekst) && !/karry/iu.test(tekst)) f(hvor + ' nævner allergenerne, men ikke karryen (den kan have selleri, sennep eller gluten): «' + tekst + '»');
+      }
+      // Hver købt vare fra PAKKE_VARER står i samme sætning (eller led efter «;») som ordet «pakke» i begge tekster
+      for (const [vare, re, ejefald] of PAKKE_VARER) {
+        if (!re.test(ingrTekst)) continue;
+        for (const [hvor, tekst] of [['«description»', allergener], ['noten i trin 1', trin1Note]]) {
+          if (typeof tekst !== 'string' || !tekst) continue; // en manglende tekst er meldt ovenfor
+          if (!tekst.split(/[.;]/u).some((led) => re.test(led) && /pakke/iu.test(led))) f(hvor + ': allergenerne i ' + vare + ' afhænger af mærket, så teksten skal sende den voksne til pakken, fx «Tjek ' + ejefald + ' pakke for allergener»: «' + tekst + '»');
+        }
       }
     }
 

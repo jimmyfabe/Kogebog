@@ -628,6 +628,16 @@ test('en ret med karry, der nævner sine allergener, nævner også karryen (revi
     'retten har karry, så noten i trin 1 skal nævne allergenerne');
 });
 
+// Review K1-K3 (17-11): allergenerne i en købt vare afhænger af mærket, så teksten sender den voksne til pakken
+test('en karryret sender den voksne til pakken for købte varer (review K1-K3)', () => {
+  forventFejl('opskrifter/linse-dhal.json', (d) => { d.description = erstat(d.description, 'tjek naanbrødets og karryens pakke', 'tjek karryens pakke'); },
+    '«description»: allergenerne i naanbrødet afhænger af mærket, så teksten skal sende den voksne til pakken');
+  forventFejl('opskrifter/linse-dhal.json', (d) => {
+    const st = d.recipeInstructions[0].tumbi;
+    st.note = erstat(st.note, 'Retten indeholder mælk (yoghurten). Tjek naanbrødets og karryens pakke', 'Retten indeholder gluten (naanbrødet) og mælk (yoghurten). Tjek karryens pakke');
+  }, 'noten i trin 1: allergenerne i naanbrødet afhænger af mærket');
+});
+
 test('dejen er ikke rå efter stegning eller bagning', () => {
   const rul = (text) => ({ '@type': 'HowToStep', text, tumbi: { verbum: 'rulle' } });
   forventGyldig('opskrifter/pandekager.json', (d) => { d.recipeInstructions.splice(10, 0, rul('Rul pandekagen sammen.')); });
