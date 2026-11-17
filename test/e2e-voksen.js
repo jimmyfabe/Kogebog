@@ -1123,11 +1123,12 @@ const retVist = (side) => side.evaluate(() => ({
   linjer: [...document.querySelectorAll('.ret .voksen-linje')].map((e) => e.textContent),
 }));
 // Gruppens kort viser tiden på den udgave, retten viser. Hyrdetærten tager længere med mere grønt (ikke lynhurtig, så
-// skærmlæserens tekst slutter med punktum: tidTekst i app.js)
+// skærmlæserens tekst slutter med punktum: tidTekst i app.js). Kortets første .sr-kun er navnet (review K9 17-11), så tiden
+// er den .sr-kun, der ikke står lige efter .kort-navn
 const TID_RET = 'hyrdetaerte';
 const kortTid = (side) => side.evaluate((id) => {
   const k = document.querySelector('.gruppe-skaerm .kort[data-ret="' + id + '"]');
-  return k ? { tal: k.querySelector('.kort-tid')?.textContent, tale: k.querySelector('.sr-kun')?.textContent } : null;
+  return k ? { tal: k.querySelector('.kort-tid')?.textContent, tale: k.querySelector('.sr-kun:not(.kort-navn + .sr-kun)')?.textContent } : null;
 }, TID_RET);
 const tidFor = (m) => ({ tal: minutterTekst(m.minutter), tale: '. ' + varighedTale(m.minutter * 60) + '.' });
 
