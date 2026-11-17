@@ -657,6 +657,33 @@ test('ingrediensens tal og ordet efter står sammen på skærmen, men ikke i sk�
   assert.ok(sagt.length === 1 && !UDEN_DELING.test(sagt[0].tekst), JSON.stringify(sagt));
 });
 
+// Review V15 (17-11): «Sluk, og lad dem trække 5- / 10 min.» i sushi-skålens trin 3 på 360 px. Et interval i noten står i
+// en .udelt (white-space: nowrap i app.css), og noten er den samme tekst som før: intet U+2011 eller hårdt mellemrum
+test('et talinterval i trinnets note brydes ikke ved bindestregen, og teksten er uændret (review V15)', async () => {
+  const INTERVAL = /\d+(?:,\d+)?[-–]\d+/gu;
+  const trin = [];
+  for (const id of INDEX.grupper.flatMap((g) => g.retter)) {
+    JSONER.get(id).recipeInstructions.forEach((t, i) => { if (INTERVAL.test(t.tumbi?.note || '')) trin.push([id, i + 1, t.tumbi.note]); INTERVAL.lastIndex = 0; });
+  }
+  assert.ok(trin.length >= 60, trin.length + ' noter med et interval');
+  await start('#/ret/' + trin[0][0] + '/trin/' + trin[0][1]);
+  const forkert = [];
+  for (const [id, nr, note] of trin) {
+    gaaTil('#/ret/' + id + '/trin/' + nr);
+    await ventPaaHentning();
+    const p = rod.querySelector('.note');
+    const udelte = p.querySelectorAll('.udelt').map((s) => s.textContent);
+    const intervaller = note.match(INTERVAL);
+    if (p.textContent !== 'Til den voksne: ' + note || udelte.length !== intervaller.length || !intervaller.every((x, i) => udelte[i].startsWith(x))) {
+      forkert.push(id + ' trin ' + nr + ': ' + JSON.stringify(udelte));
+    }
+  }
+  assert.deepEqual(forkert, []);
+  gaaTil('#/ret/sushi-bowl-med-tun/trin/3');
+  await ventPaaHentning();
+  assert.deepEqual(rod.querySelectorAll('.note .udelt').map((s) => s.textContent), ['5-10 min.']);
+});
+
 test('tilbage fra en ret: pilen fører til gruppen på samme rulleplads og med fokus på kortet', async () => {
   await start('#/gruppe/fisk');
   const id = kort()[3];

@@ -2,7 +2,7 @@
 // Ruterne står i adressen (#/gruppe/<id>, #/ret/<id>/trin/<nr>), så tilbage-knappen og en genindlæsning virker. Retten med
 // mere grønt (js/groent.js) har «/groen» efter id'et (#/ret/<id>/groen/trin/<nr>).
 // Al tekst fra opskrifterne sættes som tekst (textContent), aldrig som HTML.
-import { el, attr, ikon, svgEl, ledLinje, retNavn } from './js/dom.js';
+import { el, attr, ikon, svgEl, ledLinje, retNavn, udeltInterval } from './js/dom.js';
 import { hentIndex, hentRet } from './js/data.js';
 import * as Tale from './js/tale.js';
 import * as R from './js/replikker.js';
@@ -720,7 +720,8 @@ function trinSkaerm(m, nr) {
         el('h1', { id: 'trin-tekst', tabindex: '-1', tekst: t.tekst }),
         ikoner,
         el('div', { class: 'trin-knapper' }, laesOp, t.timerSek ? timerBlok(m, t) : null),
-        t.note ? el('p', { class: 'note' }, el('span', { class: 'note-hvem', tekst: 'Til den voksne: ' }), t.note) : null)),
+        // Et interval i noten («5-10 min.») brydes ikke ved bindestregen (review V15)
+        t.note ? el('p', { class: 'note' }, el('span', { class: 'note-hvem', tekst: 'Til den voksne: ' }), udeltInterval(t.note)) : null)),
     el('footer', { class: 'handlinger' },
       knap('Tilbage', { klasse: 'tilbage', ikonNavn: 'tilbage', label: 'Tilbage', onclick: tilbage }),
       el('span', { class: 'skub' }),

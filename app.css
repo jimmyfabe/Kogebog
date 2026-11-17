@@ -638,6 +638,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .note { font-size: 17px; color: var(--kakao-blid); max-width: 34em; padding-left: 12px; border-left: 4px solid var(--dej); text-wrap: pretty; }
 .voksen .note { border-left-color: var(--raev); }
 .note-hvem { font-weight: 750; }
+/* Et talinterval i noten («5-10 min.») brydes ikke ved bindestregen (udeltInterval i js/dom.js, review V15) */
+.udelt { white-space: nowrap; }
 
 /* Timeren */
 .timer { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; }

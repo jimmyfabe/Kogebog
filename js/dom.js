@@ -37,6 +37,14 @@ export const retNavn = (navn, klasse) => [
   el('span', { class: 'sr-kun', tekst: utenBloede(navn).replace(/\u00a0/g, ' ') }),
 ];
 
+// En tekst, hvor et talinterval («5-10 min.», «1,5-2 dl») ikke brydes ved bindestregen (review V15, 17-11: «5-/10 min.» i
+// en note på 360 px). Intervallet og et kort ord efter det (højst 4 tegn: «min.», «dl», «%») står i en .udelt (white-space:
+// nowrap i app.css). Teksten (textContent) er den samme, så intet U+2011 eller hårdt mellemrum kommer med i en kopi eller
+// til stemmen. Giver tekststykker og elementer til el()
+const INTERVAL = /(\d+(?:,\d+)?[-–]\d+(?:,\d+)?(?: \S{1,4}(?!\S))?)/u;
+export const udeltInterval = (tekst) => String(tekst ?? '').split(INTERVAL)
+  .map((s, i) => (i % 2 ? el('span', { class: 'udelt', tekst: s }) : s)).filter((s) => s !== '');
+
 // Fanens titel, som skærmlæseren siger, når siden åbnes (printet: retten eller ugeplanen)
 export function sideTitel(tekst) {
   document.title = utenBloede(tekst);
