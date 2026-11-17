@@ -2164,10 +2164,13 @@ async function former(browser) {
 // E2E_TRINBUND_RETTER=a,b begrænser retterne, E2E_TRINBUND_SKAERME=w360,iphone-status skærmene
 // Hvor der ikke er krav, må antallet ikke vokse i stilhed: højst loftet, tallet fra seneste kørsel. 360×780: 4 af 3338
 // trin (dino-vulkan 10, sushi-bowl-med-tun 3, medister-i-ovn 2 og stegte-ris-med-aeg-aerter-og-majs 2; e2e 10-11-2026).
-// 390×779: 1 af 3338 (sushi-bowl-med-tun trin 3, 18 px; e2e 10-11-2026).
+// 390×779: 2 af 3574 (sushi-bowl-med-tun trin 3, 18 px, og stegte-ris-med-aeg-aerter-og-majs trin 2, 10 px; e2e 17-11-2026).
+// Loftet kom op fra 1 til 2 i v11: stegte-ris trin 2 kom med «text-wrap: pretty» på noterne (review U12, 5d5ad85), som
+// gør dens lange note én linje længere. Målt 17-11 på de to retter: med pretty 2 trin, uden 1. Valgt frem for at slå
+// pretty fra eller korte noten, for 390×779 er ikke set på en rigtig iPhone, og noten handler om madsikkerhed (ris fra i går).
 // Bliver tallet mindre, sænkes loftet; skal det op, er det et valg, der begrundes her
 const W360_LOFT = 4;
-const STATUS_LOFT = 1;
+const STATUS_LOFT = 2;
 const TRINBUND = [
   { navn: 'iphone-safe', viewport: { width: 390, height: 826 }, hasTouch: true, krav: true },
   { navn: 'w360', viewport: { width: 360, height: 780 }, hasTouch: true, krav: false, loft: W360_LOFT },
