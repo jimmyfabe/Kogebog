@@ -571,6 +571,9 @@ test('blade plukkes med «smuldre», ikke med æg-billedet til «pille»', () =>
   forventFejl('opskrifter/hvidloegsnaan.json', (d) => { persille(d).tumbi.verbum = 'pille'; },
     'trin 10: der plukkes blade, så brug verbet "smuldre" (billedet til «pille» er et æg): «Pil bladene af persillen.»');
   forventFejl('opskrifter/mynte-lime-boble.json', (d) => { d.recipeInstructions[2].tumbi.verbum = 'pille'; }, 'trin 3: der plukkes blade');
+  // Grønkål er det tredje blad i BLAD_IKONER (review K6: uden den overlevede en mutant uden «groenkaal»)
+  forventFejl('opskrifter/groenkaal-ananas-smoothie.json', (d) => { trinMed(d, 'Pil bladene af grønkålens stilke.').st.tumbi.verbum = 'pille'; },
+    ': der plukkes blade, så brug verbet "smuldre" (billedet til «pille» er et æg): «Pil bladene af grønkålens stilke.»');
   // Jordbærrenes grønne top pilles stadig (ikonet er bærret, ikke et blad)
   forventGyldig('opskrifter/regnbue-smoothie.json', (d) => { assert.equal(d.recipeInstructions[8].tumbi.verbum, 'pille'); });
 });
@@ -611,6 +614,9 @@ test('kødet tjekkes i trinnet, der koger, ikke når barnet smager (review F7)',
   assert.equal(nr, 13);
   // Med stort forbogstav i starten af en sætning gælder reglen også
   forventFejl('opskrifter/japansk-keema-karry.json', (d) => { trinMed(d, 'Smag på karryen.').st.tumbi.note += ' Lyserødt kød skal tilbage i gryden.'; },
+    ': barnet smager her, så tjekket af kødet hører til i trinnet før');
+  // Kun «gennemstegt» (review K6: med begge ord i samme note overlevede en mutant, der kun kendte «lyserød»)
+  forventFejl('opskrifter/japansk-keema-karry.json', (d) => { trinMed(d, 'Smag på karryen.').st.tumbi.note += ' Er kødet gennemstegt?'; },
     ': barnet smager her, så tjekket af kødet hører til i trinnet før');
 });
 
