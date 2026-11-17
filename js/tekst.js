@@ -78,9 +78,14 @@ export function medBloede(tekst) {
 // Rettens navn på et kort (review V3 17-11): på 360 px stod et kort ord alene på en linje («Kikærteburger / i /
 // fuldkornsbolle», «Cowboybønner / med pølser og / majs»). Bløde bindestreger som ingredienserne, men navnet slutter
 // aldrig med et stykke på højst 4 bogstaver efter en deling («Fiskepinde / med kartoffel- / både»), og et sidste ord på
-// højst 4 bogstaver hænger sammen med ordet før (hårdt mellemrum: «og majs»). Kun til skærmen, som medBloede
+// højst 4 bogstaver hænger sammen med ordet før (hårdt mellemrum: «og majs»). Kun til skærmen, som medBloede.
+// Delingen bliver dog stående, når stykket, de to ville blive til, får over SAMLET_MAKS bogstaver: så er det forfatterens
+// egen deling af et langt ord (review K12 17-11: «kransekagetårn», 14 bogstaver, kunne ikke deles). Målt 17-11 på alle 255
+// navne: de stykker, koden selv samler, har højst 11 bogstaver («sennepssovs»)
+export const SAMLET_MAKS = ORD_MAKS + 4;
+const KORT_SIDST = new RegExp('(\\p{L}*)' + BLOED + '(\\p{L}{1,4})$', 'u');
 export const kortNavn = (navn) => medBloede(navn)
-  .replace(new RegExp(BLOED + '(\\p{L}{1,4})$', 'u'), '$1')
+  .replace(KORT_SIDST, (hel, foer, sidst) => (foer.length + sidst.length <= SAMLET_MAKS ? foer + sidst : hel))
   .replace(/ (\p{L}{1,4})$/u, H + '$1');
 
 // ---------- Teksten til stemmen ----------
