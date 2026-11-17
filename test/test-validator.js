@@ -626,6 +626,9 @@ test('en ret med karry, der nævner sine allergener, nævner også karryen (revi
     'retten har karry, så «description» skal nævne allergenerne');
   forventFejl('opskrifter/kyllingekarry.json', (d) => { delete d.recipeInstructions[0].tumbi.note; },
     'retten har karry, så noten i trin 1 skal nævne allergenerne');
+  // En note, der ikke nævner allergenerne, er ikke nok (review K4: uden mønsteret «Retten (kan )indeholde» slap den igennem)
+  forventFejl('opskrifter/kyllingekarry.json', (d) => { d.recipeInstructions[0].tumbi.note = 'Med sæbe.'; },
+    'retten har karry, så noten i trin 1 skal nævne allergenerne');
 });
 
 // Review K1-K3 (17-11): allergenerne i en købt vare afhænger af mærket, så teksten sender den voksne til pakken
