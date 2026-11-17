@@ -44,14 +44,14 @@ const ORDLED = [
   'græskar', 'grønt', 'grønt·sags', 'gule', 'gule·rods', 'ham·burger', 'hassel', 'havre', 'hel·bladet', 'hindbær',
   'hjorte·taks', 'hoisin', 'hvidløgs', 'hylde', 'iceberg', 'inder', 'is', 'jasmin', 'jule', 'kanel', 'kartof·fel', 'kidney',
   'kikærte', 'kirsebær', 'kokos', 'konditor', 'kyllinge', 'kød', 'lager', 'lakse', 'lasagne', 'laurbær', 'lever', 'løg',
-  'mad', 'mad·lavnings', 'mellem', 'mozza·rella', 'muffin', 'muskat', 'nytårs', 'oliven', 'party', 'peber', 'perle',
-  'persille', 'piske', 'pizza', 'pynte', 'risen·grød', 'rod', 'rød', 'rør', 'salat', 'senneps', 'skinke', 'solbær', 'solsikke',
-  'spege', 'spids', 'stege', 'sukker', 'suppe', 'svine', 'taco', 'toast', 'tomat', 'torske', 'val·nød', 'vand', 'vanil·je',
-  'vanil·je·is', 'varm', 'wok', 'æble', 'ægge',
+  'mad', 'mad·lavnings', 'mellem', 'mozza·rella', 'muffin', 'muskat', 'nytårs', 'oliven', 'party', 'pasta', 'peber', 'perle',
+  'persille', 'pesto', 'piske', 'pizza', 'pynte', 'risen·grød', 'rod', 'rød', 'rør', 'salat', 'senneps', 'skinke', 'solbær',
+  'solsikke', 'spege', 'spids', 'stege', 'sukker', 'suppe', 'svine', 'taco', 'toast', 'tomat', 'torske', 'val·nød', 'vand',
+  'vanil·je', 'vanil·je·is', 'varm', 'wok', 'æble', 'ægge',
   // Ord, der ikke er sammensatte, delt efter stavelsen
   'abri·koser', 'balsa·mico', 'basi·likum', 'champig·non', 'clemen·tin', 'crou·toner', 'dres·sing', 'karde·momme', 'kartof·ler',
   'koncen·trat', 'konden·ser', 'kote·letter', 'mareng·sen', 'marme·lade', 'marsh·mallow', 'mayon·naise', 'pasteu·riser',
-  'por·tioner', 'ser·vering', 'skum·fiduser', 'spaghet·ti', 'tarte·let', 'ternin·ger', 'tortel·lini', 'tortil·las',
+  'por·tioner', 'ser·vering', 'shak·shuka', 'skum·fiduser', 'spaghet·ti', 'tarte·let', 'ternin·ger', 'tortel·lini', 'tortil·las',
 ].map((l) => ({ hel: l.replace(/·/g, ''), delt: l.split('·') })).sort((a, b) => b.hel.length - a.hel.length);
 
 function delOrd(ord) {
@@ -74,6 +74,14 @@ export function medBloede(tekst) {
     return delOrd(ord);
   });
 }
+
+// Rettens navn på et kort (review V3 17-11): på 360 px stod et kort ord alene på en linje («Kikærteburger / i /
+// fuldkornsbolle», «Cowboybønner / med pølser og / majs»). Bløde bindestreger som ingredienserne, men navnet slutter
+// aldrig med et stykke på højst 4 bogstaver efter en deling («Fiskepinde / med kartoffel- / både»), og et sidste ord på
+// højst 4 bogstaver hænger sammen med ordet før (hårdt mellemrum: «og majs»). Kun til skærmen, som medBloede
+export const kortNavn = (navn) => medBloede(navn)
+  .replace(new RegExp(BLOED + '(\\p{L}{1,4})$', 'u'), '$1')
+  .replace(/ (\p{L}{1,4})$/u, H + '$1');
 
 // ---------- Teksten til stemmen ----------
 // Røst-stemmen (lyd/) læser teksten, som den står, og oversætter ikke cifre og tegn: «130 gram» blev til «tretnulsnul»,

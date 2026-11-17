@@ -17,7 +17,7 @@ import { voksenFarer, erLynhurtig, harTid, LYN_MIN } from './js/model.js';
 import { valgt, GROENT_TEKST } from './js/groent.js';
 import { VERBER, INGREDIENSER, GRUPPER, DYR, grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, grafikGruppe, GRAFIK_FAERDIG } from './js/katalog.js';
 import { formaterTid, varighed, varighedTale, idag, dagIUgen } from './js/tid.js';
-import { minutterTekst, utenBloede, medBloede } from './js/tekst.js';
+import { minutterTekst, utenBloede, medBloede, kortNavn } from './js/tekst.js';
 import { UDGAVE } from './js/version.js';
 import { soeg, soegeord } from './js/soeg.js';
 import { FAVORITTER, HASH_SOEG, hashGruppe, gruppeRute, forsideGrupper, gruppeRetter, gruppeAf, tilbageFraRet, rulleplads } from './js/grupper.js';
@@ -213,7 +213,8 @@ function kortTil(id, gruppe, fejlede) {
   const b = el('button', { type: 'button', class: 'kort' + (S.valgtKort === id ? ' valgt' : ''), 'data-ret': id },
     kendtGruppe ? el('span', { class: 'kort-gruppe', 'aria-hidden': 'true' }, billede(grafikGruppe(gruppe), '')) : null,
     el('span', { class: 'kort-billede' }, billede(grafikRet(id), ''), tidMaerke(u), lynMaerke(u)),
-    el('span', { class: 'kort-navn', tekst: m.navn }),
+    // Intet kort ord alene på en linje (review V3, kortNavn i js/tekst.js)
+    el('span', { class: 'kort-navn', tekst: kortNavn(m.navn) }),
     el('span', { class: 'kort-aabn', 'aria-hidden': 'true' }, ikon('naeste'), el('span', { tekst: 'Tryk igen' })),
     tidTekst(u),
     lynTekst(u));

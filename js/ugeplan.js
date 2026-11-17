@@ -16,7 +16,7 @@ import { afkod, kod, kodeFraTekst, ukendtTekst, BESKED_UGYLDIG, BESKED_NYERE, BE
 import { saml, grupper, tekst as listeTekst, manglerTekst, holdSammen } from './indkoeb.js';
 import { DYR, grafikIngrediens, grafikRet, grafikDyr } from './katalog.js';
 import { ugeNr, dagDato, planMandag, ugenErGaaet, DAGE } from './tid.js';
-import { minutterTekst, utenBloede } from './tekst.js';
+import { minutterTekst, utenBloede, kortNavn } from './tekst.js';
 import { holdKnap } from './hold.js';
 import { maerkerFor, MAERKER } from './maerker.js';
 import { knivtrin } from './model.js';
@@ -1031,7 +1031,7 @@ function retValgSkaerm(p, dyr) {
       }),
     },
     el('span', { class: 'kort-billede' }, K.billede(grafikRet(m.id), ''), K.lynMaerke(m)),
-    el('span', { class: 'kort-navn', tekst: m.navn }),
+    el('span', { class: 'kort-navn', tekst: kortNavn(m.navn) }),
     boerneMaerker(m, familie),
     // Retten står allerede på planen: dyret, der valgte den, i hjørnet (den kan godt vælges igen)
     af.has(m.id) ? el('span', { class: 'kort-dyr' }, K.billede(grafikDyr(af.get(m.id)), 'valgt af ' + dyrNavn(af.get(m.id)))) : null,

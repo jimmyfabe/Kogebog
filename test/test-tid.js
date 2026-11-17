@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { nyTimer, timerStatus, formaterTid, varighed, varighedKort, varighedTale, HURTIG_SEK, planMandag, ugeNr, dagDato, dagIUgen, ugenErGaaet } from '../js/tid.js';
-import { isoTilMinutter, minutterTekst, tilTale, talOrd, ukendtKoen, KOEN, antalOrd, delIngrediens, medBloede, utenBloede, ORD_MAKS } from '../js/tekst.js';
+import { isoTilMinutter, minutterTekst, tilTale, talOrd, ukendtKoen, KOEN, antalOrd, delIngrediens, medBloede, utenBloede, ORD_MAKS, kortNavn } from '../js/tekst.js';
 import { medMereGroent } from '../js/groent.js';
 import { faktorFor, skaleretIngrediens } from '../js/skaler.js';
 import { lavModel, erLynhurtig, harTid, LYN_MIN } from '../js/model.js';
@@ -266,6 +266,25 @@ test('lange ord får bløde bindestreger til skærmen, og teksten uden dem er de
   }
   assert.ok(navne > 3000, navne + ' navne');
   assert.deepEqual([...lange], [], 'stykker på over ' + ORD_MAKS + ' bogstaver i ingrediensnavnene');
+});
+
+// Review V3 (17-11): et kort ord alene på en linje i kortets navn på 360 px. kortNavn deler som medBloede, men navnet
+// slutter aldrig med et stykke på højst 4 bogstaver efter en deling, og et kort sidste ord hænger sammen med ordet før
+test('kortets navn: intet kort stykke til sidst, og et kort sidste ord hænger på ordet før (review V3)', () => {
+  const vis = (t) => kortNavn(t).replace(/\u00ad/g, '·').replace(/\u00a0/g, '_');
+  assert.equal(vis('Kikærteburger i fuldkornsbolle'), 'Kikærte·burger i fuld·korns·bolle');
+  assert.equal(vis('Cowboybønner med pølser og majs'), 'Cowboybønner med pølser og_majs');
+  assert.equal(vis('Fiskepinde med kartoffelbåde'), 'Fiske·pinde med kartof·felbåde');
+  assert.equal(vis('Nytårstorsk med sennepssovs'), 'Nytårs·torsk med sennepssovs');
+  assert.equal(vis('Lille kransekage\u00adtårn'), 'Lille kransekagetårn');
+  assert.equal(vis('Brunede kartofler'), 'Brunede kartofler');
+  assert.equal(vis('Pandekager'), 'Pandekager');
+  // Alle retters navne: uden de bløde bindestreger og med almindelige mellemrum er teksten den samme
+  const index = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter/index.json'), 'utf8'));
+  for (const id of index.grupper.flatMap((g) => g.retter)) {
+    const navn = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8')).name;
+    assert.equal(utenBloede(kortNavn(navn)).replace(/\u00a0/g, ' '), utenBloede(navn).replace(/\u00a0/g, ' '), id);
+  }
 });
 
 test('modellen af pandekagerne', () => {

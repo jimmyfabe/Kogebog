@@ -2356,18 +2356,64 @@ async function trinUdenEnsommeOrd(browser) {
   }
 }
 
-// ---------- Ingrediensernes navne (review V1, 17-11-2026) ----------
-// I ingredienslisten blev lange navne delt midt i ordet uden tegn («grøntsagsb|ouillonter|ning», «kyllingebr|yst»,
+// ---------- Ingrediensernes og kortenes navne (review V1 og V3, 17-11-2026) ----------
+// V1: i ingredienslisten blev lange navne delt midt i ordet uden tegn («grøntsagsb|ouillonter|ning», «kyllingebr|yst»,
 // «kokosmæl|k»): 158 af 1993 navne på 360 px, 108 på 390, 23 på 1180 og 58 på 1280 (målt 17-11 i WebKit). medBloede
-// (js/tekst.js) giver de lange ord bløde bindestreger, og intet ingrediensnavn i nogen ret må nu deles uden bindestreg
+// (js/tekst.js) giver de lange ord bløde bindestreger, og intet ingrediensnavn i nogen ret må nu deles uden bindestreg.
+// V3: et kort ord alene på en linje i kortets navn («Kikærteburger / i / fuldkornsbolle», «… med pølser og / majs»): 18 af
+// 255 kort på 360 px og 4 på 390 px før kortNavn (js/tekst.js), 4 og 1 efter, og 0 før og efter på 1180, 844×390, 667×375,
+// 768×1024 og 1280. KORT_ALENE_KENDT er dem, der er tilbage: det korte ord kan kun undgås ved at dele et ord med et stykke
+// på højst 4 bogstaver alene til sidst («senneps- / sovs»). Andre kort må ikke få det
 const NAVNE_PAA = [
   { navn: 'w360', viewport: { width: 360, height: 780 }, hasTouch: true },
   ...SKAERME,
 ];
+const KORT_NAVNE_PAA = ['w360', 'iphone'];
+const KORT_ALENE_KENDT = {
+  w360: ['groen-porre-kartoffelsuppe-med-bacondrys', 'julemedisterboller', 'flaeskesteg-med-sproed-svaer', 'nytaarstorsk-med-sennepssovs'],
+  iphone: ['julemedisterboller'],
+};
+// I browseren: elementernes tekst, der fylder flere linjer og har en linje med kun ét ord på højst 4 bogstaver.
+// Linjen findes for hvert synligt tegn. En linje, der slutter midt i et ord (ved en bindestreg eller en blød bindestreg,
+// fx «Taco-» over «bradepande»), tæller ikke; et kort stykke af et delt ord alene på linjen efter («choko- / lade- / is») gør
+function korteOrdAlene(sel) {
+  const ud = [];
+  for (const e of document.querySelectorAll(sel)) {
+    const linjer = [];
+    let forrige = ' ';
+    const w = document.createTreeWalker(e, NodeFilter.SHOW_TEXT);
+    for (let t; (t = w.nextNode());) {
+      for (let i = 0; i < t.data.length; i++) {
+        const c = t.data[i];
+        const r = document.createRange();
+        r.setStart(t, i);
+        r.setEnd(t, i + 1);
+        const q = [...r.getClientRects()].find((x) => x.width > 0);
+        if (q) {
+          const l = linjer.at(-1);
+          if (l && Math.abs(q.top - l.top) <= q.height / 2) l.tekst += c;
+          else {
+            if (l) l.midtIOrd = !/\s/.test(forrige);
+            linjer.push({ top: q.top, tekst: c, midtIOrd: false });
+          }
+        }
+        forrige = c;
+      }
+    }
+    const kort = (l) => {
+      const tekst = l.tekst.replace(/\u00AD/g, '').trim();
+      return !l.midtIOrd && tekst.split(/\s+/).length === 1 && tekst.replace(/[^\p{L}]/gu, '').length <= 4;
+    };
+    if (linjer.length > 1 && linjer.some(kort)) {
+      ud.push({ id: e.closest('[data-ret]')?.dataset.ret, tekst: linjer.map((l) => l.tekst.replace(/\u00AD/g, '').trim()).join(' / ') });
+    }
+  }
+  return ud;
+}
 async function navneUdenBrud(browser) {
   for (const sk of NAVNE_PAA) {
     const n = sk.navn;
-    console.log('[' + n + '] ingrediensernes navne');
+    console.log('[' + n + '] ingrediensernes navne' + (KORT_NAVNE_PAA.includes(n) ? ' og kortenes navne' : ''));
     const { ctx, side } = await nySide(browser, sk);
     const delte = [];
     for (let i = 0; i < index.length; i++) {
@@ -2390,6 +2436,27 @@ async function navneUdenBrud(browser) {
       if (d.length) delte.push(id + ' (' + d.join(', ') + ')');
     }
     maalNu(n + ': ' + delte.length + ' af ' + index.length + ' retter har et ingrediensnavn, der er delt midt i et ord' + (delte.length ? ': ' + delte.slice(0, 5).join(', ') : ''));
+    if (KORT_NAVNE_PAA.includes(n)) {
+      const alene = [];
+      for (const g of INDEX_GRUPPER) {
+        await side.goto('about:blank');
+        await side.goto(BASE + '/index.html#/gruppe/' + g.id);
+        const vist = await side.waitForFunction((x) => document.querySelectorAll('.gruppe-skaerm .kort[data-ret] .kort-navn').length === x,
+          g.retter.length, { timeout: 10000 }).then(() => true, () => false);
+        tjek(vist, n + ' gruppe ' + g.id + ': viste ikke alle ' + g.retter.length + ' kort');
+        if (!vist) continue;
+        await side.evaluate(() => document.fonts.ready);
+        const k = await side.evaluate(korteOrdAlene, '.gruppe-skaerm .kort[data-ret] .kort-navn');
+        const nye = k.filter((x) => !KORT_ALENE_KENDT[n].includes(x.id));
+        tjek(!nye.length, n + ' gruppe ' + g.id + ': kortets navn har et kort ord alene på en linje: ' + nye.map((x) => x.id + ' «' + x.tekst + '»').join(', '));
+        const d = await side.evaluate(delteOrd, '.gruppe-skaerm .kort[data-ret] .kort-navn');
+        tjek(!d.length, n + ' gruppe ' + g.id + ': kortets navn er delt midt i ordet uden bindestreg: ' + d.join(', '));
+        alene.push(...k.map((x) => x.id));
+      }
+      maalNu(n + ': ' + alene.length + ' af ' + index.length + ' kort har et kort ord alene på en linje' + (alene.length ? ' (' + alene.join(', ') + ')' : ''));
+      const vaek = KORT_ALENE_KENDT[n].filter((id) => !alene.includes(id));
+      if (vaek.length) maalNu(n + ': ' + vaek.join(', ') + ' har ikke længere et kort ord alene: tag dem af KORT_ALENE_KENDT');
+    }
     tjek(side.fejl.length === 0, n + ' (navnene): ' + side.fejl.join(' | '));
     await ctx.close();
   }
@@ -2660,7 +2727,7 @@ if (DELE.includes('former')) KOERSEL.push(['skærmformer', (b) => former(b)]);
 if (DELE.includes('former')) KOERSEL.push(['forsidens top', (b) => forsideTop(b)]);
 if (DELE.includes('trinbund')) KOERSEL.push(['trinene over den faste bund', (b) => trinOverBund(b)]);
 if (DELE.includes('titler')) KOERSEL.push(['rettens navn på højkant', (b) => titlerHoejkant(b)], ['trinets tekst uden ensomme ord', (b) => trinUdenEnsommeOrd(b)],
-  ['ingrediensernes navne', (b) => navneUdenBrud(b)]);
+  ['ingrediensernes og kortenes navne', (b) => navneUdenBrud(b)]);
 if (DELE.includes('lyn')) KOERSEL.push(['⚡ og navnene', (b) => lynOgNavne(b)]);
 // Ugeplanen står i sin egen fil (test/e2e-ugeplan.js) og får hjælperne herfra
 if (DELE.includes('ugeplan')) {
