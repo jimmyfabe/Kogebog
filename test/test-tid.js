@@ -7,7 +7,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { nyTimer, timerStatus, formaterTid, varighed, varighedKort, varighedTale, HURTIG_SEK, planMandag, ugeNr, dagDato, dagIUgen, ugenErGaaet } from '../js/tid.js';
-import { isoTilMinutter, minutterTekst, tilTale, talOrd, ukendtKoen, KOEN, antalOrd, delIngrediens } from '../js/tekst.js';
+import { isoTilMinutter, minutterTekst, tilTale, talOrd, ukendtKoen, KOEN, antalOrd, delIngrediens, medBloede, utenBloede, ORD_MAKS } from '../js/tekst.js';
+import { medMereGroent } from '../js/groent.js';
+import { faktorFor, skaleretIngrediens } from '../js/skaler.js';
 import { lavModel, erLynhurtig, harTid, LYN_MIN } from '../js/model.js';
 import { hentIndex } from '../js/data.js';
 import { lavTaleliste, alleReplikker } from '../vaerktoej/lav-taleliste.js';
@@ -216,6 +218,54 @@ test('ingrediensen deles i mængde og navn', () => {
   assert.deepEqual(delIngrediens('2,5 dl hvedemel', '2,5 dl'), { maengde: '2,5 dl', navn: 'hvedemel' });
   assert.deepEqual(delIngrediens('smør til panden', ''), { maengde: '', navn: 'smør til panden' });
   assert.deepEqual(delIngrediens('3 æg', '4'), { maengde: '', navn: '3 æg' });
+});
+
+// Review V1 (17-11): ingrediensnavnene brød midt i ordet uden tegn i de smalle kolonner («grøntsagsbo|uillonternin|g»,
+// «kyllingebr|yst», «gulerødde|r» i WebKit på 360-1280 px). medBloede deler de lange ord med bløde bindestreger, kun på
+// skærmen: teksten uden dem er den samme
+test('lange ord får bløde bindestreger til skærmen, og teksten uden dem er den samme (review V1)', () => {
+  const vis = (t) => medBloede(t).replace(/\u00ad/g, '·');
+  assert.equal(vis('1 grøntsagsbouillonterning'), '1 grønt·sags·bouil·lon·terning');
+  assert.equal(vis('Kyllingebryst'), 'Kyllinge·bryst');
+  assert.equal(vis('3 store gulerødder'), '3 store gule·rødder');
+  assert.equal(vis('frisk appelsinjuice'), 'frisk appel·sin·juice');
+  // Et led får kun en deling efter sig, når der er mindst ORD_REST bogstaver tilbage
+  assert.equal(vis('appelsiner'), 'appel·siner');
+  assert.equal(vis('spaghettien'), 'spaghet·tien');
+  // Korte ord og ord, forfatteren allerede har delt, står urørte
+  assert.equal(vis('1 gulerod'), '1 gulerod');
+  assert.equal(vis('Grøntsags\u00adblanding'), 'Grøntsags·blanding');
+  assert.equal(vis('Kikærteburger i fuld\u00adkornsbolle'), 'Kikærte·burger i fuld·kornsbolle');
+  // Ord på højst ORD_MAKS bogstaver står urørte, og et ord på 9 med brede bogstaver deles («kokosmæl|k» på 360 px)
+  assert.equal(vis('lasagne og kokosmælk'), 'lasagne og kokos·mælk');
+  assert.equal(vis('chokoladeis'), 'choko·lade·is');
+  // Et ord, der begynder med et kort led uden at være sammensat med det, deles ikke forkert
+  assert.equal(vis('Finskbrød'), 'Finskbrød');
+  // Alle ingredienser i alle retter, også skaleret og med mere grønt: uden de bløde bindestreger er teksten den samme,
+  // og intet stykke er længere end ORD_MAKS bogstaver. Fejler testen på et nyt ord, så skriv dets led i ORDLED
+  const index = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter/index.json'), 'utf8'));
+  const lange = new Set();
+  let navne = 0;
+  for (const id of index.grupper.flatMap((g) => g.retter)) {
+    const json = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8'));
+    for (const r of [json, medMereGroent(json)].filter(Boolean)) {
+      const m = lavModel(r);
+      m.ingredienser.forEach((x, i) => {
+        const alle = [x.navn];
+        for (const f of [0.5, 1.5, 2, 3]) {
+          if (faktorFor(m, 4)) alle.push(skaleretIngrediens(m, i, f).navn);
+        }
+        for (const navn of alle) {
+          navne++;
+          const delt = medBloede(navn);
+          assert.equal(utenBloede(delt), utenBloede(navn));
+          for (const stykke of delt.split(/[^\p{L}]+/u)) if (stykke.length > ORD_MAKS) lange.add(stykke + ' (' + id + ')');
+        }
+      });
+    }
+  }
+  assert.ok(navne > 3000, navne + ' navne');
+  assert.deepEqual([...lange], [], 'stykker på over ' + ORD_MAKS + ' bogstaver i ingrediensnavnene');
 });
 
 test('modellen af pandekagerne', () => {

@@ -2257,28 +2257,29 @@ const TITEL_PAA = [
   { navn: 'tablet', viewport: { width: 768, height: 1024 }, hasTouch: true },
   { navn: 'air-hoej', viewport: { width: 820, height: 1180 }, hasTouch: true },
 ];
-// I browseren: ord i elementet, der er delt over to linjer et andet sted end ved en blød bindestreg eller en bindestreg.
+// I browseren: ord i elementerne, der er delt over to linjer et andet sted end ved en blød bindestreg eller en bindestreg.
 // Linjen findes for hvert synligt tegn; en blød bindestreg, der ikke deler, har ingen bredde
 function delteOrd(sel) {
   const ud = [];
-  const e = document.querySelector(sel);
-  const w = document.createTreeWalker(e, NodeFilter.SHOW_TEXT);
-  let node;
-  while ((node = w.nextNode())) {
-    const re = /\S+/g;
-    let m;
-    while ((m = re.exec(node.data))) {
-      let forrige = null;
-      for (let i = 0; i < m[0].length; i++) {
-        const r = document.createRange();
-        r.setStart(node, m.index + i);
-        r.setEnd(node, m.index + i + 1);
-        const q = [...r.getClientRects()].find((x) => x.width > 0);
-        if (!q) continue;
-        if (forrige && Math.abs(q.top - forrige.top) > 2 && !/[\u00AD-]/.test(m[0].slice(forrige.i, i))) {
-          ud.push(m[0].slice(0, i).replace(/\u00AD/g, '') + '|' + m[0].slice(i).replace(/\u00AD/g, ''));
+  for (const e of document.querySelectorAll(sel)) {
+    const w = document.createTreeWalker(e, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = w.nextNode())) {
+      const re = /\S+/g;
+      let m;
+      while ((m = re.exec(node.data))) {
+        let forrige = null;
+        for (let i = 0; i < m[0].length; i++) {
+          const r = document.createRange();
+          r.setStart(node, m.index + i);
+          r.setEnd(node, m.index + i + 1);
+          const q = [...r.getClientRects()].find((x) => x.width > 0);
+          if (!q) continue;
+          if (forrige && Math.abs(q.top - forrige.top) > 2 && !/[\u00AD-]/.test(m[0].slice(forrige.i, i))) {
+            ud.push(m[0].slice(0, i).replace(/\u00AD/g, '') + '|' + m[0].slice(i).replace(/\u00AD/g, ''));
+          }
+          forrige = { top: q.top, i };
         }
-        forrige = { top: q.top, i };
       }
     }
   }
@@ -2351,6 +2352,45 @@ async function trinUdenEnsommeOrd(browser) {
       if (vist) await tjekKnapOrd(side, '#app > .trin:not([data-gammel]) #trin-tekst', hvor, 'trinets tekst');
     }
     tjek(side.fejl.length === 0, sk.navn + ' (trinets tekst): ' + side.fejl.join(' | '));
+    await ctx.close();
+  }
+}
+
+// ---------- Ingrediensernes navne (review V1, 17-11-2026) ----------
+// I ingredienslisten blev lange navne delt midt i ordet uden tegn («grøntsagsb|ouillonter|ning», «kyllingebr|yst»,
+// «kokosmæl|k»): 158 af 1993 navne på 360 px, 108 på 390, 23 på 1180 og 58 på 1280 (målt 17-11 i WebKit). medBloede
+// (js/tekst.js) giver de lange ord bløde bindestreger, og intet ingrediensnavn i nogen ret må nu deles uden bindestreg
+const NAVNE_PAA = [
+  { navn: 'w360', viewport: { width: 360, height: 780 }, hasTouch: true },
+  ...SKAERME,
+];
+async function navneUdenBrud(browser) {
+  for (const sk of NAVNE_PAA) {
+    const n = sk.navn;
+    console.log('[' + n + '] ingrediensernes navne');
+    const { ctx, side } = await nySide(browser, sk);
+    const delte = [];
+    for (let i = 0; i < index.length; i++) {
+      const id = index[i];
+      // Et nyt dokument for hver 100 retter: WebKit afviser over ca. 200 adresseskift pr. 10 s i samme dokument
+      if (i % 100 === 0) {
+        await side.goto('about:blank');
+        await side.goto(BASE + '/index.html#/ret/' + id);
+      } else {
+        await gaaTil(side, '#/ret/' + id, n + ' ' + id, { gammel: true });
+      }
+      const vist = await side.waitForFunction((x) => {
+        const h = document.querySelector('#app > .ret:not([data-gammel]) .ret-titel h1');
+        return h && h.textContent === x && document.querySelector('#app > .ret:not([data-gammel]) .ingr-navn');
+      }, RETTER[id].name, { timeout: 5000 }).then(() => true, () => false);
+      tjek(vist, n + ' ' + id + ': viste ikke retten');
+      if (!vist) continue;
+      const d = await side.evaluate(delteOrd, '#app > .ret:not([data-gammel]) .ingr-navn');
+      tjek(!d.length, n + ' ' + id + ': et ingrediensnavn er delt midt i ordet uden bindestreg: ' + d.join(', '));
+      if (d.length) delte.push(id + ' (' + d.join(', ') + ')');
+    }
+    maalNu(n + ': ' + delte.length + ' af ' + index.length + ' retter har et ingrediensnavn, der er delt midt i et ord' + (delte.length ? ': ' + delte.slice(0, 5).join(', ') : ''));
+    tjek(side.fejl.length === 0, n + ' (navnene): ' + side.fejl.join(' | '));
     await ctx.close();
   }
 }
@@ -2619,7 +2659,8 @@ if (DELE.includes('beroering')) KOERSEL.push(['berøring', (b) => beroering(b, S
 if (DELE.includes('former')) KOERSEL.push(['skærmformer', (b) => former(b)]);
 if (DELE.includes('former')) KOERSEL.push(['forsidens top', (b) => forsideTop(b)]);
 if (DELE.includes('trinbund')) KOERSEL.push(['trinene over den faste bund', (b) => trinOverBund(b)]);
-if (DELE.includes('titler')) KOERSEL.push(['rettens navn på højkant', (b) => titlerHoejkant(b)], ['trinets tekst uden ensomme ord', (b) => trinUdenEnsommeOrd(b)]);
+if (DELE.includes('titler')) KOERSEL.push(['rettens navn på højkant', (b) => titlerHoejkant(b)], ['trinets tekst uden ensomme ord', (b) => trinUdenEnsommeOrd(b)],
+  ['ingrediensernes navne', (b) => navneUdenBrud(b)]);
 if (DELE.includes('lyn')) KOERSEL.push(['⚡ og navnene', (b) => lynOgNavne(b)]);
 // Ugeplanen står i sin egen fil (test/e2e-ugeplan.js) og får hjælperne herfra
 if (DELE.includes('ugeplan')) {

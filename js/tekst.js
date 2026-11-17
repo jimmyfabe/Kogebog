@@ -22,6 +22,59 @@ export function minutterTekst(min) {
 // kan deles på en smal skærm. Stemmen, skærmlæseren og en delt tekst skal ikke have dem (UI-review 29-10)
 export const utenBloede = (t) => String(t).replace(/\u00ad/g, '');
 
+// Bløde bindestreger i lange ord, kun til skærmen (review V1 17-11). Ingredienslisten delte navnene midt i ordet uden tegn:
+// «grøntsagsb|ouillonter|ning», «kokosmæl|k» (WebKit, 158 af 1993 navne på 360 px, 108 på 390, 23 på 1180 og 58 på 1280).
+// hyphens: auto deler kun, hvor browseren har en dansk ordbog, så delingen står her. Et ord på over ORD_MAKS bogstaver
+// deles efter ORDLED: de første led i sammensatte ord («kyllinge·bryst») og nogle ord, der ikke er sammensatte, delt efter
+// stavelsen («champig·non»). Det længste led, ordet begynder med, vinder, og resten deles på samme måde. Et led får kun en
+// deling efter sig, når der er mindst ORD_REST bogstaver tilbage («appel·siner», ikke «appelsin·er»). ORD_MAKS er det
+// længste stykke, der altid stod på én linje på 360 px (8: «kokosmæl», «champign»). Et ord, der allerede har en blød
+// bindestreg (retternes navne), står urørt. Stemmen, skærmlæseren (attr i js/dom.js) og søgningen (js/soeg.js) får
+// teksten uden dem: brug kun medBloede, hvor teksten vises. test-tid.js fejler på en ingrediens med et stykke på over
+// ORD_MAKS bogstaver: skriv så ordets led her. Et kort led (fx «fin») deler også ord, det ikke er led i («Fin·skbrød»),
+// så skriv hellere hele leddet («fin·valse»)
+export const ORD_MAKS = 8;
+export const ORD_REST = 3;
+const BLOED = '\u00ad';
+const ORDLED = [
+  // Første led i sammensatte ord (med bindebogstavet)
+  'alle·hånde', 'ananas', 'ande', 'appel·sin', 'asparges', 'avo·cado', 'bage', 'banan', 'blad', 'blomst', 'bouil·lon', 'burger',
+  'butter', 'cayenne', 'cherry', 'chili', 'choko·lade', 'choko·lade·is', 'cider', 'citron', 'cocktail', 'dansk', 'fajita',
+  'fin·valse', 'fint', 'fiske', 'flage', 'flor', 'flæske', 'fløde', 'frisk', 'fuld·korns', 'færdig', 'grahams', 'groft',
+  'græskar', 'grønt', 'grønt·sags', 'gule', 'gule·rods', 'ham·burger', 'hassel', 'havre', 'hel·bladet', 'hindbær',
+  'hjorte·taks', 'hoisin', 'hvidløgs', 'hylde', 'iceberg', 'inder', 'is', 'jasmin', 'jule', 'kanel', 'kartof·fel', 'kidney',
+  'kikærte', 'kirsebær', 'kokos', 'konditor', 'kyllinge', 'kød', 'lager', 'lakse', 'lasagne', 'laurbær', 'lever', 'løg',
+  'mad', 'mad·lavnings', 'mellem', 'mozza·rella', 'muffin', 'muskat', 'nytårs', 'oliven', 'party', 'peber', 'perle',
+  'persille', 'piske', 'pizza', 'pynte', 'risen·grød', 'rod', 'rød', 'rør', 'salat', 'senneps', 'skinke', 'solbær', 'solsikke',
+  'spege', 'spids', 'stege', 'sukker', 'suppe', 'svine', 'taco', 'toast', 'tomat', 'torske', 'val·nød', 'vand', 'vanil·je',
+  'vanil·je·is', 'varm', 'wok', 'æble', 'ægge',
+  // Ord, der ikke er sammensatte, delt efter stavelsen
+  'abri·koser', 'balsa·mico', 'basi·likum', 'champig·non', 'clemen·tin', 'crou·toner', 'dres·sing', 'karde·momme', 'kartof·ler',
+  'koncen·trat', 'konden·ser', 'kote·letter', 'mareng·sen', 'marme·lade', 'marsh·mallow', 'mayon·naise', 'pasteu·riser',
+  'por·tioner', 'ser·vering', 'skum·fiduser', 'spaghet·ti', 'tarte·let', 'ternin·ger', 'tortel·lini', 'tortil·las',
+].map((l) => ({ hel: l.replace(/·/g, ''), delt: l.split('·') })).sort((a, b) => b.hel.length - a.hel.length);
+
+function delOrd(ord) {
+  if (ord.length <= ORD_MAKS) return ord;
+  const lille = ord.toLowerCase();
+  const led = ORDLED.find((l) => lille.startsWith(l.hel));
+  if (!led) return ord;
+  // Ordets egne bogstaver (et stort forbogstav bevares), delt som leddet
+  let i = 0;
+  const dele = led.delt.map((d) => ord.slice(i, (i += d.length)));
+  const rest = ord.slice(i);
+  if (rest.length < ORD_REST) return dele.join(BLOED) + rest;
+  return dele.join(BLOED) + BLOED + delOrd(rest);
+}
+
+export function medBloede(tekst) {
+  return String(tekst).replace(/\p{L}+/gu, (ord, i, hele) => {
+    // Et ord med en blød bindestreg lige før eller efter sig er delt af forfatteren
+    if (hele[i - 1] === BLOED || hele[i + ord.length] === BLOED) return ord;
+    return delOrd(ord);
+  });
+}
+
 // ---------- Teksten til stemmen ----------
 // Røst-stemmen (lyd/) læser teksten, som den står, og oversætter ikke cifre og tegn: «130 gram» blev til «tretnulsnul»,
 // og «7 + 5 = 12» til «syv procent fem simpel tolv» (målt med talegenkenderen 19-10-2026: fejlrate 0,57 med cifre,
