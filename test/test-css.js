@@ -342,6 +342,16 @@ test('trin-noterne ender ikke med ét ord alene på sidste linje (text-wrap: pre
   }
 });
 
+// Review U13 (17-11): «Hyrdetærte / med / kartoffelskiver» (390 px) og «Smash-burgere med / ost» (360 px) på forsidens
+// gruppekort. Med text-wrap: balance stod et ord på højst 4 bogstaver alene i 58 af 2550 navne mod 171 før (10 skærme,
+// WebKit), uden at et kort blev højere. Hyrdetærten fik desuden en blød bindestreg i «kartoffel|skiver»
+test('retternes navne på kortene brydes i lige lange linjer (text-wrap: balance)', () => {
+  const rod = blokke(CSS);
+  for (const [b, h] of [[360, 780], [390, 844], [667, 375], [844, 390], [820, 1180], [1180, 820], [1280, 800]]) {
+    assert.equal(gaeldende(rod, '.kort-navn', b, h)['text-wrap'], 'balance', b + '×' + h);
+  }
+});
+
 test('lupen er mindst 48 px på alle skærme, og Rosa og Bo giver plads til den på smalle skærme', () => {
   const rod = blokke(CSS);
   for (const [b, h] of [[1180, 820], [820, 1180], [390, 844], [360, 640], [844, 390], [667, 375]]) {

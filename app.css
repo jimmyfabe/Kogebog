@@ -498,8 +498,10 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
    billedet som det, så kortets mål og navnet ikke flytter sig. Kakao på creme (12,5:1) med samme streg som ⚡, men
    lille og lyst, så børnenes billede og ⚡ stadig er det, man ser først */
 .kort-tid { position: absolute; left: 0; bottom: 0; padding: 1px 8px; border: var(--kant); border-radius: 999px; background: var(--creme); color: var(--kakao); font-size: 15px; font-weight: 800; line-height: 1.2; white-space: nowrap; }
-/* Lange ord deles med bindestreg (lang="da"), ikke midt i ordet uden tegn */
-.kort-navn { font-size: 26px; font-weight: 800; line-height: 1.1; text-align: center; overflow-wrap: break-word; -webkit-hyphens: auto; hyphens: auto; }
+/* Lange ord deles med bindestreg (lang="da"), ikke midt i ordet uden tegn. text-wrap: balance gør linjerne lige lange, så
+   et kort ord ikke står alene («Smash-burgere med / ost» på 360 px; review U13 17-11: 171 af 2550 navne på 10 skærme med et
+   ord på højst 4 bogstaver alene, 58 med balance, og intet kort blev højere). Ældre Safari bryder som før */
+.kort-navn { font-size: 26px; font-weight: 800; line-height: 1.1; text-align: center; text-wrap: balance; overflow-wrap: break-word; -webkit-hyphens: auto; hyphens: auto; }
 .kort-aabn { display: none; align-items: center; gap: 6px; font-size: 17px; font-weight: 750; }
 .kort-aabn .ikon { width: 22px; height: 22px; }
 .kort.valgt { background: var(--sennep-lys); box-shadow: 0 6px 0 var(--kakao), 0 0 0 6px var(--sennep); }
