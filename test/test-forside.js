@@ -14,7 +14,7 @@ import { planMandag, idag } from '../js/tid.js';
 import { soeg, soegeTekst } from '../js/soeg.js';
 import { FAVORITTER, gruppeRute, forsideGrupper, gruppeAf, gruppeRetter, tilbageFraRet, rulleplads, blandet } from '../js/grupper.js';
 import { lavModel, erLynhurtig, harTid } from '../js/model.js';
-import { utenBloede } from '../js/tekst.js';
+import { utenBloede, kortNavn } from '../js/tekst.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // Alle grupper i forsidens rækkefølge. En ny gruppe står i GRUPPER, men kommer først i index.json, når dens retter har
@@ -603,6 +603,28 @@ test('kortenes navn til skærmlæseren er rettens navn uden bløde bindestreger 
   }
 });
 
+// Review V11 (17-11): rettens titel endte med et kort stykke alene («… fiskefrikadeller med / ris», «Lille kransekage- /
+// tårn»). Titlen deles nu som kortene (kortNavn), og skærmlæseren får navnet uden bløde bindestreger og hårde mellemrum
+test('rettens titel deles som kortets navn, og skærmlæseren får hele navnet (review V11 og K9)', async () => {
+  const ids = INDEX.grupper.flatMap((g) => g.retter);
+  await start('#/ret/' + ids[0]);
+  const forkert = [];
+  for (const id of ids) {
+    gaaTil('#/ret/' + id);
+    await ventPaaHentning();
+    const navn = lavModel(JSONER.get(id)).navn;
+    const h = rod.querySelector('h1');
+    const vist = h.querySelector('.titel-navn');
+    if (!vist || vist.getAttribute('aria-hidden') !== 'true' || vist.textContent !== kortNavn(navn) || laesNavn(h) !== utenBloede(navn)) {
+      forkert.push(id + ' «' + laesNavn(h).replace(/\u00ad/g, '|').replace(/\u00a0/g, '_') + '»');
+    }
+  }
+  assert.deepEqual(forkert, [], forkert.length + ' af ' + ids.length + ' titler');
+  gaaTil('#/ret/milde-asiatiske-fiskefrikadeller');
+  await ventPaaHentning();
+  assert.match(rod.querySelector('h1 .titel-navn').textContent, /med\u00a0ris$/u);
+});
+
 test('tilbage fra en ret: pilen fører til gruppen på samme rulleplads og med fokus på kortet', async () => {
   await start('#/gruppe/fisk');
   const id = kort()[3];
@@ -651,7 +673,7 @@ test('gamle adresser til en ret virker og fører tilbage til rettens gruppe', as
   for (const g of KNAPPER) {
     const id = retterI(g)[0];
     await start('#/ret/' + id);
-    assert.equal(overskrift(), lavModel(JSONER.get(id)).navn, id);
+    assert.equal(laesNavn(rod.querySelector('h1')), utenBloede(lavModel(JSONER.get(id)).navn), id);
     tryk(knapMed('Tilbage'));
     assert.equal(location.hash, '#/gruppe/' + g);
     assert.ok(kort().includes(id));

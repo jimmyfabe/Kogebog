@@ -588,6 +588,9 @@ async function venterPaa(side, fn, arg, hvor, ms = 6000) {
 }
 
 const h1 = (side) => side.locator('h1').first().textContent();
+// Rettens navn i titlen, som skærmlæseren får det: titlen viser navnet delt (kortNavn) og aria-hidden, og hele navnet står
+// i en skjult .sr-kun (review V11 og K9, 17-11)
+const retTitel = (side) => side.evaluate(() => document.querySelector('#app > .ret:not([data-gammel]) h1 .sr-kun')?.textContent ?? null);
 
 // Topbaren på et trin: hvor bred midten er, hvor fremskridtet står, om det overlapper pillen, den smalleste streg,
 // og om «Trin x af y» er på én linje
@@ -816,7 +819,7 @@ async function heleVejen(browser, skaerm) {
     return a ? { tekst: a.textContent, trekanter: a.querySelectorAll('.trekant').length } : null;
   });
   tjek(advarsel && advarsel.trekanter === 1 && /voksen/.test(advarsel.tekst), n + ': retten skal vise én trekant (varme) og «Sammen med en voksen» øverst, fik ' + JSON.stringify(advarsel));
-  tjek(await h1(side) === VEJ_NAVN, n + ': retten skal hedde ' + VEJ_NAVN);
+  tjek(await retTitel(side) === utenBloede(VEJ_NAVN), n + ': retten skal hedde ' + VEJ_NAVN);
   tjek(await side.locator('.ingr').count() === RETTER.pandekager.recipeIngredient.length, n + ': alle ingredienser skal vises');
   // Start (og print) skal kunne ses uden at rulle på alle skærme. På iPhone står bunden fast (før skulle man rulle)
   await tjekLayout(side, n + ' ret', { knapperSes: true });
@@ -1000,7 +1003,7 @@ async function heleVejen(browser, skaerm) {
   for (const id of index) {
     await side.goto('about:blank');
     await side.goto(BASE + '/index.html?hurtig=1#/ret/' + id);
-    await side.waitForFunction((x) => document.querySelector('.ret h1') && document.querySelector('.ret h1').textContent === x, RETTER[id].name);
+    await side.waitForFunction((x) => document.querySelector('.ret h1 .sr-kun')?.textContent === x, utenBloede(RETTER[id].name));
     await billederFaerdige();
     await tjekLayout(side, n + ' ' + id + ' ret', { knapperSes: true });
     await retHoved(side, n + ' ' + id + ' ret');
@@ -2301,10 +2304,10 @@ async function titlerHoejkant(browser) {
         await gaaTil(side, '#/ret/' + id, n + ' ' + id, { gammel: true });
       }
       await side.waitForFunction((x) => {
-        const h = document.querySelector('#app > .ret:not([data-gammel]) .ret-titel h1');
+        const h = document.querySelector('#app > .ret:not([data-gammel]) .ret-titel h1 .sr-kun');
         return h && h.textContent === x;
-      }, RETTER[id].name, { timeout: 5000 }).catch(() => tjek(false, n + ' ' + id + ': viste ikke retten'));
-      const d = await side.evaluate(delteOrd, '#app > .ret:not([data-gammel]) .ret-titel h1');
+      }, utenBloede(RETTER[id].name), { timeout: 5000 }).catch(() => tjek(false, n + ' ' + id + ': viste ikke retten'));
+      const d = await side.evaluate(delteOrd, '#app > .ret:not([data-gammel]) .ret-titel h1 .titel-navn');
       tjek(!d.length, n + ' ' + id + ': navnet er delt midt i ordet uden bindestreg: ' + d.join(', '));
       if (d.length) delte.push(id);
       // Højttaleren står ved siden af navnet eller i midten under det; den er rund, og begge står inden for titlen
@@ -2425,9 +2428,9 @@ async function navneUdenBrud(browser) {
         await gaaTil(side, '#/ret/' + id, n + ' ' + id, { gammel: true });
       }
       const vist = await side.waitForFunction((x) => {
-        const h = document.querySelector('#app > .ret:not([data-gammel]) .ret-titel h1');
+        const h = document.querySelector('#app > .ret:not([data-gammel]) .ret-titel h1 .sr-kun');
         return h && h.textContent === x && document.querySelector('#app > .ret:not([data-gammel]) .ingr-navn');
-      }, RETTER[id].name, { timeout: 5000 }).then(() => true, () => false);
+      }, utenBloede(RETTER[id].name), { timeout: 5000 }).then(() => true, () => false);
       tjek(vist, n + ' ' + id + ': viste ikke retten');
       if (!vist) continue;
       const d = await side.evaluate(delteOrd, '#app > .ret:not([data-gammel]) .ingr-navn');

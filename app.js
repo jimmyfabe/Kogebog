@@ -528,7 +528,8 @@ function retSkaerm(m) {
       el('section', { class: 'ret-hoved' },
         el('div', { class: 'ret-billede' }, billede(grafikRet(m.id), '')),
         el('div', { class: 'ret-titel' },
-          el('h1', { tabindex: '-1', tekst: m.navn }),
+          // Som på kortene: intet kort stykke alene til sidst, og skærmlæseren får navnet uden delingen (review V11 og K9)
+          el('h1', { tabindex: '-1' }, retNavn(m.navn, 'titel-navn')),
           hoejttaler),
         meta,
         noter.length ? el('div', { class: 'voksen-linjer' }, noter.map((t) => el('p', { class: 'voksen-linje', tekst: t }))) : null),
