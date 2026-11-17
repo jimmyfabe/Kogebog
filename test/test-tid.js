@@ -315,6 +315,11 @@ test('kortets navn: forfatterens deling af et langt ord bliver stående (review 
     for (const s of kortNavn(navn).split(/[^\p{L}]+/u)) if (!foer.has(s) && s.length > SAMLET_MAKS) for_lange.push(s + ' (' + id + ')');
   }
   assert.deepEqual(for_lange, []);
+  // En deling, kortNavn lader stå, fordi stykket ville blive for langt, er forfatterens egen. Efter V16 delte koden
+  // «Banansplit med chokolade·sovs», og «chokoladesovs» (13 bogstaver) kunne ikke stå på linje med «med» på 360 px, så
+  // «med» stod alene (e2e titler 17-11). Så deler forfatteren ordet i opskriften: «choko·lade·sovs» → «choko·ladesovs»
+  const kortSidst = /\u00ad\p{L}{1,4}$/u;
+  assert.deepEqual(RETTER.filter(({ json: { name: navn } }) => kortSidst.test(kortNavn(navn)) && !kortSidst.test(navn)).map((r) => r.id), []);
   const kransekage = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter/lille-kransekagetaarn.json'), 'utf8')).name;
   assert.equal(vis(kransekage), 'Lille kranse·kagetårn');
 });
