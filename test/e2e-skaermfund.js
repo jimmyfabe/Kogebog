@@ -339,7 +339,7 @@ async function venstrekant(browser, H) {
 
 // ---------- 7. Adskilleren « · » ved linjens kant ----------
 // Hvor mange linjer i de viste tekster, der starter eller slutter med adskilleren. Det, der ikke fylder (højde 0), ses ikke
-const SKILLE = '.meta, .dag-meta, .uge-sum, .uge-nr, .vare-maengde';
+const SKILLE = '.meta, .dag-meta, .uge-sum, .vare-maengde';
 const vedKant = (side) => side.evaluate(({ sel, s }) => {
   const ud = [];
   for (const e of document.querySelectorAll(sel.split(', ').map((x) => s + x).join(', '))) {
