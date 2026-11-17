@@ -16,7 +16,7 @@
   "tool": ["si", "dåseåbner", "blender", "3 glas"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Stil ananasdåsen på køl i forvejen, så smoothien bliver kold." } },
-    { "@type": "HowToStep", "text": "Pil bladene af grønkålens stilke.", "tumbi": { "verbum": "pille", "ikoner": ["groenkaal"], "note": "Skyl bladene i en si. Stilkene er hårde, så de skal ikke med. Kun en lille håndfuld, og det er med vilje: der skal kun lidt rå grønkål i, så ananas og banan smager mest." } },
+    { "@type": "HowToStep", "text": "Pil bladene af grønkålens stilke.", "tumbi": { "verbum": "smuldre", "ikoner": ["groenkaal"], "note": "Skyl bladene i en si. Stilkene er hårde, så de skal ikke med. Kun en lille håndfuld, og det er med vilje: der skal kun lidt rå grønkål i, så ananas og banan smager mest." } },
     { "@type": "HowToStep", "text": "Hæld ananas og juice i kanden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["ananas"], "note": "Den voksne åbner dåsen: kanten er skarp. Kanden står på bordet, og blenderens stik er ude." } },
     { "@type": "HowToStep", "text": "Pil bananen, og knæk den i stykker.", "tumbi": { "verbum": "pille", "ikoner": ["banan"] } },
     { "@type": "HowToStep", "text": "Kom grønkål og banan i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["groenkaal", "banan"], "note": "Ingen fingre i kanden: knivene sidder i bunden." } },

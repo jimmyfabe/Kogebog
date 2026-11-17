@@ -50,6 +50,7 @@ const HAENDER_PAA_OVERFLADEN = ['pynte', 'pakke-ind', 'smuldre', ...HAENDER_I_DE
 // vaskes lige bagefter, så det er ikke en pause (code review 21-10 fund 5 gælder kødet, der bruner, mens barnet venter)
 const TIMER_MAALER_HAENDERNE = ['aelte'];
 const TAGE_UD = ['tage-ud', 'tage-ud-form']; // efter ovnen: en flad plade eller en dyb form
+const BLAD_IKONER = ['krydderurt', 'mynte', 'groenkaal']; // blade, der plukkes: «smuldre», ikke æg-billedet til «pille» (U5)
 const VENTER = 'docs/venter-paa-billede'; // færdige retter uden retbillede (docs/venter-paa-billede/README.md)
 // Ordvagten går efter stammen: hvert ord, der begynder med stammen (eller har den inde i sig, hvor det står), fanges med
 // alle bøjninger («smelte», «skære», «æggeblommer»). En liste over tilladte former mangler altid en form, og så slipper
@@ -509,6 +510,9 @@ export function valider(rod = ROD) {
         if (KUN_VARME_HJAELP.includes(st.verbum) && 'voksen_hjaelp' in st && st.voksen_hjaelp !== 'varme') f(hvor + ': verbet «' + st.verbum + '» kan barnet selv. Hjælper den voksne, er det for varmens skyld: brug "voksen_hjaelp": "varme", fandt ' + JSON.stringify(st.voksen_hjaelp));
         // Billedet til «drysse» er ost på en pizza. Drysses der i en skål, har det sit eget billede (review U4 17-11: bagepulver i naan-dejen)
         if (st.verbum === 'drysse' && /(?<!\p{L})skål(?:en)?(?!\p{L})/u.test(s.text)) f(hvor + ': der drysses i en skål, så brug verbet "drysse-skaal" (billedet til «drysse» er en pizza): «' + s.text + '»');
+        // Billedet til «pille» er et æg, der får skallen pillet af. Blade af krydderurter og grønkål plukkes med «smuldre»
+        // (små stykker i en skål), som salatbladene (review U5 17-11: persillen i hvidløgsnaan viste et æg)
+        if (st.verbum === 'pille' && Array.isArray(st.ikoner) && st.ikoner.some((ik) => BLAD_IKONER.includes(ik))) f(hvor + ': der plukkes blade, så brug verbet "smuldre" (billedet til «pille» er et æg): «' + s.text + '»');
         // Ordvagten: nævner teksten kniv, rivejern eller varme, er det den voksnes trin, uanset verbet, og hjælpen passer
         // til ordet. «voksen_hjaelp» er én værdi, så et trin med både kniv og varme skal deles i to
         const kniv = fund(KNIV_ORD, s.text);

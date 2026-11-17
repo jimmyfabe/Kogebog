@@ -31,7 +31,7 @@
     {"@type": "HowToStep", "text": "Lad dejen hvile i 10 minutter.", "tumbi": {"verbum": "vente", "timer_sek": 600, "note": "Dæk skålen med et viskestykke. Lav hvidløgssmørret imens."}},
     {"@type": "HowToStep", "text": "Pres hvidløget ned i en lille skål.", "tumbi": {"verbum": "klemme", "ikoner": ["hvidloeg"], "note": "2 fed. Pil skallen af først, og brug en hvidløgspresse. Barnet kan selv."}},
     {"@type": "HowToStep", "text": "Smelt smørret, og hæld det over hvidløget.", "tumbi": {"verbum": "smelte", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["smoer", "hvidloeg"], "note": "40 g smør i en lille gryde ved svag varme. Den voksne smelter og hælder."}},
-    {"@type": "HowToStep", "text": "Pil bladene af persillen.", "tumbi": {"verbum": "pille", "ikoner": ["krydderurt"], "note": "Ca. 2 spsk blade fra en frisk persille. Store blade deles med fingrene. Barnet kan selv."}},
+    {"@type": "HowToStep", "text": "Pil bladene af persillen.", "tumbi": {"verbum": "smuldre", "ikoner": ["krydderurt"], "note": "Ca. 2 spsk blade fra en frisk persille. Store blade deles med fingrene. Barnet kan selv."}},
     {"@type": "HowToStep", "text": "Del dejen i 8 kugler.", "tumbi": {"verbum": "forme", "note": "Del den først i to, så i fire og så i otte. Rul hver bid til en kugle mellem hænderne."}},
     {"@type": "HowToStep", "text": "Rul kuglerne flade og ovale.", "tumbi": {"verbum": "kagerulle", "ikoner": ["mel"], "note": "Ca. ½ cm tykke. Drys lidt mel på bordet og kagerullen."}},
     {"@type": "HowToStep", "text": "Læg to naan på en tør pande.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "note": "Middel til høj varme, uden olie. Den voksne lægger dem på."}},

@@ -564,6 +564,17 @@ test('pensle efter råt kød rører det rå kød, indtil det er bagt, stegt elle
   forventGyldig('opskrifter/glaseret-juleskinke-af-hamburgerryg.json', () => {});
 });
 
+// Review U5 (17-11): «Pil bladene af persillen.» viste æg-billedet til «pille». Blade af krydderurter og grønkål
+// plukkes med «smuldre», som salatbladene
+test('blade plukkes med «smuldre», ikke med æg-billedet til «pille»', () => {
+  const persille = (d) => d.recipeInstructions.find((s) => s.text === 'Pil bladene af persillen.');
+  forventFejl('opskrifter/hvidloegsnaan.json', (d) => { persille(d).tumbi.verbum = 'pille'; },
+    'trin 10: der plukkes blade, så brug verbet "smuldre" (billedet til «pille» er et æg): «Pil bladene af persillen.»');
+  forventFejl('opskrifter/mynte-lime-boble.json', (d) => { d.recipeInstructions[2].tumbi.verbum = 'pille'; }, 'trin 3: der plukkes blade');
+  // Jordbærrenes grønne top pilles stadig (ikonet er bærret, ikke et blad)
+  forventGyldig('opskrifter/regnbue-smoothie.json', (d) => { assert.equal(d.recipeInstructions[8].tumbi.verbum, 'pille'); });
+});
+
 test('dejen er ikke rå efter stegning eller bagning', () => {
   const rul = (text) => ({ '@type': 'HowToStep', text, tumbi: { verbum: 'rulle' } });
   forventGyldig('opskrifter/pandekager.json', (d) => { d.recipeInstructions.splice(10, 0, rul('Rul pandekagen sammen.')); });
