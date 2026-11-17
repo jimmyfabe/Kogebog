@@ -996,7 +996,7 @@ function katalogFiltre(alle, v = katalogValg, side = 'katalog') {
   const aftensmad = alle.filter((p) => iGruppe(p, AFTENSMAD)).length;
   const grupper = K.S.grupper.filter((g) => Object.hasOwn(GRUPPER, g.id))
     .map((g) => [g.id, alle.filter((p) => p.gruppeId === g.id).length]).filter(([, n]) => n || !vaelg);
-  return filterBoks(side, vaelg ? 'Grupper, mærker og rækkefølge' : 'Grupper og mærker', valgte,
+  return filterBoks(side, vaelg ? 'Grupper, mærker, tid og rækkefølge' : 'Grupper og mærker', valgte,
     el('div', { class: 'filter-chips', role: 'group', 'aria-label': 'Grupper' },
       gruppeChip(null, 'Alle', alle.length, v, side),
       aftensmad ? gruppeChip(AFTENSMAD, AFTENSMAD_NAVN, aftensmad, v, side) : null,

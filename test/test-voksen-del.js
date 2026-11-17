@@ -921,6 +921,8 @@ test('vælg-tilstanden: «Højst 40 min» viser kun retter på højst 40 minutte
   assert.ok(korte.length >= 20 && korte.length < ugensRetter().length, 'både korte og lange retter i ugeplanen (' + korte.length + ' af ' + ugensRetter().length + ')');
   const chip = () => medFokusNavn(vist.at(-1), 'sorter-hverdag');
   assert.equal(tekstAf(chip()), 'Højst 40 min');
+  // Filterboksens navn nævner tiden, der står først i rækken «Tid og rækkefølge» (tillæg til review F1, 17-11)
+  assert.equal(tekstAf(medKlasse(filtreI(skaerm), 'voksen-filtre-navn')[0]), 'Grupper, mærker, tid og rækkefølge');
   assert.equal(chip().attr['aria-pressed'], 'false');
   assert.deepEqual(raekkerI(skaerm), ugensRetter());
   send(chip(), 'click');
