@@ -260,6 +260,16 @@ function indkoebSkaerm() {
   const liste = Lager.hentListe();
   if (liste.laast) return nyereListe();
   if (!liste.varer.length) {
+    // Åbnet med boblen på voksendelens forside: ugeplanen kunne ikke blive til et link (en plan fra en nyere udgave, eller
+    // en uge mere end 8 uger væk). Teksten er til den voksne ved ugeplanen, og «Til ugeplanen» står før feltet, så den
+    // ses uden at rulle på 360×780 (review V6, 17-11)
+    if (K.fraVoksne?.()) {
+      return K.statusSkaerm({
+        titel: 'Der er ingen indkøbsliste endnu',
+        tekst: 'Listen laves af ugeplanen, men den kunne ikke læses her. Genindlæs siden. Er ugen mere end 8 uger væk, så hold «Ny uge» under «Mere» for at tømme planen.',
+        handling: el('div', { class: 'status-handling' }, videreKnap(), linkForm()),
+      });
+    }
     return K.statusSkaerm({
       titel: 'Der er ingen indkøbsliste endnu',
       tekst: 'Tryk på linket fra iPad\'en, så kommer listen her. Er Tumbi Køkken lagt på hjemmeskærmen, så kopiér linket, og sæt det ind herunder.',

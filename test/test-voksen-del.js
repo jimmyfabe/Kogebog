@@ -788,6 +788,11 @@ test('listens statusskærme har «Til ugeplanen» i stedet for huset, når liste
   const tom = fraBoblen();
   assert.equal(tom.status.titel, 'Der er ingen indkøbsliste endnu');
   assert.ok(knapperI(tom).includes('Til ugeplanen') && !knapperI(tom).includes('Til forsiden'), 'knapperne: ' + knapperI(tom));
+  // Teksten er til den voksne ved ugeplanen, ikke til telefonen, og «Til ugeplanen» står før feltet til linket, så den
+  // ses uden at rulle på 360×780 (review V6, 17-11: «Tryk på linket fra iPad'en» på iPad'en)
+  assert.doesNotMatch(tom.status.tekst, /iPad/);
+  assert.match(tom.status.tekst, /ugeplanen/);
+  assert.deepEqual(knapperI(tom), ['Til ugeplanen', 'Hent listen']);
   send(find(tom.status.handling, (e) => e.tag === 'button' && tekstAf(e) === 'Til ugeplanen')[0], 'click');
   assert.equal(location.hash, '#/voksen');
   assert.equal(V.rute(location.hash), true);
