@@ -2165,19 +2165,24 @@ async function former(browser) {
 // under statuslinjen og er måske 47 px lavere (844 − 47 − 18 = 779). Det er ikke set på en rigtig iPhone, så dér er
 // antallet også kun en måling, og kravet på 390×826 er det samme som før.
 // E2E_TRINBUND_RETTER=a,b begrænser retterne, E2E_TRINBUND_SKAERME=w360,iphone-status skærmene
-// Hvor der ikke er krav, må antallet ikke vokse i stilhed: højst loftet, tallet fra seneste kørsel. 360×780: 2 trin
-// (dino-vulkan 10, 62 px, og medister-i-ovn 2, 16 px). 390×779: 0. Før 17-11 var det 4 og 2: noterne i sushi-bowl-med-tun
-// trin 3 og stegte-ris-med-aeg-aerter-og-majs trin 2 var de længste, og «text-wrap: pretty» på noterne (review U12) gjorde
+// Hvor der ikke er krav, må listen ikke vokse i stilhed: trinene, der var under bunden ved seneste kørsel, står i
+// W360_KENDT og STATUS_KENDT, og et trin, der ikke står dér, fejler (review K13 17-11: et loft på et antal lod et nyt trin
+// komme ind i stilhed, når et kendt kom over bunden). Et kendt trin, der kommer over bunden, skrives som måling, så det kan
+// tages af listen. 360×780: dino-vulkan trin 10 (62 px) og medister-i-ovn trin 2 (16 px). 390×779: ingen. Før 17-11 var
+// det 4 og 2 trin: noterne i sushi-bowl-med-tun trin 3 og stegte-ris-med-aeg-aerter-og-majs trin 2 var de længste, og
+// «text-wrap: pretty» på noterne (review U12) gjorde
 // stegte-ris' én linje længere. Noterne er kortet (329 → 258 og 296 → 248 tegn, review K5 og V8 17-11) med samme
 // madsikkerhed (ris fra i går: kølet hurtigt, højst et døgn, varm hele vejen igennem), og pretty er beholdt.
-// Målt 17-11 på de fire retter (e2e trinbund). Bliver tallet mindre, sænkes loftet; skal det op, er det et valg, der begrundes her
-const W360_LOFT = 2;
-const STATUS_LOFT = 0;
+// Målt 17-11 på de fire retter (e2e trinbund). Skal et trin på listen, er det et valg, der begrundes her
+const W360_KENDT = ['dino-vulkan trin 10', 'medister-i-ovn trin 2'];
+const STATUS_KENDT = [];
 const TRINBUND = [
   { navn: 'iphone-safe', viewport: { width: 390, height: 826 }, hasTouch: true, krav: true },
-  { navn: 'w360', viewport: { width: 360, height: 780 }, hasTouch: true, krav: false, loft: W360_LOFT },
-  { navn: 'iphone-status', viewport: { width: 390, height: 779 }, hasTouch: true, krav: false, loft: STATUS_LOFT },
+  { navn: 'w360', viewport: { width: 360, height: 780 }, hasTouch: true, krav: false, kendt: W360_KENDT },
+  { navn: 'iphone-status', viewport: { width: 390, height: 779 }, hasTouch: true, krav: false, kendt: STATUS_KENDT },
 ];
+// Rettens id i et trins navn fra trinbundTrin («dino-vulkan trin 10», «koedsovs grønt trin 3»)
+const trinbundRet = (navn) => navn.replace(/ (grønt )?trin \d+$/u, '');
 // Trinene, trinbund måler i en ret: alle grundrettens og de skiftede og nye trin i retten med mere grønt
 // (#/ret/<id>/groen/trin/<nr>). js/groent.js giver netop dem en lydfil, der begynder med «groen-»; de andre er grundrettens
 // trin med et andet nummer. Passer antallet ikke med rettelsen i opskriften («trin» og «nye_trin»), stopper delen, så de
@@ -2230,7 +2235,7 @@ async function trinOverBund(browser) {
         const b = await overBunden(side, ['.trin-tekst']);
         antal++;
         const over = b.rul === 0 && b.ses;
-        if (!over) under.push({ hvor, px: b.bund - b.fast });
+        if (!over) under.push({ hvor, navn, px: b.bund - b.fast });
         if (sk.krav) tjek(over, hvor + ': trinets sidste indhold ligger under den faste bund ved rulning 0 (bund ' + b.bund + ' > bundens top ' + b.fast + ', rulning ' + b.rul + ')');
         tjek(Math.abs(r.billede - r.bredde) <= 1, hvor + ': billedet skal være rundt (' + r.bredde + '×' + r.billede + ' px)');
         tjek(r.billede >= r.mindstMaal - 1, hvor + ': billedet er mindre end sit mindste mål (' + r.billede + ' < ' + Math.round(r.mindstMaal) + ' px, min(140px, 72vw, 34svh))');
@@ -2242,7 +2247,13 @@ async function trinOverBund(browser) {
     const vaerst = under.slice(0, 5).map((u) => u.hvor + ' ' + u.px + ' px').join(', ');
     maalNu(n + ': ' + under.length + ' af ' + antal + ' trin har indhold under den faste bund ved rulning 0' + (under.length ? ' (værst ' + vaerst + ')' : ''));
     maalNu(n + ': mindste billede ' + mindst.px + ' px (' + mindst.hvor + '), mindre end normalt på ' + mindre + ' trin');
-    if (!sk.krav) tjek(under.length <= sk.loft, n + ': ' + under.length + ' trin har indhold under den faste bund ved rulning 0, flere end loftet på ' + sk.loft + ' (værst ' + vaerst + ')');
+    if (!sk.krav) {
+      const nye = under.filter((u) => !sk.kendt.includes(u.navn));
+      tjek(!nye.length, n + ': ' + nye.length + ' trin har indhold under den faste bund ved rulning 0 og står ikke i den kendte liste: '
+        + nye.map((u) => u.navn + ' ' + u.px + ' px').join(', '));
+      const vaek = sk.kendt.filter((x) => retter.includes(trinbundRet(x)) && !under.some((u) => u.navn === x));
+      if (vaek.length) maalNu(n + ': ' + vaek.join(', ') + ' har ikke længere indhold under den faste bund: tag dem af den kendte liste');
+    }
     tjek(side.fejl.length === 0, n + ' (trinene over bunden): ' + side.fejl.join(' | '));
     await ctx.close();
   }
@@ -2365,16 +2376,22 @@ async function trinUdenEnsommeOrd(browser) {
 // V3: et kort ord alene på en linje i kortets navn («Kikærteburger / i / fuldkornsbolle», «… med pølser og / majs»): 18 af
 // 255 kort på 360 px og 4 på 390 px før kortNavn (js/tekst.js), 4 og 1 efter, og 0 før og efter på 1180, 844×390, 667×375,
 // 768×1024 og 1280. KORT_ALENE_KENDT er dem, der er tilbage: det korte ord kan kun undgås ved at dele et ord med et stykke
-// på højst 4 bogstaver alene til sidst («senneps- / sovs»). Andre kort må ikke få det
+// på højst 4 bogstaver alene til sidst («senneps- / sovs»). Andre kort må ikke få det. Listen har kortets linjer, som de
+// blev målt, ikke rettens id (review K13 17-11): en kendt ret, der bryder anderledes (et andet kort ord alene), fejler.
+// iPad (1180) er med fra 17-11 med en tom liste, så et kort ord alene dér også fejler
 const NAVNE_PAA = [
   { navn: 'w360', viewport: { width: 360, height: 780 }, hasTouch: true },
   ...SKAERME,
 ];
-const KORT_NAVNE_PAA = ['w360', 'iphone'];
+const KORT_NAVNE_PAA = ['w360', 'iphone', 'ipad'];
+// Målt 17-11 (e2e titler). Kortets linjer adskilt af « / », uden bløde bindestreger; et hårdt mellemrum står som \u00a0
 const KORT_ALENE_KENDT = {
-  w360: ['groen-porre-kartoffelsuppe-med-bacondrys', 'julemedisterboller', 'flaeskesteg-med-sproed-svaer', 'nytaarstorsk-med-sennepssovs'],
-  iphone: ['julemedisterboller'],
+  w360: ['Grøn porre- / kartoffelsuppe / med / bacondrys', 'Små / julemedister / boller', 'Flæskesteg / med / sprød\u00a0svær',
+    'Nytårstorsk / med / sennepssovs'],
+  iphone: ['Små / julemedister / boller'],
+  ipad: [],
 };
+const kortAlene = (x) => x.id + ' «' + x.tekst + '»';
 // I browseren: elementernes tekst, der fylder flere linjer og har en linje med kun ét ord på højst 4 bogstaver.
 // Linjen findes for hvert synligt tegn. En linje, der slutter midt i et ord (ved en bindestreg eller en blød bindestreg,
 // fx «Taco-» over «bradepande»), tæller ikke; et kort stykke af et delt ord alene på linjen efter («choko- / lade- / is») gør
@@ -2449,15 +2466,15 @@ async function navneUdenBrud(browser) {
         if (!vist) continue;
         await side.evaluate(() => document.fonts.ready);
         const k = await side.evaluate(korteOrdAlene, '.gruppe-skaerm .kort[data-ret] .kort-navn');
-        const nye = k.filter((x) => !KORT_ALENE_KENDT[n].includes(x.id));
-        tjek(!nye.length, n + ' gruppe ' + g.id + ': kortets navn har et kort ord alene på en linje: ' + nye.map((x) => x.id + ' «' + x.tekst + '»').join(', '));
+        const nye = k.filter((x) => !KORT_ALENE_KENDT[n].includes(x.tekst));
+        tjek(!nye.length, n + ' gruppe ' + g.id + ': kortets navn har et kort ord alene på en linje: ' + nye.map(kortAlene).join(', '));
         const d = await side.evaluate(delteOrd, '.gruppe-skaerm .kort[data-ret] .kort-navn');
         tjek(!d.length, n + ' gruppe ' + g.id + ': kortets navn er delt midt i ordet uden bindestreg: ' + d.join(', '));
-        alene.push(...k.map((x) => x.id));
+        alene.push(...k);
       }
-      maalNu(n + ': ' + alene.length + ' af ' + index.length + ' kort har et kort ord alene på en linje' + (alene.length ? ' (' + alene.join(', ') + ')' : ''));
-      const vaek = KORT_ALENE_KENDT[n].filter((id) => !alene.includes(id));
-      if (vaek.length) maalNu(n + ': ' + vaek.join(', ') + ' har ikke længere et kort ord alene: tag dem af KORT_ALENE_KENDT');
+      maalNu(n + ': ' + alene.length + ' af ' + index.length + ' kort har et kort ord alene på en linje' + (alene.length ? ' (' + alene.map(kortAlene).join(', ') + ')' : ''));
+      const vaek = KORT_ALENE_KENDT[n].filter((t) => !alene.some((x) => x.tekst === t));
+      if (vaek.length) maalNu(n + ': ' + vaek.map((t) => '«' + t + '»').join(', ') + ' står ikke længere med et kort ord alene: tag dem af KORT_ALENE_KENDT');
     }
     tjek(side.fejl.length === 0, n + ' (navnene): ' + side.fejl.join(' | '));
     await ctx.close();
