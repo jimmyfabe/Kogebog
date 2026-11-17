@@ -583,6 +583,43 @@ test('ingredienslinjens ikon er varens ikon i VARER (karry er et krydderi)', () 
     'ingrediens 12: ikonet skal være varens ikon i VARER, "krydderi" for «karry», fandt "krydderurt"');
 });
 
+// De tre regler fra reviewet 17-11 (U4, F7 og F8) har hver sin test som K1, så en regel, der slås fra, ses
+const erstat = (tekst, gammel, ny) => {
+  assert.ok(tekst.includes(gammel), 'testen forventede «' + gammel + '» i «' + tekst + '»');
+  return tekst.replace(gammel, ny);
+};
+const trinMed = (d, tekst) => {
+  const i = d.recipeInstructions.findIndex((s) => s.text === tekst);
+  assert.ok(i >= 0, 'testen forventede trinnet «' + tekst + '»');
+  return { st: d.recipeInstructions[i], nr: i + 1 };
+};
+
+test('der drysses i en skål med «drysse-skaal», ikke med pizza-billedet til «drysse» (review U4)', () => {
+  forventFejl('opskrifter/hvidloegsnaan.json', (d) => { trinMed(d, 'Drys bagepulver og salt i skålen.').st.tumbi.verbum = 'drysse'; },
+    ': der drysses i en skål, så brug verbet "drysse-skaal" (billedet til «drysse» er en pizza): «Drys bagepulver og salt i skålen.»');
+  forventFejl('opskrifter/kartoffeltortilla-med-aerter-og-spinat.json', (d) => { trinMed(d, 'Drys salt, peber og ost i en stor skål.').st.tumbi.verbum = 'drysse'; },
+    'så brug verbet "drysse-skaal"');
+});
+
+test('kødet tjekkes i trinnet, der koger, ikke når barnet smager (review F7)', () => {
+  let nr;
+  forventFejl('opskrifter/japansk-keema-karry.json', (d) => {
+    const t = trinMed(d, 'Smag på karryen.');
+    nr = t.nr;
+    t.st.tumbi.note += ' Kødet skal være gennemstegt uden noget lyserødt.';
+  }, ': barnet smager her, så tjekket af kødet hører til i trinnet før, der steger eller koger');
+  assert.equal(nr, 13);
+});
+
+test('en ret med karry, der nævner sine allergener, nævner også karryen (review F8)', () => {
+  forventFejl('opskrifter/kylling-i-karry.json', (d) => { d.description = erstat(d.description, ' og karryen (den kan have selleri, sennep eller gluten)', ''); },
+    '«description» nævner allergenerne, men ikke karryen (den kan have selleri, sennep eller gluten)');
+  forventFejl('opskrifter/kylling-i-karry.json', (d) => {
+    const st = d.recipeInstructions[0].tumbi;
+    st.note = erstat(st.note, ' Karryen kan have selleri, sennep eller gluten: tjek den.', '');
+  }, 'noten i trin 1 nævner allergenerne, men ikke karryen');
+});
+
 test('dejen er ikke rå efter stegning eller bagning', () => {
   const rul = (text) => ({ '@type': 'HowToStep', text, tumbi: { verbum: 'rulle' } });
   forventGyldig('opskrifter/pandekager.json', (d) => { d.recipeInstructions.splice(10, 0, rul('Rul pandekagen sammen.')); });
