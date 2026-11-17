@@ -324,8 +324,9 @@ async function forloeb(browser, H, skaerm) {
     maengde: b.querySelector('.ingr-maengde')?.textContent || '',
     skaleret: Boolean(b.querySelector('.ingr-maengde.skaleret')),
     // Navneordet bøjet efter mængden («1,5 grøntsagsbouillonterning»), som printet viser det. Skærmen har bløde
-    // bindestreger i de lange ord (medBloede i js/tekst.js, review V1 17-11), som linjen fra skaleretIngrediens ikke har
-    navn: (b.querySelector('.ingr-navn')?.textContent || '').replace(/\u00ad/g, ''),
+    // bindestreger i de lange ord (medBloede i js/tekst.js, review V1 17-11) og et hårdt mellemrum efter et tal (holdSammen,
+    // review V10), som linjen fra skaleretIngrediens ikke har
+    navn: (b.querySelector('.ingr-navn')?.textContent || '').replace(/\u00ad/g, '').replace(/\u00a0/g, ' '),
     label: b.getAttribute('aria-label'),
   })));
   const forkert = linjer.map((l, i) => [l, vist[i]]).filter(([l, v]) => !v || v.maengde !== l.maengde || v.navn !== l.navn || v.skaleret !== l.skaleret || v.label !== l.tekst);

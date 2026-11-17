@@ -625,6 +625,38 @@ test('rettens titel deles som kortets navn, og skærmlæseren får hele navnet (
   assert.match(rod.querySelector('h1 .titel-navn').textContent, /med\u00a0ris$/u);
 });
 
+// Review V10 (17-11): i ingredienslisten stod tallet og ordet efter det på hver sin linje («(à 80 / g)», «15 / %»). Navnet
+// på skærmen binder dem med et hårdt mellemrum (holdSammen i js/indkoeb.js), men knappens navn til skærmlæseren og stemmen
+// får det ikke
+test('ingrediensens tal og ordet efter står sammen på skærmen, men ikke i skærmlæserens navn (review V10)', async () => {
+  const ids = INDEX.grupper.flatMap((g) => g.retter);
+  await start('#/ret/' + ids[0]);
+  const loese = [];
+  const iNavnet = [];
+  let bundne = 0;
+  for (const id of ids) {
+    gaaTil('#/ret/' + id);
+    await ventPaaHentning();
+    for (const b of rod.querySelectorAll('.ingr')) {
+      const vist = b.querySelector('.ingr-navn').textContent;
+      if (/[\d½] \S/u.test(vist)) loese.push(id + ' «' + vist + '»');
+      if (/[\d½]\u00a0/u.test(vist)) bundne++;
+      if (UDEN_DELING.test(b.getAttribute('aria-label'))) iNavnet.push(id + ' «' + b.getAttribute('aria-label') + '»');
+    }
+  }
+  assert.deepEqual(loese, [], loese.length + ' ingrediensnavne med et tal, der kan stå alene på en linje');
+  assert.deepEqual(iNavnet, []);
+  assert.ok(bundne >= 20, bundne + ' navne med et bundet tal');
+  gaaTil('#/ret/groen-porre-kartoffelsuppe-med-bacondrys');
+  await ventPaaHentning();
+  const floede = rod.querySelectorAll('.ingr').find((b) => b.querySelector('.ingr-navn').textContent.includes('15\u00a0%'));
+  assert.ok(floede, 'madlavningsfløde 15 % med et hårdt mellemrum');
+  assert.ok(!UDEN_DELING.test(floede.getAttribute('aria-label')), floede.getAttribute('aria-label'));
+  sagt = [];
+  tryk(floede);
+  assert.ok(sagt.length === 1 && !UDEN_DELING.test(sagt[0].tekst), JSON.stringify(sagt));
+});
+
 test('tilbage fra en ret: pilen fører til gruppen på samme rulleplads og med fokus på kortet', async () => {
   await start('#/gruppe/fisk');
   const id = kort()[3];

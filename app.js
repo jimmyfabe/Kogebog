@@ -18,6 +18,7 @@ import { valgt, GROENT_TEKST } from './js/groent.js';
 import { VERBER, INGREDIENSER, GRUPPER, DYR, grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, grafikGruppe, GRAFIK_FAERDIG } from './js/katalog.js';
 import { formaterTid, varighed, varighedTale, idag, dagIUgen } from './js/tid.js';
 import { minutterTekst, utenBloede, medBloede } from './js/tekst.js';
+import { holdSammen } from './js/indkoeb.js';
 import { UDGAVE } from './js/version.js';
 import { soeg, soegeord } from './js/soeg.js';
 import { FAVORITTER, HASH_SOEG, hashGruppe, gruppeRute, forsideGrupper, gruppeRetter, gruppeAf, tilbageFraRet, rulleplads } from './js/grupper.js';
@@ -486,8 +487,9 @@ function retSkaerm(m) {
       x.ikon ? billede(grafikIngrediens(x.ikon), '', 'ingr-ikon') : null,
       l.maengde ? el('span', { class: 'ingr-maengde' + (l.skaleret ? ' skaleret' : ''), tekst: l.maengde }) : null,
       // Navnet bøjes med mængden («1 gulerod», «2 gulerødder»), som i printet: begge fra skaleretIngrediens. Lange ord får
-      // bløde bindestreger, så den smalle kolonne ikke deler dem midt i ordet uden tegn (review V1); knappens aria-label har dem ikke
-      el('span', { class: 'ingr-navn', tekst: medBloede(l.navn) }));
+      // bløde bindestreger, så den smalle kolonne ikke deler dem midt i ordet uden tegn (review V1), og et tal hænger sammen med
+      // ordet efter («80 g», «15 %», «1 tsk», review V10). Knappens aria-label og stemmen (l.tekst) har ingen af delene
+      el('span', { class: 'ingr-navn', tekst: medBloede(holdSammen(l.navn)) }));
     // Røst har kun lyd til opskriftens egne mængder: en skaleret linje siges af iPad-stemmen (js/replikker.js)
     b.addEventListener('click', klik(() => (l.skaleret
       ? Tale.sig(R.ingrediensSkaleret(l.tekst), { knap: b })
