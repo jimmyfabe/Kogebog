@@ -54,7 +54,21 @@ const BLAD_IKONER = ['krydderurt', 'mynte', 'groenkaal']; // blade, der plukkes:
 // Købte varer i en ret med karry, hvis allergener afhænger af mærket: [varen i fejlbeskeden, ordet i teksten, ejefald i
 // eksemplet]. Teksten sender den voksne til pakken og slår ikke allergenerne fast (review K1 17-11: «gluten (naanbrødet)»;
 // K2: ketchuppen i keema-karryen var ikke nævnt; K3: «Tjek bouillonen for selleri», men den kan også have soja eller sennep)
-const PAKKE_VARER = [['naanbrødet', /naan/iu, 'naanbrødets'], ['ketchuppen', /ketchup/iu, 'ketchuppens'], ['bouillonen', /bouillon/iu, 'bouillonens']];
+// Pakken nævnes med eksempler efter «fx», så teksten ikke lover en fuld liste (review K3 17-11: «oftest selleri, nogle gange
+// soja eller sennep»). Makaronien kan have æg (review K15 17-11: kødkålen sagde kun «Allergener: gluten»)
+const PAKKE_VARER = [['naanbrødet', /naan/iu, 'naanbrødets'], ['ketchuppen', /ketchup/iu, 'ketchuppens'], ['bouillonen', /bouillon/iu, 'bouillonens'],
+  ['makaronien', /makaroni/iu, 'makaroniens']];
+// Allergener, en vare altid har, uanset mærket: [varen i ingredienserne, allergenet]. I en ret med karry står de fast i
+// teksten, før pakken nævnes (review K10 17-11: naanbrødet er altid gluten, yoghurten altid mælk, men linse-dhalen sendte
+// den voksne til naanbrødets pakke for gluten). Kokosmælk er ikke mælk
+const ALTID_ALLERGENER = [
+  [/naan|makaroni|pasta|spaghetti|nudler|hvede|havregryn/iu, 'gluten'],
+  [/yoghurt|(?<!kokos)mælk|smør|fløde|(?<!\p{L})ost(?!\p{L})/iu, 'mælk'],
+  [/(?<!\p{L})æg(?!\p{L})/iu, 'æg'],
+  [/laks|torsk|fisk|(?<!\p{L})tun(?!\p{L})/iu, 'fisk'],
+  [/soja/iu, 'soja'],
+];
+const FX = /(?<!\p{L})fx(?!\p{L})/u;
 const VENTER = 'docs/venter-paa-billede'; // færdige retter uden retbillede (docs/venter-paa-billede/README.md)
 // Ordvagten går efter stammen: hvert ord, der begynder med stammen (eller har den inde i sig, hvor det står), fanges med
 // alle bøjninger («smelte», «skære», «æggeblommer»). En liste over tilladte former mangler altid en form, og så slipper
@@ -482,12 +496,27 @@ export function valider(rod = ROD) {
       for (const [hvor, tekst] of [['«description»', allergener], ['noten i trin 1', trin1Note]]) {
         if (typeof tekst === 'string' && /Allergener:|Retten (?:kan )?indeholde/u.test(tekst) && !/karry/iu.test(tekst)) f(hvor + ' nævner allergenerne, men ikke karryen (den kan have selleri, sennep eller gluten): «' + tekst + '»');
       }
-      // Hver købt vare fra PAKKE_VARER står i samme sætning (eller led efter «;») som ordet «pakke» i begge tekster
+      // Hver købt vare fra PAKKE_VARER står i samme sætning (eller led efter «;») som ordet «pakke» i begge tekster, og leddet
+      // giver eksempler med «fx»
       for (const [vare, re, ejefald] of PAKKE_VARER) {
         if (!re.test(ingrTekst)) continue;
         for (const [hvor, tekst] of [['«description»', allergener], ['noten i trin 1', trin1Note]]) {
           if (typeof tekst !== 'string' || !tekst) continue; // en manglende tekst er meldt ovenfor
-          if (!tekst.split(/[.;]/u).some((led) => re.test(led) && /pakke/iu.test(led))) f(hvor + ': allergenerne i ' + vare + ' afhænger af mærket, så teksten skal sende den voksne til pakken, fx «Tjek ' + ejefald + ' pakke for allergener»: «' + tekst + '»');
+          const led = tekst.split(/[.;]/u).find((l) => re.test(l) && /pakke/iu.test(l));
+          if (!led) f(hvor + ': allergenerne i ' + vare + ' afhænger af mærket, så teksten skal sende den voksne til pakken, fx «Tjek ' + ejefald + ' pakke for allergener, fx …»: «' + tekst + '»');
+          else if (!FX.test(led)) f(hvor + ': pakken nævnes med eksempler efter «fx», så teksten ikke lover en fuld liste, fx «Tjek ' + ejefald + ' pakke for allergener, fx selleri og sennep»: «' + tekst + '»');
+        }
+      }
+      // De faste allergener står før pakken: i «Allergener: …» før det første «;», og i sætningen «Retten indeholder …»
+      const fast = [
+        ['«description»', allergener ? allergener.split(';')[0] : null, 'Allergener: '],
+        ['noten i trin 1', typeof trin1Note === 'string' && /Retten (?:kan )?indeholde/u.test(trin1Note) ? (/Retten indeholder[^.]*/u.exec(trin1Note) || [''])[0] : null, 'Retten indeholder '],
+      ];
+      for (const [re, allergen] of ALTID_ALLERGENER) {
+        const vare = re.exec(ingrTekst);
+        if (!vare) continue;
+        for (const [hvor, tekst, start] of fast) {
+          if (tekst !== null && !tekst.includes(allergen)) f(hvor + ': «' + vare[0] + '» har altid ' + allergen + ', så det står fast før pakken: «' + start + allergen + ' …»');
         }
       }
     }

@@ -621,11 +621,11 @@ test('kødet tjekkes i trinnet, der koger, ikke når barnet smager (review F7)',
 });
 
 test('en ret med karry, der nævner sine allergener, nævner også karryen (review F8)', () => {
-  forventFejl('opskrifter/kylling-i-karry.json', (d) => { d.description = erstat(d.description, ' og karryen (den kan have selleri, sennep eller gluten)', ''); },
+  forventFejl('opskrifter/kylling-i-karry.json', (d) => { d.description = erstat(d.description, 'bouillonens og karryens pakke', 'bouillonens pakke'); },
     '«description» nævner allergenerne, men ikke karryen (den kan have selleri, sennep eller gluten)');
   forventFejl('opskrifter/kylling-i-karry.json', (d) => {
     const st = d.recipeInstructions[0].tumbi;
-    st.note = erstat(st.note, ' Karryen kan have selleri, sennep eller gluten: tjek den.', '');
+    st.note = erstat(st.note, 'bouillonens og karryens pakke', 'bouillonens pakke');
   }, 'noten i trin 1 nævner allergenerne, men ikke karryen');
   // En ret med karry nævner altid sine allergener, også når karryen er den eneste (tillæg til review F8, 17-11)
   forventFejl('opskrifter/kyllingekarry.json', (d) => { d.description = erstat(d.description, ' Allergener: tjek karryen (den kan have selleri, sennep eller gluten).', ''); },
@@ -643,21 +643,63 @@ test('en karryret sender den voksne til pakken for købte varer (review K1-K3)',
     '«description»: allergenerne i naanbrødet afhænger af mærket, så teksten skal sende den voksne til pakken');
   forventFejl('opskrifter/linse-dhal.json', (d) => {
     const st = d.recipeInstructions[0].tumbi;
-    st.note = erstat(st.note, 'Retten indeholder mælk (yoghurten). Tjek naanbrødets og karryens pakke', 'Retten indeholder gluten (naanbrødet) og mælk (yoghurten). Tjek karryens pakke');
+    st.note = erstat(st.note, 'Tjek naanbrødets og karryens pakke', 'Tjek karryens pakke');
   }, 'noten i trin 1: allergenerne i naanbrødet afhænger af mærket');
   // K2: ketchuppen kan have selleri eller sennep
   forventFejl('opskrifter/japansk-keema-karry.json', (d) => {
     const st = d.recipeInstructions[0].tumbi;
-    st.note = erstat(st.note, 'Tjek karryens og ketchuppens pakke for selleri og sennep.', 'Tjek karryen for sennep og selleri.');
+    st.note = erstat(st.note, 'Tjek karryens og ketchuppens pakke for flere allergener, fx selleri og sennep.', 'Tjek karryen for sennep og selleri.');
   }, 'noten i trin 1: allergenerne i ketchuppen afhænger af mærket');
   // K3: bouillonen kan have selleri, soja eller sennep, så «Tjek bouillonen for selleri» er for smal
   forventFejl('opskrifter/boller-i-karry.json', (d) => {
-    d.description = erstat(d.description, 'tjek bouillonens pakke for allergener (oftest selleri, nogle gange soja eller sennep)', 'tjek bouillonen for selleri');
+    d.description = erstat(d.description, 'tjek bouillonens og karryens pakke for flere allergener, fx selleri, soja og sennep',
+      'tjek bouillonen for selleri; tjek karryens pakke for flere allergener, fx sennep');
   }, '«description»: allergenerne i bouillonen afhænger af mærket');
   forventFejl('opskrifter/koedkaal-med-makaroni.json', (d) => {
     const st = d.recipeInstructions[0].tumbi;
-    st.note = erstat(st.note, 'Tjek bouillonens pakke for allergener (oftest selleri, nogle gange soja eller sennep).', 'Tjek bouillonen for selleri.');
+    st.note = erstat(st.note, 'Tjek makaroniens, bouillonens og karryens pakke for flere allergener, fx æg, selleri, soja og sennep.',
+      'Tjek makaroniens og karryens pakke for flere allergener, fx æg, selleri og sennep. Tjek bouillonen for selleri.');
   }, 'noten i trin 1: allergenerne i bouillonen afhænger af mærket');
+});
+
+// Review K3 (17-11, ensartet ordlyd): pakken nævnes med eksempler efter «fx», så teksten ikke lover en fuld liste
+// («oftest selleri, nogle gange soja eller sennep»)
+test('en karryret nævner pakkens allergener med «fx», ikke som en fuld liste (review K3)', () => {
+  forventFejl('opskrifter/boller-i-karry.json', (d) => {
+    d.description = erstat(d.description, 'for flere allergener, fx selleri, soja og sennep', 'for allergener (oftest selleri, nogle gange soja eller sennep)');
+  }, '«description»: pakken nævnes med eksempler efter «fx»');
+  forventFejl('opskrifter/japansk-keema-karry.json', (d) => {
+    const st = d.recipeInstructions[0].tumbi;
+    st.note = erstat(st.note, 'pakke for flere allergener, fx selleri og sennep', 'pakke for selleri og sennep');
+  }, 'noten i trin 1: pakken nævnes med eksempler efter «fx»');
+  // «fx» skal stå i samme led som pakken, ikke et andet sted i teksten
+  forventFejl('opskrifter/kylling-i-karry.json', (d) => {
+    d.description = erstat(d.description, 'for flere allergener, fx selleri, soja og sennep.', 'for selleri, soja og sennep. Spis fx med naan.');
+  }, '«description»: pakken nævnes med eksempler efter «fx»');
+});
+
+// Review K10 (17-11): allergener, en vare altid har (naanbrødet er gluten, yoghurten mælk), står fast i teksten. Pakken
+// nævnes kun for resten. K15: makaronien er gluten, og dens pakke nævnes (den kan have æg)
+test('en karryret nævner de faste allergener før pakken, og makaronien har sin pakke (review K10 og K15)', () => {
+  forventFejl('opskrifter/linse-dhal.json', (d) => { d.description = erstat(d.description, 'Allergener: gluten (naanbrødet) og mælk', 'Allergener: mælk'); },
+    '«description»: «naan» har altid gluten, så det står fast før pakken: «Allergener: gluten …»');
+  forventFejl('opskrifter/linse-dhal.json', (d) => {
+    const st = d.recipeInstructions[0].tumbi;
+    st.note = erstat(st.note, 'Retten indeholder gluten (naanbrødet) og mælk (yoghurten).', 'Retten indeholder mælk (yoghurten).');
+  }, 'noten i trin 1: «naan» har altid gluten, så det står fast før pakken: «Retten indeholder gluten …»');
+  forventFejl('opskrifter/linse-dhal.json', (d) => {
+    const st = d.recipeInstructions[0].tumbi;
+    st.note = erstat(st.note, 'Retten indeholder gluten (naanbrødet) og mælk (yoghurten).', 'Retten indeholder gluten (naanbrødet).');
+  }, 'noten i trin 1: «yoghurt» har altid mælk');
+  // «Retten kan indeholde» er ikke fast
+  forventFejl('opskrifter/koedkaal-med-makaroni.json', (d) => {
+    const st = d.recipeInstructions[0].tumbi;
+    st.note = erstat(st.note, 'Retten indeholder gluten (hvede i makaronien).', 'Retten kan indeholde gluten.');
+  }, 'noten i trin 1: «makaroni» har altid gluten');
+  forventFejl('opskrifter/koedkaal-med-makaroni.json', (d) => { d.description = erstat(d.description, 'tjek makaroniens, bouillonens', 'tjek bouillonens'); },
+    '«description»: allergenerne i makaronien afhænger af mærket');
+  // Kokosmælk er ikke mælk: kyllingekarryen nævner ingen faste allergener og er gyldig
+  forventGyldig('opskrifter/kyllingekarry.json', () => {});
 });
 
 test('dejen er ikke rå efter stegning eller bagning', () => {
