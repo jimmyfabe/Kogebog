@@ -143,6 +143,12 @@ function tilListe(ukendte) {
   history.replaceState(null, '', '#/indkoeb');
 }
 
+// Knappen væk fra listens statusskærme: «Til ugeplanen», når listen er åbnet med boblen på voksendelens forside (som
+// listeTopbar), ellers huset til børnenes forside, der lukker låsen (tillæg til review U2, 17-11)
+const videreKnap = () => (K.fraVoksne?.()
+  ? K.knap('Til ugeplanen', { ikonNavn: 'kalender', onclick: () => K.naviger('#/voksen') })
+  : K.knap('Til forsiden', { ikonNavn: 'hjem', onclick: () => K.naviger('#/') }));
+
 // Et link til en uge mere end 8 uger tilbage er ikke skåret over: den voksne laver en ny plan (code review U4, 23-10)
 function linkFejl(fejl) {
   const [besked, tekst] = {
@@ -153,20 +159,20 @@ function linkFejl(fejl) {
     titel: besked.replace(/\.$/, ''),
     tekst,
     handling: el('div', { class: 'status-handling' }, linkForm(),
-      K.knap('Til forsiden', { ikonNavn: 'hjem', onclick: () => K.naviger('#/') })),
+      videreKnap()),
   });
 }
 
 const nyereListe = () => K.statusSkaerm({
   titel: 'Listen er lavet med en nyere udgave',
   tekst: 'Telefonen har en ældre udgave af Tumbi Køkken, som ikke må skrive i listen. Genindlæs siden, så henter telefonen den nye udgave.',
-  handling: K.knap('Til forsiden', { ikonNavn: 'hjem', onclick: () => K.naviger('#/') }),
+  handling: videreKnap(),
 });
 
 const gemFejl = () => K.statusSkaerm({
   titel: 'Listen kunne ikke gemmes på telefonen',
   tekst: 'Måske er privat browsing slået til, eller telefonen er fuld. Slå privat browsing fra, og åbn linket igen.',
-  handling: K.knap('Til forsiden', { ikonNavn: 'hjem', onclick: () => K.naviger('#/') }),
+  handling: videreKnap(),
 });
 
 function hentSkaerm(kode) {
@@ -192,7 +198,7 @@ function hentSkaerm(kode) {
     return K.statusSkaerm({
       titel: 'Der er ingen retter i ugeplanen',
       tekst: (ukendte ? ukendtTekst(ukendte) + '. ' : '') + 'Vælg retter på iPad\'en, og send linket igen.',
-      handling: K.knap('Til forsiden', { ikonNavn: 'hjem', onclick: () => K.naviger('#/') }),
+      handling: videreKnap(),
     });
   }
   const ny = { kode: r.kode, uge: r.uge, varer: saml(valg), koebt: [], harVi: [], hentet: Date.now() };
@@ -258,7 +264,7 @@ function indkoebSkaerm() {
       titel: 'Der er ingen indkøbsliste endnu',
       tekst: 'Tryk på linket fra iPad\'en, så kommer listen her. Er Tumbi Køkken lagt på hjemmeskærmen, så kopiér linket, og sæt det ind herunder.',
       handling: el('div', { class: 'status-handling' }, linkForm(),
-        K.knap('Til forsiden', { ikonNavn: 'hjem', onclick: () => K.naviger('#/') })),
+        videreKnap()),
     });
   }
   return listeSkaerm(liste);

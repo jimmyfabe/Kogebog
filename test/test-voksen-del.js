@@ -763,6 +763,50 @@ test('indkøbslisten fra forsidens boble: låsen bliver åben, og listen har «T
   assert.ok(!V.erLaastOp() && !V.fraVoksne());
 });
 
+// Tillæg til review U2 (17-11): en låst plan (eller en uge, linket ikke kan nå) sender boblen til #/indkoeb. Uden en liste
+// på enheden var det statusskærmen «Der er ingen indkøbsliste endnu» med huset til børnenes forside, som lukker låsen.
+// Listens statusskærme har «Til ugeplanen», når listen er åbnet fra voksendelen, ligesom listens top
+test('listens statusskærme har «Til ugeplanen» i stedet for huset, når listen er åbnet med boblen (tillæg til review U2)', (t) => {
+  const gemt = ['kog-uge-v1', 'kog-liste-v1'].map((k) => [k, lageret.get(k)]);
+  t.after(() => {
+    V.rute('#/');
+    for (const [k, v] of gemt) if (v === undefined) lageret.delete(k); else lageret.set(k, v);
+  });
+  medOpskrifter();
+  aabnSide('');
+  const knapperI = (s) => find(s.status.handling, (e) => e.tag === 'button').map(tekstAf);
+  const fraBoblen = () => {
+    V.rute('#/voksen');
+    send(medFokusNavn(vist.at(-1), 'indkoeb'), 'click');
+    assert.equal(location.hash, '#/indkoeb');
+    assert.equal(V.rute(location.hash), false);
+    assert.ok(V.fraVoksne());
+    return U.skaerm(U.rute(location.hash));
+  };
+  lageret.set('kog-uge-v1', JSON.stringify({ v: 99, dage: [] }));
+  lageret.delete('kog-liste-v1');
+  const tom = fraBoblen();
+  assert.equal(tom.status.titel, 'Der er ingen indkøbsliste endnu');
+  assert.ok(knapperI(tom).includes('Til ugeplanen') && !knapperI(tom).includes('Til forsiden'), 'knapperne: ' + knapperI(tom));
+  send(find(tom.status.handling, (e) => e.tag === 'button' && tekstAf(e) === 'Til ugeplanen')[0], 'click');
+  assert.equal(location.hash, '#/voksen');
+  assert.equal(V.rute(location.hash), true);
+  assert.equal(h1I(vist.at(-1)), 'Ugeplan', 'forsiden, ikke holdet');
+  // En liste fra en nyere udgave: samme knap
+  lageret.set('kog-liste-v1', JSON.stringify({ v: 99, varer: [] }));
+  const nyere = fraBoblen();
+  assert.equal(nyere.status.titel, 'Listen er lavet med en nyere udgave');
+  assert.deepEqual(knapperI(nyere), ['Til ugeplanen']);
+  // Åbnet på anden vis (telefonens link, browserens «tilbage»): huset til børnenes forside som før
+  V.rute('#/voksen');
+  V.rute('#/indkoeb');
+  assert.ok(!V.fraVoksne());
+  assert.deepEqual(knapperI(U.skaerm(U.rute('#/indkoeb'))), ['Til forsiden']);
+  lageret.delete('kog-liste-v1');
+  const tomTilBoern = U.skaerm(U.rute('#/indkoeb'));
+  assert.ok(knapperI(tomTilBoern).includes('Til forsiden') && !knapperI(tomTilBoern).includes('Til ugeplanen'));
+});
+
 test('forsiden: en tom uge har en hvid «Indkøbsliste», og et tryk siger, hvad man gør, i stedet for at åbne listen (review U3)', (t) => {
   t.after(() => V.rute('#/'));
   medOpskrifter();
