@@ -225,7 +225,7 @@ test('ingrediensen deles i mængde og navn', () => {
 // skærmen: teksten uden dem er den samme
 test('lange ord får bløde bindestreger til skærmen, og teksten uden dem er den samme (review V1)', () => {
   const vis = (t) => medBloede(t).replace(/\u00ad/g, '·');
-  assert.equal(vis('1 grøntsagsbouillonterning'), '1 grønt·sags·bouil·lon·terning');
+  assert.equal(vis('1 grøntsagsbouillonterning'), '1 grønt·sags·bouillon·terning');
   assert.equal(vis('Kyllingebryst'), 'Kyllinge·bryst');
   assert.equal(vis('3 store gulerødder'), '3 store gule·rødder');
   assert.equal(vis('frisk appelsinjuice'), 'frisk appel·sin·juice');
@@ -238,11 +238,16 @@ test('lange ord får bløde bindestreger til skærmen, og teksten uden dem er de
   assert.equal(vis('Kikærteburger i fuld\u00adkornsbolle'), 'Kikærte·burger i fuld·kornsbolle');
   // Ord på højst ORD_MAKS bogstaver står urørte, og et ord på 9 med brede bogstaver deles («kokosmæl|k» på 360 px)
   assert.equal(vis('lasagne og kokosmælk'), 'lasagne og kokos·mælk');
-  assert.equal(vis('chokoladeis'), 'choko·lade·is');
+  assert.equal(vis('chokoladeis'), 'chokolade·is');
+  // «bouillon» og «chokolade» står hele (review V9 og V16): «bouil-/lon» og «choko-/lade» var svære at læse
+  assert.equal(vis('2 bouillonterninger'), '2 bouillon·ternin·ger');
+  assert.equal(vis('chokoladestykker og chokolade'), 'chokolade·stykker og chokolade');
   // Et ord, der begynder med et kort led uden at være sammensat med det, deles ikke forkert
   assert.equal(vis('Finskbrød'), 'Finskbrød');
   // Alle ingredienser i alle retter, også skaleret og med mere grønt: uden de bløde bindestreger er teksten den samme,
-  // og intet stykke er længere end ORD_MAKS bogstaver. Fejler testen på et nyt ord, så skriv dets led i ORDLED
+  // og intet stykke er længere end ORD_MAKS bogstaver. Fejler testen på et nyt ord, så skriv dets led i ORDLED.
+  // Undtaget er «chokolade», der med vilje står hel (review V16)
+  const HELE = new Set(['chokolade']);
   const index = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter/index.json'), 'utf8'));
   const lange = new Set();
   let navne = 0;
@@ -259,7 +264,7 @@ test('lange ord får bløde bindestreger til skærmen, og teksten uden dem er de
           navne++;
           const delt = medBloede(navn);
           assert.equal(utenBloede(delt), utenBloede(navn));
-          for (const stykke of delt.split(/[^\p{L}]+/u)) if (stykke.length > ORD_MAKS) lange.add(stykke + ' (' + id + ')');
+          for (const stykke of delt.split(/[^\p{L}]+/u)) if (stykke.length > ORD_MAKS && !HELE.has(stykke.toLowerCase())) lange.add(stykke + ' (' + id + ')');
         }
       });
     }

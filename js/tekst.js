@@ -32,14 +32,15 @@ export const utenBloede = (t) => String(t).replace(/\u00ad/g, '');
 // bindestreg (retternes navne), står urørt. Stemmen, skærmlæseren (attr i js/dom.js) og søgningen (js/soeg.js) får
 // teksten uden dem: brug kun medBloede, hvor teksten vises. test-tid.js fejler på en ingrediens med et stykke på over
 // ORD_MAKS bogstaver: skriv så ordets led her. Et kort led (fx «fin») deler også ord, det ikke er led i («Fin·skbrød»),
-// så skriv hellere hele leddet («fin·valse»)
+// så skriv hellere hele leddet («fin·valse»). «bouillon» og «chokolade» deles ikke («grøntsagsbouil-/lonterning»,
+// «choko-/lade» på 360 px, review V9 og V16 17-11), selvom «chokolade» har 9 bogstaver (smalle bogstaver)
 export const ORD_MAKS = 8;
 export const ORD_REST = 3;
 const BLOED = '\u00ad';
 const ORDLED = [
   // Første led i sammensatte ord (med bindebogstavet)
-  'alle·hånde', 'ananas', 'ande', 'appel·sin', 'asparges', 'avo·cado', 'bage', 'banan', 'blad', 'blomst', 'bouil·lon', 'burger',
-  'butter', 'cayenne', 'cherry', 'chili', 'choko·lade', 'choko·lade·is', 'cider', 'citron', 'cocktail', 'dansk', 'fajita',
+  'alle·hånde', 'ananas', 'ande', 'appel·sin', 'asparges', 'avo·cado', 'bage', 'banan', 'blad', 'blomst', 'bouillon', 'burger',
+  'butter', 'cayenne', 'cherry', 'chili', 'chokolade', 'chokolade·is', 'cider', 'citron', 'cocktail', 'dansk', 'fajita',
   'fin·valse', 'fint', 'fiske', 'flage', 'flor', 'flæske', 'fløde', 'frisk', 'fuld·korns', 'færdig', 'grahams', 'groft',
   'græskar', 'grønt', 'grønt·sags', 'gule', 'gule·rods', 'ham·burger', 'hassel', 'havre', 'hel·bladet', 'hindbær',
   'hjorte·taks', 'hoisin', 'hvidløgs', 'hylde', 'iceberg', 'inder', 'is', 'jasmin', 'jule', 'kanel', 'kartof·fel', 'kidney',
