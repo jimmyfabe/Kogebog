@@ -641,6 +641,14 @@ test('en karryret sender den voksne til pakken for købte varer (review K1-K3)',
     const st = d.recipeInstructions[0].tumbi;
     st.note = erstat(st.note, 'Tjek karryens og ketchuppens pakke for selleri og sennep.', 'Tjek karryen for sennep og selleri.');
   }, 'noten i trin 1: allergenerne i ketchuppen afhænger af mærket');
+  // K3: bouillonen kan have selleri, soja eller sennep, så «Tjek bouillonen for selleri» er for smal
+  forventFejl('opskrifter/boller-i-karry.json', (d) => {
+    d.description = erstat(d.description, 'tjek bouillonens pakke for allergener (oftest selleri, nogle gange soja eller sennep)', 'tjek bouillonen for selleri');
+  }, '«description»: allergenerne i bouillonen afhænger af mærket');
+  forventFejl('opskrifter/koedkaal-med-makaroni.json', (d) => {
+    const st = d.recipeInstructions[0].tumbi;
+    st.note = erstat(st.note, 'Tjek bouillonens pakke for allergener (oftest selleri, nogle gange soja eller sennep).', 'Tjek bouillonen for selleri.');
+  }, 'noten i trin 1: allergenerne i bouillonen afhænger af mærket');
 });
 
 test('dejen er ikke rå efter stegning eller bagning', () => {

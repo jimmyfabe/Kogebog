@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "Recipe",
   "name": "Boller i karry med ris",
-  "description": "Den klassiske danske ret: små kødboller af grisekød kogt i bouillon og vendt i en mild karrysovs med æble og ærter. Ris ved siden af. Allergener: æg, mælk og gluten (hvede i melet); tjek bouillonen for selleri og karryen (den kan have selleri, sennep eller gluten).",
+  "description": "Den klassiske danske ret: små kødboller af grisekød kogt i bouillon og vendt i en mild karrysovs med æble og ærter. Ris ved siden af. Allergener: æg, mælk og gluten (hvede i melet); tjek bouillonens pakke for allergener (oftest selleri, nogle gange soja eller sennep) og karryen (den kan have selleri, sennep eller gluten).",
   "image": "grafik/ret-boller-i-karry.webp",
   "inLanguage": "da",
   "recipeYield": "4 personer",
@@ -29,7 +29,7 @@
   ],
   "tool": ["si", "riskoger (eller gryde med låg)", "stor gryde med låg", "rivejern", "røreskål", "tallerken", "kniv", "skærebræt", "skål til kogevandet", "piskeris"],
   "recipeInstructions": [
-    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Retten indeholder æg, mælk og gluten (hvede i melet). Tjek bouillonen for selleri. Karryen kan have selleri, sennep eller gluten: tjek den."}},
+    {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Retten indeholder æg, mælk og gluten (hvede i melet). Tjek bouillonens pakke for allergener (oftest selleri, nogle gange soja eller sennep). Karryen kan have selleri, sennep eller gluten: tjek den."}},
     {"@type": "HowToStep", "text": "Skyl risene i en si.", "tumbi": {"verbum": "haelde", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er næsten klart. Barnet kan selv."}},
     {"@type": "HowToStep", "text": "Tænd for riskogeren.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris", "vand"], "note": "Ris og vand i riskogeren efter stregerne i skålen eller som på posen. Barnet kan hælde i, før den tændes. Risene er færdige efter ca. 25 min og holdes varme. Ingen riskoger: kog dem under låg i en gryde som på posen."}},
     {"@type": "HowToStep", "text": "Kog vand med bouillon i en gryde.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand", "bouillon"], "note": "1,5 l vand og bouillonterningen i en stor gryde med låg på en bagerste plade, med håndtagene ind. Skru ned, når det koger: vandet skal kun simre, når bollerne kommer i."}},

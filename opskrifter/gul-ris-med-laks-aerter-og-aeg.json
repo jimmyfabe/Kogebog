@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "Recipe",
   "name": "Gul ris med laks, ærter og æg",
-  "description": "Milde gule ris med karry i én pande, med flager af varmrøget laks, grønne ærter og halve hårdkogte æg på toppen. Barnet piller æggene. Allergener: æg og fisk; tjek bouillonen for selleri og karryen (den kan have selleri, sennep eller gluten).",
+  "description": "Milde gule ris med karry i én pande, med flager af varmrøget laks, grønne ærter og halve hårdkogte æg på toppen. Barnet piller æggene. Allergener: æg og fisk; tjek bouillonens pakke for allergener (oftest selleri, nogle gange soja eller sennep) og karryen (den kan have selleri, sennep eller gluten).",
   "image": "grafik/ret-gul-ris-med-laks-aerter-og-aeg.webp",
   "inLanguage": "da",
   "recipeYield": "4 personer",
@@ -22,7 +22,7 @@
   ],
   "tool": ["dyb pande med låg", "lille gryde", "målebæger", "grydeske", "ske", "tallerken", "kniv", "skærebræt"],
   "recipeInstructions": [
-    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder æg og fisk. Tjek bouillonen for selleri. Karryen kan have selleri, sennep eller gluten: tjek den." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder æg og fisk. Tjek bouillonens pakke for allergener (oftest selleri, nogle gange soja eller sennep). Karryen kan have selleri, sennep eller gluten: tjek den." } },
     { "@type": "HowToStep", "text": "Kog vand til æggene i en lille gryde.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "Ca. 1 liter vand. Det skal koge, før æggene kommer i." } },
     { "@type": "HowToStep", "text": "Mål 3½ dl ris.", "tumbi": { "verbum": "maale", "ikoner": ["ris"] } },
     { "@type": "HowToStep", "text": "Rist karryen kort i olien på panden.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["olie", "krydderi"], "note": "1 spsk olie og 2 tsk mild karry i en dyb pande ved middel varme. Kun et halvt minut, så den ikke brænder på." } },
