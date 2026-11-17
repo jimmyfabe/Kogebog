@@ -15,6 +15,23 @@ import { hentIndex } from '../js/data.js';
 import { lavTaleliste, alleReplikker } from '../vaerktoej/lav-taleliste.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+// Alle retter i index.json med deres JSON, til testene af delingen på skærmen (medBloede og kortNavn)
+const RETTER = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter/index.json'), 'utf8')).grupper.flatMap((g) => g.retter)
+  .map((id) => ({ id, json: JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8')) }));
+// Alle ingrediensnavne, som ingredienslisten kan vise dem: i alle retter, også skaleret og med mere grønt
+function ingrediensNavne() {
+  const navne = [];
+  for (const { id, json } of RETTER) {
+    for (const r of [json, medMereGroent(json)].filter(Boolean)) {
+      const m = lavModel(r);
+      m.ingredienser.forEach((x, i) => {
+        navne.push({ id, navn: x.navn });
+        if (faktorFor(m, 4)) for (const f of [0.5, 1.5, 2, 3]) navne.push({ id, navn: skaleretIngrediens(m, i, f).navn });
+      });
+    }
+  }
+  return navne;
+}
 
 test('timeren regner fra sluttidspunktet', () => {
   const t = nyTimer(1_000_000, 600);
@@ -248,28 +265,14 @@ test('lange ord får bløde bindestreger til skærmen, og teksten uden dem er de
   // og intet stykke er længere end ORD_MAKS bogstaver. Fejler testen på et nyt ord, så skriv dets led i ORDLED.
   // Undtaget er «chokolade», der med vilje står hel (review V16)
   const HELE = new Set(['chokolade']);
-  const index = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter/index.json'), 'utf8'));
   const lange = new Set();
-  let navne = 0;
-  for (const id of index.grupper.flatMap((g) => g.retter)) {
-    const json = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8'));
-    for (const r of [json, medMereGroent(json)].filter(Boolean)) {
-      const m = lavModel(r);
-      m.ingredienser.forEach((x, i) => {
-        const alle = [x.navn];
-        for (const f of [0.5, 1.5, 2, 3]) {
-          if (faktorFor(m, 4)) alle.push(skaleretIngrediens(m, i, f).navn);
-        }
-        for (const navn of alle) {
-          navne++;
-          const delt = medBloede(navn);
-          assert.equal(utenBloede(delt), utenBloede(navn));
-          for (const stykke of delt.split(/[^\p{L}]+/u)) if (stykke.length > ORD_MAKS && !HELE.has(stykke.toLowerCase())) lange.add(stykke + ' (' + id + ')');
-        }
-      });
-    }
+  const navne = ingrediensNavne();
+  for (const { id, navn } of navne) {
+    const delt = medBloede(navn);
+    assert.equal(utenBloede(delt), utenBloede(navn));
+    for (const stykke of delt.split(/[^\p{L}]+/u)) if (stykke.length > ORD_MAKS && !HELE.has(stykke.toLowerCase())) lange.add(stykke + ' (' + id + ')');
   }
-  assert.ok(navne > 3000, navne + ' navne');
+  assert.ok(navne.length > 3000, navne.length + ' navne');
   assert.deepEqual([...lange], [], 'stykker på over ' + ORD_MAKS + ' bogstaver i ingrediensnavnene');
 });
 
@@ -284,9 +287,7 @@ test('kortets navn: intet kort stykke til sidst, og et kort sidste ord hænger p
   assert.equal(vis('Brunede kartofler'), 'Brunede kartofler');
   assert.equal(vis('Pandekager'), 'Pandekager');
   // Alle retters navne: uden de bløde bindestreger og med almindelige mellemrum er teksten den samme
-  const index = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter/index.json'), 'utf8'));
-  for (const id of index.grupper.flatMap((g) => g.retter)) {
-    const navn = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8')).name;
+  for (const { id, json: { name: navn } } of RETTER) {
     assert.equal(utenBloede(kortNavn(navn)).replace(/\u00a0/g, ' '), utenBloede(navn).replace(/\u00a0/g, ' '), id);
   }
 });
@@ -304,16 +305,35 @@ test('kortets navn: forfatterens deling af et langt ord bliver stående (review 
   assert.equal(vis('Pasta med abcdefghi\u00adjklm'), 'Pasta med abcdefghi·jklm');
   // Alle retters navne: et stykke, som kortNavn samler, har højst SAMLET_MAKS bogstaver, og kransekagetårnet deles
   // «kranse·kagetårn», så titlen ikke ender med «tårn» alene (review V11)
-  const index = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter/index.json'), 'utf8'));
   const for_lange = [];
-  for (const id of index.grupper.flatMap((g) => g.retter)) {
-    const navn = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter', id + '.json'), 'utf8')).name;
+  for (const { id, json: { name: navn } } of RETTER) {
     const foer = new Set(medBloede(navn).split(/[^\p{L}]+/u));
     for (const s of kortNavn(navn).split(/[^\p{L}]+/u)) if (!foer.has(s) && s.length > SAMLET_MAKS) for_lange.push(s + ' (' + id + ')');
   }
   assert.deepEqual(for_lange, []);
   const kransekage = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter/lille-kransekagetaarn.json'), 'utf8')).name;
   assert.equal(vis(kransekage), 'Lille kranse·kagetårn');
+});
+
+// Review K14 (17-11): testene ovenfor ser kun på længden af stykkerne, ikke på, om ordet er delt det rigtige sted
+// («val·nød·der»). Alle delte ord på skærmen (ingredienserne, også skaleret og med mere grønt, og kortenes navne) står
+// derfor på en fast liste, som et menneske har læst igennem. Et nyt eller ændret ord fejler testen: se delingen efter,
+// og skriv det på listen (eller ret ORDLED i js/tekst.js)
+test('alle delte ord på skærmen står på den gennemlæste liste i test/delte-ord.txt (review K14)', () => {
+  assert.equal(medBloede('valnødder').replace(/\u00ad/g, '·'), 'val·nødder');
+  const nu = new Set();
+  const tilfoej = (tekst) => {
+    for (const o of tekst.split(/[^\p{L}\u00ad]+/u)) if (o.includes('\u00ad')) nu.add(o.replace(/\u00ad/g, '·').toLowerCase());
+  };
+  for (const { navn } of ingrediensNavne()) tilfoej(medBloede(navn));
+  for (const { json } of RETTER) tilfoej(kortNavn(json.name));
+  const liste = new Set(fs.readFileSync(path.join(ROD, 'test/delte-ord.txt'), 'utf8').split(/\r?\n/)
+    .filter((l) => l && !l.startsWith('#')));
+  const nye = [...nu].filter((o) => !liste.has(o));
+  const vaek = [...liste].filter((o) => !nu.has(o));
+  assert.deepEqual({ nye, vaek }, { nye: [], vaek: [] },
+    'Nye delte ord: se delingen efter, og skriv dem i test/delte-ord.txt. Væk: fjern dem fra listen');
+  assert.ok(liste.size > 200, liste.size + ' ord på listen');
 });
 
 test('modellen af pandekagerne', () => {

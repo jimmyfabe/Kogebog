@@ -47,8 +47,8 @@ const ORDLED = [
   'kikærte', 'kirsebær', 'kokos', 'konditor', 'kyllinge', 'kød', 'lager', 'lakse', 'lasagne', 'laurbær', 'lever', 'løg',
   'mad', 'mad·lavnings', 'mellem', 'mozza·rella', 'muffin', 'muskat', 'nytårs', 'oliven', 'party', 'pasta', 'peber', 'perle',
   'persille', 'pesto', 'piske', 'pizza', 'pynte', 'risen·grød', 'rod', 'rød', 'rør', 'salat', 'senneps', 'skinke', 'solbær',
-  'solsikke', 'spege', 'spids', 'stege', 'sukker', 'suppe', 'svine', 'taco', 'toast', 'tomat', 'torske', 'val·nød', 'vand',
-  'vanil·je', 'vanil·je·is', 'varm', 'wok', 'æble', 'ægge',
+  'solsikke', 'spege', 'spids', 'stege', 'sukker', 'suppe', 'svine', 'taco', 'toast', 'tomat', 'torske', 'val·nød',
+  'val·nødder', 'vand', 'vanil·je', 'vanil·je·is', 'varm', 'wok', 'æble', 'ægge',
   // Ord, der ikke er sammensatte, delt efter stavelsen
   'abri·koser', 'balsa·mico', 'basi·likum', 'champig·non', 'clemen·tin', 'crou·toner', 'dres·sing', 'karde·momme', 'kartof·ler',
   'koncen·trat', 'konden·ser', 'kote·letter', 'mareng·sen', 'marme·lade', 'marsh·mallow', 'mayon·naise', 'pasteu·riser',
