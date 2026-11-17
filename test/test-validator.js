@@ -609,6 +609,9 @@ test('kødet tjekkes i trinnet, der koger, ikke når barnet smager (review F7)',
     t.st.tumbi.note += ' Kødet skal være gennemstegt uden noget lyserødt.';
   }, ': barnet smager her, så tjekket af kødet hører til i trinnet før, der steger eller koger');
   assert.equal(nr, 13);
+  // Med stort forbogstav i starten af en sætning gælder reglen også
+  forventFejl('opskrifter/japansk-keema-karry.json', (d) => { trinMed(d, 'Smag på karryen.').st.tumbi.note += ' Lyserødt kød skal tilbage i gryden.'; },
+    ': barnet smager her, så tjekket af kødet hører til i trinnet før');
 });
 
 test('en ret med karry, der nævner sine allergener, nævner også karryen (review F8)', () => {
