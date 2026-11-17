@@ -291,19 +291,19 @@ test('kortets navn: intet kort stykke til sidst, og et kort sidste ord hænger p
   }
 });
 
-// Review K12 (17-11): kortNavn fjernede ogs\u00e5 forfatterens egen deling foran et kort sidste stykke, s\u00e5 \u00abLille
-// kransekage|t\u00e5rn\u00bb fik et ord p\u00e5 14 bogstaver, der ikke kunne deles. Delingen fjernes kun, n\u00e5r stykket, de to bliver til,
-// har h\u00f8jst SAMLET_MAKS bogstaver
-test('kortets navn: forfatterens deling af et langt ord bliver st\u00e5ende (review K12)', () => {
-  const vis = (t) => kortNavn(t).replace(/\u00ad/g, '\u00b7').replace(/\u00a0/g, '_');
+// Review K12 (17-11): kortNavn fjernede også forfatterens egen deling foran et kort sidste stykke, så «Lille
+// kransekage|tårn» fik et ord på 14 bogstaver, der ikke kunne deles. Delingen fjernes kun, når stykket, de to bliver til,
+// har højst SAMLET_MAKS bogstaver
+test('kortets navn: forfatterens deling af et langt ord bliver stående (review K12)', () => {
+  const vis = (t) => kortNavn(t).replace(/\u00ad/g, '·').replace(/\u00a0/g, '_');
   assert.equal(SAMLET_MAKS, ORD_MAKS + 4);
-  assert.equal(vis('Lille kransekage\u00adt\u00e5rn'), 'Lille kransekage\u00b7t\u00e5rn');
-  assert.equal(vis('Lille kranse\u00adkage\u00adt\u00e5rn'), 'Lille kranse\u00b7kaget\u00e5rn');
-  // Et stykke p\u00e5 pr\u00e6cis SAMLET_MAKS bogstaver samles stadig (sennepssovs har 11)
+  assert.equal(vis('Lille kransekage\u00adtårn'), 'Lille kransekage·tårn');
+  assert.equal(vis('Lille kranse\u00adkage\u00adtårn'), 'Lille kranse·kagetårn');
+  // Et stykke på præcis SAMLET_MAKS bogstaver samles stadig (sennepssovs har 11)
   assert.equal(vis('Pasta med abcdefgh\u00adijkl'), 'Pasta med abcdefghijkl');
-  assert.equal(vis('Pasta med abcdefghi\u00adjklm'), 'Pasta med abcdefghi\u00b7jklm');
-  // Alle retters navne: et stykke, som kortNavn samler, har h\u00f8jst SAMLET_MAKS bogstaver, og kransekaget\u00e5rnet deles
-  // \u00abkranse\u00b7kaget\u00e5rn\u00bb, s\u00e5 titlen ikke ender med \u00abt\u00e5rn\u00bb alene (review V11)
+  assert.equal(vis('Pasta med abcdefghi\u00adjklm'), 'Pasta med abcdefghi·jklm');
+  // Alle retters navne: et stykke, som kortNavn samler, har højst SAMLET_MAKS bogstaver, og kransekagetårnet deles
+  // «kranse·kagetårn», så titlen ikke ender med «tårn» alene (review V11)
   const index = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter/index.json'), 'utf8'));
   const for_lange = [];
   for (const id of index.grupper.flatMap((g) => g.retter)) {
@@ -313,7 +313,7 @@ test('kortets navn: forfatterens deling af et langt ord bliver st\u00e5ende (rev
   }
   assert.deepEqual(for_lange, []);
   const kransekage = JSON.parse(fs.readFileSync(path.join(ROD, 'opskrifter/lille-kransekagetaarn.json'), 'utf8')).name;
-  assert.equal(vis(kransekage), 'Lille kranse\u00b7kaget\u00e5rn');
+  assert.equal(vis(kransekage), 'Lille kranse·kagetårn');
 });
 
 test('modellen af pandekagerne', () => {
