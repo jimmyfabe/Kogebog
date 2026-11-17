@@ -38,7 +38,7 @@ test('--bund regner med samme safe-area som den faste bund', () => {
   const medBund = blokke(CSS).regler.filter((b) => b.hoved.startsWith('@media') && b.regler.some((r) => /--bund\s*:/.test(r.deklarationer)));
   assert.ok(medBund.length >= 3, 'forventede --bund i mindst tre @media-blokke (iPhone, iPad på højkant, på langs), fandt ' + medBund.length);
   for (const blok of medBund) {
-    // En fast bund: position: sticky og bottom: 0 (.handlinger på retten, trinene og børnenes valg, .uge-handlinger på ugeplanen)
+    // En fast bund: position: sticky og bottom: 0 (.handlinger på retten, trinene og børnenes valg)
     const bund = blok.regler.find((r) => /position\s*:\s*sticky/.test(r.deklarationer) && /(^|;)\s*bottom\s*:\s*0\s*(;|$)/.test(r.deklarationer));
     assert.ok(bund, blok.hoved + ': --bund står i en blok uden en fast bund (en regel med position: sticky og bottom: 0)');
     const padding = SAFE_AREA.exec(bund.deklarationer);
@@ -519,4 +519,23 @@ test('familie.css bruger kun app.css\' klassenavne fra en kendt liste (ingen nav
   const begge = [...klasser(FAM)].filter((k) => iApp.has(k)).sort();
   const KENDTE = ['.faerdig', '.ikon', '.knap', '.topbar-midte', '.uge-besked', '.valg-par', '.valgt'];
   assert.deepEqual(begge.filter((k) => !KENDTE.includes(k)), [], 'klasser i både app.css og familie.css (giv dem et nyt navn, eller skriv dem i KENDTE)');
+});
+
+// Review F9 (17-11): app.css havde regler til den gamle ugeplans skærme (.uge-handlinger, .ret-valg, .dag-vaerktoej,
+// .dag-hoved, .uden-billede m.fl.), som intet tegnede efter v11 (f020bf1), og --bund-testen tjekkede en fast bund, der
+// ikke fandtes. Hvert klassenavn i app.css skal stå som et ord i en streng i koden (app.js, index.html og js/ uden
+// printets filer, som har print.css), eller være et kendt sammensat navn ('anim-' + verbum, 'k' + tal). Groft: korte
+// navne som .dag og .uge står også i koden som adresser og slipper igennem
+test('hvert klassenavn i app.css bruges af koden (ingen døde regler)', () => {
+  const filer = ['app.js', 'index.html', ...fs.readdirSync(path.join(ROD, 'js')).filter((f) => f.endsWith('.js') && !f.startsWith('print')).map((f) => 'js/' + f)];
+  const ord = new Set();
+  for (const f of filer) {
+    for (const m of fs.readFileSync(path.join(ROD, f), 'utf8').matchAll(/'([^'\n]*)'|"([^"\n]*)"|`([^`]*)`/g)) {
+      for (const o of (m[1] ?? m[2] ?? m[3]).split(/\s+/)) ord.add(o);
+    }
+  }
+  const SAMMENSAT = /^(anim-[a-z-]+|k\d)$/;
+  const klasser = new Set(CSS.replace(/\{[^{}]*\}/g, '{}').match(/\.[a-zA-Z][\w-]*/g) ?? []);
+  const doede = [...klasser].map((k) => k.slice(1)).filter((k) => !ord.has(k) && !SAMMENSAT.test(k)).sort();
+  assert.deepEqual(doede, [], 'klasser i app.css, som ingen kode bruger (fjern reglerne, eller ret navnet)');
 });

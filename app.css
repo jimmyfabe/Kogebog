@@ -205,7 +205,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 /* Hvor bunden står fast, sætter --bund dens højde plus lidt luft. En knap i indholdet, der får fokus (Tab, VoiceOver),
    rulles så op over bunden i stedet for ind under den. Margen på knapperne og ikke scroll-padding på html: med den
    rullede siden også, når fokus gik mellem knapperne i selve bunden, så indholdet hoppede (390 px: 0 → 176 → 348 px) */
-.ret-indhold button, .scene button, .valg-indhold button, .uge-indstillinger button, .uge-dage button { scroll-margin-bottom: var(--bund, 0px); }
+.ret-indhold button, .scene button, .valg-indhold button, .uge-indstillinger button { scroll-margin-bottom: var(--bund, 0px); }
 
 /* ---------- Status: henter, tom, fejl ---------- */
 
@@ -832,9 +832,6 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 [data-dag="6"] { --dag: var(--dej-lys); }
 
 .uge { width: 100%; max-width: 1080px; margin: 0 auto; padding: 4px 24px 40px; display: flex; flex-direction: column; gap: 16px; }
-.uge-hoved { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 4px 16px; }
-.uge-hoved h1 { font-size: 38px; line-height: 1.1; }
-.uge-nr { font-size: 20px; font-weight: 750; color: var(--kakao-blid); }
 .uge-indstillinger { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 36px; }
 .indstilling { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
 .indstilling-navn { font-size: 18px; font-weight: 750; }
@@ -842,36 +839,20 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .knap.trin-knap { width: 52px; min-width: 52px; min-height: 52px; box-shadow: 0 3px 0 var(--kakao); }
 .knap.trin-knap .ikon { width: 24px; height: 24px; }
 .stepper-tal { min-width: 4.4em; text-align: center; font-size: 19px; font-weight: 800; font-variant-numeric: tabular-nums; }
-.valg-par, .filtre { display: flex; flex-wrap: wrap; gap: 10px; }
+.valg-par { display: flex; flex-wrap: wrap; gap: 10px; }
 .knap.valg { min-width: 56px; padding: 0 20px; }
 /* Valgt: sennep og en dobbelt så tyk kant, så tilstanden ikke kun er en farve */
-.knap.valg[aria-pressed="true"], .knap.filter[aria-pressed="true"] { background: var(--sennep); box-shadow: inset 0 0 0 3px var(--kakao), 0 5px 0 var(--kakao); }
+.knap.valg[aria-pressed="true"] { background: var(--sennep); box-shadow: inset 0 0 0 3px var(--kakao), 0 5px 0 var(--kakao); }
 
-/* margin og padding: 0, ellers rykker <ol> dagene 40 px ind (kun <ul> er nulstillet øverst) */
-.uge-dage { margin: 0; padding: 0; list-style: none; border: var(--kant); border-radius: 22px; background: var(--hvid); overflow: hidden; }
 .dag { display: grid; grid-template-columns: 128px 84px minmax(0, 1fr) auto; align-items: center; gap: 0 16px; min-height: 104px; padding-right: 16px; }
 .dag.fri { grid-template-columns: 128px minmax(0, 1fr) auto; min-height: 76px; }
-/* Uden billede (retten er ikke længere i ugeplanen, eller opskriften kunne ikke hentes) bruger teksten også billedets
-   kolonne. I den kolonne alene (64-84 px) blev «Ukendt ret» delt midt i et ord, og «internetforbindelsen.» løb ud */
-.dag.uden-billede .dag-ret { grid-column: 2 / span 2; }
 .dag + .dag { border-top: 2px solid var(--creme-moerk); }
-.dag-hoved { align-self: stretch; display: flex; flex-direction: column; justify-content: center; padding: 10px 16px; background: var(--dag, var(--creme)); border-right: 2px solid var(--creme-moerk); }
-.dag-navn { font-size: 21px; font-weight: 800; }
-.dag-dato { font-size: 16px; color: var(--kakao-blid); }
-.dag-billede { width: 84px; height: 84px; object-fit: contain; }
-.dag-ret { min-width: 0; display: flex; flex-direction: column; gap: 2px; padding: 10px 0; }
-.dag-ret-navn { font-size: 21px; font-weight: 800; line-height: 1.2; overflow-wrap: anywhere; }
-.dag.fri .dag-ret-navn { font-weight: 700; color: var(--kakao-blid); }
 .dag-meta { font-size: 16px; color: var(--kakao-blid); }
 .dag-af { display: flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 700; }
 .dag-dyr { width: 28px; height: 28px; }
-.dag-knapper { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 10px; padding: 10px 0; }
 
-.uge-bund { display: flex; flex-direction: column; gap: 14px; padding-top: 4px; }
 .uge-sum { font-size: 24px; font-weight: 800; }
 .uge-tom { display: flex; flex-direction: column; align-items: flex-start; gap: 12px; font-size: 18px; color: var(--kakao-blid); }
-.uge-knapper { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
-.uge-knapper .ny-uge { margin-left: auto; }
 a.knap { color: inherit; text-decoration: none; }
 /* scroll-margin: beskeden rulles frem efter Send og Del (visBesked i js/ugeplan.js) og skal have luft til skærmkanten.
    Uden stod den kant i kant med bunden og en brøkdel af en pixel under (målt 766-820 af 820 på iPad'en, UI-review V1) */
@@ -881,65 +862,16 @@ a.knap { color: inherit; text-decoration: none; }
 .kopi-felt { width: 100%; min-height: 48px; padding: 10px 12px; border: var(--kant); border-radius: 12px; background: var(--hvid); color: var(--kakao); font: inherit; font-size: 16px; }
 textarea.kopi-felt { resize: vertical; }
 
-/* Valget af en ret til en dag */
-.dag-vaerktoej { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
-.ret-valg { border: var(--kant); border-radius: 22px; background: var(--hvid); overflow: hidden; }
-/* position: relative holder skærmlæserens tekst til ⚡ (.sr-kun) inde i rækken */
-.ret-valg-raekke { position: relative; display: grid; grid-template-columns: 84px minmax(0, 1fr) auto; align-items: center; gap: 0 16px; padding: 8px 16px; }
-/* Rammen om billedet, så ⚡ kan sidde på dets hjørne som på børnenes kort. justify-self: start, så rammen er lige så
-   bred som billedet: ved 701-900 px er billedet 72 px i en kolonne på 84 px, og så sad ⚡ 12 px fra billedets hjørne (udledt af CSS'en, review 31-10) */
-.dag-billede-ramme { position: relative; display: block; justify-self: start; }
-.dag-billede-ramme .lyn { width: 28px; }
-.ret-valg-raekke + .ret-valg-raekke { border-top: 2px solid var(--creme-moerk); }
-.ret-valg-raekke.valgt { background: var(--sennep-lys); }
-.ret-valg-raekke > .uge-besked { grid-column: 1 / -1; margin: 6px 0 4px; }
-
 @media (max-width: 900px) {
   .dag { grid-template-columns: 112px 72px minmax(0, 1fr); }
-  .dag-hoved { grid-row: span 2; }
-  .dag-billede { width: 72px; height: 72px; }
-  .dag:not(.fri) .dag-knapper { grid-column: 2 / -1; justify-content: flex-start; padding-top: 0; }
-  .dag.uden-billede .dag-ret { grid-column: 2 / -1; }
   .dag.fri { grid-template-columns: 112px minmax(0, 1fr) auto; }
-  .dag.fri .dag-hoved { grid-row: auto; }
 }
 
 /* Telefonen: dagen står som en farvet stribe øverst i rækken, og knapperne får deres egen linje */
 @media (max-width: 700px) {
   .uge { padding: 4px 12px 32px; gap: 14px; }
-  .uge-hoved h1 { font-size: 32px; }
   .dag { grid-template-columns: 64px minmax(0, 1fr); gap: 0 12px; padding: 0 12px; }
   .dag.fri { grid-template-columns: minmax(0, 1fr) auto; }
-  .dag-hoved, .dag.fri .dag-hoved { grid-column: 1 / -1; grid-row: auto; flex-direction: row; align-items: baseline; gap: 10px; margin: 0 -12px; padding: 8px 12px; border-right: 0; border-bottom: 2px solid var(--creme-moerk); }
-  .dag-billede { width: 64px; height: 64px; }
-  .dag:not(.fri) .dag-knapper { grid-column: 1 / -1; padding: 0 0 12px; }
-  .dag.uden-billede .dag-ret { grid-column: 1 / -1; }
-  /* Portionerne har deres egen linje, og «Byt ret» og «Fjern» står sammen under dem: før brød «Fjern» alene ned på en
-     linje for sig i hver række (390 og 360 px, UI-review 27-10) */
-  .dag:not(.fri) .dag-knapper .stepper { flex-basis: 100%; }
-  .uge-knapper .ny-uge { margin-left: 0; }
-  .ret-valg-raekke { grid-template-columns: 64px minmax(0, 1fr); padding: 10px 12px; }
-  .ret-valg-raekke .dag-billede { width: 64px; height: 64px; }
-  .ret-valg-raekke .knap { grid-column: 1 / -1; justify-self: start; margin-bottom: 4px; }
-}
-
-/* iPad og desktop: «Indkøbsliste» og «Send til telefon» står fast i bunden, så de altid kan ses. På iPad'en på langs lå
-   de under kanten (UI-review V8, 27-10). Rullet helt ned står bunden på sin plads over «Del som tekst», «Print» og
-   «Ny uge», så ingen dag ender bag den. Bunden er 115 px høj (84 px knap, 12 px over, 3 px streg), plus samme safe-area
-   som dens padding; --bund giver 13 px luft til de knapper i dagene, der får fokus. Kun når bunden er der: uden retter,
-   eller når linket ikke kan sendes, er den væk, og før blev en dag med fokus rullet op over ingenting (code review 28-10).
-   Ikke på telefonen og de lave skærme: dér ville bunden tage for meget af skærmen */
-@media (min-width: 701px) and (min-height: 521px) {
-  .uge-oversigt:has(.uge-handlinger) { --bund: calc(112px + max(16px, env(safe-area-inset-bottom))); }
-  .uge-oversigt .uge-handlinger {
-    position: sticky;
-    bottom: 0;
-    z-index: 2;
-    margin: 0 -24px;
-    padding: 12px 24px max(16px, env(safe-area-inset-bottom));
-    background: var(--creme);
-    border-top: 3px solid var(--creme-moerk);
-  }
 }
 
 /* ---------- Børnene vælger ugens mad: #/uge/vaelg (js/ugeplan.js, iPad på langs) ---------- */
@@ -1317,11 +1249,6 @@ button.dag-brik:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--k
   .ret .handlinger .start { min-width: 0; }
   /* Bunden er én række på 85 px, også med «Fortsæt», plus samme safe-area som bundens padding (21 px på en iPhone på langs) */
   .trin, .ret { --bund: calc(88px + max(8px, env(safe-area-inset-bottom))); }
-  /* Vælg ret: tilbage og filtrene deler rækkerne, så den første ret kan ses. På tre rækker stod den ved y=338 af 375 på
-     667×375, og «Vis alle retter» ved et tomt filter lå under kanten. 48 px er de voksnes mindste knap */
-  .dag-vaerktoej { justify-content: flex-start; gap: 8px; }
-  .dag-vaerktoej .filtre { display: contents; }
-  .dag-vaerktoej .knap.lille { min-height: 48px; }
   /* Statusskærmene (henter, tom, fejl): figuren på 140 px og knapperne under hinanden skar «Genindlæs siden» (bund 400 af
      375) og lagde «Til forsiden» under folden på 667×375 (e2e 05-11-2026). Mindre figur, og knapperne står side om side */
   .status-skaerm { padding: 8px 24px; }
