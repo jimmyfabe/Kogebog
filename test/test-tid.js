@@ -259,6 +259,10 @@ test('lange ord får bløde bindestreger til skærmen, og teksten uden dem er de
   // «bouillon» og «chokolade» står hele (review V9 og V16): «bouil-/lon» og «choko-/lade» var svære at læse
   assert.equal(vis('2 bouillonterninger'), '2 bouillon·ternin·ger');
   assert.equal(vis('chokoladestykker og chokolade'), 'chokolade·stykker og chokolade');
+  // … men ikke med et tegn lige efter: «chokolade,» var for bred til 360 px og blev brudt foran kommaet (e2e titler 17-11)
+  assert.equal(vis('100 g chokolade, fx mørk'), '100 g choko·lade, fx mørk');
+  assert.equal(vis('hvid Chokolade.'), 'hvid Choko·lade.');
+  assert.equal(vis('Chokolade-milkshake og chokolade'), 'Chokolade-milkshake og chokolade');
   // Et ord, der begynder med et kort led uden at være sammensat med det, deles ikke forkert
   assert.equal(vis('Finskbrød'), 'Finskbrød');
   // Alle ingredienser i alle retter, også skaleret og med mere grønt: uden de bløde bindestreger er teksten den samme,

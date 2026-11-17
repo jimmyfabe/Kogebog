@@ -33,7 +33,9 @@ export const utenBloede = (t) => String(t).replace(/\u00ad/g, '');
 // teksten uden dem: brug kun medBloede, hvor teksten vises. test-tid.js fejler på en ingrediens med et stykke på over
 // ORD_MAKS bogstaver: skriv så ordets led her. Et kort led (fx «fin») deler også ord, det ikke er led i («Fin·skbrød»),
 // så skriv hellere hele leddet («fin·valse»). «bouillon» og «chokolade» deles ikke («grøntsagsbouil-/lonterning»,
-// «choko-/lade» på 360 px, review V9 og V16 17-11), selvom «chokolade» har 9 bogstaver (smalle bogstaver)
+// «choko-/lade» på 360 px, review V9 og V16 17-11), selvom «chokolade» har 9 bogstaver (smalle bogstaver). Står et tegn
+// lige efter ordet, deles det dog efter DELT_FOER_TEGN: «chokolade,» var bredere end ingredienskolonnen på 360 px og blev
+// brudt foran kommaet uden bindestreg (e2e titler 17-11: blondie, flødeis uden ismaskine og banansplit)
 export const ORD_MAKS = 8;
 export const ORD_REST = 3;
 const BLOED = '\u00ad';
@@ -54,6 +56,9 @@ const ORDLED = [
   'koncen·trat', 'konden·ser', 'kote·letter', 'mareng·sen', 'marme·lade', 'marsh·mallow', 'mayon·naise', 'pasteu·riser',
   'por·tioner', 'ser·vering', 'shak·shuka', 'skum·fiduser', 'spaghet·ti', 'tarte·let', 'ternin·ger', 'tortel·lini', 'tortil·las',
 ].map((l) => ({ hel: l.replace(/·/g, ''), delt: l.split('·') })).sort((a, b) => b.hel.length - a.hel.length);
+// Hele ord over ORD_MAKS, der deles, når et tegn hænger fast lige efter dem (komma, punktum, parentes): ordet → delingen
+const DELT_FOER_TEGN = new Map(['choko·lade'].map((l) => [l.replace('·', ''), l.indexOf('·')]));
+const FAST_TEGN = /[,.;:!?)]/u;
 
 function delOrd(ord) {
   if (ord.length <= ORD_MAKS) return ord;
@@ -72,6 +77,8 @@ export function medBloede(tekst) {
   return String(tekst).replace(/\p{L}+/gu, (ord, i, hele) => {
     // Et ord med en blød bindestreg lige før eller efter sig er delt af forfatteren
     if (hele[i - 1] === BLOED || hele[i + ord.length] === BLOED) return ord;
+    const n = DELT_FOER_TEGN.get(ord.toLowerCase());
+    if (n && FAST_TEGN.test(hele[i + ord.length] ?? '')) return ord.slice(0, n) + BLOED + ord.slice(n);
     return delOrd(ord);
   });
 }
