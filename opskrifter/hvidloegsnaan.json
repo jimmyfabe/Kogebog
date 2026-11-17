@@ -37,7 +37,7 @@
     {"@type": "HowToStep", "text": "Læg to naan på en tør pande.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "note": "Middel til høj varme, uden olie. Den voksne lægger dem på."}},
     {"@type": "HowToStep", "text": "Steg dem i 2 minutter.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 120, "note": "Til der kommer bobler, og undersiden har brune pletter."}},
     {"@type": "HowToStep", "text": "Vend dem, og steg 2 minutter mere.", "tumbi": {"verbum": "vende", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 120, "note": "Den voksne vender med stegespaden og lægger dem på et bræt."}},
-    {"@type": "HowToStep", "text": "Pensl dem med hvidløgssmør.", "tumbi": {"verbum": "pensle", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["smoer", "hvidloeg"], "note": "De er varme: den voksne holder, og barnet pensler forsigtigt."}},
+    {"@type": "HowToStep", "text": "Pensl smørret på dem.", "tumbi": {"verbum": "pensle", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["smoer", "hvidloeg"], "note": "De er varme: den voksne holder, og barnet pensler forsigtigt."}},
     {"@type": "HowToStep", "text": "Drys persille over.", "tumbi": {"verbum": "drysse", "ikoner": ["krydderurt"], "note": "Læg dem i et rent viskestykke, så de holder sig bløde."}},
     {"@type": "HowToStep", "text": "Steg resten på samme måde.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "note": "To ad gangen, 2 minutter på hver side. Pensl og drys, når de kommer af panden. Sluk for panden til sidst."}}
   ],

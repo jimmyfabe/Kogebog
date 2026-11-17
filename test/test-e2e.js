@@ -264,8 +264,8 @@ async function tjekLayout(side, hvor, { knapperSes = false } = {}) {
 // Intet ord alene på en linje i en knap (v11-briefen, 16-11): bryder en knaps tekst, skal hver linje have mindst to ord,
 // og et ord må ikke selv være delt over to linjer. Ord på samme linje er ord, hvis midte står højst en halv linjehøjde fra
 // linjens første ord (et tal i en pille med en anden skriftstørrelse står lidt højere). Hårde mellemrum (som i «Ny uge»)
-// tæller som mellemrum, så de to ord tælles hver for sig. sel: knapperne, der måles
-async function tjekKnapOrd(side, sel, hvor) {
+// tæller som mellemrum, så de to ord tælles hver for sig. sel: knapperne, der måles (eller trinets tekst, hvad = 'trinets tekst')
+async function tjekKnapOrd(side, sel, hvor, hvad = 'en knap') {
   const r = await side.evaluate((s) => {
     const alene = [];
     let antal = 0;
@@ -298,8 +298,8 @@ async function tjekKnapOrd(side, sel, hvor) {
     }
     return { alene, antal };
   }, sel);
-  tjek(r.antal > 0, hvor + ': ingen knapper at måle i ' + sel);
-  tjek(!r.alene.length, hvor + ': et ord står alene på en linje i en knap: ' + r.alene.join(', '));
+  tjek(r.antal > 0, hvor + ': intet at måle i ' + sel);
+  tjek(!r.alene.length, hvor + ': et ord står alene på en linje i ' + hvad + ': ' + r.alene.join(', '));
 }
 
 // Verbum-billedet er firkantet i en rund ramme: enten ligger hele billedet inden for cirklen, eller rammen klipper det
@@ -2323,6 +2323,35 @@ async function titlerHoejkant(browser) {
   }
 }
 
+// ---------- Trinets tekst uden ét ord alene på en linje (review U6, 17-11-2026) ----------
+// Den store tekst til barnet: «Pensl dem med / hvidløgssmør.», «Hæld sovsen og / grøntsagerne / på panden.», «Rør olie og /
+// hvidløgspulver / sammen i en kop.» og «Drys sesam på / risbollerne.» (390 px, de tre også ved 1180 px). text-wrap: balance
+// i .trin-tekst h1 deler linjerne ligeligt, så et langt ord ender alene. Rettet i teksten (ny Røst-lyd). Kebab trin 8 er
+// samme slags (review U2, 15-11). Målt med tjekKnapOrd på de skærme, fundene blev set på, plus 360 px
+const TRIN_UDEN_ENSOMME = [['hvidloegsnaan', 16], ['japansk-keema-karry', 11], ['pizzabroed-med-hvidloeg-og-ost', 10],
+  ['risboller-med-tun-og-majs', 10], ['hjemmelavet-kebab', 8]];
+const TRIN_ORD_PAA = [
+  { navn: 'w360', viewport: { width: 360, height: 780 }, hasTouch: true },
+  SKAERME.find((s) => s.navn === 'iphone'),
+  SKAERME.find((s) => s.navn === 'ipad'),
+];
+async function trinUdenEnsommeOrd(browser) {
+  for (const sk of TRIN_ORD_PAA) {
+    const { ctx, side } = await nySide(browser, sk);
+    for (const [id, nr] of TRIN_UDEN_ENSOMME) {
+      const hvor = sk.navn + ' ' + id + ' trin ' + nr;
+      const tekst = RETTER[id].recipeInstructions[nr - 1].text;
+      await side.goto(BASE + '/index.html#/ret/' + id + '/trin/' + nr);
+      const vist = await side.waitForFunction((x) => document.querySelector('#app > .trin:not([data-gammel]) #trin-tekst')?.textContent === x,
+        tekst, { timeout: 5000 }).then(() => true, () => false);
+      tjek(vist, hvor + ': viste ikke trinnet');
+      if (vist) await tjekKnapOrd(side, '#app > .trin:not([data-gammel]) #trin-tekst', hvor, 'trinets tekst');
+    }
+    tjek(side.fejl.length === 0, sk.navn + ' (trinets tekst): ' + side.fejl.join(' | '));
+    await ctx.close();
+  }
+}
+
 // ---------- ⚡ på de lynhurtige retter, og navnene uden blød bindestreg (iPad) ----------
 // ⚡ (lynMaerke i app.js) står på kortet eller rækken for hver ret på højst LYN_MIN minutter, hvor retterne vælges:
 // forsiden, børnenes valg (#/uge/vaelg/<dyr>) og den voksnes valg til en dag (#/voksen/dag/<n>). Skærmlæseren får teksten
@@ -2587,7 +2616,7 @@ if (DELE.includes('beroering')) KOERSEL.push(['berøring', (b) => beroering(b, S
 if (DELE.includes('former')) KOERSEL.push(['skærmformer', (b) => former(b)]);
 if (DELE.includes('former')) KOERSEL.push(['forsidens top', (b) => forsideTop(b)]);
 if (DELE.includes('trinbund')) KOERSEL.push(['trinene over den faste bund', (b) => trinOverBund(b)]);
-if (DELE.includes('titler')) KOERSEL.push(['rettens navn på højkant', (b) => titlerHoejkant(b)]);
+if (DELE.includes('titler')) KOERSEL.push(['rettens navn på højkant', (b) => titlerHoejkant(b)], ['trinets tekst uden ensomme ord', (b) => trinUdenEnsommeOrd(b)]);
 if (DELE.includes('lyn')) KOERSEL.push(['⚡ og navnene', (b) => lynOgNavne(b)]);
 // Ugeplanen står i sin egen fil (test/e2e-ugeplan.js) og får hjælperne herfra
 if (DELE.includes('ugeplan')) {

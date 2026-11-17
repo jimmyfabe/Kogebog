@@ -30,7 +30,7 @@
     {"@type": "HowToStep", "text": "Ælt dejen i 5 minutter.", "tumbi": {"verbum": "aelte", "timer_sek": 300, "note": "Drys melet fra den lille skål på bordet. Dejen skal være glat og blød."}},
     {"@type": "HowToStep", "text": "Lad dejen hæve i 30 minutter.", "tumbi": {"verbum": "vente", "timer_sek": 1800, "note": "Dæk skålen med et viskestykke. Tænd ovnen på 225 °C almindelig ovn (200 °C varmluft), når der er 15 minutter tilbage."}},
     {"@type": "HowToStep", "text": "Rul dejen ud på bagepapir.", "tumbi": {"verbum": "kagerulle", "ikoner": ["mel"], "note": "Ca. 30 × 40 cm. Drys lidt mel på dejen og kagerullen. Træk papiret over på en bageplade."}},
-    {"@type": "HowToStep", "text": "Rør olie og hvidløgspulver sammen i en kop.", "tumbi": {"verbum": "roere", "ikoner": ["olie", "hvidloeg"], "note": "3 spsk olie og 1 tsk hvidløgspulver."}},
+    {"@type": "HowToStep", "text": "Rør hvidløgspulver og olie i en kop.", "tumbi": {"verbum": "roere", "ikoner": ["olie", "hvidloeg"], "note": "3 spsk olie og 1 tsk hvidløgspulver."}},
     {"@type": "HowToStep", "text": "Smør hvidløgsolien ud på dejen.", "tumbi": {"verbum": "smoere", "ikoner": ["olie", "hvidloeg"], "note": "Med bagsiden af en ske, helt ud til kanten."}},
     {"@type": "HowToStep", "text": "Drys osten over.", "tumbi": {"verbum": "drysse", "ikoner": ["ost"], "note": "175 g revet ost."}},
     {"@type": "HowToStep", "text": "Drys oregano over.", "tumbi": {"verbum": "drysse", "ikoner": ["krydderurt"], "note": "1 tsk tørret oregano."}},

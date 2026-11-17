@@ -29,7 +29,7 @@
     {"@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen. Brug halvdelen, og gem resten i køleskabet."}},
     {"@type": "HowToStep", "text": "Rør tun, majs og mayonnaise sammen.", "tumbi": {"verbum": "roere", "ikoner": ["tun", "majs", "mayonnaise"], "note": "I en skål, med 3 spsk mayonnaise. Barnet kan selv."}},
     {"@type": "HowToStep", "text": "Form en risbolle med fyld i midten.", "tumbi": {"verbum": "forme", "ikoner": ["ris", "tun"], "note": "Dyp hænderne i koldt vand, så risene ikke klistrer. Tag 2 spsk ris, tryk et hul, kom 1 tsk fyld i, og luk med lidt flere ris. Tryk dem til en kugle eller en trekant. Det giver ca. 12."}},
-    {"@type": "HowToStep", "text": "Drys sesam på risbollerne.", "tumbi": {"verbum": "drysse", "ikoner": ["kerner"], "note": "Eller rul dem i sesam på en tallerken. Barnet kan selv."}},
+    {"@type": "HowToStep", "text": "Drys sesam på bollerne.", "tumbi": {"verbum": "drysse", "ikoner": ["kerner"], "note": "Eller rul dem i sesam på en tallerken. Barnet kan selv."}},
     {"@type": "HowToStep", "text": "Pak risbollerne ind.", "tumbi": {"verbum": "pakke-ind", "note": "Hver for sig i husholdningsfilm eller tæt i madkassen. Læg dem i køleskabet med det samme, og spis dem samme dag: kogte ris, der står lunt for længe, kan give maveonde."}}
   ],
   "tumbi": {
