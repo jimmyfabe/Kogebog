@@ -2525,6 +2525,8 @@ const minuttalPaa = (side) => overAlleGrupper(side, () => side.evaluate(() => {
       billede: felt(k.querySelector('.kort-billede')),
       lyn: lyn ? felt(lyn) : null,
       navn: navnAf(k).replace(/\u00ad/g, '').replace(/\s+/g, ' ').replace(/ \./g, '.').trim(),
+      // Skærmlæseren sagde den bløde bindestreg og det hårde mellemrum fra kortNavn (review K9, 17-11)
+      deling: /[\u00ad\u00a0]/.test(navnAf(k)),
     };
   });
 }));
@@ -2534,7 +2536,8 @@ async function tjekMinuttal(side, hvor, tider = TIDER) {
   let mindstLuft = null; // mindste vandrette luft mellem tallet og ⚡ (en måling)
   for (const k of kort) {
     const min = tider[k.id];
-    const fejlNavn = k.navn !== forventetNavn(k.id, min) ? 'navn «' + k.navn + '»' : null;
+    const fejlNavn = k.navn !== forventetNavn(k.id, min) ? 'navn «' + k.navn + '»'
+      : k.deling ? 'blød bindestreg eller hårdt mellemrum i navnet til skærmlæseren' : null;
     if (!(Number.isFinite(min) && min > 0)) {
       if (k.antal || fejlNavn) forkert.push(k.id + ': uden tid, men ' + k.antal + ' tal, ' + (fejlNavn || 'navnet ok'));
       continue;

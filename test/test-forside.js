@@ -14,6 +14,7 @@ import { planMandag, idag } from '../js/tid.js';
 import { soeg, soegeTekst } from '../js/soeg.js';
 import { FAVORITTER, gruppeRute, forsideGrupper, gruppeAf, gruppeRetter, tilbageFraRet, rulleplads, blandet } from '../js/grupper.js';
 import { lavModel, erLynhurtig, harTid } from '../js/model.js';
+import { utenBloede } from '../js/tekst.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // Alle grupper i forsidens rækkefølge. En ny gruppe står i GRUPPER, men kommer først i index.json, når dens retter har
@@ -552,6 +553,54 @@ test('gemte data med kødretter fra før v11 overlever delingen i Gris og Ko, ud
   assert.deepEqual([...rod.querySelectorAll('.ret-kort').map((k) => k.dataset.ret)].sort(), [...KOED_GEMT].sort());
   assert.equal(lageret.get('kog-familie-v1'), foer.familie);
   assert.deepEqual(skrivninger, [], 'ingen nøgle skrives om');
+});
+
+// Det, skærmlæseren siger for et element: teksten og billedernes alt, uden det, der er aria-hidden (aria-label vinder)
+const laesNavn = (e) => {
+  if (!e.tag) return e.textContent;
+  if (e.getAttribute('aria-hidden') === 'true') return '';
+  if (e.getAttribute('aria-label') !== null) return e.getAttribute('aria-label');
+  if (e.tag === 'img') return e.getAttribute('alt') || '';
+  return e._tekst + e.born.map(laesNavn).join('');
+};
+const UDEN_DELING = /[\u00ad\u00a0]/u;
+// Navnet til skærmlæseren er rettens navn uden bløde bindestreger og hårde mellemrum, og skærmen viser det delt (kortNavn)
+function tjekKortNavne(kortene, hvor) {
+  assert.ok(kortene.length > 0, hvor + ': ingen kort');
+  const medDeling = [];
+  for (const k of kortene) {
+    const sagt = laesNavn(k);
+    if (UDEN_DELING.test(sagt)) medDeling.push(k.dataset.ret + ' «' + sagt.replace(/\u00ad/g, '|').replace(/\u00a0/g, '_') + '»');
+  }
+  assert.deepEqual(medDeling, [], hvor + ': ' + medDeling.length + ' af ' + kortene.length + ' kort har en blød bindestreg eller et hårdt mellemrum i navnet til skærmlæseren');
+  for (const k of kortene) {
+    const navn = utenBloede(lavModel(JSONER.get(k.dataset.ret)).navn);
+    const sagt = laesNavn(k);
+    assert.ok(sagt.startsWith(navn), hvor + ' ' + k.dataset.ret + ': «' + sagt + '» begynder ikke med «' + navn + '»');
+    const vist = k.querySelector('.kort-navn');
+    assert.equal(vist.getAttribute('aria-hidden'), 'true', hvor + ' ' + k.dataset.ret);
+    assert.equal(utenBloede(vist.textContent).replace(/\u00a0/g, ' '), navn, hvor + ' ' + k.dataset.ret + ': skærmen viser hele navnet');
+  }
+}
+
+// Review K9 (17-11): kortNavn giver navnet bløde bindestreger og et hårdt mellemrum til skærmen, og kortets navn til
+// skærmlæseren kom fra den tekst (97 af 255 navne med en blød bindestreg, 48 med et hårdt mellemrum)
+test('kortenes navn til skærmlæseren er rettens navn uden bløde bindestreger og hårde mellemrum (review K9)', async () => {
+  let delt = 0;
+  for (const g of KNAPPER) {
+    await start('#/gruppe/' + g);
+    const kortene = rod.querySelectorAll('.kort[data-ret]');
+    tjekKortNavne(kortene, g);
+    delt += kortene.filter((k) => UDEN_DELING.test(k.querySelector('.kort-navn').textContent)).length;
+  }
+  assert.ok(delt >= 90, delt + ' kort viser navnet delt');
+  await start('#/gruppe/fisk');
+  assert.equal(rod.querySelector('.kort[data-ret="fiskepinde-med-baade"] .kort-navn').textContent, 'Fiske\u00adpinde med kartof\u00adfelbåde');
+  // Børnenes valg (js/ugeplan.js) har de samme kort
+  for (const dyr of ['rosa', 'bo']) {
+    await start('#/uge/vaelg/' + dyr);
+    tjekKortNavne(rod.querySelectorAll('.ret-kort'), '#/uge/vaelg/' + dyr);
+  }
 });
 
 test('tilbage fra en ret: pilen fører til gruppen på samme rulleplads og med fokus på kortet', async () => {

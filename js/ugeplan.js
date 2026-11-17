@@ -10,13 +10,13 @@
 // Koden i linket kommer udefra. Den går kun gennem afkod() i js/plankode.js, og intet fra adressen kommer i DOM'en: fejlene
 // er faste tekster, og listen gemmes med den genskrevne kode. Lageret røres kun gennem js/lager.js, og al tekst sættes
 // som tekst (js/dom.js). app.js ejer ruterne og tilstanden (S) og giver sine hjælpere med init().
-import { el, ikon, ledLinje, printLink } from './dom.js';
+import { el, ikon, ledLinje, printLink, retNavn } from './dom.js';
 import * as Lager from './lager.js';
 import { afkod, kod, kodeFraTekst, ukendtTekst, BESKED_UGYLDIG, BESKED_NYERE, BESKED_GAMMEL } from './plankode.js';
 import { saml, grupper, tekst as listeTekst, manglerTekst, holdSammen } from './indkoeb.js';
 import { DYR, grafikIngrediens, grafikRet, grafikDyr } from './katalog.js';
 import { ugeNr, dagDato, planMandag, ugenErGaaet, DAGE } from './tid.js';
-import { minutterTekst, utenBloede, kortNavn } from './tekst.js';
+import { minutterTekst, utenBloede } from './tekst.js';
 import { holdKnap } from './hold.js';
 import { maerkerFor, MAERKER } from './maerker.js';
 import { knivtrin } from './model.js';
@@ -1031,7 +1031,7 @@ function retValgSkaerm(p, dyr) {
       }),
     },
     el('span', { class: 'kort-billede' }, K.billede(grafikRet(m.id), ''), K.lynMaerke(m)),
-    el('span', { class: 'kort-navn', tekst: kortNavn(m.navn) }),
+    retNavn(m.navn, 'kort-navn'), // skærmlæseren får navnet uden delingen (review K9)
     boerneMaerker(m, familie),
     // Retten står allerede på planen: dyret, der valgte den, i hjørnet (den kan godt vælges igen)
     af.has(m.id) ? el('span', { class: 'kort-dyr' }, K.billede(grafikDyr(af.get(m.id)), 'valgt af ' + dyrNavn(af.get(m.id)))) : null,

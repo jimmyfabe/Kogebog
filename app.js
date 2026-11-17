@@ -2,7 +2,7 @@
 // Ruterne står i adressen (#/gruppe/<id>, #/ret/<id>/trin/<nr>), så tilbage-knappen og en genindlæsning virker. Retten med
 // mere grønt (js/groent.js) har «/groen» efter id'et (#/ret/<id>/groen/trin/<nr>).
 // Al tekst fra opskrifterne sættes som tekst (textContent), aldrig som HTML.
-import { el, attr, ikon, svgEl, ledLinje } from './js/dom.js';
+import { el, attr, ikon, svgEl, ledLinje, retNavn } from './js/dom.js';
 import { hentIndex, hentRet } from './js/data.js';
 import * as Tale from './js/tale.js';
 import * as R from './js/replikker.js';
@@ -17,7 +17,7 @@ import { voksenFarer, erLynhurtig, harTid, LYN_MIN } from './js/model.js';
 import { valgt, GROENT_TEKST } from './js/groent.js';
 import { VERBER, INGREDIENSER, GRUPPER, DYR, grafikVerbum, grafikIngrediens, grafikDyr, grafikRet, grafikGruppe, GRAFIK_FAERDIG } from './js/katalog.js';
 import { formaterTid, varighed, varighedTale, idag, dagIUgen } from './js/tid.js';
-import { minutterTekst, utenBloede, medBloede, kortNavn } from './js/tekst.js';
+import { minutterTekst, utenBloede, medBloede } from './js/tekst.js';
 import { UDGAVE } from './js/version.js';
 import { soeg, soegeord } from './js/soeg.js';
 import { FAVORITTER, HASH_SOEG, hashGruppe, gruppeRute, forsideGrupper, gruppeRetter, gruppeAf, tilbageFraRet, rulleplads } from './js/grupper.js';
@@ -213,8 +213,8 @@ function kortTil(id, gruppe, fejlede) {
   const b = el('button', { type: 'button', class: 'kort' + (S.valgtKort === id ? ' valgt' : ''), 'data-ret': id },
     kendtGruppe ? el('span', { class: 'kort-gruppe', 'aria-hidden': 'true' }, billede(grafikGruppe(gruppe), '')) : null,
     el('span', { class: 'kort-billede' }, billede(grafikRet(id), ''), tidMaerke(u), lynMaerke(u)),
-    // Intet kort ord alene på en linje (review V3, kortNavn i js/tekst.js)
-    el('span', { class: 'kort-navn', tekst: kortNavn(m.navn) }),
+    // Intet kort ord alene på en linje (review V3, kortNavn i js/tekst.js), og skærmlæseren får navnet uden delingen (K9)
+    retNavn(m.navn, 'kort-navn'),
     el('span', { class: 'kort-aabn', 'aria-hidden': 'true' }, ikon('naeste'), el('span', { tekst: 'Tryk igen' })),
     tidTekst(u),
     lynTekst(u));

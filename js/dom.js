@@ -1,6 +1,6 @@
 // dom.js — små hjælpere til at bygge elementer. Al tekst sættes som tekstnoder (aldrig innerHTML).
 
-import { utenBloede } from './tekst.js';
+import { utenBloede, kortNavn } from './tekst.js';
 
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
@@ -28,6 +28,14 @@ export function attr(e, k, v) {
   const s = v === true ? '' : String(v);
   e.setAttribute(k, NAVNE.has(k) ? utenBloede(s) : s);
 }
+
+// Rettens navn delt til skærmen (kortNavn i js/tekst.js: bløde bindestreger og et hårdt mellemrum før et kort sidste ord)
+// og hele til skærmlæseren, som ellers får elementets navn med dem (review K9, 17-11: 97 af 255 kort). Den viste tekst er
+// aria-hidden, og navnet står helt i en skjult .sr-kun lige efter. Bruges på kortene og i rettens titel
+export const retNavn = (navn, klasse) => [
+  el('span', { class: klasse, 'aria-hidden': 'true', tekst: kortNavn(navn) }),
+  el('span', { class: 'sr-kun', tekst: utenBloede(navn).replace(/\u00a0/g, ' ') }),
+];
 
 // Fanens titel, som skærmlæseren siger, når siden åbnes (printet: retten eller ugeplanen)
 export function sideTitel(tekst) {
