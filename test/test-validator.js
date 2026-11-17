@@ -636,6 +636,11 @@ test('en karryret sender den voksne til pakken for købte varer (review K1-K3)',
     const st = d.recipeInstructions[0].tumbi;
     st.note = erstat(st.note, 'Retten indeholder mælk (yoghurten). Tjek naanbrødets og karryens pakke', 'Retten indeholder gluten (naanbrødet) og mælk (yoghurten). Tjek karryens pakke');
   }, 'noten i trin 1: allergenerne i naanbrødet afhænger af mærket');
+  // K2: ketchuppen kan have selleri eller sennep
+  forventFejl('opskrifter/japansk-keema-karry.json', (d) => {
+    const st = d.recipeInstructions[0].tumbi;
+    st.note = erstat(st.note, 'Tjek karryens og ketchuppens pakke for selleri og sennep.', 'Tjek karryen for sennep og selleri.');
+  }, 'noten i trin 1: allergenerne i ketchuppen afhænger af mærket');
 });
 
 test('dejen er ikke rå efter stegning eller bagning', () => {

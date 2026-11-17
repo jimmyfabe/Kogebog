@@ -52,8 +52,9 @@ const TIMER_MAALER_HAENDERNE = ['aelte'];
 const TAGE_UD = ['tage-ud', 'tage-ud-form']; // efter ovnen: en flad plade eller en dyb form
 const BLAD_IKONER = ['krydderurt', 'mynte', 'groenkaal']; // blade, der plukkes: «smuldre», ikke æg-billedet til «pille» (U5)
 // Købte varer i en ret med karry, hvis allergener afhænger af mærket: [varen i fejlbeskeden, ordet i teksten, ejefald i
-// eksemplet]. Teksten sender den voksne til pakken og slår ikke allergenerne fast (review K1 17-11: «gluten (naanbrødet)»)
-const PAKKE_VARER = [['naanbrødet', /naan/iu, 'naanbrødets']];
+// eksemplet]. Teksten sender den voksne til pakken og slår ikke allergenerne fast (review K1 17-11: «gluten (naanbrødet)»;
+// K2: ketchuppen i keema-karryen var ikke nævnt)
+const PAKKE_VARER = [['naanbrødet', /naan/iu, 'naanbrødets'], ['ketchuppen', /ketchup/iu, 'ketchuppens']];
 const VENTER = 'docs/venter-paa-billede'; // færdige retter uden retbillede (docs/venter-paa-billede/README.md)
 // Ordvagten går efter stammen: hvert ord, der begynder med stammen (eller har den inde i sig, hvor det står), fanges med
 // alle bøjninger («smelte», «skære», «æggeblommer»). En liste over tilladte former mangler altid en form, og så slipper
