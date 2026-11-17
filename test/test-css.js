@@ -342,6 +342,16 @@ test('trin-noterne ender ikke med ét ord alene på sidste linje (text-wrap: pre
   }
 });
 
+// Review V4 (17-11): rettens navn over ingredienserne endte med et kort ord alene på sidste linje («… med / ris»). Samme
+// regel som kortene: målt i WebKit stod det i 24 af 255 navne på 360 px før og 6 efter (390 px: 12 og 3, 1180 px: 24 og 6,
+// 1280 px: 20 og 4). Resten er lange ord, der ikke kan deles («Mild / kyllingekarry / med ris»)
+test('rettens navn på retten brydes i lige lange linjer (text-wrap: balance)', () => {
+  const rod = blokke(CSS);
+  for (const [b, h] of [[360, 780], [390, 844], [844, 390], [768, 1024], [1180, 820], [1280, 800]]) {
+    assert.equal(gaeldende(rod, '.ret-titel h1', b, h)['text-wrap'], 'balance', b + '×' + h);
+  }
+});
+
 // Review U13 (17-11): «Hyrdetærte / med / kartoffelskiver» (390 px) og «Smash-burgere med / ost» (360 px) på forsidens
 // gruppekort. Med text-wrap: balance stod et ord på højst 4 bogstaver alene i 58 af 2550 navne mod 171 før (10 skærme,
 // WebKit), uden at et kort blev højere. Hyrdetærten fik desuden en blød bindestreg i «kartoffel|skiver»
