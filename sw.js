@@ -9,7 +9,7 @@
    Svarer nettet ikke inden for HENT_MS (4 s), kommer en opskrift (også index.json) fra cachen, og nettets svar gemmes
    til næste gang. De næste LANGSOM_MS (30 s) tager opskrifterne cachen med det samme (code review U3 og F2, 23-10). */
 const PRAEFIKS = 'kog-';
-const INDHOLD = '11fcf614af1912f3'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = '625503d1fae53254'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '7b503e0be6847e32'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
@@ -427,6 +427,7 @@ const FILER = [
   'opskrifter/tortellini-i-cremet-tomatsovs.json', 'grafik/ret-tortellini-i-cremet-tomatsovs.webp',
   'opskrifter/pizzapasta-i-fad.json', 'grafik/ret-pizzapasta-i-fad.webp',
   'opskrifter/boller-i-karry.json', 'grafik/ret-boller-i-karry.webp',
+  'grafik/verbum-si-daase.svg', 'grafik/verbum-skylle.svg', 'grafik/verbum-plukke.svg',
 ];
 
 const iScope = (url) => url.href.startsWith(self.registration.scope);
