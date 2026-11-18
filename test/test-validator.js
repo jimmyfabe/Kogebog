@@ -201,11 +201,16 @@ test('smelte kræver en voksen for varmens skyld; stikke-ud, forme, pille, ryste
     'trin 3: verbet «smelte» skal have "voksen": true og "voksen_hjaelp": "varme"');
   forventFejl('opskrifter/koedsovs.json', (d) => { Object.assign(d.recipeInstructions[2].tumbi, { verbum: 'smelte', voksen: true, voksen_hjaelp: 'kniv' }); },
     'trin 3: verbet «smelte» skal have "voksen": true og "voksen_hjaelp": "varme"');
-  for (const v of ['stikke-ud', 'forme', 'pille', 'ryste', 'klemme', 'dyppe', 'dyppe-vand', 'plukke']) {
+  for (const v of ['stikke-ud', 'forme', 'pille', 'ryste', 'klemme', 'dyppe', 'dyppe-vand']) {
     forventGyldig('opskrifter/boller.json', (d) => { const st = d.recipeInstructions[10].tumbi; st.verbum = v; delete st.voksen; delete st.voksen_hjaelp; });
     forventFejl('opskrifter/boller.json', (d) => { Object.assign(d.recipeInstructions[10].tumbi, { verbum: v, voksen: true, voksen_hjaelp: 'kniv' }); },
       'trin 11: verbet «' + v + '» kan barnet selv');
   }
+  // «plukke» står kun på et trin, der plukker blade (review 18-11), så det prøves på persillen i hvidløgsnaan
+  const persille = (d) => d.recipeInstructions.find((s) => s.text === 'Pil bladene af persillen.').tumbi;
+  forventGyldig('opskrifter/hvidloegsnaan.json', (d) => { const st = persille(d); assert.equal(st.verbum, 'plukke'); delete st.voksen; delete st.voksen_hjaelp; });
+  forventFejl('opskrifter/hvidloegsnaan.json', (d) => { Object.assign(persille(d), { voksen: true, voksen_hjaelp: 'kniv' }); },
+    'trin 10: verbet «plukke» kan barnet selv');
 });
 
 // «blende» (05-11-2026): blenderen har knive, så trinnet er altid den voksnes, også når alt i kanden er koldt
@@ -656,6 +661,30 @@ test('et si-trin med kogende vand ("varme") er «si», ikke den kolde dåse «si
   assert.ok(!fejl.some((f) => f.includes('"si-daase"')), 'rådet må ikke være «si-daase»:\n  ' + fejl.join('\n  '));
   forventFejl('opskrifter/pastasalat-med-squash.json', (d) => { pasta(d).verbum = 'si-daase'; },
     'trin 3: "si-daase" er en kold dåse; med kogende vand er verbet "si": «Hæld pastaen i en si.»');
+});
+
+// Review af v12 18-11 (lav): reglen vogtede kun mod «haelde». Den vogter nu også valget mellem de tre si-verber, og
+// «si-daase», «skylle» og «plukke» står kun på et trin, hvis tekst passer til billedet
+test('si-daase, skylle og plukke står kun, hvor teksten passer, og byttes ikke om (review 18-11)', () => {
+  // Med dåseåbneren er det dåsen, også når der skylles bagefter, og uden kniv sien under hanen
+  forventFejl('opskrifter/kikaerteburger.json', (d) => { trinMed(d, 'Hæld kikærterne i en si, og skyl dem.').st.tumbi.verbum = 'skylle'; },
+    ': der hældes i en si, så brug verbet "si-daase" (billedet til «skylle» er en si under vandhanen): «Hæld kikærterne i en si, og skyl dem.»');
+  forventFejl('opskrifter/linse-dhal.json', (d) => { trinMed(d, 'Hæld linserne i en si, og skyl dem.').st.tumbi.verbum = 'si-daase'; },
+    ': der skylles, så brug verbet "skylle" (billedet til «si-daase» er en åben dåse over en si i vasken): «Hæld linserne i en si, og skyl dem.»');
+  // Uden si og uden skylning, også saft og mos «gennem en si» ned i kanden (de hældes)
+  const ingenSi = (verbum) => ': verbet "' + verbum + '" er ' + (verbum === 'skylle' ? 'en si under vandhanen' : 'en åben dåse over en si i vasken')
+    + ', men teksten hælder ikke noget i en si og skyller ikke (saft og mos «gennem en si» hældes med "haelde"): «';
+  forventFejl('opskrifter/bedste-venners-pizza.json', (d) => { trinMed(d, 'Drys oregano over.').st.tumbi.verbum = 'si-daase'; }, ingenSi('si-daase') + 'Drys oregano over.»');
+  forventFejl('opskrifter/rugbroedsaften.json', (d) => { trinMed(d, 'Pil skallen af æggene.').st.tumbi.verbum = 'skylle'; }, ingenSi('skylle') + 'Pil skallen af æggene.»');
+  forventFejl('opskrifter/lyseroed-limonade.json', (d) => { trinMed(d, 'Hæld mosen gennem en si ned i kanden.').st.tumbi.verbum = 'si-daase'; },
+    ingenSi('si-daase') + 'Hæld mosen gennem en si ned i kanden.»');
+  // «plukke» kræver blade i teksten: ikke æggene, ikke tørret oregano (ikonet «krydderurt» alene er ikke blade, der plukkes)
+  // og ikke jordbærrenes grønne top (U5)
+  const ingenBlade = ': verbet "plukke" er blade, der plukkes af en kvist, men teksten plukker ingen blade («Pluk …» eller «Pil … blade …»; jordbærrenes grønne top er "pille"): «';
+  forventFejl('opskrifter/rugbroedsaften.json', (d) => { trinMed(d, 'Pil skallen af æggene.').st.tumbi.verbum = 'plukke'; }, ingenBlade + 'Pil skallen af æggene.»');
+  forventFejl('opskrifter/bedste-venners-pizza.json', (d) => { trinMed(d, 'Drys oregano over.').st.tumbi.verbum = 'plukke'; }, ingenBlade + 'Drys oregano over.»');
+  forventFejl('opskrifter/regnbue-smoothie.json', (d) => { trinMed(d, 'Pil de grønne blade af jordbærrene.').st.tumbi.verbum = 'plukke'; },
+    ingenBlade + 'Pil de grønne blade af jordbærrene.»');
 });
 
 test('kødet tjekkes i trinnet, der koger, ikke når barnet smager (review F7)', () => {
