@@ -717,6 +717,44 @@ test('tørrede krydderurter smuldres: «smuldre» vurderes kun efter teksten (re
     ': der plukkes blade, så brug verbet "plukke" (billedet til «smuldre» er en terning, der smuldres): «Pluk dilden i små dotter.»');
 });
 
+// Review af v12 18-11 (lav): ordmønstrene i si- og pluk-reglen (SKYL_ORD, GENNEM_SI, PLUK_TEKST og SI_ORD), én test hver
+test('«skyld» er ikke en skylning (review 18-11)', () => {
+  forventGyldig('opskrifter/bedste-venners-pizza.json', (d) => {
+    const { st } = trinMed(d, 'Hæld majsen i en si.');
+    st.text = 'Hæld majsen i skålen for en sikkerheds skyld.';
+    st.tumbi.verbum = 'haelde';
+  });
+});
+
+test('saft «gennem en fin si» hældes som «gennem en si» (review 18-11)', () => {
+  for (const tekst of ['Hæld mosen gennem en fin si ned i kanden.', 'Hæld mosen gennem den fine si ned i kanden.']) {
+    forventGyldig('opskrifter/lyseroed-limonade.json', (d) => { trinMed(d, 'Hæld mosen gennem en si ned i kanden.').st.text = tekst; });
+  }
+});
+
+test('«Pil salatbladene af …» og «Pil et blad af …» er blade, der plukkes (review 18-11)', () => {
+  for (const [fil, gammel, tekst] of [
+    ['kylling-salatbaade-med-ris', 'Pil bladene af salaten, og skyl dem.', 'Pil salatbladene af, og skyl dem.'],
+    ['smash-burgere-med-ost', 'Pil fire blade af salaten, og skyl dem.', 'Pil et blad af salaten.'],
+  ]) {
+    forventFejl('opskrifter/' + fil + '.json', (d) => {
+      const { st } = trinMed(d, gammel);
+      st.text = tekst;
+      st.tumbi.verbum = 'smuldre';
+    }, ': der plukkes blade, så brug verbet "plukke" (billedet til «smuldre» er en terning, der smuldres): «' + tekst + '»');
+  }
+});
+
+test('et dørslag er en si (review 18-11)', () => {
+  for (const tekst of ['Hæld majsen i et dørslag.', 'Hæld majsen i dørslaget.']) {
+    forventFejl('opskrifter/bedste-venners-pizza.json', (d) => {
+      const { st } = trinMed(d, 'Hæld majsen i en si.');
+      st.text = tekst;
+      st.tumbi.verbum = 'haelde';
+    }, ': der hældes i en si, så brug verbet "si-daase" (billedet til «haelde» er en målekande over en skål): «' + tekst + '»');
+  }
+});
+
 test('kødet tjekkes i trinnet, der koger, ikke når barnet smager (review F7)', () => {
   let nr;
   forventFejl('opskrifter/japansk-keema-karry.json', (d) => {

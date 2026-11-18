@@ -55,10 +55,12 @@ const BLAD_IKONER = ['krydderurt', 'mynte', 'groenkaal']; // blade, der plukkes:
 // eller noget andet, der drænes («si-daase»), eller noget, der skylles («skylle», også uden si: «Skyl jordbærrene.»). Saft og
 // mos «gennem en si ned i kanden» hældes stadig. Blade, der plukkes («Pluk …», «Pil bladene af persillen.», «Pil fire blade
 // af salaten …»), er «plukke». Jordbærrenes grønne top pilles med æg-billedet til «pille» (U5: ikonet er bærret, ikke et blad)
-const SI_ORD = /(?<!\p{L})si(?:en)?(?!\p{L})/iu;
-const GENNEM_SI = /gennem\s+(?:en\s+)?si(?:en)?(?!\p{L})/iu;
-const SKYL_ORD = /(?<!\p{L})skyl/iu;
-const PLUK_TEKST = /^(?:pluk(?!\p{L})|pil(?!\p{L}).*(?<!\p{L})blade(?:ne)?(?!\p{L}))/iu;
+// Review 18-11: et dørslag er en si; «gennem en fin si» (et eller to ord imellem) er også saft, der hældes; «skyld» er ikke
+// en skylning; og «Pil salatbladene af …» og «Pil et blad af …» er også blade (sammensat ord og ental)
+const SI_ORD = /(?<!\p{L})(?:si(?:en)?|dørslag(?:et)?)(?!\p{L})/iu;
+const GENNEM_SI = /gennem\s+(?:\p{L}+\s+){0,2}(?:si(?:en)?|dørslag(?:et)?)(?!\p{L})/iu;
+const SKYL_ORD = /(?<!\p{L})skyl(?!d)/iu;
+const PLUK_TEKST = /^(?:pluk(?!\p{L})|pil(?!\p{L}).*blad(?:e|et|ene)?(?!\p{L}))/iu;
 const TOPPEN_PILLES = /jordbær/iu;
 // Verberne, si-reglen vælger imellem, hvad deres billede viser, og hvorfor et si-trin har sit verbum (i fejlbeskeden)
 const SI_VERBER = ['haelde', 'si-daase', 'skylle'];
