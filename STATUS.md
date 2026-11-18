@@ -2,6 +2,54 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
+## 18-11-2026 kl. 18:58: v11 klar til udgivelse (push afvist, kommandoen ligger hos Jimmy) · v12 på grenen `v12-rester`
+
+Jimmy skrev 18-11 «Du puncher bare det hele og forsætter». Claude læste det som: udgiv v11, og fortsæt med resten.
+
+**Udgivelsen af v11**
+- Auto-mode-filteret afviste `git push`. Det blev ikke omgået.
+- Live på Pages er stadig `v9 · 13-11-2026` (målt kl. 18:58). GitHubs `main` er `2785747`.
+- Spidsen `7e88273` (v11) bygger direkte oven på `2785747`, og den lokale `main` (`7adced4`) ligger før den. Pushet er derfor en ren fremspoling.
+- Kommandoen til **PowerShell**: `cd .\Kogebog; git push origin 7e88273:main; if ($?) { git branch -f main 7e88273 }`
+
+**v12 på grenen `v12-rester`** (15 commits oven på v11, spids `caf652b`, `UDGAVE = 'v12 · 18-11-2026'`). Ingen ændring af gemte data. Ikke flettet og ikke udgivet.
+- Tre nye trin-billeder:
+  - `si-daase`: en åben dåse over en si i vasken.
+  - `skylle`: en si under vandhanen.
+  - `plukke`: blade plukkes ned i en skål.
+- 72 trin har fået det billede, der passer til teksten. Kun `verbum` er ændret, ikke `text`, så ingen lyd er lavet om.
+- Det lukker U7 og V7 fra v11-reviewet.
+- Validatoren vogter nu valget mellem `haelde`, `si-daase` og `skylle` og mellem `plukke`, `pille` og `smuldre`. Reglen og de kendte valg står i `CLAUDE.md`.
+- Kyllingekarry og mild kartoffelkarry har fået den faste allergentekst (`4982e58`).
+- code-reviewer: 9 fund, alle rettet med test i hver sin commit.
+- ui-reviewer i WebKit: kører (se næste afsnit, når den er færdig).
+
+**Tests**
+
+| Kørsel | Resultat |
+|---|---|
+| E2e `timer` på v11 (18-11) | 169 tjek, 0 fejl |
+| Node på v12 | Hver fil, rettelserne rørte, er grøn. Den fulde pakke gennem låsen er ikke kørt endnu |
+
+**Afventer Jimmy**
+1. (18-11) Kør push-kommandoen ovenfor (v11). Bagefter kan Claude tjekke Pages.
+2. (18-11) v12: se de tre nye billeder (testlisten nedenfor). Sig til, før den flettes og udgives. v12 kræver, at v11 er udgivet først.
+3. (18-11) To grænsetilfælde i v12:
+   - «Pil druerne af stilkene» (waldorfsalat) beholder `pille`.
+   - «Hæld mosen i en si over kanden» får rådet `si-daase`.
+   
+   Er de i orden?
+4. (15-11) Må de 3 gamle gruppe-mp3 slettes? Kommandoen står i v11-afsnittet, punkt 2. Det er dem, `test-lyd` fejler på.
+5. (17-11) `drysse` i kander, kopper og glas: skal de have deres eget billede?
+6. (15-11) Lam senere?
+7. (14-11) Fase 2 (`kog-familie` v1 → v2) står i v10-afsnittet.
+
+**Testliste til Jimmy (v12, på pc'en).** Først `cd D:\Claude\Kogebog; git switch v12-rester` i **PowerShell**. Serveren på 8091 kører allerede. Åbn så http://127.0.0.1:8091/.
+1. Forsiden: der står «Version v12 · 18-11-2026» nederst.
+2. Bedste venners pizza, trinet «Hæld majsen i en si.»: billedet er en dåse over en si, ikke en varm gryde.
+3. Blåbær-skyr-smoothie, skylle-trinet: billedet er en si under vandhanen.
+4. Mynte-lime-boble, trin 3: billedet er blade, der plukkes ned i en skål.
+
 ## 18-11-2026 kl. 16:26: v11 færdig på grenen `v10-foraeldre`, ikke flettet og ikke udgivet
 
 Bygget efter Jimmys «kør den helt færdig» (16-11) og «fortsæt til 100 %» (17-11). Grenen ligger 112 commits over `main` før denne STATUS-commit (den sidste er `ad93067`). `UDGAVE = 'v11 · 17-11-2026'`. Ingen ændring af gemte data.
