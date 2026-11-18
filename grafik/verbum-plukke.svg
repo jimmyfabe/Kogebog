@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="pluck" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="bowl">
+      <path d="M50 194 L206 194 Q198 234 128 238 Q58 234 50 194 Z" fill="#FFF4E2"/>
+      <ellipse cx="128" cy="194" rx="78" ry="18" fill="#FFF4E2"/>
+      <ellipse cx="128" cy="197" rx="63" ry="11" fill="#EEDDBF"/>
+    </g>
+    <g id="leaves-in-bowl">
+      <g transform="translate(118 200) rotate(-76)"><path d="M0 0 C-11 -7 -11 -27 0 -34 C11 -27 11 -7 0 0 Z" fill="#5BAA6A"/></g>
+      <g transform="translate(140 199) rotate(70)"><path d="M0 0 C-11 -7 -11 -27 0 -34 C11 -27 11 -7 0 0 Z" fill="#448450"/></g>
+    </g>
+    <g id="falling-leaves">
+      <g transform="translate(158 132) rotate(158)"><path d="M0 0 C-11 -7 -11 -27 0 -34 C11 -27 11 -7 0 0 Z" fill="#5BAA6A"/></g>
+      <g transform="translate(124 140) rotate(-150)"><path d="M0 0 C-11 -7 -11 -27 0 -34 C11 -27 11 -7 0 0 Z" fill="#448450"/></g>
+    </g>
+    <g id="stem">
+      <path d="M64 168 C74 132 90 92 116 44" fill="none" stroke-width="9"/>
+      <path d="M64 168 C74 132 90 92 116 44" fill="none" stroke="#448450" stroke-width="3.5"/>
+    </g>
+    <g id="sprig-leaves">
+      <g transform="translate(116 46) rotate(26)"><path d="M0 0 C-14 -10 -14 -36 0 -45 C14 -36 14 -10 0 0 Z" fill="#5BAA6A"/><path d="M0 -7 L0 -34" fill="none" stroke-width="2.5"/></g>
+      <g transform="translate(108 60) rotate(-58)"><path d="M0 0 C-14 -10 -14 -36 0 -45 C14 -36 14 -10 0 0 Z" fill="#448450"/><path d="M0 -7 L0 -34" fill="none" stroke-width="2.5"/></g>
+      <g transform="translate(110 58) rotate(84)"><path d="M0 0 C-14 -10 -14 -36 0 -45 C14 -36 14 -10 0 0 Z" fill="#5BAA6A"/><path d="M0 -7 L0 -34" fill="none" stroke-width="2.5"/></g>
+      <g transform="translate(94 92) rotate(-62)"><path d="M0 0 C-14 -10 -14 -36 0 -45 C14 -36 14 -10 0 0 Z" fill="#5BAA6A"/><path d="M0 -7 L0 -34" fill="none" stroke-width="2.5"/></g>
+      <g transform="translate(83 122) rotate(-66)"><path d="M0 0 C-14 -10 -14 -36 0 -45 C14 -36 14 -10 0 0 Z" fill="#448450"/><path d="M0 -7 L0 -34" fill="none" stroke-width="2.5"/></g>
+    </g>
+    <g id="plucked-leaf" transform="translate(112 98) rotate(90)">
+      <path d="M0 0 C-14 -10 -14 -36 0 -45 C14 -36 14 -10 0 0 Z" fill="#448450"/><path d="M0 -7 L0 -34" fill="none" stroke-width="2.5"/>
+    </g>
+    <g id="rosa-left-forearm">
+      <path d="M-10 128 Q24 134 56 146 L50 176 Q18 170 -10 172 Z" fill="#F08A3C"/>
+    </g>
+    <g id="rosa-left-paw" transform="translate(70 152) rotate(-96)">
+      <path d="M-2 -19 C-13 -22 -18 -14 -14 -8 C-22 -4 -18 6 -11 6 C-15 14 -6 21 1 16 C9 23 17 14 13 7 C22 3 17 -8 9 -7 Q9 -17 -2 -19 Z" fill="#F08A3C"/>
+      <path d="M-7 -7 Q2 -12 8 -2 Q13 8 2 13 Q-9 14 -11 4 Q-13 -2 -7 -7 Z" fill="#FFF4E2"/>
+    </g>
+    <g id="rosa-right-forearm">
+      <path d="M196 80 Q230 76 264 70 L264 124 Q232 122 198 120 Z" fill="#F08A3C"/>
+    </g>
+    <g id="rosa-pinching-paw" transform="translate(37 44)">
+      <path d="M166 39 C154 33 139 35 127 44 L115 54 C108 59 112 66 120 64 L132 58 L125 68 C122 75 130 79 135 72 C141 77 148 74 150 67 C158 73 167 67 165 59 C174 57 174 46 166 39 Z" fill="#F08A3C"/>
+      <path d="M145 43 Q135 41 126 50 L122 56 Q132 52 140 58 Q147 64 156 58 Q160 48 145 43 Z" fill="#FFF4E2"/>
+      <path d="M140 62 L138 68 M151 59 L150 64" fill="none"/>
+    </g>
+    <g id="into-the-bowl-motion">
+      <path d="M204 134 C198 144 198 157 204 167 L211 162 L209 185 Q209 188 206 186 L189 172 L196 171 C188 157 189 141 195 130 Q201 125 204 134 Z" fill="#3E8FB0"/>
+    </g>
+  </g>
+</svg>

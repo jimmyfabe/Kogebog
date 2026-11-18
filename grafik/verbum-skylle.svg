@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <g id="rinse" stroke="#3B2A20" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+    <g id="sink">
+      <path d="M78 190 L178 190 Q202 190 202 210 L202 212 Q202 236 178 236 L78 236 Q54 236 54 212 L54 210 Q54 190 78 190 Z" fill="#8E9AA6"/>
+      <path d="M84 197 L172 197 Q192 197 192 212 L192 213 Q192 228 172 228 L84 228 Q64 228 64 213 L64 212 Q64 197 84 197 Z" fill="#6D7B8A"/>
+      <ellipse cx="170" cy="218" rx="9" ry="4.5" fill="#3B2A20"/>
+    </g>
+    <g id="tap">
+      <path d="M181 95 L181 58 Q181 45 168 45 L146 45 Q133 45 133 58 L133 76 L111 76 L111 56 Q111 24 144 24 L173 24 Q204 24 204 56 L204 95 Z" fill="#8E9AA6"/>
+      <path d="M193 57 L193 95 L204 95 L204 56 Q204 33 184 26 Q193 39 193 57 Z" fill="#6D7B8A"/>
+      <path d="M176 57 L207 57 Q213 57 213 63 Q213 69 207 69 L176 69 Q170 69 170 63 Q170 57 176 57 Z" fill="#8E9AA6"/>
+      <path d="M175 95 L210 95 Q216 95 216 102 L216 107 L175 107 Q169 107 169 101 Q169 95 175 95 Z" fill="#8E9AA6"/>
+      <path d="M108 70 L136 70 L136 80 Q122 85 108 80 Z" fill="#6D7B8A"/>
+    </g>
+    <g id="water-stream" fill="#3E8FB0">
+      <path d="M114 88 Q122 91 130 88 L132 128 L112 128 Z"/>
+    </g>
+    <g id="sieve-handle">
+      <path d="M80 128 L28 112 Q18 109 16 117 Q14 125 24 128 L76 140 Z" fill="#8E9AA6"/>
+    </g>
+    <g id="sieve">
+      <path d="M74 132 L174 132 Q170 178 124 182 Q78 178 74 132 Z" fill="#8E9AA6"/>
+      <ellipse cx="124" cy="132" rx="50" ry="6" fill="#6D7B8A"/>
+    </g>
+    <g id="sieve-holes" fill="#3B2A20" stroke="none">
+      <circle cx="96" cy="148" r="3.5"/>
+      <circle cx="110" cy="148" r="3.5"/>
+      <circle cx="124" cy="148" r="3.5"/>
+      <circle cx="138" cy="148" r="3.5"/>
+      <circle cx="152" cy="148" r="3.5"/>
+      <circle cx="103" cy="160" r="3.5"/>
+      <circle cx="117" cy="160" r="3.5"/>
+      <circle cx="131" cy="160" r="3.5"/>
+      <circle cx="145" cy="160" r="3.5"/>
+      <circle cx="114" cy="171" r="3.5"/>
+      <circle cx="128" cy="171" r="3.5"/>
+    </g>
+    <g id="grains-in-sieve">
+      <circle cx="94" cy="128" r="6.5" fill="#FFF4E2"/>
+      <circle cx="108" cy="124" r="6.5" fill="#E8C79A"/>
+      <circle cx="122" cy="129" r="6.5" fill="#FFF4E2"/>
+      <circle cx="137" cy="124" r="6.5" fill="#FFF4E2"/>
+      <circle cx="151" cy="128" r="6.5" fill="#E8C79A"/>
+      <circle cx="116" cy="117" r="6.5" fill="#FFF4E2"/>
+      <circle cx="130" cy="116" r="6.5" fill="#E8C79A"/>
+    </g>
+    <g id="splash" fill="#3E8FB0">
+      <path d="M104 112 Q96 106 92 110 Q90 115 97 116 Z"/>
+      <path d="M140 112 Q148 106 152 110 Q154 115 147 116 Z"/>
+    </g>
+    <g id="dripping-water" fill="#3E8FB0">
+      <path d="M110 186 Q104 194 107 198 Q110 201 114 197 Q116 193 110 186 Z"/>
+      <path d="M134 188 Q128 196 131 200 Q134 203 138 199 Q140 195 134 188 Z"/>
+      <path d="M100 214 C110 208 128 208 138 212 C132 217 110 218 100 214 Z"/>
+    </g>
+    <g id="rosa-forearm">
+      <path d="M-8 96 Q14 102 34 110 L28 136 Q10 136 -8 140 Z" fill="#F08A3C"/>
+    </g>
+    <g id="rosa-holding-paw" transform="translate(34 122) rotate(-72)">
+      <path d="M-2 -19 C-13 -22 -18 -14 -14 -8 C-22 -4 -18 6 -11 6 C-15 14 -6 21 1 16 C9 23 17 14 13 7 C22 3 17 -8 9 -7 Q9 -17 -2 -19 Z" fill="#F08A3C"/>
+      <path d="M-7 -7 Q2 -12 8 -2 Q13 8 2 13 Q-9 14 -11 4 Q-13 -2 -7 -7 Z" fill="#FFF4E2"/>
+    </g>
+    <g id="down-motion">
+      <path d="M187 124 L187 160 L180 160 Q177 160 179 163 L190 179 Q192 182 194 179 L205 163 Q207 160 204 160 L197 160 L197 124 Q192 119 187 124 Z" fill="#3E8FB0"/>
+    </g>
+  </g>
+</svg>

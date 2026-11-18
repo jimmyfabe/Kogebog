@@ -48,6 +48,12 @@ export const VERBER = {
   // på en pizza. «dyppe-vand» er et ark rispapir i en dyb tallerken med vand, «drysse-skaal» ost ned i en skål
   'dyppe-vand': 'dyppe i vand',
   'drysse-skaal': 'drysse i skålen',
+  // v12 (18-11-2026): «haelde» er en målekande over en skål og «smuldre» en terning, der smuldres. «si-daase» er en åben dåse
+  // over en si i vasken (kold: ingen damp og ingen grydelapper som i «si»), «skylle» en si under vandhanen, og «plukke»
+  // blade, der plukkes af en kvist ned i en skål
+  'si-daase': 'hælde i en si',
+  'skylle': 'skylle',
+  'plukke': 'plukke',
 };
 
 // Verber, der altid kræver en voksen, og hvilken slags hjælp. Rivejernet skærer, blenderen har knive, «bage» og «tage-ud» er altid ovnen
@@ -67,11 +73,13 @@ export const VOKSEN_KRAV = {
 };
 
 // Verber, barnet kan selv, når der er koldt: piske dej, pensle boller, mose, drysse ost, pynte, sprøjte ketchup, stikke ud,
-// forme, pille, ryste, klemme og dyppe. Er der varme med (varmt fedt, en varm gryde eller pande, et lunt æg), skal den
+// forme, pille, ryste, klemme, dyppe og plukke. Er der varme med (varmt fedt, en varm gryde eller pande, et lunt æg), skal den
 // voksne hjælpe, og så er det for varmens skyld, aldrig kniven.
 // Validatoren kan ikke se, om der er varme; det skriver opskriften med «voksen». Den tjekker, at hjælpen er «varme».
+// «si-daase» og «skylle» står ikke her: dåseåbneren og blenderkanden («Skyl kanden under hanen.») er den voksnes for knivens
+// skyld. «si-daase» står heller ikke i VOKSEN_KRAV, for dåseåbneren tæller ikke i ugeplanens kniv-loft (KNIV_VERBER)
 export const KUN_VARME_HJAELP = ['piske', 'pensle', 'mose', 'drysse', 'pynte', 'sproejte', 'stikke-ud', 'forme', 'pille', 'ryste', 'klemme', 'dyppe',
-  'dyppe-vand', 'drysse-skaal'];
+  'dyppe-vand', 'drysse-skaal', 'plukke'];
 
 export const VOKSEN_HJAELP = {
   kniv: 'Kniv',
