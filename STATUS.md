@@ -12,7 +12,7 @@ Jimmy skrev 18-11 «Du puncher bare det hele og forsætter». Claude læste det 
 - Spidsen `7e88273` (v11) bygger direkte oven på `2785747`, og den lokale `main` (`7adced4`) ligger før den. Pushet er derfor en ren fremspoling.
 - Kommandoen til **PowerShell**: `cd .\Kogebog; git push origin 7e88273:main; if ($?) { git branch -f main 7e88273 }`
 
-**v12 på grenen `v12-rester`** (15 commits oven på v11, spids `caf652b`, `UDGAVE = 'v12 · 18-11-2026'`). Ingen ændring af gemte data. Ikke flettet og ikke udgivet.
+**v12 på grenen `v12-rester`** (16 commits oven på v11, spids `7a16a74`, `UDGAVE = 'v12 · 18-11-2026'`). Ingen ændring af gemte data. Ikke flettet og ikke udgivet.
 - Tre nye trin-billeder:
   - `si-daase`: en åben dåse over en si i vasken.
   - `skylle`: en si under vandhanen.
@@ -22,14 +22,22 @@ Jimmy skrev 18-11 «Du puncher bare det hele og forsætter». Claude læste det 
 - Validatoren vogter nu valget mellem `haelde`, `si-daase` og `skylle` og mellem `plukke`, `pille` og `smuldre`. Reglen og de kendte valg står i `CLAUDE.md`.
 - Kyllingekarry og mild kartoffelkarry har fået den faste allergentekst (`4982e58`).
 - code-reviewer: 9 fund, alle rettet med test i hver sin commit.
-- ui-reviewer i WebKit: kører (se næste afsnit, når den er færdig).
+- ui-reviewer i WebKit (390×844, 1180×820 og 1440×900):
+  - Billederne er skarpe og har samme streg som de gamle. Ingen vandret rulning, ingen fejl i konsollen, og «mindre bevægelse» holder dem stille.
+  - **Rettet** (`7a16a74`): skylle-animationen gav en hvid stribe ved rammens venstre kant hver 1,6 s. Armen er skåret af ved billedets kant, og `gnid` flyttede den +4 px. Den nye `skyl` går fra -4 px til 0. Testen fejlede mod den gamle CSS, og rettelsen er målt i browserpanelet. Den lille UI-rettelse er lavet i hovedsessionen.
+  - **Lav, ladet ligge:**
+    - Si-daase vipper 6° som `haelde`, så vasken også vipper.
+    - Den blå stråle er lille.
+    - Sien viser altid de samme kugler (også ved blåbær), og dåsen viser altid majs.
+    - Si-daase og si ligner hinanden i printets 34 px i gråtone. Teksten står ved siden af.
 
 **Tests**
 
 | Kørsel | Resultat |
 |---|---|
 | E2e `timer` på v11 (18-11) | 169 tjek, 0 fejl |
-| Node på v12 | Hver fil, rettelserne rørte, er grøn. Den fulde pakke gennem låsen er ikke kørt endnu |
+| Node, 18 filer på v12 (`7a16a74`, gennem låsen, kl. 19:14) | 17 grønne. `test-lyd` fejler kun på de 3 gamle gruppe-mp3 (Afventer, punkt 4). Validatoren har 72 tests, og `test-css` har 32 |
+| E2e på v12 | Ikke kørt. Kun CSS, SVG og `verbum` er ændret. UI-reviewet så de tre trin i WebKit |
 
 **Afventer Jimmy**
 1. (18-11) Kør push-kommandoen ovenfor (v11). Bagefter kan Claude tjekke Pages.
