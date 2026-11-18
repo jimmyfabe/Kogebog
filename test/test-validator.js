@@ -687,6 +687,23 @@ test('si-daase, skylle og plukke står kun, hvor teksten passer, og byttes ikke 
     ingenBlade + 'Pil de grønne blade af jordbærrene.»');
 });
 
+// Review af v12 18-11 (lav): «Pil fire blade af salaten, og skyl dem.» med «haelde» fik rådet «skylle». Pluk-teksten regnes
+// først: bladene plukkes, og skylningen hører med. Kun teksten tæller, ikke ikonet «krydderurt» (det sidder også på tørret
+// oregano og paprika), så «Kom basilikum, kerner, ost og hvidløg i bægeret.» hældes stadig
+test('blade, der plukkes og skylles, er «plukke», ikke «skylle» (review 18-11)', () => {
+  const salat = 'Pil fire blade af salaten, og skyl dem.';
+  for (const [verbum, billede] of [['haelde', 'en målekande over en skål'], ['skylle', 'en si under vandhanen']]) {
+    const fejl = forventFejl('opskrifter/smash-burgere-med-ost.json', (d) => { trinMed(d, salat).st.tumbi.verbum = verbum; },
+      ': der plukkes blade, så brug verbet "plukke" (billedet til «' + verbum + '» er ' + billede + '): «' + salat + '»');
+    assert.ok(!fejl.some((f) => f.includes('der skylles')), 'si/skyl-rådet springes over, når der plukkes blade:\n  ' + fejl.join('\n  '));
+  }
+  forventGyldig('opskrifter/bolle-med-spegepoelse-og-pesto.json', (d) => {
+    const { st } = trinMed(d, 'Kom basilikum, kerner, ost og hvidløg i bægeret.');
+    assert.equal(st.tumbi.verbum, 'haelde');
+    assert.ok(st.tumbi.ikoner.includes('krydderurt'));
+  });
+});
+
 test('kødet tjekkes i trinnet, der koger, ikke når barnet smager (review F7)', () => {
   let nr;
   forventFejl('opskrifter/japansk-keema-karry.json', (d) => {

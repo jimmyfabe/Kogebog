@@ -62,7 +62,8 @@ const PLUK_TEKST = /^(?:pluk(?!\p{L})|pil(?!\p{L}).*(?<!\p{L})blade(?:ne)?(?!\p{
 const TOPPEN_PILLES = /jordbær/iu;
 // Verberne, si-reglen vælger imellem, hvad deres billede viser, og hvorfor et si-trin har sit verbum (i fejlbeskeden)
 const SI_VERBER = ['haelde', 'si-daase', 'skylle'];
-const BILLEDE = { 'haelde': 'en målekande over en skål', 'si-daase': 'en åben dåse over en si i vasken', 'skylle': 'en si under vandhanen' };
+const BILLEDE = { 'haelde': 'en målekande over en skål', 'si-daase': 'en åben dåse over en si i vasken', 'skylle': 'en si under vandhanen',
+  'pille': 'et æg', 'smuldre': 'en terning, der smuldres' };
 const SI_GRUND = { 'si': 'der sies med kogende vand ("voksen_hjaelp": "varme")', 'si-daase': 'der hældes i en si', 'skylle': 'der skylles' };
 // Købte varer i en ret med karry, hvis allergener afhænger af mærket: [varen i fejlbeskeden, ordet i teksten, ejefald i
 // eksemplet]. Teksten sender den voksne til pakken og slår ikke allergenerne fast (review K1 17-11: «gluten (naanbrødet)»;
@@ -572,18 +573,22 @@ export function valider(rod = ROD) {
         if (st.verbum === 'drysse' && /(?<!\p{L})skål(?:en)?(?!\p{L})/u.test(s.text)) f(hvor + ': der drysses i en skål, så brug verbet "drysse-skaal" (billedet til «drysse» er en pizza): «' + s.text + '»');
         // Billedet til «pille» er et æg, der får skallen pillet af, og til «smuldre» en terning, der smuldres. Blade, der
         // plukkes, har deres eget billede, efter ikonet (krydderurter og grønkål) eller teksten (salatbladene har ikonet
-        // «kaal»). Review U5 17-11: persillen i hvidløgsnaan viste et æg; v12 18-11: 8 blad-trin viste terningen
-        const blade = (Array.isArray(st.ikoner) && st.ikoner.some((ik) => BLAD_IKONER.includes(ik))) || (PLUK_TEKST.test(s.text) && !TOPPEN_PILLES.test(s.text));
-        if ((st.verbum === 'pille' || st.verbum === 'smuldre') && blade) f(hvor + ': der plukkes blade, så brug verbet "plukke" (billedet til «' + st.verbum + '» er ' + (st.verbum === 'pille' ? 'et æg' : 'en terning, der smuldres') + '): «' + s.text + '»');
-        // «plukke» står kun, hvor teksten plukker blade (review 18-11): ikonet «krydderurt» sidder også på tørret oregano
-        if (st.verbum === 'plukke' && !(PLUK_TEKST.test(s.text) && !TOPPEN_PILLES.test(s.text))) f(hvor + ': verbet "plukke" er blade, der plukkes af en kvist, men teksten plukker ingen blade («Pluk …» eller «Pil … blade …»; jordbærrenes grønne top er "pille"): «' + s.text + '»');
+        // «kaal»). Review U5 17-11: persillen i hvidløgsnaan viste et æg; v12 18-11: 8 blad-trin viste terningen.
+        // Pluk-teksten regnes først (review 18-11: «Pil fire blade af salaten, og skyl dem.» fik rådet «skylle»): så er også
+        // «haelde», «si-daase» og «skylle» «plukke», og si-reglen herunder springes over. Kun teksten, ikke ikonet: «krydderurt»
+        // sidder også på tørret oregano og paprika
+        const bladeTekst = PLUK_TEKST.test(s.text) && !TOPPEN_PILLES.test(s.text);
+        const blade = (Array.isArray(st.ikoner) && st.ikoner.some((ik) => BLAD_IKONER.includes(ik))) || bladeTekst;
+        if (((st.verbum === 'pille' || st.verbum === 'smuldre') && blade) || (SI_VERBER.includes(st.verbum) && bladeTekst)) f(hvor + ': der plukkes blade, så brug verbet "plukke" (billedet til «' + st.verbum + '» er ' + BILLEDE[st.verbum] + '): «' + s.text + '»');
+        // «plukke» står kun, hvor teksten plukker blade (review 18-11)
+        if (st.verbum === 'plukke' && !bladeTekst) f(hvor + ': verbet "plukke" er blade, der plukkes af en kvist, men teksten plukker ingen blade («Pluk …» eller «Pil … blade …»; jordbærrenes grønne top er "pille"): «' + s.text + '»');
         // En si eller en skylning med målekanden til «haelde» (v12 18-11: ca. 70 trin). Med kogende vand ("varme") er det «si»
         // (gryden over dørslaget; review 18-11). Med dåseåbneren («kniv») er det dåsen, også når der skylles bagefter; uden kniv
         // er det dåsen, når intet skylles (spinaten drænes), ellers sien under hanen. Reglen vogter også valget mellem de tre
         // (review 18-11), og «si-daase» og «skylle» står ikke på et trin uden en si eller en skylning
         const si = SI_ORD.test(s.text) && !GENNEM_SI.test(s.text);
         const skyl = SKYL_ORD.test(s.text);
-        const siVerbum = !SI_VERBER.includes(st.verbum) ? st.verbum : !si && !skyl ? 'haelde' : si && st.voksen_hjaelp === 'varme' ? 'si'
+        const siVerbum = bladeTekst || !SI_VERBER.includes(st.verbum) ? st.verbum : !si && !skyl ? 'haelde' : si && st.voksen_hjaelp === 'varme' ? 'si'
           : si && (st.voksen_hjaelp === 'kniv' || !skyl) ? 'si-daase' : 'skylle';
         if (siVerbum === 'haelde' && st.verbum !== 'haelde') f(hvor + ': verbet "' + st.verbum + '" er ' + BILLEDE[st.verbum] + ', men teksten hælder ikke noget i en si og skyller ikke (saft og mos «gennem en si» hældes med "haelde"): «' + s.text + '»');
         else if (siVerbum === 'si' && st.verbum === 'si-daase') f(hvor + ': "si-daase" er en kold dåse; med kogende vand er verbet "si": «' + s.text + '»');
