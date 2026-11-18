@@ -1620,6 +1620,9 @@ const FORMER = [
 // Retterne, som «former» går helt igennem (knapper, Tab, fokus), og skærmene, hvor alle retters hoved også måles
 const RET_FORMER = ['pandekager', 'koedsovs', 'pizzasnegle'];
 const RET_ALLE_PAA = ['se-land', 'plus-land', 'x-land', 'mini', 'desk-901', 'desk-960', 'desk-1024'];
+// Adresseskift i samme dokument, før løkken over alle retters hoved åbner et nyt: et godt stykke under WebKits loft på
+// ca. 200 pr. 10 s, også når alle skiftene falder inden for 10 s
+const NYT_DOKUMENT_EFTER = 150;
 
 // Hvor et element ligger i forhold til den faste bund: { top, bund } for elementet og bundens top (bundTop)
 const modBund = (side, sel) => side.evaluate((sel) => {
@@ -2048,19 +2051,29 @@ async function former(browser) {
     // service workeren alle 52 opskrifter fra nettet ved hver genindlæsning, ca. 6.000 forespørgsler pr. skærmform, hver
     // med sin egen TCP-forbindelse (py -m http.server svarer med HTTP/1.0). Efter se-land og plus-land stod op til 16.368
     // forbindelser i TIME_WAIT (Windows har 16.384 dynamiske porte), Windows måtte genbruge porte (Tcpip-hændelse 4227),
-    // og x-land fik ingen forbindelse og stod i 30 s (23-10). To runder (uden og med «Fortsæt»), så adressen altid skifter
+    // og x-land fik ingen forbindelse og stod i 30 s (23-10). To runder (uden og med «Fortsæt»), så adressen altid skifter.
+    // To runder er 504 skift (252 retter), og WebKit afviser over ca. 200 pr. 10 s i samme dokument (se heleVejen): målt
+    // 18-11-2026 afviste den 15 skift i 14 kørsler af løkken (201-222 skift pr. 10 s), og e2e ventede så 30 s på «Fortsæt»
+    // (17-11 på 960×800 og 667×375). Efter NYT_DOKUMENT_EFTER skift åbnes retten derfor i et nyt dokument
     if (RET_ALLE_PAA.includes(n)) {
       const andre = index.filter((r) => !RET_FORMER.includes(r));
+      let skift = NYT_DOKUMENT_EFTER; // den første ret åbnes i et nyt dokument: delene ovenfor har også skiftet adresse
       for (const fortsaet of [false, true]) {
         for (const ret of andre) {
+          const hvor = n + ' ret ' + ret + (fortsaet ? ' med Fortsæt' : '');
           await side.evaluate(({ ret, nr }) => {
             localStorage.setItem('kog-v1', JSON.stringify({ v: 1, sidste: nr ? { ret, nr, tid: Date.now() } : null, timer: null }));
-            document.querySelector('#app > .skaerm').dataset.gammel = '1';
-            location.hash = '#/ret/' + ret;
           }, { ret, nr: fortsaet ? RETTER[ret].recipeInstructions.length - 1 : 0 });
+          if (skift >= NYT_DOKUMENT_EFTER) {
+            skift = 0;
+            await side.goto('about:blank'); // goto til en adresse, der kun skifter efter #, bliver i samme dokument
+            await side.goto(BASE + '/index.html#/ret/' + ret);
+          } else {
+            skift++;
+            await gaaTil(side, '#/ret/' + ret, hvor, { gammel: true });
+          }
           await side.waitForSelector('#app > .ret:not([data-gammel]) ' + (fortsaet ? '.fortsaet' : '.start'));
           await side.waitForFunction(() => [...document.images].every((i) => i.complete && i.naturalWidth)); // billedet giver højden
-          const hvor = n + ' ret ' + ret + (fortsaet ? ' med Fortsæt' : '');
           await retHoved(side, hvor);
           if (lav) noterLuft(await modBund(side, '.meta'), hvor);
         }
