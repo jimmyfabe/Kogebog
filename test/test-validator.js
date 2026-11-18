@@ -628,7 +628,7 @@ test('en ret med karry, der nævner sine allergener, nævner også karryen (revi
     st.note = erstat(st.note, 'bouillonens og karryens pakke', 'bouillonens pakke');
   }, 'noten i trin 1 nævner allergenerne, men ikke karryen');
   // En ret med karry nævner altid sine allergener, også når karryen er den eneste (tillæg til review F8, 17-11)
-  forventFejl('opskrifter/kyllingekarry.json', (d) => { d.description = erstat(d.description, ' Allergener: tjek karryen (den kan have selleri, sennep eller gluten).', ''); },
+  forventFejl('opskrifter/kyllingekarry.json', (d) => { d.description = erstat(d.description, ' Allergener: afhænger af karryen; tjek pakken, fx for selleri, sennep og gluten.', ''); },
     'retten har karry, så «description» skal nævne allergenerne');
   forventFejl('opskrifter/kyllingekarry.json', (d) => { delete d.recipeInstructions[0].tumbi.note; },
     'retten har karry, så noten i trin 1 skal nævne allergenerne');

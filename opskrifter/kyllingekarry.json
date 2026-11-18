@@ -2,7 +2,7 @@
   "@context": "https://schema.org",
   "@type": "Recipe",
   "name": "Mild kyllingekarry med ris",
-  "description": "Kylling i mild karry med kokosmælk, tomat, blomkål og ærter. Ris ved siden af. Allergener: tjek karryen (den kan have selleri, sennep eller gluten).",
+  "description": "Kylling i mild karry med kokosmælk, tomat, blomkål og ærter. Ris ved siden af. Allergener: afhænger af karryen; tjek pakken, fx for selleri, sennep og gluten.",
   "image": "grafik/ret-kyllingekarry.webp",
   "inLanguage": "da",
   "recipeYield": "4 personer",
@@ -23,7 +23,7 @@
   ],
   "tool": ["dåseåbner", "gryde med låg", "gryde til ris", "grydeske", "dørslag", "tallerken", "2 gafler"],
   "recipeInstructions": [
-    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten kan indeholde selleri, sennep eller gluten: tjek karryen." } },
+    { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten kan indeholde allergener fra karryen. Tjek karryens pakke, fx for selleri, sennep og gluten." } },
     { "@type": "HowToStep", "text": "Kog vand til risene.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "2 l vand og 1 tsk salt i en stor gryde på en bagerste plade, med håndtagene ind. Med låg på koger det hurtigere." } },
     { "@type": "HowToStep", "text": "Rør karryen ud i olien.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 60, "ikoner": ["olie", "krydderi"], "note": "Olien i en gryde med låg ved middel varme. Rør i 1 min, til det dufter." } },
     { "@type": "HowToStep", "text": "Hæld kokosmælk og tomater i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["kokos", "tomat"], "note": "Gryden er varm. Den voksne åbner dåserne: kanten er skarp." } },
