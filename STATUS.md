@@ -2,6 +2,71 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
+## 18-11-2026 kl. 16:26: v11 færdig på grenen `v10-foraeldre`, ikke flettet og ikke udgivet
+
+Bygget efter Jimmys «kør den helt færdig» (16-11) og «fortsæt til 100 %» (17-11). Grenen ligger 112 commits over `main` før denne STATUS-commit (den sidste er `ad93067`). `UDGAVE = 'v11 · 17-11-2026'`. Ingen ændring af gemte data.
+
+**Hvad v11 indeholder (oven på v10)**
+- **Voksendelens forside er ugeplanen** (`#/voksen`): ugens 7 dage og boblerne Indkøbsliste · Retter · Mere. Et tryk på en dag åbner kataloget som «Vælg ret til …».
+- **Gris og Ko** i stedet for Kød, så forsiden har 12 knapper.
+- **14 nye retter** med billede (FLUX.2 klein) og Røst-stemme, alle `afproevet: false`:
+  - Brød: lynpizza med yoghurtdej, pizzabrød med hvidløg og ost, naan på panden, hvidløgsnaan og ostenaan.
+  - Ris og pasta: honningkylling med sesam og ris, japansk keema-karry, risboller med tun og majs, tomatris fra riskogeren, cremet kyllingepasta med broccoli, tortellini i cremet tomatsovs og pizzapasta i fad.
+  - Karry: boller i karry og kylling i karry.
+- **Tre runder review** (code-reviewer + ui-reviewer i WebKit) med 56 commits 17-11, rettelserne hver med test og egen commit:
+  - Allergentekster i karryretterne: fast tekst plus «tjek pakken, fx …».
+  - Lange ord deles med bløde bindestreger (`ORD_MAKS = 8`), og intet kort ord står alene på kortenes navne.
+  - Skærmlæseren får hele navnet.
+  - «Prøv igen» på indkøbslistens tomme skærme.
+  - Seks retbilleder er tegnet om, så de kan genkendes: risboller, tortellini (to gange), tomatris (to gange) og pizzapasta.
+
+**Tests**
+
+| Kørsel | Resultat |
+|---|---|
+| Node, 18 filer (18-11) | 17 grønne. `test-lyd` fejler kun på de 3 gamle gruppe-mp3 uden for listen (se Afventer, punkt 2) |
+| E2e alt undtagen `timer` (17-11 kl. 17:17–18:23, på `701542e`) | ca. 217.000 tjek, 1 fejl: `skærmformer` ventede 30 s på «Fortsæt» på 667×375. Det samme skete i den forrige fulde kørsel (17-11 kl. 12, på 960×800) |
+| Årsagen (18-11) | En fejl i testen, ikke i appen. Løkken over alle retter lavede 504 adresseskift i samme dokument, og WebKit afviser over ca. 200 pr. 10 s. Målt med samme løkke: 15 afviste skift i 14 kørsler før rettelsen, 0 efter (`ad93067`: nyt dokument for hver 150 skift) |
+| E2e `former` på de 7 formater med løkken (18-11, efter `ad93067`) | 10.120 tjek, 0 fejl |
+| E2e `timer` | Ikke kørt på v11. Intet i timerne er ændret siden v10 |
+
+**Ikke gjort / usikkert**
+- Intet er afprøvet på en rigtig iPad eller iPhone. Det gælder især delingen af lange ord: `ORD_MAKS = 8` er kun målt med Trebuchet i WebKit på Windows.
+- 6 mp3 bør lyttes til (talegenkendelsen hørte noget andet; `lyt=true` i `D:/Stemmer/kogebog-v11-retter2/kvalitet.json`):
+  - boller i karry: ingrediens 3 og timer-optaget-20;
+  - kylling i karry: ingrediens 10 og timer-optaget-9;
+  - tomatris: ingrediens 2;
+  - kyllingepasta: ingrediens 4.
+  
+  Pizzabrødets stemme er valgt alene efter talegenkendelsen.
+- Ladet ligge fra reviewet:
+  - **U7:** «Hæld majsen i en si» bruger si-billedet med den varme gryde.
+  - **U9:** delingen af lange ingrediensnavne skal tjekkes på en rigtig iPad.
+  - **V7:** der findes ingen tegning af blade, der plukkes (`smuldre` viser små stykker i en skål).
+- Kyllingekarry og mild kartoffelkarry har stadig den gamle allergentekst («tjek karryen (den kan have …)»). Validatoren godtager den, men den følger ikke de 8 andre karryretters faste mønster.
+
+**Afventer Jimmy**
+1. (18-11) Se v11 på grenen (testlisten nedenfor), og sig til, før den flettes til `main` og udgives (regel 7).
+2. (15-11) Må de 3 gamle gruppe-mp3 slettes? Kommandoen til **PowerShell** er `cd .\Kogebog; git rm lyd/faelles/gruppe-aftensmad.mp3 lyd/faelles/gruppe-bagning.mp3 lyd/faelles/gruppe-koed.mp3`.
+3. (17-11) `drysse` i kander, kopper og glas: skal de have deres eget billede?
+4. (15-11) Lam senere?
+5. (14-11) Fase 2 (`kog-familie` v1 → v2) står stadig i v10-afsnittet nedenfor.
+
+**Testliste til Jimmy (v11).** Grenen kan først ses på iPad og iPhone efter udgivelsen (eller via Tailscale, som kræver dit ja). Indtil da på pc'en, i **PowerShell**: `cd D:\Claude\Kogebog; py -m http.server 8091 --bind 127.0.0.1 --protocol HTTP/1.1 --directory D:\Claude\Kogebog`, og åbn http://127.0.0.1:8091/. (I dag kører der allerede en server på 8091. Står siden der, så spring kommandoen over.)
+
+*iPad på langs (eller et bredt vindue):*
+1. Forsiden: der står «Version v11 · 17-11-2026» nederst, og der er 12 knapper, også Gris og Ko.
+2. Hold «Voksne» i 2 s. Ugeplanen er forsiden: 7 dage og boblerne Indkøbsliste, Retter og Mere.
+3. Tryk på en tom dag. Der står «Vælg ret til …». Vælg «Tortellini i cremet tomatsovs». Dagen viser retten, og billedet er foldede pastaringe i orange sovs.
+4. Tryk på Indkøbsliste-boblen. Listen har «Til ugeplanen» i stedet for huset, og den knap fører tilbage uden et nyt hold.
+5. Søg «tomatris» og åbn retten. Billedet er ris med revet ost i strimler, ikke en osteterning.
+6. Åbn «Kylling i karry med ris», trin 1. Noten «Til den voksne: Retten indeholder mælk og gluten …» sender den voksne videre til bouillonens og karryens pakke.
+
+*iPhone (eller et smalt vindue):*
+7. Forsiden: i lange retnavne står intet kort ord («med», «i») alene på en linje, og intet ord er delt uden en bindestreg.
+8. Åbn en ret med et langt ingrediensnavn (fx en bouillonterning). Ordet deles med en bindestreg, der ser rigtig ud.
+9. Lyt til de 6 mp3-filer under «Ikke gjort / usikkert», når appen siger dem.
+
 ## 16-11-2026 kl. 02:23: v11 halvvejs på grenen `v10-foraeldre` (Saga)
 
 **Gjort (15-11, efter Jimmys «ja» til v11):** v10-reviewets R1–R6 og U1–U8 er rettet med test (`ace1807`…`0a1f2ae`). «Kød» er delt i **Gris** (8) og **Ko** (6) på forsiden, så der nu er 12 knapper (`762f368`). Der er ingen Lam, fordi appen har 0 retter med lam. 5 nye brødretter med billede og Røst: lynpizza med yoghurtdej, pizzabrød med hvidløg og ost, naan på panden, hvidløgsnaan og ostenaan (`6760fbb`…`b248f95`, `afproevet: false`). `UDGAVE = 'v11 · 15-11-2026'`. Planen ligger i Saga-sessionens scratchpad (`tumbi-v11/plan.md`).
