@@ -576,10 +576,11 @@ export function valider(rod = ROD) {
         // «kaal»). Review U5 17-11: persillen i hvidløgsnaan viste et æg; v12 18-11: 8 blad-trin viste terningen.
         // Pluk-teksten regnes først (review 18-11: «Pil fire blade af salaten, og skyl dem.» fik rådet «skylle»): så er også
         // «haelde», «si-daase» og «skylle» «plukke», og si-reglen herunder springes over. Kun teksten, ikke ikonet: «krydderurt»
-        // sidder også på tørret oregano og paprika
+        // sidder også på tørret oregano og paprika. Det gælder også «smuldre» («Smuldr oregano over.»: review 18-11); kun
+        // «pille» går også efter ikonet
         const bladeTekst = PLUK_TEKST.test(s.text) && !TOPPEN_PILLES.test(s.text);
         const blade = (Array.isArray(st.ikoner) && st.ikoner.some((ik) => BLAD_IKONER.includes(ik))) || bladeTekst;
-        if (((st.verbum === 'pille' || st.verbum === 'smuldre') && blade) || (SI_VERBER.includes(st.verbum) && bladeTekst)) f(hvor + ': der plukkes blade, så brug verbet "plukke" (billedet til «' + st.verbum + '» er ' + BILLEDE[st.verbum] + '): «' + s.text + '»');
+        if ((st.verbum === 'pille' && blade) || ((st.verbum === 'smuldre' || SI_VERBER.includes(st.verbum)) && bladeTekst)) f(hvor + ': der plukkes blade, så brug verbet "plukke" (billedet til «' + st.verbum + '» er ' + BILLEDE[st.verbum] + '): «' + s.text + '»');
         // «plukke» står kun, hvor teksten plukker blade (review 18-11)
         if (st.verbum === 'plukke' && !bladeTekst) f(hvor + ': verbet "plukke" er blade, der plukkes af en kvist, men teksten plukker ingen blade («Pluk …» eller «Pil … blade …»; jordbærrenes grønne top er "pille"): «' + s.text + '»');
         // En si eller en skylning med målekanden til «haelde» (v12 18-11: ca. 70 trin). Med kogende vand ("varme") er det «si»

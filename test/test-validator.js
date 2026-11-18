@@ -704,6 +704,19 @@ test('blade, der plukkes og skylles, er «plukke», ikke «skylle» (review 18-1
   });
 });
 
+// Review af v12 18-11 (lav): «Smuldr oregano over.» med ikonet «krydderurt» fik rådet «plukke». Tørret oregano smuldres,
+// så «smuldre» vurderes kun efter teksten («Pluk …», «Pil … blade …»)
+test('tørrede krydderurter smuldres: «smuldre» vurderes kun efter teksten (review 18-11)', () => {
+  forventGyldig('opskrifter/bedste-venners-pizza.json', (d) => {
+    const { st } = trinMed(d, 'Drys oregano over.');
+    assert.deepEqual(st.tumbi.ikoner, ['krydderurt']);
+    st.text = 'Smuldr oregano over.';
+    st.tumbi.verbum = 'smuldre';
+  });
+  forventFejl('opskrifter/fiskefrikadeller-med-dilddip.json', (d) => { trinMed(d, 'Pluk dilden i små dotter.').st.tumbi.verbum = 'smuldre'; },
+    ': der plukkes blade, så brug verbet "plukke" (billedet til «smuldre» er en terning, der smuldres): «Pluk dilden i små dotter.»');
+});
+
 test('kødet tjekkes i trinnet, der koger, ikke når barnet smager (review F7)', () => {
   let nr;
   forventFejl('opskrifter/japansk-keema-karry.json', (d) => {
