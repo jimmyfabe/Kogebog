@@ -77,7 +77,9 @@ export const VOKSEN_KRAV = {
 // voksne hjælpe, og så er det for varmens skyld, aldrig kniven.
 // Validatoren kan ikke se, om der er varme; det skriver opskriften med «voksen». Den tjekker, at hjælpen er «varme».
 // «si-daase» og «skylle» står ikke her: dåseåbneren og blenderkanden («Skyl kanden under hanen.») er den voksnes for knivens
-// skyld. «si-daase» står heller ikke i VOKSEN_KRAV, for dåseåbneren tæller ikke i ugeplanens kniv-loft (KNIV_VERBER)
+// skyld. «si-daase» står heller ikke i VOKSEN_KRAV, for dåseåbneren tæller ikke i ugeplanens kniv-loft (UGEPLAN_MAKS_KNIV i
+// test/test-opskrifter.js tæller kun kniv-verberne i VOKSEN_KRAV). Ugeplanens viste «N knivtrin» (knivtrin i js/model.js)
+// tæller dåseåbneren med, for den går efter voksen_hjaelp «kniv», ikke efter verbet
 export const KUN_VARME_HJAELP = ['piske', 'pensle', 'mose', 'drysse', 'pynte', 'sproejte', 'stikke-ud', 'forme', 'pille', 'ryste', 'klemme', 'dyppe',
   'dyppe-vand', 'drysse-skaal', 'plukke'];
 
