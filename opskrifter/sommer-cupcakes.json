@@ -38,7 +38,7 @@
     { "@type": "HowToStep", "text": "Bag kagerne i 18 minutter.", "tumbi": { "verbum": "bage", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 1080, "note": "Midt i ovnen ved 180 °C (eller 160 °C varmluft). De er færdige, når en tandstik kommer tør op." } },
     { "@type": "HowToStep", "text": "Tag pladen ud af ovnen.", "tumbi": { "verbum": "tage-ud", "voksen": true, "voksen_hjaelp": "varme", "note": "Med grydelapper. Løft kagerne over på en rist." } },
     { "@type": "HowToStep", "text": "Lad kagerne køle helt af.", "tumbi": { "verbum": "vente", "timer_sek": 1800, "note": "De skal være helt kolde, før de pyntes: ellers løber glasuren af." } },
-    { "@type": "HowToStep", "text": "Skyl jordbærrene.", "tumbi": { "verbum": "haelde", "ikoner": ["jordbaer"], "note": "Under koldt vand. Brug kun friske jordbær: frosne bær skal koges, før de spises kolde." } },
+    { "@type": "HowToStep", "text": "Skyl jordbærrene.", "tumbi": { "verbum": "skylle", "ikoner": ["jordbaer"], "note": "Under koldt vand. Brug kun friske jordbær: frosne bær skal koges, før de spises kolde." } },
     { "@type": "HowToStep", "text": "Skær jordbærrene i skiver.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["jordbaer"], "note": "Tag den grønne top af først." } },
     { "@type": "HowToStep", "text": "Skær citronen i to.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["citron"] } },
     { "@type": "HowToStep", "text": "Pres saften ud i en ren kop.", "tumbi": { "verbum": "klemme", "ikoner": ["citron"], "note": "Fisk kernerne op." } },

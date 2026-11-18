@@ -25,7 +25,7 @@
   "tool": ["si", "riskoger (eller gryde med låg)", "kniv", "skærebræt", "stor kop eller kande", "stor pande med låg", "grydeske"],
   "recipeInstructions": [
     {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Retten indeholder soja og gluten (hvede i melet og sojaen). Tjek karryens og ketchuppens pakke for flere allergener, fx selleri og sennep."}},
-    {"@type": "HowToStep", "text": "Skyl risene i en si.", "tumbi": {"verbum": "haelde", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er næsten klart. Barnet kan selv."}},
+    {"@type": "HowToStep", "text": "Skyl risene i en si.", "tumbi": {"verbum": "skylle", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er næsten klart. Barnet kan selv."}},
     {"@type": "HowToStep", "text": "Tænd for riskogeren.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris", "vand"], "note": "Ris og vand i riskogeren efter stregerne i skålen eller som på posen. Barnet kan hælde i, før den tændes. Risene er færdige efter ca. 25 min og holdes varme. Ingen riskoger: kog dem under låg i en gryde som på posen."}},
     {"@type": "HowToStep", "text": "Skær løget i små tern.", "tumbi": {"verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["loeg"], "note": "Pil det først. Det kan barnet."}},
     {"@type": "HowToStep", "text": "Rør sovsen sammen i en kop.", "tumbi": {"verbum": "roere", "ikoner": ["ketchup", "honning", "soja", "vand"], "note": "2 spsk ketchup, 1 spsk honning, 2 spsk soja og 2 dl vand i en stor kop eller kande. Barnet kan selv."}},

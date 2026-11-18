@@ -33,7 +33,7 @@
     {"@type": "HowToStep", "text": "Rul dejen ud på bagepapir.", "tumbi": {"verbum": "kagerulle", "ikoner": ["mel"], "note": "Ca. 30 × 40 cm og ½ cm tyk, så den fylder en bageplade. Træk papiret over på pladen."}},
     {"@type": "HowToStep", "text": "Smør passataen ud på dejen.", "tumbi": {"verbum": "smoere", "ikoner": ["tomat"], "note": "250 g, det er en halv flaske. Lad 1 cm være fri langs kanten."}},
     {"@type": "HowToStep", "text": "Drys oregano over.", "tumbi": {"verbum": "drysse", "ikoner": ["krydderurt"], "note": "1 tsk tørret oregano."}},
-    {"@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad vandet løbe fra."}},
+    {"@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": {"verbum": "si-daase", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad vandet løbe fra."}},
     {"@type": "HowToStep", "text": "Drys skinke og majs over.", "tumbi": {"verbum": "drysse", "ikoner": ["skinke", "majs"], "note": "Fordel det over hele pizzaen."}},
     {"@type": "HowToStep", "text": "Drys osten over.", "tumbi": {"verbum": "drysse", "ikoner": ["ost"], "note": "175 g revet ost."}},
     {"@type": "HowToStep", "text": "Skær agurken i stave.", "tumbi": {"verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["agurk"], "note": "Den voksne skærer. Læg stavene på et fad."}},

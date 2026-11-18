@@ -24,7 +24,7 @@
   "tool": ["dåseåbner", "si", "køkkenvægt", "gryde med låg", "grydeske"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
-    { "@type": "HowToStep", "text": "Hæld kidneybønnerne i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["boenner"], "note": "Den voksne åbner dåserne: kanten er skarp. Skyl dem med koldt vand." } },
+    { "@type": "HowToStep", "text": "Hæld kidneybønnerne i en si.", "tumbi": { "verbum": "si-daase", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["boenner"], "note": "Den voksne åbner dåserne: kanten er skarp. Skyl dem med koldt vand." } },
     { "@type": "HowToStep", "text": "Mål 150 g suppehorn.", "tumbi": { "verbum": "maale", "ikoner": ["spaghetti"], "note": "Brug køkkenvægten." } },
     { "@type": "HowToStep", "text": "Hæld suppeurter og grønne bønner i en gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["gulerod", "boenner"], "note": "Direkte fra frost. Gryden er kold, så barnet kan selv." } },
     { "@type": "HowToStep", "text": "Hæld tomaterne i gryden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["tomat"], "note": "Gryden er kold. Den voksne åbner dåserne: kanten er skarp." } },

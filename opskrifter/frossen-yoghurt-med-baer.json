@@ -33,7 +33,7 @@
     { "@type": "HowToStep", "text": "Hæld resten af bærmosen over i striber.", "tumbi": { "verbum": "haelde", "note": "Træk en ske et par gange gennem, men rør den ikke helt sammen." } },
     { "@type": "HowToStep", "text": "Sæt bøtten i fryseren i 1½ time mere.", "tumbi": { "verbum": "vente", "timer_sek": 5400, "note": "Med låg på. Står den hele natten, bliver den hård." } },
     { "@type": "HowToStep", "text": "Lad bøtten stå på bordet i 10 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 600, "note": "Så bliver den let at øse. Med skyr bliver den hårdere: lad den stå 15-20 minutter." } },
-    { "@type": "HowToStep", "text": "Skyl bærrene til pynt i en si.", "tumbi": { "verbum": "haelde", "ikoner": ["baer"], "note": "De friske bær, under koldt vand. Lad dem dryppe af. Barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Skyl bærrene til pynt i en si.", "tumbi": { "verbum": "skylle", "ikoner": ["baer"], "note": "De friske bær, under koldt vand. Lad dem dryppe af. Barnet kan selv." } },
     { "@type": "HowToStep", "text": "Øs tre kugler op i hver skål.", "tumbi": { "verbum": "maale", "note": "Med en isske eller en stor ske. Dyp skeen i varmt vand fra hanen, så glider det lettere." } },
     { "@type": "HowToStep", "text": "Pynt med et par bær.", "tumbi": { "verbum": "pynte", "ikoner": ["baer"] } },
     { "@type": "HowToStep", "text": "Smag den frosne yoghurt!", "tumbi": { "verbum": "smage" } }

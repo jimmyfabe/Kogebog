@@ -24,7 +24,7 @@
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
     { "@type": "HowToStep", "text": "Kog vand til spaghettien.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "3 l vand og 1 tsk salt i en stor gryde på en bagerste plade, med håndtagene ind. Med låg på koger det hurtigere." } },
-    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåserne: kanten er skarp. Lad vandet løbe fra." } },
+    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "si-daase", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåserne: kanten er skarp. Lad vandet løbe fra." } },
     { "@type": "HowToStep", "text": "Hæld vandet fra tunen.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["tun"], "note": "Den voksne åbner dåserne: kanten er skarp. Tryk låget ned, og hæld vandet ud." } },
     { "@type": "HowToStep", "text": "Kom spaghettien i vandet.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 420, "ikoner": ["spaghetti"], "note": "Kog som anvist på pakken. Ærterne kommer i de sidste 3 min. Rør lidt i starten." } },
     { "@type": "HowToStep", "text": "Hæld ærterne i vandet.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["aerter"], "note": "Direkte fra frost. Den voksne hælder: vandet koger og kan sprøjte." } },

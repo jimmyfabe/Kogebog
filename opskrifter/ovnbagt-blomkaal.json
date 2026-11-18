@@ -27,7 +27,7 @@
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
     { "@type": "HowToStep", "text": "Rør yoghurt og hvidløgspulver sammen.", "tumbi": { "verbum": "roere", "ikoner": ["yoghurt", "hvidloeg"], "note": "I en lille skål. Det er dip til maden. Stil den i køleskabet." } },
-    { "@type": "HowToStep", "text": "Hæld kikærterne i en si, og skyl dem.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kikaerter"], "note": "Den voksne åbner dåserne: kanten er skarp. Skyl under koldt vand, og lad dem dryppe af." } },
+    { "@type": "HowToStep", "text": "Hæld kikærterne i en si, og skyl dem.", "tumbi": { "verbum": "si-daase", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kikaerter"], "note": "Den voksne åbner dåserne: kanten er skarp. Skyl under koldt vand, og lad dem dryppe af." } },
     { "@type": "HowToStep", "text": "Hæld blomkålen i en bradepande.", "tumbi": { "verbum": "haelde", "ikoner": ["blomkaal"], "note": "Tænd ovnen på 220 °C varmluft først. Blomkålen kommer direkte fra frost." } },
     { "@type": "HowToStep", "text": "Ryst kikærter, olie og krydderier i en pose.", "tumbi": { "verbum": "roere", "ikoner": ["kikaerter", "olie", "krydderurt", "salt"], "note": "2 spsk olie, paprika, spidskommen og salt. Hold godt om posen." } },
     { "@type": "HowToStep", "text": "Hæld kikærterne ud over blomkålen.", "tumbi": { "verbum": "haelde", "ikoner": ["kikaerter"], "note": "Vend det hele med en ske, så blomkålen også får olie og krydderi." } },

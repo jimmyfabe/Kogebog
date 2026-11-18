@@ -21,7 +21,7 @@
     { "@type": "HowToStep", "text": "Mål 3 spsk havregryn i kanden.", "tumbi": { "verbum": "maale", "ikoner": ["havregryn"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
     { "@type": "HowToStep", "text": "Hæld 3 dl mælk i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["maelk"] } },
     { "@type": "HowToStep", "text": "Lad havren trække i 5 minutter.", "tumbi": { "verbum": "vente", "timer_sek": 300, "note": "Så bliver havren blød, og smoothien bliver glat." } },
-    { "@type": "HowToStep", "text": "Skyl hindbærrene forsigtigt i en si.", "tumbi": { "verbum": "haelde", "ikoner": ["baer"] } },
+    { "@type": "HowToStep", "text": "Skyl hindbærrene forsigtigt i en si.", "tumbi": { "verbum": "skylle", "ikoner": ["baer"] } },
     { "@type": "HowToStep", "text": "Pil bananen, og knæk den i stykker.", "tumbi": { "verbum": "pille", "ikoner": ["banan"] } },
     { "@type": "HowToStep", "text": "Kom hindbær og banan i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["baer", "banan"] } },
     { "@type": "HowToStep", "text": "Kom 2 tsk honning i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["honning"] } },

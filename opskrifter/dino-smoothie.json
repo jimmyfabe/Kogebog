@@ -17,7 +17,7 @@
   "tool": ["si", "kniv og skærebræt", "målebæger", "blender", "3 glas"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Stil frugten og æblemosten på køl i forvejen, så smoothien bliver kold." } },
-    { "@type": "HowToStep", "text": "Skyl spinaten i en si.", "tumbi": { "verbum": "haelde", "ikoner": ["spinat"], "note": "Kun en lille håndfuld, og det er med vilje: der skal kun lidt rå spinat i, så banan og æble smager mest." } },
+    { "@type": "HowToStep", "text": "Skyl spinaten i en si.", "tumbi": { "verbum": "skylle", "ikoner": ["spinat"], "note": "Kun en lille håndfuld, og det er med vilje: der skal kun lidt rå spinat i, så banan og æble smager mest." } },
     { "@type": "HowToStep", "text": "Skær æblet i både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["aeble"], "note": "Skær kernehuset væk. Skrællen må gerne blive på." } },
     { "@type": "HowToStep", "text": "Pil bananerne, og knæk dem i stykker.", "tumbi": { "verbum": "pille", "ikoner": ["banan"] } },
     { "@type": "HowToStep", "text": "Kom spinat, æble og banan i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["spinat", "aeble", "banan"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },

@@ -21,7 +21,7 @@
   "tool": ["stor pande", "stegespade", "si", "skærebræt", "kniv", "skræller", "fad"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder gluten og mælk." } },
-    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad vandet løbe fra." } },
+    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "si-daase", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad vandet løbe fra." } },
     { "@type": "HowToStep", "text": "Skær gulerødder og agurk i stave.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod", "agurk"], "note": "3 gulerødder og 1 agurk. Barnet skræller gulerødderne med skrælleren, den voksne skærer." } },
     { "@type": "HowToStep", "text": "Drys ost på den ene halvdel af hvert brød.", "tumbi": { "verbum": "drysse", "ikoner": ["tortilla", "ost"], "note": "Læg de 6 brød på bordet. Brug lidt over halvdelen af osten. Barnet kan selv." } },
     { "@type": "HowToStep", "text": "Drys skinke, majs og spinat ovenpå.", "tumbi": { "verbum": "drysse", "ikoner": ["skinke", "majs", "spinat"], "note": "Kun på den halvdel med ost. Del store spinatblade med fingrene." } },

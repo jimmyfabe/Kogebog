@@ -16,7 +16,7 @@
   "tool": ["si", "målebæger", "blender", "3 glas"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Retten indeholder mælk. 250 g jordbær er ca. en halv stor bakke. Brug friske bær: frosne bær skal koges først." } },
-    { "@type": "HowToStep", "text": "Skyl jordbærrene i en si.", "tumbi": { "verbum": "haelde", "ikoner": ["jordbaer"] } },
+    { "@type": "HowToStep", "text": "Skyl jordbærrene i en si.", "tumbi": { "verbum": "skylle", "ikoner": ["jordbaer"] } },
     { "@type": "HowToStep", "text": "Pil de grønne blade af jordbærrene.", "tumbi": { "verbum": "pille", "ikoner": ["jordbaer"] } },
     { "@type": "HowToStep", "text": "Pil bananerne, og knæk dem i stykker.", "tumbi": { "verbum": "pille", "ikoner": ["banan"] } },
     { "@type": "HowToStep", "text": "Kom jordbær og banan i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["jordbaer", "banan"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },

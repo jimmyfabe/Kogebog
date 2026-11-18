@@ -16,7 +16,7 @@
   "tool": ["si", "kniv og skærebræt", "målebæger", "blender", "3 glas"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Stil pærerne og juicen på køl i forvejen, så smoothien bliver kold." } },
-    { "@type": "HowToStep", "text": "Skyl spinaten i en si.", "tumbi": { "verbum": "haelde", "ikoner": ["spinat"], "note": "Kun en lille håndfuld, og det er med vilje: der skal kun lidt rå spinat i, så pære og appelsin smager mest." } },
+    { "@type": "HowToStep", "text": "Skyl spinaten i en si.", "tumbi": { "verbum": "skylle", "ikoner": ["spinat"], "note": "Kun en lille håndfuld, og det er med vilje: der skal kun lidt rå spinat i, så pære og appelsin smager mest." } },
     { "@type": "HowToStep", "text": "Skær pærerne i både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["paere"], "note": "Skær kernehuset og stilken væk. Skrællen må gerne blive på, når pærerne er bløde." } },
     { "@type": "HowToStep", "text": "Kom spinat og pære i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["spinat", "paere"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
     { "@type": "HowToStep", "text": "Hæld 3 dl juice i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["appelsin"] } },

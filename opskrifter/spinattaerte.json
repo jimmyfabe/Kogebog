@@ -26,7 +26,7 @@
   "tool": ["si", "køkkenvægt", "stor skål", "spiseske", "kagerulle", "tærteform (ca. 24 cm)", "gaffel", "kniv", "skærebræt", "skål", "piskeris", "kop", "grydelapper", "fryseposer"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
-    { "@type": "HowToStep", "text": "Hæld spinaten i en si.", "tumbi": { "verbum": "haelde", "ikoner": ["spinat"], "note": "Den skal være tøet op i køleskabet natten over. Sæt sien over en skål." } },
+    { "@type": "HowToStep", "text": "Hæld spinaten i en si.", "tumbi": { "verbum": "si-daase", "ikoner": ["spinat"], "note": "Den skal være tøet op i køleskabet natten over. Sæt sien over en skål." } },
     { "@type": "HowToStep", "text": "Mål grahamsmel og hvedemel.", "tumbi": { "verbum": "maale", "ikoner": ["mel"], "note": "100 g af hver i en stor skål. Brug køkkenvægten." } },
     { "@type": "HowToStep", "text": "Smuldr smør og salt i melet.", "tumbi": { "verbum": "smuldre", "ikoner": ["smoer", "salt", "mel"], "note": "100 g koldt smør i små stykker og ½ tsk salt. Gnid det mellem fingrene, til det ligner groft sand." } },
     { "@type": "HowToStep", "text": "Rør vandet i, og saml dejen.", "tumbi": { "verbum": "roere", "ikoner": ["vand"], "note": "4 spsk koldt vand. Saml dejen hurtigt med hænderne. Den må ikke æltes længe, så bliver bunden sej." } },

@@ -27,7 +27,7 @@
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
     { "@type": "HowToStep", "text": "Skær løg og peberfrugt i tynde strimler.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["loeg", "peberfrugt"], "note": "Pil løget, og tag kernerne ud af peberfrugten først." } },
-    { "@type": "HowToStep", "text": "Hæld bønnerne i en si, og skyl dem.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["boenner"], "note": "Den voksne åbner dåserne: kanten er skarp. Skyl under koldt vand, og lad dem dryppe af." } },
+    { "@type": "HowToStep", "text": "Hæld bønnerne i en si, og skyl dem.", "tumbi": { "verbum": "si-daase", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["boenner"], "note": "Den voksne åbner dåserne: kanten er skarp. Skyl under koldt vand, og lad dem dryppe af." } },
     { "@type": "HowToStep", "text": "Steg løg og peberfrugt i olien.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "ikoner": ["olie", "loeg", "peberfrugt"], "note": "En stor pande med låg ved middel varme. Rør af og til, til grøntsagerne er bløde." } },
     { "@type": "HowToStep", "text": "Rør paprika og spidskommen i.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 60, "ikoner": ["krydderurt"], "note": "Rør i 1 min, til det dufter." } },
     { "@type": "HowToStep", "text": "Hæld tomater, bønner og vand på panden.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["tomat", "boenner", "vand"], "note": "Panden er varm: den voksne holder øje. Den voksne åbner tomatdåserne: kanten er skarp." } },

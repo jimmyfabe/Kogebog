@@ -21,7 +21,7 @@
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Skyl æblet og blåbærrene. Grillspyd er spidse: den voksne holder øje, og de mindste søskende får frugten uden spyd. Dyppen indeholder mælk (yoghurten)." } },
     { "@type": "HowToStep", "text": "Pil clementinerne, og del dem i både.", "tumbi": { "verbum": "pille", "ikoner": ["appelsin"], "note": "Med fingrene: bådene skilles let fra hinanden." } },
-    { "@type": "HowToStep", "text": "Hæld ananassen i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["ananas"], "note": "Den voksne åbner dåserne: kanten er skarp. Lad saften løbe fra." } },
+    { "@type": "HowToStep", "text": "Hæld ananassen i en si.", "tumbi": { "verbum": "si-daase", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["ananas"], "note": "Den voksne åbner dåserne: kanten er skarp. Lad saften løbe fra." } },
     { "@type": "HowToStep", "text": "Skær æblet i små trekanter.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["aeble"], "note": "Skær kernehuset væk først. Der skal være 8 trekanter, én til hver raket." } },
     { "@type": "HowToStep", "text": "Stik to clementinbåde på spyddet som flammer.", "tumbi": { "verbum": "pynte", "ikoner": ["appelsin"], "note": "Start forneden: det er rakettens ild." } },
     { "@type": "HowToStep", "text": "Stik ananas og blåbær på, hver anden gang.", "tumbi": { "verbum": "pynte", "ikoner": ["ananas", "baer"], "note": "Lad der være plads til spidsen øverst." } },

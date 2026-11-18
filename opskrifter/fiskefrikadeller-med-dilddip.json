@@ -26,7 +26,7 @@
     { "@type": "HowToStep", "text": "Hæld skyren i en lille skål.", "tumbi": { "verbum": "haelde", "ikoner": ["yoghurt"], "note": "2 dl. Dippen laves først, før der er rå fisk på bordet." } },
     { "@type": "HowToStep", "text": "Skær citronen over.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["citron"], "note": "Over på midten. Kun den ene halvdel skal bruges." } },
     { "@type": "HowToStep", "text": "Pres citronen over.", "tumbi": { "verbum": "klemme", "ikoner": ["citron"], "note": "Fisk kernerne op." } },
-    { "@type": "HowToStep", "text": "Pluk dilden i små dotter.", "tumbi": { "verbum": "smuldre", "ikoner": ["krydderurt"], "note": "De tykke stilke smides ud. Dotterne kan også klippes med en saks." } },
+    { "@type": "HowToStep", "text": "Pluk dilden i små dotter.", "tumbi": { "verbum": "plukke", "ikoner": ["krydderurt"], "note": "De tykke stilke smides ud. Dotterne kan også klippes med en saks." } },
     { "@type": "HowToStep", "text": "Rør det meste af dilden i skyren.", "tumbi": { "verbum": "roere", "ikoner": ["krydderurt", "yoghurt"], "note": "Gem en lille håndfuld dild til farsen. Dippen holder 2 dage i køleskabet." } },
     { "@type": "HowToStep", "text": "Riv guleroden fint.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skrub den først. Rivejernet er skarpt, så den voksne river." } },
     { "@type": "HowToStep", "text": "Kom gulerod, havregryn og dild i den store skål.", "tumbi": { "verbum": "haelde", "ikoner": ["gulerod", "havregryn", "krydderurt"], "note": "2 spsk havregryn og resten af dilden." } },

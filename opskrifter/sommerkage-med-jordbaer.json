@@ -38,7 +38,7 @@
     { "@type": "HowToStep", "text": "Lad kagen køle helt af.", "tumbi": { "verbum": "vente", "timer_sek": 2400, "note": "Den skal være helt kold, ellers smelter flødeskummet." } },
     { "@type": "HowToStep", "text": "Pisk fløden til skum.", "tumbi": { "verbum": "piske", "ikoner": ["flode"], "note": "Vask piskerisene først: der må ikke komme rå dej i flødeskummet. 2,5 dl piskefløde og 1 tsk vaniljesukker. Med en elpisker hjælper den voksne lidt." } },
     { "@type": "HowToStep", "text": "Smør flødeskummet på kagen.", "tumbi": { "verbum": "smoere", "ikoner": ["flode"] } },
-    { "@type": "HowToStep", "text": "Skyl jordbærrene.", "tumbi": { "verbum": "haelde", "ikoner": ["jordbaer"], "note": "Under koldt vand. Brug kun friske jordbær: frosne bær skal koges, før de spises kolde." } },
+    { "@type": "HowToStep", "text": "Skyl jordbærrene.", "tumbi": { "verbum": "skylle", "ikoner": ["jordbaer"], "note": "Under koldt vand. Brug kun friske jordbær: frosne bær skal koges, før de spises kolde." } },
     { "@type": "HowToStep", "text": "Skær jordbærrene i halve.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["jordbaer"], "note": "Tag den grønne top af først." } },
     { "@type": "HowToStep", "text": "Læg jordbær på kagen.", "tumbi": { "verbum": "pynte", "ikoner": ["jordbaer"], "note": "Gerne i en stor cirkel eller som et hjerte." } },
     { "@type": "HowToStep", "text": "Skær kagen i 8 stykker.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv" } },

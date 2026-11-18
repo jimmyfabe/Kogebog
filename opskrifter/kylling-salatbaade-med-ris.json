@@ -23,10 +23,10 @@
   "tool": ["si", "gryde med låg", "dåseåbner", "glas med låg", "stor pande", "grydeske", "skål"],
   "recipeInstructions": [
     {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Retten indeholder soja og gluten (hvede i sojaen)."}},
-    {"@type": "HowToStep", "text": "Skyl risene i en si.", "tumbi": {"verbum": "haelde", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er næsten klart. Barnet kan selv."}},
+    {"@type": "HowToStep", "text": "Skyl risene i en si.", "tumbi": {"verbum": "skylle", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er næsten klart. Barnet kan selv."}},
     {"@type": "HowToStep", "text": "Sæt risene over at koge.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Vand som på posen, uden salt: sovsen er salt nok. Kog op, skru ned, og lad dem småkoge under låg i 10-12 min. Sluk, og lad dem trække 5-10 min med låget på."}},
-    {"@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad vandet løbe fra."}},
-    {"@type": "HowToStep", "text": "Pil bladene af salaten, og skyl dem.", "tumbi": {"verbum": "smuldre", "ikoner": ["kaal"], "note": "Bank stokken ned i bordet, og vrid den ud. Så er bladene lette at pille af. Brug de store blade som både."}},
+    {"@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": {"verbum": "si-daase", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad vandet løbe fra."}},
+    {"@type": "HowToStep", "text": "Pil bladene af salaten, og skyl dem.", "tumbi": {"verbum": "plukke", "ikoner": ["kaal"], "note": "Bank stokken ned i bordet, og vrid den ud. Så er bladene lette at pille af. Brug de store blade som både."}},
     {"@type": "HowToStep", "text": "Ryst sovsen sammen i et glas med låg.", "tumbi": {"verbum": "roere", "ikoner": ["soja", "honning", "vand"], "note": "2 spsk soja, 1 spsk honning og 3 spsk vand. Skru låget godt på."}},
     {"@type": "HowToStep", "text": "Læg kødet på panden.", "tumbi": {"verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["koed"], "note": "1 spsk olie i en stor pande ved høj varme. Timeren startes efter håndvasken."}},
     {"@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": {"verbum": "vaske-haender", "note": "Med sæbe: rå kylling kan give maveonde."}},

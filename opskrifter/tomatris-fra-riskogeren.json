@@ -25,7 +25,7 @@
   "tool": ["si", "kande", "riskoger (eller gryde med låg)", "dåseåbner", "lang ske"],
   "recipeInstructions": [
     {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Retten indeholder mælk (osten)."}},
-    {"@type": "HowToStep", "text": "Skyl risene i en si.", "tumbi": {"verbum": "haelde", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er næsten klart. Barnet kan selv."}},
+    {"@type": "HowToStep", "text": "Skyl risene i en si.", "tumbi": {"verbum": "skylle", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er næsten klart. Barnet kan selv."}},
     {"@type": "HowToStep", "text": "Rør passata, vand og krydderier sammen.", "tumbi": {"verbum": "roere", "ikoner": ["tomat", "vand", "krydderurt", "hvidloeg", "salt"], "note": "I en kande: 250 g passata, 3 dl vand, 1 tsk paprika, 1 tsk spidskommen, ½ tsk hvidløgspulver og ½ tsk salt. Barnet kan selv."}},
     {"@type": "HowToStep", "text": "Hæld ris, tomatvand og ærter i riskogeren.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris", "tomat", "aerter"], "note": "Riskogeren er ikke tændt endnu: barnet hælder, og den voksne holder. Ærterne direkte fra frost, ovenpå. Rør én gang."}},
     {"@type": "HowToStep", "text": "Tænd for riskogeren.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "note": "Risene er færdige efter ca. 25-30 min. Tomat kan brænde på i bunden: kan låget åbnes, så rør efter halv tid. Ingen riskoger: kog det hele under låg ved svag varme i ca. 20 min, og rør et par gange."}},

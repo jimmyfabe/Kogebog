@@ -22,7 +22,7 @@
   "tool": ["si", "gryde med låg", "dåseåbner", "skål", "ske", "kniv", "2 skærebrætter", "stor pande", "grydeske"],
   "recipeInstructions": [
     {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Retten indeholder soja og gluten (hvede i sojaen og melet)."}},
-    {"@type": "HowToStep", "text": "Skyl risene i en si.", "tumbi": {"verbum": "haelde", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er næsten klart. Barnet kan selv."}},
+    {"@type": "HowToStep", "text": "Skyl risene i en si.", "tumbi": {"verbum": "skylle", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er næsten klart. Barnet kan selv."}},
     {"@type": "HowToStep", "text": "Sæt risene over at koge.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Vand som på posen, uden salt: sovsen er salt nok. Kog op, skru ned, og lad dem småkoge under låg i 10-12 min. Sluk, og lad dem trække 5-10 min med låget på."}},
     {"@type": "HowToStep", "text": "Hæld saften fra ananassen i en skål.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["ananas"], "note": "Den voksne åbner dåsen: kanten er skarp. Gem saften til sovsen."}},
     {"@type": "HowToStep", "text": "Rør mel, ketchup og soja i saften.", "tumbi": {"verbum": "roere", "ikoner": ["mel", "ketchup", "soja"], "note": "1 spsk mel først: rør, til der ikke er klumper. Så 4 spsk ketchup og 1 spsk soja. Det er den søde og sure sovs."}},

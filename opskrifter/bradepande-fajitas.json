@@ -22,7 +22,7 @@
   "tool": ["dåseåbner", "si", "bradepande", "grydelapper", "2 gafler", "bagepapir", "skåle"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
-    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad vandet løbe fra." } },
+    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "si-daase", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad vandet løbe fra." } },
     { "@type": "HowToStep", "text": "Hæld grøntsagerne i en bradepande.", "tumbi": { "verbum": "haelde", "ikoner": ["aerter", "olie"], "note": "Tænd ovnen på 220 °C varmluft først. Direkte fra frost. Dryp 2 spsk olie over." } },
     { "@type": "HowToStep", "text": "Læg kyllingen oven på grøntsagerne.", "tumbi": { "verbum": "pynte", "ikoner": ["koed"], "note": "Hele fileter." } },
     { "@type": "HowToStep", "text": "Vask hænderne godt.", "tumbi": { "verbum": "vaske-haender", "note": "Med sæbe: rå kylling kan give maveonde." } },

@@ -22,7 +22,7 @@
   "recipeInstructions": [
     {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Retten indeholder gluten (pastaen) og mælk (osten). Skinketern er svinekød."}},
     {"@type": "HowToStep", "text": "Kog vand til pastaen.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "Tænd ovnen på 220 °C varmluft først. 3 l vand og 1 tsk salt i en stor gryde med låg på en bagerste plade, med håndtagene ind."}},
-    {"@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": {"verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad majsen dryppe af i vasken."}},
+    {"@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": {"verbum": "si-daase", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad majsen dryppe af i vasken."}},
     {"@type": "HowToStep", "text": "Rør passata, skinke, majs og oregano sammen.", "tumbi": {"verbum": "roere", "ikoner": ["tomat", "skinke", "majs", "krydderurt"], "note": "Direkte i et ovnfast fad: 500 g passata, 150 g skinketern, majsen og 1 tsk oregano. Fadet er koldt, så barnet kan selv."}},
     {"@type": "HowToStep", "text": "Kom pastaen i vandet.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 480, "ikoner": ["spaghetti"], "note": "Når vandet koger. Kog den kun 8 min: den bliver færdig i ovnen. Rør lidt i starten."}},
     {"@type": "HowToStep", "text": "Hæld vandet fra pastaen.", "tumbi": {"verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["spaghetti"], "note": "Den voksne hælder gennem dørslaget i vasken. Pas på dampen."}},

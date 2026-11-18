@@ -26,7 +26,7 @@
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
     { "@type": "HowToStep", "text": "Kog vand til nudlerne.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "2 l vand og 1 tsk salt i en stor gryde på en bagerste plade, med håndtagene ind. Med låg på koger det hurtigere." } },
     { "@type": "HowToStep", "text": "Ryst saucen sammen i et glas med låg.", "tumbi": { "verbum": "roere", "ikoner": ["soja", "honning", "vand"], "note": "Soja, honning og vand. Skru låget godt på." } },
-    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåserne: kanten er skarp. Resten af majsen kan gemmes i køleskabet." } },
+    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "si-daase", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåserne: kanten er skarp. Resten af majsen kan gemmes i køleskabet." } },
     { "@type": "HowToStep", "text": "Læg kødet i gryden.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["koed"], "note": "Olie i en stor gryde eller wok ved høj varme. Timeren startes efter håndvasken." } },
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Efter råt kød." } },
     { "@type": "HowToStep", "text": "Brun kødet, og del det i små stykker.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 240, "note": "Den voksne rører og deler kødet med grydeskeen." } },

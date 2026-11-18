@@ -24,7 +24,7 @@
   "tool": ["dåseåbner", "si", "stor skål", "gaffel eller kartoffelmoser", "rivejern", "kniv", "skærebræt", "bageplade", "bagepapir", "pensel", "grydelapper", "paletkniv"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
-    { "@type": "HowToStep", "text": "Hæld kikærterne i en si, og skyl dem.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kikaerter"], "note": "Tænd ovnen på 200 °C varmluft først. Den voksne åbner dåsen: kanten er skarp. Skyl under koldt vand, og lad dem dryppe godt af." } },
+    { "@type": "HowToStep", "text": "Hæld kikærterne i en si, og skyl dem.", "tumbi": { "verbum": "si-daase", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kikaerter"], "note": "Tænd ovnen på 200 °C varmluft først. Den voksne åbner dåsen: kanten er skarp. Skyl under koldt vand, og lad dem dryppe godt af." } },
     { "@type": "HowToStep", "text": "Mos kikærterne med en gaffel i en skål.", "tumbi": { "verbum": "mose", "ikoner": ["kikaerter"], "note": "Eller med en kartoffelmoser. Små stykker gør ikke noget." } },
     { "@type": "HowToStep", "text": "Riv gulerødderne fint.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Rivejernet er skarpt, så den voksne river. Skræl dem først." } },
     { "@type": "HowToStep", "text": "Kom gulerod, havregryn og krydderier i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["gulerod", "havregryn", "soja", "krydderurt", "hvidloeg"], "note": "2 dl havregryn, 1 spsk soja, ½ tsk spidskommen og ½ tsk hvidløgspulver." } },

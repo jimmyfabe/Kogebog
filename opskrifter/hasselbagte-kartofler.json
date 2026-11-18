@@ -18,7 +18,7 @@
   "tool": ["grøntsagsbørste", "si", "skærebræt", "skarp kniv", "2 grydeskeer", "ovnfast fad", "lille gryde", "pensel", "teske", "spiseske"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Tænd ovnen på 225 °C (varmluft 200 °C). Retten indeholder mælk (smør) og gluten (rasp)." } },
-    { "@type": "HowToStep", "text": "Skyl kartoflerne i en si.", "tumbi": { "verbum": "haelde", "ikoner": ["kartoffel"], "note": "Skrub dem med en grøntsagsbørste. Skrællen må gerne sidde på." } },
+    { "@type": "HowToStep", "text": "Skyl kartoflerne i en si.", "tumbi": { "verbum": "skylle", "ikoner": ["kartoffel"], "note": "Skrub dem med en grøntsagsbørste. Skrællen må gerne sidde på." } },
     { "@type": "HowToStep", "text": "Læg en kartoffel mellem to grydeskeer.", "tumbi": { "verbum": "pynte", "ikoner": ["kartoffel"], "note": "Skeernes skafter stopper kniven, så skiverne ikke skæres helt igennem." } },
     { "@type": "HowToStep", "text": "Skær tynde skiver, men ikke helt igennem.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["kartoffel"], "note": "Ca. 3 mm imellem. Triller kartoflen, så skær først en tynd skive af bunden. Den voksne skærer, og barnet lægger den næste kartoffel klar." } },
     { "@type": "HowToStep", "text": "Stil kartoflerne i et fad med snittene opad.", "tumbi": { "verbum": "pynte", "ikoner": ["kartoffel"], "note": "Tæt sammen, så de støtter hinanden." } },

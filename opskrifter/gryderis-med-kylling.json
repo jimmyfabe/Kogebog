@@ -23,7 +23,7 @@
   "tool": ["dåseåbner", "si", "kop", "gryde med låg", "tallerken", "2 gafler", "grydeske"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
-    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåserne: kanten er skarp. Lad vandet løbe fra." } },
+    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "si-daase", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåserne: kanten er skarp. Lad vandet løbe fra." } },
     { "@type": "HowToStep", "text": "Mål risene med en kop.", "tumbi": { "verbum": "maale", "ikoner": ["ris"], "note": "250 g ris er ca. 3 dl. Brug den samme kop til vandet." } },
     { "@type": "HowToStep", "text": "Hæld ris og vand i en gryde.", "tumbi": { "verbum": "haelde", "ikoner": ["ris", "vand"], "note": "Dobbelt så meget vand som ris: 6 dl. Gryden er kold, så barnet kan selv." } },
     { "@type": "HowToStep", "text": "Smuldr bouillonterningen ned i gryden.", "tumbi": { "verbum": "smuldre", "ikoner": ["bouillon"] } },

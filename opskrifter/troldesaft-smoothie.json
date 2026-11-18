@@ -19,7 +19,7 @@
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Rødbeden skal være kogt og kold: færdigkogt fra en pakke, eller kogt af den voksne dagen før. Ikke en rå og ikke en syltet. Kun en lille, og det er med vilje: æblerne og bærrene skal smage mest. Brug friske bær: frosne bær skal koges først." } },
     { "@type": "HowToStep", "text": "Skær rødbeden i små stykker.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["roedbede"], "note": "Rødbeden farver fingre og bræt." } },
     { "@type": "HowToStep", "text": "Skær æblerne i både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["aeble"], "note": "Skær kernehuset væk. Skrællen må gerne blive på." } },
-    { "@type": "HowToStep", "text": "Skyl bærrene i en si.", "tumbi": { "verbum": "haelde", "ikoner": ["baer"] } },
+    { "@type": "HowToStep", "text": "Skyl bærrene i en si.", "tumbi": { "verbum": "skylle", "ikoner": ["baer"] } },
     { "@type": "HowToStep", "text": "Kom rødbede, æble og bær i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["roedbede", "aeble", "baer"], "note": "Kanden står på bordet, og blenderens stik er ude. Knivene sidder i bunden: ingen fingre i kanden." } },
     { "@type": "HowToStep", "text": "Hæld 2 dl æblemost i kanden.", "tumbi": { "verbum": "haelde", "ikoner": ["aeble"] } },
     { "@type": "HowToStep", "text": "Blend troldesaften helt glat.", "tumbi": { "verbum": "blende", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["roedbede", "baer"], "note": "Sæt låget på, og hold hånden på det. Blend ca. 1 minut. Barnet står et skridt tilbage. Kun kolde ting i blenderen. Tag stikket ud, før nogen rører kanden." } },

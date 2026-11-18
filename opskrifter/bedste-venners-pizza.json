@@ -21,7 +21,7 @@
   "tool": ["2 bageplader", "dåseåbner", "si", "kniv", "skærebræt", "kagerulle", "spiseske", "teske", "grydelapper"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Tag bagepladerne ud af ovnen, og tænd den på 225 °C varmluft. Retten indeholder gluten og mælk. Tjek allergener på pakken med dejen." } },
-    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad vandet løbe fra." } },
+    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "si-daase", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad vandet løbe fra." } },
     { "@type": "HowToStep", "text": "Skær oliven og peberfrugt til ansigterne.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["oliven", "peberfrugt"], "note": "Halvér 4 oliven til 8 øjne. Fjern kernerne i peberfrugten, og skær den i tynde strimler til munde." } },
     { "@type": "HowToStep", "text": "Form dejen til fire kugler.", "tumbi": { "verbum": "forme", "ikoner": ["pizzadej"], "note": "Tag dejen af papiret, og gem papiret. Del begge ruller i to stykker hver, og tril dem til kugler. To venner tager to kugler hver." } },
     { "@type": "HowToStep", "text": "Rul hver kugle til en rund pizza.", "tumbi": { "verbum": "kagerulle", "ikoner": ["pizzadej"], "note": "Med en kagerulle på papiret fra dejen, to pizzaer på hvert stykke, ca. 18 cm brede. Lidt skæve pizzaer er fine: venner ser forskellige ud. Løft papiret over på pladerne." } },

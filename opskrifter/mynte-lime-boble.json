@@ -20,7 +20,7 @@
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Sæt æblemost og danskvand på køl i god tid. Skyl limen og mynten. Isterningerne skal være lavet i forvejen, ellers springer I dem over." } },
     { "@type": "HowToStep", "text": "Skær limen over.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["lime"], "note": "Over på midten." } },
-    { "@type": "HowToStep", "text": "Pluk myntebladene af stilkene.", "tumbi": { "verbum": "smuldre", "ikoner": ["mynte"], "note": "Cirka 20 blade." } },
+    { "@type": "HowToStep", "text": "Pluk myntebladene af stilkene.", "tumbi": { "verbum": "plukke", "ikoner": ["mynte"], "note": "Cirka 20 blade." } },
     { "@type": "HowToStep", "text": "Kom mynte og sukker i en stor kande.", "tumbi": { "verbum": "haelde", "ikoner": ["mynte", "sukker"], "note": "2 spsk sukker." } },
     { "@type": "HowToStep", "text": "Mos mynten med enden af en grydeske.", "tumbi": { "verbum": "mose", "ikoner": ["mynte"], "note": "Tryk bladene mod sukkeret, så de begynder at dufte. De skal ikke i stykker." } },
     { "@type": "HowToStep", "text": "Klem limen ud i kanden.", "tumbi": { "verbum": "klemme", "ikoner": ["lime"], "note": "Begge halvdele. Fisk kernerne op." } },

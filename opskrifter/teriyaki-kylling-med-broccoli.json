@@ -23,7 +23,7 @@
   "tool": ["si", "gryde med låg", "glas med låg", "kniv", "2 skærebrætter", "stor pande eller wok", "grydeske"],
   "recipeInstructions": [
     {"@type": "HowToStep", "text": "Vask hænderne.", "tumbi": {"verbum": "vaske-haender", "note": "Retten indeholder soja og gluten (hvede i sojaen og melet)."}},
-    {"@type": "HowToStep", "text": "Skyl risene i en si.", "tumbi": {"verbum": "haelde", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er næsten klart. Barnet kan selv."}},
+    {"@type": "HowToStep", "text": "Skyl risene i en si.", "tumbi": {"verbum": "skylle", "ikoner": ["ris"], "note": "Under koldt vand, til vandet er næsten klart. Barnet kan selv."}},
     {"@type": "HowToStep", "text": "Sæt risene over at koge.", "tumbi": {"verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["ris"], "note": "Vand som på posen, uden salt: sovsen er salt nok. Kog op, skru ned, og lad dem småkoge under låg i 10-12 min. Sluk, og lad dem trække 5-10 min med låget på."}},
     {"@type": "HowToStep", "text": "Ryst sovsen sammen i et glas med låg.", "tumbi": {"verbum": "roere", "ikoner": ["soja", "honning", "vand", "mel"], "note": "2 spsk soja, 2 spsk honning, 4 spsk vand og 1 spsk mel. Skru låget godt på, og ryst, til der ikke er klumper."}},
     {"@type": "HowToStep", "text": "Skær gulerødderne i tynde skiver.", "tumbi": {"verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Skræl dem først. Tynde skiver bliver hurtigt møre."}},

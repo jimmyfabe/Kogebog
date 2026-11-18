@@ -28,7 +28,7 @@
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
     { "@type": "HowToStep", "text": "Skær løget i fire både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["loeg"], "note": "Pil løget først. Kun to snit, og bådene bliver bløde i sovsen." } },
-    { "@type": "HowToStep", "text": "Hæld linserne i en si, og skyl dem.", "tumbi": { "verbum": "haelde", "ikoner": ["linser"], "note": "Under koldt vand, til vandet er klart. Barnet kan selv." } },
+    { "@type": "HowToStep", "text": "Hæld linserne i en si, og skyl dem.", "tumbi": { "verbum": "skylle", "ikoner": ["linser"], "note": "Under koldt vand, til vandet er klart. Barnet kan selv." } },
     { "@type": "HowToStep", "text": "Kog vand til spaghettien.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "3 l vand og 1 tsk salt i en stor gryde på en bagerste plade, med håndtagene ind. Med låg på koger det hurtigere." } },
     { "@type": "HowToStep", "text": "Steg løg og suppeurter i olien.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 300, "ikoner": ["olie", "loeg", "gulerod"], "note": "Gryden med låg ved middel varme. Suppeurterne kommer direkte fra frost. Rør af og til." } },
     { "@type": "HowToStep", "text": "Rør tomatpuréen i.", "tumbi": { "verbum": "roere", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 60, "ikoner": ["tomatpure"], "note": "Steg 1 min under omrøring." } },

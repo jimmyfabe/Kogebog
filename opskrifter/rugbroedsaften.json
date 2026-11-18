@@ -28,7 +28,7 @@
     { "@type": "HowToStep", "text": "Kog æggene i 8 minutter.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 480, "note": "Fra vandet koger, ved middel varme." } },
     { "@type": "HowToStep", "text": "Hæld vandet fra æggene.", "tumbi": { "verbum": "si", "voksen": true, "voksen_hjaelp": "varme", "note": "Den voksne hælder vandet fra i vasken og fylder koldt vand på. Pas på dampen." } },
     { "@type": "HowToStep", "text": "Hæld makrellen i en skål.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["makrel"], "note": "Den voksne åbner dåsen: kanten er skarp." } },
-    { "@type": "HowToStep", "text": "Pil skallen af æggene.", "tumbi": { "verbum": "smuldre", "note": "Når de er kølet af i det kolde vand. Bank dem let mod bordet først." } },
+    { "@type": "HowToStep", "text": "Pil skallen af æggene.", "tumbi": { "verbum": "pille", "note": "Når de er kølet af i det kolde vand. Bank dem let mod bordet først." } },
     { "@type": "HowToStep", "text": "Mos æggene med lidt salt.", "tumbi": { "verbum": "mose", "ikoner": ["salt"], "note": "Med en gaffel i en skål." } },
     { "@type": "HowToStep", "text": "Sæt det hele på bordet.", "tumbi": { "verbum": "pynte", "ikoner": ["broed", "gulerod", "agurk", "peberfrugt"], "note": "Rugbrød, æg, makrel og grønt i hver sin skål." } },
     { "@type": "HowToStep", "text": "Smør din egen mad.", "tumbi": { "verbum": "smoere", "ikoner": ["broed"], "note": "Rugbrød med æg eller makrel, og grøntstave ved siden af." } }

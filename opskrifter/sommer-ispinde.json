@@ -16,7 +16,7 @@
   "tool": ["si", "gaffel", "stor skål", "dl-mål", "spiseske", "lille kande", "8 ispindeforme, eller små krus og træpinde", "husholdningsfilm til små krus"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender", "note": "Ispindene skal fryse i mindst 4 timer: lav dem om formiddagen eller dagen før. De indeholder mælk. Brug kun friske bær: frosne bær skal koges, før de spises kolde. Honning er ikke til børn under 1 år, så små søskende skal have noget andet." } },
-    { "@type": "HowToStep", "text": "Skyl bærrene i en si.", "tumbi": { "verbum": "haelde", "ikoner": ["baer"], "note": "Under koldt vand. Lad dem dryppe af. Pil bladene af jordbærrene." } },
+    { "@type": "HowToStep", "text": "Skyl bærrene i en si.", "tumbi": { "verbum": "skylle", "ikoner": ["baer"], "note": "Under koldt vand. Lad dem dryppe af. Pil bladene af jordbærrene." } },
     { "@type": "HowToStep", "text": "Mos bærrene med en gaffel.", "tumbi": { "verbum": "mose", "ikoner": ["baer"], "note": "Små stykker må gerne blive tilbage." } },
     { "@type": "HowToStep", "text": "Hæld yoghurten i en stor skål.", "tumbi": { "verbum": "haelde", "ikoner": ["yoghurt"], "note": "5 dl." } },
     { "@type": "HowToStep", "text": "Rør bærmos og honning i yoghurten.", "tumbi": { "verbum": "roere", "ikoner": ["baer", "honning"], "note": "4 spsk honning." } },

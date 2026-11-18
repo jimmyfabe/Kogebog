@@ -24,7 +24,7 @@
   "tool": ["dåseåbner", "si", "gryde med låg", "grydeske", "skål", "ske"],
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
-    { "@type": "HowToStep", "text": "Hæld bønner og majs i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["boenner", "majs"], "note": "Den voksne åbner dåserne: kanten er skarp. Skyl dem med koldt vand." } },
+    { "@type": "HowToStep", "text": "Hæld bønner og majs i en si.", "tumbi": { "verbum": "si-daase", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["boenner", "majs"], "note": "Den voksne åbner dåserne: kanten er skarp. Skyl dem med koldt vand." } },
     { "@type": "HowToStep", "text": "Hæld bønner, majs og tomater i en gryde.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["boenner", "majs", "tomat"], "note": "Gryden er kold. Den voksne åbner dåserne: kanten er skarp." } },
     { "@type": "HowToStep", "text": "Drys paprika og spidskommen i gryden.", "tumbi": { "verbum": "drysse", "ikoner": ["krydderurt"], "note": "Gryden er kold, så barnet kan selv." } },
     { "@type": "HowToStep", "text": "Rør kål, gulerod og yoghurt sammen.", "tumbi": { "verbum": "roere", "ikoner": ["kaal", "gulerod", "yoghurt", "salt"], "note": "I en skål med en knivspids salt. Det er kålsalaten." } },

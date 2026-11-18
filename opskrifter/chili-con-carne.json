@@ -27,7 +27,7 @@
   "recipeInstructions": [
     { "@type": "HowToStep", "text": "Vask hænderne.", "tumbi": { "verbum": "vaske-haender" } },
     { "@type": "HowToStep", "text": "Skær løget i fire både.", "tumbi": { "verbum": "skaere", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["loeg"], "note": "Pil løget først. Kun to snit, og bådene bliver bløde i chilien." } },
-    { "@type": "HowToStep", "text": "Hæld bønner og majs i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["boenner", "majs"], "note": "Den voksne åbner dåserne: kanten er skarp. Skyl dem med koldt vand." } },
+    { "@type": "HowToStep", "text": "Hæld bønner og majs i en si.", "tumbi": { "verbum": "si-daase", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["boenner", "majs"], "note": "Den voksne åbner dåserne: kanten er skarp. Skyl dem med koldt vand." } },
     { "@type": "HowToStep", "text": "Kog vand til risene.", "tumbi": { "verbum": "koge", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["vand"], "note": "2 l vand og 1 tsk salt i en stor gryde på en bagerste plade, med håndtagene ind. Med låg på koger det hurtigere." } },
     { "@type": "HowToStep", "text": "Steg løget i olien.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "timer_sek": 180, "ikoner": ["olie", "loeg"], "note": "Gryden med låg ved middel varme." } },
     { "@type": "HowToStep", "text": "Læg kødet i gryden.", "tumbi": { "verbum": "stege", "voksen": true, "voksen_hjaelp": "varme", "ikoner": ["koed"], "note": "Skru op til høj varme. Timeren startes efter håndvasken." } },

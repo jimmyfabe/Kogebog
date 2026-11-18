@@ -31,7 +31,7 @@
     { "@type": "HowToStep", "text": "Drys salt over kålen.", "tumbi": { "verbum": "drysse", "ikoner": ["salt"] } },
     { "@type": "HowToStep", "text": "Ælt kålen med hænderne, til den bliver blød.", "tumbi": { "verbum": "aelte", "timer_sek": 120, "ikoner": ["kaal"], "note": "Klem og ælt i ca. 2 min. Kålen bliver blød og fylder mindre." } },
     { "@type": "HowToStep", "text": "Riv gulerødderne groft.", "tumbi": { "verbum": "rive", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["gulerod"], "note": "Rivejernet er skarpt, så den voksne river. Skræl dem først." } },
-    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "haelde", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad vandet løbe fra." } },
+    { "@type": "HowToStep", "text": "Hæld majsen i en si.", "tumbi": { "verbum": "si-daase", "voksen": true, "voksen_hjaelp": "kniv", "ikoner": ["majs"], "note": "Den voksne åbner dåsen: kanten er skarp. Lad vandet løbe fra." } },
     { "@type": "HowToStep", "text": "Kom gulerod og majs i skålen.", "tumbi": { "verbum": "haelde", "ikoner": ["gulerod", "majs"] } },
     { "@type": "HowToStep", "text": "Rør bouillonen ud i vandet.", "tumbi": { "verbum": "roere", "ikoner": ["bouillon", "vand"], "note": "2 dl koldt vand fra hanen i en kande: varmt vand fra hanen bruges ikke til mad. Smuldr den halve terning helt fint i, og rør godt." } },
     { "@type": "HowToStep", "text": "Hæld havregryn, mel og bouillon over grøntsagerne.", "tumbi": { "verbum": "haelde", "ikoner": ["havregryn", "mel", "bouillon"], "note": "100 g havregryn og 1 dl hvedemel. Melet får pandekagerne til at hænge sammen." } },
