@@ -553,14 +553,22 @@ test('hvert klassenavn i app.css bruges af koden (ingen døde regler)', () => {
 // Review af v12 (18-11): 63 trin gik fra «haelde» (vippet med haeld) til «si-daase» og «skylle» og stod stille. Dåsen
 // hældes som målekanden, og sien rystes under vandhanen som hænderne i «vaske-haender» (gnid). Verbernes bevægelse står
 // kun i @media (prefers-reduced-motion: no-preference), så «mindre bevægelse» holder billederne stille
-test('si-daase vipper som haelde, og skylle rystes som vaske-haender, kun uden «mindre bevægelse» (v12)', () => {
+test('si-daase vipper som haelde, og skylle rystes kun mod venstre, kun uden «mindre bevægelse» (v12)', () => {
   const rod = blokke(CSS);
   const vaelgere = (b) => b.hoved.split(',').map((s) => s.trim());
   const bevaegelse = rod.regler.filter((b) => /prefers-reduced-motion\s*:\s*no-preference/.test(b.hoved)).flatMap((b) => b.regler);
   const anim = (verbum) => bevaegelse.filter((r) => vaelgere(r).includes('.anim-' + verbum + ' .verbum-billede')).map((r) => ens(r.deklarationer)).join(';');
   assert.match(anim('haelde'), /animation-name:haeld;/, '.anim-haelde skal stadig vippe med haeld');
   assert.equal(anim('si-daase'), anim('haelde'), '.anim-si-daase .verbum-billede skal have samme bevægelse som .anim-haelde (dåsen hældes)');
-  assert.match(anim('skylle'), /animation-name:gnid;/, '.anim-skylle .verbum-billede skal rystes med gnid, som .anim-vaske-haender under vandhanen');
+  // UI-review af v12 (18-11): Rosas arm i «skylle» er skåret af ved billedets venstre kant (x=0). Med gnid (±4 px)
+  // slap armen rammen ved +4 px, og der kom en hvid stribe hver 1,6 s. Sien rystes derfor kun mod venstre (skyl).
+  assert.match(anim('skylle'), /animation-name:skyl;/, '.anim-skylle .verbum-billede skal rystes med skyl (kun mod venstre), ikke gnid');
+  const skyl = CSS.split('\n').find((l) => /^@keyframes skyl\s*\{/.test(l));
+  assert.ok(skyl, '@keyframes skyl mangler i app.css');
+  const flyt = [...skyl.matchAll(/translateX\((-?[\d.]+)px\)|translateX\(0\)/g)].map((m) => Number(m[1] || 0));
+  assert.ok(flyt.length >= 2, '@keyframes skyl skal flytte billedet med translateX: ' + skyl);
+  assert.deepEqual(flyt.filter((x) => x > 0), [], 'skyl må aldrig flytte billedet mod højre: armen slipper rammens venstre kant');
+  assert.ok(Math.min(...flyt) < 0, 'skyl skal flytte billedet mod venstre');
   assert.match(anim('vaske-haender'), /animation-name:gnid;/);
   // Ingen .anim-regel uden for «ingen præference» (på øverste niveau eller i en anden @media)
   const alle = (b) => [b, ...b.regler.flatMap(alle)];
