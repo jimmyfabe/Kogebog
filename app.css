@@ -677,6 +677,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .verbum-billede { transform-origin: 50% 60%; animation: 2.4s ease-in-out infinite; }
   .anim-roere .verbum-billede { animation-name: vrik; }
   .anim-haelde .verbum-billede { animation-name: haeld; animation-duration: 2.8s; }
+  .anim-si-daase .verbum-billede { animation-name: haeld; animation-duration: 2.8s; }
   .anim-skaere .verbum-billede { animation-name: hak; animation-duration: 1.2s; }
   .anim-aelte .verbum-billede { animation-name: klem; animation-duration: 1.6s; }
   .anim-rulle .verbum-billede { animation-name: rul; animation-duration: 1.8s; }
@@ -685,6 +686,7 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
   .anim-koge .verbum-billede { animation-name: bobl; animation-duration: 2s; }
   .anim-maale .verbum-billede { animation-name: bobl; animation-duration: 2.6s; }
   .anim-vaske-haender .verbum-billede { animation-name: gnid; animation-duration: 1s; }
+  .anim-skylle .verbum-billede { animation-name: gnid; animation-duration: 1.6s; }
   .anim-vente .verbum-billede { animation-name: vip; animation-duration: 4s; }
   .anim-smage .verbum-billede { animation-name: sus; animation-duration: 2s; }
 }

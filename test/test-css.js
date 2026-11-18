@@ -549,3 +549,21 @@ test('hvert klassenavn i app.css bruges af koden (ingen døde regler)', () => {
   const doede = [...klasser].map((k) => k.slice(1)).filter((k) => !ord.has(k) && !SAMMENSAT.test(k)).sort();
   assert.deepEqual(doede, [], 'klasser i app.css, som ingen kode bruger (fjern reglerne, eller ret navnet)');
 });
+
+// Review af v12 (18-11): 63 trin gik fra «haelde» (vippet med haeld) til «si-daase» og «skylle» og stod stille. Dåsen
+// hældes som målekanden, og sien rystes under vandhanen som hænderne i «vaske-haender» (gnid). Verbernes bevægelse står
+// kun i @media (prefers-reduced-motion: no-preference), så «mindre bevægelse» holder billederne stille
+test('si-daase vipper som haelde, og skylle rystes som vaske-haender, kun uden «mindre bevægelse» (v12)', () => {
+  const rod = blokke(CSS);
+  const vaelgere = (b) => b.hoved.split(',').map((s) => s.trim());
+  const bevaegelse = rod.regler.filter((b) => /prefers-reduced-motion\s*:\s*no-preference/.test(b.hoved)).flatMap((b) => b.regler);
+  const anim = (verbum) => bevaegelse.filter((r) => vaelgere(r).includes('.anim-' + verbum + ' .verbum-billede')).map((r) => ens(r.deklarationer)).join(';');
+  assert.match(anim('haelde'), /animation-name:haeld;/, '.anim-haelde skal stadig vippe med haeld');
+  assert.equal(anim('si-daase'), anim('haelde'), '.anim-si-daase .verbum-billede skal have samme bevægelse som .anim-haelde (dåsen hældes)');
+  assert.match(anim('skylle'), /animation-name:gnid;/, '.anim-skylle .verbum-billede skal rystes med gnid, som .anim-vaske-haender under vandhanen');
+  assert.match(anim('vaske-haender'), /animation-name:gnid;/);
+  // Ingen .anim-regel uden for «ingen præference» (på øverste niveau eller i en anden @media)
+  const alle = (b) => [b, ...b.regler.flatMap(alle)];
+  const udenfor = alle(rod).filter((b) => /\.anim-/.test(b.hoved) && !bevaegelse.includes(b)).map((b) => b.hoved);
+  assert.deepEqual(udenfor, [], 'verbernes bevægelse skal stå i @media (prefers-reduced-motion: no-preference)');
+});
