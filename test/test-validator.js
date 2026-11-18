@@ -647,6 +647,17 @@ test('si-trin og pluk-trin har deres egne billeder, ikke målekanden til «haeld
     ': der plukkes blade, så brug verbet "plukke"');
 });
 
+// Review af v12 18-11 (mellem): «Hæld pastaen i en si.» med «haelde» og "varme" fik rådet «si-daase». Med kogende vand er
+// det «si» (gryden over dørslaget), og den kolde dåse «si-daase» afvises, når hjælpen er "varme"
+test('et si-trin med kogende vand ("varme") er «si», ikke den kolde dåse «si-daase» (review 18-11)', () => {
+  const pasta = (d) => trinMed(d, 'Hæld pastaen i en si.').st.tumbi;
+  const fejl = forventFejl('opskrifter/pastasalat-med-squash.json', (d) => { pasta(d).verbum = 'haelde'; },
+    'trin 3: der sies med kogende vand ("voksen_hjaelp": "varme"), så brug verbet "si" (billedet til «haelde» er en målekande over en skål): «Hæld pastaen i en si.»');
+  assert.ok(!fejl.some((f) => f.includes('"si-daase"')), 'rådet må ikke være «si-daase»:\n  ' + fejl.join('\n  '));
+  forventFejl('opskrifter/pastasalat-med-squash.json', (d) => { pasta(d).verbum = 'si-daase'; },
+    'trin 3: "si-daase" er en kold dåse; med kogende vand er verbet "si": «Hæld pastaen i en si.»');
+});
+
 test('kødet tjekkes i trinnet, der koger, ikke når barnet smager (review F7)', () => {
   let nr;
   forventFejl('opskrifter/japansk-keema-karry.json', (d) => {

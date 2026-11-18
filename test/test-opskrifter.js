@@ -60,6 +60,8 @@ const GENNEM_SI = /gennem\s+(?:en\s+)?si(?:en)?(?!\p{L})/iu;
 const SKYL_ORD = /(?<!\p{L})skyl/iu;
 const PLUK_TEKST = /^(?:pluk(?!\p{L})|pil(?!\p{L}).*(?<!\p{L})blade(?:ne)?(?!\p{L}))/iu;
 const TOPPEN_PILLES = /jordbær/iu;
+// Hvorfor et si-trin har sit verbum (i fejlbeskeden)
+const SI_GRUND = { 'si': 'der sies med kogende vand ("voksen_hjaelp": "varme")', 'si-daase': 'der hældes i en si', 'skylle': 'der skylles' };
 // Købte varer i en ret med karry, hvis allergener afhænger af mærket: [varen i fejlbeskeden, ordet i teksten, ejefald i
 // eksemplet]. Teksten sender den voksne til pakken og slår ikke allergenerne fast (review K1 17-11: «gluten (naanbrødet)»;
 // K2: ketchuppen i keema-karryen var ikke nævnt; K3: «Tjek bouillonen for selleri», men den kan også have soja eller sennep)
@@ -571,13 +573,16 @@ export function valider(rod = ROD) {
         // «kaal»). Review U5 17-11: persillen i hvidløgsnaan viste et æg; v12 18-11: 8 blad-trin viste terningen
         const blade = (Array.isArray(st.ikoner) && st.ikoner.some((ik) => BLAD_IKONER.includes(ik))) || (PLUK_TEKST.test(s.text) && !TOPPEN_PILLES.test(s.text));
         if ((st.verbum === 'pille' || st.verbum === 'smuldre') && blade) f(hvor + ': der plukkes blade, så brug verbet "plukke" (billedet til «' + st.verbum + '» er ' + (st.verbum === 'pille' ? 'et æg' : 'en terning, der smuldres') + '): «' + s.text + '»');
-        // En si eller en skylning med målekanden til «haelde» (v12 18-11: ca. 70 trin). Med dåseåbneren («kniv») er det dåsen,
-        // også når der skylles bagefter; uden kniv er det dåsen, når intet skylles (spinaten drænes), ellers sien under hanen
+        // En si eller en skylning med målekanden til «haelde» (v12 18-11: ca. 70 trin). Med kogende vand ("varme") er det «si»
+        // (gryden over dørslaget; review 18-11). Med dåseåbneren («kniv») er det dåsen, også når der skylles bagefter; uden kniv
+        // er det dåsen, når intet skylles (spinaten drænes), ellers sien under hanen
         const si = SI_ORD.test(s.text) && !GENNEM_SI.test(s.text);
         const skyl = SKYL_ORD.test(s.text);
+        const varmSi = si && st.voksen_hjaelp === 'varme';
+        if (st.verbum === 'si-daase' && varmSi) f(hvor + ': "si-daase" er en kold dåse; med kogende vand er verbet "si": «' + s.text + '»');
         if (st.verbum === 'haelde' && (si || skyl)) {
-          const skal = si && (st.voksen_hjaelp === 'kniv' || !skyl) ? 'si-daase' : 'skylle';
-          f(hvor + ': ' + (skal === 'si-daase' ? 'der hældes i en si' : 'der skylles') + ', så brug verbet "' + skal + '" (billedet til «haelde» er en målekande over en skål): «' + s.text + '»');
+          const skal = varmSi ? 'si' : si && (st.voksen_hjaelp === 'kniv' || !skyl) ? 'si-daase' : 'skylle';
+          f(hvor + ': ' + SI_GRUND[skal] + ', så brug verbet "' + skal + '" (billedet til «haelde» er en målekande over en skål): «' + s.text + '»');
         }
         // Ordvagten: nævner teksten kniv, rivejern eller varme, er det den voksnes trin, uanset verbet, og hjælpen passer
         // til ordet. «voksen_hjaelp» er én værdi, så et trin med både kniv og varme skal deles i to
