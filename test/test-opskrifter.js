@@ -50,7 +50,16 @@ const HAENDER_PAA_OVERFLADEN = ['pynte', 'pakke-ind', 'smuldre', ...HAENDER_I_DE
 // vaskes lige bagefter, så det er ikke en pause (code review 21-10 fund 5 gælder kødet, der bruner, mens barnet venter)
 const TIMER_MAALER_HAENDERNE = ['aelte'];
 const TAGE_UD = ['tage-ud', 'tage-ud-form']; // efter ovnen: en flad plade eller en dyb form
-const BLAD_IKONER = ['krydderurt', 'mynte', 'groenkaal']; // blade, der plukkes: «smuldre», ikke æg-billedet til «pille» (U5)
+const BLAD_IKONER = ['krydderurt', 'mynte', 'groenkaal']; // blade, der plukkes: «plukke», ikke æg-billedet til «pille» (U5, v12)
+// Si og blade i trinteksten (v12, 18-11). Billedet til «haelde» er en målekande over en skål: en si i teksten er en dåsevare
+// eller noget andet, der drænes («si-daase»), eller noget, der skylles («skylle», også uden si: «Skyl jordbærrene.»). Saft og
+// mos «gennem en si ned i kanden» hældes stadig. Blade, der plukkes («Pluk …», «Pil bladene af persillen.», «Pil fire blade
+// af salaten …»), er «plukke». Jordbærrenes grønne top pilles med æg-billedet til «pille» (U5: ikonet er bærret, ikke et blad)
+const SI_ORD = /(?<!\p{L})si(?:en)?(?!\p{L})/iu;
+const GENNEM_SI = /gennem\s+(?:en\s+)?si(?:en)?(?!\p{L})/iu;
+const SKYL_ORD = /(?<!\p{L})skyl/iu;
+const PLUK_TEKST = /^(?:pluk(?!\p{L})|pil(?!\p{L}).*(?<!\p{L})blade(?:ne)?(?!\p{L}))/iu;
+const TOPPEN_PILLES = /jordbær/iu;
 // Købte varer i en ret med karry, hvis allergener afhænger af mærket: [varen i fejlbeskeden, ordet i teksten, ejefald i
 // eksemplet]. Teksten sender den voksne til pakken og slår ikke allergenerne fast (review K1 17-11: «gluten (naanbrødet)»;
 // K2: ketchuppen i keema-karryen var ikke nævnt; K3: «Tjek bouillonen for selleri», men den kan også have soja eller sennep)
@@ -557,9 +566,19 @@ export function valider(rod = ROD) {
         if (KUN_VARME_HJAELP.includes(st.verbum) && 'voksen_hjaelp' in st && st.voksen_hjaelp !== 'varme') f(hvor + ': verbet «' + st.verbum + '» kan barnet selv. Hjælper den voksne, er det for varmens skyld: brug "voksen_hjaelp": "varme", fandt ' + JSON.stringify(st.voksen_hjaelp));
         // Billedet til «drysse» er ost på en pizza. Drysses der i en skål, har det sit eget billede (review U4 17-11: bagepulver i naan-dejen)
         if (st.verbum === 'drysse' && /(?<!\p{L})skål(?:en)?(?!\p{L})/u.test(s.text)) f(hvor + ': der drysses i en skål, så brug verbet "drysse-skaal" (billedet til «drysse» er en pizza): «' + s.text + '»');
-        // Billedet til «pille» er et æg, der får skallen pillet af. Blade af krydderurter og grønkål plukkes med «smuldre»
-        // (små stykker i en skål), som salatbladene (review U5 17-11: persillen i hvidløgsnaan viste et æg)
-        if (st.verbum === 'pille' && Array.isArray(st.ikoner) && st.ikoner.some((ik) => BLAD_IKONER.includes(ik))) f(hvor + ': der plukkes blade, så brug verbet "smuldre" (billedet til «pille» er et æg): «' + s.text + '»');
+        // Billedet til «pille» er et æg, der får skallen pillet af, og til «smuldre» en terning, der smuldres. Blade, der
+        // plukkes, har deres eget billede, efter ikonet (krydderurter og grønkål) eller teksten (salatbladene har ikonet
+        // «kaal»). Review U5 17-11: persillen i hvidløgsnaan viste et æg; v12 18-11: 8 blad-trin viste terningen
+        const blade = (Array.isArray(st.ikoner) && st.ikoner.some((ik) => BLAD_IKONER.includes(ik))) || (PLUK_TEKST.test(s.text) && !TOPPEN_PILLES.test(s.text));
+        if ((st.verbum === 'pille' || st.verbum === 'smuldre') && blade) f(hvor + ': der plukkes blade, så brug verbet "plukke" (billedet til «' + st.verbum + '» er ' + (st.verbum === 'pille' ? 'et æg' : 'en terning, der smuldres') + '): «' + s.text + '»');
+        // En si eller en skylning med målekanden til «haelde» (v12 18-11: ca. 70 trin). Med dåseåbneren («kniv») er det dåsen,
+        // også når der skylles bagefter; uden kniv er det dåsen, når intet skylles (spinaten drænes), ellers sien under hanen
+        const si = SI_ORD.test(s.text) && !GENNEM_SI.test(s.text);
+        const skyl = SKYL_ORD.test(s.text);
+        if (st.verbum === 'haelde' && (si || skyl)) {
+          const skal = si && (st.voksen_hjaelp === 'kniv' || !skyl) ? 'si-daase' : 'skylle';
+          f(hvor + ': ' + (skal === 'si-daase' ? 'der hældes i en si' : 'der skylles') + ', så brug verbet "' + skal + '" (billedet til «haelde» er en målekande over en skål): «' + s.text + '»');
+        }
         // Ordvagten: nævner teksten kniv, rivejern eller varme, er det den voksnes trin, uanset verbet, og hjælpen passer
         // til ordet. «voksen_hjaelp» er én værdi, så et trin med både kniv og varme skal deles i to
         const kniv = fund(KNIV_ORD, s.text);

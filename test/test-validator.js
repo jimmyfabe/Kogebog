@@ -195,13 +195,13 @@ test('tage-ud, tage-ud-form og si kræver en voksen for varmens skyld; kagerulle
 
 // De fire verber til jule-retterne (01-11-2026). «smelte» er altid den voksnes (skålen over den varme gryde); udstikkeren,
 // at forme og at pille kan barnet, og hjælper den voksne, er det for varmens skyld. Det samme gælder ryste, klemme og dyppe
-// (05-11-2026): kniven hører ikke til dem
-test('smelte kræver en voksen for varmens skyld; stikke-ud, forme, pille, ryste, klemme og dyppe kan barnet', () => {
+// (05-11-2026): kniven hører ikke til dem, og «plukke» (v12, 18-11): bladene plukkes med fingrene
+test('smelte kræver en voksen for varmens skyld; stikke-ud, forme, pille, ryste, klemme, dyppe og plukke kan barnet', () => {
   forventFejl('opskrifter/koedsovs.json', (d) => { const st = d.recipeInstructions[2].tumbi; st.verbum = 'smelte'; delete st.voksen; delete st.voksen_hjaelp; },
     'trin 3: verbet «smelte» skal have "voksen": true og "voksen_hjaelp": "varme"');
   forventFejl('opskrifter/koedsovs.json', (d) => { Object.assign(d.recipeInstructions[2].tumbi, { verbum: 'smelte', voksen: true, voksen_hjaelp: 'kniv' }); },
     'trin 3: verbet «smelte» skal have "voksen": true og "voksen_hjaelp": "varme"');
-  for (const v of ['stikke-ud', 'forme', 'pille', 'ryste', 'klemme', 'dyppe', 'dyppe-vand']) {
+  for (const v of ['stikke-ud', 'forme', 'pille', 'ryste', 'klemme', 'dyppe', 'dyppe-vand', 'plukke']) {
     forventGyldig('opskrifter/boller.json', (d) => { const st = d.recipeInstructions[10].tumbi; st.verbum = v; delete st.voksen; delete st.voksen_hjaelp; });
     forventFejl('opskrifter/boller.json', (d) => { Object.assign(d.recipeInstructions[10].tumbi, { verbum: v, voksen: true, voksen_hjaelp: 'kniv' }); },
       'trin 11: verbet «' + v + '» kan barnet selv');
@@ -565,15 +565,15 @@ test('pensle efter råt kød rører det rå kød, indtil det er bagt, stegt elle
 });
 
 // Review U5 (17-11): «Pil bladene af persillen.» viste æg-billedet til «pille». Blade af krydderurter og grønkål
-// plukkes med «smuldre», som salatbladene
-test('blade plukkes med «smuldre», ikke med æg-billedet til «pille»', () => {
+// plukkes med «plukke» (fra v12, 18-11; før med «smuldre»)
+test('blade plukkes med «plukke», ikke med æg-billedet til «pille»', () => {
   const persille = (d) => d.recipeInstructions.find((s) => s.text === 'Pil bladene af persillen.');
   forventFejl('opskrifter/hvidloegsnaan.json', (d) => { persille(d).tumbi.verbum = 'pille'; },
-    'trin 10: der plukkes blade, så brug verbet "smuldre" (billedet til «pille» er et æg): «Pil bladene af persillen.»');
+    'trin 10: der plukkes blade, så brug verbet "plukke" (billedet til «pille» er et æg): «Pil bladene af persillen.»');
   forventFejl('opskrifter/mynte-lime-boble.json', (d) => { d.recipeInstructions[2].tumbi.verbum = 'pille'; }, 'trin 3: der plukkes blade');
   // Grønkål er det tredje blad i BLAD_IKONER (review K6: uden den overlevede en mutant uden «groenkaal»)
   forventFejl('opskrifter/groenkaal-ananas-smoothie.json', (d) => { trinMed(d, 'Pil bladene af grønkålens stilke.').st.tumbi.verbum = 'pille'; },
-    ': der plukkes blade, så brug verbet "smuldre" (billedet til «pille» er et æg): «Pil bladene af grønkålens stilke.»');
+    ': der plukkes blade, så brug verbet "plukke" (billedet til «pille» er et æg): «Pil bladene af grønkålens stilke.»');
   // Jordbærrenes grønne top pilles stadig (ikonet er bærret, ikke et blad)
   forventGyldig('opskrifter/regnbue-smoothie.json', (d) => { assert.equal(d.recipeInstructions[8].tumbi.verbum, 'pille'); });
 });
@@ -602,6 +602,49 @@ test('der drysses i en skål med «drysse-skaal», ikke med pizza-billedet til �
     ': der drysses i en skål, så brug verbet "drysse-skaal" (billedet til «drysse» er en pizza): «Drys bagepulver og salt i skålen.»');
   forventFejl('opskrifter/kartoffeltortilla-med-aerter-og-spinat.json', (d) => { trinMed(d, 'Drys salt, peber og ost i en stor skål.').st.tumbi.verbum = 'drysse'; },
     'så brug verbet "drysse-skaal"');
+});
+
+// v12 (18-11): ca. 70 si-trin viste målekanden til «haelde», og bladene, der plukkes, terningen til «smuldre». Dåsevaren i
+// sien, skylningen og plukningen har nu hver sit billede, og validatoren holder dem der
+test('si-trin og pluk-trin har deres egne billeder, ikke målekanden til «haelde» eller terningen til «smuldre» (v12)', () => {
+  // De rigtige retter (før v12 havde de første 10 «haelde» eller «smuldre»)
+  const forvent = [
+    ['bedste-venners-pizza', 'Hæld majsen i en si.', 'si-daase'],
+    ['kikaerteburger', 'Hæld kikærterne i en si, og skyl dem.', 'si-daase'],
+    ['tarteletter-med-hoens-i-asparges', 'Hæld aspargesene i en si over en skål.', 'si-daase'],
+    ['spinattaerte', 'Hæld spinaten i en si.', 'si-daase'],
+    ['boller-i-karry', 'Skyl risene i en si.', 'skylle'],
+    ['linse-dhal', 'Hæld linserne i en si, og skyl dem.', 'skylle'],
+    ['sommer-cupcakes', 'Skyl jordbærrene.', 'skylle'],
+    ['regnbue-smoothie', 'Skyl kanden under hanen.', 'skylle'],
+    ['fiskefrikadeller-med-dilddip', 'Pluk dilden i små dotter.', 'plukke'],
+    ['smash-burgere-med-ost', 'Pil fire blade af salaten, og skyl dem.', 'plukke'],
+    // Æggene pilles med æg-billedet (før v12 «smuldre»)
+    ['rugbroedsaften', 'Pil skallen af æggene.', 'pille'],
+    // Saft gennem en si ned i kanden hældes stadig, og jordbærrenes grønne top pilles (U5)
+    ['lyseroed-limonade', 'Hæld mosen gennem en si ned i kanden.', 'haelde'],
+    ['regnbue-smoothie', 'Pil de grønne blade af jordbærrene.', 'pille'],
+  ];
+  for (const [id, tekst, verbum] of forvent) assert.equal(trinMed(laes(ROD, 'opskrifter/' + id + '.json'), tekst).st.tumbi.verbum, verbum, id + ': «' + tekst + '»');
+  // Validatoren afviser de gamle verber og siger, hvilket billede der passer
+  forventFejl('opskrifter/bedste-venners-pizza.json', (d) => { trinMed(d, 'Hæld majsen i en si.').st.tumbi.verbum = 'haelde'; },
+    'trin 2: der hældes i en si, så brug verbet "si-daase" (billedet til «haelde» er en målekande over en skål): «Hæld majsen i en si.»');
+  // Med dåseåbneren er det dåsen, også når der skylles bagefter
+  forventFejl('opskrifter/kikaerteburger.json', (d) => { trinMed(d, 'Hæld kikærterne i en si, og skyl dem.').st.tumbi.verbum = 'haelde'; },
+    ': der hældes i en si, så brug verbet "si-daase"');
+  // Uden kniv og uden skylning drænes noget (spinaten): også dåse-billedet
+  forventFejl('opskrifter/spinattaerte.json', (d) => { trinMed(d, 'Hæld spinaten i en si.').st.tumbi.verbum = 'haelde'; },
+    ': der hældes i en si, så brug verbet "si-daase"');
+  forventFejl('opskrifter/linse-dhal.json', (d) => { trinMed(d, 'Hæld linserne i en si, og skyl dem.').st.tumbi.verbum = 'haelde'; },
+    ': der skylles, så brug verbet "skylle" (billedet til «haelde» er en målekande over en skål): «Hæld linserne i en si, og skyl dem.»');
+  // Også uden en si i teksten
+  forventFejl('opskrifter/sommer-cupcakes.json', (d) => { trinMed(d, 'Skyl jordbærrene.').st.tumbi.verbum = 'haelde'; },
+    ': der skylles, så brug verbet "skylle"');
+  forventFejl('opskrifter/fiskefrikadeller-med-dilddip.json', (d) => { trinMed(d, 'Pluk dilden i små dotter.').st.tumbi.verbum = 'smuldre'; },
+    ': der plukkes blade, så brug verbet "plukke" (billedet til «smuldre» er en terning, der smuldres): «Pluk dilden i små dotter.»');
+  // Salatbladene har ikonet «kaal», så her er det teksten, der fanger dem
+  forventFejl('opskrifter/smash-burgere-med-ost.json', (d) => { trinMed(d, 'Pil fire blade af salaten, og skyl dem.').st.tumbi.verbum = 'smuldre'; },
+    ': der plukkes blade, så brug verbet "plukke"');
 });
 
 test('kødet tjekkes i trinnet, der koger, ikke når barnet smager (review F7)', () => {
