@@ -923,6 +923,14 @@ function foelgInstallation(arbejder) {
   });
 }
 
+// Appen kommer frem igen. Har en ny udgave taget over, mens en timer kørte, og er timeren stoppet nu, genindlæses
+// forsiden (code review L1: før skete der intet, før barnet forlod forsiden og kom tilbage). Ellers spørges der efter
+// en ny sw.js (iOS gør det kun ved en koldstart). Uden net fejler det stille, og appen kører videre med den udgave, den har
+function kommerFrem(reg) {
+  if (genindlaesTilNyUdgave()) return;
+  reg.update().catch(() => {});
+}
+
 // Alt om en ny udgave, startet én gang nederst i filen (code review L5: før to «if (MED_SW)»-blokke)
 function startOpdatering() {
   if (!MED_SW) return;
@@ -941,10 +949,8 @@ function startOpdatering() {
       // En installation, der allerede var i gang, og hver ny (updatefound)
       foelgInstallation(reg.installing);
       reg.addEventListener('updatefound', () => foelgInstallation(reg.installing));
-      // Appen hentes frem fra baggrunden: spørg efter en ny sw.js (iOS gør det kun ved en koldstart). Uden net fejler det
-      // stille, og appen kører videre med den udgave, den har
       document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') reg.update().catch(() => {});
+        if (document.visibilityState === 'visible') kommerFrem(reg);
       });
     }).catch(() => { /* uden service worker virker appen bare kun online */ });
   });

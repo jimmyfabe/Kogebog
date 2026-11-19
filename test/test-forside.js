@@ -1032,6 +1032,32 @@ test('en ny udgave: forsiden genindlæses ikke, mens en timer kører, men gerne 
   }
 });
 
+// Code review L1 (19-11): den nye udgave tog over, mens en timer kørte, og barnet blev på forsiden. Når timeren er stoppet,
+// og appen kommer frem igen, genindlæses forsiden (før skete der intet, før barnet forlod forsiden og kom tilbage)
+test('en ny udgave: forsiden genindlæses, når appen kommer frem igen efter en stoppet timer', async () => {
+  const Timer = await import('../js/timer.js');
+  try {
+    await medSW(true, async ({ sw, genindlaest, indlaest, synlighed }) => {
+      await start('#/', { foer: () => {
+        const slut = Date.now() + 600000;
+        lageret.set('kog-v1', JSON.stringify({ v: 1, sidste: null, timer: { ret: 'koedsovs', nr: 8, start: slut - 1200000, slut, sek: 1200 } }));
+      } });
+      await indlaest();
+      sw.skift();
+      await synlighed('visible');
+      assert.equal(genindlaest(), 0, 'timeren kører stadig');
+      Timer.stop();
+      await synlighed('hidden');
+      assert.equal(genindlaest(), 0, 'ikke når appen skjules');
+      await synlighed('visible');
+      assert.equal(genindlaest(), 1);
+      assert.equal(location.hash, '#/');
+    });
+  } finally {
+    Timer.stop();
+  }
+});
+
 test('en ny udgave: appen spørger efter en ny sw.js, når den kommer frem igen, men først når register er lykkedes', async () => {
   await medSW(true, async ({ sw, indlaest, synlighed }) => {
     await start('#/');
