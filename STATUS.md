@@ -2,6 +2,39 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
+## 19-11-2026 kl. 18:39: v12 er live (første automatiske udgivelse)
+
+Jimmy 19-11: «gør det automatisk … du forsætter bare». Det står nu som regel 7 i `CLAUDE.md` (`9cc63c5`). v12 er udgivet efter den regel, uden at Jimmy så den først.
+- **Betingelserne var opfyldt:**
+  - code-reviewer: 9 fund rettet;
+  - ui-reviewer i WebKit: 1 fund på mellem rettet med test;
+  - node: 17 af 18 grønne (de 3 gamle mp3);
+  - e2e på v12 (alle dele undtagen `timer`, gennem låsen) gav rc 0 og «Alle tjek er grønne»;
+  - `test-sw` 13/13 og `test-version` 5/5 på spidsen.
+- **Push:** `git push origin 9cc63c5:main` (`7e88273..9cc63c5`). Den lokale `main` er flyttet med.
+- **Pages kl. 18:39:**
+  - forsiden svarer 200;
+  - `UDGAVE = 'v12 · 18-11-2026'`;
+  - `INDHOLD = 'a1a2a17a2a0bf480'` som spidsen.
+- Ikke afprøvet på en rigtig iPad.
+
+**Afventer Jimmy** (ført op fra 18-11; punkt 1 og 2 dér er lukket)
+1. (18-11) To grænsetilfælde i v12:
+   - «Pil druerne af stilkene» beholder `pille`.
+   - «Hæld mosen i en si over kanden» får rådet `si-daase`.
+   
+   Er de i orden?
+2. (15-11) Må de 3 gamle gruppe-mp3 slettes? I **PowerShell**: `cd D:\Claude\Kogebog; git rm lyd/faelles/gruppe-aftensmad.mp3 lyd/faelles/gruppe-bagning.mp3 lyd/faelles/gruppe-koed.mp3`
+3. (17-11) `drysse` i kander, kopper og glas: skal de have deres eget billede?
+4. (15-11) Lam senere?
+5. (14-11) Fase 2 (`kog-familie` v1 → v2, står i v10-afsnittet) er en migrering af gemte data. Den kræver stadig dit ja.
+
+**Lave UI-fund, ladet ligge:**
+- si-daase vipper vasken 6°;
+- den blå stråle er lille;
+- sien viser altid de samme kugler, og dåsen viser altid majs;
+- si-daase og si ligner hinanden i printets 34 px.
+
 ## 19-11-2026 kl. 17:27: v11 er live
 
 Jimmy skrev «Kan du ikke punch den». Claude pushede `7e88273` til `main` (`2785747..7e88273`), og den lokale `main` er flyttet med.
