@@ -325,12 +325,14 @@ function forside() {
   } else {
     const { knapper, ukendte } = forsideGrupper(S.grupper);
     // Listen er nyere end koden. En app på hjemmeskærmen har ingen genindlæs-knap, så appen henter selv den nye udgave
-    // (tjekNyUdgave), og forsiden genindlæses, når den har taget over (genindlaesTilNyUdgave)
+    // (tjekNyUdgave), og forsiden genindlæses, når den har taget over (genindlaesTilNyUdgave). Uden service worker sker
+    // der intet af sig selv, så dér beder teksten om at genindlæse (code review L4)
     if (ukendte.length) tjekNyUdgave();
     indhold = el('div', { class: 'forside-indhold' },
       el('nav', { 'aria-label': 'Vælg slags mad' }, el('ul', { class: 'gruppe-knapper', role: 'list' }, knapper.map((id) => el('li', {}, gruppeKnap(id))))),
       hentFejlLinje(S.ids.filter((id) => S.retter.get(id) instanceof Error)),
-      ukendte.length ? el('p', { class: 'fejl-linje', role: 'status', tekst: 'Listen har grupper, denne udgave ikke kender (' + ukendte.join(', ') + '). Den nye udgave hentes og vises af sig selv om lidt.' }) : null);
+      ukendte.length ? el('p', { class: 'fejl-linje', role: 'status', tekst: 'Listen har grupper, denne udgave ikke kender (' + ukendte.join(', ') + '). ' +
+        (MED_SW ? 'Den nye udgave hentes og vises af sig selv om lidt.' : 'Genindlæs siden.') }) : null);
   }
   const harRetter = Boolean(S.ids && S.ids.length);
   const top = el('header', { class: 'forside-top' },

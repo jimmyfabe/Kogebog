@@ -854,16 +854,27 @@ test('«Voksne: hold» står under knapperne', async () => {
   assert.match(hold.getAttribute('aria-label'), /^Voksne: hold\b/);
 });
 
-// En app på hjemmeskærmen har ingen genindlæs-knap (Jimmy 19-11: v9 på iPhonen, selvom v12 var live), så teksten beder
-// ikke om at genindlæse: appen henter selv den nye udgave
-test('grupper i listen, koden ikke kender, forsvinder ikke i stilhed', async () => {
-  const ny = { version: 2, grupper: [...INDEX.grupper, { id: 'ukendt-gruppe', retter: ['ny-ret-her'] }] };
-  await start('#/', { hent: (sti) => (sti === 'opskrifter/index.json' ? ny : undefined) });
+// En app på hjemmeskærmen har ingen genindlæs-knap (Jimmy 19-11: v9 på iPhonen, selvom v12 var live), så med en service
+// worker beder teksten ikke om at genindlæse: appen henter selv den nye udgave. Uden service worker sker der intet af sig
+// selv, så dér beder den om det (code review L4, 19-11: før lovede den «af sig selv» også dér)
+const MED_UKENDT_GRUPPE = { version: 2, grupper: [...INDEX.grupper, { id: 'ukendt-gruppe', retter: ['ny-ret-her'] }] };
+async function ukendtGruppeLinje() {
+  await start('#/', { hent: (sti) => (sti === 'opskrifter/index.json' ? MED_UKENDT_GRUPPE : undefined) });
   assert.equal(knapper().length, 12);
   // Den første linje er retten, der ikke kunne hentes (hentFejlLinje: ny-ret-her findes ikke på disken)
   const linje = rod.querySelectorAll('.fejl-linje').find((p) => p.textContent.includes('ukendt-gruppe'));
-  assert.equal(linje.textContent, 'Listen har grupper, denne udgave ikke kender (ukendt-gruppe). Den nye udgave hentes og vises af sig selv om lidt.');
   assert.equal(linje.getAttribute('role'), 'status');
+  return linje.textContent;
+}
+
+test('grupper i listen, koden ikke kender, forsvinder ikke i stilhed: med service worker kommer den nye udgave af sig selv', async () => {
+  await medSW(true, async () => {
+    assert.equal(await ukendtGruppeLinje(), 'Listen har grupper, denne udgave ikke kender (ukendt-gruppe). Den nye udgave hentes og vises af sig selv om lidt.');
+  });
+});
+
+test('grupper i listen, koden ikke kender, forsvinder ikke i stilhed: uden service worker beder teksten om at genindlæse', async () => {
+  assert.equal(await ukendtGruppeLinje(), 'Listen har grupper, denne udgave ikke kender (ukendt-gruppe). Genindlæs siden.');
 });
 
 // ---------- En ny udgave (v13) ----------
