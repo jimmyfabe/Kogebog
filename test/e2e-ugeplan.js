@@ -1574,7 +1574,8 @@ async function ugePrint(browser, H) {
 // LEGO 22-10), så profilen ligger i en kort sti under %TEMP%\swm\ (højst 62 tegn). De tre skærme deler én profil (én
 // installation), og alle har berøring (en profil har ét valg for berøring).
 
-const ledigPort = () => new Promise((ok, fejl) => {
+// ledigPort, nyFane og swFiler bruges også af test/e2e-opdatering.js
+export const ledigPort = () => new Promise((ok, fejl) => {
   const s = net.createServer().listen(0, '127.0.0.1', () => { const p = s.address().port; s.close(() => ok(p)); });
   s.on('error', fejl);
 });
@@ -1625,14 +1626,14 @@ async function stopServer(server, port) {
 }
 
 // FILER og INDHOLD, som de står i sw.js
-function swFiler(rod) {
+export function swFiler(rod) {
   const kilde = fs.readFileSync(path.join(rod, 'sw.js'), 'utf8');
   const blok = /const FILER = \[([\s\S]*?)\];/.exec(kilde)[1];
   return { filer: [...blok.matchAll(/'([^']+)'/g)].map((m) => m[1]), indhold: /const INDHOLD = '([0-9a-f]+)'/.exec(kilde)[1] };
 }
 
 // En fane i profilen med samme vagter som nySide: konsolfejl, sidefejl, svar over 400 og forespørgsler, der fejler
-async function nyFane(ctx, skaerm) {
+export async function nyFane(ctx, skaerm) {
   const side = await ctx.newPage();
   await side.setViewportSize(skaerm.viewport);
   side.fejl = [];
