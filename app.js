@@ -877,6 +877,8 @@ function genindlaesTilNyUdgave() {
   const t = Timer.aktuel();
   if (t && !t.faerdig) return false;
   genindlaeser = true;
+  // location.reload() er ikke øjeblikkelig, og imens står den gamle skærm: den må ikke kunne trykkes på (code review L2)
+  rod.inert = true;
   location.reload();
   return true;
 }

@@ -984,6 +984,25 @@ test('en ny udgave: midt i en ret står skærmen stille, til børnenes forside v
   });
 });
 
+// Code review L2 (19-11): location.reload() er ikke øjeblikkelig. Imens står den gamle skærm (vis() tegner ikke forsiden,
+// når den genindlæses), og den må ikke kunne trykkes på
+test('en ny udgave: den gamle skærm kan ikke trykkes på, mens siden genindlæses', async () => {
+  await medSW(true, async ({ sw, genindlaest }) => {
+    await start('#/ret/koedsovs/trin/2');
+    sw.skift();
+    assert.ok(!rod.inert, 'midt i retten kan barnet trykke videre');
+    gaaTil('#/');
+    assert.equal(genindlaest(), 1);
+    assert.equal(rod.inert, true);
+  });
+  await medSW(true, async ({ sw, genindlaest }) => {
+    await start('#/');
+    sw.skift();
+    assert.equal(genindlaest(), 1);
+    assert.equal(rod.inert, true, 'også på forsiden');
+  });
+});
+
 test('en ny udgave: voksendelen og dens gamle adresser genindlæses ikke', async () => {
   await medSW(true, async ({ sw, genindlaest }) => {
     await start('#/voksen');
