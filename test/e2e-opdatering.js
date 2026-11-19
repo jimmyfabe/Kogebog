@@ -10,6 +10,7 @@
 // nye sw.js ikke bliver hængende i browserens cache.
 //   1. Første besøg: siden bliver styret og genindlæses ikke.
 //   2. På forsiden: ny udgave på serveren, og appen kommer frem igen. Siden genindlæser selv og viser den nye udgave.
+//      Installationen henter kun de ændrede filer hele (200); resten kommer som 304 (code review M2).
 //   3. Midt i en ret: ny udgave. Skærmen står stille (adresse og overskrift, ingen genindlæsning), til man går til
 //      forsiden. Så genindlæses den og viser den nye udgave.
 //   4. En timer kører, og forsiden vises: ingen genindlæsning, for lyden og skærmlåsen kræver et nyt tryk efter en
@@ -25,6 +26,7 @@ import { UDGAVE } from '../js/version.js';
 
 const NY_MS = 30000;        // så længe må det tage, fra appen kommer frem, til den nye udgave står på skærmen
 const STILLE_MS = 2000;     // så længe ventes der efter overtagelsen, før det tjekkes, at intet er genindlæst
+const MAKS_200 = 2;         // en ny udgave ændrer js/version.js (og sw.js, der ikke står i FILER): resten skal komme som 304
 const pause = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const TYPER = {
@@ -50,10 +52,14 @@ function nyUdgave(rod, navn) {
   return new Map([['/sw.js', nySw], ['/js/version.js', nyVersion]]);
 }
 
-// Serverer mappen rod som GitHub Pages (filerne og max-age=600). skift(navn) giver de næste svar en ny sw.js og
-// js/version.js; filerne på disken røres ikke. Node holder forbindelserne åbne (HTTP/1.1), så porte ikke løber tør
+// Serverer mappen rod som GitHub Pages (filerne, max-age=600 og Last-Modified, så et uændret svar kommer som 304 på
+// If-Modified-Since, som Pythons http.server). skift(navn) giver de næste svar en ny sw.js og js/version.js uden
+// Last-Modified (de er nye, så de kommer altid som 200); filerne på disken røres ikke. Node holder forbindelserne åbne
+// (HTTP/1.1), så porte ikke løber tør.
+// Efter et skift huskes det første svar på hver sti: det er installationens hentning (se taelling)
 async function udgaveServer(rod, port) {
   let nyt = new Map();
+  let foersteSvar = new Map();
   const server = http.createServer((req, res) => {
     if (req.method !== 'GET' && req.method !== 'HEAD') { res.writeHead(405).end(); return; }
     let sti;
@@ -64,18 +70,37 @@ async function udgaveServer(rod, port) {
       return;
     }
     if (sti.endsWith('/')) sti += 'index.html';
+    const send = (status, hoved = {}, data) => {
+      if (!foersteSvar.has(sti)) foersteSvar.set(sti, status);
+      res.writeHead(status, hoved).end(data);
+    };
     const fil = path.resolve(rod, '.' + sti);
-    if (!fil.startsWith(rod + path.sep)) { res.writeHead(403).end(); return; }
+    if (!fil.startsWith(rod + path.sep)) { send(403); return; }
     const hoved = { 'Content-Type': TYPER[path.extname(fil).toLowerCase()] || 'application/octet-stream', 'Cache-Control': 'max-age=600' };
-    if (nyt.has(sti)) { res.writeHead(200, hoved).end(nyt.get(sti)); return; }
-    fs.readFile(fil, (fejl, data) => {
-      if (fejl) res.writeHead(404).end();
-      else res.writeHead(200, hoved).end(data);
+    if (nyt.has(sti)) { send(200, hoved, nyt.get(sti)); return; }
+    fs.stat(fil, (fejl, st) => {
+      if (fejl || !st.isFile()) { send(404); return; }
+      const sidst = new Date(Math.floor(st.mtimeMs / 1000) * 1000); // HTTP-datoer har hele sekunder
+      const siden = Date.parse(req.headers['if-modified-since'] || '');
+      if (!Number.isNaN(siden) && sidst.getTime() <= siden) { send(304, { 'Cache-Control': hoved['Cache-Control'], 'Last-Modified': sidst.toUTCString() }); return; }
+      fs.readFile(fil, (fejl2, data) => {
+        if (fejl2) send(404);
+        else send(200, { ...hoved, 'Last-Modified': sidst.toUTCString() }, data);
+      });
     });
   });
   await new Promise((ok, fejl) => { server.once('error', fejl); server.listen(port, '127.0.0.1', ok); });
   return {
-    skift: (navn) => { nyt = nyUdgave(rod, navn); },
+    skift: (navn) => { nyt = nyUdgave(rod, navn); foersteSvar = new Map(); },
+    // Det første svar på hver af filerne (FILER i sw.js) siden skift: { 200: [...], 304: [...], andet: [...], intet: [...] }
+    taelling: (filer) => {
+      const ud = { 200: [], 304: [], andet: [], intet: [] };
+      for (const f of new Set(filer.map((x) => '/' + (x === './' ? 'index.html' : x)))) {
+        const s = foersteSvar.get(f);
+        (s === undefined ? ud.intet : s === 200 || s === 304 ? ud[s] : ud.andet).push(f);
+      }
+      return ud;
+    },
     stop: () => new Promise((ok) => { server.closeAllConnections(); server.close(() => ok()); }),
   };
 }
@@ -206,6 +231,16 @@ async function paaForsiden(H, side, server) {
   maal.push('opdatering, forsiden: ' + (r.ok ? '«Version e2e-ny» stod på skærmen ' + sek + ' s efter visibilitychange' : 'den nye udgave kom ikke inden for ' + NY_MS / 1000 + ' s'));
   console.log('  MÅL ' + maal.at(-1));
   if (!r.ok) return;
+  // Code review M2: den anden installation spørger serveren om hver fil, men kun de ændrede kommer hele (200). Resten
+  // er uændret og kommer som 304 fra browserens cache. Med «reload» kom alle som 200 (18,9 MB på 4G i butikken)
+  const t = server.taelling(swFiler(H.ROD).filer);
+  const liste = (l) => l.slice(0, 8).join(', ') + (l.length > 8 ? ' …' : '');
+  maal.push('opdatering, anden installation: ' + t[200].length + ' × 200 (' + liste(t[200]) + ') og ' + t[304].length +
+    ' × 304' + (t.andet.length ? ', ' + t.andet.length + ' med en anden status' : '') + (t.intet.length ? ', ' + t.intet.length + ' blev ikke hentet' : ''));
+  console.log('  MÅL ' + maal.at(-1));
+  tjek(t[200].length <= MAKS_200 && t.andet.length === 0 && t.intet.length === 0,
+    'opdatering, anden installation: højst ' + MAKS_200 + ' filer må komme hele (200), resten som 304 (' + t[200].length + ' som 200, ' +
+    t[304].length + ' som 304, andet: ' + liste(t.andet) + ', ikke hentet: ' + liste(t.intet) + ')');
   await pause(STILLE_MS); // ingen løkke: siden må ikke genindlæses igen
   const n = await indlaest(side);
   tjek(n === foer + 1, 'opdatering, forsiden: præcis én genindlæsning (' + (n - foer) + ')');

@@ -175,6 +175,19 @@ test('install gemmer alle filer — eller ingen, hvis én mangler', async () => 
   assert.equal(caches2.lagre.size, 0);
 });
 
+// Code review M2 (19-11): med «reload» hentede installationen alle filer forfra (18,9 MB, ingen 304), og på 4G blev den
+// aldrig færdig. «no-cache» spørger stadig serveren hver gang (ETag/Last-Modified), men en uændret fil kommer som 304
+// fra browserens egen cache. e2e-delen «opdatering» tæller svarene fra serveren
+test('install spørger serveren om hver fil med «no-cache», så uændrede filer kan komme som 304', async () => {
+  const hentet = [];
+  const { haendelser, FILER } = lavSw({ caches: falskeCaches(), fetch: async (req) => { hentet.push(req.cache); return ok('x'); } });
+  const h = haendelse(null);
+  haendelser.install(h);
+  await Promise.all(h.ventet);
+  assert.equal(hentet.length, FILER.length);
+  assert.deepEqual([...new Set(hentet)], ['no-cache']);
+});
+
 test('opskrifterne hentes netværk først og falder tilbage til cachen', async () => {
   const caches = falskeCaches();
   let net = 'ny';
