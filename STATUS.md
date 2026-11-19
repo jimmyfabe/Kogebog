@@ -2,6 +2,15 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
+## 19-11-2026 kl. 17:27: v11 er live
+
+Jimmy skrev «Kan du ikke punch den». Claude pushede `7e88273` til `main` (`2785747..7e88273`), og den lokale `main` er flyttet med.
+- https://jimmyfabe.github.io/Kogebog/ svarer 200.
+- `js/version.js` viser `v11 · 17-11-2026`, og `sw.js` har `INDHOLD = '11fcf614af1912f3'` som spidsen.
+- Ikke afprøvet på en rigtig iPad. En iPad med den gamle udgave henter den nye første gang, den er på nettet.
+
+Punkt 1 under «Afventer Jimmy» nedenfor er dermed lukket. v12 (`v12-rester`) er ikke udgivet og venter på Jimmys ja (punkt 2).
+
 ## 18-11-2026 kl. 18:58: v11 klar til udgivelse (push afvist, kommandoen ligger hos Jimmy) · v12 på grenen `v12-rester`
 
 Jimmy skrev 18-11 «Du puncher bare det hele og forsætter». Claude læste det som: udgiv v11, og fortsæt med resten.
