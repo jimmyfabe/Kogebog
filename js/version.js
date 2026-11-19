@@ -3,5 +3,5 @@
 // Hæves ved hver udgivelse, der ændrer en fil i FILER, sw.js eller lyden: løbenummeret +1 og dagens dato.
 // UDGAVE_INDHOLD er filernes fingeraftryk for nummeret. test/test-version.js fejler, når en fil ændres uden et nyt
 // nummer, og skriver de to nye linjer i fejlbeskeden.
-export const UDGAVE = 'v12 · 18-11-2026';
-export const UDGAVE_INDHOLD = 'v12:d857b4d1b60cb82d';
+export const UDGAVE = 'v13 · 19-11-2026';
+export const UDGAVE_INDHOLD = 'v13:bd7b127ac0eabe8d';
