@@ -1092,6 +1092,39 @@ test('en ny udgave: appen spørger efter en ny sw.js, når den kommer frem igen,
   });
 });
 
+// Code review L3 (19-11): pageshow er en ekstra udløser med samme funktion som visibilitychange. En side, der kommer
+// tilbage fra browserens bfcache (persisted), spørger efter en ny sw.js og genindlæses til en ny udgave, der har taget
+// over. Den første pageshow (siden er lige indlæst) gør intet. Hvad iOS sender, når en app på hjemmeskærmen hentes frem,
+// er ikke afprøvet på iPhone/iPad
+test('en ny udgave: pageshow fra bfcache spørger efter en ny sw.js og genindlæser som visibilitychange', async () => {
+  const pageshow = (persisted) => { for (const f of vinduesLyttere.pageshow || []) f({ type: 'pageshow', persisted }); };
+  await medSW(true, async ({ sw, genindlaest, indlaest }) => {
+    await start('#/');
+    await indlaest();
+    pageshow(false);
+    assert.equal(sw.opdateringer, 0, 'den første pageshow');
+    pageshow(true);
+    assert.equal(sw.opdateringer, 1);
+    assert.equal(genindlaest(), 0);
+  });
+  const Timer = await import('../js/timer.js');
+  try {
+    await medSW(true, async ({ sw, genindlaest, indlaest }) => {
+      await start('#/', { foer: () => {
+        const slut = Date.now() + 600000;
+        lageret.set('kog-v1', JSON.stringify({ v: 1, sidste: null, timer: { ret: 'koedsovs', nr: 8, start: slut - 1200000, slut, sek: 1200 } }));
+      } });
+      await indlaest();
+      sw.skift();
+      Timer.stop();
+      pageshow(true);
+      assert.equal(genindlaest(), 1);
+    });
+  } finally {
+    Timer.stop();
+  }
+});
+
 test('en ny udgave: ukendte grupper på forsiden spørger efter den nye udgave, højst én gang pr. sideindlæsning', async () => {
   const ny = { version: 2, grupper: [...INDEX.grupper, { id: 'ukendt-gruppe', retter: ['ny-ret-her'] }] };
   await medSW(true, async ({ sw, genindlaest }) => {

@@ -856,11 +856,12 @@ window.addEventListener('hashchange', () => {
 
 // ---------- En ny udgave ----------
 // Jimmy havde 19-11-2026 v9 på iPhonen, selvom v12 var live. sw.js installerer en ny udgave og tager over (skipWaiting og
-// clients.claim), men den side, der allerede er åben, kører videre med den gamle kode. iOS spørger desuden kun efter en
-// ny sw.js, når appen startes forfra, ikke når den hentes frem fra baggrunden. Og en app på hjemmeskærmen har ingen
-// genindlæs-knap. Derfor spørger appen selv, når den kommer frem igen (visibilitychange), og genindlæser selv, når den nye
-// udgave har taget over (controllerchange). Men kun på børnenes forside: midt i en ret eller i voksendelen må skærmen ikke
-// skifte under barnet eller den voksne, så dér venter genindlæsningen, til forsiden vises næste gang (vis()).
+// clients.claim), men den side, der allerede er åben, kører videre med den gamle kode. Måske spørger iOS også kun efter en
+// ny sw.js, når appen startes forfra, og ikke, når den hentes frem fra baggrunden (ikke afprøvet på iPhone/iPad). Og en app
+// på hjemmeskærmen har ingen genindlæs-knap. Derfor spørger appen selv, når den kommer frem igen (visibilitychange og
+// pageshow), og genindlæser selv, når den nye udgave har taget over (controllerchange). Men kun på børnenes forside: midt
+// i en ret eller i voksendelen må skærmen ikke skifte under barnet eller den voksne, så dér venter genindlæsningen, til
+// forsiden vises næste gang (vis()).
 const MED_SW = 'serviceWorker' in navigator && location.protocol !== 'file:';
 let nyUdgaveKlar = false;   // en ny service worker har taget over en side, der allerede var styret af en gammel
 let genindlaeser = false;   // højst én genindlæsning pr. ny udgave (location.reload() er ikke øjeblikkelig)
@@ -872,8 +873,9 @@ function genindlaesTilNyUdgave() {
   if (!nyUdgaveKlar) return false;
   if (VoksenDel.voksenSide(location.hash) || rute().side !== 'forside') return false;
   if (genindlaeser) return true;
-  // En timer, der kører, venter også: efter en genindlæsning kræver alarmens lyd og skærmlåsen et nyt tryk på iPad'en
-  // (Timer.gendan genskaber tiden, men ikke lyden), og barnet venter måske på ovnen
+  // En timer, der kører, venter også: efter en genindlæsning kræver alarmens lyd og skærmlåsen et nyt tryk (browserens
+  // regel for lyd; ikke afprøvet på iPhone/iPad). Timer.gendan genskaber tiden, men ikke lyden, og barnet venter måske
+  // på ovnen
   const t = Timer.aktuel();
   if (t && !t.faerdig) return false;
   genindlaeser = true;
@@ -927,7 +929,7 @@ function foelgInstallation(arbejder) {
 
 // Appen kommer frem igen. Har en ny udgave taget over, mens en timer kørte, og er timeren stoppet nu, genindlæses
 // forsiden (code review L1: før skete der intet, før barnet forlod forsiden og kom tilbage). Ellers spørges der efter
-// en ny sw.js (iOS gør det kun ved en koldstart). Uden net fejler det stille, og appen kører videre med den udgave, den har
+// en ny sw.js. Uden net fejler det stille, og appen kører videre med den udgave, den har
 function kommerFrem(reg) {
   if (genindlaesTilNyUdgave()) return;
   reg.update().catch(() => {});
@@ -953,6 +955,11 @@ function startOpdatering() {
       reg.addEventListener('updatefound', () => foelgInstallation(reg.installing));
       document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible') kommerFrem(reg);
+      });
+      // Siden kommer tilbage fra browserens bfcache (code review L3). Den første pageshow er siden, der lige er indlæst.
+      // Hvilken af de to iOS sender, når en app på hjemmeskærmen hentes frem, er ikke afprøvet på iPhone/iPad
+      window.addEventListener('pageshow', (e) => {
+        if (e.persisted) kommerFrem(reg);
       });
     }).catch(() => { /* uden service worker virker appen bare kun online */ });
   });
