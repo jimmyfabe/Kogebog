@@ -853,13 +853,196 @@ test('«Voksne: hold» står under knapperne', async () => {
   assert.match(hold.getAttribute('aria-label'), /^Voksne: hold\b/);
 });
 
+// En app på hjemmeskærmen har ingen genindlæs-knap (Jimmy 19-11: v9 på iPhonen, selvom v12 var live), så teksten beder
+// ikke om at genindlæse: appen henter selv den nye udgave
 test('grupper i listen, koden ikke kender, forsvinder ikke i stilhed', async () => {
   const ny = { version: 2, grupper: [...INDEX.grupper, { id: 'ukendt-gruppe', retter: ['ny-ret-her'] }] };
   await start('#/', { hent: (sti) => (sti === 'opskrifter/index.json' ? ny : undefined) });
   assert.equal(knapper().length, 12);
-  const fejl = rod.querySelectorAll('.fejl-linje').map((p) => p.textContent).join(' ');
-  assert.match(fejl, /ukendt-gruppe/);
-  assert.equal(rod.querySelector('.fejl-linje').getAttribute('role'), 'status');
+  // Den første linje er retten, der ikke kunne hentes (hentFejlLinje: ny-ret-her findes ikke på disken)
+  const linje = rod.querySelectorAll('.fejl-linje').find((p) => p.textContent.includes('ukendt-gruppe'));
+  assert.equal(linje.textContent, 'Listen har grupper, denne udgave ikke kender (ukendt-gruppe). Den nye udgave hentes og vises af sig selv om lidt.');
+  assert.equal(linje.getAttribute('role'), 'status');
+});
+
+// ---------- En ny udgave (v13) ----------
+// sw.js tager over (skipWaiting og clients.claim), men den åbne side kører den gamle kode, til den genindlæses. Det gør
+// app.js selv, men kun på børnenes forside. Den falske service worker: controller (styret eller ej), ready med en
+// registrering, der tæller update(), og skift(), der sender controllerchange, som når en ny udgave tager over
+
+function falskSW(styret) {
+  const lyttere = [];
+  const reg = { update: async () => { sw.opdateringer++; } };
+  const sw = {
+    controller: styret ? { udgave: 'gammel' } : null,
+    opdateringer: 0,
+    ready: Promise.resolve(reg),
+    addEventListener: (type, fn) => { if (type === 'controllerchange') lyttere.push(fn); },
+    register: async () => reg,
+    skift() {
+      sw.controller = { udgave: 'ny' };
+      for (const fn of lyttere) fn();
+    },
+  };
+  return sw;
+}
+
+// Kører fn med en falsk service worker. Lytterne på document fanges, så visibilitychange kan sendes, og
+// location.reload tælles. Bagefter er alt som før, så de andre tests kører uden service worker
+async function medSW(styret, fn) {
+  const sw = falskSW(styret);
+  const dokLyttere = {};
+  const dokLyt = document.addEventListener;
+  let genindlaest = 0;
+  navigator.serviceWorker = sw;
+  document.addEventListener = (type, f) => { (dokLyttere[type] ??= []).push(f); };
+  lokation.reload = () => { genindlaest++; };
+  try {
+    await fn({
+      sw,
+      genindlaest: () => genindlaest,
+      // window's load: app.js registrerer sw.js
+      indlaest: async () => { for (const f of vinduesLyttere.load || []) f(); await ventPaaHentning(); },
+      // Appen kommer frem igen (eller skjules)
+      synlighed: async (tilstand) => {
+        document.visibilityState = tilstand;
+        for (const f of dokLyttere.visibilitychange || []) f();
+        await ventPaaHentning();
+      },
+    });
+  } finally {
+    delete navigator.serviceWorker;
+    document.addEventListener = dokLyt;
+    document.visibilityState = 'visible';
+    delete lokation.reload;
+  }
+}
+
+test('en ny udgave: første installation (siden var ikke styret) genindlæser ikke', async () => {
+  await medSW(false, async ({ sw, genindlaest }) => {
+    await start('#/');
+    sw.skift();
+    assert.equal(genindlaest(), 0);
+    // Først den næste nye udgave er ny for siden
+    sw.skift();
+    assert.equal(genindlaest(), 1);
+  });
+});
+
+test('en ny udgave: på børnenes forside genindlæses med det samme, og kun én gang', async () => {
+  await medSW(true, async ({ sw, genindlaest }) => {
+    await start('#/');
+    assert.equal(genindlaest(), 0, 'ingen genindlæsning uden en ny udgave');
+    sw.skift();
+    assert.equal(genindlaest(), 1);
+    // location.reload() er ikke øjeblikkelig: et nyt skift eller en ny visning af forsiden imens giver ikke en til
+    sw.skift();
+    gaaTil('#/gruppe/fisk');
+    gaaTil('#/');
+    assert.equal(genindlaest(), 1);
+  });
+});
+
+test('en ny udgave: midt i en ret står skærmen stille, til børnenes forside vises', async () => {
+  await medSW(true, async ({ sw, genindlaest }) => {
+    await start('#/ret/koedsovs/trin/2');
+    const foer = overskrift();
+    sw.skift();
+    assert.equal(genindlaest(), 0);
+    assert.equal(location.hash, '#/ret/koedsovs/trin/2');
+    assert.equal(overskrift(), foer);
+    // Resten af retten, gruppen, lupen, børnenes valg og indkøbslisten er ikke børnenes forside
+    for (const hash of ['#/ret/koedsovs/trin/3', '#/ret/koedsovs/faerdig', '#/ret/koedsovs', '#/gruppe/fisk', '#/soeg', '#/uge/vaelg', '#/indkoeb']) {
+      gaaTil(hash);
+      assert.equal(genindlaest(), 0, hash);
+    }
+    gaaTil('#/');
+    assert.equal(genindlaest(), 1);
+    assert.equal(location.hash, '#/');
+  });
+});
+
+test('en ny udgave: voksendelen og dens gamle adresser genindlæses ikke', async () => {
+  await medSW(true, async ({ sw, genindlaest }) => {
+    await start('#/voksen');
+    sw.skift();
+    assert.equal(genindlaest(), 0);
+    // #/uge skiftes til #/voksen (history.replaceState), og #/voksen/mere er en af voksendelens sider
+    for (const hash of ['#/voksen/mere', '#/uge', '#/voksen/dag/3']) {
+      gaaTil(hash);
+      assert.equal(genindlaest(), 0, hash);
+    }
+    gaaTil('#/');
+    assert.equal(genindlaest(), 1);
+  });
+});
+
+test('en ny udgave: forsiden genindlæses ikke, mens en timer kører, men gerne med en færdig timer', async () => {
+  const Timer = await import('../js/timer.js');
+  const timer = (slut) => () => {
+    lageret.set('kog-v1', JSON.stringify({ v: 1, sidste: null, timer: { ret: 'koedsovs', nr: 8, start: slut - 1200000, slut, sek: 1200 } }));
+  };
+  try {
+    await medSW(true, async ({ sw, genindlaest }) => {
+      // Timer.gendan genskaber timeren, før forsiden vises første gang
+      await start('#/', { foer: timer(Date.now() + 600000) });
+      assert.ok(Timer.aktuel() && !Timer.aktuel().faerdig, 'timeren kører');
+      sw.skift();
+      assert.equal(genindlaest(), 0, 'alarmens lyd kræver et nyt tryk efter en genindlæsning');
+      gaaTil('#/gruppe/fisk');
+      gaaTil('#/');
+      assert.equal(genindlaest(), 0);
+      Timer.stop();
+      gaaTil('#/gruppe/fisk');
+      gaaTil('#/');
+      assert.equal(genindlaest(), 1);
+    });
+    // Tiden er gået: «Tiden er gået» står i lageret og kommer igen efter genindlæsningen (Timer.gendan)
+    await medSW(true, async ({ sw, genindlaest }) => {
+      await start('#/', { foer: timer(Date.now() - 60000) });
+      assert.ok(Timer.aktuel() && Timer.aktuel().faerdig, 'timeren er færdig');
+      sw.skift();
+      assert.equal(genindlaest(), 1);
+      assert.equal(JSON.parse(lageret.get('kog-v1')).timer.nr, 8, 'den færdige timer er gemt til næste indlæsning');
+    });
+  } finally {
+    Timer.stop();
+  }
+});
+
+test('en ny udgave: appen spørger efter en ny sw.js, når den kommer frem igen, men først når register er lykkedes', async () => {
+  await medSW(true, async ({ sw, indlaest, synlighed }) => {
+    await start('#/');
+    await synlighed('visible');
+    assert.equal(sw.opdateringer, 0, 'før load er der ingen registrering');
+    await indlaest();
+    await synlighed('visible');
+    assert.equal(sw.opdateringer, 1);
+    await synlighed('hidden');
+    assert.equal(sw.opdateringer, 1, 'ikke når appen skjules');
+    await synlighed('visible');
+    assert.equal(sw.opdateringer, 2);
+  });
+});
+
+test('en ny udgave: ukendte grupper på forsiden spørger efter den nye udgave, højst én gang pr. sideindlæsning', async () => {
+  const ny = { version: 2, grupper: [...INDEX.grupper, { id: 'ukendt-gruppe', retter: ['ny-ret-her'] }] };
+  await medSW(true, async ({ sw, genindlaest }) => {
+    await start('#/', { hent: (sti) => (sti === 'opskrifter/index.json' ? ny : undefined) });
+    assert.equal(sw.opdateringer, 1);
+    gaaTil('#/gruppe/fisk');
+    gaaTil('#/');
+    await ventPaaHentning();
+    assert.equal(sw.opdateringer, 1);
+    // Når den nye udgave tager over, genindlæses forsiden, og den nye kode kender grupperne
+    sw.skift();
+    assert.equal(genindlaest(), 1);
+  });
+  // Uden ukendte grupper spørges der ikke
+  await medSW(true, async ({ sw }) => {
+    await start('#/');
+    assert.equal(sw.opdateringer, 0);
+  });
 });
 
 test('Madpakke har 8. pladsen (efter Gris og Ko), og uden for index.json har den ingen knap', async () => {

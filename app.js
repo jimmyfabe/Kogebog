@@ -324,10 +324,13 @@ function forside() {
       knap('Hent opskrifterne igen', { klasse: 'primaer', ikonNavn: 'igen', onclick: () => { S.ids = null; indlaes(); } }));
   } else {
     const { knapper, ukendte } = forsideGrupper(S.grupper);
+    // Listen er nyere end koden. En app på hjemmeskærmen har ingen genindlæs-knap, så appen henter selv den nye udgave
+    // (tjekNyUdgave), og forsiden genindlæses, når den har taget over (genindlaesTilNyUdgave)
+    if (ukendte.length) tjekNyUdgave();
     indhold = el('div', { class: 'forside-indhold' },
       el('nav', { 'aria-label': 'Vælg slags mad' }, el('ul', { class: 'gruppe-knapper', role: 'list' }, knapper.map((id) => el('li', {}, gruppeKnap(id))))),
       hentFejlLinje(S.ids.filter((id) => S.retter.get(id) instanceof Error)),
-      ukendte.length ? el('p', { class: 'fejl-linje', role: 'status', tekst: 'Listen har grupper, denne udgave ikke kender (' + ukendte.join(', ') + '). Genindlæs siden, så hentes den nye udgave.' }) : null);
+      ukendte.length ? el('p', { class: 'fejl-linje', role: 'status', tekst: 'Listen har grupper, denne udgave ikke kender (' + ukendte.join(', ') + '). Den nye udgave hentes og vises af sig selv om lidt.' }) : null);
   }
   const harRetter = Boolean(S.ids && S.ids.length);
   const top = el('header', { class: 'forside-top' },
@@ -786,6 +789,9 @@ function vis() {
     return;
   }
   const r = rute();
+  // Har en ny udgave taget over, mens barnet var i en ret, hentes den nu, hvor børnenes forside skal vises. Forsiden
+  // tegnes ikke først: genindlæsningen viser den alligevel, og dens billeder ville blive afbrudt midt i hentningen
+  if (r.side === 'forside' && genindlaesTilNyUdgave()) return;
   let skaerm;
   if (r.side === 'forside') {
     skaerm = forside();
@@ -847,6 +853,53 @@ window.addEventListener('hashchange', () => {
   if (location.hash !== S.vistHash) { Tale.stop(); vis(); }
 });
 
+// ---------- En ny udgave ----------
+// Jimmy havde 19-11-2026 v9 på iPhonen, selvom v12 var live. sw.js installerer en ny udgave og tager over (skipWaiting og
+// clients.claim), men den side, der allerede er åben, kører videre med den gamle kode. iOS spørger desuden kun efter en
+// ny sw.js, når appen startes forfra, ikke når den hentes frem fra baggrunden. Og en app på hjemmeskærmen har ingen
+// genindlæs-knap. Derfor spørger appen selv, når den kommer frem igen (visibilitychange), og genindlæser selv, når den nye
+// udgave har taget over (controllerchange). Men kun på børnenes forside: midt i en ret eller i voksendelen må skærmen ikke
+// skifte under barnet eller den voksne, så dér venter genindlæsningen, til forsiden vises næste gang (vis()).
+const MED_SW = 'serviceWorker' in navigator && location.protocol !== 'file:';
+let nyUdgaveKlar = false;   // en ny service worker har taget over en side, der allerede var styret af en gammel
+let genindlaeser = false;   // højst én genindlæsning pr. ny udgave (location.reload() er ikke øjeblikkelig)
+let udgaveTjekket = false;  // forsidens ukendte grupper beder højst én gang pr. sideindlæsning om en ny udgave
+
+// Svar: true, når siden genindlæses
+function genindlaesTilNyUdgave() {
+  if (!nyUdgaveKlar) return false;
+  if (VoksenDel.voksenSide(location.hash) || rute().side !== 'forside') return false;
+  if (genindlaeser) return true;
+  // En timer, der kører, venter også: efter en genindlæsning kræver alarmens lyd og skærmlåsen et nyt tryk på iPad'en
+  // (Timer.gendan genskaber tiden, men ikke lyden), og barnet venter måske på ovnen
+  const t = Timer.aktuel();
+  if (t && !t.faerdig) return false;
+  genindlaeser = true;
+  location.reload();
+  return true;
+}
+
+// Forsiden viser grupper, denne udgave ikke kender: listen (netværk først) er nyere end koden (cache først). Spørg efter
+// den nye udgave med det samme i stedet for at vente på, at appen kommer frem igen
+function tjekNyUdgave() {
+  if (!MED_SW || udgaveTjekket) return;
+  udgaveTjekket = true;
+  navigator.serviceWorker.ready.then((reg) => reg.update()).catch(() => { /* uden net: næste gang appen kommer frem */ });
+}
+
+if (MED_SW) {
+  // Første installation tager også en side, der ikke var styret (clients.claim). Den har allerede den nyeste kode, så den
+  // genindlæses ikke. Variablen følger hvert skift, så den næste nye udgave genkendes
+  let styret = Boolean(navigator.serviceWorker.controller);
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    const varStyret = styret;
+    styret = Boolean(navigator.serviceWorker.controller);
+    if (!varStyret) return;
+    nyUdgaveKlar = true;
+    genindlaesTilNyUdgave();
+  });
+}
+
 document.addEventListener('keydown', (e) => {
   if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
   if (S.tastatur) S.tastatur(e);
@@ -883,8 +936,14 @@ Timer.gendan();
 Tale.hentLydListe();
 indlaes();
 
-if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+if (MED_SW) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js', { scope: './' }).catch(() => { /* uden service worker virker appen bare kun online */ });
+    navigator.serviceWorker.register('sw.js', { scope: './' }).then((reg) => {
+      // Appen hentes frem fra baggrunden: spørg efter en ny sw.js (iOS gør det kun ved en koldstart). Uden net fejler det
+      // stille, og appen kører videre med den udgave, den har
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') reg.update().catch(() => {});
+      });
+    }).catch(() => { /* uden service worker virker appen bare kun online */ });
   });
 }
