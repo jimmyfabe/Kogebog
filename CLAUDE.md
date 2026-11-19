@@ -125,7 +125,13 @@ Al oplæsning er Røst v3 500m fra Alexandra Instituttet (referencestemmen «Nic
 4. **Cache-præfiks `kog-`.** `sw.js` rører kun `kog-`-caches. Lystårnet (`mat-`) og LEGO (`lego-`) ligger på samme origin.
 5. **`kog-v1` i `localStorage`** er `{ v, sidste, timer }`. Ændres formatet, skal der skrives en migrering, så gemte data ikke forsvinder (Jimmys regel). Koden nulstiller i dag ved en anden version (`rens()` i `lager.js`). Det er ikke en migrering, så afklar det før første formatændring. **`kog-uge-v1`, `kog-liste-v1` og `kog-familie-v1`** har en versionsvagt i stedet: et højere `v` (en nyere udgave) læses som tomt og skrives aldrig over (`laast`), og et lavere `v` løftes ét trin ad gangen af kæden i `MIGRER_UGE`/`MIGRER_LISTE`. Ny gemt data får en nøgle der, aldrig en egen nøgle i en anden fil, og `rens()` må ikke kopieres til de nye nøgler. `gemUge` renser den gemte plan kun for form og grænser; «retter» filtrerer kun det, der vises, og nye dage (code review M1, 22-10).
 6. **Ingen persondata om børn** i filer, prompter eller commit-beskeder. Skriv «børn ca. 5-9 år». Ingen fotos af børn.
-7. **Ingen push og ingen udgivelse** uden Jimmys ja. Udgivelse på GitHub Pages er offentlig, så der må ikke ligge nøgler i koden.
+7. **Udgivelse sker automatisk** (Jimmy 19-11-2026: «gør det automatisk … du forsætter bare»), som i Lystårnet. Claude pusher til `main` uden at spørge, når alt dette er opfyldt:
+   - code-reviewer og ui-reviewer i WebKit har set ændringen, og deres fund på høj og mellem er rettet med test;
+   - alle node-tests er grønne, bortset fra kendte fejl, der står i STATUS;
+   - e2e er grøn for de dele, ændringen rører;
+   - `UDGAVE` er hævet.
+
+   Push en fast sha (`git push origin <sha>:main`), aldrig `--force`, og tjek bagefter, at Pages viser den nye `UDGAVE`. Ændringer i gemte data (migreringer, fase 2) kræver stadig Jimmys ja. Udgivelse på GitHub Pages er offentlig, så der må ikke ligge nøgler i koden.
 8. **Ingen Google-stemme.** Chirp 3 HD er udelukket, medmindre Google bekræfter skriftligt (`docs/gennemgang.md`).
 9. **Knapper:** børnenes knapper mindst 64 px, de voksnes mindst 48 px. `test-e2e.js` tjekker det.
 10. **Test i WebKit** (Safaris motor) i 1180×820 (iPad), 390×844 (iPhone) og 1280×800 (desktop). Statiske sider testes over HTTP, aldrig `file://`.
