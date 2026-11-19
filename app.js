@@ -354,10 +354,11 @@ function forside() {
   // Timeren og «I dag»-kortet i én beholder: over hinanden, på skærme på langs ved siden af hinanden (app.css, review U6)
   const nu = el('div', { class: 'forside-nu' }, el('div', { class: 'forside-timer' }, timerPille()), harRetter ? idagKort() : null);
   // Røsts licens kræver, at man får at vide, at stemmen er en computerstemme, før den taler (sikkerhedsreview 20-10).
-  // Før stod det kun på printet. Versionsnummeret står under, så den voksne kan se, om iPad'en har den nye udgave (js/version.js)
+  // Før stod det kun på printet. Versionsnummeret står under, så den voksne kan se, om iPad'en har den nye udgave (js/version.js),
+  // og om en ny udgave ikke kunne hentes (udgaveFejlTekst)
   return el('main', { class: 'skaerm forside' }, top, nu, indhold, bund,
     el('p', { class: 'forside-fod', tekst: 'Stemmen er en computerstemme (Røst\u00a0fra\u00a0Alexandra\u00a0Instituttet).' }),
-    el('p', { class: 'forside-fod forside-version', tekst: 'Version ' + UDGAVE }));
+    el('p', { class: 'forside-fod forside-version', tekst: 'Version ' + UDGAVE }, el('span', { class: 'udgave-fejl', tekst: udgaveFejlTekst() })));
 }
 
 // ---------- Gruppeskærmen ----------
@@ -864,6 +865,7 @@ const MED_SW = 'serviceWorker' in navigator && location.protocol !== 'file:';
 let nyUdgaveKlar = false;   // en ny service worker har taget over en side, der allerede var styret af en gammel
 let genindlaeser = false;   // højst én genindlæsning pr. ny udgave (location.reload() er ikke øjeblikkelig)
 let udgaveTjekket = false;  // forsidens ukendte grupper beder højst én gang pr. sideindlæsning om en ny udgave
+let udgaveFejl = null;      // klokkeslættet («18:41»), da en ny udgave sidst ikke kunne installeres (code review M1)
 
 // Svar: true, når siden genindlæses
 function genindlaesTilNyUdgave() {
@@ -887,7 +889,43 @@ function tjekNyUdgave() {
   navigator.serviceWorker.ready.then((reg) => reg.update()).catch(() => { /* uden net: næste gang appen kommer frem */ });
 }
 
-if (MED_SW) {
+// Til den voksne efter «Version …» i forsidens fod. Kort, så den ikke fylder for børnene
+const udgaveFejlTekst = () => (udgaveFejl ? ' · ny udgave kunne ikke hentes kl. ' + udgaveFejl : '');
+const klokken = (d = new Date()) => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+
+// Sætter (eller fjerner, med null) fejlen. Står forsiden der, skiftes kun linjens tekst: resten af skærmen tegnes ikke om
+// under barnets finger
+function saetUdgaveFejl(kl) {
+  udgaveFejl = kl;
+  const linje = rod.querySelector('.forside-version .udgave-fejl');
+  if (linje) linje.textContent = udgaveFejlTekst();
+}
+
+// Følger én installation af en ny sw.js (code review M1). reg.update() er løst, så snart sw.js er hentet, så en
+// installation, der fejler (en fil mangler, nettet falder ud midt i de mange filer), kan kun ses på arbejderens tilstand:
+// den går til «redundant» uden at have været installeret. Den gamle udgave kører videre, og forsidens versionslinje siger
+// det til den voksne; næste forsøg er, når appen kommer frem igen. Tavs ved første installation (siden er ikke styret og
+// har allerede den nyeste kode) og uden net (det er ventet)
+const fulgte = new WeakSet();
+function foelgInstallation(arbejder) {
+  if (!arbejder || fulgte.has(arbejder)) return;
+  fulgte.add(arbejder);
+  const opdatering = Boolean(navigator.serviceWorker.controller);
+  let installeret = false;
+  arbejder.addEventListener('statechange', () => {
+    if (arbejder.state === 'redundant') {
+      // En installeret udgave, der senere afløses af en nyere, er ikke en fejl
+      if (!installeret && opdatering && navigator.onLine) saetUdgaveFejl(klokken());
+    } else if (arbejder.state !== 'installing' && !installeret) {
+      installeret = true;
+      if (udgaveFejl) saetUdgaveFejl(null);
+    }
+  });
+}
+
+// Alt om en ny udgave, startet én gang nederst i filen (code review L5: før to «if (MED_SW)»-blokke)
+function startOpdatering() {
+  if (!MED_SW) return;
   // Første installation tager også en side, der ikke var styret (clients.claim). Den har allerede den nyeste kode, så den
   // genindlæses ikke. Variablen følger hvert skift, så den næste nye udgave genkendes
   let styret = Boolean(navigator.serviceWorker.controller);
@@ -897,6 +935,18 @@ if (MED_SW) {
     if (!varStyret) return;
     nyUdgaveKlar = true;
     genindlaesTilNyUdgave();
+  });
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js', { scope: './' }).then((reg) => {
+      // En installation, der allerede var i gang, og hver ny (updatefound)
+      foelgInstallation(reg.installing);
+      reg.addEventListener('updatefound', () => foelgInstallation(reg.installing));
+      // Appen hentes frem fra baggrunden: spørg efter en ny sw.js (iOS gør det kun ved en koldstart). Uden net fejler det
+      // stille, og appen kører videre med den udgave, den har
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') reg.update().catch(() => {});
+      });
+    }).catch(() => { /* uden service worker virker appen bare kun online */ });
   });
 }
 
@@ -935,15 +985,4 @@ VoksenDel.init({ S, knap, klik, billede, lynMaerke, lynTekst, topbar, statusSkae
 Timer.gendan();
 Tale.hentLydListe();
 indlaes();
-
-if (MED_SW) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('sw.js', { scope: './' }).then((reg) => {
-      // Appen hentes frem fra baggrunden: spørg efter en ny sw.js (iOS gør det kun ved en koldstart). Uden net fejler det
-      // stille, og appen kører videre med den udgave, den har
-      document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') reg.update().catch(() => {});
-      });
-    }).catch(() => { /* uden service worker virker appen bare kun online */ });
-  });
-}
+startOpdatering();

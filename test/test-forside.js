@@ -15,6 +15,7 @@ import { soeg, soegeTekst } from '../js/soeg.js';
 import { FAVORITTER, gruppeRute, forsideGrupper, gruppeAf, gruppeRetter, tilbageFraRet, rulleplads, blandet } from '../js/grupper.js';
 import { lavModel, erLynhurtig, harTid } from '../js/model.js';
 import { utenBloede, kortNavn } from '../js/tekst.js';
+import { UDGAVE } from '../js/version.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // Alle grupper i forsidens rækkefølge. En ny gruppe står i GRUPPER, men kommer først i index.json, når dens retter har
@@ -868,11 +869,17 @@ test('grupper i listen, koden ikke kender, forsvinder ikke i stilhed', async () 
 // ---------- En ny udgave (v13) ----------
 // sw.js tager over (skipWaiting og clients.claim), men den åbne side kører den gamle kode, til den genindlæses. Det gør
 // app.js selv, men kun på børnenes forside. Den falske service worker: controller (styret eller ej), ready med en
-// registrering, der tæller update(), og skift(), der sender controllerchange, som når en ny udgave tager over
+// registrering, der tæller update(), skift(), der sender controllerchange, som når en ny udgave tager over, og
+// nyInstallation(), der sender updatefound med en ny arbejder i reg.installing (til(tilstand) sender dens statechange)
 
 function falskSW(styret) {
   const lyttere = [];
-  const reg = { update: async () => { sw.opdateringer++; } };
+  const fundet = [];
+  const reg = {
+    installing: null,
+    update: async () => { sw.opdateringer++; },
+    addEventListener: (type, fn) => { if (type === 'updatefound') fundet.push(fn); },
+  };
   const sw = {
     controller: styret ? { udgave: 'gammel' } : null,
     opdateringer: 0,
@@ -882,6 +889,21 @@ function falskSW(styret) {
     skift() {
       sw.controller = { udgave: 'ny' };
       for (const fn of lyttere) fn();
+    },
+    nyInstallation() {
+      const statLyttere = [];
+      const arbejder = {
+        state: 'installing',
+        addEventListener: (type, fn) => { if (type === 'statechange') statLyttere.push(fn); },
+        til(tilstand) {
+          arbejder.state = tilstand;
+          if (reg.installing === arbejder) reg.installing = null;
+          for (const fn of statLyttere) fn();
+        },
+      };
+      reg.installing = arbejder;
+      for (const fn of fundet) fn();
+      return arbejder;
     },
   };
   return sw;
@@ -1042,6 +1064,92 @@ test('en ny udgave: ukendte grupper på forsiden spørger efter den nye udgave, 
   await medSW(true, async ({ sw }) => {
     await start('#/');
     assert.equal(sw.opdateringer, 0);
+  });
+});
+
+// Code review M1 (19-11): reg.update() er løst, så snart sw.js er hentet, så en installation, der fejler (en fil mangler,
+// nettet falder ud midt i de 719 filer), kunne ikke ses, og forsiden viste den gamle udgave for altid. Nu siger forsidens
+// versionslinje det til den voksne. Uden net er det ventet, så dér er linjen tavs
+const VERSIONSLINJE = 'Version ' + UDGAVE;
+const FEJL_I_FODEN = /^Version .+ · ny udgave kunne ikke hentes kl\. ([01]\d|2[0-3]):[0-5]\d$/;
+const fod = () => rod.querySelector('.forside-version').textContent;
+
+test('en ny udgave, der ikke kan installeres: versionslinjen siger det, siden står stille, og næste forsøg fjerner teksten', async () => {
+  await medSW(true, async ({ sw, genindlaest, indlaest }) => {
+    await start('#/');
+    await indlaest();
+    assert.equal(fod(), VERSIONSLINJE);
+    sw.nyInstallation().til('redundant');
+    assert.match(fod(), FEJL_I_FODEN);
+    assert.ok(fod().startsWith(VERSIONSLINJE + ' · '), fod());
+    assert.equal(genindlaest(), 0, 'den gamle udgave kører videre');
+    // Den står der stadig, når forsiden vises igen
+    gaaTil('#/gruppe/fisk');
+    gaaTil('#/');
+    assert.match(fod(), FEJL_I_FODEN);
+    // Næste forsøg lykkes: teksten forsvinder, og den nye udgave tager over som før
+    const ny = sw.nyInstallation();
+    ny.til('installed');
+    assert.equal(fod(), VERSIONSLINJE);
+    ny.til('activating');
+    ny.til('activated');
+    sw.skift();
+    assert.equal(genindlaest(), 1);
+  });
+});
+
+test('en ny udgave, der ikke kan installeres midt i en ret: skærmen står stille, og forsiden siger det bagefter', async () => {
+  await medSW(true, async ({ sw, genindlaest, indlaest }) => {
+    await start('#/ret/koedsovs/trin/2');
+    await indlaest();
+    const foer = overskrift();
+    sw.nyInstallation().til('redundant');
+    assert.equal(overskrift(), foer);
+    assert.equal(location.hash, '#/ret/koedsovs/trin/2');
+    gaaTil('#/');
+    assert.match(fod(), FEJL_I_FODEN);
+    assert.equal(genindlaest(), 0);
+  });
+});
+
+test('en ny udgave, der ikke kan installeres: også når installationen var i gang, før register blev løst', async () => {
+  await medSW(true, async ({ sw, indlaest }) => {
+    await start('#/');
+    const ny = sw.nyInstallation(); // updatefound, før appen lytter
+    await indlaest();
+    ny.til('redundant');
+    assert.match(fod(), FEJL_I_FODEN);
+  });
+});
+
+test('en ny udgave, der ikke kan installeres: tavs uden net, ved første installation og når en installeret udgave afløses', async () => {
+  await medSW(true, async ({ sw, indlaest }) => {
+    await start('#/');
+    await indlaest();
+    navigator.onLine = false;
+    try {
+      sw.nyInstallation().til('redundant');
+    } finally {
+      navigator.onLine = true;
+    }
+    assert.equal(fod(), VERSIONSLINJE, 'uden net');
+  });
+  // Første installation: siden er ikke styret og har allerede den nyeste kode
+  await medSW(false, async ({ sw, indlaest }) => {
+    await start('#/');
+    await indlaest();
+    sw.nyInstallation().til('redundant');
+    assert.equal(fod(), VERSIONSLINJE, 'første installation');
+  });
+  // En udgave, der blev installeret og senere afløses af en nyere, er ikke en fejl
+  await medSW(true, async ({ sw, indlaest }) => {
+    await start('#/');
+    await indlaest();
+    const ny = sw.nyInstallation();
+    ny.til('installed');
+    ny.til('activated');
+    ny.til('redundant');
+    assert.equal(fod(), VERSIONSLINJE, 'afløst');
   });
 });
 

@@ -11,9 +11,12 @@
 //   1. Første besøg: siden bliver styret og genindlæses ikke.
 //   2. På forsiden: ny udgave på serveren, og appen kommer frem igen. Siden genindlæser selv og viser den nye udgave.
 //      Installationen henter kun de ændrede filer hele (200); resten kommer som 304 (code review M2).
-//   3. Midt i en ret: ny udgave. Skærmen står stille (adresse og overskrift, ingen genindlæsning), til man går til
+//   3. En fil mangler i den nye udgave (404): installationen fejler. Siden genindlæses ikke, den gamle udgave virker, og
+//      forsidens fod siger det til den voksne. Når serveren er rettet, kommer den nye udgave, næste gang appen kommer frem
+//      (code review M1).
+//   4. Midt i en ret: ny udgave. Skærmen står stille (adresse og overskrift, ingen genindlæsning), til man går til
 //      forsiden. Så genindlæses den og viser den nye udgave.
-//   4. En timer kører, og forsiden vises: ingen genindlæsning, for lyden og skærmlåsen kræver et nyt tryk efter en
+//   5. En timer kører, og forsiden vises: ingen genindlæsning, for lyden og skærmlåsen kræver et nyt tryk efter en
 //      genindlæsning på iPad. Først når timeren er stoppet, og forsiden vises igen.
 // Siderne tælles i sessionStorage (taelIndlaesning), som overlever en genindlæsning i samme fane.
 import fs from 'node:fs';
@@ -55,10 +58,11 @@ function nyUdgave(rod, navn) {
 // Serverer mappen rod som GitHub Pages (filerne, max-age=600 og Last-Modified, så et uændret svar kommer som 304 på
 // If-Modified-Since, som Pythons http.server). skift(navn) giver de næste svar en ny sw.js og js/version.js uden
 // Last-Modified (de er nye, så de kommer altid som 200); filerne på disken røres ikke. Node holder forbindelserne åbne
-// (HTTP/1.1), så porte ikke løber tør.
+// (HTTP/1.1), så porte ikke løber tør. skift(navn, { mangler: sti }) giver 404 på én fil i den nye udgave.
 // Efter et skift huskes det første svar på hver sti: det er installationens hentning (se taelling)
 async function udgaveServer(rod, port) {
   let nyt = new Map();
+  let mangler = null;
   let foersteSvar = new Map();
   const server = http.createServer((req, res) => {
     if (req.method !== 'GET' && req.method !== 'HEAD') { res.writeHead(405).end(); return; }
@@ -76,6 +80,7 @@ async function udgaveServer(rod, port) {
     };
     const fil = path.resolve(rod, '.' + sti);
     if (!fil.startsWith(rod + path.sep)) { send(403); return; }
+    if (sti === mangler) { send(404); return; }
     const hoved = { 'Content-Type': TYPER[path.extname(fil).toLowerCase()] || 'application/octet-stream', 'Cache-Control': 'max-age=600' };
     if (nyt.has(sti)) { send(200, hoved, nyt.get(sti)); return; }
     fs.stat(fil, (fejl, st) => {
@@ -91,7 +96,7 @@ async function udgaveServer(rod, port) {
   });
   await new Promise((ok, fejl) => { server.once('error', fejl); server.listen(port, '127.0.0.1', ok); });
   return {
-    skift: (navn) => { nyt = nyUdgave(rod, navn); foersteSvar = new Map(); },
+    skift: (navn, valg = {}) => { nyt = nyUdgave(rod, navn); mangler = valg.mangler ?? null; foersteSvar = new Map(); },
     // Det første svar på hver af filerne (FILER i sw.js) siden skift: { 200: [...], 304: [...], andet: [...], intet: [...] }
     taelling: (filer) => {
       const ud = { 200: [], 304: [], andet: [], intet: [] };
@@ -169,6 +174,7 @@ export async function opdatering(H) {
     for (const s of foerste) await s.close();
     if (!await foersteBesoeg(H, side, base)) return;
     await paaForsiden(H, side, server);
+    await fejletInstallation(H, side, server);
     await midtIRet(H, side, server);
     await underTimer(H, side, server);
     tjek(side.fejl.length === 0, 'opdatering: ' + side.fejl.join(' | '));
@@ -249,7 +255,55 @@ async function paaForsiden(H, side, server) {
   await foto(side, 'opdatering-forsiden-ny-udgave');
 }
 
-// 3. Midt i en ret: skærmen må ikke skifte under barnet. Den nye udgave vises, næste gang børnenes forside vises
+// 3. En fil i den nye udgave giver 404 (fx afbrudt net eller en fil, der mangler på Pages). Installationen fejler, men
+// reg.update() er løst, så snart sw.js er hentet: kun versionslinjen kan vise det (code review M1)
+const MANGLER = '/grafik/verbum-plukke.svg';
+const FEJL_I_FODEN = /^Version e2e-ny · ny udgave kunne ikke hentes kl\. \d\d:\d\d$/;
+async function fejletInstallation(H, side, server) {
+  const { tjek, tryk, maal, foto } = H;
+  const foer = await indlaest(side);
+  const fejlFoer = side.fejl.length;
+  const fejlIFoden = (m) => new RegExp(m).test(document.querySelector('.forside-version')?.textContent ?? '');
+  server.skift('e2e-hul', { mangler: MANGLER });
+  const t0 = Date.now();
+  await fremIgen(side);
+  const r = await indtil(side, fejlIFoden, FEJL_I_FODEN.source, NY_MS);
+  const sek = ((Date.now() - t0) / 1000).toFixed(1);
+  tjek(r.ok, 'opdatering, fejlet installation: forsidens fod skal sige, at den nye udgave ikke kunne hentes (står: ' + await fod(side) +
+    (r.fejl ? '; ' + r.fejl : '') + ')');
+  await pause(STILLE_MS);
+  tjek(await indlaest(side) === foer, 'opdatering, fejlet installation: siden må ikke genindlæses (' + (await indlaest(side) - foer) + ' gange)');
+  tjek((await kogCacher(side)).join() === 'kog-e2e-ny', 'opdatering, fejlet installation: kun den gamle udgaves cache (' + (await kogCacher(side)).join(', ') + ')');
+  await foto(side, 'opdatering-fejlet-installation');
+  // Den gamle udgave virker: en gruppe og tilbage til forsiden, hvor fejlen stadig står
+  await tryk(side, '.gruppe-knap[data-gruppe="fisk"]');
+  const gruppe = await indtil(side, () => location.hash === '#/gruppe/fisk' && document.querySelectorAll('.kort[data-ret]').length > 0, null, 10000);
+  tjek(gruppe.ok, 'opdatering, fejlet installation: den gamle udgave viser gruppen Fisk (' + (gruppe.fejl || await side.evaluate(() => location.hash)) + ')');
+  await side.evaluate(() => { location.hash = '#/'; });
+  const tilbage = await indtil(side, (m) => location.hash === '#/' && new RegExp(m).test(document.querySelector('.forside-version')?.textContent ?? ''),
+    FEJL_I_FODEN.source, 10000);
+  tjek(tilbage.ok && await indlaest(side) === foer, 'opdatering, fejlet installation: tilbage på forsiden står fejlen der stadig, uden genindlæsning (' +
+    await fod(side) + ')');
+  // 404 på den manglende fil er ventet. Ser siden installationens svar, tælles de her og ikke som fejl
+  const nye = side.fejl.splice(fejlFoer);
+  const ventede = nye.filter((f) => f.startsWith('HTTP 404: ') && f.endsWith(MANGLER));
+  side.fejl.push(...nye.filter((f) => !ventede.includes(f)));
+  maal.push('opdatering, fejlet installation: ' + (r.ok ? 'fejlen stod i foden ' + sek + ' s efter visibilitychange' : 'fejlen kom ikke i foden') +
+    ', og siden så ' + ventede.length + ' svar 404 på ' + MANGLER);
+  console.log('  MÅL ' + maal.at(-1));
+  // Serveren er rettet: næste gang appen kommer frem, installeres den nye udgave, og forsiden genindlæses én gang
+  server.skift('e2e-hul');
+  await fremIgen(side);
+  const ny = await indtil(side, () => document.querySelector('.forside-version')?.textContent === 'Version e2e-hul', null, NY_MS);
+  tjek(ny.ok, 'opdatering, fejlet installation: efter rettelsen skal den nye udgave stå i foden uden fejltekst (står: ' + await fod(side) +
+    (ny.fejl ? '; ' + ny.fejl : '') + ')');
+  await pause(STILLE_MS);
+  tjek(await indlaest(side) === foer + 1, 'opdatering, fejlet installation: præcis én genindlæsning efter rettelsen (' + (await indlaest(side) - foer) + ')');
+  tjek((await kogCacher(side)).join() === 'kog-e2e-hul', 'opdatering, fejlet installation: kun den nye udgaves cache efter rettelsen (' +
+    (await kogCacher(side)).join(', ') + ')');
+}
+
+// 4. Midt i en ret: skærmen må ikke skifte under barnet. Den nye udgave vises, næste gang børnenes forside vises
 async function midtIRet(H, side, server) {
   const { tjek, tryk } = H;
   await side.evaluate(() => { location.hash = '#/ret/pandekager/trin/2'; });
