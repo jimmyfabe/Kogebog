@@ -34,8 +34,8 @@ import { INDHOLD_FIL, manifestAf, manifestTekst } from '../vaerktoej/sw-indhold.
 const NY_MS = 30000;        // så længe må det tage, fra appen kommer frem, til den nye udgave står på skærmen
 const STILLE_MS = 2000;     // så længe ventes der efter overtagelsen, før det tjekkes, at intet er genindlæst
 // En ny udgave ændrer js/version.js og sw-indhold.json (og sw.js, der ikke tælles med). Resten er uændret og må ikke
-// hentes hele igen, selvom Pages giver dem en ny ETag. Lidt luft: højst ca. 3 filer som 200 efter en udgivelse
-const MAKS_200 = 3;
+// hentes hele igen, selvom Pages giver dem en ny ETag: præcis de to filer som 200 efter en udgivelse (code review L3, v13b)
+const HELE_200 = ['/js/version.js', '/sw-indhold.json'];
 const pause = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const TYPER = {
@@ -286,8 +286,8 @@ async function paaForsiden(H, side, server) {
     (t.andet.length ? ', ' + t.andet.length + ' med en anden status' : '') + ' og ' + t.intet.length + ' genbrugt fra den forrige cache (ikke hentet)' +
     (t.side.length ? '; genindlæsningen hentede selv ' + t.side.join(', ') : ''));
   console.log('  MÅL ' + maal.at(-1));
-  tjek(t[200].length <= MAKS_200 && t.andet.length === 0,
-    'opdatering, anden installation: højst ' + MAKS_200 + ' filer må komme hele (200) efter en udgivelse (' + t[200].length + ' som 200: ' +
+  tjek([...t[200]].sort().join() === HELE_200.join() && t.andet.length === 0,
+    'opdatering, anden installation: kun ' + HELE_200.join(' og ') + ' må komme hele (200) efter en udgivelse (' + t[200].length + ' som 200: ' +
     liste(t[200]) + '; ' + t[304].length + ' som 304, andet: ' + liste(t.andet) + ')');
   await pause(STILLE_MS); // ingen løkke: siden må ikke genindlæses igen
   const n = await indlaest(side);
