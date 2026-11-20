@@ -867,12 +867,14 @@ window.addEventListener('hashchange', () => {
 const MED_SW = 'serviceWorker' in navigator && location.protocol !== 'file:';
 let nyUdgaveKlar = false;   // en ny service worker har taget over en side, der allerede var styret af en gammel
 let genindlaeser = false;   // højst én genindlæsning pr. ny udgave (location.reload() er ikke øjeblikkelig)
+let genindlaesOpgivet = false; // genindlæsningen skete ikke inden for GENINDLAES_MS: næste forsøg, når appen kommer frem
+const GENINDLAES_MS = 10000;
 let udgaveTjekket = false;  // forsidens ukendte grupper beder højst én gang pr. sideindlæsning om en ny udgave
 let udgaveFejl = null;      // klokkeslættet («18:41»), da en ny udgave sidst ikke kunne installeres (code review M1)
 
 // Svar: true, når siden genindlæses
 function genindlaesTilNyUdgave() {
-  if (!nyUdgaveKlar) return false;
+  if (!nyUdgaveKlar || genindlaesOpgivet) return false;
   if (VoksenDel.voksenSide(location.hash) || rute().side !== 'forside') return false;
   if (genindlaeser) return true;
   // En timer, der kører, venter også: efter en genindlæsning kræver alarmens lyd og skærmlåsen et nyt tryk (browserens
@@ -881,10 +883,21 @@ function genindlaesTilNyUdgave() {
   const t = Timer.aktuel();
   if (t && !t.faerdig) return false;
   genindlaeser = true;
-  // location.reload() er ikke øjeblikkelig, og imens står den gamle skærm: den må ikke kunne trykkes på (code review L2)
+  // location.reload() er ikke øjeblikkelig, og imens står den gamle skærm: den må ikke kunne trykkes på (code review L2),
+  // og tastaturlytteren nederst springer over den. Nødudgangen sættes før reload(), så den også gælder, hvis den fejler
   rod.inert = true;
+  setTimeout(opgivGenindlaesning, GENINDLAES_MS);
   location.reload();
   return true;
+}
+
+// Nødudgang (v13-review, 19-11): genindlæsningen er ikke sket efter GENINDLAES_MS. Skærmen kan bruges igen, og forsiden
+// tegnes uden at prøve igen med det samme (ellers låste den igen og igen). Næste forsøg er, når appen kommer frem igen
+function opgivGenindlaesning() {
+  genindlaeser = false;
+  genindlaesOpgivet = true;
+  rod.inert = false;
+  vis();
 }
 
 // Forsiden viser grupper, denne udgave ikke kender: listen (netværk først) er nyere end koden (cache først). Spørg efter
@@ -933,6 +946,7 @@ function foelgInstallation(arbejder) {
 // forsiden (code review L1: før skete der intet, før barnet forlod forsiden og kom tilbage). Ellers spørges der efter
 // en ny sw.js. Uden net fejler det stille, og appen kører videre med den udgave, den har
 function kommerFrem(reg) {
+  genindlaesOpgivet = false;
   if (genindlaesTilNyUdgave()) return;
   reg.update().catch(() => {});
 }
@@ -948,6 +962,7 @@ function startOpdatering() {
     styret = Boolean(navigator.serviceWorker.controller);
     if (!varStyret) return;
     nyUdgaveKlar = true;
+    genindlaesOpgivet = false; // endnu en ny udgave: prøv igen
     genindlaesTilNyUdgave();
   });
   window.addEventListener('load', () => {
@@ -967,8 +982,9 @@ function startOpdatering() {
   });
 }
 
+// Mens siden genindlæses, står den gamle skærm, og dens tastatur må ikke skifte adresse (rod.inert stopper kun tryk)
 document.addEventListener('keydown', (e) => {
-  if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+  if (genindlaeser || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
   if (S.tastatur) S.tastatur(e);
 });
 

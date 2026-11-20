@@ -921,7 +921,8 @@ function falskSW(styret) {
 }
 
 // Kører fn med en falsk service worker. Lytterne på document fanges, så visibilitychange kan sendes, og
-// location.reload tælles. Bagefter er alt som før, så de andre tests kører uden service worker
+// location.reload tælles. setTimeout går på et falsk ur (gaa(ms) lader tiden gå), så genindlæsningens nødudgang (10 s)
+// ikke kører senere i en anden test. Bagefter er alt som før, så de andre tests kører uden service worker
 async function medSW(styret, fn) {
   const sw = falskSW(styret);
   const dokLyttere = {};
@@ -931,8 +932,9 @@ async function medSW(styret, fn) {
   document.addEventListener = (type, f) => { (dokLyttere[type] ??= []).push(f); };
   lokation.reload = () => { genindlaest++; };
   try {
-    await fn({
+    await medUr((gaa) => fn({
       sw,
+      gaa,
       genindlaest: () => genindlaest,
       // window's load: app.js registrerer sw.js
       indlaest: async () => { for (const f of vinduesLyttere.load || []) f(); await ventPaaHentning(); },
@@ -942,12 +944,47 @@ async function medSW(styret, fn) {
         for (const f of dokLyttere.visibilitychange || []) f();
         await ventPaaHentning();
       },
-    });
+      // En tast på tastaturet (keydown på document), efter spærren mod dobbelttryk er løbet ud
+      tast: (key) => {
+        ur += 1000;
+        const e = { type: 'keydown', key, repeat: false, defaultPrevented: false, altKey: false, ctrlKey: false, metaKey: false,
+          preventDefault() { e.defaultPrevented = true; } };
+        for (const f of dokLyttere.keydown || []) f(e);
+        return e;
+      },
+    }));
   } finally {
     delete navigator.serviceWorker;
     document.addEventListener = dokLyt;
     document.visibilityState = 'visible';
     delete lokation.reload;
+  }
+}
+
+// Falsk ur til setTimeout og clearTimeout, mens fn kører: gaa(ms) lader tiden gå og kører de timere, der er nået, i
+// rækkefølge. Bagefter er de rigtige tilbage
+async function medUr(fn) {
+  const rigtige = { setTimeout: globalThis.setTimeout, clearTimeout: globalThis.clearTimeout };
+  const timere = new Map();
+  let nu = 0;
+  let naesteId = 1;
+  globalThis.setTimeout = (f, ms = 0, ...arg) => { timere.set(naesteId, { tid: nu + ms, f: () => f(...arg) }); return naesteId++; };
+  globalThis.clearTimeout = (id) => { timere.delete(id); };
+  const gaa = (ms) => {
+    const slut = nu + ms;
+    for (;;) {
+      const naeste = [...timere].filter(([, t]) => t.tid <= slut).sort((a, b) => a[1].tid - b[1].tid || a[0] - b[0])[0];
+      if (!naeste) break;
+      timere.delete(naeste[0]);
+      nu = naeste[1].tid;
+      naeste[1].f();
+    }
+    nu = slut;
+  };
+  try {
+    await fn(gaa);
+  } finally {
+    Object.assign(globalThis, rigtige);
   }
 }
 
@@ -1011,6 +1048,37 @@ test('en ny udgave: den gamle skærm kan ikke trykkes på, mens siden genindlæs
     sw.skift();
     assert.equal(genindlaest(), 1);
     assert.equal(rod.inert, true, 'også på forsiden');
+  });
+});
+
+// v13-review (19-11): rod.inert stopper tryk, men ikke tastaturlytteren på document. Den gamle trinskærms piletaster
+// skiftede adressen, mens siden genindlæste. Og sker genindlæsningen aldrig, stod skærmen låst: efter 10 s kan den bruges
+// igen, forsiden tegnes uden en ny genindlæsning, og næste forsøg er, når appen kommer frem igen
+test('en ny udgave: tastaturet skifter ikke adresse under genindlæsningen, og efter 10 s uden genindlæsning virker skærmen igen', async () => {
+  await medSW(true, async ({ sw, gaa, genindlaest, indlaest, synlighed, tast }) => {
+    await start('#/ret/koedsovs/trin/2');
+    await indlaest();
+    sw.skift();
+    gaaTil('#/');
+    assert.equal(genindlaest(), 1);
+    // Trinskærmens tastatur tager piletasterne og mellemrum (preventDefault): her når tasten den ikke
+    for (const key of ['ArrowLeft', 'ArrowRight', ' ']) {
+      assert.equal(tast(key).defaultPrevented, false, JSON.stringify(key) + ' må ikke nå trinskærmen');
+      assert.equal(location.hash, '#/', JSON.stringify(key) + ' under genindlæsningen');
+    }
+    assert.equal(knapper().length, 0, 'forsiden tegnes ikke, mens siden genindlæses');
+    gaa(9999);
+    assert.equal(rod.inert, true, 'efter 9,999 s er skærmen stadig låst');
+    gaa(1);
+    assert.equal(rod.inert, false, 'efter 10 s kan skærmen bruges igen');
+    assert.ok(knapper().length > 0, 'forsiden er tegnet');
+    assert.equal(genindlaest(), 1, 'ingen ny genindlæsning med det samme');
+    gaaTil('#/gruppe/fisk');
+    gaaTil('#/');
+    assert.equal(genindlaest(), 1, 'heller ikke, når forsiden vises igen');
+    await synlighed('visible');
+    assert.equal(genindlaest(), 2, 'næste forsøg, når appen kommer frem igen');
+    assert.equal(rod.inert, true);
   });
 });
 
