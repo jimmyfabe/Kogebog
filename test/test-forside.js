@@ -1115,7 +1115,7 @@ test('en ny udgave: voksendelen og dens gamle adresser genindlæses ikke', async
   });
 });
 
-test('en ny udgave: forsiden genindlæses ikke, mens en timer kører, men gerne med en færdig timer', async () => {
+test('en ny udgave: forsiden genindlæses ikke, mens der er en timer, heller ikke en færdig, men gerne efter «Stop» eller «Ok»', async () => {
   const Timer = await import('../js/timer.js');
   try {
     await medSW(true, async ({ sw, genindlaest }) => {
@@ -1132,13 +1132,22 @@ test('en ny udgave: forsiden genindlæses ikke, mens en timer kører, men gerne 
       gaaTil('#/');
       assert.equal(genindlaest(), 1);
     });
-    // Tiden er gået: «Tiden er gået» står i lageret og kommer igen efter genindlæsningen (Timer.gendan)
+    // Tiden er gået: alarmen ringer, til nogen trykker «Ok» (stop), og den må ikke dø i en genindlæsning (v13-review d,
+    // 20-11: før genindlæste controllerchange med en færdig timer). Timeren står stadig i lageret. Efter «Ok» genindlæses
+    // forsiden, næste gang den vises
     await medSW(true, async ({ sw, genindlaest }) => {
       await start('#/', { foer: gemtTimer(Date.now() - 60000) });
       assert.ok(Timer.aktuel() && Timer.aktuel().faerdig, 'timeren er færdig');
       sw.skift();
-      assert.equal(genindlaest(), 1);
-      assert.equal(JSON.parse(lageret.get('kog-v1')).timer.nr, 8, 'den færdige timer er gemt til næste indlæsning');
+      assert.equal(genindlaest(), 0, 'alarmen må ikke afbrydes af en genindlæsning');
+      assert.equal(JSON.parse(lageret.get('kog-v1')).timer.nr, 8, 'den færdige timer står stadig i lageret');
+      gaaTil('#/gruppe/fisk');
+      gaaTil('#/');
+      assert.equal(genindlaest(), 0, 'heller ikke, når forsiden vises igen');
+      Timer.stop();
+      gaaTil('#/gruppe/fisk');
+      gaaTil('#/');
+      assert.equal(genindlaest(), 1, 'efter «Ok» genindlæses forsiden');
     });
   } finally {
     Timer.stop();
@@ -1191,6 +1200,40 @@ test('en ny udgave: appen genindlæser ikke, når den kommer frem med en timer, 
       assert.equal(genindlaest(), 0, 'ikke når appen skjules');
       await synlighed('visible');
       assert.equal(genindlaest(), 1, 'efter «Ok» genindlæses forsiden, næste gang appen kommer frem');
+    });
+  } finally {
+    Date.now = rigtigNu;
+    Timer.stop();
+  }
+});
+
+// Code review M2 (v13b, 20-11, rækkefølgen d1): den almindelige rækkefølge er omvendt. Appen kommer frem med en timer, der
+// lige er blevet færdig, og kommerFrem spørger selv efter en ny sw.js (reg.update). Installationen tager kun få sekunder
+// (2 filer), og så tager den nye udgave over (controllerchange), mens alarmen ringer. Før genindlæste controllerchange
+// med en færdig timer, og alarmen døde. Reglen står nu ét sted (genindlaesTilNyUdgave): ingen genindlæsning, så længe der
+// er en timer, også en færdig. Efter «Ok» (stop) og forsiden genindlæses den
+test('en ny udgave: tager den over, efter at appen er kommet frem med en lige færdig timer, genindlæses der først efter «Ok»', async () => {
+  const Timer = await import('../js/timer.js');
+  const rigtigNu = Date.now;
+  try {
+    await medSW(true, async ({ sw, gaa, genindlaest, indlaest, synlighed }) => {
+      const slut = Date.now() + 600000;
+      await start('#/', { foer: gemtTimer(slut) });
+      await indlaest();
+      await synlighed('hidden');
+      Date.now = () => slut + 1000;
+      await ventTil(() => Timer.aktuel()?.faerdig === true);
+      await synlighed('visible');
+      assert.equal(sw.opdateringer, 1, 'kommerFrem spørger efter en ny sw.js');
+      assert.equal(genindlaest(), 0);
+      gaa(1000);
+      sw.skift(); // installationen, kommerFrem startede, er færdig ca. 1 s senere
+      assert.equal(genindlaest(), 0, 'alarmen må ikke afbrydes af en genindlæsning');
+      assert.equal(Timer.aktuel()?.faerdig, true, 'alarmen ringer stadig');
+      Timer.stop();
+      gaaTil('#/gruppe/fisk');
+      gaaTil('#/');
+      assert.equal(genindlaest(), 1, 'efter «Ok» og forsiden genindlæses den');
     });
   } finally {
     Date.now = rigtigNu;

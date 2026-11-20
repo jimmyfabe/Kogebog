@@ -877,11 +877,11 @@ function genindlaesTilNyUdgave() {
   if (!nyUdgaveKlar || genindlaesOpgivet) return false;
   if (VoksenDel.voksenSide(location.hash) || rute().side !== 'forside') return false;
   if (genindlaeser) return true;
-  // En timer, der kører, venter også: efter en genindlæsning kræver alarmens lyd og skærmlåsen et nyt tryk (browserens
-  // regel for lyd; ikke afprøvet på iPhone/iPad). Timer.gendan genskaber tiden, men ikke lyden, og barnet venter måske
-  // på ovnen
-  const t = Timer.aktuel();
-  if (t && !t.faerdig) return false;
+  // En timer venter også, til nogen trykker «Stop» eller «Ok»: efter en genindlæsning kræver alarmens lyd og skærmlåsen et
+  // nyt tryk (browserens regel for lyd; ikke afprøvet på iPhone/iPad). Timer.gendan genskaber tiden, men ikke lyden, og
+  // barnet venter måske på ovnen. En færdig timer ringer, og alarmen må ikke dø i en genindlæsning, heller ikke når den nye
+  // udgave tager over lige efter, at appen er kommet frem (code review M2, v13b). Reglen står kun her
+  if (Timer.aktuel()) return false;
   genindlaeser = true;
   // location.reload() er ikke øjeblikkelig, og imens står den gamle skærm: den må ikke kunne trykkes på (code review L2),
   // og tastaturlytteren nederst springer over den. Nødudgangen sættes før reload(), så den også gælder, hvis den fejler
@@ -957,11 +957,11 @@ function foelgInstallation(arbejder) {
 // Appen kommer frem igen. Har en ny udgave taget over, mens en timer kørte, og er timeren stoppet nu, genindlæses
 // forsiden (code review L1: før skete der intet, før barnet forlod forsiden og kom tilbage). Ellers spørges der efter
 // en ny sw.js. Uden net fejler det stille, og appen kører videre med den udgave, den har.
-// En timer, også en færdig, venter på «Ok»: er tiden gået, mens appen var skjult, har timerens egen visibilitychange lige
-// startet alarmen, og den må ikke dø i en genindlæsning (v13-review, 19-11)
+// En timer, også en færdig, venter på «Ok» (genindlaesTilNyUdgave): er tiden gået, mens appen var skjult, har timerens
+// egen visibilitychange lige startet alarmen, og den må ikke dø i en genindlæsning (v13-review, 19-11)
 function kommerFrem(reg) {
   genindlaesOpgivet = false;
-  if (!Timer.aktuel() && genindlaesTilNyUdgave()) return;
+  if (genindlaesTilNyUdgave()) return;
   spoergEfterNyUdgave(reg);
 }
 
