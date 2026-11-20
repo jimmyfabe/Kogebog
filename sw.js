@@ -9,7 +9,7 @@
    Svarer nettet ikke inden for HENT_MS (4 s), kommer en opskrift (også index.json) fra cachen, og nettets svar gemmes
    til næste gang. De næste LANGSOM_MS (30 s) tager opskrifterne cachen med det samme (code review U3 og F2, 23-10). */
 const PRAEFIKS = 'kog-';
-const INDHOLD = 'e29376b668778cf0'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = '205c2b3da65216e9'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '7b503e0be6847e32'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
@@ -433,16 +433,65 @@ const FILER = [
 const iScope = (url) => url.href.startsWith(self.registration.scope);
 const erOpskrift = (url) => /\/opskrifter\/[a-z0-9-]+\.json$/.test(url.pathname) || /\/lyd\/liste\.json$/.test(url.pathname);
 
+// sw-indhold.json: hver fils sha256 (16 tegn) i denne udgave, { indhold: INDHOLD, filer: { <sti i FILER>: <hash> } }, skrevet
+// af vaerktoej/sw-indhold.js (test/test-sw.js tjekker, at den passer). Den gemmes i udgavens cache, så den næste udgave kan se,
+// hvilke filer der er uændrede. GitHub Pages giver alle filer udgivelsens tid som ETag (målt 19-11), så «no-cache» alene
+// hentede hele appen (18,9 MB) ved hver udgivelse, og på 4G blev installationen aldrig færdig (code review M2, 19-11)
+const INDHOLD_FIL = 'sw-indhold.json';
+const hashFor = (m, f) => (Object.hasOwn(m.filer, f) && typeof m.filer[f] === 'string' ? m.filer[f] : null);
+const passer = (m, indhold) => Boolean(m) && m.indhold === indhold && Boolean(m.filer) && typeof m.filer === 'object';
+
+// Den nye udgaves sw-indhold.json, eller null, hvis den ikke kan hentes, ikke kan læses eller hører til en anden sw.js
+async function nytIndhold() {
+  try {
+    const svar = await fetch(new Request(INDHOLD_FIL, { cache: 'no-cache' }));
+    if (!svar.ok) return null;
+    const m = await svar.json();
+    return passer(m, INDHOLD) ? m : null;
+  } catch (err) {
+    return null;
+  }
+}
+
+// Den forrige udgave: den nyeste «kog-»-cache (ikke lyden), hvis sw-indhold.json hører til cachens navn, eller null
+async function forrigeUdgave() {
+  const navne = (await caches.keys()).filter((n) => n.startsWith(PRAEFIKS) && !n.startsWith(PRAEFIKS + 'lyd-') && n !== VERSION);
+  for (const navn of navne.reverse()) {
+    try {
+      const cache = await caches.open(navn);
+      const svar = await cache.match(INDHOLD_FIL);
+      const m = svar && svar.ok ? await svar.json() : null;
+      if (passer(m, navn.slice(PRAEFIKS.length))) return { cache, m };
+    } catch (err) { /* kan ikke læses: prøv den næste */ }
+  }
+  return null;
+}
+
+// En fil til den nye udgave: fra den forrige cache, når filens hash er den samme i begge udgaver. Ellers, og ved tvivl
+// (ingen forrige udgave, ingen hash, filen mangler i cachen), fra nettet med «no-cache»: inden for samme udgivelse kan en
+// fil, browseren har, så komme som 304. En opskrift i den forrige cache kan være nyere end dens hash (netværk først gemmer
+// nettets svar); den genbruges kun, når den nye hash er den gamle, og netværk først henter den igen, når den vises
+async function filTilUdgave(f, nyt, forrige) {
+  const h = nyt && forrige ? hashFor(nyt, f) : null;
+  if (h !== null && hashFor(forrige.m, f) === h) {
+    const gemt = await forrige.cache.match(f);
+    if (gemt && gemt.ok) return gemt;
+  }
+  return fetch(new Request(f, { cache: 'no-cache' }));
+}
+
 self.addEventListener('install', (e) => {
   e.waitUntil((async () => {
-    // Alt eller intet: mangler én fil, beholder enheden den gamle, hele udgave og prøver igen næste gang.
-    // «no-cache» spørger serveren om hver fil (ETag/Last-Modified), så en uændret fil kommer som 304 fra browserens cache.
-    // «reload» hentede alle filer forfra (18,9 MB), og på 4G blev installationen aldrig færdig (code review M2, 19-11)
-    const svar = await Promise.all(FILER.map((f) => fetch(new Request(f, { cache: 'no-cache' }))));
+    // Alt eller intet: mangler én fil, beholder enheden den gamle, hele udgave og prøver igen næste gang
+    const nyt = await nytIndhold();
+    const forrige = nyt ? await forrigeUdgave() : null;
+    const svar = await Promise.all(FILER.map((f) => filTilUdgave(f, nyt, forrige)));
     const mangler = FILER.filter((f, i) => !svar[i].ok);
     if (mangler.length) throw new Error('Mangler: ' + mangler.join(', '));
     const cache = await caches.open(VERSION);
     await Promise.all(svar.map((r, i) => cache.put(FILER[i], r)));
+    // Sidst: kun en hel udgave kan give filer videre til den næste
+    if (nyt) await cache.put(INDHOLD_FIL, new Response(JSON.stringify(nyt), { headers: { 'Content-Type': 'application/json' } }));
     await self.skipWaiting();
   })());
 });

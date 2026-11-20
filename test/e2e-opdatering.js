@@ -10,7 +10,8 @@
 // nye sw.js ikke bliver hængende i browserens cache) og udgivelsens tid som Last-Modified og ETag for alle filer.
 //   1. Første besøg: siden bliver styret og genindlæses ikke.
 //   2. På forsiden: ny udgave på serveren, og appen kommer frem igen. Siden genindlæser selv og viser den nye udgave.
-//      Installationen henter kun de ændrede filer hele (200); resten kommer som 304 (code review M2).
+//      Installationen henter kun de ændrede filer og sw-indhold.json (200) og genbruger resten fra den forrige cache
+//      (code review M2).
 //   3. En fil mangler i den nye udgave (404): installationen fejler. Siden genindlæses ikke, den gamle udgave virker, og
 //      forsidens fod siger det til den voksne. Når serveren er rettet, kommer den nye udgave, næste gang appen kommer frem
 //      (code review M1).
@@ -26,11 +27,12 @@ import http from 'node:http';
 import { hentPlaywright } from '../vaerktoej/lav-ikoner.js';
 import { ledigPort, nyFane, swFiler } from './e2e-ugeplan.js';
 import { UDGAVE } from '../js/version.js';
+import { INDHOLD_FIL, manifestAf, manifestTekst } from '../vaerktoej/sw-indhold.js';
 
 const NY_MS = 30000;        // så længe må det tage, fra appen kommer frem, til den nye udgave står på skærmen
 const STILLE_MS = 2000;     // så længe ventes der efter overtagelsen, før det tjekkes, at intet er genindlæst
-// En ny udgave ændrer js/version.js (og sw.js, der ikke står i FILER). Resten er uændret og må ikke hentes hele igen,
-// selvom Pages giver dem en ny ETag. Lidt luft: højst ca. 3 filer som 200 efter en udgivelse
+// En ny udgave ændrer js/version.js og sw-indhold.json (og sw.js, der ikke tælles med). Resten er uændret og må ikke
+// hentes hele igen, selvom Pages giver dem en ny ETag. Lidt luft: højst ca. 3 filer som 200 efter en udgivelse
 const MAKS_200 = 3;
 const pause = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -46,15 +48,19 @@ const TYPER = {
   '.mp3': 'audio/mpeg',
 };
 
-// sw.js og js/version.js, som de ville se ud i udgaven «navn»: et andet INDHOLD (så cachen får et nyt navn, og alle FILER
-// hentes igen) og UDGAVE = navn (forsidens fod viser den)
-function nyUdgave(rod, navn) {
+// sw.js, js/version.js og sw-indhold.json, som de ville se ud i udgaven «navn»: et andet INDHOLD (så cachen får et nyt
+// navn), UDGAVE = navn (forsidens fod viser den), og den nye hash for js/version.js, regnet af samme værktøj som
+// sw-indhold.json på disken. mangler: filen, serveren giver 404 på, er ændret i den nye udgave (en ny hash), så
+// installationen henter den og ikke genbruger den fra den forrige cache
+function nyUdgave(rod, navn, mangler = null) {
   const sw = fs.readFileSync(path.join(rod, 'sw.js'), 'utf8');
   const version = fs.readFileSync(path.join(rod, 'js/version.js'), 'utf8');
   const nySw = sw.replace(/const INDHOLD = '[^']*'/, "const INDHOLD = '" + navn + "'");
   const nyVersion = version.replace(/export const UDGAVE = '[^']*'/, "export const UDGAVE = '" + navn + "'");
   if (nySw === sw || nyVersion === version) throw new Error('INDHOLD eller UDGAVE blev ikke fundet i sw.js eller js/version.js');
-  return new Map([['/sw.js', nySw], ['/js/version.js', nyVersion]]);
+  const manifest = manifestAf(rod, swFiler(rod).filer, navn, new Map([['js/version.js', nyVersion]]));
+  if (mangler) manifest.filer[mangler.slice(1)] = '0000000000000000';
+  return new Map([['/sw.js', nySw], ['/js/version.js', nyVersion], ['/' + INDHOLD_FIL, manifestTekst(manifest)]]);
 }
 
 // Svar 304? RFC 9110, 13.1.2 og 13.2.2: er If-None-Match sendt, gælder kun den (en af dens ETags er den aktuelle, eller
@@ -71,9 +77,9 @@ function uaendret(hoved, etag, udgivetMs) {
 // max-age=600. En uændret fil får altså en ny ETag ved hver udgivelse, og 304 kommer kun inden for samme udgivelse.
 // Den gamle server brugte filens egen ændringstid, så uændrede filer kom som 304 på tværs af udgivelser: et falsk grønt
 // resultat for installationens 200-tal. skift(navn) er en ny udgivelse: en ny udgivelsestid for alle filer og en ny
-// sw.js og js/version.js (filerne på disken røres ikke). skift(navn, { mangler: sti }) giver 404 på én fil i den nye
-// udgave. Node holder forbindelserne åbne (HTTP/1.1), så porte ikke løber tør.
-// Efter et skift huskes det første svar på hver sti: det er installationens hentning (se taelling)
+// sw.js, js/version.js og sw-indhold.json (filerne på disken røres ikke). skift(navn, { mangler: sti }) giver 404 på én
+// fil i den nye udgave. Node holder forbindelserne åbne (HTTP/1.1), så porte ikke løber tør.
+// Efter et skift huskes det første svar på hver sti og tidspunktet (se taelling)
 async function udgaveServer(rod, port) {
   let nyt = new Map();
   let mangler = null;
@@ -90,7 +96,7 @@ async function udgaveServer(rod, port) {
     }
     if (sti.endsWith('/')) sti += 'index.html';
     const send = (status, hoved = {}, data) => {
-      if (!foersteSvar.has(sti)) foersteSvar.set(sti, status);
+      if (!foersteSvar.has(sti)) foersteSvar.set(sti, { status, tid: Date.now(), navigering: req.headers['sec-fetch-mode'] === 'navigate' });
       res.writeHead(status, hoved).end(data);
     };
     const fil = path.resolve(rod, '.' + sti);
@@ -112,17 +118,22 @@ async function udgaveServer(rod, port) {
   return {
     // En ny udgivelse har altid en senere udgivelsestid, også når to skift kommer i samme sekund
     skift: (navn, valg = {}) => {
-      nyt = nyUdgave(rod, navn);
       mangler = valg.mangler ?? null;
+      nyt = nyUdgave(rod, navn, mangler);
       foersteSvar = new Map();
       udgivet = Math.max(udgivet + 1, Math.floor(Date.now() / 1000));
     },
-    // Det første svar på hver af filerne (FILER i sw.js) siden skift: { 200: [...], 304: [...], andet: [...], intet: [...] }
-    taelling: (filer) => {
-      const ud = { 200: [], 304: [], andet: [], intet: [] };
+    // Det første svar på hver af filerne siden skift, før tidspunktet foer (Date.now()): installationens hentning. Efter
+    // genindlæsningen henter siden selv opskrifterne (netværk først), og dem kan serveren ikke skelne fra installationens.
+    // Selve genindlæsningen (en navigering, Sec-Fetch-Mode: navigate) kommer før foer: den står i side.
+    // Svar: { 200: [...], 304: [...], andet: [...], intet: [...], side: [...] }, hvor intet er filer, installationen ikke hentede
+    taelling: (filer, foer = Infinity) => {
+      const ud = { 200: [], 304: [], andet: [], intet: [], side: [] };
       for (const f of new Set(filer.map((x) => '/' + (x === './' ? 'index.html' : x)))) {
         const s = foersteSvar.get(f);
-        (s === undefined ? ud.intet : s === 200 || s === 304 ? ud[s] : ud.andet).push(f);
+        if (s === undefined || s.tid >= foer) ud.intet.push(f);
+        else if (s.navigering) ud.side.push(f + ' ' + s.status);
+        else (s.status === 200 || s.status === 304 ? ud[s.status] : ud.andet).push(f);
       }
       return ud;
     },
@@ -130,13 +141,16 @@ async function udgaveServer(rod, port) {
   };
 }
 
-// Init-script: tæller fanens indlæsninger af appen. sessionStorage overlever en genindlæsning, men ikke en ny fane
+// Init-script: tæller fanens indlæsninger af appen og husker tidspunktet for den sidste. sessionStorage overlever en
+// genindlæsning, men ikke en ny fane
 function taelIndlaesning() {
   if (location.protocol !== 'http:') return; // about:blank har intet lager
   const n = Number(sessionStorage.getItem('e2e-indlaest') || 0) + 1;
   sessionStorage.setItem('e2e-indlaest', String(n));
+  sessionStorage.setItem('e2e-indlaest-tid', String(Date.now()));
 }
 const indlaest = (side) => side.evaluate(() => Number(sessionStorage.getItem('e2e-indlaest') || 0));
+const sidstIndlaest = (side) => side.evaluate(() => Number(sessionStorage.getItem('e2e-indlaest-tid') || 0));
 const fod = (side) => side.evaluate(() => document.querySelector('.forside-version')?.textContent ?? null);
 const overskrift = (side) => side.evaluate(() => document.querySelector('#app h1')?.textContent ?? null);
 const kogCacher = (side) => side.evaluate(async () => (await caches.keys()).filter((k) => k.startsWith('kog-') && !k.startsWith('kog-lyd-')));
@@ -228,14 +242,15 @@ async function foersteBesoeg(H, side, base) {
       await new Promise((r) => setTimeout(r, 250));
     }
     return ud;
-  }, filer.length);
+  }, filer.length + 1); // FILER og sw-indhold.json
   if (sw.mangler) {
     tjek(false, 'opdatering: WebKit har ingen service worker eller Cache API i en rigtig profil');
     return false;
   }
   tjek(sw.styret, 'opdatering, første besøg: siden skal blive styret af service workeren');
-  tjek(sw.navne.join() === 'kog-' + indhold && sw.gemt === filer.length,
-    'opdatering, første besøg: cachen «kog-' + indhold + '» skal have alle ' + filer.length + ' FILER (fik ' + sw.gemt + ' i ' + sw.navne.join(', ') + ')');
+  tjek(sw.navne.join() === 'kog-' + indhold && sw.gemt === filer.length + 1,
+    'opdatering, første besøg: cachen «kog-' + indhold + '» skal have alle ' + filer.length + ' FILER og ' + INDHOLD_FIL + ' (fik ' + sw.gemt + ' i ' +
+    sw.navne.join(', ') + ')');
   await pause(STILLE_MS); // en genindlæsning efter clients.claim ville være sket nu
   const n = await indlaest(side);
   tjek(n === 1, 'opdatering, første besøg: siden må ikke genindlæses, når service workeren tager den første gang (indlæst ' + n + ' gange)');
@@ -257,16 +272,18 @@ async function paaForsiden(H, side, server) {
   maal.push('opdatering, forsiden: ' + (r.ok ? '«Version e2e-ny» stod på skærmen ' + sek + ' s efter visibilitychange' : 'den nye udgave kom ikke inden for ' + NY_MS / 1000 + ' s'));
   console.log('  MÅL ' + maal.at(-1));
   if (!r.ok) return;
-  // Code review M2: den anden installation spørger serveren om hver fil, men kun de ændrede kommer hele (200). Resten
-  // er uændret og kommer som 304 fra browserens cache. Med «reload» kom alle som 200 (18,9 MB på 4G i butikken)
-  const t = server.taelling(swFiler(H.ROD).filer);
+  // Code review M2: Pages giver alle filer en ny ETag ved hver udgivelse, så «no-cache» alene hentede hele appen igen
+  // (718 × 200, 18,9 MB på 4G i butikken). Den anden installation henter kun de ændrede filer og sw-indhold.json og
+  // genbruger resten fra den forrige cache. Kun svarene før genindlæsningen er installationens (se taelling)
+  const t = server.taelling([...swFiler(H.ROD).filer, INDHOLD_FIL], await sidstIndlaest(side));
   const liste = (l) => l.slice(0, 8).join(', ') + (l.length > 8 ? ' …' : '');
-  maal.push('opdatering, anden installation: ' + t[200].length + ' × 200 (' + liste(t[200]) + ') og ' + t[304].length +
-    ' × 304' + (t.andet.length ? ', ' + t.andet.length + ' med en anden status' : '') + (t.intet.length ? ', ' + t.intet.length + ' blev ikke hentet' : ''));
+  maal.push('opdatering, anden installation: ' + t[200].length + ' × 200 (' + liste(t[200]) + '), ' + t[304].length + ' × 304' +
+    (t.andet.length ? ', ' + t.andet.length + ' med en anden status' : '') + ' og ' + t.intet.length + ' genbrugt fra den forrige cache (ikke hentet)' +
+    (t.side.length ? '; genindlæsningen hentede selv ' + t.side.join(', ') : ''));
   console.log('  MÅL ' + maal.at(-1));
-  tjek(t[200].length <= MAKS_200 && t.andet.length === 0 && t.intet.length === 0,
-    'opdatering, anden installation: højst ' + MAKS_200 + ' filer må komme hele (200), resten som 304 (' + t[200].length + ' som 200, ' +
-    t[304].length + ' som 304, andet: ' + liste(t.andet) + ', ikke hentet: ' + liste(t.intet) + ')');
+  tjek(t[200].length <= MAKS_200 && t.andet.length === 0,
+    'opdatering, anden installation: højst ' + MAKS_200 + ' filer må komme hele (200) efter en udgivelse (' + t[200].length + ' som 200: ' +
+    liste(t[200]) + '; ' + t[304].length + ' som 304, andet: ' + liste(t.andet) + ')');
   await pause(STILLE_MS); // ingen løkke: siden må ikke genindlæses igen
   const n = await indlaest(side);
   tjek(n === foer + 1, 'opdatering, forsiden: præcis én genindlæsning (' + (n - foer) + ')');

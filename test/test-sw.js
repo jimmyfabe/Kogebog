@@ -7,8 +7,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
-import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { INDHOLD_FIL, indholdAf as indholdI, manifestAf, filHash } from '../vaerktoej/sw-indhold.js';
 
 const ROD = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const KILDE = fs.readFileSync(path.join(ROD, 'sw.js'), 'utf8');
@@ -35,6 +35,7 @@ function falskeCaches(start = {}) {
         return undefined;
       },
       async put(req, res) { m.set(absolut(req), res); },
+      async delete(req) { return m.delete(absolut(req)); },
     };
   };
   for (const [navn, filer] of Object.entries(start)) {
@@ -50,7 +51,8 @@ function falskeCaches(start = {}) {
 }
 
 // ur: falsk setTimeout/clearTimeout (standard: de rigtige), så testen selv kan lade tiden gå. naa: falsk Date.now()
-function lavSw({ caches, fetch, ur = { setTimeout, clearTimeout }, naa }) {
+// kilde: sw.js, som den ser ud i en anden udgave (standard: filen på disken)
+function lavSw({ caches, fetch, ur = { setTimeout, clearTimeout }, naa, kilde = KILDE }) {
   const haendelser = {};
   const self = {
     addEventListener: (type, fn) => { haendelser[type] = fn; },
@@ -61,7 +63,7 @@ function lavSw({ caches, fetch, ur = { setTimeout, clearTimeout }, naa }) {
   };
   const ctx = vm.createContext({ self, caches, fetch, Request: SwRequest, Response, URL, AbortController, console, setTimeout: ur.setTimeout, clearTimeout: ur.clearTimeout,
     ...(naa ? { Date: class extends Date { static now() { return naa(); } } } : {}) });
-  vm.runInContext(KILDE + '\n;globalThis.__FILER = FILER; globalThis.__VERSION = VERSION; globalThis.__INDHOLD = typeof INDHOLD === \'undefined\' ? undefined : INDHOLD;'
+  vm.runInContext(kilde + '\n;globalThis.__FILER = FILER; globalThis.__VERSION = VERSION; globalThis.__INDHOLD = typeof INDHOLD === \'undefined\' ? undefined : INDHOLD;'
     + ' globalThis.__LYD = typeof LYD === \'undefined\' ? undefined : LYD; globalThis.__LYD_CACHE = typeof LYD_CACHE === \'undefined\' ? undefined : LYD_CACHE;', ctx);
   return { haendelser, FILER: ctx.__FILER, VERSION: ctx.__VERSION, INDHOLD: ctx.__INDHOLD, LYD: ctx.__LYD, LYD_CACHE: ctx.__LYD_CACHE };
 }
@@ -105,19 +107,9 @@ test('CLAUDE.md nævner hver fil i js/, hver nøgle i lager.js og antallet af no
   assert.deepEqual(tests.map((t) => t.slice(1, -1)).filter((t) => !md.includes(t)), [], 'skriv disse testfiler i CLAUDE.md');
 });
 
-// sha256 (16 tegn) over stierne og indholdet i FILER-rækkefølge. Tekstfiler regnes med LF, for git på Windows
-// kan give CRLF i arbejdsmappen, og samme indhold skal give samme tal på alle maskiner.
-const TEKSTFIL = /\.(html|js|css|json|svg|webmanifest)$/;
-function indholdAf(filer) {
-  const h = crypto.createHash('sha256');
-  for (const f of filer) {
-    const fil = f === './' ? 'index.html' : f;
-    let data = fs.readFileSync(path.join(ROD, fil));
-    if (TEKSTFIL.test(fil)) data = Buffer.from(data.toString('utf8').replace(/\r\n/g, '\n'), 'utf8');
-    h.update(f + '\n').update(data).update('\n');
-  }
-  return h.digest('hex').slice(0, 16);
-}
+// sha256 (16 tegn) over stierne og indholdet i listens rækkefølge, regnet af vaerktoej/sw-indhold.js, som også laver
+// sw-indhold.json. Tekstfiler regnes med LF, for git på Windows kan give CRLF i arbejdsmappen
+const indholdAf = (filer) => indholdI(ROD, filer);
 
 // Lydfilerne (lyd/<ret>/<navn>.mp3) står ikke i FILER (de gemmes, når de spilles), men de er også cache først.
 // Derfor har de deres eget tal (LYD) og deres egen cache: en ny udgave af en lydfil giver en ny LYD_CACHE, og en ny
@@ -180,12 +172,105 @@ test('install gemmer alle filer — eller ingen, hvis én mangler', async () => 
 // fra browserens egen cache. e2e-delen «opdatering» tæller svarene fra serveren
 test('install spørger serveren om hver fil med «no-cache», så uændrede filer kan komme som 304', async () => {
   const hentet = [];
-  const { haendelser, FILER } = lavSw({ caches: falskeCaches(), fetch: async (req) => { hentet.push(req.cache); return ok('x'); } });
+  const { haendelser, FILER } = lavSw({ caches: falskeCaches(), fetch: async (req) => { hentet.push({ sti: absolut(req).slice(SCOPE.length), cache: req.cache }); return ok('x'); } });
   const h = haendelse(null);
   haendelser.install(h);
   await Promise.all(h.ventet);
-  assert.equal(hentet.length, FILER.length);
-  assert.deepEqual([...new Set(hentet)], ['no-cache']);
+  assert.equal(hentet.filter((x) => x.sti !== INDHOLD_FIL).length, FILER.length, 'uden en forrige udgave hentes alle filer');
+  assert.deepEqual(hentet.filter((x) => x.sti === INDHOLD_FIL).length, 1, 'sw-indhold.json hentes én gang');
+  assert.deepEqual([...new Set(hentet.map((x) => x.cache))], ['no-cache']);
+});
+
+// sw-indhold.json er hver fils sha256 (16 tegn), regnet af vaerktoej/sw-indhold.js (samme værktøj som INDHOLD). Passer den
+// ikke til filerne, genbruger installationen en gammel fil, der er ændret, eller henter en uændret fil igen
+test('sw-indhold.json passer til filerne og til INDHOLD', () => {
+  const { FILER, INDHOLD } = lavSw({ caches: falskeCaches(), fetch: async () => ok('') });
+  const sti = path.join(ROD, INDHOLD_FIL);
+  const raad = ': sæt INDHOLD i sw.js først (testen ovenfor viser den), og kør så «node vaerktoej/sw-indhold.js»';
+  assert.ok(fs.existsSync(sti), 'sw-indhold.json mangler' + raad);
+  const gemt = JSON.parse(fs.readFileSync(sti, 'utf8'));
+  const nu = manifestAf(ROD, FILER, INDHOLD);
+  assert.equal(gemt.indhold, INDHOLD, 'sw-indhold.json hører til en anden INDHOLD' + raad);
+  const gemteFiler = gemt.filer && typeof gemt.filer === 'object' ? gemt.filer : {};
+  const forkert = [...new Set([...Object.keys(nu.filer), ...Object.keys(gemteFiler)])].filter((f) => gemteFiler[f] !== nu.filer[f]);
+  assert.deepEqual(forkert, [], 'disse filer har en forkert eller manglende hash i sw-indhold.json' + raad);
+});
+
+// Code review M2, andet review (19-11): GitHub Pages giver alle filer udgivelsens tid som ETag (målt med curl), så
+// «no-cache» hentede hele appen (18,9 MB) ved hver udgivelse. Nu genbruger installationen en fil fra den forrige «kog-»-cache,
+// når dens hash i sw-indhold.json er den samme i begge udgaver, og kun nye og ændrede filer hentes (med «no-cache»).
+// En udgave på den falske server: hver fil indeholder «<sti> v1», undtagen de ændrede, og sw-indhold.json passer til dem.
+// manifest: null giver 404 på sw-indhold.json, og en tekst sendes, som den er
+function udgivelse(FILER, indhold, aendret = {}, manifest) {
+  const fil = (f) => (Object.hasOwn(aendret, f) ? aendret[f] : f + ' v1');
+  return { indhold, fil, manifest: manifest !== undefined ? manifest : { indhold, filer: Object.fromEntries(FILER.map((f) => [f, filHash(f, fil(f))])) } };
+}
+const swI = (indhold) => KILDE.replace(/const INDHOLD = '[^']*'/, "const INDHOLD = '" + indhold + "'");
+const serverFor = (u, hentet) => async (req) => {
+  const sti = absolut(req).slice(SCOPE.length) || './';
+  hentet.push({ sti, cache: req.cache });
+  if (sti !== INDHOLD_FIL) return ok(u.fil(sti));
+  if (u.manifest === null) return new Response('', { status: 404 });
+  return ok(typeof u.manifest === 'string' ? u.manifest : JSON.stringify(u.manifest));
+};
+async function installer(caches, u, hentet = []) {
+  const sw = lavSw({ caches, kilde: swI(u.indhold), fetch: serverFor(u, hentet) });
+  const h = haendelse(null);
+  sw.haendelser.install(h);
+  await Promise.all(h.ventet);
+  return hentet.filter((x) => x.sti !== INDHOLD_FIL);
+}
+// To udgaver efter hinanden i samme caches (activate kører først bagefter, så den forrige cache er der endnu).
+// mellem(cache) kan ændre den forrige udgaves cache før anden installation. Svar: stierne, anden installation hentede
+async function toUdgaver(u1, u2, mellem = async () => {}) {
+  const caches = falskeCaches();
+  await installer(caches, u1);
+  await mellem(await caches.open('kog-' + u1.indhold));
+  const hentet = await installer(caches, u2);
+  return { hentet, caches, cache: await caches.open('kog-' + u2.indhold) };
+}
+const FORRIGE = '1111111111111111';
+const NY = '2222222222222222';
+
+test('en ny udgave henter kun den ændrede fil og genbruger resten fra den forrige cache', async () => {
+  const { FILER } = lavSw({ caches: falskeCaches(), fetch: async () => ok('') });
+  const caches = falskeCaches();
+  assert.equal((await installer(caches, udgivelse(FILER, FORRIGE))).length, FILER.length, 'første installation henter alle filer');
+  const ny = udgivelse(FILER, NY, { 'app.css': 'app.css v2' });
+  const hentet = [];
+  const filer = await installer(caches, ny, hentet);
+  assert.deepEqual(filer, [{ sti: 'app.css', cache: 'no-cache' }], 'præcis én fetch for indholdsfilerne: den ændrede, med «no-cache»');
+  assert.deepEqual(hentet.filter((x) => x.sti === INDHOLD_FIL), [{ sti: INDHOLD_FIL, cache: 'no-cache' }]);
+  const cache = await caches.open('kog-' + NY);
+  for (const f of FILER) assert.equal(await (await cache.match(f)).text(), ny.fil(f), f);
+  assert.deepEqual(await (await cache.match(INDHOLD_FIL)).json(), ny.manifest, 'den nye udgaves sw-indhold.json gemmes til næste gang');
+});
+
+test('ved tvivl hentes filen: intet sw-indhold.json, en anden INDHOLD, en hash eller en fil, der mangler', async () => {
+  const { FILER } = lavSw({ caches: falskeCaches(), fetch: async () => ok('') });
+  const u1 = udgivelse(FILER, FORRIGE);
+  const ens = (manifest) => udgivelse(FILER, NY, {}, manifest);
+  // Den forrige cache har intet sw-indhold.json (en udgave fra før, fx v13 fra 19-11): alt hentes
+  let r = await toUdgaver(u1, ens(), async (c) => { await c.delete(INDHOLD_FIL); });
+  assert.equal(r.hentet.length, FILER.length, 'den forrige cache har ingen sw-indhold.json');
+  r = await toUdgaver(u1, ens(), async (c) => { await c.put(INDHOLD_FIL, ok('{ikke json')); });
+  assert.equal(r.hentet.length, FILER.length, 'den forrige sw-indhold.json kan ikke læses');
+  // Den nye kan ikke hentes (404) eller hører til en anden sw.js (fx et gammelt svar fra et mellemled): alt hentes, og
+  // intet sw-indhold.json gemmes, så næste udgave heller ikke stoler på den
+  for (const [hvad, manifest] of [['404', null], ['en anden INDHOLD', { indhold: FORRIGE, filer: u1.manifest.filer }], ['ikke json', '{x'], ['uden filer', { indhold: NY }]]) {
+    r = await toUdgaver(u1, ens(manifest));
+    assert.equal(r.hentet.length, FILER.length, hvad);
+    assert.equal(await r.cache.match(INDHOLD_FIL), undefined, hvad + ': ingen sw-indhold.json i den nye cache');
+    assert.equal(r.caches.lagre.get('kog-' + NY).size, FILER.length, hvad);
+  }
+  // Den forrige sw-indhold.json mangler en hash, og den forrige cache mangler en fil: kun de to hentes
+  r = await toUdgaver(u1, ens(), async (c) => {
+    const { 'app.js': _, ...uden } = u1.manifest.filer;
+    await c.put(INDHOLD_FIL, ok(JSON.stringify({ indhold: FORRIGE, filer: uden })));
+    await c.delete('app.css');
+  });
+  assert.deepEqual(r.hentet.map((x) => x.sti).sort(), ['app.css', 'app.js']);
+  for (const f of FILER) assert.equal(await (await r.cache.match(f)).text(), f + ' v1', f);
 });
 
 test('opskrifterne hentes netværk først og falder tilbage til cachen', async () => {

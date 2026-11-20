@@ -1689,14 +1689,14 @@ async function udenNet(H) {
         await new Promise((r) => setTimeout(r, 250));
       }
       return ud;
-    }, filer.length);
+    }, filer.length + 1); // FILER og sw-indhold.json (sw.js gemmer den til den næste udgave)
     if (sw.mangler) {
       tjek(false, 'uden net: WebKit har ingen service worker eller Cache API i en rigtig profil');
       return;
     }
     tjek(sw.styret, 'uden net: siden skal være styret af service workeren, før nettet forsvinder');
-    tjek(sw.navne.join() === 'kog-' + indhold && sw.gemt === filer.length,
-      'uden net: cachen «kog-' + indhold + '» skal have alle ' + filer.length + ' FILER (fik ' + sw.gemt + ' i ' + sw.navne.join(', ') + ')');
+    tjek(sw.navne.join() === 'kog-' + indhold && sw.gemt === filer.length + 1,
+      'uden net: cachen «kog-' + indhold + '» skal have alle ' + filer.length + ' FILER og sw-indhold.json (fik ' + sw.gemt + ' i ' + sw.navne.join(', ') + ')');
     tjek(side.fejl.length === 0, 'uden net, før serveren stoppes: ' + side.fejl.join(' | '));
     await side.close();
 
