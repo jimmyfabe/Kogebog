@@ -14,12 +14,14 @@
 //      (code review M2).
 //   3. En fil mangler i den nye udgave (404): installationen fejler. Siden genindlæses ikke, den gamle udgave virker, og
 //      forsidens fod siger det til den voksne. Når serveren er rettet, kommer den nye udgave, næste gang appen kommer frem
-//      (code review M1).
+//      (code review M1). Fejlteksten forsvinder på den gamle side, så snart den nye udgave er installeret, før
+//      genindlæsningen.
 //   4. Midt i en ret: ny udgave. Skærmen står stille (adresse og overskrift, ingen genindlæsning), til man går til
 //      forsiden. Så genindlæses den og viser den nye udgave.
 //   5. En timer kører, og forsiden vises: ingen genindlæsning, for lyden og skærmlåsen kræver et nyt tryk efter en
 //      genindlæsning på iPad. Først når timeren er stoppet, og forsiden vises igen.
-// Siderne tælles i sessionStorage (taelIndlaesning), som overlever en genindlæsning i samme fane.
+// Siderne tælles i sessionStorage (taelIndlaesning), som overlever en genindlæsning i samme fane. Dér gemmes også
+// forsidens fod, lige før en side forsvinder (pagehide).
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -142,12 +144,15 @@ async function udgaveServer(rod, port) {
 }
 
 // Init-script: tæller fanens indlæsninger af appen og husker tidspunktet for den sidste. sessionStorage overlever en
-// genindlæsning, men ikke en ny fane
+// genindlæsning, men ikke en ny fane. Ved pagehide (fx genindlæsningen) gemmes forsidens fod, som siden viste den til sidst
 function taelIndlaesning() {
   if (location.protocol !== 'http:') return; // about:blank har intet lager
   const n = Number(sessionStorage.getItem('e2e-indlaest') || 0) + 1;
   sessionStorage.setItem('e2e-indlaest', String(n));
   sessionStorage.setItem('e2e-indlaest-tid', String(Date.now()));
+  addEventListener('pagehide', () => {
+    sessionStorage.setItem('e2e-fod-ved-pagehide', document.querySelector('.forside-version')?.textContent ?? '');
+  });
 }
 const indlaest = (side) => side.evaluate(() => Number(sessionStorage.getItem('e2e-indlaest') || 0));
 const sidstIndlaest = (side) => side.evaluate(() => Number(sessionStorage.getItem('e2e-indlaest-tid') || 0));
@@ -329,11 +334,17 @@ async function fejletInstallation(H, side, server) {
     ', og siden så ' + ventede.length + ' svar 404 på ' + MANGLER);
   console.log('  MÅL ' + maal.at(-1));
   // Serveren er rettet: næste gang appen kommer frem, installeres den nye udgave, og forsiden genindlæses én gang
+  await side.evaluate(() => sessionStorage.removeItem('e2e-fod-ved-pagehide'));
   server.skift('e2e-hul');
   await fremIgen(side);
   const ny = await indtil(side, () => document.querySelector('.forside-version')?.textContent === 'Version e2e-hul', null, NY_MS);
-  tjek(ny.ok, 'opdatering, fejlet installation: efter rettelsen skal den nye udgave stå i foden uden fejltekst (står: ' + await fod(side) +
+  tjek(ny.ok, 'opdatering, fejlet installation: efter rettelsen skal den nye udgave stå i foden (står: ' + await fod(side) +
     (ny.fejl ? '; ' + ny.fejl : '') + ')');
+  // Efter genindlæsningen er foden altid uden fejltekst (en ny side). Fejlteksten skal forsvinde på den gamle side, så
+  // snart den nye udgave er installeret (foelgInstallation): foden, som den gamle side viste den lige før genindlæsningen
+  const sidsteFod = await side.evaluate(() => sessionStorage.getItem('e2e-fod-ved-pagehide'));
+  tjek(sidsteFod === 'Version e2e-ny', 'opdatering, fejlet installation: fejlteksten skal forsvinde uden genindlæsning, når den nye udgave er ' +
+    'installeret (den gamle sides fod lige før genindlæsningen: ' + JSON.stringify(sidsteFod) + ')');
   await pause(STILLE_MS);
   tjek(await indlaest(side) === foer + 1, 'opdatering, fejlet installation: præcis én genindlæsning efter rettelsen (' + (await indlaest(side) - foer) + ')');
   tjek((await kogCacher(side)).join() === 'kog-e2e-hul', 'opdatering, fejlet installation: kun den nye udgaves cache efter rettelsen (' +
@@ -367,7 +378,7 @@ async function midtIRet(H, side, server) {
   tjek(await side.evaluate(() => location.hash) === '#/', 'opdatering, midt i en ret: adressen er forsiden efter genindlæsningen');
 }
 
-// 4. En timer kører (kødsovs trin 8, 20 min), og barnet går til forsiden: ingen genindlæsning, før timeren er stoppet
+// 5. En timer kører (kødsovs trin 8, 20 min), og barnet går til forsiden: ingen genindlæsning, før timeren er stoppet
 async function underTimer(H, side, server) {
   const { tjek, tryk } = H;
   await side.evaluate(() => { location.hash = '#/ret/koedsovs/trin/8'; });

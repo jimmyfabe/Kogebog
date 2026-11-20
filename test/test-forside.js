@@ -992,6 +992,20 @@ async function medUr(fn) {
   }
 }
 
+// En timer på kødsovsens trin 8 i lageret, der slutter kl. slut (Date.now()-tid). Til start({ foer }): Timer.gendan
+// genskaber den, før forsiden vises første gang
+const gemtTimer = (slut) => () => {
+  lageret.set('kog-v1', JSON.stringify({ v: 1, sidste: null, timer: { ret: 'koedsovs', nr: 8, start: slut - 1200000, slut, sek: 1200 } }));
+};
+// Venter i rigtig tid (højst ms), til fn() er sand. Date.now og performance.now kan være falske, så uret er hrtime
+async function ventTil(fn, ms = 3000) {
+  const frist = process.hrtime.bigint() + BigInt(ms) * 1000000n;
+  while (!fn()) {
+    if (process.hrtime.bigint() > frist) throw new Error('ventTil: ikke sket inden for ' + ms + ' ms');
+    await new Promise(setImmediate);
+  }
+}
+
 test('en ny udgave: første installation (siden var ikke styret) genindlæser ikke', async () => {
   await medSW(false, async ({ sw, genindlaest }) => {
     await start('#/');
@@ -1103,13 +1117,10 @@ test('en ny udgave: voksendelen og dens gamle adresser genindlæses ikke', async
 
 test('en ny udgave: forsiden genindlæses ikke, mens en timer kører, men gerne med en færdig timer', async () => {
   const Timer = await import('../js/timer.js');
-  const timer = (slut) => () => {
-    lageret.set('kog-v1', JSON.stringify({ v: 1, sidste: null, timer: { ret: 'koedsovs', nr: 8, start: slut - 1200000, slut, sek: 1200 } }));
-  };
   try {
     await medSW(true, async ({ sw, genindlaest }) => {
       // Timer.gendan genskaber timeren, før forsiden vises første gang
-      await start('#/', { foer: timer(Date.now() + 600000) });
+      await start('#/', { foer: gemtTimer(Date.now() + 600000) });
       assert.ok(Timer.aktuel() && !Timer.aktuel().faerdig, 'timeren kører');
       sw.skift();
       assert.equal(genindlaest(), 0, 'alarmens lyd kræver et nyt tryk efter en genindlæsning');
@@ -1123,7 +1134,7 @@ test('en ny udgave: forsiden genindlæses ikke, mens en timer kører, men gerne 
     });
     // Tiden er gået: «Tiden er gået» står i lageret og kommer igen efter genindlæsningen (Timer.gendan)
     await medSW(true, async ({ sw, genindlaest }) => {
-      await start('#/', { foer: timer(Date.now() - 60000) });
+      await start('#/', { foer: gemtTimer(Date.now() - 60000) });
       assert.ok(Timer.aktuel() && Timer.aktuel().faerdig, 'timeren er færdig');
       sw.skift();
       assert.equal(genindlaest(), 1);
@@ -1140,10 +1151,7 @@ test('en ny udgave: forsiden genindlæses, når appen kommer frem igen efter en 
   const Timer = await import('../js/timer.js');
   try {
     await medSW(true, async ({ sw, genindlaest, indlaest, synlighed }) => {
-      await start('#/', { foer: () => {
-        const slut = Date.now() + 600000;
-        lageret.set('kog-v1', JSON.stringify({ v: 1, sidste: null, timer: { ret: 'koedsovs', nr: 8, start: slut - 1200000, slut, sek: 1200 } }));
-      } });
+      await start('#/', { foer: gemtTimer(Date.now() + 600000) });
       await indlaest();
       sw.skift();
       await synlighed('visible');
@@ -1159,20 +1167,6 @@ test('en ny udgave: forsiden genindlæses, når appen kommer frem igen efter en 
     Timer.stop();
   }
 });
-
-// En timer på kødsovsens trin 8 i lageret, der slutter kl. slut (Date.now()-tid). Til start({ foer }): Timer.gendan
-// genskaber den, før forsiden vises første gang
-const gemtTimer = (slut) => () => {
-  lageret.set('kog-v1', JSON.stringify({ v: 1, sidste: null, timer: { ret: 'koedsovs', nr: 8, start: slut - 1200000, slut, sek: 1200 } }));
-};
-// Venter i rigtig tid (højst ms), til fn() er sand. Date.now og performance.now kan være falske, så uret er hrtime
-async function ventTil(fn, ms = 3000) {
-  const frist = process.hrtime.bigint() + BigInt(ms) * 1000000n;
-  while (!fn()) {
-    if (process.hrtime.bigint() > frist) throw new Error('ventTil: ikke sket inden for ' + ms + ' ms');
-    await new Promise(setImmediate);
-  }
-}
 
 // v13-review (19-11): appen kommer frem, og tiden er gået imens. Timerens egen visibilitychange (eller dens tik hvert 250 ms)
 // gør den færdig og starter alarmen, og så genindlæste kommerFrem til den nye udgave: alarmen døde, før barnet hørte den.
@@ -1237,10 +1231,7 @@ test('en ny udgave: pageshow fra bfcache spørger efter en ny sw.js og genindlæ
   const Timer = await import('../js/timer.js');
   try {
     await medSW(true, async ({ sw, genindlaest, indlaest }) => {
-      await start('#/', { foer: () => {
-        const slut = Date.now() + 600000;
-        lageret.set('kog-v1', JSON.stringify({ v: 1, sidste: null, timer: { ret: 'koedsovs', nr: 8, start: slut - 1200000, slut, sek: 1200 } }));
-      } });
+      await start('#/', { foer: gemtTimer(Date.now() + 600000) });
       await indlaest();
       sw.skift();
       Timer.stop();
@@ -1253,9 +1244,8 @@ test('en ny udgave: pageshow fra bfcache spørger efter en ny sw.js og genindlæ
 });
 
 test('en ny udgave: ukendte grupper på forsiden spørger efter den nye udgave, højst én gang pr. sideindlæsning', async () => {
-  const ny = { version: 2, grupper: [...INDEX.grupper, { id: 'ukendt-gruppe', retter: ['ny-ret-her'] }] };
   await medSW(true, async ({ sw, genindlaest }) => {
-    await start('#/', { hent: (sti) => (sti === 'opskrifter/index.json' ? ny : undefined) });
+    await start('#/', { hent: (sti) => (sti === 'opskrifter/index.json' ? MED_UKENDT_GRUPPE : undefined) });
     assert.equal(sw.opdateringer, 1);
     gaaTil('#/gruppe/fisk');
     gaaTil('#/');
