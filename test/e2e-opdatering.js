@@ -295,7 +295,7 @@ async function paaForsiden(H, side, server) {
 // 3. En fil i den nye udgave giver 404 (fx afbrudt net eller en fil, der mangler på Pages). Installationen fejler, men
 // reg.update() er løst, så snart sw.js er hentet: kun versionslinjen kan vise det (code review M1)
 const MANGLER = '/grafik/verbum-plukke.svg';
-const FEJL_I_FODEN = /^Version e2e-ny · ny udgave kunne ikke hentes kl\. \d\d:\d\d$/;
+const FEJL_I_FODEN = /^Version e2e-ny · ny udgave kunne ikke hentes kl\.\u00a0\d\d:\d\d$/;
 async function fejletInstallation(H, side, server) {
   const { tjek, tryk, maal, foto } = H;
   const foer = await indlaest(side);

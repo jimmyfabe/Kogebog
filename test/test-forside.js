@@ -1276,7 +1276,7 @@ test('en ny udgave: ukendte grupper på forsiden spørger efter den nye udgave, 
 // nettet falder ud midt i de 719 filer), kunne ikke ses, og forsiden viste den gamle udgave for altid. Nu siger forsidens
 // versionslinje det til den voksne. Uden net er det ventet, så dér er linjen tavs
 const VERSIONSLINJE = 'Version ' + UDGAVE;
-const FEJL_I_FODEN = /^Version .+ · ny udgave kunne ikke hentes kl\. ([01]\d|2[0-3]):[0-5]\d$/;
+const FEJL_I_FODEN = /^Version .+ · ny udgave kunne ikke hentes kl\.\u00a0([01]\d|2[0-3]):[0-5]\d$/;
 const fod = () => rod.querySelector('.forside-version').textContent;
 
 test('en ny udgave, der ikke kan installeres: versionslinjen siger det, siden står stille, og næste forsøg fjerner teksten', async () => {
