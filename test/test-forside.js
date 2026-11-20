@@ -888,7 +888,11 @@ function falskSW(styret) {
   const fundet = [];
   const reg = {
     installing: null,
-    update: async () => { sw.opdateringer++; },
+    // sw.afvis: sw.js kan ikke hentes (som browserens TypeError, når serveren ikke svarer, eller svaret ikke er sw.js)
+    update: async () => {
+      sw.opdateringer++;
+      if (sw.afvis) throw new TypeError('Failed to update a ServiceWorker');
+    },
     addEventListener: (type, fn) => { if (type === 'updatefound') fundet.push(fn); },
   };
   const sw = {
@@ -1352,6 +1356,40 @@ test('en ny udgave, der ikke kan installeres: tavs uden net, ved første install
     ny.til('redundant');
     assert.equal(fod(), VERSIONSLINJE, 'afløst');
   });
+});
+
+// v13-review (19-11): reg.update() afvises, når sw.js ikke kan hentes (serveren svarer ikke, eller svaret er ikke sw.js),
+// og afvisningen blev slugt: den voksne så aldrig, at iPad'en ikke fik den nye udgave. Med net siger forsidens fod det nu;
+// uden net er det ventet og tavst. Lykkes næste forsøg, uden at en ny udgave er på vej, er teksten forældet og går væk
+test('en ny udgave, der ikke kan hentes: afviser reg.update() med net, siger foden det; uden net er den tavs', async () => {
+  try {
+    await medSW(true, async ({ sw, genindlaest, indlaest, synlighed }) => {
+      await start('#/');
+      await indlaest();
+      sw.afvis = true;
+      navigator.onLine = false;
+      await synlighed('visible');
+      assert.equal(sw.opdateringer, 1);
+      assert.equal(fod(), VERSIONSLINJE, 'uden net');
+      navigator.onLine = true;
+      await synlighed('visible');
+      assert.equal(sw.opdateringer, 2);
+      assert.match(fod(), FEJL_I_FODEN);
+      assert.equal(genindlaest(), 0, 'den gamle udgave kører videre');
+      sw.afvis = false;
+      await synlighed('visible');
+      assert.equal(fod(), VERSIONSLINJE, 'næste forsøg lykkes, og ingen ny udgave er på vej');
+    });
+    // Forsidens ukendte grupper spørger også efter den nye udgave (tjekNyUdgave): samme fod
+    await medSW(true, async ({ sw }) => {
+      sw.afvis = true;
+      await start('#/', { hent: (sti) => (sti === 'opskrifter/index.json' ? MED_UKENDT_GRUPPE : undefined) });
+      assert.equal(sw.opdateringer, 1);
+      assert.match(fod(), FEJL_I_FODEN);
+    });
+  } finally {
+    navigator.onLine = true;
+  }
 });
 
 test('Madpakke har 8. pladsen (efter Gris og Ko), og uden for index.json har den ingen knap', async () => {

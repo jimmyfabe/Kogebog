@@ -1,10 +1,10 @@
 {
- "indhold": "7461b9e68893c9cc",
+ "indhold": "990fe5ab5f401ac5",
  "filer": {
   "./": "40e44d856faefeaf",
   "index.html": "40e44d856faefeaf",
   "print.html": "fb87c246772bd390",
-  "app.js": "2ed652666a5163b9",
+  "app.js": "0e38081d3cf95d6d",
   "app.css": "ee05f08d6974abb0",
   "familie.css": "ca0d8114c98f1589",
   "print.css": "ade7f72d081f45bd",
@@ -33,7 +33,7 @@
   "js/soeg.js": "13fc8f52b8eef351",
   "js/grupper.js": "a9cd77db336e6b7b",
   "js/voksen-del.js": "0c8bdc1ec75b3379",
-  "js/version.js": "c4c7a61dcf86e58c",
+  "js/version.js": "9d333330b28b292f",
   "opskrifter/index.json": "81fb0548acbce3d9",
   "opskrifter/pandekager.json": "8a29ab36ec2c4727",
   "opskrifter/frikadeller.json": "ff11168ece9c9766",

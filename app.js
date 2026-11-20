@@ -905,7 +905,19 @@ function opgivGenindlaesning() {
 function tjekNyUdgave() {
   if (!MED_SW || udgaveTjekket) return;
   udgaveTjekket = true;
-  navigator.serviceWorker.ready.then((reg) => reg.update()).catch(() => { /* uden net: næste gang appen kommer frem */ });
+  navigator.serviceWorker.ready.then(spoergEfterNyUdgave).catch(() => { /* ingen registrering: appen virker bare online */ });
+}
+
+// Spørger efter en ny sw.js. reg.update() afvises, når sw.js ikke kan hentes (serveren svarer ikke, eller svaret er ikke
+// sw.js). Med net siger forsidens fod det til den voksne (v13-review, 19-11: før blev det slugt); uden net er det ventet og
+// tavst, og næste forsøg er, når appen kommer frem igen. Lykkes den, uden at en ny udgave er på vej, er en gammel
+// fejltekst forældet. Er en ny udgave på vej (installing), følger foelgInstallation den
+function spoergEfterNyUdgave(reg) {
+  return reg.update().then(() => {
+    if (udgaveFejl && !reg.installing && !reg.waiting) saetUdgaveFejl(null);
+  }, () => {
+    if (navigator.onLine) saetUdgaveFejl(klokken());
+  });
 }
 
 // Til den voksne efter «Version …» i forsidens fod. Kort, så den ikke fylder for børnene
@@ -950,7 +962,7 @@ function foelgInstallation(arbejder) {
 function kommerFrem(reg) {
   genindlaesOpgivet = false;
   if (!Timer.aktuel() && genindlaesTilNyUdgave()) return;
-  reg.update().catch(() => {});
+  spoergEfterNyUdgave(reg);
 }
 
 // Alt om en ny udgave, startet én gang nederst i filen (code review L5: før to «if (MED_SW)»-blokke)
