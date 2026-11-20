@@ -550,6 +550,14 @@ test('hvert klassenavn i app.css bruges af koden (ingen døde regler)', () => {
   assert.deepEqual(doede, [], 'klasser i app.css, som ingen kode bruger (fjern reglerne, eller ret navnet)');
 });
 
+// UI-review af v13 (LAV, 20-11): «Ny udgave kunne ikke hentes kl. …» i forsidens fod har sin egen linje under
+// versionsnummeret, så den ikke brydes midt i linjen med versionen på en smal skærm
+test('fejlteksten i forsidens fod har sin egen linje (.udgave-fejl er display: block)', () => {
+  const regler = blokke(CSS).regler.filter((b) => b.hoved === '.udgave-fejl');
+  assert.equal(regler.length, 1, 'forventede én regel .udgave-fejl øverst i app.css, fandt ' + regler.length);
+  assert.match(regler[0].deklarationer, /(^|;)\s*display\s*:\s*block\s*(;|$)/);
+});
+
 // Review af v12 (18-11): 63 trin gik fra «haelde» (vippet med haeld) til «si-daase» og «skylle» og stod stille. Dåsen
 // hældes som målekanden, og sien rystes under vandhanen som hænderne i «vaske-haender» (gnid). Verbernes bevægelse står
 // kun i @media (prefers-reduced-motion: no-preference), så «mindre bevægelse» holder billederne stille

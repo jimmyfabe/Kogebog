@@ -300,7 +300,7 @@ async function paaForsiden(H, side, server) {
 // 3. En fil i den nye udgave giver 404 (fx afbrudt net eller en fil, der mangler på Pages). Installationen fejler, men
 // reg.update() er løst, så snart sw.js er hentet: kun versionslinjen kan vise det (code review M1)
 const MANGLER = '/grafik/verbum-plukke.svg';
-const FEJL_I_FODEN = /^Version e2e-ny · ny udgave kunne ikke hentes kl\.\u00a0\d\d:\d\d$/;
+const FEJL_I_FODEN = /^Version e2e-nyNy udgave kunne ikke hentes kl\.\u00a0\d\d:\d\d$/;
 async function fejletInstallation(H, side, server) {
   const { tjek, tryk, maal, foto } = H;
   const foer = await indlaest(side);
@@ -313,6 +313,18 @@ async function fejletInstallation(H, side, server) {
   const sek = ((Date.now() - t0) / 1000).toFixed(1);
   tjek(r.ok, 'opdatering, fejlet installation: forsidens fod skal sige, at den nye udgave ikke kunne hentes (står: ' + await fod(side) +
     (r.fejl ? '; ' + r.fejl : '') + ')');
+  // Fejlteksten har sin egen linje under versionsnummeret (.udgave-fejl er display: block; UI-review LAV, v13b), og
+  // textContent ovenfor er de to linjer uden noget imellem
+  const linjer = await side.evaluate(() => {
+    const p = document.querySelector('.forside-version');
+    const fejl = p?.querySelector('.udgave-fejl');
+    if (!p || !fejl || !p.firstChild || p.firstChild.nodeType !== Node.TEXT_NODE) return null;
+    const r = document.createRange();
+    r.selectNodeContents(p.firstChild);
+    return { versionBund: Math.round(r.getBoundingClientRect().bottom), fejlTop: Math.round(fejl.getBoundingClientRect().top), hoejde: Math.round(fejl.getBoundingClientRect().height) };
+  });
+  tjek(linjer && linjer.hoejde > 0 && linjer.fejlTop >= linjer.versionBund - 1,
+    'opdatering, fejlet installation: fejlteksten skal stå på sin egen linje under versionsnummeret (' + JSON.stringify(linjer) + ')');
   await pause(STILLE_MS);
   tjek(await indlaest(side) === foer, 'opdatering, fejlet installation: siden må ikke genindlæses (' + (await indlaest(side) - foer) + ' gange)');
   tjek((await kogCacher(side)).join() === 'kog-e2e-ny', 'opdatering, fejlet installation: kun den gamle udgaves cache (' + (await kogCacher(side)).join(', ') + ')');

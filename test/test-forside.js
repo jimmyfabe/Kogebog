@@ -1308,8 +1308,11 @@ test('en ny udgave: ukendte grupper på forsiden spørger efter den nye udgave, 
 // Code review M1 (19-11): reg.update() er løst, så snart sw.js er hentet, så en installation, der fejler (en fil mangler,
 // nettet falder ud midt i de 719 filer), kunne ikke ses, og forsiden viste den gamle udgave for altid. Nu siger forsidens
 // versionslinje det til den voksne. Uden net er det ventet, så dér er linjen tavs
+// Fejlteksten har sin egen linje under versionsnummeret (.udgave-fejl er display: block; UI-review LAV, v13b), så den står
+// uden « · » foran og med stort forbogstav, og textContent er de to linjer uden noget imellem
 const VERSIONSLINJE = 'Version ' + UDGAVE;
-const FEJL_I_FODEN = /^Version .+ · ny udgave kunne ikke hentes kl\.\u00a0([01]\d|2[0-3]):[0-5]\d$/;
+const FEJL_LINJE = /^Ny udgave kunne ikke hentes kl\.\u00a0([01]\d|2[0-3]):[0-5]\d$/;
+const FEJL_I_FODEN = new RegExp('^' + VERSIONSLINJE.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + FEJL_LINJE.source.slice(1));
 const fod = () => rod.querySelector('.forside-version').textContent;
 
 test('en ny udgave, der ikke kan installeres: versionslinjen siger det, siden står stille, og næste forsøg fjerner teksten', async () => {
@@ -1319,7 +1322,7 @@ test('en ny udgave, der ikke kan installeres: versionslinjen siger det, siden st
     assert.equal(fod(), VERSIONSLINJE);
     sw.nyInstallation().til('redundant');
     assert.match(fod(), FEJL_I_FODEN);
-    assert.ok(fod().startsWith(VERSIONSLINJE + ' · '), fod());
+    assert.match(rod.querySelector('.forside-version .udgave-fejl').textContent, FEJL_LINJE, 'fejlteksten står for sig i sin egen linje');
     assert.equal(genindlaest(), 0, 'den gamle udgave kører videre');
     // Den står der stadig, når forsiden vises igen
     gaaTil('#/gruppe/fisk');

@@ -920,8 +920,9 @@ function spoergEfterNyUdgave(reg) {
   });
 }
 
-// Til den voksne efter «Version …» i forsidens fod. Kort, så den ikke fylder for børnene
-const udgaveFejlTekst = () => (udgaveFejl ? ' · ny udgave kunne ikke hentes kl.\u00a0' + udgaveFejl : '');
+// Til den voksne i sin egen linje under «Version …» i forsidens fod (.udgave-fejl er display: block i app.css; UI-review
+// LAV, v13b). Kort, så den ikke fylder for børnene
+const udgaveFejlTekst = () => (udgaveFejl ? 'Ny udgave kunne ikke hentes kl.\u00a0' + udgaveFejl : '');
 const klokken = (d = new Date()) => String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
 
 // Sætter (eller fjerner, med null) fejlen. Står forsiden der, skiftes kun linjens tekst: resten af skærmen tegnes ikke om

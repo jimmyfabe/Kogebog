@@ -425,6 +425,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 .forside-fod { text-align: center; color: var(--kakao-blid); font-size: 15px; padding: 0 24px 4px; }
 /* Versionsnummeret (js/version.js) under linjen om stemmen: til den voksne, mindre end resten af foden */
 .forside-version { font-size: 13px; padding-bottom: 10px; }
+/* «Ny udgave kunne ikke hentes kl. …» (code review M1): sin egen linje under versionsnummeret. Uden fejl er den tom og fylder intet */
+.udgave-fejl { display: block; }
 
 /* Gruppeskærmen (#/gruppe/<id>) og søgningen (#/soeg): overskriften er et billede på gruppens farve og et ord, og kortenes
    cirkel har samme farve, så børnene kan kende billedet igen uden at læse */
