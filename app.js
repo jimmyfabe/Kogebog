@@ -944,10 +944,12 @@ function foelgInstallation(arbejder) {
 
 // Appen kommer frem igen. Har en ny udgave taget over, mens en timer kørte, og er timeren stoppet nu, genindlæses
 // forsiden (code review L1: før skete der intet, før barnet forlod forsiden og kom tilbage). Ellers spørges der efter
-// en ny sw.js. Uden net fejler det stille, og appen kører videre med den udgave, den har
+// en ny sw.js. Uden net fejler det stille, og appen kører videre med den udgave, den har.
+// En timer, også en færdig, venter på «Ok»: er tiden gået, mens appen var skjult, har timerens egen visibilitychange lige
+// startet alarmen, og den må ikke dø i en genindlæsning (v13-review, 19-11)
 function kommerFrem(reg) {
   genindlaesOpgivet = false;
-  if (genindlaesTilNyUdgave()) return;
+  if (!Timer.aktuel() && genindlaesTilNyUdgave()) return;
   reg.update().catch(() => {});
 }
 

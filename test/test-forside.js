@@ -1156,6 +1156,50 @@ test('en ny udgave: forsiden genindlæses, når appen kommer frem igen efter en 
   }
 });
 
+// En timer på kødsovsens trin 8 i lageret, der slutter kl. slut (Date.now()-tid). Til start({ foer }): Timer.gendan
+// genskaber den, før forsiden vises første gang
+const gemtTimer = (slut) => () => {
+  lageret.set('kog-v1', JSON.stringify({ v: 1, sidste: null, timer: { ret: 'koedsovs', nr: 8, start: slut - 1200000, slut, sek: 1200 } }));
+};
+// Venter i rigtig tid (højst ms), til fn() er sand. Date.now og performance.now kan være falske, så uret er hrtime
+async function ventTil(fn, ms = 3000) {
+  const frist = process.hrtime.bigint() + BigInt(ms) * 1000000n;
+  while (!fn()) {
+    if (process.hrtime.bigint() > frist) throw new Error('ventTil: ikke sket inden for ' + ms + ' ms');
+    await new Promise(setImmediate);
+  }
+}
+
+// v13-review (19-11): appen kommer frem, og tiden er gået imens. Timerens egen visibilitychange (eller dens tik hvert 250 ms)
+// gør den færdig og starter alarmen, og så genindlæste kommerFrem til den nye udgave: alarmen døde, før barnet hørte den.
+// Nu genindlæses der ikke, når appen kommer frem, så længe der er en timer, også en færdig, til nogen trykker «Ok» (stop)
+test('en ny udgave: appen genindlæser ikke, når den kommer frem med en timer, der lige er blevet færdig', async () => {
+  const Timer = await import('../js/timer.js');
+  const rigtigNu = Date.now;
+  try {
+    await medSW(true, async ({ sw, genindlaest, indlaest, synlighed }) => {
+      const slut = Date.now() + 600000;
+      await start('#/', { foer: gemtTimer(slut) });
+      await indlaest();
+      sw.skift();
+      assert.equal(genindlaest(), 0, 'timeren kører');
+      await synlighed('hidden');
+      Date.now = () => slut + 1000;
+      await ventTil(() => Timer.aktuel()?.faerdig === true);
+      await synlighed('visible');
+      assert.equal(genindlaest(), 0, 'alarmen må ikke afbrydes af en genindlæsning');
+      Timer.stop();
+      await synlighed('hidden');
+      assert.equal(genindlaest(), 0, 'ikke når appen skjules');
+      await synlighed('visible');
+      assert.equal(genindlaest(), 1, 'efter «Ok» genindlæses forsiden, næste gang appen kommer frem');
+    });
+  } finally {
+    Date.now = rigtigNu;
+    Timer.stop();
+  }
+});
+
 test('en ny udgave: appen spørger efter en ny sw.js, når den kommer frem igen, men først når register er lykkedes', async () => {
   await medSW(true, async ({ sw, indlaest, synlighed }) => {
     await start('#/');
