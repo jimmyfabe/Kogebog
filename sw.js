@@ -9,7 +9,7 @@
    Svarer nettet ikke inden for HENT_MS (4 s), kommer en opskrift (også index.json) fra cachen, og nettets svar gemmes
    til næste gang. De næste LANGSOM_MS (30 s) tager opskrifterne cachen med det samme (code review U3 og F2, 23-10). */
 const PRAEFIKS = 'kog-';
-const INDHOLD = 'aadd9b74a99cc1cf'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = '24aa04e52a02f9df'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '7b503e0be6847e32'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
@@ -467,27 +467,47 @@ async function forrigeUdgave() {
   return null;
 }
 
-// En fil til den nye udgave: fra den forrige cache, når filens hash er den samme i begge udgaver. Ellers, og ved tvivl
-// (ingen forrige udgave, ingen hash, filen mangler i cachen), fra nettet med «no-cache»: inden for samme udgivelse kan en
-// fil, browseren har, så komme som 304. En opskrift i den forrige cache kan være nyere end dens hash (netværk først gemmer
-// nettets svar); den genbruges kun, når den nye hash er den gamle, og netværk først henter den igen, når den vises
-async function filTilUdgave(f, nyt, forrige) {
-  const h = nyt && forrige ? hashFor(nyt, f) : null;
-  if (h !== null && hashFor(forrige.m, f) === h) {
-    const gemt = await forrige.cache.match(f);
-    if (gemt && gemt.ok) return gemt;
+// Svarets hash, som vaerktoej/sw-indhold.js regner den: sha256 (16 tegn) af indholdet, med LF i tekstfiler (git på Windows
+// kan give CRLF). Svaret selv kan stadig læses (clone). ignoreBOM: et BOM tæller med, som i Node
+const TEKSTFIL = /\.(html|js|css|json|svg|webmanifest)$/;
+async function hashAf(f, svar) {
+  let data = await svar.clone().arrayBuffer();
+  if (TEKSTFIL.test(f === './' ? 'index.html' : f)) {
+    data = new TextEncoder().encode(new TextDecoder('utf-8', { ignoreBOM: true }).decode(data).replace(/\r\n/g, '\n'));
   }
-  return fetch(new Request(f, { cache: 'no-cache' }));
+  const sum = new Uint8Array(await crypto.subtle.digest('SHA-256', data));
+  return Array.from(sum.slice(0, 8), (b) => b.toString(16).padStart(2, '0')).join('');
+}
+
+// En fil til den nye udgave, { svar, forkert }: fra den forrige cache, når filens hash er den samme i begge udgaver. Ellers,
+// og ved tvivl (ingen forrige udgave, ingen hash, filen mangler i cachen), fra nettet med «no-cache»: inden for samme
+// udgivelse kan en fil, browseren har, så komme som 304. En opskrift i den forrige cache kan være nyere end dens hash
+// (netværk først gemmer nettets svar); den genbruges kun, når den nye hash er den gamle, og netværk først henter den igen,
+// når den vises. forkert: filen fra nettet har ikke den hash, den nye sw-indhold.json siger (en CDN-kant eller et mellemled
+// med den gamle udgave; code review M1, v13b). Uden en hash kan den ikke tjekkes, og så gives den heller ikke videre
+async function filTilUdgave(f, nyt, forrige) {
+  const h = nyt ? hashFor(nyt, f) : null;
+  if (h !== null && forrige && hashFor(forrige.m, f) === h) {
+    const gemt = await forrige.cache.match(f);
+    if (gemt && gemt.ok) return { svar: gemt, forkert: false };
+  }
+  const svar = await fetch(new Request(f, { cache: 'no-cache' }));
+  return { svar, forkert: h !== null && svar.ok && (await hashAf(f, svar)) !== h };
 }
 
 self.addEventListener('install', (e) => {
   e.waitUntil((async () => {
-    // Alt eller intet: mangler én fil, beholder enheden den gamle, hele udgave og prøver igen næste gang
+    // Alt eller intet: mangler én fil, eller er én forkert, beholder enheden den gamle, hele udgave og prøver igen næste gang
     const nyt = await nytIndhold();
     const forrige = nyt ? await forrigeUdgave() : null;
-    const svar = await Promise.all(FILER.map((f) => filTilUdgave(f, nyt, forrige)));
+    const filer = await Promise.all(FILER.map((f) => filTilUdgave(f, nyt, forrige)));
+    const svar = filer.map((x) => x.svar);
     const mangler = FILER.filter((f, i) => !svar[i].ok);
-    if (mangler.length) throw new Error('Mangler: ' + mangler.join(', '));
+    const forkert = FILER.filter((f, i) => filer[i].forkert);
+    if (mangler.length || forkert.length) {
+      throw new Error([mangler.length ? 'Mangler: ' + mangler.join(', ') : '', forkert.length ? 'Forkert indhold: ' + forkert.join(', ') : '']
+        .filter(Boolean).join('; '));
+    }
     const cache = await caches.open(VERSION);
     await Promise.all(svar.map((r, i) => cache.put(FILER[i], r)));
     // Sidst: kun en hel udgave kan give filer videre til den næste

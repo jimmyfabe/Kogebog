@@ -62,10 +62,11 @@ function lavSw({ caches, fetch, ur = { setTimeout, clearTimeout }, naa, kilde = 
     skipWaiting: async () => {},
   };
   const ctx = vm.createContext({ self, caches, fetch, Request: SwRequest, Response, URL, AbortController, console, setTimeout: ur.setTimeout, clearTimeout: ur.clearTimeout,
+    crypto: globalThis.crypto, TextEncoder, TextDecoder,
     ...(naa ? { Date: class extends Date { static now() { return naa(); } } } : {}) });
   vm.runInContext(kilde + '\n;globalThis.__FILER = FILER; globalThis.__VERSION = VERSION; globalThis.__INDHOLD = typeof INDHOLD === \'undefined\' ? undefined : INDHOLD;'
     + ' globalThis.__LYD = typeof LYD === \'undefined\' ? undefined : LYD; globalThis.__LYD_CACHE = typeof LYD_CACHE === \'undefined\' ? undefined : LYD_CACHE;', ctx);
-  return { haendelser, FILER: ctx.__FILER, VERSION: ctx.__VERSION, INDHOLD: ctx.__INDHOLD, LYD: ctx.__LYD, LYD_CACHE: ctx.__LYD_CACHE };
+  return { haendelser, FILER: ctx.__FILER, VERSION: ctx.__VERSION, INDHOLD: ctx.__INDHOLD, LYD: ctx.__LYD, LYD_CACHE: ctx.__LYD_CACHE, hashAf: ctx.hashAf };
 }
 
 function haendelse(req) {
@@ -271,6 +272,57 @@ test('ved tvivl hentes filen: intet sw-indhold.json, en anden INDHOLD, en hash e
   });
   assert.deepEqual(r.hentet.map((x) => x.sti).sort(), ['app.css', 'app.js']);
   for (const f of FILER) assert.equal(await (await r.cache.match(f)).text(), f + ' v1', f);
+});
+
+// Code review M1 (v13b, 20-11): en forkert eller forældet fil fra nettet (en CDN-kant eller et mellemled, der svarer med den
+// gamle udgave) blev gemt under den nye udgaves hash, og alle senere udgaver genbrugte den. Nu tjekkes hver hentet fil mod
+// den nye sw-indhold.json, også når der ingen forrige udgave er. Afviger den, fejler installationen som ved en fil, der
+// mangler, og intet sw-indhold.json gemmes, så den næste udgave ikke arver den
+const harManifest = (caches, indhold) => Boolean(caches.lagre.get('kog-' + indhold)?.has(SCOPE + INDHOLD_FIL));
+test('en hentet fil med en anden hash end sw-indhold.json: installationen fejler, også uden en forrige udgave', async () => {
+  const { FILER } = lavSw({ caches: falskeCaches(), fetch: async () => ok('') });
+  // Første installation: sw-indhold.json siger den nye app.css, men serveren sender den gamle
+  const u1 = udgivelse(FILER, FORRIGE, { 'app.css': 'app.css v2' });
+  let caches = falskeCaches();
+  await assert.rejects(installer(caches, { ...u1, fil: (f) => (f === 'app.css' ? 'app.css v1' : u1.fil(f)) }), /Forkert indhold: app\.css/);
+  assert.equal(caches.lagre.size, 0, 'uden en forrige udgave: intet gemmes');
+  // De rigtige bytes giver en installation
+  assert.equal((await installer(caches, u1)).length, FILER.length);
+  assert.ok(harManifest(caches, FORRIGE), 'sw-indhold.json gemmes efter en hel installation');
+
+  // Med en forrige udgave: den nye udgave ændrer app.css, men serveren sender den forrige. Installationen fejler, og den
+  // halve cache har intet sw-indhold.json
+  const u2 = udgivelse(FILER, NY, { 'app.css': 'app.css v3' });
+  await assert.rejects(installer(caches, { ...u2, fil: (f) => (f === 'app.css' ? 'app.css v2' : u2.fil(f)) }), /Forkert indhold: app\.css/);
+  assert.equal(harManifest(caches, NY), false, 'intet sw-indhold.json efter en fejlet installation');
+  // Serveren er rettet: kun app.css hentes, og den rigtige gemmes
+  const hentet = await installer(caches, u2);
+  assert.deepEqual(hentet.map((x) => x.sti), ['app.css']);
+  assert.equal(await (await (await caches.open('kog-' + NY)).match('app.css')).text(), 'app.css v3');
+  assert.ok(harManifest(caches, NY));
+
+  // Samme hash som værktøjet: CRLF i en tekstfil (git på Windows) er LF, og en binær fil regnes, som den er (\r\n bliver
+  // stående), så en server med CRLF i arbejdsmappen og et billede med de bytes giver en installation
+  const png = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x0d, 0x0a]);
+  const u3 = udgivelse(FILER, FORRIGE, { 'app.css': 'a {}\nb {}\n', 'ikoner/ikon-180.png': png });
+  caches = falskeCaches();
+  await installer(caches, { ...u3, fil: (f) => (f === 'app.css' ? 'a {}\r\nb {}\r\n' : u3.fil(f)) });
+  assert.ok(harManifest(caches, FORRIGE), 'CRLF i en tekstfil og \\r\\n i en binær fil giver en installation');
+});
+
+// Hashen i sw.js og vaerktoej/sw-indhold.js skal være den samme for hver fil, ellers fejler hver installation (eller
+// genbruget). Filerne læses fra disken som de er: på Windows har tekstfilerne CRLF, og billederne har tilfældige \r\n
+test('service workerens hash er værktøjets for hver fil i FILER', async () => {
+  const { FILER, hashAf } = lavSw({ caches: falskeCaches(), fetch: async () => ok('') });
+  assert.equal(typeof hashAf, 'function', 'sw.js skal have hashAf(f, svar)');
+  const forskellige = [];
+  for (const f of FILER) {
+    const data = fs.readFileSync(path.join(ROD, f === './' ? 'index.html' : f));
+    const sw = await hashAf(f, new Response(data));
+    if (sw !== filHash(f, data)) forskellige.push(f + ': ' + sw + ' ≠ ' + filHash(f, data));
+  }
+  assert.deepEqual(forskellige, []);
+  assert.ok(FILER.length > 700, 'alle filer er med (' + FILER.length + ')');
 });
 
 test('opskrifterne hentes netværk først og falder tilbage til cachen', async () => {
