@@ -2,15 +2,13 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
-## 20-11-2026 kl. 09:40: v13 på grenen `v13-opdatering`, mangler ét code-review (ikke udgivet)
+## 20-11-2026 kl. 13:29: v13 er klar, venter på Jimmys push (filteret afviste Claudes)
 
 - **Hvad v13 gør:** en åben app henter selv den nye udgave. Installationen henter kun ændrede filer (målt i e2e: 2 × 200, 717 genbrugt i stedet for 719 hele), og hver fil tjekkes mod `sw-indhold.json`.
-- **Status:** code-review 1–3 og UI-review er rettet og godkendt. Den sidste rettelse (`347b48d`, MELLEM 1) er ikke gennemgået:
-  - Node 17/18 (kendt: `test-lyd`, 3 mp3) og e2e `opdatering` 32/32.
-  - Én `code-reviewer` på `35b16d1..347b48d` efter ugenulstillingen (lør 21-11 kl. 19:00).
-- **Afventer Jimmy (20-11):**
-  - Må Tumbi udgives fra en ubemandet kørsel? Den globale regel siger nej, regel 7 siger automatisk.
-  - `UDGAVE` sættes til dagens dato ved udgivelsen.
+- **Status:** alle betingelser i regel 7 er opfyldt. Code-review 1–4 og UI-review er godkendt (review 4 af `35b16d1..347b48d`: ingen HØJ/MELLEM). Node 17/18 (kendt: `test-lyd`, 3 mp3), e2e `opdatering` 32/32, `UDGAVE` = v13 (main har v12). Grenen er en fast-forward af `origin/main`.
+- **Push afvist (20-11):** `git push origin <sha>:main` blev afvist af auto-mode-filteret, så regel 7 kan ikke køre helt selv. Jimmy kører kommandoen; Claude tjekker bagefter, at Pages viser v13. (Task-observer 0206: regel 7 og filteret skal bringes i overensstemmelse.)
+- **Valg:** `UDGAVE` blev stående på «v13 · 19-11-2026» (en ny dato ville kræve ny `INDHOLD`, ny `sw-indhold.json` og nye tests uden gevinst).
+- **Til v14 (fra review 4, begge LAV, målt af revieweren):** (1) `nytIndhold` godtager `filer: {}`/`[]` eller en manglende sti, så en fil uden hash hentes uden tjek; ret med `FILER.every((f) => hashFor(m, f) !== null)` kun for den nye fil, og læg «tomme filer» i løkken i `test/test-sw.js`. Kan kun ske med en defekt udgivet `sw-indhold.json` (testen «sw-indhold.json passer» fanger det før push). (2) Ingen test for, at `fetch` af `sw-indhold.json` kaster (netværksfejl); koden er fail-closed, men det er ikke låst af en test.
 - **Første opdatering fra v12** henter alt én gang (18,9 MB), fordi v12 ikke har noget manifest.
 - **v14-listen** står i `D:\Claude\STATUS.md` (20-11 kl. 09:15).
 
