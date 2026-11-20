@@ -6,8 +6,8 @@
 // over (controllerchange), men kun på børnenes forside.
 // Testen har sin egen server (Node), der kan skifte sw.js og js/version.js til en ny udgave uden at røre filerne på
 // disken, og en rigtig WebKit-profil under %TEMP%\swm\ (højst 62 tegn, se udenNet i e2e-ugeplan.js): de andre dele
-// blokerer service workeren. Serveren sender «Cache-Control: max-age=600» som GitHub Pages, så testen også ser, at den
-// nye sw.js ikke bliver hængende i browserens cache.
+// blokerer service workeren. Serveren svarer som GitHub Pages: «Cache-Control: max-age=600» (så testen også ser, at den
+// nye sw.js ikke bliver hængende i browserens cache) og udgivelsens tid som Last-Modified og ETag for alle filer.
 //   1. Første besøg: siden bliver styret og genindlæses ikke.
 //   2. På forsiden: ny udgave på serveren, og appen kommer frem igen. Siden genindlæser selv og viser den nye udgave.
 //      Installationen henter kun de ændrede filer hele (200); resten kommer som 304 (code review M2).
@@ -29,7 +29,9 @@ import { UDGAVE } from '../js/version.js';
 
 const NY_MS = 30000;        // så længe må det tage, fra appen kommer frem, til den nye udgave står på skærmen
 const STILLE_MS = 2000;     // så længe ventes der efter overtagelsen, før det tjekkes, at intet er genindlæst
-const MAKS_200 = 2;         // en ny udgave ændrer js/version.js (og sw.js, der ikke står i FILER): resten skal komme som 304
+// En ny udgave ændrer js/version.js (og sw.js, der ikke står i FILER). Resten er uændret og må ikke hentes hele igen,
+// selvom Pages giver dem en ny ETag. Lidt luft: højst ca. 3 filer som 200 efter en udgivelse
+const MAKS_200 = 3;
 const pause = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const TYPER = {
@@ -55,15 +57,28 @@ function nyUdgave(rod, navn) {
   return new Map([['/sw.js', nySw], ['/js/version.js', nyVersion]]);
 }
 
-// Serverer mappen rod som GitHub Pages (filerne, max-age=600 og Last-Modified, så et uændret svar kommer som 304 på
-// If-Modified-Since, som Pythons http.server). skift(navn) giver de næste svar en ny sw.js og js/version.js uden
-// Last-Modified (de er nye, så de kommer altid som 200); filerne på disken røres ikke. Node holder forbindelserne åbne
-// (HTTP/1.1), så porte ikke løber tør. skift(navn, { mangler: sti }) giver 404 på én fil i den nye udgave.
+// Svar 304? RFC 9110, 13.1.2 og 13.2.2: er If-None-Match sendt, gælder kun den (en af dens ETags er den aktuelle, eller
+// «*»), og If-Modified-Since tæller ikke. Ellers 304, når If-Modified-Since er udgivelsestiden eller senere
+function uaendret(hoved, etag, udgivetMs) {
+  const inm = hoved['if-none-match'];
+  if (inm !== undefined) return inm.trim() === '*' || inm.split(',').some((e) => e.trim().replace(/^W\//, '') === etag);
+  const siden = Date.parse(hoved['if-modified-since'] || '');
+  return !Number.isNaN(siden) && siden >= udgivetMs;
+}
+
+// Serverer mappen rod som GitHub Pages (målt med curl 19-11-2026, se faldgruben i CLAUDE.md): ALLE filer får udgivelsens
+// tid som Last-Modified og ETag "<udgivelsestid i sekunder, hex>-<størrelse i byte, hex>", og Cache-Control:
+// max-age=600. En uændret fil får altså en ny ETag ved hver udgivelse, og 304 kommer kun inden for samme udgivelse.
+// Den gamle server brugte filens egen ændringstid, så uændrede filer kom som 304 på tværs af udgivelser: et falsk grønt
+// resultat for installationens 200-tal. skift(navn) er en ny udgivelse: en ny udgivelsestid for alle filer og en ny
+// sw.js og js/version.js (filerne på disken røres ikke). skift(navn, { mangler: sti }) giver 404 på én fil i den nye
+// udgave. Node holder forbindelserne åbne (HTTP/1.1), så porte ikke løber tør.
 // Efter et skift huskes det første svar på hver sti: det er installationens hentning (se taelling)
 async function udgaveServer(rod, port) {
   let nyt = new Map();
   let mangler = null;
   let foersteSvar = new Map();
+  let udgivet = Math.floor(Date.now() / 1000); // udgivelsestiden i hele sekunder (HTTP-datoer har hele sekunder)
   const server = http.createServer((req, res) => {
     if (req.method !== 'GET' && req.method !== 'HEAD') { res.writeHead(405).end(); return; }
     let sti;
@@ -81,22 +96,27 @@ async function udgaveServer(rod, port) {
     const fil = path.resolve(rod, '.' + sti);
     if (!fil.startsWith(rod + path.sep)) { send(403); return; }
     if (sti === mangler) { send(404); return; }
-    const hoved = { 'Content-Type': TYPER[path.extname(fil).toLowerCase()] || 'application/octet-stream', 'Cache-Control': 'max-age=600' };
-    if (nyt.has(sti)) { send(200, hoved, nyt.get(sti)); return; }
-    fs.stat(fil, (fejl, st) => {
-      if (fejl || !st.isFile()) { send(404); return; }
-      const sidst = new Date(Math.floor(st.mtimeMs / 1000) * 1000); // HTTP-datoer har hele sekunder
-      const siden = Date.parse(req.headers['if-modified-since'] || '');
-      if (!Number.isNaN(siden) && sidst.getTime() <= siden) { send(304, { 'Cache-Control': hoved['Cache-Control'], 'Last-Modified': sidst.toUTCString() }); return; }
-      fs.readFile(fil, (fejl2, data) => {
-        if (fejl2) send(404);
-        else send(200, { ...hoved, 'Last-Modified': sidst.toUTCString() }, data);
-      });
+    const svar = (data) => {
+      const pages = { 'Cache-Control': 'max-age=600', 'Last-Modified': new Date(udgivet * 1000).toUTCString(),
+        ETag: '"' + udgivet.toString(16) + '-' + data.length.toString(16) + '"' };
+      if (uaendret(req.headers, pages.ETag, udgivet * 1000)) send(304, pages);
+      else send(200, { 'Content-Type': TYPER[path.extname(fil).toLowerCase()] || 'application/octet-stream', ...pages }, data);
+    };
+    if (nyt.has(sti)) { svar(Buffer.from(nyt.get(sti), 'utf8')); return; }
+    fs.readFile(fil, (fejl, data) => {
+      if (fejl) send(404); // også en mappe (EISDIR)
+      else svar(data);
     });
   });
   await new Promise((ok, fejl) => { server.once('error', fejl); server.listen(port, '127.0.0.1', ok); });
   return {
-    skift: (navn, valg = {}) => { nyt = nyUdgave(rod, navn); mangler = valg.mangler ?? null; foersteSvar = new Map(); },
+    // En ny udgivelse har altid en senere udgivelsestid, også når to skift kommer i samme sekund
+    skift: (navn, valg = {}) => {
+      nyt = nyUdgave(rod, navn);
+      mangler = valg.mangler ?? null;
+      foersteSvar = new Map();
+      udgivet = Math.max(udgivet + 1, Math.floor(Date.now() / 1000));
+    },
     // Det første svar på hver af filerne (FILER i sw.js) siden skift: { 200: [...], 304: [...], andet: [...], intet: [...] }
     taelling: (filer) => {
       const ud = { 200: [], 304: [], andet: [], intet: [] };
