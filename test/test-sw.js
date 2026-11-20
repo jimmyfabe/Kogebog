@@ -23,8 +23,10 @@ class SwRequest extends Request {
   constructor(input, init) { super(typeof input === 'string' ? absolut(input) : input, init); }
 }
 
-function falskeCaches(start = {}) {
+// putFejl(navn, n): sand, når put nr. n i cachen navn skal kaste (som en fuld disk midt i en installation)
+function falskeCaches(start = {}, { putFejl = null } = {}) {
   const lagre = new Map();
+  const antalPut = new Map();
   const lavCache = (navn) => {
     if (!lagre.has(navn)) lagre.set(navn, new Map());
     const m = lagre.get(navn);
@@ -34,7 +36,12 @@ function falskeCaches(start = {}) {
         for (const [k, v] of m) if (k === n || (o.ignoreSearch && utenSoeg(k) === utenSoeg(n))) return v.clone();
         return undefined;
       },
-      async put(req, res) { m.set(absolut(req), res); },
+      async put(req, res) {
+        const n = (antalPut.get(navn) || 0) + 1;
+        antalPut.set(navn, n);
+        if (putFejl && putFejl(navn, n)) throw new DOMException('Disken er fuld (falsk)', 'QuotaExceededError');
+        m.set(absolut(req), res);
+      },
       async delete(req) { return m.delete(absolut(req)); },
     };
   };
@@ -334,6 +341,59 @@ test('en genbrugt opskrift, som netværk først har skrevet om, tjekkes mod sin 
   // En opskrift, der passer til sin hash, genbruges stadig
   const tredje = udgivelse(FILER, '3333333333333333', { 'js/version.js': 'v tredje' });
   assert.deepEqual((await installer(caches, tredje)).map((x) => x.sti), ['js/version.js']);
+});
+
+// Code review L4 (v13b, 20-11): dækning af det, der allerede virker (reviewets scenarie 3-6). Kun en hel installation
+// gemmer sw-indhold.json (til sidst), og den forrige udgave er den nyeste «kog-»-cache, der har en, der passer til navnet
+const TREDJE = '3333333333333333';
+test('en afbrudt installation efterlader en halv cache uden sw-indhold.json, og den næste udgave springer den over', async () => {
+  const { FILER } = lavSw({ caches: falskeCaches(), fetch: async () => ok('') });
+  let afbryd = true;
+  const caches = falskeCaches({}, { putFejl: (navn, n) => afbryd && navn === 'kog-' + NY && n === 100 });
+  await installer(caches, udgivelse(FILER, FORRIGE));
+  await assert.rejects(installer(caches, udgivelse(FILER, NY, { 'app.css': 'app.css v2', 'js/version.js': 'v ny' })), /fuld/);
+  assert.ok(caches.lagre.get('kog-' + NY)?.size > 0, 'den halve cache har filer');
+  assert.equal(harManifest(caches, NY), false, 'den halve cache har intet sw-indhold.json');
+  // Den næste udgave ruller app.css tilbage: den halve cache (nyest) springes over, og den hele forrige udgave bruges
+  afbryd = false;
+  const hentet = await installer(caches, udgivelse(FILER, TREDJE, { 'js/version.js': 'v tredje' }));
+  assert.deepEqual(hentet.map((x) => x.sti), ['js/version.js']);
+  assert.equal(await (await (await caches.open('kog-' + TREDJE)).match('app.css')).text(), 'app.css v1');
+});
+
+test('en genoptaget installation af samme udgave skriver den halve cache helt og gemmer sw-indhold.json til sidst', async () => {
+  const { FILER } = lavSw({ caches: falskeCaches(), fetch: async () => ok('') });
+  let afbryd = true;
+  const caches = falskeCaches({}, { putFejl: (navn, n) => afbryd && navn === 'kog-' + NY && n === 50 });
+  await installer(caches, udgivelse(FILER, FORRIGE));
+  const ny = udgivelse(FILER, NY, { 'app.css': 'app.css v2' });
+  await assert.rejects(installer(caches, ny), /fuld/);
+  afbryd = false;
+  const hentet = await installer(caches, ny);
+  assert.deepEqual(hentet.map((x) => x.sti), ['app.css'], 'den halve cache er ikke en forrige udgave: genbruget kommer fra den hele');
+  assert.equal(caches.lagre.get('kog-' + NY).size, FILER.length + 1, 'alle filer og sw-indhold.json');
+  assert.ok(harManifest(caches, NY));
+  const cache = await caches.open('kog-' + NY);
+  for (const f of FILER) assert.equal(await (await cache.match(f)).text(), ny.fil(f), f);
+});
+
+test('med to gamle udgaver genbruges fra den nyeste, der har et sw-indhold.json, som passer', async () => {
+  const { FILER } = lavSw({ caches: falskeCaches(), fetch: async () => ok('') });
+  // Begge har sw-indhold.json (activate har ikke kørt imellem): den nyeste bruges
+  let caches = falskeCaches();
+  await installer(caches, udgivelse(FILER, FORRIGE));
+  await installer(caches, udgivelse(FILER, NY, { 'app.css': 'app.css v2' }));
+  let hentet = await installer(caches, udgivelse(FILER, TREDJE, { 'app.css': 'app.css v2', 'js/version.js': 'v tredje' }));
+  assert.deepEqual(hentet.map((x) => x.sti), ['js/version.js'], 'app.css v2 kommer fra den nyeste');
+  assert.equal(await (await (await caches.open('kog-' + TREDJE)).match('app.css')).text(), 'app.css v2');
+  // Den nyeste fik intet gyldigt sw-indhold.json (fx et svar fra et mellemled): den springes over, og den ældre bruges
+  caches = falskeCaches();
+  await installer(caches, udgivelse(FILER, FORRIGE));
+  assert.equal((await installer(caches, udgivelse(FILER, NY, { 'js/version.js': 'v ny' }, { indhold: 'forkert', filer: {} }))).length, FILER.length,
+    'uden et gyldigt sw-indhold.json hentes alt');
+  assert.equal(harManifest(caches, NY), false);
+  hentet = await installer(caches, udgivelse(FILER, TREDJE, { 'js/version.js': 'v tredje' }));
+  assert.deepEqual(hentet.map((x) => x.sti), ['js/version.js']);
 });
 
 // Hashen i sw.js og vaerktoej/sw-indhold.js skal være den samme for hver fil, ellers fejler hver installation (eller
