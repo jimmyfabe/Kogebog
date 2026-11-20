@@ -2,6 +2,18 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
+## 20-11-2026 kl. 09:40: v13 på grenen `v13-opdatering`, mangler ét code-review (ikke udgivet)
+
+- **Hvad v13 gør:** en åben app henter selv den nye udgave. Installationen henter kun ændrede filer (målt i e2e: 2 × 200, 717 genbrugt i stedet for 719 hele), og hver fil tjekkes mod `sw-indhold.json`.
+- **Status:** code-review 1–3 og UI-review er rettet og godkendt. Den sidste rettelse (`347b48d`, MELLEM 1) er ikke gennemgået:
+  - Node 17/18 (kendt: `test-lyd`, 3 mp3) og e2e `opdatering` 32/32.
+  - Én `code-reviewer` på `35b16d1..347b48d` efter ugenulstillingen (lør 21-11 kl. 19:00).
+- **Afventer Jimmy (20-11):**
+  - Må Tumbi udgives fra en ubemandet kørsel? Den globale regel siger nej, regel 7 siger automatisk.
+  - `UDGAVE` sættes til dagens dato ved udgivelsen.
+- **Første opdatering fra v12** henter alt én gang (18,9 MB), fordi v12 ikke har noget manifest.
+- **v14-listen** står i `D:\Claude\STATUS.md` (20-11 kl. 09:15).
+
 ## 19-11-2026 kl. 18:39: v12 er live (første automatiske udgivelse)
 
 Jimmy 19-11: «gør det automatisk … du forsætter bare». Det står nu som regel 7 i `CLAUDE.md` (`9cc63c5`). v12 er udgivet efter den regel, uden at Jimmy så den først.
