@@ -9,7 +9,7 @@
    Svarer nettet ikke inden for HENT_MS (4 s), kommer en opskrift (også index.json) fra cachen, og nettets svar gemmes
    til næste gang. De næste LANGSOM_MS (30 s) tager opskrifterne cachen med det samme (code review U3 og F2, 23-10). */
 const PRAEFIKS = 'kog-';
-const INDHOLD = 'f2a9d8c3291971a1'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = '4d19c963221b9340'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '7b503e0be6847e32'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
@@ -487,7 +487,7 @@ async function hashAf(f, svar) {
 // hash, den nye sw-indhold.json siger (en CDN-kant eller et mellemled med den gamle udgave; code review M1, v13b). Uden en
 // hash kan den ikke tjekkes, og så gives den heller ikke videre
 async function filTilUdgave(f, nyt, forrige) {
-  const h = nyt ? hashFor(nyt, f) : null;
+  const h = hashFor(nyt, f);
   if (h !== null && forrige && hashFor(forrige.m, f) === h) {
     const gemt = await forrige.cache.match(f);
     const tjekkes = erOpskrift(new URL(f, self.registration.scope));
@@ -499,9 +499,12 @@ async function filTilUdgave(f, nyt, forrige) {
 
 self.addEventListener('install', (e) => {
   e.waitUntil((async () => {
-    // Alt eller intet: mangler én fil, eller er én forkert, beholder enheden den gamle, hele udgave og prøver igen næste gang
+    // Alt eller intet: mangler én fil, eller er én forkert, beholder enheden den gamle, hele udgave og prøver igen næste gang.
+    // Uden den nye sw-indhold.json kan ingen fil tjekkes (fx en CDN-kant med den forrige udgaves sw-indhold.json og
+    // app.css), så installationen fejler også da (code review 3, MELLEM 1, v13b)
     const nyt = await nytIndhold();
-    const forrige = nyt ? await forrigeUdgave() : null;
+    if (!nyt) throw new Error('sw-indhold.json mangler eller hører til en anden sw.js');
+    const forrige = await forrigeUdgave();
     const filer = await Promise.all(FILER.map((f) => filTilUdgave(f, nyt, forrige)));
     const svar = filer.map((x) => x.svar);
     const mangler = FILER.filter((f, i) => !svar[i].ok);
@@ -513,7 +516,7 @@ self.addEventListener('install', (e) => {
     const cache = await caches.open(VERSION);
     await Promise.all(svar.map((r, i) => cache.put(FILER[i], r)));
     // Sidst: kun en hel udgave kan give filer videre til den næste
-    if (nyt) await cache.put(INDHOLD_FIL, new Response(JSON.stringify(nyt), { headers: { 'Content-Type': 'application/json' } }));
+    await cache.put(INDHOLD_FIL, new Response(JSON.stringify(nyt), { headers: { 'Content-Type': 'application/json' } }));
     await self.skipWaiting();
   })());
 });

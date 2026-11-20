@@ -159,16 +159,28 @@ test('activate sletter kun gamle «kog-»-caches og beholder lyden, så længe l
   assert.ok(await (await caches.open(LYD_CACHE)).match(SCOPE + 'lyd/pandekager/1.mp3'), 'den gemte lyd skal være der endnu');
 });
 
+// En falsk server, der svarer svar(sti) for filerne og en sw-indhold.json, der passer til fil(sti). Installationen kræver
+// den nye sw-indhold.json (code review 3, MELLEM 1, v13b)
+function medIndhold(fil, svar = (sti) => ok(fil(sti))) {
+  const { FILER, INDHOLD } = lavSw({ caches: falskeCaches(), fetch: async () => ok('') });
+  const manifest = JSON.stringify({ indhold: INDHOLD, filer: Object.fromEntries(FILER.map((f) => [f, filHash(f, fil(f))])) });
+  return async (req) => {
+    const sti = absolut(req).slice(SCOPE.length) || './';
+    return sti === INDHOLD_FIL ? ok(manifest) : svar(sti);
+  };
+}
+
 test('install gemmer alle filer — eller ingen, hvis én mangler', async () => {
   const caches = falskeCaches();
-  const { haendelser, FILER, VERSION } = lavSw({ caches, fetch: async (req) => ok('indhold af ' + absolut(req)) });
+  const { haendelser, FILER, VERSION } = lavSw({ caches, fetch: medIndhold((sti) => 'indhold af ' + sti) });
   const h = haendelse(null);
   haendelser.install(h);
   await Promise.all(h.ventet);
-  assert.equal(caches.lagre.get(VERSION).size, FILER.length);
+  assert.equal(caches.lagre.get(VERSION).size, FILER.length + 1, 'alle filer og sw-indhold.json');
+  assert.ok(caches.lagre.get(VERSION).has(SCOPE + INDHOLD_FIL), 'sw-indhold.json gemmes');
 
   const caches2 = falskeCaches();
-  const sw2 = lavSw({ caches: caches2, fetch: async (req) => (absolut(req).endsWith('app.css') ? new Response('', { status: 404 }) : ok('x')) });
+  const sw2 = lavSw({ caches: caches2, fetch: medIndhold(() => 'x', (sti) => (sti === 'app.css' ? new Response('', { status: 404 }) : ok('x'))) });
   const h2 = haendelse(null);
   sw2.haendelser.install(h2);
   await assert.rejects(Promise.all(h2.ventet), /Mangler: app\.css/);
@@ -180,7 +192,8 @@ test('install gemmer alle filer — eller ingen, hvis én mangler', async () => 
 // fra browserens egen cache. e2e-delen «opdatering» tæller svarene fra serveren
 test('install spørger serveren om hver fil med «no-cache», så uændrede filer kan komme som 304', async () => {
   const hentet = [];
-  const { haendelser, FILER } = lavSw({ caches: falskeCaches(), fetch: async (req) => { hentet.push({ sti: absolut(req).slice(SCOPE.length), cache: req.cache }); return ok('x'); } });
+  const server = medIndhold(() => 'x');
+  const { haendelser, FILER } = lavSw({ caches: falskeCaches(), fetch: async (req) => { hentet.push({ sti: absolut(req).slice(SCOPE.length), cache: req.cache }); return server(req); } });
   const h = haendelse(null);
   haendelser.install(h);
   await Promise.all(h.ventet);
@@ -254,7 +267,7 @@ test('en ny udgave henter kun den ændrede fil og genbruger resten fra den forri
   assert.deepEqual(await (await cache.match(INDHOLD_FIL)).json(), ny.manifest, 'den nye udgaves sw-indhold.json gemmes til næste gang');
 });
 
-test('ved tvivl hentes filen: intet sw-indhold.json, en anden INDHOLD, en hash eller en fil, der mangler', async () => {
+test('ved tvivl om den forrige udgave hentes filen, og uden den nyes sw-indhold.json fejler installationen', async () => {
   const { FILER } = lavSw({ caches: falskeCaches(), fetch: async () => ok('') });
   const u1 = udgivelse(FILER, FORRIGE);
   const ens = (manifest) => udgivelse(FILER, NY, {}, manifest);
@@ -263,13 +276,29 @@ test('ved tvivl hentes filen: intet sw-indhold.json, en anden INDHOLD, en hash e
   assert.equal(r.hentet.length, FILER.length, 'den forrige cache har ingen sw-indhold.json');
   r = await toUdgaver(u1, ens(), async (c) => { await c.put(INDHOLD_FIL, ok('{ikke json')); });
   assert.equal(r.hentet.length, FILER.length, 'den forrige sw-indhold.json kan ikke læses');
-  // Den nye kan ikke hentes (404) eller hører til en anden sw.js (fx et gammelt svar fra et mellemled): alt hentes, og
-  // intet sw-indhold.json gemmes, så næste udgave heller ikke stoler på den
+  // Den nye kan ikke hentes (404), hører til en anden sw.js (fx et gammelt svar fra en CDN-kant), kan ikke læses eller har
+  // ingen filer: så kan ingen fil tjekkes, og installationen fejler (code review 3, MELLEM 1, v13b). Den forrige, hele
+  // udgave står urørt, og næste forsøg prøver igen
+  const forrigeUrørt = (caches, hvad) => {
+    assert.equal(caches.lagre.has('kog-' + NY), false, hvad + ': ingen ny cache');
+    assert.equal(caches.lagre.get('kog-' + FORRIGE).size, FILER.length + 1, hvad + ': den forrige udgave har alle filer og sin sw-indhold.json');
+  };
   for (const [hvad, manifest] of [['404', null], ['en anden INDHOLD', { indhold: FORRIGE, filer: u1.manifest.filer }], ['ikke json', '{x'], ['uden filer', { indhold: NY }]]) {
-    r = await toUdgaver(u1, ens(manifest));
-    assert.equal(r.hentet.length, FILER.length, hvad);
-    assert.equal(await r.cache.match(INDHOLD_FIL), undefined, hvad + ': ingen sw-indhold.json i den nye cache');
-    assert.equal(r.caches.lagre.get('kog-' + NY).size, FILER.length, hvad);
+    const caches = falskeCaches();
+    await installer(caches, u1);
+    const hentet = [];
+    await assert.rejects(installer(caches, ens(manifest), hentet), /sw-indhold\.json mangler eller hører til en anden sw\.js/, hvad);
+    assert.deepEqual(hentet.map((x) => x.sti), [INDHOLD_FIL], hvad + ': kun sw-indhold.json hentes');
+    forrigeUrørt(caches, hvad);
+  }
+  // En CDN-kant med den forrige udgave sender både dens sw-indhold.json og dens app.css, mens den nye sw.js har en ny app.css.
+  // Før rettelsen kom den gamle app.css ind i den nye udgave uden tjek
+  {
+    const caches = falskeCaches();
+    await installer(caches, u1);
+    const ny = udgivelse(FILER, NY, { 'app.css': 'app.css v2' }, u1.manifest);
+    await assert.rejects(installer(caches, { ...ny, fil: u1.fil }), /sw-indhold\.json mangler/, 'gammelt sw-indhold.json + gammel app.css');
+    forrigeUrørt(caches, 'gammelt sw-indhold.json + gammel app.css');
   }
   // Den forrige sw-indhold.json mangler en hash, og den forrige cache mangler en fil: kun de to hentes
   r = await toUdgaver(u1, ens(), async (c) => {
@@ -386,12 +415,13 @@ test('med to gamle udgaver genbruges fra den nyeste, der har et sw-indhold.json,
   let hentet = await installer(caches, udgivelse(FILER, TREDJE, { 'app.css': 'app.css v2', 'js/version.js': 'v tredje' }));
   assert.deepEqual(hentet.map((x) => x.sti), ['js/version.js'], 'app.css v2 kommer fra den nyeste');
   assert.equal(await (await (await caches.open('kog-' + TREDJE)).match('app.css')).text(), 'app.css v2');
-  // Den nyeste fik intet gyldigt sw-indhold.json (fx et svar fra et mellemled): den springes over, og den ældre bruges
+  // Den nyeste cache har intet gyldigt sw-indhold.json: den springes over, og den ældre bruges. En installation uden et
+  // gyldigt sw-indhold.json fejler fra code review 3 (testen ovenfor), så cachen laves her direkte (fx en installation,
+  // der fejlede ved sidste put, fordi lageret var fuldt)
   caches = falskeCaches();
   await installer(caches, udgivelse(FILER, FORRIGE));
-  assert.equal((await installer(caches, udgivelse(FILER, NY, { 'js/version.js': 'v ny' }, { indhold: 'forkert', filer: {} }))).length, FILER.length,
-    'uden et gyldigt sw-indhold.json hentes alt');
-  assert.equal(harManifest(caches, NY), false);
+  await installer(caches, udgivelse(FILER, NY, { 'js/version.js': 'v ny' }));
+  await (await caches.open('kog-' + NY)).put(INDHOLD_FIL, ok(JSON.stringify({ indhold: 'forkert', filer: {} })));
   hentet = await installer(caches, udgivelse(FILER, TREDJE, { 'js/version.js': 'v tredje' }));
   assert.deepEqual(hentet.map((x) => x.sti), ['js/version.js']);
 });
