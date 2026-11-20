@@ -9,7 +9,7 @@
    Svarer nettet ikke inden for HENT_MS (4 s), kommer en opskrift (også index.json) fra cachen, og nettets svar gemmes
    til næste gang. De næste LANGSOM_MS (30 s) tager opskrifterne cachen med det samme (code review U3 og F2, 23-10). */
 const PRAEFIKS = 'kog-';
-const INDHOLD = '6938385646c28924'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
+const INDHOLD = 'a529d2a530220291'; // sha256 (16 tegn) af FILER — sæt den værdi, test/test-sw.js viser i fejlbeskeden
 const VERSION = PRAEFIKS + INDHOLD;
 const LYD = '7b503e0be6847e32'; // sha256 (16 tegn) af lydfilerne (lyd/*/*.mp3) — sæt den værdi, test/test-sw.js viser
 const LYD_CACHE = PRAEFIKS + 'lyd-' + LYD;
@@ -481,15 +481,17 @@ async function hashAf(f, svar) {
 
 // En fil til den nye udgave, { svar, forkert }: fra den forrige cache, når filens hash er den samme i begge udgaver. Ellers,
 // og ved tvivl (ingen forrige udgave, ingen hash, filen mangler i cachen), fra nettet med «no-cache»: inden for samme
-// udgivelse kan en fil, browseren har, så komme som 304. En opskrift i den forrige cache kan være nyere end dens hash
-// (netværk først gemmer nettets svar); den genbruges kun, når den nye hash er den gamle, og netværk først henter den igen,
-// når den vises. forkert: filen fra nettet har ikke den hash, den nye sw-indhold.json siger (en CDN-kant eller et mellemled
-// med den gamle udgave; code review M1, v13b). Uden en hash kan den ikke tjekkes, og så gives den heller ikke videre
+// udgivelse kan en fil, browseren har, så komme som 304. En opskrift i den forrige cache kan være en anden end dens hash
+// (netværk først gemmer nettets svar, også fra en udgave, der aldrig blev installeret), så en genbrugt opskrift (små
+// JSON-filer) tjekkes mod hashen, og afviger den, hentes den (code review L1, v13b). forkert: filen fra nettet har ikke den
+// hash, den nye sw-indhold.json siger (en CDN-kant eller et mellemled med den gamle udgave; code review M1, v13b). Uden en
+// hash kan den ikke tjekkes, og så gives den heller ikke videre
 async function filTilUdgave(f, nyt, forrige) {
   const h = nyt ? hashFor(nyt, f) : null;
   if (h !== null && forrige && hashFor(forrige.m, f) === h) {
     const gemt = await forrige.cache.match(f);
-    if (gemt && gemt.ok) return { svar: gemt, forkert: false };
+    const tjekkes = erOpskrift(new URL(f, self.registration.scope));
+    if (gemt && gemt.ok && (!tjekkes || (await hashAf(f, gemt)) === h)) return { svar: gemt, forkert: false };
   }
   const svar = await fetch(new Request(f, { cache: 'no-cache' }));
   return { svar, forkert: h !== null && svar.ok && (await hashAf(f, svar)) !== h };

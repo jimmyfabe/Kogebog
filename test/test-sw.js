@@ -310,6 +310,32 @@ test('en hentet fil med en anden hash end sw-indhold.json: installationen fejler
   assert.ok(harManifest(caches, FORRIGE), 'CRLF i en tekstfil og \\r\\n i en binær fil giver en installation');
 });
 
+// Code review L1 (v13b, 20-11): netværk først gemmer nettets svar på en opskrift i den aktive udgaves cache, også en nyere
+// udgave, der aldrig blev installeret. Ruller en senere udgivelse opskriften tilbage (samme hash som i den aktive udgave),
+// genbrugte installationen den nyere, forkerte tekst. Nu tjekkes en genbrugt opskrift (små JSON-filer, erOpskrift) med
+// samme hash som en hentet fil, og afviger den, hentes den
+test('en genbrugt opskrift, som netværk først har skrevet om, tjekkes mod sin hash og hentes, når den afviger', async () => {
+  const { FILER } = lavSw({ caches: falskeCaches(), fetch: async () => ok('') });
+  const OPSKRIFT = 'opskrifter/pandekager.json';
+  const caches = falskeCaches();
+  await installer(caches, udgivelse(FILER, FORRIGE));
+  // Den aktive udgave viser opskriften, mens en udgave med en ændret opskrift er live: netværk først gemmer dens tekst
+  const aktiv = lavSw({ caches, kilde: swI(FORRIGE), fetch: async () => ok(OPSKRIFT + ' X') });
+  const h = haendelse(new SwRequest(OPSKRIFT));
+  aktiv.haendelser.fetch(h);
+  await h.svar;
+  await Promise.all(h.ventet);
+  assert.equal(await (await (await caches.open('kog-' + FORRIGE)).match(OPSKRIFT)).text(), OPSKRIFT + ' X');
+  // Den nye udgave ruller opskriften tilbage (samme hash som den forrige udgaves sw-indhold.json): opskriften hentes igen
+  const ny = udgivelse(FILER, NY, { 'js/version.js': 'v ny' });
+  const hentet = await installer(caches, ny);
+  assert.deepEqual(hentet.map((x) => x.sti).sort(), ['js/version.js', OPSKRIFT].sort());
+  assert.equal(await (await (await caches.open('kog-' + NY)).match(OPSKRIFT)).text(), OPSKRIFT + ' v1');
+  // En opskrift, der passer til sin hash, genbruges stadig
+  const tredje = udgivelse(FILER, '3333333333333333', { 'js/version.js': 'v tredje' });
+  assert.deepEqual((await installer(caches, tredje)).map((x) => x.sti), ['js/version.js']);
+});
+
 // Hashen i sw.js og vaerktoej/sw-indhold.js skal være den samme for hver fil, ellers fejler hver installation (eller
 // genbruget). Filerne læses fra disken som de er: på Windows har tekstfilerne CRLF, og billederne har tilfældige \r\n
 test('service workerens hash er værktøjets for hver fil i FILER', async () => {
