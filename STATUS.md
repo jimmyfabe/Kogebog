@@ -40,7 +40,7 @@ Jimmy 19-11: «gør det automatisk … du forsætter bare». Det står nu som re
 Jimmy skrev «Kan du ikke punch den». Claude pushede `7e88273` til `main` (`2785747..7e88273`), og den lokale `main` er flyttet med.
 - https://jimmyfabe.github.io/Kogebog/ svarer 200.
 - `js/version.js` viser `v11 · 17-11-2026`, og `sw.js` har `INDHOLD = '11fcf614af1912f3'` som spidsen.
-- Ikke afprøvet på en rigtig iPad. En iPad med den gamle udgave henter den nye første gang, den er på nettet.
+- Ikke afprøvet på en rigtig iPad. (Rettet 20-11: det var en antagelse, ikke målt. iPhonen stod på v9 længe efter. Se v13 om genindlæsning og fejlede installationer.)
 
 Punkt 1 under «Afventer Jimmy» nedenfor er dermed lukket. v12 (`v12-rester`) er ikke udgivet og venter på Jimmys ja (punkt 2).
 
@@ -232,7 +232,7 @@ De ældre «Afventer Jimmy»-punkter længere nede er ikke gennemgået i denne r
 
 ## 13-11-2026 kl. 13:30: v9 er live igen
 
-Jimmy pushede main (`df3e125..2785747`) og slog GitHub Pages til (main, / root). Claude tjekkede kl. 13:30, ca. 30 s efter: https://jimmyfabe.github.io/Kogebog/ svarer 200, `js/version.js` siger `v9 · 13-11-2026` og `v9:eaba115fe45c41bd`, og `sw.js` har `INDHOLD = '795750507c2054b4'`. Punkterne 1-3 nedenfor er lukket. Ikke afprøvet på en rigtig iPad. En iPad med den gamle udgave henter den nye første gang, den er på nettet.
+Jimmy pushede main (`df3e125..2785747`) og slog GitHub Pages til (main, / root). Claude tjekkede kl. 13:30, ca. 30 s efter: https://jimmyfabe.github.io/Kogebog/ svarer 200, `js/version.js` siger `v9 · 13-11-2026` og `v9:eaba115fe45c41bd`, og `sw.js` har `INDHOLD = '795750507c2054b4'`. Punkterne 1-3 nedenfor er lukket. Ikke afprøvet på en rigtig iPad. (Rettet 20-11: det var en antagelse, ikke målt. iPhonen stod på v9 længe efter. Se v13 om genindlæsning og fejlede installationer.)
 
 ## 13-11-2026 kl. 11:40: v9 er flettet til main og klar til udgivelse
 
