@@ -484,21 +484,21 @@ async function hashAf(f, svar) {
 }
 
 // En fil til den nye udgave, { svar, forkert }: fra den forrige cache, når filens hash er den samme i begge udgaver. Ellers,
-// og ved tvivl (ingen forrige udgave, ingen hash, filen mangler i cachen), fra nettet med «no-cache»: inden for samme
+// og ved tvivl (ingen forrige udgave, ingen hash i den forrige, filen mangler i cachen), fra nettet med «no-cache»: inden for samme
 // udgivelse kan en fil, browseren har, så komme som 304. En opskrift i den forrige cache kan være en anden end dens hash
 // (netværk først gemmer nettets svar, også fra en udgave, der aldrig blev installeret), så en genbrugt opskrift (små
 // JSON-filer) tjekkes mod hashen, og afviger den, hentes den (code review L1, v13b). forkert: filen fra nettet har ikke den
-// hash, den nye sw-indhold.json siger (en CDN-kant eller et mellemled med den gamle udgave; code review M1, v13b). Uden en
-// hash kan den ikke tjekkes, og så gives den heller ikke videre
+// hash, den nye sw-indhold.json siger (en CDN-kant eller et mellemled med den gamle udgave; code review M1, v13b). Den nye
+// har en hash for hver fil (komplet i nytIndhold), så hver fil tjekkes
 async function filTilUdgave(f, nyt, forrige) {
   const h = hashFor(nyt, f);
-  if (h !== null && forrige && hashFor(forrige.m, f) === h) {
+  if (forrige && hashFor(forrige.m, f) === h) {
     const gemt = await forrige.cache.match(f);
     const tjekkes = erOpskrift(new URL(f, self.registration.scope));
     if (gemt && gemt.ok && (!tjekkes || (await hashAf(f, gemt)) === h)) return { svar: gemt, forkert: false };
   }
   const svar = await fetch(new Request(f, { cache: 'no-cache' }));
-  return { svar, forkert: h !== null && svar.ok && (await hashAf(f, svar)) !== h };
+  return { svar, forkert: svar.ok && (await hashAf(f, svar)) !== h };
 }
 
 self.addEventListener('install', (e) => {
