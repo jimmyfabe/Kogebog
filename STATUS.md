@@ -2,6 +2,17 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
+## 21-11-2026 kl. 11:53: v14 godkendt af code-review og ui-review · e2e `timer` kører · venter på Jimmys push
+
+- **code-reviewer:** godkendt, 0 HØJ/MELLEM. LAV 2 (CLAUDE.md: et manifest uden hash for en fil i `FILER` fejler også installationen) er rettet i `244be5d`. LAV til senere: vagten `hashFor(forrige.m, f) === h` i `sw.js:495` (ændrer `INDHOLD`, så den venter til næste udgave).
+- **ui-reviewer (WebKit, 390×844, 1180×820, 1440×900):** godkendt, 0 HØJ/MELLEM. Foden flytter sig 0,0 px, når fejllinjen vises. «Voksne: hold» virker med mus og berøring, versionen kan læses (6,4:1), og ingen trykflade er under 52 px. e2e fund 10 og 11 kørte grønt.
+  - LAV: på lave skærme på langs med «I dag» og timer (fx 1133×720) ruller siden 18 px mere end i v13 (`app.css:432`).
+  - LAV: kommentaren `app.css:291-292` lover 18 px luft, men 1366×768 har kun 14,4 px.
+  - Valg: med mus kan holdet ikke længere afbrydes ved at trække ud af knappen, som med en finger.
+  - Ikke afprøvet: rigtig iPad og iPhone.
+- **Hovedsessionen målte selv:** node 17/18 (kendt `test-lyd`). e2e-delen `timer` kører gennem låsen (log i kladdemappen `e2e-v14-timer.log`).
+- **Udgivelse:** når `timer` er grøn, er v14 klar. v14 er en fast-forward af v13, så ét push udgiver begge: `cd D:\Claude\Kogebog; git push origin v14-rettelser:main` (PowerShell). Filteret afviser Claudes push (observation 0206).
+
 ## 21-11-2026 kl. 11:16: v14 bygget på `v14-rettelser` (`37c60ea`), code-review kører · v13 venter stadig på Jimmys push
 
 - **v14 (fra `v13-opdatering`):** strengt manifest (LAV 1) + forenkling, test for netværksfejl (LAV 2), en færdig timer holder kun en ny udgave tilbage i 60 s, foden rykker ikke på iPad (fund 10), «Voksne: hold» med mus (fund 11; WebKit sender `pointerleave` før `gotpointercapture`), `UDGAVE` v14 · 21-11-2026.
