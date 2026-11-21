@@ -5,6 +5,7 @@
 ## 21-11-2026 kl. 13:03: v14 er klar · venter på Jimmys push
 
 - e2e-delen `timer` er grøn: 5 dele med 0 fejl, kørt gennem låsen mod `v14-rettelser`. Alle betingelser i regel 7 er opfyldt.
+- **Afventer Jimmy (21-11 kl. 14:36):** appen skal åbne hos de voksne (ugeplanen), og børnenes køkken skal åbnes derfra. Det har aldrig været planlagt: Fables plan og v10/v11 beholdt børnenes forside som start. Forslag og to spørgsmål: `docs/vend-forsiden-plan-21-11-2026.md`. Kræver ja til en ny nøgle `kog-enhed-v1` og review-workflowet.
 - **Afventer Jimmy (21-11):** `cd D:\Claude\Kogebog; git push origin v14-rettelser:main` (PowerShell). Bagefter tjekker Claude, at Pages viser «v14 · 21-11-2026».
 
 ## 21-11-2026 kl. 11:53: v14 godkendt af code-review og ui-review · e2e `timer` kører · venter på Jimmys push
