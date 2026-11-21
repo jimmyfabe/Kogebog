@@ -221,7 +221,7 @@ test('sw-indhold.json passer til filerne og til INDHOLD', () => {
 // «no-cache» hentede hele appen (18,9 MB) ved hver udgivelse. Nu genbruger installationen en fil fra den forrige «kog-»-cache,
 // når dens hash i sw-indhold.json er den samme i begge udgaver, og kun nye og ændrede filer hentes (med «no-cache»).
 // En udgave på den falske server: hver fil indeholder «<sti> v1», undtagen de ændrede, og sw-indhold.json passer til dem.
-// manifest: null giver 404 på sw-indhold.json, og en tekst sendes, som den er
+// manifest: null giver 404 på sw-indhold.json, en fejl kastes (som fetch uden net), og en tekst sendes, som den er
 function udgivelse(FILER, indhold, aendret = {}, manifest) {
   const fil = (f) => (Object.hasOwn(aendret, f) ? aendret[f] : f + ' v1');
   return { indhold, fil, manifest: manifest !== undefined ? manifest : { indhold, filer: Object.fromEntries(FILER.map((f) => [f, filHash(f, fil(f))])) } };
@@ -231,6 +231,7 @@ const serverFor = (u, hentet) => async (req) => {
   const sti = absolut(req).slice(SCOPE.length) || './';
   hentet.push({ sti, cache: req.cache });
   if (sti !== INDHOLD_FIL) return ok(u.fil(sti));
+  if (u.manifest instanceof Error) throw u.manifest;
   if (u.manifest === null) return new Response('', { status: 404 });
   return ok(typeof u.manifest === 'string' ? u.manifest : JSON.stringify(u.manifest));
 };
@@ -287,7 +288,7 @@ test('ved tvivl om den forrige udgave hentes filen, og uden den nyes sw-indhold.
   const { 'app.css': _css, ...udenCss } = ens().manifest.filer;
   for (const [hvad, manifest] of [['404', null], ['en anden INDHOLD', { indhold: FORRIGE, filer: u1.manifest.filer }], ['ikke json', '{x'], ['uden filer', { indhold: NY }],
     ['tomme filer', { indhold: NY, filer: {} }], ['filer som liste', { indhold: NY, filer: [] }], ['én sti mangler', { indhold: NY, filer: udenCss }],
-    ['én hash er ikke tekst', { indhold: NY, filer: { ...udenCss, 'app.css': 42 } }]]) {
+    ['én hash er ikke tekst', { indhold: NY, filer: { ...udenCss, 'app.css': 42 } }], ['netværksfejl', new TypeError('Failed to fetch')]]) {
     const caches = falskeCaches();
     await installer(caches, u1);
     const hentet = [];
