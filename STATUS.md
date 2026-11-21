@@ -2,6 +2,14 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
+## 21-11-2026 kl. 11:16: v14 bygget på `v14-rettelser` (`37c60ea`), code-review kører · v13 venter stadig på Jimmys push
+
+- **v14 (fra `v13-opdatering`):** strengt manifest (LAV 1) + forenkling, test for netværksfejl (LAV 2), en færdig timer holder kun en ny udgave tilbage i 60 s, foden rykker ikke på iPad (fund 10), «Voksne: hold» med mus (fund 11; WebKit sender `pointerleave` før `gotpointercapture`), `UDGAVE` v14 · 21-11-2026.
+- **Tal (agentens, gennem låsen):** Node 17/18 (kendt `test-lyd`), e2e 159.751 tjek / 0 fejl. Ureviewet.
+- **Sprunget over:** de fire lave billedfund (si-dåsen vipper 6°, lille blå stråle, sien viser altid samme kugler og dåsen altid majs, si-dåse og si ligner hinanden i printets gråtone). Kræver designvalg/nye tegninger.
+- **Mangler:** code-reviewer (kører), derefter ui-reviewer (foden er 18 px højere; hold med mus). e2e-delen `timer` er ikke kørt.
+- **Afventer Jimmy (20-11):** push v13: `cd D:\Claude\Kogebog; git push origin 4a58f83:main` (Pages viste v12 kl. 10:18 21-11).
+
 ## 20-11-2026 kl. 13:29: v13 er klar, venter på Jimmys push (filteret afviste Claudes)
 
 - **Hvad v13 gør:** en åben app henter selv den nye udgave. Installationen henter kun ændrede filer (målt i e2e: 2 × 200, 717 genbrugt i stedet for 719 hele), og hver fil tjekkes mod `sw-indhold.json`.
