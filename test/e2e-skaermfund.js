@@ -2,7 +2,7 @@
 // 1 ugeplanens række uden billede, 2 børnenes sideprikker, 3 «Start timer» over den faste bund, 4 statusskærme på lave
 // skærme, 5 rettens højttaler, 6 venstrekanten på 667×375, 7 adskilleren « · » ved linjens kant (også efter en drejning
 // fra 667×375 til 932×430), 8 gruppens kolonner og
-// 9 «Vælg ret» på lave skærme, 10 fejllinjen i forsidens fod (UI-review v13b, LAV: v14).
+// 9 «Vælg ret» på lave skærme, 10 fejllinjen i forsidens fod og 11 «Voksne: hold» med musen (UI-review v13b, LAV: v14).
 // Del af test-e2e.js: E2E_DELE=skaermfund. E2E_FUND=1,3 begrænser til nogle af fundene, E2E_FUND_SKAERME=se-land,iphone til nogle af skærmene.
 import { planMandag } from '../js/tid.js';
 import { kod } from '../js/plankode.js';
@@ -17,7 +17,7 @@ const IPLAN = (RETTER) => Object.keys(RETTER).filter((id) => RETTER[id].tumbi.ug
 
 export async function skaermfund(browser, H) {
   const dele = { 1: raekkeUdenBillede, 2: sidePrikker, 3: timerOverBund, 4: statusLave, 5: hoejttaler, 6: venstrekant, 7: adskiller, 8: gruppeKolonner, 9: vaelgRet,
-    10: fejlIFoden };
+    10: fejlIFoden, 11: holdMedMus };
   for (const [nr, del] of Object.entries(dele)) if (!FUND || FUND.includes(nr)) await del(browser, H);
 }
 
@@ -623,5 +623,61 @@ async function fejlIFoden(browser, H) {
     maal.push(n + ' fejl i foden: «Voksne: hold» ved y=' + foer.hold + ' før og ' + efter.hold + ' efter, siden ' + foer.side + ' → ' + efter.side + ' px');
     await foto(side, n + '-fund10-fejl-i-foden');
     await ctx.close();
+  }
+}
+
+// ---------- 11. «Voksne: hold» med musen ----------
+// Med musen løfter knappen sig 2 px (:hover), og mens den holdes, trykkes den 4 px ned (.holder). Står musen ved knappens
+// øverste kant, er den så uden for knappen, og den mindste bevægelse gav pointerleave, der stoppede holdet (UI-review
+// v13b, LAV). Fingeren har sin egen, indbyggede capture og blev aldrig ramt. Her: musen 2 px under knappens kant, holdet
+// med et ryk på 1 px undervejs (en hånd på en mus står ikke helt stille), og voksendelen skal åbne
+async function holdMedMus(browser, H) {
+  const { tjek, foto, vent, maal } = H;
+  for (const n of paa(['desktop', 'ipad'])) {
+    console.log('[' + n + '] fund 11: «Voksne: hold» med musen');
+    const { ctx, side } = await aabn(browser, H, n);
+    await side.waitForSelector('.forside-voksen .voksen-hold');
+    await side.waitForFunction(() => [...document.images].every((i) => i.complete), null, { timeout: 8000 }).catch(() => {});
+    await tegnet(side);
+    await vent(400); // appen sluger tryk i 350 ms efter et skærmskift
+    const b = await side.locator('.forside-voksen .voksen-hold').boundingBox();
+    const x = Math.round(b.x + b.width / 2);
+    const y = Math.round(b.y + 2);
+    await side.mouse.move(x, y);
+    await vent(200);
+    await side.mouse.down();
+    await vent(400);
+    await side.mouse.move(x + 1, y);
+    await vent(300);
+    await side.mouse.move(x, y);
+    await vent(1700);
+    const under = await side.evaluate(() => ({ adresse: location.hash, holder: Boolean(document.querySelector('.voksen-hold.holder')) }));
+    await side.mouse.up();
+    const aaben = await side.waitForFunction(() => location.hash.startsWith('#/voksen'), null, { timeout: 3000 }).then(() => true, () => false);
+    const adresse = await side.evaluate(() => location.hash);
+    tjek(aaben, n + ' «Voksne: hold» med musen ved knappens kant: voksendelen skal åbne efter 2,4 s hold med et ryk på 1 px (adresse ' +
+      JSON.stringify(adresse) + ', efter 2,4 s: ' + JSON.stringify(under) + ')');
+    maal.push(n + ' «Voksne: hold» med musen: ' + (aaben ? 'åbnede ' + adresse : 'åbnede ikke'));
+    await foto(side, n + '-fund11-hold-med-mus');
+    await ctx.close();
+
+    // Musen holdes fast på knappen (setPointerCapture i js/hold.js). Slippes den uden for knappen, skal holdet stoppe:
+    // ellers ville en capture, der fanger slippet forkert, lade holdet løbe færdigt efter slip
+    const s2 = await aabn(browser, H, n);
+    await s2.side.waitForSelector('.forside-voksen .voksen-hold');
+    await tegnet(s2.side);
+    await vent(400);
+    const b2 = await s2.side.locator('.forside-voksen .voksen-hold').boundingBox();
+    await s2.side.mouse.move(Math.round(b2.x + b2.width / 2), Math.round(b2.y + b2.height / 2));
+    await vent(200);
+    await s2.side.mouse.down();
+    await vent(500);
+    await s2.side.mouse.move(Math.round(b2.x + b2.width / 2), Math.max(5, Math.round(b2.y - 150)), { steps: 5 });
+    await vent(200);
+    await s2.side.mouse.up();
+    await vent(2500);
+    const slip = await s2.side.evaluate(() => ({ adresse: location.hash, holder: Boolean(document.querySelector('.voksen-hold.holder')) }));
+    tjek(!slip.adresse.startsWith('#/voksen') && !slip.holder, n + ' «Voksne: hold» med musen, sluppet uden for knappen efter 0,5 s: holdet skal stoppe ' + JSON.stringify(slip));
+    await s2.ctx.close();
   }
 }

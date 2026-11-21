@@ -65,10 +65,21 @@ export function holdKnap({ klasse = '', indhold = [], label, ms = 2000, naarFaer
 
   b.addEventListener('pointerdown', (e) => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
+    // Musen holdes fast på knappen (UI-review v13b, LAV, v14): knappen løfter sig 2 px ved hover og trykkes 4 px ned under
+    // holdet, så en mus ved kanten kom uden for, fik pointerleave, og holdet stoppede. En finger og en blyant har allerede
+    // denne capture fra browseren, så kun musen ændres. Slip uden for knappen er et kort tryk, som slip på den.
+    if (e.pointerType === 'mouse') {
+      try { b.setPointerCapture(e.pointerId); } catch (err) { /* ingen capture: holdet virker som før, med pointerleave */ }
+    }
     start(true);
   });
   b.addEventListener('pointerup', () => { if (holder) { slut(false); kort(); } });
-  b.addEventListener('pointerleave', () => slut(false));
+  // WebKit sender pointerleave lige efter pointerdown (knappen flyttede sig), før capturen er trådt i kraft (målt v14:
+  // pointerdown, pointerleave, gotpointercapture). Den ventende capture tæller her, så holdet ikke stopper af det.
+  b.addEventListener('pointerleave', (e) => {
+    if (e.pointerType === 'mouse' && b.hasPointerCapture(e.pointerId)) return;
+    slut(false);
+  });
   b.addEventListener('pointercancel', () => slut(false));
   b.addEventListener('contextmenu', (e) => e.preventDefault()); // langt tryk på iPad åbner ellers en menu
   b.addEventListener('click', (e) => e.preventDefault());
