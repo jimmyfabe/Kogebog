@@ -440,14 +440,18 @@ const erOpskrift = (url) => /\/opskrifter\/[a-z0-9-]+\.json$/.test(url.pathname)
 const INDHOLD_FIL = 'sw-indhold.json';
 const hashFor = (m, f) => (Object.hasOwn(m.filer, f) && typeof m.filer[f] === 'string' ? m.filer[f] : null);
 const passer = (m, indhold) => Boolean(m) && m.indhold === indhold && Boolean(m.filer) && typeof m.filer === 'object';
+// Den nye udgave skal have en hash for hver fil, ellers hentes en fil uden tjek (code review 4, LAV 1, v14). Den forrige må
+// godt mangle en: så hentes filen bare
+const komplet = (m) => FILER.every((f) => hashFor(m, f) !== null);
 
-// Den nye udgaves sw-indhold.json, eller null, hvis den ikke kan hentes, ikke kan læses eller hører til en anden sw.js
+// Den nye udgaves sw-indhold.json, eller null, hvis den ikke kan hentes, ikke kan læses, hører til en anden sw.js eller
+// mangler en fils hash
 async function nytIndhold() {
   try {
     const svar = await fetch(new Request(INDHOLD_FIL, { cache: 'no-cache' }));
     if (!svar.ok) return null;
     const m = await svar.json();
-    return passer(m, INDHOLD) ? m : null;
+    return passer(m, INDHOLD) && komplet(m) ? m : null;
   } catch (err) {
     return null;
   }

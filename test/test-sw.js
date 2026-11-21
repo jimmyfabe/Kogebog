@@ -283,7 +283,11 @@ test('ved tvivl om den forrige udgave hentes filen, og uden den nyes sw-indhold.
     assert.equal(caches.lagre.has('kog-' + NY), false, hvad + ': ingen ny cache');
     assert.equal(caches.lagre.get('kog-' + FORRIGE).size, FILER.length + 1, hvad + ': den forrige udgave har alle filer og sin sw-indhold.json');
   };
-  for (const [hvad, manifest] of [['404', null], ['en anden INDHOLD', { indhold: FORRIGE, filer: u1.manifest.filer }], ['ikke json', '{x'], ['uden filer', { indhold: NY }]]) {
+  // Tomme filer, en liste eller én sti uden hash: den fil kunne ellers hentes uden tjek (code review 4, LAV 1, v14)
+  const { 'app.css': _css, ...udenCss } = ens().manifest.filer;
+  for (const [hvad, manifest] of [['404', null], ['en anden INDHOLD', { indhold: FORRIGE, filer: u1.manifest.filer }], ['ikke json', '{x'], ['uden filer', { indhold: NY }],
+    ['tomme filer', { indhold: NY, filer: {} }], ['filer som liste', { indhold: NY, filer: [] }], ['én sti mangler', { indhold: NY, filer: udenCss }],
+    ['én hash er ikke tekst', { indhold: NY, filer: { ...udenCss, 'app.css': 42 } }]]) {
     const caches = falskeCaches();
     await installer(caches, u1);
     const hentet = [];
