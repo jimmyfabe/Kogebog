@@ -2,6 +2,11 @@
 
 > Ældre afsnit står i `STATUS-arkiv.md` i samme mappe (nyeste øverst).
 
+## 21-11-2026 kl. 13:03: v14 er klar · venter på Jimmys push
+
+- e2e-delen `timer` er grøn: 5 dele med 0 fejl, kørt gennem låsen mod `v14-rettelser`. Alle betingelser i regel 7 er opfyldt.
+- **Afventer Jimmy (21-11):** `cd D:\Claude\Kogebog; git push origin v14-rettelser:main` (PowerShell). Bagefter tjekker Claude, at Pages viser «v14 · 21-11-2026».
+
 ## 21-11-2026 kl. 11:53: v14 godkendt af code-review og ui-review · e2e `timer` kører · venter på Jimmys push
 
 - **code-reviewer:** godkendt, 0 HØJ/MELLEM. LAV 2 (CLAUDE.md: et manifest uden hash for en fil i `FILER` fejler også installationen) er rettet i `244be5d`. LAV til senere: vagten `hashFor(forrige.m, f) === h` i `sw.js:495` (ændrer `INDHOLD`, så den venter til næste udgave).
