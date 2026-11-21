@@ -1154,6 +1154,41 @@ test('en ny udgave: forsiden genindlæses ikke, mens der er en timer, heller ikk
   }
 });
 
+// Code review 2, LAV (v14): en færdig timer, som ingen kvitterer for, holdt appen på den gamle udgave for altid. Alarmen
+// (to bip, 4 s imellem) er slut længe før, så genindlæsningen venter kun 60 s efter, at timeren blev færdig. Den færdige
+// timer står stadig i lageret, så «Tiden er gået» kommer igen efter genindlæsningen (Timer.gendan, op til 2 timer)
+test('en ny udgave: en færdig timer, som ingen kvitterer for, holder kun genindlæsningen tilbage i 60 s', async () => {
+  const Timer = await import('../js/timer.js');
+  const rigtigNu = Date.now;
+  try {
+    await medSW(true, async ({ sw, genindlaest, indlaest, synlighed }) => {
+      const slut = Date.now() + 600000;
+      await start('#/', { foer: gemtTimer(slut) });
+      await indlaest();
+      await synlighed('hidden');
+      const faerdig = slut + 1000;
+      Date.now = () => faerdig;
+      await ventTil(() => Timer.aktuel()?.faerdig === true);
+      await synlighed('visible');
+      sw.skift();
+      assert.equal(genindlaest(), 0, 'alarmen må ikke afbrydes af en genindlæsning');
+      Date.now = () => faerdig + 59999;
+      gaaTil('#/gruppe/fisk');
+      gaaTil('#/');
+      await synlighed('visible');
+      assert.equal(genindlaest(), 0, 'efter 59,999 s venter genindlæsningen stadig');
+      Date.now = () => faerdig + 60000;
+      gaaTil('#/gruppe/fisk');
+      gaaTil('#/');
+      assert.equal(genindlaest(), 1, 'efter 60 s genindlæses forsiden, selvom ingen har trykket «Ok»');
+      assert.equal(JSON.parse(lageret.get('kog-v1')).timer.nr, 8, 'den færdige timer står stadig i lageret');
+    });
+  } finally {
+    Date.now = rigtigNu;
+    Timer.stop();
+  }
+});
+
 // Code review L1 (19-11): den nye udgave tog over, mens en timer kørte, og barnet blev på forsiden. Når timeren er stoppet,
 // og appen kommer frem igen, genindlæses forsiden (før skete der intet, før barnet forlod forsiden og kom tilbage)
 test('en ny udgave: forsiden genindlæses, når appen kommer frem igen efter en stoppet timer', async () => {

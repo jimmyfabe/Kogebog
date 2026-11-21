@@ -4,7 +4,9 @@
 import { nyTimer, timerStatus } from './tid.js';
 import * as Lager from './lager.js';
 
-let aktiv = null; // { ret, nr, groen, start, slut, sek, faerdig }. groen: trinnummeret hører til retten med mere grønt
+// { ret, nr, groen, start, slut, sek, faerdig, faerdigKl }. groen: trinnummeret hører til retten med mere grønt.
+// faerdigKl: Date.now(), da denne side så timeren blive færdig (kun i hukommelsen, ikke i lageret)
+let aktiv = null;
 let interval = 0;
 let gentag = 0;
 const lyttere = new Set();
@@ -106,6 +108,7 @@ function tik() {
   if (!aktiv) return;
   if (!aktiv.faerdig && timerStatus(aktiv, Date.now()).faerdig) {
     aktiv.faerdig = true;
+    aktiv.faerdigKl = Date.now();
     stopUr();
     slipLaas();
     gemTimer();
@@ -146,6 +149,15 @@ export function aktuel() {
   return aktiv;
 }
 
+// En ny udgave må ikke genindlæse siden, mens en timer kører (efter en genindlæsning kræver alarmens lyd og skærmlåsen et
+// nyt tryk), og heller ikke lige efter, at den er blevet færdig (alarmen ringer). Men en færdig timer, som ingen kvitterer
+// for, må ikke holde appen på den gamle udgave for altid: efter 60 s er alarmen (to bip, 4 s imellem) slut, og den færdige
+// timer står stadig i lageret, så «Tiden er gået» kommer igen efter genindlæsningen (code review 2, LAV, v14)
+export const VENT_EFTER_FAERDIG_MS = 60000;
+export function holderOpdateringTilbage(nu = Date.now()) {
+  return Boolean(aktiv) && (!aktiv.faerdig || nu - aktiv.faerdigKl < VENT_EFTER_FAERDIG_MS);
+}
+
 export function status() {
   return aktiv ? timerStatus(aktiv, Date.now()) : null;
 }
@@ -162,7 +174,8 @@ export function gendan() {
   if (!t) return;
   if (t.slut <= Date.now()) {
     // Løb ud, mens siden var væk (fx smed iOS fanen ud): vis «Tiden er gået», hvis det er under 2 timer siden
-    if (Date.now() - t.slut < HUSK_UDLOEBET_MS) aktiv = { ...t, faerdig: true };
+    // (faerdigKl: siden så den først nu, så en ny udgave venter de første 60 s efter genindlæsningen)
+    if (Date.now() - t.slut < HUSK_UDLOEBET_MS) aktiv = { ...t, faerdig: true, faerdigKl: Date.now() };
     else Lager.gem({ timer: null });
     return;
   }
