@@ -2,7 +2,7 @@
 // 1 ugeplanens række uden billede, 2 børnenes sideprikker, 3 «Start timer» over den faste bund, 4 statusskærme på lave
 // skærme, 5 rettens højttaler, 6 venstrekanten på 667×375, 7 adskilleren « · » ved linjens kant (også efter en drejning
 // fra 667×375 til 932×430), 8 gruppens kolonner og
-// 9 «Vælg ret» på lave skærme.
+// 9 «Vælg ret» på lave skærme, 10 fejllinjen i forsidens fod (UI-review v13b, LAV: v14).
 // Del af test-e2e.js: E2E_DELE=skaermfund. E2E_FUND=1,3 begrænser til nogle af fundene, E2E_FUND_SKAERME=se-land,iphone til nogle af skærmene.
 import { planMandag } from '../js/tid.js';
 import { kod } from '../js/plankode.js';
@@ -16,7 +16,8 @@ const nuSkaerm = '#app > .skaerm:not([data-gammel]) ';
 const IPLAN = (RETTER) => Object.keys(RETTER).filter((id) => RETTER[id].tumbi.ugeplan === true);
 
 export async function skaermfund(browser, H) {
-  const dele = { 1: raekkeUdenBillede, 2: sidePrikker, 3: timerOverBund, 4: statusLave, 5: hoejttaler, 6: venstrekant, 7: adskiller, 8: gruppeKolonner, 9: vaelgRet };
+  const dele = { 1: raekkeUdenBillede, 2: sidePrikker, 3: timerOverBund, 4: statusLave, 5: hoejttaler, 6: venstrekant, 7: adskiller, 8: gruppeKolonner, 9: vaelgRet,
+    10: fejlIFoden };
   for (const [nr, del] of Object.entries(dele)) if (!FUND || FUND.includes(nr)) await del(browser, H);
 }
 
@@ -588,5 +589,39 @@ async function vaelgRet(browser, H) {
     maal.push(n + ' tomt filter: «Fjern filtrene» slutter ved y=' + t.bund + ' af ' + t.H);
     await foto(b.side, n + '-fund9-tom');
     await b.ctx.close();
+  }
+}
+
+// ---------- 10. Fejllinjen i forsidens fod ----------
+// «Ny udgave kunne ikke hentes kl. …» (saetUdgaveFejl i app.js) kommer i sin egen linje under versionsnummeret. På iPad
+// rykkede «Voksne: hold» 17 px op og knapperne 9 px, når linjen kom (UI-review v13b, LAV; målt 21-11-2026 i WebKit
+// 1180×820: hold 696 → 679, første knap 188 → 179). Pladsen er nu sat af: intet over linjen flytter sig, og siden bliver
+// ikke længere. Teksten sættes, som appen sætter den (kun linjens textContent)
+async function fejlIFoden(browser, H) {
+  const { tjek, foto, maal } = H;
+  for (const n of paa(['ipad', 'iphone', 'desktop'])) {
+    console.log('[' + n + '] fund 10: fejllinjen i forsidens fod');
+    const { ctx, side } = await aabn(browser, H, n);
+    await side.waitForSelector('.gruppe-knap');
+    await side.waitForFunction(() => [...document.images].every((i) => i.complete), null, { timeout: 8000 }).catch(() => {});
+    const placering = async () => {
+      await tegnet(side);
+      return side.evaluate(() => {
+        const top = (s) => Math.round(document.querySelector(s).getBoundingClientRect().top * 10) / 10;
+        const f = document.querySelector('.forside-version .udgave-fejl').getBoundingClientRect();
+        const v = document.querySelector('.forside-version').getBoundingClientRect();
+        return { dug: top('.forside-top'), knap: top('.gruppe-knap'), hold: top('.forside-voksen .voksen-hold'), stemme: top('.forside-fod'), version: top('.forside-version'),
+          side: document.documentElement.scrollHeight, fejl: { h: Math.round(f.height * 10) / 10, inde: f.bottom <= v.bottom + 0.5 } };
+      });
+    };
+    const foer = await placering();
+    await side.evaluate(() => { document.querySelector('.forside-version .udgave-fejl').textContent = 'Ny udgave kunne ikke hentes kl.\u00a018:41'; });
+    const efter = await placering();
+    const flyttet = ['dug', 'knap', 'hold', 'stemme', 'version', 'side'].filter((k) => Math.abs(efter[k] - foer[k]) > 0.5);
+    tjek(flyttet.length === 0, n + ' fejl i foden: intet må flytte sig, når fejllinjen kommer (flyttet: ' + flyttet.join(', ') + '; før ' + JSON.stringify(foer) + ', efter ' + JSON.stringify(efter) + ')');
+    tjek(efter.fejl.h > 0 && efter.fejl.inde, n + ' fejl i foden: linjen ses inden for foden ' + JSON.stringify(efter.fejl));
+    maal.push(n + ' fejl i foden: «Voksne: hold» ved y=' + foer.hold + ' før og ' + efter.hold + ' efter, siden ' + foer.side + ' → ' + efter.side + ' px');
+    await foto(side, n + '-fund10-fejl-i-foden');
+    await ctx.close();
   }
 }

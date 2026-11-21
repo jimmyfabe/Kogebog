@@ -288,7 +288,8 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 /* Forsidens billedknapper. Gitteret får antallet af kolonner og rækker som variabler, og tallerkenen regnes ud af skærmens
    højde og rækkerne, så alle knapper kan ses uden at rulle på iPad. --rest er det, der ikke er rækker: dugen (ca. 152 px),
    gitterets luft (24), bunden med «Voksne: hold» (86) og de to linjer om stemmen og versionen (52). Regnet, ikke målt:
-   e2e måler det på 1180×820.
+   e2e måler det på 1180×820. Fejllinjens plads under versionen (18 px, v14) tages af luften i .forside-indhold: målt
+   21-11-2026 i WebKit står der mindst 18 px luft tilbage på de skærme, der ikke ruller (1280×800, også med «I dag» og en timer).
    9 knapper: 3 × 3. 10 knapper (:has nedenfor): 5 × 2 på langs, 2 × 5 på højkant, uden at koden skal ændres.
    11 knapper (Madpakke, v9): 6 + 5 på iPad på langs, 3 × 4 i smalle vinduer på langs, ellers 2 kolonner (reglerne under 10).
    12 knapper (Gris og Ko, v11): samme kolonner og rækker som 11 (6 × 2, 3 × 4, 2 × 6), bare med fulde rækker */
@@ -424,9 +425,11 @@ img { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none;
 /* Til den voksne: lille og blid nederst på forsiden */
 .forside-fod { text-align: center; color: var(--kakao-blid); font-size: 15px; padding: 0 24px 4px; }
 /* Versionsnummeret (js/version.js) under linjen om stemmen: til den voksne, mindre end resten af foden */
-.forside-version { font-size: 13px; padding-bottom: 10px; }
-/* «Ny udgave kunne ikke hentes kl. …» (code review M1): sin egen linje under versionsnummeret. Uden fejl er den tom og fylder intet */
-.udgave-fejl { display: block; }
+.forside-version { font-size: 13px; line-height: 1.35; padding-bottom: 10px; }
+/* «Ny udgave kunne ikke hentes kl. …» (code review M1): sin egen linje under versionsnummeret. Linjens plads er sat af,
+   også uden fejl: før rykkede «Voksne: hold» 17 px op på iPad, når fejlen kom (UI-review v13b, LAV; e2e skaermfund 10).
+   Samme højde som linjen (line-height 1.35 ovenfor), så en anden skrift på iPad'en ikke gør linjen højere end pladsen */
+.udgave-fejl { display: block; min-height: 1.35em; }
 
 /* Gruppeskærmen (#/gruppe/<id>) og søgningen (#/soeg): overskriften er et billede på gruppens farve og et ord, og kortenes
    cirkel har samme farve, så børnene kan kende billedet igen uden at læse */
